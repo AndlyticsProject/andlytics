@@ -1,0 +1,53 @@
+
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:background="#ffffff">
+	<RelativeLayout
+		android:id="@+id/main_app_row"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/button_background"
+		android:paddingLeft="15dp"
+		android:paddingRight="15dp"
+		android:paddingBottom="5dp"
+		android:paddingTop="5dp">
+
+		<RelativeLayout
+			android:id="@+id/main_app_iconname_frame"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content">
+
+			<ImageView
+				android:id="@+id/main_app_icon"
+				android:src="@drawable/default_app_icon"
+				android:layout_height="32dp"
+				android:layout_width="32dp" android:layout_centerVertical="true" android:layout_marginRight="5dp"></ImageView>
+
+			<TextView
+				style="@style/MainTableText"
+				android:id="@+id/main_app_name"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Brutto Netto Gehalt Rechner"
+				android:textStyle="bold"
+				android:layout_toRightOf="@+id/main_app_icon"
+				 android:layout_centerVertical="true"/>
+			<CheckBox android:layout_width="wrap_content" android:id="@+id/ghost_checkbox" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true"></CheckBox>
+
+
+		</RelativeLayout>
+
+		<TextView
+			style="@style/MainTableText"
+			android:id="@+id/main_package_name"
+			android:layout_height="wrap_content"
+			android:text="de.betaapps.bruttonetto"
+			android:textColor="#aaa" android:layout_width="wrap_content" android:layout_below="@+id/main_app_iconname_frame" android:paddingBottom="10dp" android:paddingLeft="2dp"/>
+
+
+	</RelativeLayout>
+
+
+</RelativeLayout>

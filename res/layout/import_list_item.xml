@@ -1,0 +1,33 @@
+
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:background="#ffffff">
+	<RelativeLayout
+		android:id="@+id/import_app_row"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/button_background"
+		android:paddingLeft="15dp"
+		android:paddingRight="15dp"
+		android:paddingBottom="10dp" android:paddingTop="10dp">
+
+		<TextView
+			style="@style/MainTableText"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:textStyle="bold" android:id="@+id/import_file_name" android:paddingLeft="10dp" android:text="de.betaapps.bruttonetto.csv"/>
+			 
+
+		<CheckBox
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:paddingTop="10dp"
+			android:layout_centerVertical="true" android:layout_alignParentRight="true" android:id="@+id/import_file_checkbox"></CheckBox>
+			 
+	</RelativeLayout>
+
+
+</RelativeLayout>

@@ -1,0 +1,103 @@
+<LinearLayout
+	android:id="@+id/LinearLayout01"
+	android:layout_height="fill_parent"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:background="#aa000000"
+	android:gravity="center"
+	android:layout_width="fill_parent"
+	android:orientation="vertical">
+	<RelativeLayout
+		android:id="@+id/LinearLayout01"
+		android:layout_height="fill_parent"
+		android:gravity="center"
+		android:layout_width="fill_parent"
+		android:orientation="vertical"
+		android:layout_marginTop="40dp"
+		android:layout_marginBottom="40dp"
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="10dp"
+		android:background="@drawable/modal_dialog">
+
+		<ListView
+			android:id="@+id/list_view_id"
+			android:persistentDrawingCache="animation|scrolling"
+			android:layout_width="fill_parent"
+			android:choiceMode="none"
+			android:dividerHeight="2sp"
+			android:layout_centerInParent="true"
+			android:divider="#fff"
+			android:cacheColorHint="#fff"
+			android:layout_above="@+id/import_dialog_buttons"
+			android:layout_below="@+id/import_dialog_title"
+			android:layout_margin="2dp" android:layout_height="fill_parent"/>
+
+
+		<LinearLayout
+			android:id="@+id/import_dialog_buttons"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:layout_alignParentBottom="true"
+			android:orientation="horizontal">
+
+
+			<RelativeLayout
+				android:id="@+id/import_dialog_import_button"
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent"
+				android:background="@drawable/image_button"
+				android:layout_margin="5dp"
+				android:padding="5dp"
+				android:layout_weight="1">
+
+				<LinearLayout
+					android:orientation="horizontal"
+					android:layout_centerVertical="true"
+					android:layout_centerHorizontal="true"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content">
+
+					<TextView
+						android:textStyle="bold"
+						style="@style/MainTableText"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textColor="#fff"
+						android:layout_gravity="center"
+						android:padding="5dp" android:text="run import"/>
+
+				</LinearLayout>
+
+			</RelativeLayout>
+
+			<RelativeLayout
+				android:id="@+id/import_dialog_close_button"
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent"
+				android:background="@drawable/image_button"
+				android:layout_margin="5dp"
+				android:padding="5dp"
+				android:layout_weight="1">
+
+				<LinearLayout
+					android:orientation="horizontal"
+					android:layout_centerVertical="true"
+					android:layout_centerHorizontal="true"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content">
+
+					<TextView
+						android:textStyle="bold"
+						style="@style/MainTableText"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textColor="#fff"
+						android:text="close"
+						android:layout_gravity="center"
+						android:padding="5dp" />
+				</LinearLayout>
+
+			</RelativeLayout>
+
+		</LinearLayout>
+	</RelativeLayout>
+</LinearLayout>

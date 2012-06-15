@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:background="@drawable/modal_dialog"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content">
+	<ScrollView
+		android:layout_width="fill_parent"
+		android:layout_height="0dip"
+		android:layout_weight="1">
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:orientation="vertical"
+			android:paddingTop="5dip"
+			android:paddingLeft="20dip"
+			android:paddingRight="20dip" android:paddingBottom="5dip">
+
+			<TextView
+				android:id="@+id/admob_login_headline"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="18dp"
+				android:gravity="center"
+				android:textStyle="bold"
+				android:layout_marginTop="8dp"
+				android:layout_marginBottom="8dp"
+				style="@style/MainTableHeadline" android:layout_gravity="center" android:text="ADMOB ACCOUNT LOGIN"/>
+
+			<View
+				android:layout_width="fill_parent"
+				android:layout_height="2dp"
+				android:background="#dadada"
+				android:paddingLeft="5dp"
+				android:paddingRight="5dp"
+				android:layout_marginTop="1dp"
+				android:layout_marginBottom="1dp" />
+
+			<TextView
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="5dip"
+				android:id="@+id/admob_login_message"
+				style="@style/MainTableText"
+				android:textStyle="bold" />
+			<TextView
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				style="@style/MainTableText" android:text="email"/>
+			<EditText
+				android:singleLine="true"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:minWidth="250dip"
+				android:scrollHorizontally="true"
+				android:capitalize="none"
+				android:autoText="false"
+				android:inputType="textEmailAddress"
+				android:id="@+id/admob_login_username_edit" android:textSize="12dp"/>
+			<TextView
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:singleLine="true"
+				android:layout_marginTop="2dip"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				style="@style/MainTableText" android:text="password"/>
+			<EditText
+				android:singleLine="true"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:minWidth="250dip"
+				android:scrollHorizontally="true"
+				android:capitalize="none"
+				android:autoText="false"
+				android:password="true"
+				android:inputType="textPassword"
+				android:id="@+id/admob_login_password_edit" android:textSize="12dp"/>
+		</LinearLayout>
+	</ScrollView>
+	<FrameLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:paddingRight="16dip"
+		android:paddingLeft="16dip"
+		android:paddingBottom="5dp"
+		android:paddingTop="2dp"
+		android:minHeight="58dip">
+
+
+
+		<RelativeLayout
+			android:id="@+id/admob_login_ok_button"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:background="@drawable/image_button"
+			android:layout_margin="5dp"
+			android:padding="5dp"
+			android:layout_gravity="center">
+
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_centerVertical="true"
+				android:layout_centerHorizontal="true"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+
+				<TextView
+					android:textStyle="bold"
+					style="@style/MainTableText"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textColor="#fff"
+					android:text="login"
+					android:layout_gravity="center"
+					android:padding="5dp" />
+			</LinearLayout>
+
+		</RelativeLayout>
+
+
+	</FrameLayout>
+</LinearLayout>

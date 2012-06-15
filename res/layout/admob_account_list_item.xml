@@ -1,0 +1,28 @@
+
+
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/button_background"
+	android:paddingBottom="10dp" android:paddingTop="10dp">
+
+	<TextView
+		android:layout_marginLeft="5dp"
+		android:id="@+id/admob_account_list_item_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text=""
+		android:padding="10dp"
+		android:textColor="#555555"
+		android:layout_centerHorizontal="true"
+		android:layout_marginRight="5dp" />
+
+		<ImageView
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:scaleType="fitXY"
+			android:src="@drawable/icon_more"
+			android:layout_alignParentRight="true" android:layout_centerVertical="true" android:paddingRight="20dp"/>
+
+</RelativeLayout>

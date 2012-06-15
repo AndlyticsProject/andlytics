@@ -1,0 +1,4 @@
+<transition xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:drawable="@drawable/row_background_inner_borderless"></item>
+  <item android:drawable="@drawable/row_background_inner_borderless_bottom"></item>
+</transition>

@@ -1,0 +1,591 @@
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:background="#fff"
+	android:paddingBottom="5dp">
+
+	<View
+		android:id="@+id/main_app_topspacer"
+		android:layout_width="fill_parent"
+		android:layout_height="10dp">
+	</View>
+
+	<RelativeLayout
+		android:layout_below="@+id/main_app_topspacer"
+		android:id="@+id/main_app_ratingdetain_frame"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:paddingLeft="15dp"
+		android:paddingRight="15dp"
+		android:background="@drawable/row_background_inner"
+		android:layout_marginLeft="5dp"
+		android:paddingBottom="10dp"
+		android:paddingTop="27dp">
+
+		<ImageView
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:scaleType="fitXY"
+			android:src="@drawable/icon_more"
+			android:layout_alignParentRight="true"
+			android:layout_centerVertical="true" />
+
+		<TextView
+			style="@style/MainTableText"
+			android:id="@+id/main_app_ratingbar5_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="53"
+			android:paddingRight="5dp"
+			android:gravity="right"
+			android:minWidth="65dp"  />
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/main_app_ratingbar5"
+			android:layout_below="@+id/main_app_name"
+			android:layout_toRightOf="@+id/main_app_ratingbar5_text"
+			android:minHeight="20dp"
+			android:paddingRight="50dp" />
+		<TextView
+			style="@style/MainTableText"
+			android:id="@+id/main_app_ratingbar5_percent"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="50%"
+			android:layout_alignParentRight="true"
+			android:paddingRight="50dp" />
+
+
+		<TextView
+			style="@style/MainTableText"
+			android:id="@+id/main_app_ratingbar4_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="23"
+			android:minWidth="65dp" 
+			android:paddingRight="5dp"
+			android:gravity="right"
+			android:layout_below="@+id/main_app_ratingbar5" />
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/main_app_ratingbar4"
+			android:layout_toRightOf="@+id/main_app_ratingbar4_text"
+			android:layout_below="@+id/main_app_ratingbar5"
+			android:minHeight="20dp"
+			android:scaleType="centerInside"
+			android:paddingRight="50dp" />
+		<TextView
+			style="@style/MainTableText"
+			android:id="@+id/main_app_ratingbar4_percent"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="50%"
+			android:layout_below="@+id/main_app_ratingbar5"
+			android:layout_alignParentRight="true"
+			android:paddingRight="50dp" />
+
+
+
+		<TextView
+			style="@style/MainTableText"
+			android:id="@+id/main_app_ratingbar3_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:minWidth="65dp" 
+			android:paddingRight="5dp"
+			android:gravity="right"
+			android:text="12"
+			android:layout_below="@+id/main_app_ratingbar4" />
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/main_app_ratingbar3"
+			android:layout_toRightOf="@+id/main_app_ratingbar3_text"
+			android:layout_below="@+id/main_app_ratingbar4"
+			android:minHeight="20dp"
+			android:scaleType="centerInside"
+			android:paddingRight="50dp" />
+
+		<TextView
+			style="@style/MainTableText"
+			android:id="@+id/main_app_ratingbar3_percent"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="50%"
+			android:layout_below="@+id/main_app_ratingbar4"
+			android:layout_alignParentRight="true"
+			android:paddingRight="50dp" />
+
+		<TextView
+			style="@style/MainTableText"
+			android:id="@+id/main_app_ratingbar2_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:minWidth="65dp" 
+			android:paddingRight="5dp"
+			android:gravity="right"
+			android:text="2"
+			android:layout_below="@+id/main_app_ratingbar3" />
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/main_app_ratingbar2"
+			android:layout_toRightOf="@+id/main_app_ratingbar2_text"
+			android:layout_below="@+id/main_app_ratingbar3"
+			android:minHeight="20dp"
+			android:scaleType="centerInside"
+			android:paddingRight="50dp" />
+
+		<TextView
+			style="@style/MainTableText"
+			android:id="@+id/main_app_ratingbar2_percent"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="50%"
+			android:layout_below="@+id/main_app_ratingbar3"
+			android:layout_alignParentRight="true"
+			android:paddingRight="50dp" />
+
+
+		<TextView
+			style="@style/MainTableText"
+			android:id="@+id/main_app_ratingbar1_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:minWidth="65dp"
+			android:paddingRight="5dp"
+			android:gravity="right"
+			android:text="5"
+			android:layout_below="@+id/main_app_ratingbar2" />
+
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/main_app_ratingbar1"
+			android:layout_toRightOf="@+id/main_app_ratingbar1_text"
+			android:layout_below="@+id/main_app_ratingbar2"
+			android:minHeight="20dp"
+			android:scaleType="centerInside"
+			android:paddingRight="50dp" />
+
+		<TextView
+			style="@style/MainTableText"
+			android:id="@+id/main_app_ratingbar1_percent"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="50%"
+			android:layout_below="@+id/main_app_ratingbar2"
+			android:layout_alignParentRight="true"
+			android:paddingRight="50dp" />
+
+		<TextView
+			style="@style/MainTableText"
+			android:layout_below="@+id/main_app_ratingbar1"
+			android:id="@+id/main_package_name"
+			android:layout_height="wrap_content"
+			android:text="de.betaapps.bruttonetto"
+			android:paddingTop="2dp"
+			android:layout_centerHorizontal="true"
+			android:textColor="#bababa"
+			android:layout_width="wrap_content" />
+
+
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:layout_below="@+id/main_app_topspacer"
+		android:id="@+id/main_app_row"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/row_background"
+		android:layout_marginRight="5dp">
+
+		<RelativeLayout
+			android:id="@+id/main_app_top_frame"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingTop="15dp"
+			android:paddingRight="15dp"
+			android:paddingLeft="15dp">
+
+			<ImageView
+				android:layout_width="wrap_content"
+				android:id="@+id/imageView1"
+				android:scaleType="fitXY"
+				android:src="@drawable/icon_more"
+				android:layout_height="wrap_content"
+				android:layout_alignParentRight="true"
+				android:layout_centerVertical="true"></ImageView>
+
+			<RelativeLayout
+				android:id="@+id/main_app_icon_frame"
+				android:layout_height="wrap_content"
+				android:layout_width="65dp">
+				<ImageView
+					android:layout_width="32dp"
+					android:layout_height="32dp"
+					android:src="@drawable/default_app_icon"
+					android:layout_marginRight="5dp"
+					android:layout_marginTop="2dp"
+					android:id="@+id/main_app_icon"
+					android:layout_alignParentRight="true"></ImageView>
+			</RelativeLayout>
+			<TextView
+				style="@style/MainTableText"
+				android:id="@+id/main_app_name"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Brutto Netto Gehalt Rechner"
+				android:textStyle="bold"
+				android:maxLines="1"
+				android:layout_toRightOf="@+id/main_app_icon_frame" />
+
+
+			<RatingBar
+				style="?android:attr/ratingBarStyleSmall"
+				android:layout_below="@+id/main_app_name"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:stepSize="0.5"
+				android:rating="4.5"
+				android:numStars="5"
+				android:id="@+id/main_app_ratingbar"
+				android:layout_toRightOf="@+id/main_app_icon_frame" />
+
+
+
+			<TextView
+				android:id="@+id/main_app_commentscount"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:text="23"
+				android:layout_alignRight="@+id/main_app_rating"
+				android:paddingRight="5dp"
+				android:maxLines="1"
+				
+				android:layout_below="@+id/main_app_ratingbar"
+				android:minWidth="65dp"
+				android:gravity="right"
+				android:paddingBottom="2dp"
+				android:paddingTop="2dp"></TextView>
+			<TextView
+				android:id="@+id/main_app_commentscountText"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_toRightOf="@+id/main_app_commentscount"
+				android:layout_alignBaseline="@+id/main_app_commentscount"
+				android:paddingRight="5dp"
+				android:text="comments"
+				android:minWidth="110dp" />
+			<TextView
+				android:id="@+id/main_app_commentscountPercent"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_alignBaseline="@+id/main_app_commentscountText"
+				android:text="68%"
+				android:layout_alignParentRight="true"
+				android:paddingRight="50dp" />
+
+		</RelativeLayout>
+
+
+		<RelativeLayout
+			android:id="@+id/main_app_download_frame"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/main_app_top_frame"
+			android:paddingLeft="10dp"
+			android:background="@drawable/row_background_inner_borderless"
+			android:paddingRight="10dp">
+
+			<ImageView
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:scaleType="fitXY"
+				android:src="@drawable/icon_more"
+				android:layout_alignParentRight="true"
+				android:layout_centerVertical="true"
+				android:paddingRight="5dp" />
+
+
+			<View
+				android:id="@+id/main_app_spacer"
+				android:layout_width="fill_parent"
+				android:background="@drawable/row_dash"
+				android:layout_height="2dp" />
+
+
+			<TextView
+				android:layout_below="@+id/main_app_spacer"
+				android:id="@+id/main_app_downloads"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:text="100000"
+				android:gravity="right"
+				android:paddingRight="5dp"
+				android:paddingLeft="10dp"
+				android:minWidth="70dp" 
+				android:paddingTop="3dp" />
+			<TextView
+				android:id="@+id/main_app_downloadsText"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_toRightOf="@+id/main_app_downloads"
+				android:layout_width="wrap_content"
+				android:text="total downloads"
+				android:layout_alignBaseline="@+id/main_app_downloads" />
+			<TextView
+				android:id="@+id/main_app_downloadsPercent"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_alignBaseline="@+id/main_app_downloadsText"
+				android:text=""
+				android:layout_alignParentRight="true"
+				android:paddingRight="55dp" />				
+			<TextView
+				android:id="@+id/main_app_activeinstalls"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:text="77777"
+				android:layout_alignRight="@+id/main_app_downloads"
+				android:gravity="right"
+				android:paddingRight="5dp" 
+				android:layout_below="@+id/main_app_downloads"
+				android:paddingBottom="3dp" />
+			<TextView
+				android:id="@+id/main_app_activeinstallsText"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_toRightOf="@+id/main_app_activeinstalls"
+				android:layout_alignBaseline="@+id/main_app_activeinstalls"
+				android:text="active installs"
+				android:paddingRight="5dp"
+				android:minWidth="110dp" />
+			<TextView
+				android:id="@+id/main_app_activeinstallsPercent"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_alignBaseline="@+id/main_app_activeinstallsText"
+				android:text="68%"
+				android:layout_alignParentRight="true"
+				android:paddingRight="55dp" />
+
+		</RelativeLayout>
+
+
+		<RelativeLayout
+			android:id="@+id/main_app_admob_frame"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/main_app_download_frame"
+			android:paddingLeft="10dp"
+			android:background="@drawable/row_background_inner_borderless"
+			android:paddingRight="10dp">
+
+			<ImageView
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:scaleType="fitXY"
+				android:src="@drawable/icon_more"
+				android:layout_alignParentRight="true"
+				android:layout_centerVertical="true"
+				android:paddingRight="5dp" />
+
+
+			<View
+				android:id="@+id/main_app_spacer_admob"
+				android:layout_width="fill_parent"
+				android:background="@drawable/row_dash"
+				android:layout_height="2dp" />
+
+
+			<TextView
+				android:layout_below="@+id/main_app_spacer_admob"
+				android:id="@+id/main_app_admob_revenue"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:text="100000"
+				android:gravity="right"
+				android:paddingRight="5dp" 
+				android:paddingLeft="10dp"
+				android:minWidth="70dp" 
+				android:paddingTop="3dp" />
+			<TextView
+				android:id="@+id/main_app_admob_revenue_text"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_toRightOf="@+id/main_app_admob_revenue"
+				android:layout_width="wrap_content"
+				android:text="admob revenue"
+				android:layout_alignBaseline="@+id/main_app_admob_revenue" />
+			<TextView
+				android:id="@+id/main_app_admobPercent"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_alignBaseline="@+id/main_app_admob_revenue_text"
+				android:text=""
+				android:layout_alignParentRight="true"
+				android:paddingRight="55dp" />				
+			<TextView
+				android:id="@+id/main_app_admob_requests"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:text="77777"
+				android:layout_alignRight="@+id/main_app_admob_revenue"
+				android:gravity="right"
+				android:paddingRight="5dp" 
+				android:layout_below="@+id/main_app_admob_revenue"
+				android:paddingBottom="3dp" />
+			<TextView
+				android:id="@+id/main_app_admob_requests_text"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_toRightOf="@+id/main_app_admob_requests"
+				android:layout_alignBaseline="@+id/main_app_admob_requests"
+				android:text="admob requests"
+				android:paddingRight="5dp"
+				android:minWidth="110dp" />
+			<TextView
+				android:id="@+id/main_app_admobRequestsPercent"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_alignBaseline="@+id/main_app_admob_requests_text"
+				android:text=""
+				android:layout_alignParentRight="true"
+				android:paddingRight="55dp" />
+
+		</RelativeLayout>
+
+
+		<RelativeLayout
+
+			android:id="@+id/main_app_button_history"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/main_app_admob_frame"
+			android:layout_width="fill_parent"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:paddingBottom="0dp"
+			android:background="@drawable/row_background_inner_borderless_bottom">
+
+
+			<ImageView
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:scaleType="fitXY"
+				android:src="@drawable/icon_down"
+				android:layout_alignParentRight="true"
+				android:layout_centerVertical="true"
+				android:id="@+id/main_app_expand_image"
+				android:layout_marginRight="5dp" />
+
+			<View
+				android:id="@+id/main_app_spacer2"
+				android:layout_width="fill_parent"
+				android:background="@drawable/row_dash"
+				android:layout_height="2dp" />
+
+
+			<TextView
+				android:layout_below="@+id/main_app_spacer2"
+
+				android:id="@+id/main_app_avgrating"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:text="4.233"
+				android:paddingRight="5dp" 
+				android:maxLines="1"
+				android:layout_alignRight="@+id/main_app_rating"
+				android:paddingTop="2dp"></TextView>
+			<TextView
+				android:id="@+id/main_app_avgratingText"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_toRightOf="@+id/main_app_avgrating"
+				android:layout_alignBaseline="@+id/main_app_avgrating"
+				android:text="average rating"
+				android:paddingRight="5dp" />
+
+			<TextView
+				android:layout_below="@+id/main_app_avgrating"
+				android:id="@+id/main_app_rating"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:text="123"
+				android:paddingRight="5dp"
+				android:gravity="right"
+				android:paddingBottom="5dp"
+				android:minWidth="70dp" ></TextView>
+				
+
+			<TextView
+				android:id="@+id/main_app_avgratingPercent"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_alignBaseline="@+id/main_app_avgrating"
+				android:text="68%"
+				android:layout_alignParentRight="true"
+				android:paddingRight="55dp" />				
+
+			<TextView
+				android:id="@+id/main_app_ratingText"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_toRightOf="@+id/main_app_rating"
+				android:layout_alignBaseline="@+id/main_app_rating"
+				android:text="ratings"
+				android:paddingRight="5dp"
+				android:minWidth="110dp" />
+
+			<TextView
+				android:id="@+id/main_app_ratingPercent"
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_alignBaseline="@+id/main_app_ratingText"
+				android:text="68%"
+				android:layout_alignParentRight="true"
+				android:paddingRight="55dp" />
+
+
+			<View
+				android:layout_below="@+id/main_app_rating"
+				android:id="@+id/main_app_spacer3"
+				android:layout_width="fill_parent"
+				android:background="@drawable/row_dash"
+				android:layout_height="2dp" />
+
+
+
+		</RelativeLayout>
+
+
+	</RelativeLayout>
+
+</RelativeLayout>

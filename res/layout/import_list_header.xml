@@ -1,0 +1,27 @@
+
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:orientation="vertical">
+
+
+	<TextView
+		style="@style/MainTableText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingBottom="5dp"
+		android:textStyle="bold"
+		android:paddingTop="15dp"
+		android:layout_gravity="center"
+		android:id="@+id/import_dialog_title" android:text="Select files to import"></TextView>
+
+	<TextView
+		style="@style/MainTableText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingBottom="5dp"
+		android:paddingTop="5dp"
+		android:layout_gravity="center"
+		android:id="@+id/import_dialog_title" android:text="Existing data will be replaced"></TextView>
+</LinearLayout>

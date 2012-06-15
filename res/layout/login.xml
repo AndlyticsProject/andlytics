@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content">
+
+	<RelativeLayout
+		android:id="@+id/login_header_frame"
+		android:layout_width="fill_parent"
+		android:layout_height="45dp">
+
+		<RelativeLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true">
+
+
+			<TextView
+				android:id="@+id/login_headline"
+				android:layout_width="wrap_content"
+				android:textColor="#84b325"
+				android:textSize="22dp"
+				android:layout_height="wrap_content"
+				android:paddingTop="5dp"
+				android:layout_centerVertical="true" android:textStyle="bold" android:text="andlytics"/>
+
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:textColor="#ff0000"
+				android:layout_height="wrap_content"
+				android:text="beta"
+				android:id="@+id/login_headline_beta"
+				android:paddingLeft="5dp"
+				android:textSize="10dp"
+				android:layout_alignBaseline="@+id/login_headline"
+				android:layout_toRightOf="@+id/login_headline" android:textStyle="bold"/>
+		</RelativeLayout>
+
+	</RelativeLayout>
+
+
+	<View
+		android:id="@+id/login_headline_spacer_1"
+		android:layout_width="fill_parent"
+		android:layout_height="2dp"
+		android:background="#84b325"
+		android:layout_below="@+id/login_header_frame" />
+
+
+
+	<ScrollView
+		android:layout_width="fill_parent"
+		android:layout_below="@+id/login_headline_spacer_1"
+		android:layout_height="wrap_content">
+
+
+
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:paddingBottom="80dp">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="android developer account required"
+				style="@style/MainTableText"
+				android:paddingLeft="5dp"
+				android:paddingRight="5dp"
+				android:layout_marginLeft="5dp"
+				android:layout_marginRight="5dp"
+				android:textStyle="bold"
+				android:layout_marginTop="10dp" />
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				style="@style/MainTableText"
+				android:paddingLeft="5dp"
+				android:paddingRight="5dp"
+				android:layout_marginLeft="5dp"
+				android:layout_marginRight="5dp"
+				android:layout_marginTop="5dp" android:text="Please choose or add a Google account. The account must be a registered developer account with apps published in the Android Market ('Google Apps for Business' accounts are not supported yet)."/>
+
+			<View
+				android:id="@+id/main_app_buttonbarSpacer"
+				android:layout_width="fill_parent"
+				android:layout_height="2dp"
+				android:background="#dadada"
+				android:paddingLeft="5dp"
+				android:paddingRight="5dp"
+				android:layout_marginTop="10dp"
+				android:layout_marginBottom="10dp" />
+
+			<LinearLayout
+				android:id="@+id/login_input"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical">
+			</LinearLayout>
+
+
+
+		</LinearLayout>
+
+
+
+	</ScrollView>
+
+
+	<View
+		android:id="@+id/login_status_lineSpacer"
+		android:layout_width="fill_parent"
+		android:layout_height="2dp"
+		android:background="#84b325"
+		android:layout_above="@+id/login_buttonbar" />
+
+	<LinearLayout
+		android:layout_alignParentBottom="true"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/login_buttonbar"
+		android:orientation="horizontal"
+		android:background="#fff">
+
+
+		<RelativeLayout
+			android:id="@+id/loign_add_account_button"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:layout_weight="1"
+			android:background="@drawable/image_button"
+			android:layout_margin="5dp"
+			android:padding="5dp">
+
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_centerVertical="true"
+				android:layout_centerHorizontal="true"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+
+				<ImageView
+					android:layout_height="wrap_content"
+					android:src="@drawable/icon_add"
+					android:layout_width="wrap_content"
+					android:paddingRight="5dp"></ImageView>
+
+				<TextView
+					android:textStyle="bold"
+					style="@style/MainTableText"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textColor="#fff"
+					android:layout_gravity="center"
+					android:text="add android developer account" />
+			</LinearLayout>
+
+		</RelativeLayout>
+
+
+	</LinearLayout>
+
+	<ImageView
+		android:layout_height="wrap_content"
+		android:src="@drawable/shadow_down"
+		android:layout_width="fill_parent"
+		android:scaleType="fitXY"></ImageView>
+
+	<ImageView
+		android:layout_height="wrap_content"
+		android:src="@drawable/shadow_down"
+		android:layout_width="fill_parent"
+		android:scaleType="fitXY"
+		android:layout_below="@+id/login_headline_spacer_1" />
+
+	<ImageView
+		android:layout_height="wrap_content"
+		android:src="@drawable/shadow_up"
+		android:layout_width="fill_parent"
+		android:scaleType="fitXY"
+		android:layout_above="@+id/login_status_lineSpacer" />
+
+
+</RelativeLayout>

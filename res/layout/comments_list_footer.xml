@@ -1,0 +1,47 @@
+
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:paddingTop="10dp"
+	android:paddingBottom="20dp" android:orientation="vertical">
+
+	<RelativeLayout
+		android:id="@+id/comments_list_footer"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/button_background"
+		android:padding="15dp">
+
+		<RelativeLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingBottom="5dp"
+			android:paddingTop="5dp">
+
+			<TextView
+				style="@style/MainTableText"
+				android:layout_height="wrap_content"
+				android:text="load more comments"
+				android:paddingRight="5dp"
+				android:paddingLeft="10dp"
+				android:id="@+id/comments_footer_loadmore"
+				android:gravity="center"
+				android:layout_centerInParent="true"
+				android:layout_width="wrap_content" />
+
+		</RelativeLayout>
+
+
+
+	</RelativeLayout>
+	
+	<TextView
+		style="@style/MainTableText"
+		android:layout_height="wrap_content"
+		android:paddingLeft="10dp"
+		android:id="@+id/comments_footer_loadmore"
+		android:gravity="center" android:layout_width="fill_parent" android:paddingTop="10dp" android:paddingRight="10dp" android:paddingBottom="10dp" android:text="The number of comments reported on the main screen may be higher than the number of comments shown here because of withdrawn / changed comments."/>
+
+
+</LinearLayout>

@@ -1,0 +1,153 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#fff" >
+
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="10dp" >
+
+            <TextView
+                android:id="@+id/admob_config_headline_text"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="AdMob account required"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/admob_buttonbarSpacer"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:layout_below="@+id/admob_config_headline_text"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#dadada"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" />
+
+            <LinearLayout
+                android:id="@+id/admob_accountlist"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/admob_buttonbarSpacer"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/admob_addaccount_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/admob_accountlist"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/image_button"
+                android:padding="7dp" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        style="@style/MainTableText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="5dp"
+                        android:text="add AdMob account"
+                        android:textColor="#fff"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/admob_accout_desc"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/admob_addaccount_button"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:padding="7dp" >
+
+                <TextView
+                    style="@style/MainTableText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="If you want to remove an account go to: Android Settings -> Accounts and Sync"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:layout_above="@+id/admob_config_headline_subtext"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#dadada"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" />                
+                
+            <TextView
+                android:id="@+id/admob_config_headline_subtext"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/admob_accout_desc"
+                android:paddingBottom="5dp"
+                android:text="For AdMob accounts that are linked to a Google account you can find the API password on the admob account information page:" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:paddingTop="10dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/admob_config_headline_subtext"
+                android:src="@drawable/admob" />
+        </RelativeLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/admob_config_done_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_background"
+        android:padding="10dp"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="2dp"
+            android:visibility="visible" >
+
+            <TextView
+                android:id="@+id/main_autosync_text"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="close" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

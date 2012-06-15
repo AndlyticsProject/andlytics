@@ -1,0 +1,99 @@
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent"
+	android:layout_width="fill_parent">
+	<ScrollView
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:background="#fff">
+
+		<RelativeLayout
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_height="fill_parent"
+			android:layout_width="fill_parent"
+			android:padding="10dp">
+
+			<TextView
+				android:id="@+id/admob_config_2_headline_text"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				style="@style/MainTableText"
+				android:textStyle="bold"
+				android:paddingBottom="5dp"
+				android:text="Choose your app" />
+
+			<TextView
+				android:id="@+id/admob_config_2_headline_subtext"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				style="@style/MainTableText"
+				android:paddingBottom="5dp"
+				android:layout_below="@+id/admob_config_2_headline_text"
+				android:text="select AdMob site to assoicate with this app" />
+
+
+			<View
+				android:layout_below="@+id/admob_config_2_headline_subtext"
+				android:id="@+id/admob_config_2_buttonbarSpacer"
+				android:layout_width="fill_parent"
+				android:layout_height="2dp"
+				android:background="#dadada"
+				android:paddingLeft="5dp"
+				android:paddingRight="5dp"
+				android:layout_marginTop="10dp"
+				android:layout_marginBottom="10dp" />
+
+
+			<LinearLayout
+				android:layout_below="@+id/admob_config_2_buttonbarSpacer"
+				android:id="@+id/admob_sitelist"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:layout_marginBottom="20dp">
+	
+				<TextView
+					style="@style/MainTableText"
+					android:id="@+id/main_autosync_text"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					android:text="Loading site list..." />
+					
+				
+			</LinearLayout>
+
+
+		</RelativeLayout>
+
+	</ScrollView>
+	<RelativeLayout
+		android:layout_height="wrap_content"
+		android:id="@+id/admob_config_2_done_button"
+		android:background="@drawable/button_background"
+		android:layout_width="wrap_content"
+		android:layout_alignParentRight="true"
+		android:padding="10dp"
+		android:layout_marginTop="10dp"
+		android:layout_marginRight="5dp"
+		android:visibility="gone">
+
+		<LinearLayout
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:visibility="visible"
+			android:paddingLeft="20dp"
+			android:paddingRight="20dp"
+			android:paddingBottom="2dp"
+			android:paddingTop="2dp">
+
+			<TextView
+				style="@style/MainTableText"
+				android:id="@+id/main_autosync_text"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:text="close" />
+		</LinearLayout>
+	</RelativeLayout>
+</RelativeLayout>

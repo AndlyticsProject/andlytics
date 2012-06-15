@@ -1,0 +1,158 @@
+
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_alignParentBottom="true"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:id="@+id/tabbar_buttonbar"
+	android:orientation="horizontal"
+	android:background="#b4d17a">
+
+
+
+	<RelativeLayout
+		android:id="@+id/tabbar_button_comments"
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:layout_weight="1"
+		android:padding="2dp"
+		android:background="@drawable/tabbar_button">
+
+		<LinearLayout
+			android:layout_centerVertical="true"
+			android:layout_centerHorizontal="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:orientation="horizontal">
+
+			<ImageView
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:src="@drawable/icon_comments"
+				android:layout_gravity="center_horizontal" />
+
+			<TextView
+				android:textStyle="bold"
+				style="@style/MainTableText"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="#fff"
+				android:textSize="12dp"
+				android:text="comments" android:layout_gravity="center" android:layout_marginLeft="2dp"/>
+		</LinearLayout>
+
+	</RelativeLayout>	
+	
+
+
+	<View
+		android:layout_height="fill_parent"
+		android:layout_width="1dp"
+		android:background="#fff" />
+
+	
+
+			
+	<RelativeLayout
+		android:id="@+id/tabbar_button_ratings"
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:layout_weight="1"
+		android:padding="2dp"
+		android:background="@drawable/tabbar_button">
+
+		<LinearLayout
+			android:layout_centerVertical="true"
+			android:layout_centerHorizontal="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:orientation="horizontal">
+
+			<ImageView
+				android:layout_height="wrap_content"
+				android:src="@drawable/icon_star"
+				android:layout_width="wrap_content"
+				android:layout_gravity="center_horizontal" />
+
+			<TextView
+				android:textStyle="bold"
+				style="@style/MainTableText"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="#fff"
+				android:textSize="12dp" android:layout_gravity="center" android:layout_marginLeft="2dp" android:text="ratings"/>
+		</LinearLayout>
+
+	</RelativeLayout>	
+
+	<View
+		android:layout_height="fill_parent"
+		android:layout_width="1dp"
+		android:background="#fff" />
+
+	<RelativeLayout
+		android:id="@+id/tabbar_button_downloads"
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:layout_weight="1"
+		android:padding="2dp"
+		android:background="@drawable/tabbar_button">
+
+		<LinearLayout
+			android:layout_centerVertical="true"
+			android:layout_centerHorizontal="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:orientation="horizontal">
+
+			<ImageView
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_gravity="center_horizontal" android:src="@drawable/icon_downloads"/>
+
+			<TextView
+				android:textStyle="bold"
+				style="@style/MainTableText"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="#fff"
+				android:textSize="12dp" android:layout_gravity="center" android:layout_marginLeft="2dp" android:text="downloads"/>
+		</LinearLayout>
+
+	</RelativeLayout>
+	
+	<View
+		android:layout_height="fill_parent"
+		android:layout_width="1dp"
+		android:background="#fff" />
+
+
+	<RelativeLayout
+		android:id="@+id/tabbar_button_back"
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:layout_weight="1"
+		android:padding="2dp"
+		android:background="@drawable/tabbar_button">
+
+		<LinearLayout
+			android:layout_centerVertical="true"
+			android:layout_centerHorizontal="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:orientation="horizontal">
+
+			<ImageView
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_gravity="center_horizontal" android:src="@drawable/icon_admob"/>
+
+			<TextView
+				android:textStyle="bold"
+				style="@style/MainTableText"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="#fff"
+				android:text="admob"
+				android:textSize="12dp" android:layout_gravity="center" android:layout_marginLeft="2dp"/>
+		</LinearLayout>
+
+	</RelativeLayout>
+
+</LinearLayout>

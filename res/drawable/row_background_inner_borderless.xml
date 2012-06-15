@@ -1,0 +1,35 @@
+
+
+<selector
+	xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+	<item
+		android:state_pressed="true">
+		<layer-list
+			xmlns:android="http://schemas.android.com/apk/res/android">
+			<item
+				android:top="0dp"
+				android:bottom="0dp"
+				android:right="12dp"
+				android:left="12dp"
+				android:drawable="@drawable/row_selected_borderless" />
+		</layer-list>
+
+	</item>
+
+
+	<item>
+		<layer-list
+			xmlns:android="http://schemas.android.com/apk/res/android">
+			<item
+				android:top="0dp"
+				android:bottom="0dp"
+				android:right="12dp"
+				android:left="12dp"
+				android:drawable="@drawable/row_normal_borderless" />
+		</layer-list>
+	</item>
+
+
+</selector>

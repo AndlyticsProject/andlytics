@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+	<RelativeLayout
+		android:id="@+id/chart_header_frame"
+		android:layout_width="fill_parent"
+		android:layout_height="45dp">
+
+
+		<RelativeLayout
+			android:layout_centerInParent="true"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:background="#fff">
+
+
+
+			<de.betaapps.andlytics.chart.ChartTextSwitcher
+				android:layout_height="wrap_content"
+				android:id="@+id/chart_chart_type"
+				android:layout_centerInParent="true"
+				android:layout_width="fill_parent"
+				android:paddingTop="5dp">
+			</de.betaapps.andlytics.chart.ChartTextSwitcher>
+
+			<RelativeLayout
+				android:id="@+id/chart_button_back"
+				android:layout_width="wrap_content"
+				android:layout_height="fill_parent"
+				android:background="@drawable/toolbar_button_background"
+				android:minWidth="45dp">
+				<ImageView
+					android:layout_width="32dp"
+					android:layout_height="32dp"
+					android:id="@+id/chart_app_icon"
+					android:src="@drawable/default_app_icon"
+					android:layout_centerInParent="true" />
+			</RelativeLayout>
+
+			<View
+				android:layout_height="fill_parent"
+				android:layout_width="1dp"
+				android:background="#dadada"
+				android:layout_toRightOf="@+id/chart_button_back"></View>
+
+			<View
+				android:layout_height="fill_parent"
+				android:layout_toLeftOf="@+id/chart_button_config"
+				android:layout_width="1dp"
+				android:background="#dadada"></View>
+			<RelativeLayout
+				android:id="@+id/chart_button_config"
+				android:layout_width="wrap_content"
+				android:layout_alignParentRight="true"
+				android:layout_centerVertical="true"
+				android:layout_height="fill_parent"
+				android:background="@drawable/toolbar_button_background"
+				android:minWidth="45dp">
+
+				<ImageView
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:layout_centerInParent="true"
+					android:src="@drawable/icon_settings"></ImageView>
+
+			</RelativeLayout>
+
+
+		</RelativeLayout>
+
+	</RelativeLayout>
+	<View
+		android:id="@+id/chart_header_frame_spacer"
+		android:layout_width="fill_parent"
+		android:layout_height="2dp"
+		android:background="#84b325"
+		android:layout_below="@+id/chart_header_frame" />
+
+
+
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_below="@+id/chart_header_frame_spacer"
+		android:layout_height="fill_parent"
+		android:layout_above="@+id/chart_buttonbarSpacer">
+		<!-- <ViewSwitcher android:id="@+id/chart_chart_frame" android:layout_width="fill_parent" android:layout_height="fill_parent" 
+			android:layout_marginLeft="5dp" android:layout_marginRight="5dp" android:layout_weight="0.5" ></ViewSwitcher> -->
+
+		<RelativeLayout
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:layout_weight="0.5">
+			<de.betaapps.andlytics.view.ChartGallery
+				xmlns:android="http://schemas.android.com/apk/res/android"
+				android:id="@+id/chart_gallery"
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent"
+				android:clipChildren="true"
+				android:clipToPadding="true"
+				android:unselectedAlpha="1"
+				android:spacing="0dp"
+				android:focusableInTouchMode="true"
+				android:longClickable="true"
+				android:clickable="true"
+				android:isScrollContainer="true"
+				android:focusable="true"
+				android:fadeScrollbars="false"
+				android:fadingEdge="none" />
+		</RelativeLayout>
+		<RelativeLayout
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:layout_weight="0.5">
+
+			<LinearLayout
+				android:id="@+id/chart_bottom_frame"
+				android:orientation="vertical"
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+				<RelativeLayout
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent"
+					android:visibility="gone">
+					<include
+						android:id="@+id/chart_config"
+						layout="@layout/chart_config" />
+
+				</RelativeLayout>
+				<RelativeLayout
+					android:id="@+id/chart_list_frame"
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent">
+
+					<ListView
+						android:layout_width="fill_parent"
+						android:layout_height="fill_parent"
+						android:id="@+id/chart_list"
+						android:cacheColorHint="#00000000"
+						android:paddingLeft="5dp"
+						android:paddingRight="5dp"
+						android:divider="#dadada"
+						android:dividerHeight="1dp"
+						android:paddingTop="5dp"
+						android:background="#eeeeee" />
+
+					<ScrollView
+						android:layout_width="fill_parent"
+						android:layout_height="wrap_content"
+						android:paddingTop="35dp"
+						android:id="@+id/chart_one_entry_hint"
+						android:visibility="invisible">
+						<LinearLayout
+							android:orientation="vertical"
+							android:layout_width="fill_parent"
+							android:layout_height="wrap_content">
+
+							<TextView
+								style="@style/MainTableText"
+								android:text="@string/one_entry_hint_desc"
+								android:layout_height="wrap_content"
+								android:visibility="visible"
+								android:layout_width="wrap_content"
+								android:paddingLeft="5dp"
+								android:paddingRight="5dp"
+								android:gravity="center" />
+
+
+							<TextView
+								style="@style/MainTableText"
+								android:text="@string/one_entry_hint_demo"
+								android:id="@+id/chart_one_entry_link"
+								android:paddingLeft="5dp"
+								android:paddingRight="5dp"
+								android:layout_height="wrap_content"
+								android:layout_width="fill_parent"
+								android:gravity="center"
+								android:visibility="invisible"
+								android:paddingTop="5dp"
+								android:paddingBottom="20dp" />
+
+						</LinearLayout>
+					</ScrollView>
+				</RelativeLayout>
+			</LinearLayout>
+			<View
+				android:id="@+id/chart_listSpacer"
+				android:layout_width="fill_parent"
+				android:layout_height="2dp"
+				android:background="#84b325" />
+
+		</RelativeLayout>
+
+
+	</LinearLayout>
+
+	<TextView
+		style="@style/MainTableText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/chart_timeframe"
+		android:visibility="visible"
+		android:textSize="14dp"
+		android:layout_centerHorizontal="true"
+		android:layout_below="@+id/chart_header_frame_spacer"
+		android:layout_marginTop="5dp"
+		android:text="" />
+
+
+
+	<RelativeLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/chart_app_status_line_frame"
+		android:orientation="horizontal"
+		android:layout_above="@+id/chart_buttonbarSpacer">
+
+		<TextView
+			style="@style/MainTableText"
+			android:id="@+id/chart_status_line"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingLeft="10dp"
+			android:text=""
+			android:layout_centerVertical="true" />
+
+		<ProgressBar
+			android:id="@+id/chart_status_line_progress"
+			style="?android:attr/android:progressBarStyleSmall"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:padding="2dp"
+			android:layout_marginRight="5dp"
+			android:indeterminateOnly="true"
+			android:indeterminateDrawable="@drawable/progress"
+			android:visibility="invisible"></ProgressBar>
+
+
+	</RelativeLayout>
+
+	<View
+		android:id="@+id/chart_buttonbarSpacer"
+		android:layout_width="fill_parent"
+		android:layout_height="2dp"
+		android:layout_above="@+id/tabbar_buttonbar"
+		android:background="#84b325" />
+
+	<include
+		android:id="@+id/tabbar_buttonbar"
+		layout="@layout/tabbar" />
+
+
+	<ImageView
+		android:layout_height="wrap_content"
+		android:src="@drawable/shadow_down"
+		android:layout_width="fill_parent"
+		android:scaleType="fitXY"></ImageView>
+
+
+
+	<ImageView
+		android:layout_height="wrap_content"
+		android:src="@drawable/shadow_down"
+		android:layout_width="fill_parent"
+		android:scaleType="fitXY"
+		android:layout_below="@+id/chart_header_frame_spacer" />
+
+	<ImageView
+		android:layout_height="wrap_content"
+		android:src="@drawable/shadow_up"
+		android:layout_width="fill_parent"
+		android:scaleType="fitXY"
+		android:layout_above="@+id/chart_buttonbarSpacer" />
+
+</RelativeLayout>

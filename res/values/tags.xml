@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <item
+        type="id"
+        name="tag_mainlist_image_reference" />
+    <item
+        type="id"
+        name="tag_mainlist_expanded" />
+    <item
+        type="id"
+        name="tag_mainlist_rowid" />
+        
+</resources>
