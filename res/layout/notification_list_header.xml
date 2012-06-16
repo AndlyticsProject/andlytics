@@ -5,27 +5,28 @@
 	android:layout_width="fill_parent"
 	android:orientation="vertical">
 
+	<TextView
+	    android:id="@+id/notification_dialog_change_title"
+	    style="@style/MainTableText"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:paddingBottom="5dp"
+	    android:paddingTop="15dp"
+	    android:text="@string/notification_trigger"
+	    android:textStyle="bold" >
+</TextView>
 
 	<TextView
-		style="@style/MainTableText"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:paddingBottom="5dp"
-		android:textStyle="bold"
-		android:paddingTop="15dp"
-		android:layout_gravity="center"
-		android:id="@+id/notification_dialog_change_title"
-		android:text="Notification trigger"></TextView>
-
-	<TextView
-		style="@style/MainTableText"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:paddingBottom="5dp"
-		android:paddingTop="5dp"
-		android:layout_gravity="center"
-		android:id="@+id/notification_dialog_change_title"
-		android:text="Deselect all to disable notifications"></TextView>
+	    android:id="@+id/notification_dialog_change_title"
+	    style="@style/MainTableText"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:paddingBottom="5dp"
+	    android:paddingTop="5dp"
+	    android:text="@string/disable_notifications" >
+</TextView>
 
 	<RelativeLayout
 		android:layout_width="fill_parent"
@@ -63,15 +64,17 @@
 				android:padding="4dp"></ImageView>
 
 		</RelativeLayout>
+
 		<TextView
-			style="@style/MainTableText"
-			android:layout_toRightOf="@+id/notification_rating_change_icon"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerVertical="true"
-			android:paddingLeft="5dp"
-			android:id="@+id/notification_rating_change_text"
-			android:text="rating changes" />
+		    android:id="@+id/notification_rating_change_text"
+		    style="@style/MainTableText"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerVertical="true"
+		    android:layout_toRightOf="@+id/notification_rating_change_icon"
+		    android:paddingLeft="5dp"
+		    android:text="@string/rating_changes" />
+
 	</RelativeLayout>
 
 	<RelativeLayout
@@ -112,14 +115,15 @@
 		</RelativeLayout>
 
 		<TextView
-			style="@style/MainTableText"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerVertical="true"
-			android:paddingLeft="5dp"
-			android:layout_toRightOf="@+id/notification_comments_change_icon"
-			android:id="@+id/notification_comments_change_text"
-			android:text="comment changes" />
+		    android:id="@+id/notification_comments_change_text"
+		    style="@style/MainTableText"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerVertical="true"
+		    android:layout_toRightOf="@+id/notification_comments_change_icon"
+		    android:paddingLeft="5dp"
+		    android:text="@string/comment_changes" />
+
 	</RelativeLayout>
 
 	<RelativeLayout
@@ -155,15 +159,17 @@
 				android:padding="4dp" android:src="@drawable/icon_downloads"></ImageView>
 
 		</RelativeLayout>
+
 		<TextView
-			style="@style/MainTableText"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerVertical="true"
-			android:paddingLeft="5dp"
-			android:layout_toRightOf="@+id/notification_downloads_change_icon"
-			android:id="@+id/notification_downloads_change_text"
-			android:text="download changes" />
+		    android:id="@+id/notification_downloads_change_text"
+		    style="@style/MainTableText"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerVertical="true"
+		    android:layout_toRightOf="@+id/notification_downloads_change_icon"
+		    android:paddingLeft="5dp"
+		    android:text="@string/download_changes" />
+
 	</RelativeLayout>
 	<View
 		android:layout_width="fill_parent"
@@ -172,17 +178,17 @@
 		android:background="#84b325"
 		android:layout_marginTop="10dp" />
 
-
 	<TextView
-		style="@style/MainTableText"
-		android:id="@+id/notification_dialog_sound_title"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:paddingBottom="5dp"
-		android:textStyle="bold"
-		android:paddingTop="15dp"
-		android:layout_gravity="center"
-		android:text="Notification signal"></TextView>
+	    android:id="@+id/notification_dialog_sound_title"
+	    style="@style/MainTableText"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:paddingBottom="5dp"
+	    android:paddingTop="15dp"
+	    android:text="@string/notification_signal"
+	    android:textStyle="bold" >
+</TextView>
 
 
 	<RelativeLayout
@@ -218,15 +224,17 @@
 				android:padding="4dp" android:src="@drawable/icon_sound"></ImageView>
 
 		</RelativeLayout>
+
 		<TextView
-			android:layout_toRightOf="@+id/notification_sound_icon"
-			style="@style/MainTableText"
-			android:id="@+id/notification_sound_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerVertical="true"
-			android:paddingLeft="5dp"
-			android:text="notification sound" />
+		    android:id="@+id/notification_sound_text"
+		    style="@style/MainTableText"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerVertical="true"
+		    android:layout_toRightOf="@+id/notification_sound_icon"
+		    android:paddingLeft="5dp"
+		    android:text="@string/notification_sound" />
+
 	</RelativeLayout>
 
 	<RelativeLayout
@@ -262,15 +270,17 @@
 				android:padding="4dp" android:src="@drawable/icon_led"></ImageView>
 
 		</RelativeLayout>
+
 		<TextView
-			android:layout_toRightOf="@+id/notification_led_icon"
-			style="@style/MainTableText"
-			android:id="@+id/notification_led_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerVertical="true"
-			android:paddingLeft="5dp"
-			android:text="notification light" />
+		    android:id="@+id/notification_led_text"
+		    style="@style/MainTableText"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerVertical="true"
+		    android:layout_toRightOf="@+id/notification_led_icon"
+		    android:paddingLeft="5dp"
+		    android:text="@string/notification_light" />
+
 	</RelativeLayout>
 
 	<View
@@ -280,20 +290,19 @@
 		android:layout_marginTop="10dp"
 		android:id="@+id/notification_dialog_spacer3" />
 
-
-
 	<TextView
-		style="@style/MainTableText"
-		android:id="@+id/notification_dialog_applist_headline"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_margin="5dp"
-		android:paddingLeft="10dp"
-		android:paddingRight="10dp"
-		android:gravity="center"
-		android:paddingBottom="5dp"
-		android:textStyle="bold"
-		android:paddingTop="15dp"
-		android:text="Apps for change notification"
-		android:layout_gravity="center"></TextView>
+	    android:id="@+id/notification_dialog_applist_headline"
+	    style="@style/MainTableText"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:layout_margin="5dp"
+	    android:gravity="center"
+	    android:paddingBottom="5dp"
+	    android:paddingLeft="10dp"
+	    android:paddingRight="10dp"
+	    android:paddingTop="15dp"
+	    android:text="@string/apss_notification"
+	    android:textStyle="bold" >
+</TextView>
 </LinearLayout>

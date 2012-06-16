@@ -31,13 +31,16 @@
 				android:layout_gravity="center_horizontal" />
 
 			<TextView
-				android:textStyle="bold"
-				style="@style/MainTableText"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textColor="#fff"
-				android:textSize="12dp"
-				android:text="comments" android:layout_gravity="center" android:layout_marginLeft="2dp"/>
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_gravity="center"
+			    android:layout_marginLeft="2dp"
+			    android:text="@string/comments"
+			    android:textColor="#fff"
+			    android:textSize="12dp"
+			    android:textStyle="bold" />
+
 		</LinearLayout>
 
 	</RelativeLayout>	
@@ -73,12 +76,16 @@
 				android:layout_gravity="center_horizontal" />
 
 			<TextView
-				android:textStyle="bold"
-				style="@style/MainTableText"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textColor="#fff"
-				android:textSize="12dp" android:layout_gravity="center" android:layout_marginLeft="2dp" android:text="ratings"/>
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_gravity="center"
+			    android:layout_marginLeft="2dp"
+			    android:text="@string/ratings"
+			    android:textColor="#fff"
+			    android:textSize="12dp"
+			    android:textStyle="bold" />
+
 		</LinearLayout>
 
 	</RelativeLayout>	
@@ -108,12 +115,16 @@
 				android:layout_gravity="center_horizontal" android:src="@drawable/icon_downloads"/>
 
 			<TextView
-				android:textStyle="bold"
-				style="@style/MainTableText"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textColor="#fff"
-				android:textSize="12dp" android:layout_gravity="center" android:layout_marginLeft="2dp" android:text="downloads"/>
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_gravity="center"
+			    android:layout_marginLeft="2dp"
+			    android:text="@string/downloads"
+			    android:textColor="#fff"
+			    android:textSize="12dp"
+			    android:textStyle="bold" />
+
 		</LinearLayout>
 
 	</RelativeLayout>

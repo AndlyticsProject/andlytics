@@ -55,17 +55,18 @@
 				android:layout_centerVertical="true"
 				android:paddingTop="5dp" android:text="andlytics" android:textStyle="bold"/>
 
-
 			<TextView
-				android:layout_width="wrap_content"
-				android:textColor="#ff0000"
-				android:layout_height="wrap_content"
-				android:text="beta"
-				android:layout_toRightOf="@+id/main_headline"
-				android:id="@+id/main_headline_beta"
-				android:layout_alignBaseline="@+id/main_headline"
-				android:paddingLeft="5dp"
-				android:textSize="10dp" android:textStyle="bold"/>
+			    android:id="@+id/main_headline_beta"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_alignBaseline="@+id/main_headline"
+			    android:layout_toRightOf="@+id/main_headline"
+			    android:paddingLeft="5dp"
+			    android:text="open"
+			    android:textColor="#ff0000"
+			    android:textSize="10dp"
+			    android:textStyle="bold" />
+
 		</RelativeLayout>
 
 
@@ -159,13 +160,14 @@
 					android:paddingRight="5dp"></ImageView>
 
 				<TextView
-					android:textStyle="bold"
-					style="@style/MainTableText"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textColor="#fff"
-					android:text="logout"
-					android:layout_gravity="center" />
+				    style="@style/MainTableText"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center"
+				    android:text="@string/logout"
+				    android:textColor="#fff"
+				    android:textStyle="bold" />
+
 			</LinearLayout>
 
 		</RelativeLayout>
@@ -195,14 +197,15 @@
 					android:layout_width="wrap_content"></ImageView>
 
 				<TextView
-					android:id="@+id/main_button_statsmode_text"
-					android:textStyle="bold"
-					style="@style/MainTableText"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textColor="#fff"
-					android:text="refresh"
-					android:layout_gravity="center" />
+				    android:id="@+id/main_button_statsmode_text"
+				    style="@style/MainTableText"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center"
+				    android:text="@string/refresh"
+				    android:textColor="#fff"
+				    android:textStyle="bold" />
+
 			</LinearLayout>
 
 		</RelativeLayout>

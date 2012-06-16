@@ -355,25 +355,25 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
             switch ((DownloadChartType) currentChart) {
             
             case TOTAL_DOWNLAODS:
-                titleTextSwitcher.setText("total downloads",null);
+                titleTextSwitcher.setText(this.getString(R.string.total_downloads),null);
                 if(overallStats != null)
                     subHeadlineText = overallStats.getTotalDownloads() + "";
                 
                 break;
                 
             case TOTAL_DOWNLAODS_BY_DAY:
-                titleTextSwitcher.setText("downloads by day",null);
+                titleTextSwitcher.setText(this.getString(R.string.downloads_day),null);
                 subHeadlineText = overallStats.getDailyDownloads() + "";
                 break;
                 
             case ACTIVE_INSTALLS_PERCENT:
-                titleTextSwitcher.setText("active installs in percent",null);
+                titleTextSwitcher.setText(this.getString(R.string.active_installs_percent),null);
                 subHeadlineText = overallStats.getActiveInstallsPercentString() + "%";
                 break;
                 
             case ACTIVE_INSTALLS_TOTAL:
                 Preferences.saveShowChartHint(ChartActivity.this, false);
-                titleTextSwitcher.setText("active installs",null);
+                titleTextSwitcher.setText(this.getString(R.string.active_installs),null);
                 subHeadlineText = overallStats.getActiveInstalls() + "";
                 break;
                 
@@ -385,29 +385,29 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
             switch ((RatingChartType) currentChart) {
             
             case AVG_RATING:
-                titleTextSwitcher.setText("average rating",null);
+                titleTextSwitcher.setText(this.getString(R.string.average_rating),null);
                 subHeadlineText = overallStats.getAvgRatingString() + "";
                 break;
                 
             case RATINGS_1:
-                titleTextSwitcher.setText("ratings", getResources().getDrawable(R.drawable.rating_1));
+                titleTextSwitcher.setText(this.getString(R.string.ratings), getResources().getDrawable(R.drawable.rating_1));
                 subHeadlineText = overallStats.getRating1() + "";
                 break;
             case RATINGS_2:
-                titleTextSwitcher.setText("ratings", getResources().getDrawable(R.drawable.rating_2));
+                titleTextSwitcher.setText(this.getString(R.string.ratings), getResources().getDrawable(R.drawable.rating_2));
                 subHeadlineText = overallStats.getRating2() + "";
                 break;
             case RATINGS_3:
-                titleTextSwitcher.setText("ratings", getResources().getDrawable(R.drawable.rating_3));
+                titleTextSwitcher.setText(this.getString(R.string.ratings), getResources().getDrawable(R.drawable.rating_3));
                 subHeadlineText = overallStats.getRating3() + "";
                 break;
             case RATINGS_4:
-                titleTextSwitcher.setText("ratings", getResources().getDrawable(R.drawable.rating_4));
+                titleTextSwitcher.setText(this.getString(R.string.ratings), getResources().getDrawable(R.drawable.rating_4));
                 subHeadlineText = overallStats.getRating4() + "";
                 break;
             case RATINGS_5:
                 Preferences.saveShowChartHint(ChartActivity.this, false);
-                titleTextSwitcher.setText("ratings", getResources().getDrawable(R.drawable.rating_5));
+                titleTextSwitcher.setText(this.getString(R.string.ratings), getResources().getDrawable(R.drawable.rating_5));
                 subHeadlineText = overallStats.getRating5() + "";
                 break;
                 
@@ -420,7 +420,7 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
         }        
 	    
 	    if(Preferences.getShowChartHint(ChartActivity.this)) {
-            timeframeText.setText(Html.fromHtml("swipe to see next chart ->"));
+            timeframeText.setText(Html.fromHtml(this.getString(R.string.swipe)));
 	    } else {
 	        if(timetext != null) {
 	            timeframeText.setText(Html.fromHtml(timetext + ": <b>" + subHeadlineText + "</b>"));

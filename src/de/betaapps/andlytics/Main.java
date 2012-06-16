@@ -730,12 +730,12 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
     private void updateStatsMode() {
         switch (currentStatsMode) {
         case PERCENT:
-            statsModeText.setText("daily changes");
+            statsModeText.setText(this.getString(R.string.daily));
             statsModeIcon.setImageDrawable(getResources().getDrawable(R.drawable.icon_plusminus));
             break;
 
         case DAY_CHANGES:
-            statsModeText.setText("percentage");
+            statsModeText.setText(this.getString(R.string.percentage));
             statsModeIcon.setImageDrawable(getResources().getDrawable(R.drawable.icon_percent));
             break;
 
@@ -819,17 +819,17 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
         case FEEDBACK_DIALOG:
             
             FeedbackDialog.FeedbackDialogBuilder builder = new FeedbackDialogBuilder(Main.this);
-            builder.setTitle("Feedback");
+            builder.setTitle(this.getString(R.string.feedback));
 
-            builder.setMessage("Please help us to improve this app by providing feedback. \n\nThank you!");
-            builder.setPositiveButton("send", new DialogInterface.OnClickListener() {
+            builder.setMessage(this.getString(R.string.help_us));
+            builder.setPositiveButton(this.getString(R.string.send), new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                 }
 
             });
-            builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(this.getString(R.string.cancel), new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();

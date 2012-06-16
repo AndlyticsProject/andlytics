@@ -36,7 +36,9 @@ public class AndlyticsApp extends Application {
 
 	public static boolean isProVersion(Context context) {
 
-		if (!proVersion) {
+		return true;
+		
+		/*if (!proVersion) {
 
 			Uri allTitles = Uri.parse(CONTENT_URI);
 			
@@ -51,8 +53,7 @@ public class AndlyticsApp extends Application {
 			
 		}
 
-		return proVersion;
-
+		return proVersion;*/
 	}
 
 	@Override

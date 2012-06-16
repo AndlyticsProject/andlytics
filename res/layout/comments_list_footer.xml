@@ -20,15 +20,15 @@
 			android:paddingTop="5dp">
 
 			<TextView
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:text="load more comments"
-				android:paddingRight="5dp"
-				android:paddingLeft="10dp"
-				android:id="@+id/comments_footer_loadmore"
-				android:gravity="center"
-				android:layout_centerInParent="true"
-				android:layout_width="wrap_content" />
+			    android:id="@+id/comments_footer_loadmore"
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_centerInParent="true"
+			    android:gravity="center"
+			    android:paddingLeft="10dp"
+			    android:paddingRight="5dp"
+			    android:text="@string/load_more_comments" />
 
 		</RelativeLayout>
 
@@ -37,11 +37,15 @@
 	</RelativeLayout>
 	
 	<TextView
-		style="@style/MainTableText"
-		android:layout_height="wrap_content"
-		android:paddingLeft="10dp"
-		android:id="@+id/comments_footer_loadmore"
-		android:gravity="center" android:layout_width="fill_parent" android:paddingTop="10dp" android:paddingRight="10dp" android:paddingBottom="10dp" android:text="The number of comments reported on the main screen may be higher than the number of comments shown here because of withdrawn / changed comments."/>
-
+	    android:id="@+id/comments_footer_loadmore"
+	    style="@style/MainTableText"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center"
+	    android:paddingBottom="10dp"
+	    android:paddingLeft="10dp"
+	    android:paddingRight="10dp"
+	    android:paddingTop="10dp"
+	    android:text="@string/info_comments" />
 
 </LinearLayout>

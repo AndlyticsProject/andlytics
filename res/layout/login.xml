@@ -25,17 +25,18 @@
 				android:paddingTop="5dp"
 				android:layout_centerVertical="true" android:textStyle="bold" android:text="andlytics"/>
 
-
 			<TextView
-				android:layout_width="wrap_content"
-				android:textColor="#ff0000"
-				android:layout_height="wrap_content"
-				android:text="beta"
-				android:id="@+id/login_headline_beta"
-				android:paddingLeft="5dp"
-				android:textSize="10dp"
-				android:layout_alignBaseline="@+id/login_headline"
-				android:layout_toRightOf="@+id/login_headline" android:textStyle="bold"/>
+			    android:id="@+id/login_headline_beta"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_alignBaseline="@+id/login_headline"
+			    android:layout_toRightOf="@+id/login_headline"
+			    android:paddingLeft="5dp"
+			    android:text="open"
+			    android:textColor="#ff0000"
+			    android:textSize="10dp"
+			    android:textStyle="bold" />
+
 		</RelativeLayout>
 
 	</RelativeLayout>
@@ -64,26 +65,27 @@
 			android:paddingBottom="80dp">
 
 			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="android developer account required"
-				style="@style/MainTableText"
-				android:paddingLeft="5dp"
-				android:paddingRight="5dp"
-				android:layout_marginLeft="5dp"
-				android:layout_marginRight="5dp"
-				android:textStyle="bold"
-				android:layout_marginTop="10dp" />
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_marginLeft="5dp"
+			    android:layout_marginRight="5dp"
+			    android:layout_marginTop="10dp"
+			    android:paddingLeft="5dp"
+			    android:paddingRight="5dp"
+			    android:text="@string/account_required"
+			    android:textStyle="bold" />
 
 			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				style="@style/MainTableText"
-				android:paddingLeft="5dp"
-				android:paddingRight="5dp"
-				android:layout_marginLeft="5dp"
-				android:layout_marginRight="5dp"
-				android:layout_marginTop="5dp" android:text="Please choose or add a Google account. The account must be a registered developer account with apps published in the Android Market ('Google Apps for Business' accounts are not supported yet)."/>
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_marginLeft="5dp"
+			    android:layout_marginRight="5dp"
+			    android:layout_marginTop="5dp"
+			    android:paddingLeft="5dp"
+			    android:paddingRight="5dp"
+			    android:text="@string/account_choose" />
 
 			<View
 				android:id="@+id/main_app_buttonbarSpacer"
@@ -150,13 +152,14 @@
 					android:paddingRight="5dp"></ImageView>
 
 				<TextView
-					android:textStyle="bold"
-					style="@style/MainTableText"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textColor="#fff"
-					android:layout_gravity="center"
-					android:text="add android developer account" />
+				    style="@style/MainTableText"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center"
+				    android:text="@string/account_add"
+				    android:textColor="#fff"
+				    android:textStyle="bold" />
+
 			</LinearLayout>
 
 		</RelativeLayout>

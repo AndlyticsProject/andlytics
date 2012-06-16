@@ -30,7 +30,7 @@ public class AutosyncDialog extends Dialog implements OnClickListener {
 
 	private Activity context;
 
-	private String[] periodTexts = {"disabled", "15 minutes", "30 minutes", "1 hour", "2 hours", "3 hours", "6 hours", "12 hours", "24 hours"};
+	private String[] periodTexts;
 
 	private Integer[] periodValues = {0, 60 * 15, 60 * 30, 60 * 60, 60 * 60 * 2, 60 * 60 * 3, 60 * 60 * 6, 60 * 60 * 12, 60 * 60 * 24};
 
@@ -59,6 +59,8 @@ public class AutosyncDialog extends Dialog implements OnClickListener {
         layoutInflater = context.getLayoutInflater();
         
         setContentView(R.layout.autosync_dialog);
+        
+        periodTexts = context.getResources().getStringArray(R.array.autosync_periods);
         
         View closeButton = (View) this.findViewById(R.id.notification_dialog_close_button);
         closeButton.setOnClickListener(new View.OnClickListener() {

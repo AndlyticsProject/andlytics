@@ -5,20 +5,20 @@
 	android:layout_width="fill_parent"
 	android:orientation="vertical">
 
-
 	<TextView
-		style="@style/MainTableText"
-		android:id="@+id/notification_dialog_title"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:paddingLeft="10dp"
-		android:paddingRight="10dp"
-		android:gravity="center"
-		android:textStyle="bold"
-		android:layout_gravity="center"
-		android:text="Auto synchronization period"
-		android:layout_marginBottom="5dp"
-		android:paddingTop="15dp"></TextView>
+	    android:id="@+id/notification_dialog_title"
+	    style="@style/MainTableText"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:layout_marginBottom="5dp"
+	    android:gravity="center"
+	    android:paddingLeft="10dp"
+	    android:paddingRight="10dp"
+	    android:paddingTop="15dp"
+	    android:text="@string/auto_sync_period"
+	    android:textStyle="bold" >
+</TextView>
 
 	<RelativeLayout
 		android:layout_height="wrap_content"
@@ -88,17 +88,19 @@
 		</RelativeLayout>
 
 	</RelativeLayout>
+
 	<TextView
-		android:gravity="center"
-		android:background="#f00"
-		android:paddingBottom="2dp"
-		android:layout_width="fill_parent"
-		android:paddingRight="10dp"
-		style="@style/MainTableText"
-		android:paddingLeft="10dp"
-		android:textColor="#fff"
-		android:layout_gravity="center"
-		android:id="@+id/notification_dialog_warning"
-		android:text="If auto synchronization is disabled graph views will probably miss future values "
-		android:layout_height="wrap_content"></TextView>
+	    android:id="@+id/notification_dialog_warning"
+	    style="@style/MainTableText"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:background="#f00"
+	    android:gravity="center"
+	    android:paddingBottom="2dp"
+	    android:paddingLeft="10dp"
+	    android:paddingRight="10dp"
+	    android:text="@string/info_autosync"
+	    android:textColor="#fff" >
+</TextView>
 </LinearLayout>
