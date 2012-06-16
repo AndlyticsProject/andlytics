@@ -277,16 +277,18 @@
 				android:gravity="right"
 				android:paddingBottom="2dp"
 				android:paddingTop="2dp"></TextView>
+
 			<TextView
-				android:id="@+id/main_app_commentscountText"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_toRightOf="@+id/main_app_commentscount"
-				android:layout_alignBaseline="@+id/main_app_commentscount"
-				android:paddingRight="5dp"
-				android:text="comments"
-				android:minWidth="110dp" />
+			    android:id="@+id/main_app_commentscountText"
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_alignBaseline="@+id/main_app_commentscount"
+			    android:layout_toRightOf="@+id/main_app_commentscount"
+			    android:minWidth="110dp"
+			    android:paddingRight="5dp"
+			    android:text="@string/comments" />
+
 			<TextView
 				android:id="@+id/main_app_commentscountPercent"
 				style="@style/MainTableText"
@@ -338,14 +340,16 @@
 				android:paddingLeft="10dp"
 				android:minWidth="70dp" 
 				android:paddingTop="3dp" />
+
 			<TextView
-				android:id="@+id/main_app_downloadsText"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_toRightOf="@+id/main_app_downloads"
-				android:layout_width="wrap_content"
-				android:text="total downloads"
-				android:layout_alignBaseline="@+id/main_app_downloads" />
+			    android:id="@+id/main_app_downloadsText"
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_alignBaseline="@+id/main_app_downloads"
+			    android:layout_toRightOf="@+id/main_app_downloads"
+			    android:text="@string/total_downloads" />
+
 			<TextView
 				android:id="@+id/main_app_downloadsPercent"
 				style="@style/MainTableText"
@@ -366,16 +370,18 @@
 				android:paddingRight="5dp" 
 				android:layout_below="@+id/main_app_downloads"
 				android:paddingBottom="3dp" />
+
 			<TextView
-				android:id="@+id/main_app_activeinstallsText"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_toRightOf="@+id/main_app_activeinstalls"
-				android:layout_alignBaseline="@+id/main_app_activeinstalls"
-				android:text="active installs"
-				android:paddingRight="5dp"
-				android:minWidth="110dp" />
+			    android:id="@+id/main_app_activeinstallsText"
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_alignBaseline="@+id/main_app_activeinstalls"
+			    android:layout_toRightOf="@+id/main_app_activeinstalls"
+			    android:minWidth="110dp"
+			    android:paddingRight="5dp"
+			    android:text="@string/active_installs" />
+
 			<TextView
 				android:id="@+id/main_app_activeinstallsPercent"
 				style="@style/MainTableText"
@@ -427,14 +433,16 @@
 				android:paddingLeft="10dp"
 				android:minWidth="70dp" 
 				android:paddingTop="3dp" />
+
 			<TextView
-				android:id="@+id/main_app_admob_revenue_text"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_toRightOf="@+id/main_app_admob_revenue"
-				android:layout_width="wrap_content"
-				android:text="admob revenue"
-				android:layout_alignBaseline="@+id/main_app_admob_revenue" />
+			    android:id="@+id/main_app_admob_revenue_text"
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_alignBaseline="@+id/main_app_admob_revenue"
+			    android:layout_toRightOf="@+id/main_app_admob_revenue"
+			    android:text="@string/admob_revenue" />
+
 			<TextView
 				android:id="@+id/main_app_admobPercent"
 				style="@style/MainTableText"
@@ -455,16 +463,18 @@
 				android:paddingRight="5dp" 
 				android:layout_below="@+id/main_app_admob_revenue"
 				android:paddingBottom="3dp" />
+
 			<TextView
-				android:id="@+id/main_app_admob_requests_text"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_toRightOf="@+id/main_app_admob_requests"
-				android:layout_alignBaseline="@+id/main_app_admob_requests"
-				android:text="admob requests"
-				android:paddingRight="5dp"
-				android:minWidth="110dp" />
+			    android:id="@+id/main_app_admob_requests_text"
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_alignBaseline="@+id/main_app_admob_requests"
+			    android:layout_toRightOf="@+id/main_app_admob_requests"
+			    android:minWidth="110dp"
+			    android:paddingRight="5dp"
+			    android:text="@string/admob_requests" />
+
 			<TextView
 				android:id="@+id/main_app_admobRequestsPercent"
 				style="@style/MainTableText"
@@ -519,15 +529,16 @@
 				android:maxLines="1"
 				android:layout_alignRight="@+id/main_app_rating"
 				android:paddingTop="2dp"></TextView>
+
 			<TextView
-				android:id="@+id/main_app_avgratingText"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_toRightOf="@+id/main_app_avgrating"
-				android:layout_alignBaseline="@+id/main_app_avgrating"
-				android:text="average rating"
-				android:paddingRight="5dp" />
+			    android:id="@+id/main_app_avgratingText"
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_alignBaseline="@+id/main_app_avgrating"
+			    android:layout_toRightOf="@+id/main_app_avgrating"
+			    android:paddingRight="5dp"
+			    android:text="@string/average_rating" />
 
 			<TextView
 				android:layout_below="@+id/main_app_avgrating"
@@ -553,15 +564,15 @@
 				android:paddingRight="55dp" />				
 
 			<TextView
-				android:id="@+id/main_app_ratingText"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_toRightOf="@+id/main_app_rating"
-				android:layout_alignBaseline="@+id/main_app_rating"
-				android:text="ratings"
-				android:paddingRight="5dp"
-				android:minWidth="110dp" />
+			    android:id="@+id/main_app_ratingText"
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_alignBaseline="@+id/main_app_rating"
+			    android:layout_toRightOf="@+id/main_app_rating"
+			    android:minWidth="110dp"
+			    android:paddingRight="5dp"
+			    android:text="@string/ratings" />
 
 			<TextView
 				android:id="@+id/main_app_ratingPercent"
