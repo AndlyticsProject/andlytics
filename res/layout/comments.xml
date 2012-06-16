@@ -40,16 +40,16 @@
 				android:layout_toRightOf="@+id/comments_button_back"></View>
 
 			<TextView
-				style="@style/MainTableText"
-				android:id="@+id/comments_chart_type"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="comments"
-				android:textStyle="bold"
-				android:paddingBottom="2dp"
-				android:layout_centerInParent="true"
-				android:textSize="15dp"
-				android:paddingTop="5dp" />
+			    android:id="@+id/comments_chart_type"
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_centerInParent="true"
+			    android:paddingBottom="2dp"
+			    android:paddingTop="5dp"
+			    android:text="@string/comments"
+			    android:textSize="15dp"
+			    android:textStyle="bold" />
 
 			<View
 				android:layout_height="fill_parent"

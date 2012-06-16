@@ -19,15 +19,17 @@
 			android:paddingRight="20dip" android:paddingBottom="5dip">
 
 			<TextView
-				android:id="@+id/admob_login_headline"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textSize="18dp"
-				android:gravity="center"
-				android:textStyle="bold"
-				android:layout_marginTop="8dp"
-				android:layout_marginBottom="8dp"
-				style="@style/MainTableHeadline" android:layout_gravity="center" android:text="ADMOB ACCOUNT LOGIN"/>
+			    android:id="@+id/admob_login_headline"
+			    style="@style/MainTableHeadline"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_gravity="center"
+			    android:layout_marginBottom="8dp"
+			    android:layout_marginTop="8dp"
+			    android:gravity="center"
+			    android:text="@string/admob_login"
+			    android:textSize="18dp"
+			    android:textStyle="bold" />
 
 			<View
 				android:layout_width="fill_parent"
@@ -61,13 +63,16 @@
 				android:autoText="false"
 				android:inputType="textEmailAddress"
 				android:id="@+id/admob_login_username_edit" android:textSize="12dp"/>
+
 			<TextView
-				android:textAppearance="?android:attr/textAppearanceSmall"
-				android:singleLine="true"
-				android:layout_marginTop="2dip"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				style="@style/MainTableText" android:text="password"/>
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_marginTop="2dip"
+			    android:singleLine="true"
+			    android:text="@string/password"
+			    android:textAppearance="?android:attr/textAppearanceSmall" />
+
 			<EditText
 				android:singleLine="true"
 				android:layout_width="fill_parent"
@@ -109,14 +114,15 @@
 				android:layout_height="wrap_content">
 
 				<TextView
-					android:textStyle="bold"
-					style="@style/MainTableText"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textColor="#fff"
-					android:text="login"
-					android:layout_gravity="center"
-					android:padding="5dp" />
+				    style="@style/MainTableText"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center"
+				    android:padding="5dp"
+				    android:text="@string/login"
+				    android:textColor="#fff"
+				    android:textStyle="bold" />
+
 			</LinearLayout>
 
 		</RelativeLayout>

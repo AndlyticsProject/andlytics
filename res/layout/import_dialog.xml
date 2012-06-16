@@ -57,13 +57,14 @@
 					android:layout_height="wrap_content">
 
 					<TextView
-						android:textStyle="bold"
-						style="@style/MainTableText"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:textColor="#fff"
-						android:layout_gravity="center"
-						android:padding="5dp" android:text="run import"/>
+					    style="@style/MainTableText"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_gravity="center"
+					    android:padding="5dp"
+					    android:text="@string/run_import"
+					    android:textColor="#fff"
+					    android:textStyle="bold" />
 
 				</LinearLayout>
 
@@ -86,14 +87,15 @@
 					android:layout_height="wrap_content">
 
 					<TextView
-						android:textStyle="bold"
-						style="@style/MainTableText"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:textColor="#fff"
-						android:text="close"
-						android:layout_gravity="center"
-						android:padding="5dp" />
+					    style="@style/MainTableText"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_gravity="center"
+					    android:padding="5dp"
+					    android:text="@string/close"
+					    android:textColor="#fff"
+					    android:textStyle="bold" />
+
 				</LinearLayout>
 
 			</RelativeLayout>

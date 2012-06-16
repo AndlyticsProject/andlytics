@@ -14,23 +14,22 @@
 			android:padding="10dp">
 
 			<TextView
-				android:id="@+id/admob_config_2_headline_text"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				style="@style/MainTableText"
-				android:textStyle="bold"
-				android:paddingBottom="5dp"
-				android:text="Choose your app" />
+			    android:id="@+id/admob_config_2_headline_text"
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:paddingBottom="5dp"
+			    android:text="@string/choose_app"
+			    android:textStyle="bold" />
 
 			<TextView
-				android:id="@+id/admob_config_2_headline_subtext"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				style="@style/MainTableText"
-				android:paddingBottom="5dp"
-				android:layout_below="@+id/admob_config_2_headline_text"
-				android:text="select AdMob site to assoicate with this app" />
-
+			    android:id="@+id/admob_config_2_headline_subtext"
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_below="@+id/admob_config_2_headline_text"
+			    android:paddingBottom="5dp"
+			    android:text="@string/select_admob_site" />
 
 			<View
 				android:layout_below="@+id/admob_config_2_headline_subtext"
@@ -53,13 +52,12 @@
 				android:layout_marginBottom="20dp">
 	
 				<TextView
-					style="@style/MainTableText"
-					android:id="@+id/main_autosync_text"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center"
-					android:text="Loading site list..." />
-					
+				    android:id="@+id/main_autosync_text"
+				    style="@style/MainTableText"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center"
+				    android:text="@string/loading_site" />
 				
 			</LinearLayout>
 

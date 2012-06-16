@@ -14,13 +14,14 @@
 			android:padding="10dp">
 
 			<TextView
-				android:id="@+id/admob_config3_headline_text"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				style="@style/MainTableText"
-				android:textStyle="bold"
-				android:paddingBottom="5dp"
-				android:text="Time frame" />
+			    android:id="@+id/admob_config3_headline_text"
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:paddingBottom="5dp"
+			    android:text="@string/time_frame"
+			    android:textStyle="bold" />
+
 			<RadioGroup
 				android:id="@+id/admob_config3_timeframe_radios"
 				android:layout_width="fill_parent"
@@ -29,73 +30,83 @@
 				android:orientation="vertical">
 				
 				<RadioButton
-					style="@style/MainTableText"
-					android:text="Last 7 days"
-					android:id="@+id/admob_config3_ratio_last_seven_days"
-					android:layout_width="wrap_content"
-					android:layout_height="match_parent"></RadioButton>				
+				    android:id="@+id/admob_config3_ratio_last_seven_days"
+				    style="@style/MainTableText"
+				    android:layout_width="wrap_content"
+				    android:layout_height="match_parent"
+				    android:text="@string/seven_days" >
+</RadioButton>				
 				
 				<RadioButton
-					style="@style/MainTableText"
-					android:text="Last 30 days"
-					android:id="@+id/admob_config3_ratio_last_thrity_days"
-					android:layout_width="wrap_content"
-					android:layout_height="match_parent"></RadioButton>
+				    android:id="@+id/admob_config3_ratio_last_thrity_days"
+				    style="@style/MainTableText"
+				    android:layout_width="wrap_content"
+				    android:layout_height="match_parent"
+				    android:text="@string/thirty_days" >
+</RadioButton>
 
 				<RadioButton
-					style="@style/MainTableText"
-					android:text="Unlimited"
-					android:id="@+id/admob_config3_ratio_last_unlimited"
-					android:layout_width="wrap_content"
-					android:layout_height="match_parent"></RadioButton>
+				    android:id="@+id/admob_config3_ratio_last_unlimited"
+				    style="@style/MainTableText"
+				    android:layout_width="wrap_content"
+				    android:layout_height="match_parent"
+				    android:text="@string/unlimited" >
+</RadioButton>
 
 			</RadioGroup>
 
-
 			<TextView
-				android:id="@+id/admob_config3_headline_date"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				style="@style/MainTableText"
-				android:textStyle="bold"
-				android:paddingBottom="5dp"
-				android:layout_below="@+id/admob_config3_timeframe_radios"
-				android:text="Date format" />
+			    android:id="@+id/admob_config3_headline_date"
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_below="@+id/admob_config3_timeframe_radios"
+			    android:paddingBottom="5dp"
+			    android:text="@string/date_format"
+			    android:textStyle="bold" />
+
 			<RadioGroup
 				android:id="@+id/admob_config3_dateformat_radios"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:layout_below="@+id/admob_config3_headline_date"
 				android:orientation="vertical">
+
 				<RadioButton
-					style="@style/MainTableText"
-					android:text="Day/Month/Year"
-					android:id="@+id/admob_config3_ratio_dmy"
-					android:layout_width="wrap_content"
-					android:layout_height="match_parent"></RadioButton>
+				    android:id="@+id/admob_config3_ratio_dmy"
+				    style="@style/MainTableText"
+				    android:layout_width="wrap_content"
+				    android:layout_height="match_parent"
+				    android:text="@string/ddmmyy" >
+</RadioButton>
+
 				<RadioButton
-					style="@style/MainTableText"
-					android:text="Month/Day/Year"
-					android:id="@+id/admob_config3_ratio_mdy"
-					android:layout_width="wrap_content"
-					android:layout_height="match_parent"></RadioButton>
+				    android:id="@+id/admob_config3_ratio_mdy"
+				    style="@style/MainTableText"
+				    android:layout_width="wrap_content"
+				    android:layout_height="match_parent"
+				    android:text="@string/mmddyy" >
+</RadioButton>
+
 				<RadioButton
-					style="@style/MainTableText"
-					android:text="Year/Month/Day"
-					android:id="@+id/admob_config3_ratio_ymd"
-					android:layout_width="wrap_content"
-					android:layout_height="match_parent"></RadioButton>
+				    android:id="@+id/admob_config3_ratio_ymd"
+				    style="@style/MainTableText"
+				    android:layout_width="wrap_content"
+				    android:layout_height="match_parent"
+				    android:text="@string/yymmdd" >
+</RadioButton>
 			</RadioGroup>
 
 			<TextView
-				android:layout_below="@+id/admob_config3_dateformat_radios"
-				style="@style/MainTableText"
-				android:textStyle="bold"
-				android:paddingTop="5dp"
-				android:text="Remove AdMob site association"				
-				android:id="@+id/admob_config3_remove_text"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" />
+			    android:id="@+id/admob_config3_remove_text"
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_below="@+id/admob_config3_dateformat_radios"
+			    android:paddingTop="5dp"
+			    android:text="@string/remove_admob"
+			    android:textStyle="bold" />
+
 			<RelativeLayout
 				android:layout_below="@+id/admob_config3_remove_text"
 				android:layout_height="wrap_content"
@@ -112,11 +123,13 @@
 					android:paddingBottom="5dp" android:paddingTop="5dp">
 
 					<TextView
-						style="@style/MainTableText"
-						android:id="@+id/main_autosync_text"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_gravity="center" android:text="Remove AdMob values for this app"/>
+					    android:id="@+id/main_autosync_text"
+					    style="@style/MainTableText"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_gravity="center"
+					    android:text="@string/remove_admob_app" />
+
 				</LinearLayout>
 			</RelativeLayout>
 			<View 
@@ -145,12 +158,13 @@
 			android:paddingTop="2dp">
 
 			<TextView
-				style="@style/MainTableText"
-				android:id="@+id/main_autosync_text"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center"
-				android:text="close" />
+			    android:id="@+id/main_autosync_text"
+			    style="@style/MainTableText"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_gravity="center"
+			    android:text="@string/close" />
+
 		</LinearLayout>
 	</RelativeLayout>
 </RelativeLayout>

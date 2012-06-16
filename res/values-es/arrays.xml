@@ -1,0 +1,14 @@
+
+    <resources>
+        <string-array name="autosync_periods">
+            <item>desactivado</item>
+            <item>15 minutos</item>
+            <item>30 minutos</item>
+            <item>1 hora</item>
+            <item>2 horas</item>
+            <item>3 horas</item>
+            <item>6 horas</item>
+            <item>12 horas</item>
+            <item>24 horas</item>
+        </string-array>
+    </resources>

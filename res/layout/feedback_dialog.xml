@@ -24,31 +24,33 @@
 		android:background="#ddffffff"
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true">
-
-
+
+		<TextView
+		    android:id="@+id/info_dialog_title"
+		    style="@style/MainTableText"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:paddingBottom="10dp"
+		    android:paddingLeft="20dp"
+		    android:paddingRight="30dp"
+		    android:paddingTop="10dp"
+		    android:text="@string/title"
+		    android:textSize="20dp"
+		    android:textStyle="bold" >
+</TextView>
 
 		<TextView
-			style="@style/MainTableText"
-			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"
-			android:text="Title"
-			android:id="@+id/info_dialog_title"
-			android:paddingRight="30dp"
-			android:textStyle="bold"
-			android:textSize="20dp"
-			android:paddingTop="10dp"
-			android:paddingBottom="10dp" android:paddingLeft="20dp"></TextView>
-		<TextView
-			style="@style/MainTableText"
-			android:layout_height="wrap_content"
-			android:text="Text"
-			android:id="@+id/info_dialog_text"
-			android:layout_width="fill_parent"
-			android:layout_below="@+id/info_dialog_title"
-			android:paddingTop="10dp"
-			android:paddingBottom="10dp"
-			android:paddingLeft="20dp"
-			android:paddingRight="20dp"></TextView>
+		    android:id="@+id/info_dialog_text"
+		    style="@style/MainTableText"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@+id/info_dialog_title"
+		    android:paddingBottom="10dp"
+		    android:paddingLeft="20dp"
+		    android:paddingRight="20dp"
+		    android:paddingTop="10dp"
+		    android:text="@string/text" >
+</TextView>
 
 		<LinearLayout
 			android:id="@+id/info_dialog_buttonbar"
@@ -79,17 +81,17 @@
 					android:layout_centerHorizontal="true"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content">
-
-
+
 					<TextView
-						android:id="@+id/info_dialog_positive_button_text"
-						android:textStyle="bold"
-						style="@style/MainTableText"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:textColor="#fff"
-						android:layout_gravity="center"
-						android:text="ok" />
+					    android:id="@+id/info_dialog_positive_button_text"
+					    style="@style/MainTableText"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_gravity="center"
+					    android:text="@string/ok"
+					    android:textColor="#fff"
+					    android:textStyle="bold" />
+
 				</LinearLayout>
 
 			</RelativeLayout>
@@ -118,16 +120,17 @@
 					android:layout_centerHorizontal="true"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content">
-
+
 					<TextView
-						android:id="@+id/info_dialog_negative_button_text"
-						android:textStyle="bold"
-						style="@style/MainTableText"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:textColor="#fff"
-						android:layout_gravity="center"
-						android:text="cancel" />
+					    android:id="@+id/info_dialog_negative_button_text"
+					    style="@style/MainTableText"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_gravity="center"
+					    android:text="@string/cancel"
+					    android:textColor="#fff"
+					    android:textStyle="bold" />
+
 				</LinearLayout>
 
 			</RelativeLayout>

@@ -19,7 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
-                android:text="AdMob account required"
+                android:text="@string/admob_required"
                 android:textStyle="bold" />
 
             <View
@@ -67,7 +67,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:padding="5dp"
-                        android:text="add AdMob account"
+                        android:text="@string/admob_add"
                         android:textColor="#fff"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/admob_accout_desc"
                 android:paddingBottom="5dp"
-                android:text="For AdMob accounts that are linked to a Google account you can find the API password on the admob account information page:" />
+                android:text="@string/admob_info" />
 
             <ImageView
                 android:layout_width="wrap_content"

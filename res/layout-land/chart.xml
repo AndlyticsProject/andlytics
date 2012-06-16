@@ -169,17 +169,16 @@
 	</LinearLayout>
 
 	<TextView
-		style="@style/MainTableText"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:id="@+id/chart_timeframe"
-		android:visibility="visible"
-		android:textSize="14dp"
-		android:layout_centerHorizontal="true"
-		android:layout_below="@+id/chart_header_frame_spacer"
-		android:layout_marginTop="5dp" android:text="swipe to see next chart -&gt;"/>
-
-
+	    android:id="@+id/chart_timeframe"
+	    style="@style/MainTableText"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/chart_header_frame_spacer"
+	    android:layout_centerHorizontal="true"
+	    android:layout_marginTop="5dp"
+	    android:text="@string/swipe"
+	    android:textSize="14dp"
+	    android:visibility="visible" />
 
 	<RelativeLayout
 		android:layout_width="fill_parent"
