@@ -91,4 +91,7 @@
     <string name="active_installs_percent">Aktive Installationen in Prozent</string>
     <string name="swipe">Swipen um zur nächsten Übersicht zu kommen -></string>
 
+    <string name="Einnahmen">revenue</string>
+    <string name="last_update">Letztes Update</string>
+
 </resources>

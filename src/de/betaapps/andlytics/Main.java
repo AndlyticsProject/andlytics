@@ -82,16 +82,16 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
     private View importButton;
     public ExportDialog exportDialog;
     public ImportDialog importDialog;
-    
+
     private static final int FEEDBACK_DIALOG = 0;
-    
-    
+
+
 
     /** Called when the activity is first created. */
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
@@ -174,7 +174,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
             @Override
             public void onClick(View v) {
- 
+
                showDialog(FEEDBACK_DIALOG);
             }
         });
@@ -191,13 +191,13 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
             @Override
             public void onClick(View v) {
-                
+
                 if(!isProVersion()) {
                     showProDialog();
                 } else {
                     (new LoadExportDialog()).execute();
                 }
-                
+
             }
         });
 
@@ -224,7 +224,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
                 }
             }
         });
-        
+
         autosyncButton.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -251,13 +251,13 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
     protected void onResume() {
         super.onResume();
         boolean mainSkipDataReload = getAndlyticsApplication().isSkipMainReload();
-        
+
         if (!mainSkipDataReload) {
             new LoadDbEntries().execute(true);
         } else {
             new LoadDbEntries().execute(false);
         }
-        
+
         getAndlyticsApplication().setSkipMainReload(false);
     }
 
@@ -307,7 +307,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
             }
 
             if (lastUpdateDate != null) {
-                statusText.setText("last update: " + ContentAdapter.formatDate(lastUpdateDate));
+                statusText.setText(this.getString(R.string.last_update) + ": " + ContentAdapter.formatDate(lastUpdateDate));
             }
 
         }
@@ -327,25 +327,25 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
             // authentication failed before, retry with token invalidation
 
             Exception exception = null;
-            
-            
-                
+
+
+
                 String authtoken = ((AndlyticsApp) getApplication()).getAuthToken();
-    
-    
+
+
                 List<AppInfo> appDownloadInfos = null;
                 try {
-    
+
                     DeveloperConsole console = new DeveloperConsole(Main.this);
                     appDownloadInfos = console.getAppDownloadInfos(authtoken, accountname);
-    
+
                     if (cancelRequested) {
                         cancelRequested = false;
                         return null;
                     }
-    
+
                     Map<String, List<String>> admobAccountSiteMap = new HashMap<String, List<String>>();
-                    
+
                     for (AppInfo appDownloadInfo : appDownloadInfos) {
                         // update in database
                         db.insertOrUpdateStats(appDownloadInfo);
@@ -362,27 +362,27 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
                             }
                         }
                     }
-                    
+
                     // sync admob accounts
                     Set<String> admobAccuntKeySet = admobAccountSiteMap.keySet();
                     for (String admobAccount : admobAccuntKeySet) {
-    
+
                         AdmobRequest.syncSiteStats(admobAccount, Main.this, admobAccountSiteMap.get(admobAccount), null);
                     }
-                    
+
                     new LoadIconInCache().execute(appDownloadInfos);
-    
+
                 } catch (Exception e) {
-    
+
                     if(e instanceof IOException) {
                         e = new NetworkException(e);
                     }
 
                     exception = e;
-    
+
                     Log.e(TAG, "error while requesting developer console", e);
                 }
-    
+
                 if (dotracking == true) {
                     int size = 0;
                     if (appDownloadInfos != null) {
@@ -396,7 +396,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
                     }
                     dotracking = false;
                 }
-            
+
 
 
             return exception;
@@ -404,7 +404,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
          */
         @Override
@@ -430,19 +430,19 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
             } else {
                 new LoadDbEntries().execute(false);
-                
+
                 if(Preferences.getProVersionHint(Main.this) && !isProVersion()) {
                     showProDialog();
                     Preferences.saveProVersionHint(Main.this, false);
                 }
-                
+
             }
 
         }
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see android.os.AsyncTask#onPreExecute()
          */
         @Override
@@ -467,9 +467,9 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
         protected Boolean doInBackground(Boolean... params) {
 
             allStats = db.getAllAppsLatestStats(accountname);
-            
+
             for (AppInfo appInfo : allStats) {
-                
+
                 if (!appInfo.isGhost()) {
                     String admobSiteId = Preferences.getAdmobSiteId(Main.this, appInfo.getPackageName());
                     if(admobSiteId != null) {
@@ -481,9 +481,9 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
                     }
                     filteredStats.add(appInfo);
                 }
-                
+
             }
-            
+
 
             triggerRemoteCall = params[0];
 
@@ -497,7 +497,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
             if (triggerRemoteCall) {
                 authenticateAccountFromPreferences(false, Main.this);
-                
+
             } else {
 
                 if (allStats.size() == 0) {
@@ -623,8 +623,8 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
             }
         }
 
-    }    
-    
+    }
+
     private class LoadImportDialog extends AsyncTask<Boolean, Void, Boolean> {
 
         private List<String> fileNames;
@@ -634,7 +634,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
             if (android.os.Environment.getExternalStorageState().equals(
                             android.os.Environment.MEDIA_MOUNTED)) {
-                
+
                 List<AppInfo> allStats = db.getAllAppsLatestStats(accountname);
                 try {
                     fileNames = StatsCsvReaderWriter.getImportFileNames(accountname, allStats);
@@ -645,17 +645,17 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
                 return true;
 
             } else {
-                
+
                 return false;
             }
-                
+
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
 
             if (!isFinishing()) {
-                
+
                 if(result) {
                     importDialog = new ImportDialog(Main.this, fileNames, accountname);
                     importDialog.show();
@@ -665,18 +665,18 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
             }
         }
 
-    }   
-    
-    
+    }
+
+
     protected void showAutosyncDialog() {
-        
+
         if(!isFinishing()) {
-            
+
             AutosyncDialog autosyncDialog = new AutosyncDialog(Main.this, accountname);
             autosyncDialog.show();
         }
-    }       
-    
+    }
+
     private class LoadNotificationDialog extends AsyncTask<Boolean, Void, Boolean> {
 
         private List<AppInfo> allStats;
@@ -784,14 +784,14 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
                 try {
                     appDownloadInfos = console.parseAppStatisticsResponse(DemoDataActivity.readTestData(event.getNumber()),
                             accountname);
-                    
+
                     for (AppInfo appDownloadInfo : appDownloadInfos) {
                         // update in database
-                        
+
                         db.insertOrUpdateStats(appDownloadInfo);
-                        
+
                         new LoadIconInCache().execute(appDownloadInfos);
-                        
+
                     }
                 } catch (AuthenticationException e) {
                     // TODO Auto-generated catch block
@@ -812,12 +812,12 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
     @Override
     protected Dialog onCreateDialog(int id) {
-        
+
         Dialog dialog = null;
-        
+
         switch (id) {
         case FEEDBACK_DIALOG:
-            
+
             FeedbackDialog.FeedbackDialogBuilder builder = new FeedbackDialogBuilder(Main.this);
             builder.setTitle(this.getString(R.string.feedback));
 
@@ -838,13 +838,13 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
             });
 
             dialog = builder.create(accountname + "\n\n", getApplication());
-            
+
             break;
 
         default:
             break;
         }
-        
+
         return dialog;
     }
 
@@ -852,8 +852,8 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
     public void authenticationSuccess() {
         new LoadRemoteEntries().execute();
     }
-    
-    
-    
+
+
+
 
 }

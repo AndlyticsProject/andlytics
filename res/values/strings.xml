@@ -5,13 +5,13 @@
     <string name="app_name_admob">AdMob for Andlytics</string>
     <string name="app_name_headline_full">ANDLYTICS</string>
     <string name="app_name_headline_light">ANDLYTICS LITE</string>
-    
+
     <string name="autosync_off">auto sync is turned off</string>
     <string name="autosync_on">auto sync is turned on</string>
 
     <string name="one_entry_hint_desc">andlytics collects data over time. to see a meaningful chart come back as soon as more data is available.\n\nusually download stats are updated every 24-48 hours.</string>
     <string name="one_entry_hint_demo"><u>view chart with demo data</u></string>
-    
+
     <string name="pro_desc">Andlytics donate / pro key unlocks the additional features change notification as well as statistics data export and import.\n\nPlease notice that Google doesn\'t provide a stable API to get the numbers. Therefore Andlytics might not work properly if there are changes in the Android Market.\n\nIn that case we try to catch up with the changes but <b>we can\'t guarantee that the app works properly in the future</b>.\n\nNot available in: Bulgaria Estonia Greece Hungary Kazakhstan Latvia Lithuania Luxembourg Philippines Romania Serbia Slovakia Slovenia South Africa Thailand</string>
     <string name="crash_desc">An unexpected error occurred.\n\nPlease help us to fix this by sending us error report data. Information about the error (stacktrace) and information about your device such as device manufacturer\'s name, device model number, operating system, etc. will be sent to help us identifying the problem.\n\nThanks!\n\n</string>
     <string name="newversion_desc"><b>An unexpected error occurred, probably because the remote interface changed.</b>\n\nBut the good news is that a new version of Andlytics is available in the Android Market.\n\nPlease update before reporting this issue.\n\nThanks!\n\n\n</string>
@@ -90,5 +90,8 @@
     <string name="downloads_day">downloads by day</string>
     <string name="active_installs_percent">active installs in percent</string>
     <string name="swipe">swipe to see next chart -></string>
+
+    <string name="revenue">revenue</string>
+    <string name="last_update">last update</string>
 
 </resources>

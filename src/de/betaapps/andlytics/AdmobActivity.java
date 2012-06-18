@@ -89,7 +89,7 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
     protected String admobToken;
 
     private ViewGroup siteList;
-    
+
     private ViewSwitcher toolbarViewSwitcher;
 
     private Timeframe currentTimeFrame;
@@ -104,17 +104,17 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
 
 		setContentView(R.layout.admob);
 		currentTimeFrame = Preferences.getAdmobTimeframe(this);
-		
+
 		currentChartPosition = -1;
 
 		toolbarViewSwitcher = (ViewSwitcher) findViewById(R.id.admob_toobar_switcher);
 
-		
+
         titleTextSwitcher = (ChartTextSwitcher) findViewById(R.id.admob_admob_type);
         titleTextSwitcher.setFactory(new ViewFactory() {
 
 			public View makeView() {
-				
+
 				return getLayoutInflater().inflate(R.layout.admob_headline, null);
 			}
 		});
@@ -122,13 +122,13 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
 		outNegative = AnimationUtils.loadAnimation(AdmobActivity.this, R.anim.slide_out_left);
 		inPositive = AnimationUtils.loadAnimation(AdmobActivity.this, R.anim.slide_in_left);
 		outPositive = AnimationUtils.loadAnimation(AdmobActivity.this, R.anim.slide_out_right);
-		
+
 		db = getDbAdapter();
 		//chartFrame = (ViewSwitcher) ;
-        
+
 		View backButton = findViewById(R.id.admob_button_back);
 		backButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				startActivity(Main.class, false, true);
@@ -139,18 +139,18 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
 		View refreshButton = findViewById(R.id.admob_button_refresh);
 		if(refreshButton != null) {
 		    refreshButton.setOnClickListener(new OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
-                    
+
                     chartGallery.setIgnoreLayoutCalls(true);
                     new LoadRemoteEntiesTask().execute();
-                    
+
                 }
             });
 		}
 
-		
+
 		View configButton = findViewById(R.id.admob_button_config);
 
 		mainViewSwitcher = new ViewSwitcher3D((ViewGroup) findViewById(R.id.admob_main_frame));
@@ -161,17 +161,17 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
 
 			smallConfigViewSwitcher = new ViewSwitcher3D((ViewGroup) findViewById(R.id.admob_bottom_frame));
 			smallConfigViewSwitcher.setListener(this);
-			
+
 			configButton.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					chartGallery.setIgnoreLayoutCalls(true);
-					
+
 					String admobSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
-					
+
 					if(admobSiteId == null) {
-					    
+
 					    View currentView = configSwitcher.getCurrentView();
 					    if(currentView.getId() != R.id.admob_config) {
 					        configSwitcher.showPrevious();
@@ -181,16 +181,16 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
 					} else {
 					    smallConfigViewSwitcher.swap();
 					}
-					
+
 				}
 			});
-			
+
             RadioButton radioLastSeven = (RadioButton) findViewById(R.id.admob_config3_ratio_last_seven_days);
             if(Timeframe.LAST_SEVEN_DAYS.equals(currentTimeFrame)) {
                 radioLastSeven.setChecked(true);
             }
             radioLastSeven.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                
+
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked) {
@@ -207,7 +207,7 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
                 radioLastThrity.setChecked(true);
             }
             radioLastThrity.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                
+
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked) {
@@ -222,7 +222,7 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
                 radioUnlimited.setChecked(true);
             }
             radioUnlimited.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                
+
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked) {
@@ -232,14 +232,14 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
                     }
                 }
             });
-            
+
             String dateFormatLong = Preferences.getDateFormatLong(this);
             RadioButton radioDmy = (RadioButton) findViewById(R.id.admob_config3_ratio_dmy);
             if("dd/MM/yyyy".equals(dateFormatLong)) {
                 radioDmy.setChecked(true);
             }
             radioDmy.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                
+
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked) {
@@ -248,14 +248,14 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
                         new LoadDbEntiesTask().execute(false);
                     }
                 }
-            });         
-            
+            });
+
             RadioButton radioYmd = (RadioButton) findViewById(R.id.admob_config3_ratio_ymd);
             if("yyyy/MM/dd".equals(dateFormatLong)) {
                 radioYmd.setChecked(true);
             }
             radioYmd.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                
+
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked) {
@@ -264,13 +264,13 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
                         new LoadDbEntiesTask().execute(false);
                     }
                 }
-            });         
+            });
             RadioButton radioMdy = (RadioButton) findViewById(R.id.admob_config3_ratio_mdy);
             if("MM/dd/yyyy".equals(dateFormatLong)) {
                 radioMdy.setChecked(true);
             }
             radioMdy.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                
+
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked) {
@@ -279,21 +279,21 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
                         new LoadDbEntiesTask().execute(false);
                     }
                 }
-            });         
+            });
 
             View configDoneButton = (View) findViewById(R.id.admob_config3_done_button);
             configDoneButton.setOnClickListener(new OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
                     smallConfigViewSwitcher.swap();
                 }
             });
-            
+
 
             View removeButton = (View) findViewById(R.id.admob_config3_remove_button);
             removeButton.setOnClickListener(new OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
                     Preferences.saveAdmobSiteId(AdmobActivity.this, packageName, null);
@@ -304,13 +304,13 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
                     mainViewSwitcher.swap();
                 }
             });
-			
+
 		}
-		
+
 		configSwitcher = (ViewSwitcher) findViewById(R.id.admob_viewswitcher_config);
 		configSwitcher.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
         configSwitcher.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_left));
-		
+
 		chartGallery = (ChartGallery) findViewById(R.id.admob_gallery);
 		chartGalleryAdapter = new ChartGalleryAdapter(new ArrayList<View>());
 		chartGallery.setAdapter(chartGalleryAdapter);
@@ -321,30 +321,30 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
 
 
 				chartGallery.setIgnoreLayoutCalls(true);
-				
+
 				if(currentChartPosition < position) {
 					titleTextSwitcher.setInAnimation(inNegative);
 					titleTextSwitcher.setOutAnimation(outNegative);
 				} else {
 					titleTextSwitcher.setInAnimation(inPositive);
 					titleTextSwitcher.setOutAnimation(outPositive);
-				} 
+				}
 				currentChartPosition = position;
 
 				subHeadlineText = "";
-					
+
 				Object tag = view.getTag();
 				if (tag != null) {
-					
+
 				    currentChart = (AdmobChartType) tag;
 				    updateChartHeadline();
-				
-					
+
+
 					admobListAdapter.setCurrentChart(currentChart);
 					admobListAdapter.notifyDataSetChanged();
 				}
 
-				
+
 			}
 
 			@Override
@@ -355,19 +355,19 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
 
 		accountList = (ViewGroup) findViewById(R.id.admob_accountlist);
         siteList = (ViewGroup) findViewById(R.id.admob_sitelist);
-        
+
 		addAccountButton = (View) findViewById(R.id.admob_addaccount_button);
 		addAccountButton.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
-                addNewAdmobAccount();                
+                addNewAdmobAccount();
             }
         });
-		
-		
+
+
 		timeframeText = (TextView) findViewById(R.id.admob_timeframe);
-		
+
 		historyList = (ListView) findViewById(R.id.admob_list);
 
 		admobListAdapter = new AdmobListAdapter(this);
@@ -377,26 +377,26 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
         secondPageChats.add(AdmobChartType.CTR);
         secondPageChats.add(AdmobChartType.ECPM);
         secondPageChats.add(AdmobChartType.IMPRESSIONS);
-        
+
         admobListAdapter.setSecondPageCharts(secondPageChats);
-        
+
 		historyList.setAdapter(admobListAdapter);
-		 
+
 		if(iconFilePath != null) {
-			
+
 			ImageView appIcon = (ImageView) findViewById(R.id.admob_app_icon);
 			Bitmap bm = BitmapFactory.decodeFile(iconFilePath);
 			appIcon.setImageBitmap(bm);
 		}
 
 		currentChart = AdmobChartType.REVENUE;
-		
+
 		String currentAdmobAccount  = null;
 	    String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
         if(currentSiteId != null) {
             currentAdmobAccount = Preferences.getAdmobAccount(this, currentSiteId);
         }
-		
+
 		if(currentAdmobAccount == null) {
 		    mainViewSwitcher.swap();
             if(configSwitcher.getCurrentView().getId() != R.id.admob_config) {
@@ -406,7 +406,7 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
 		} else {
 		    new LoadDbEntiesTask().execute(false);
 		}
-		
+
 
 
 	}
@@ -414,47 +414,47 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
     protected void updateChartHeadline() {
 
         subHeadlineText = "";
-        
+
         switch (currentChart) {
-        
+
         case REVENUE:
-            updateTitleTextSwitcher("revenue");
+            updateTitleTextSwitcher(this.getString(R.string.revenue));
             if(overallStats != null)
                 subHeadlineText = numberFormat.format(overallStats.getRevenue());
             break;
-            
+
         case REQUESTS:
             Preferences.saveShowChartHint(AdmobActivity.this, false);
             updateTitleTextSwitcher("requests");
             if(overallStats != null)
                 subHeadlineText = overallStats.getRequests() + "";
             break;
-            
+
         case CLICKS:
             updateTitleTextSwitcher("clicks");
             if(overallStats != null)
                 subHeadlineText = overallStats.getClicks() + "";
             break;
-            
+
         case FILL_RATE:
             updateTitleTextSwitcher("fill rate");
-            if(overallStats != null) 
+            if(overallStats != null)
                 subHeadlineText = (new BigDecimal(overallStats.getFillRate() * 100)).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "%";
-            
+
             break;
-        
+
         case ECPM:
             updateTitleTextSwitcher("eCPM");
             if(overallStats != null)
                 subHeadlineText = numberFormat.format(overallStats.getEcpm());
             break;
-        
+
         case IMPRESSIONS:
             updateTitleTextSwitcher("impressions");
             if(overallStats != null)
                 subHeadlineText = overallStats.getImpressions() + "";
             break;
-        
+
         case CTR:
             updateTitleTextSwitcher("CTR");
             if(overallStats != null)
@@ -466,11 +466,11 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
             if(overallStats != null)
                 subHeadlineText = overallStats.getHouseAdClicks() + "";
             break;
-            
+
         default:
             break;
         }
-        
+
         if(Preferences.getShowChartHint(AdmobActivity.this)) {
             timeframeText.setText(Html.fromHtml("8 AdMob charts available ->"));
         } else {
@@ -479,14 +479,14 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
             }
         }
 
-        
-    }        
-    
+
+    }
+
 
     private void updateTitleTextSwitcher(String string) {
-        
+
         Object tag = titleTextSwitcher.getTag();
-        
+
         if(tag != null && tag.equals(string)) {
             return;
         } else {
@@ -516,8 +516,8 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
                 public void onClick(View view) {
 
                     String currentAdmobAccount = (String) view.getTag();
-                    
-                    
+
+
                     configSwitcher.showNext();
                     new LoadRemoteSiteListTask(currentAdmobAccount).execute();
 
@@ -526,10 +526,10 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
             accountList.addView(inflate);
         }
     }
-    
+
 
     private void addNewAdmobAccount() {
-        
+
         AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
             public void run(AccountManagerFuture<Bundle> future) {
                 try {
@@ -549,7 +549,7 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
                 // gotAccount(false);
             }
         };
-        
+
         AccountManager.get(AdmobActivity.this).addAccount(Constants.ACCOUNT_TYPE_ADMOB, Constants.AUTHTOKEN_TYPE_ADMOB,
                         null, null /* options */, AdmobActivity.this, callback, null /* handler */);
     }
@@ -558,7 +558,7 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
 	protected void onResume() {
 		super.onResume();
 		chartGallery.setIgnoreLayoutCalls(false);
-		
+
 	}
 
     private class LoadDbEntiesTask extends AsyncTask<Boolean, Void, Exception> {
@@ -573,8 +573,8 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
 
         @Override
         protected Exception doInBackground(Boolean... params) {
-            
-            
+
+
             String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
             AdmobList admobList = db.getAdmobStats(currentSiteId, currentTimeFrame);
             admobStats = admobList.getAdmobs();
@@ -594,59 +594,59 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
             admobListAdapter.notifyDataSetChanged();
 
             if(executeRemoteCall) {
- 
+
                 new LoadRemoteEntiesTask().execute();
             }
 
         }
     };
-    
+
     private class LoadRemoteEntiesTask extends AsyncTask<Void, Void, Exception> {
 
         boolean isRunning;
 
         @Override
         protected void onPreExecute() {
-     
+
             showLoadingIndecator(toolbarViewSwitcher);
             isRunning = true;
-            
+
         }
 
         @Override
         protected Exception doInBackground(Void... lastValueDate) {
-            
+
             isRunning = true;
-            
+
             String currentAdmobAccount  = null;
             String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
             if(currentSiteId != null) {
                 currentAdmobAccount = Preferences.getAdmobAccount(AdmobActivity.this, currentSiteId);
             }
-            
-            
+
+
             try {
 
                 List<String> siteList = new ArrayList<String>();
                 siteList.add(currentSiteId);
-                
+
                 AdmobRequest.syncSiteStats(currentAdmobAccount, AdmobActivity.this, siteList, new SyncCallback() {
-                    
+
                     @Override
                     public void initialImportStarted() {
                         publishProgress();
                     }
                 });
-                
+
             } catch (Exception e) {
-                
+
                 if(e instanceof IOException) {
                     e = new NetworkException(e);
                 }
-                
+
                 return e;
             }
-            
+
             return null;
         }
 
@@ -657,21 +657,21 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
 
         @Override
         protected void onPostExecute(Exception result) {
-            
+
             if(result != null) {
                 Log.e(TAG, "admob exception", result);
                 handleUserVisibleException(result);
             } else {
-                
+
                 new LoadDbEntiesTask().execute(false);
-                
+
             }
-            
+
             if(isRunning)
                 hideLoadingIndecator(toolbarViewSwitcher);
         }
     };
-	
+
     private class LoadRemoteSiteListTask extends AsyncTask<Void, Void, Exception> {
 
         private Map<String, String> data;
@@ -688,7 +688,7 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
 
         @Override
         protected Exception doInBackground(Void... params) {
-            
+
             try {
                 data = AdmobRequest.getSiteList(currentAdmobAccount, AdmobActivity.this);
             } catch (Exception e) {
@@ -699,28 +699,28 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
 
         @Override
         protected void onPostExecute(Exception result) {
-            
+
             if(result != null) {
                 handleUserVisibleException(result);
             } else {
-                
+
                 if(data.size() > 0) {
 
                     siteList.removeAllViews();
 
                     Set<String> keySet = data.keySet();
                     for (String siteId : keySet) {
-                        
+
                         String siteName = data.get(siteId);
-                        
+
                         //pull the id from the data
                         View inflate = getLayoutInflater().inflate(R.layout.admob_account_list_item, null);
                         TextView accountName = (TextView) inflate.findViewById(R.id.admob_account_list_item_text);
                         accountName.setText(siteName);
                         inflate.setTag(siteId);
                         inflate.setOnClickListener(new OnClickListener() {
-                            
-                            
+
+
                             @Override
                             public void onClick(View view) {
 
@@ -732,11 +732,11 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
                         });
                         siteList.addView(inflate);
 
-                        
+
                     }
                 }
             }
-            
+
             hideLoadingIndecator(toolbarViewSwitcher);
         }
     };
@@ -751,9 +751,9 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
 
             if(statsForApp != null && statsForApp.size() > 0) {
                 Chart chart = new Chart();
-                
+
                 List<View> charts = new ArrayList<View>();
-                
+
                 AdmobChartType[] chartTypes = AdmobChartType.values();
                 for (int i = 0; i < chartTypes.length; i++) {
                     View chartView = chart.buildAdmobChart(AdmobActivity.this, statsForApp, chartTypes[i]);
@@ -762,24 +762,24 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
                     chartView.setTag(chartTypes[i]);
                     charts.add(chartView);
                 }
-                     
-             
-                
+
+
+
                 chartGallery.setIgnoreLayoutCalls(false);
                 chartGalleryAdapter.setViews(charts);
                 chartGalleryAdapter.notifyDataSetChanged();
                 chartGallery.invalidate();
-                
+
                 SimpleDateFormat dateFormat = new SimpleDateFormat(Preferences.getDateFormatLong(AdmobActivity.this));
                 if(statsForApp.size() > 0) {
-                    
+
                     timetext = dateFormat.format(statsForApp.get(0).getDate()) + " - " + dateFormat.format(statsForApp.get(statsForApp.size() -1).getDate());
                     updateChartHeadline();
                 }
 
-                
+
                 //chartFrame.showNext();
-                
+
             }
 /*            if(radioLastThrity != null) {
                 radioLastThrity.setEnabled(true);
@@ -788,22 +788,22 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
 
             }*/
 
-        
-		
+
+
 	}
 
 
 	@Override
 	public void onViewChanged(boolean frontsideVisible) {
 		chartGallery.setIgnoreLayoutCalls(true);
-		
+
 	}
 
 
 	@Override
 	public void onRender() {
 		chartGallery.invalidate();
-		
+
 	}
-	
+
 }
