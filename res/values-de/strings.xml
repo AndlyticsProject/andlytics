@@ -21,13 +21,13 @@
     <string name="logout">ausloggen</string>
     <string name="refresh">refresh</string>
     <string name="comments">Kommentare</string>
-    <string name="total_downloads">Downloads gesammt</string>
-    <string name="active_installs">Aktive Installationen</string>
+    <string name="total_downloads">Downloads</string>
+    <string name="active_installs">Installationen</string>
     <string name="admob_revenue">Admob Einnahmen</string>
     <string name="admob_requests">Admob Anfragen</string>
     <string name="average_rating">Durchschnittsbewertung</string>
-    <string name="ratings">Bewertung</string>
-    <string name="auto_sync">Automatische Synchronization</string>
+    <string name="ratings">Bewertungen</string>
+    <string name="auto_sync">Synchronization</string>
     <string name="notifications">Benachrichtigungen</string>
     <string name="statistics_export">Statistiken exportieren</string>
     <string name="statistics_import">Statistiken importieren</string>
