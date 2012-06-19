@@ -37,7 +37,7 @@
 			    android:layout_gravity="center_horizontal"
 			    android:text="@string/comments"
 			    android:textColor="#fff"
-			    android:textSize="12dp"
+			    android:textSize="11dp"
 			    android:textStyle="bold" />
 
 		</LinearLayout>
@@ -76,7 +76,7 @@
 			    android:layout_gravity="center_horizontal"
 			    android:text="@string/ratings"
 			    android:textColor="#fff"
-			    android:textSize="12dp"
+			    android:textSize="11dp"
 			    android:textStyle="bold" />
 
 		</LinearLayout>
@@ -116,7 +116,7 @@
 			    android:layout_gravity="center_horizontal"
 			    android:text="@string/downloads"
 			    android:textColor="#fff"
-			    android:textSize="12dp"
+			    android:textSize="11dp"
 			    android:textStyle="bold" />
 
 		</LinearLayout>
@@ -156,7 +156,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:textColor="#fff"
-				android:textSize="12dp"
+				android:textSize="11dp"
 				android:layout_gravity="center_horizontal"
 				android:text="@string/admob" />
 		</LinearLayout>
