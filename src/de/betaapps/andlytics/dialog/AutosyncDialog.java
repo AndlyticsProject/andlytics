@@ -32,7 +32,7 @@ public class AutosyncDialog extends Dialog implements OnClickListener {
 
 	private String[] periodTexts;
 
-	private Integer[] periodValues = {0, 60 * 15, 60 * 30, 60 * 60, 60 * 60 * 2, 60 * 60 * 3, 60 * 60 * 6, 60 * 60 * 12, 60 * 60 * 24};
+	private Integer[] periodValues = {0, 60 * 15, 60 * 30, 60 * 60, 60 * 60 * 2, 60 * 60 * 3, 60 * 60 * 6, 60 * 60 * 8, 60 * 60 * 12, 60 * 60 * 24};
 
     private TextView periodTextView;
 

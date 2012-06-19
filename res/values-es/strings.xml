@@ -5,13 +5,13 @@
     <string name="app_name_admob">AdMob for Andlytics</string>
     <string name="app_name_headline_full">ANDLYTICS</string>
     <string name="app_name_headline_light">ANDLYTICS LITE</string>
-    
+
     <string name="autosync_off">la sincronización está desactivada</string>
     <string name="autosync_on">la sincronización está activada</string>
 
     <string name="one_entry_hint_desc">andlytics recolecta datos en el tiempo. para ver la gráfica rellenada inténtalo de nuevo cuando haya más datos.\n\nnormalmente las estadísticas se actualizan cada 24-48 horas.</string>
     <string name="one_entry_hint_demo"><u>ver gráfica con datos de demostración</u></string>
-    
+
     <string name="pro_desc">Andlytics donate / pro key unlocks the additional features change notification as well as statistics data export and import.\n\nPlease notice that Google doesn\'t provide a stable API to get the numbers. Therefore Andlytics might not work properly if there are changes in the Android Market.\n\nIn that case we try to catch up with the changes but <b>we can\'t guarantee that the app works properly in the future</b>.\n\nNot available in: Bulgaria Estonia Greece Hungary Kazakhstan Latvia Lithuania Luxembourg Philippines Romania Serbia Slovakia Slovenia South Africa Thailand</string>
     <string name="crash_desc">Ha ocurrido un error inesperado.\n\nPor favor, ayudanos a solucionarlo enviandonos los datos del error. La información sobre el error (stacktrace) y la información sobre tu dispositivo serán enviadas para identificar el problema.\n\nGracias!\n\n</string>
     <string name="newversion_desc"><b>Ha ocurrido un error inesperado, probablemente porque haya cambiado la interfaz web.</b>\n\nPero las buenas noticias son que hay una nueva versión de Andlytics en el Android Market.\n\nPor favor, actualiza antes de avisarnos del error.\n\nGracias!\n\n\n</string>
@@ -90,5 +90,17 @@
     <string name="downloads_day">descargas por día</string>
     <string name="active_installs_percent">porcentaje de instalaciones activas</string>
     <string name="swipe">desliza para ver la siguiente gráfica -></string>
-    
+
+    <string name="admob">admob</string>
+    <string name="admob__revenue">revenue</string>
+    <string name="admob__requests">requests</string>
+    <string name="admob__clicks">clicks</string>
+    <string name="admob__fill_rate">fill rate</string>
+    <string name="admob__eCPM">eCPM</string>
+    <string name="admob__impressions">impressions</string>
+    <string name="admob__CTR">CTR</string>
+    <string name="admob__house_ad_clicks">house ad clicks</string>
+    <string name="admob__charts_available">AdMob charts available</string>
+    <string name="last_update">last update</string>
+
 </resources>

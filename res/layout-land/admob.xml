@@ -38,8 +38,8 @@
 				android:layout_width="1dp"
 				android:background="#dadada"
 				android:layout_toRightOf="@+id/admob_button_back"></View>
-				
-				
+
+
 
 
 			<de.betaapps.andlytics.chart.ChartTextSwitcher
@@ -49,18 +49,18 @@
 				android:paddingTop="5dp" android:layout_centerVertical="true" android:layout_toLeftOf="@+id/admob_toolbar_spacer" android:layout_toRightOf="@+id/admob_back_button_spacer">
 			</de.betaapps.andlytics.chart.ChartTextSwitcher>
 
-	
-				
+
+
 			<View
-				android:id="@+id/admob_toobar_spacer"
+				android:id="@+id/admob_toolbar_spacer"
 				android:layout_height="fill_parent"
-				android:layout_toLeftOf="@+id/admob_toobar_switcher"
+				android:layout_toLeftOf="@+id/admob_toolbar_switcher"
 				android:layout_width="1dp"
 				android:background="#dadada"></View>
-				
+
 
 			<ViewSwitcher
-				android:id="@+id/admob_toobar_switcher"
+				android:id="@+id/admob_toolbar_switcher"
 				android:layout_width="wrap_content"
 				android:layout_alignParentRight="true"
 				android:layout_centerVertical="true"
@@ -73,7 +73,7 @@
 					android:id="@+id/admob_button_refresh"
 					android:background="@drawable/toolbar_button_background"
 					android:layout_gravity="center" android:layout_height="fill_parent" android:layout_width="fill_parent">
-					
+
 					<ImageView
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
 				</RelativeLayout>
 				<RelativeLayout
 					android:layout_gravity="center" android:layout_height="fill_parent" android:layout_width="fill_parent">
-			
+
 					<ImageView
 						android:id="@+id/loading"
 						android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
 			</ViewSwitcher>
 
 
-				
+
 
 
 
@@ -120,7 +120,7 @@
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:visibility="gone">
-			
+
 			<ViewSwitcher
 				android:id="@+id/admob_viewswitcher_config"
 				android:layout_width="fill_parent"
@@ -187,9 +187,9 @@
 					android:orientation="vertical"
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
-					
 
-	
+
+
 					<RelativeLayout
 						android:layout_width="fill_parent"
 						android:layout_height="fill_parent"
@@ -197,7 +197,7 @@
 						<include
 							android:id="@+id/admob_config3"
 							layout="@layout/admob_config3" />
-					</RelativeLayout>					
+					</RelativeLayout>
 
 					<RelativeLayout
 						android:id="@+id/admob_list_frame"
@@ -254,8 +254,8 @@
 							</LinearLayout>
 						</ScrollView>
 					</RelativeLayout>
-	
-					
+
+
 				</LinearLayout>
 				<View
 					android:id="@+id/admob_listSpacer"

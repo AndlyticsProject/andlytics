@@ -43,8 +43,8 @@
 
 		</LinearLayout>
 
-	</RelativeLayout>	
-	
+	</RelativeLayout>
+
 
 
 	<View
@@ -52,9 +52,9 @@
 		android:layout_width="1dp"
 		android:background="#fff" />
 
-	
 
-			
+
+
 	<RelativeLayout
 		android:id="@+id/tabbar_button_ratings"
 		android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
 
 		</LinearLayout>
 
-	</RelativeLayout>	
+	</RelativeLayout>
 
 	<View
 		android:layout_height="fill_parent"
@@ -128,7 +128,7 @@
 		</LinearLayout>
 
 	</RelativeLayout>
-	
+
 	<View
 		android:layout_height="fill_parent"
 		android:layout_width="1dp"
@@ -160,7 +160,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:textColor="#fff"
-				android:text="admob"
+				android:text="@string/admob"
 				android:textSize="12dp" android:layout_gravity="center" android:layout_marginLeft="2dp"/>
 		</LinearLayout>
 
