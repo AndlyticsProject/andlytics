@@ -74,7 +74,7 @@
     <string name="admob_login">ADMOB ACCOUNT LOGIN</string>
     <string name="password">Passwort</string>
     <string name="login">einloggen</string>
-    <string name="remove_admob">AdMob Verknüpfung nertfernen</string>
+    <string name="remove_admob">AdMob Verknüpfung entfernen</string>
     <string name="remove_admob_app">AdMob Werte von dieser App entfernen</string>
     <string name="loading_site">Lade Seiten...</string>
     <string name="select_admob_site">Die mit dieser App zu verknüpfende AdMob Seite auswählen</string>
@@ -91,7 +91,16 @@
     <string name="active_installs_percent">Aktive Installationen in Prozent</string>
     <string name="swipe">Swipen um zur nächsten Übersicht zu kommen -></string>
 
-    <string name="revenue">Einnahmen</string>
+    <string name="admob">Admob</string>
+    <string name="admob__revenue">Einnahmen</string>
+    <string name="admob__requests">Anfragen</string>
+    <string name="admob__clicks">Klicks</string>
+    <string name="admob__fill_rate">Füllrate</string>
+    <string name="admob__eCPM">Kosten pro 1000</string>
+    <string name="admob__impressions">Aufrufe</string>
+    <string name="admob__CTR">Klickrate</string>
+    <string name="admob__house_ad_clicks">House-Ad Klicks</string>
+    <string name="admob__charts_available">AdMob Tabellen verfügbar</string>
     <string name="last_update">Letztes Update</string>
 
 </resources>

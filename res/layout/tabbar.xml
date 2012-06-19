@@ -157,7 +157,8 @@
 				android:layout_height="wrap_content"
 				android:textColor="#fff"
 				android:textSize="12dp"
-				android:layout_gravity="center_horizontal" android:text="admob"/>
+				android:layout_gravity="center_horizontal"
+				android:text="@string/admob" />
 		</LinearLayout>
 
 	</RelativeLayout>

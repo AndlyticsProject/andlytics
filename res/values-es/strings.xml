@@ -91,7 +91,16 @@
     <string name="active_installs_percent">porcentaje de instalaciones activas</string>
     <string name="swipe">desliza para ver la siguiente gráfica -></string>
 
-    <string name="revenue">revenue</string>
+    <string name="admob">admob</string>
+    <string name="admob__revenue">revenue</string>
+    <string name="admob__requests">requests</string>
+    <string name="admob__clicks">clicks</string>
+    <string name="admob__fill_rate">fill rate</string>
+    <string name="admob__eCPM">eCPM</string>
+    <string name="admob__impressions">impressions</string>
+    <string name="admob__CTR">CTR</string>
+    <string name="admob__house_ad_clicks">house ad clicks</string>
+    <string name="admob__charts_available">AdMob charts available</string>
     <string name="last_update">last update</string>
 
 </resources>

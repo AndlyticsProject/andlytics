@@ -418,51 +418,51 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
         switch (currentChart) {
 
         case REVENUE:
-            updateTitleTextSwitcher(this.getString(R.string.revenue));
+            updateTitleTextSwitcher(this.getString(R.string.admob__revenue));
             if(overallStats != null)
                 subHeadlineText = numberFormat.format(overallStats.getRevenue());
             break;
 
         case REQUESTS:
             Preferences.saveShowChartHint(AdmobActivity.this, false);
-            updateTitleTextSwitcher("requests");
+            updateTitleTextSwitcher(this.getString(R.string.admob__requests));
             if(overallStats != null)
                 subHeadlineText = overallStats.getRequests() + "";
             break;
 
         case CLICKS:
-            updateTitleTextSwitcher("clicks");
+            updateTitleTextSwitcher(this.getString(R.string.admob__clicks));
             if(overallStats != null)
                 subHeadlineText = overallStats.getClicks() + "";
             break;
 
         case FILL_RATE:
-            updateTitleTextSwitcher("fill rate");
+            updateTitleTextSwitcher(this.getString(R.string.admob__fill_rate));
             if(overallStats != null)
                 subHeadlineText = (new BigDecimal(overallStats.getFillRate() * 100)).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "%";
 
             break;
 
         case ECPM:
-            updateTitleTextSwitcher("eCPM");
+            updateTitleTextSwitcher(this.getString(R.string.admob__eCPM));
             if(overallStats != null)
                 subHeadlineText = numberFormat.format(overallStats.getEcpm());
             break;
 
         case IMPRESSIONS:
-            updateTitleTextSwitcher("impressions");
+            updateTitleTextSwitcher(this.getString(R.string.admob__impressions));
             if(overallStats != null)
                 subHeadlineText = overallStats.getImpressions() + "";
             break;
 
         case CTR:
-            updateTitleTextSwitcher("CTR");
+            updateTitleTextSwitcher(this.getString(R.string.admob__CTR));
             if(overallStats != null)
                 subHeadlineText = (new BigDecimal(overallStats.getCtr() * 100)).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "%";
             break;
 
         case HOUSEAD_CLICKS:
-            updateTitleTextSwitcher("house ad clicks");
+            updateTitleTextSwitcher(this.getString(R.string.admob__house_ad_clicks));
             if(overallStats != null)
                 subHeadlineText = overallStats.getHouseAdClicks() + "";
             break;
@@ -472,7 +472,7 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
         }
 
         if(Preferences.getShowChartHint(AdmobActivity.this)) {
-            timeframeText.setText(Html.fromHtml("8 AdMob charts available ->"));
+            timeframeText.setText(Html.fromHtml("8 " + this.getString(R.string.admob__charts_available)+ " ->"));
         } else {
             if(timetext != null) {
                 timeframeText.setText(Html.fromHtml(timetext + ": <b>" + subHeadlineText + "</b>"));
