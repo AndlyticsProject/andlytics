@@ -92,15 +92,15 @@
     <string name="swipe">desliza para ver la siguiente gráfica -></string>
 
     <string name="admob">admob</string>
-    <string name="admob__revenue">revenue</string>
-    <string name="admob__requests">requests</string>
+    <string name="admob__revenue">ganancias</string>
+    <string name="admob__requests">peticiones</string>
     <string name="admob__clicks">clicks</string>
-    <string name="admob__fill_rate">fill rate</string>
+    <string name="admob__fill_rate">tasa de relleno</string>
     <string name="admob__eCPM">eCPM</string>
-    <string name="admob__impressions">impressions</string>
+    <string name="admob__impressions">impresiones</string>
     <string name="admob__CTR">CTR</string>
-    <string name="admob__house_ad_clicks">house ad clicks</string>
-    <string name="admob__charts_available">AdMob charts available</string>
-    <string name="last_update">last update</string>
+    <string name="admob__house_ad_clicks">clicks en los anuncios</string>
+    <string name="admob__charts_available">gráficas AdMob disponibles</string>
+    <string name="last_update">última actualización</string>
 
 </resources>
