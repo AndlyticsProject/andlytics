@@ -1,7 +1,7 @@
-andlytics
+Andlytics
 =========
 
-Project imported from last source code released by Timelappse with fix by Maurizio Pinotti (@wwtwister).
+Project imported from last source code released by Timelappse (@andlytics) with fix by Maurizio Pinotti (@wwtwister).
 
 Track your Android app's statistics.
 
