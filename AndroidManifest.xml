@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	package="de.betaapps.andlytics"
 	android:installLocation="auto"
-	android:versionName="1.3.37" android:versionCode="76">
+	android:versionName="1.3.38" android:versionCode="77">
 
 	<uses-permission
 		android:name="android.permission.INTERNET" />
