@@ -23,7 +23,7 @@
 				android:textSize="22dp"
 				android:layout_height="wrap_content"
 				android:paddingTop="5dp"
-				android:layout_centerVertical="true" android:textStyle="bold" android:text="andlytics"/>
+				android:layout_centerVertical="true" android:textStyle="bold" android:text="@string/app_name"/>
 
 			<TextView
 			    android:id="@+id/login_headline_beta"
