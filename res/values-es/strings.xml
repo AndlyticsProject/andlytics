@@ -15,7 +15,7 @@
     <string name="pro_desc">Andlytics donate / pro key unlocks the additional features change notification as well as statistics data export and import.\n\nPlease notice that Google doesn\'t provide a stable API to get the numbers. Therefore Andlytics might not work properly if there are changes in the Android Market.\n\nIn that case we try to catch up with the changes but <b>we can\'t guarantee that the app works properly in the future</b>.\n\nNot available in: Bulgaria Estonia Greece Hungary Kazakhstan Latvia Lithuania Luxembourg Philippines Romania Serbia Slovakia Slovenia South Africa Thailand</string>
     <string name="crash_desc">Ha ocurrido un error inesperado.\n\nPor favor, ayudanos a solucionarlo enviandonos los datos del error. La información sobre el error (stacktrace) y la información sobre tu dispositivo serán enviadas para identificar el problema.\n\nGracias!\n\n</string>
     <string name="newversion_desc"><b>Ha ocurrido un error inesperado, probablemente porque haya cambiado la interfaz web.</b>\n\nPero las buenas noticias son que hay una nueva versión de Andlytics en el Android Market.\n\nPor favor, actualiza antes de avisarnos del error.\n\nGracias!\n\n\n</string>
-    <string name="account_required">cuenta de desarrollador android necesarea</string>
+    <string name="account_required">cuenta de desarrollador android necesaria</string>
     <string name="account_choose">Elige o añade una cuenta de Google. La cuenta tiene que ser una cuenta de desarrollador android con aplicaciones publicadas en el Android Market (\'Las cuentas Google Apps for Business\' no están soportadas todavía).</string>
     <string name="logout">logout</string>
     <string name="refresh">actualizar</string>
@@ -93,6 +93,7 @@
 
     <string name="admob">admob</string>
     <string name="admob__revenue">ganancias</string>
+    <string name="admob__epc">epc</string>
     <string name="admob__requests">peticiones</string>
     <string name="admob__clicks">clicks</string>
     <string name="admob__fill_rate">tasa de relleno</string>

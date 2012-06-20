@@ -1,5 +1,6 @@
 package de.betaapps.andlytics.model;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 
 public class Admob  {
@@ -21,6 +22,8 @@ public class Admob  {
     private Float cpmRevenue = .0f;
     private Integer exchangeDownloads = 0;
     private Date date;
+    private static final int XK_cent                           = 0x00a2;  /* U+00A2 CENT SIGN */
+    private static final DecimalFormat centsFormatter = new DecimalFormat("0.00"+((char)XK_cent));
     
     public String getSiteId() {
         return siteId;
@@ -91,6 +94,12 @@ public class Admob  {
     public Float getEcpm() {
         return ecpm;
     }
+    public String getEpcCents() {
+      return centsFormatter.format(getEpc());
+  }
+    public Float getEpc() {
+    return clicks>0?(revenue*100.f/clicks):-1;
+  }
     public void setEcpm(Float ecpm) {
         this.ecpm = ecpm;
     }
