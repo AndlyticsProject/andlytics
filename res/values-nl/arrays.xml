@@ -1,0 +1,15 @@
+
+    <resources>
+        <string-array name="autosync_periods">
+            <item>uitgeschakeld</item>
+            <item>15 minuten</item>
+            <item>30 minuten</item>
+            <item>1 uur</item>
+            <item>2 uren</item>
+            <item>3 uren</item>
+            <item>6 uren</item>
+            <item>8 uren</item>
+            <item>12 uren</item>
+            <item>24 uren</item>
+        </string-array>
+    </resources>
