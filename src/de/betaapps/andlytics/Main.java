@@ -25,6 +25,7 @@ import de.betaapps.andlytics.sync.AutosyncHandlerFactory;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -817,7 +818,8 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
         switch (id) {
         case FEEDBACK_DIALOG:
-
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/brunomendola/andlytics/issues")));
+/*
             FeedbackDialog.FeedbackDialogBuilder builder = new FeedbackDialogBuilder(Main.this);
             builder.setTitle(this.getString(R.string.feedback));
 
@@ -838,7 +840,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
             });
 
             dialog = builder.create(accountname + "\n\n", getApplication());
-
+*/
             break;
 
         default:
