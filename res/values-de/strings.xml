@@ -93,6 +93,7 @@
 
     <string name="admob">Admob</string>
     <string name="admob__revenue">Einnahmen</string>
+    <string name="admob__epc">Verdienst je Klick</string>
     <string name="admob__requests">Anfragen</string>
     <string name="admob__clicks">Klicks</string>
     <string name="admob__fill_rate">Füllrate</string>

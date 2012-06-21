@@ -80,7 +80,7 @@ public class DeveloperConsole {
 
 	private static final String GET_ASSET_FOR_USER_COUNT_REQUEST = "7|0|4|https://play.google.com/apps/publish/gwt/|11B29A336607683DE538737452FFF924|com.google.wireless.android.vending.developer.shared.AppEditorService|getAssetForUserCount|1|2|3|4|0|";
 	
-	private static final String GET_USER_COMMENTS_REQUEST = "7|0|9|https://play.google.com/apps/publish/gwt/|2E9964DE97CC7BE08F40232BE9F2F2D9|com.google.wireless.android.vending.developer.shared.CommentsService|getUserComments|java.lang.String/2004016611|J|java.lang.Iterable|<<appname>>|java.util.ArrayList/4159755760|1|2|3|4|7|5|6|6|7|7|7|5|8|<<start>>|<<length>>|9|0|9|0|9|0|0|";
+	private static final String GET_USER_COMMENTS_REQUEST = "7|2|11|https://play.google.com/apps/publish/gwt/|3B4252B1EA6FFDBEAC02B41B3975C468|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.CommentsService|getUserComments|java.lang.String/2004016611|J|java.lang.Iterable|<<appname>>|java.util.ArrayList/4159755760|1|2|3|4|5|6|7|7|8|8|9|9|9|7|10|<<start>>|<<length>>|11|0|11|0|11|0|0|";
 
 	private static final String GET_FEEDBACK_OVERVIEW = "7|0|6|https://play.google.com/apps/publish/gwt/|8A88A8C8E8E60107C7E013322C6CE8F2|com.google.wireless.android.vending.developer.shared.FeedbackService|getOverviewsForPackages|com.google.protos.userfeedback.gwt.AndroidFrontend$AndroidPackageListRequest$Json/4146859527|[,[<<packagelist>>] ] |1|2|3|4|1|5|5|6|";
 	
@@ -389,6 +389,10 @@ public class DeveloperConsole {
 		postData = postData.replace(PARAM_APPNAME, packageName);
 		postData = postData.replace(PARAM_STARTINDEX, startIndexString);
 		postData = postData.replace(PARAM_LENGTH, lengthString);
+
+		// 8p8 fix for xsrfToken
+		String xsrfToken = ((AndlyticsApp) context.getApplicationContext()).getXsrfToken();
+		if (xsrfToken != null) postData = postData.replace(PARAM_XSRFTOKEN, xsrfToken);
 
 		String result = null;
 		
