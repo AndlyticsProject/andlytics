@@ -3,7 +3,6 @@
 *.ap_
 .project
 .classpath
-.gitignore
 
 # files for the dex VM
 *.dex
