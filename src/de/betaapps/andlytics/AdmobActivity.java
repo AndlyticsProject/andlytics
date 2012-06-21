@@ -423,6 +423,12 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
                 subHeadlineText = numberFormat.format(overallStats.getRevenue());
             break;
 
+          case EPC:
+            updateTitleTextSwitcher(this.getString(R.string.admob__epc));
+            if(overallStats != null)
+              subHeadlineText = overallStats.getEpcCents();
+            break;
+            
         case REQUESTS:
             Preferences.saveShowChartHint(AdmobActivity.this, false);
             updateTitleTextSwitcher(this.getString(R.string.admob__requests));

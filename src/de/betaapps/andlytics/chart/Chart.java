@@ -31,7 +31,7 @@ public class Chart extends AbstractChart {
 	}
 	
 	public enum AdmobChartType {
-        REVENUE, REQUESTS, CLICKS, FILL_RATE, ECPM, IMPRESSIONS, CTR, HOUSEAD_CLICKS
+        REVENUE, EPC,REQUESTS, CLICKS, FILL_RATE, ECPM, IMPRESSIONS, CTR, HOUSEAD_CLICKS
     }
 
 	public enum DownloadChartType {
@@ -429,6 +429,16 @@ public class Chart extends AbstractChart {
                 @Override
                 public double getValue(Object appInfo) {
                     return ((Admob)appInfo).getRevenue();
+                }
+            };
+            result = buildLineChart(context, statsForApp.toArray(), handler);
+            break;
+          case EPC:
+
+            handler = new AdmobValueCallbackHander() {
+                @Override
+                public double getValue(Object appInfo) {
+                    return ((Admob)appInfo).getEpc();
                 }
             };
             result = buildLineChart(context, statsForApp.toArray(), handler);
