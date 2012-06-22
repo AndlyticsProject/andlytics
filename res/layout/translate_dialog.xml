@@ -47,7 +47,7 @@
 			<RelativeLayout
 				android:id="@+id/translate_dialog_close_button"
 				android:layout_height="wrap_content"
-				android:layout_width="fill_parent"
+				android:layout_width="0dp"
 				android:background="@drawable/image_button"
 				android:layout_margin="5dp"
 				android:padding="5dp"
