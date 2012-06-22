@@ -818,7 +818,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
         switch (id) {
         case FEEDBACK_DIALOG:
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/brunomendola/andlytics/issues")));
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Andlytics-Project/andlytics/issues")));
 /*
             FeedbackDialog.FeedbackDialogBuilder builder = new FeedbackDialogBuilder(Main.this);
             builder.setTitle(this.getString(R.string.feedback));
