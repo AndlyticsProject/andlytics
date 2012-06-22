@@ -25,7 +25,7 @@
     <string name="active_installs">Installationen</string>
     <string name="admob_revenue">Admob Einnahmen</string>
     <string name="admob_requests">Admob Anfragen</string>
-    <string name="average_rating">Durchschnittsbewertung</string>
+    <string name="average_rating">Durchschnitt</string>
     <string name="ratings">Bewertungen</string>
     <string name="auto_sync">Synchronization</string>
     <string name="notifications">Benachrichtigungen</string>
