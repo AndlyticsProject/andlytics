@@ -1,0 +1,13 @@
+This project uses the following open source libraries:
+
+AChartEngine (http://code.google.com/p/achartengine/)
+by The 4ViewSoft Company
+is licensed under Apache License 2.0.
+
+opencsv (http://opencsv.sourceforge.net/) 
+by Glen Smith, Sean Sullivan, Scott Conway 
+is licensed under Apache License 2.0.
+
+ACRA - Application Crash Reporting for Android (http://code.google.com/p/acra/) 
+by Emmanuel Astier & Kevin Gaudin 
+is licensed under Apache License 2.0.
