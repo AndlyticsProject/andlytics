@@ -1,6 +1,8 @@
 # built application files
 *.apk
 *.ap_
+.project
+.classpath
 
 # files for the dex VM
 *.dex
@@ -12,6 +14,7 @@
 bin/
 gen/
 build/
+proguard/
 
 # Local configuration file (sdk path, etc)
 local.properties
