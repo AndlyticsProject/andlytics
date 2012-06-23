@@ -29,8 +29,9 @@
 			android:shadowDy="1"
 			android:shadowRadius="1"
 			android:textSize="15dp"
+			android:text="@string/app_name_admob"
 			android:layout_centerVertical="true"
-			android:layout_alignWithParentIfMissing="true" android:text="" />
+			android:layout_alignWithParentIfMissing="true" />
 
 	</RelativeLayout>
 
