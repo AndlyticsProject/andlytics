@@ -18,7 +18,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_centerVertical="true"
-			android:textStyle="bold" android:id="@+id/import_file_name" android:paddingLeft="10dp" android:text="de.betaapps.bruttonetto.csv"/>
+			android:textStyle="bold" android:id="@+id/import_file_name" android:paddingLeft="10dp" android:text="com.github.andlyticsproject.bruttonetto.csv"/>
 			 
 
 		<CheckBox

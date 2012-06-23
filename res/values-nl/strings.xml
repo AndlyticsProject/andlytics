@@ -24,7 +24,7 @@
     <string name="total_downloads">downloads in totaal</string>
     <string name="active_installs">actieve installaties</string>
     <string name="admob_revenue">admob opbrengst</string>
-    <string name="admob__epc">epc</string>
+    <string name="admob_epc">epc</string>
     <string name="admob_requests">admob verzoeken</string>
     <string name="average_rating">gemiddelde beoordeling</string>
     <string name="ratings">beoordelingen</string>
