@@ -26,9 +26,9 @@
 			android:type="sweep"
 			android:useLevel="false"
 			android:startColor="#fff"
-			android:centerColor="#84b325"
+			android:centerColor="#33B5E5"
 			android:centerY="0.50"
-			android:endColor="#84b325" />
+			android:endColor="#33B5E5" />
 
 	</shape>
 </rotate>

@@ -175,7 +175,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
 		android:id="@+id/notification_dialog_spacer2"
-		android:background="#84b325"
+		android:background="#33B5E5"
 		android:layout_marginTop="10dp" />
 
 	<TextView
@@ -286,7 +286,7 @@
 	<View
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
-		android:background="#84b325"
+		android:background="#33B5E5"
 		android:layout_marginTop="10dp"
 		android:id="@+id/notification_dialog_spacer3" />
 

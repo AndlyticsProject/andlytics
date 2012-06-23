@@ -8,9 +8,8 @@
 			xmlns:android="http://schemas.android.com/apk/res/android"
 			android:shape="rectangle">
 			<gradient
-				android:startColor="#b4d17a"
-				android:centerColor="#9fc455"
-				android:endColor="#b4d17a"
+				android:startColor="#33B5E5"
+				android:endColor="#8FD6F1"
 				android:angle="270" />	
 		</shape>
 	</item>
@@ -23,9 +22,8 @@
 			xmlns:android="http://schemas.android.com/apk/res/android"
 			android:shape="rectangle">
 			<gradient
-				android:startColor="#b4d17a"
-				android:centerColor="#9fc455"
-				android:endColor="#b4d17a"
+				android:startColor="#33B5E5"
+				android:endColor="#8FD6F1"
 				android:angle="270" />	
 		</shape>
 	</item>
@@ -37,9 +35,8 @@
 			xmlns:android="http://schemas.android.com/apk/res/android"
 			android:shape="rectangle">
 			<gradient
-				android:startColor="#9fc455"
-				android:centerColor="#84b325"
-				android:endColor="#9fc455"
+				android:startColor="#33B5E5"
+				android:endColor="#8FD6F1"
 				android:angle="270" />
 		</shape>
 	</item>
@@ -51,9 +48,8 @@
 			xmlns:android="http://schemas.android.com/apk/res/android"
 			android:shape="rectangle">
 			<gradient
-				android:startColor="#9fc455"
-				android:centerColor="#84b325"
-				android:endColor="#9fc455"
+				android:startColor="#8FD6F1"
+				android:endColor="#33B5E5"
 				android:angle="270" />
 		</shape>
 	</item>
@@ -65,9 +61,8 @@
 			android:shape="rectangle">
 
 			<gradient
-				android:startColor="#9fc455"
-				android:centerColor="#84b325"
-				android:endColor="#9fc455"
+				android:startColor="#555555"
+				android:endColor="#555555"
 				android:angle="270" />
 		</shape>
 	</item>

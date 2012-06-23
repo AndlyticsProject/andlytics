@@ -46,7 +46,7 @@
 	<View
 		android:layout_height="fill_parent"
 		android:layout_width="1dp"
-		android:background="#fff" />
+		android:background="@color/andBackground" />
 
 
 	<RelativeLayout
@@ -87,7 +87,7 @@
 	<View
 		android:layout_height="fill_parent"
 		android:layout_width="1dp"
-		android:background="#fff" />
+		android:background="@color/andBackground" />
 
 	<RelativeLayout
 		android:id="@+id/tabbar_button_downloads"
@@ -126,7 +126,7 @@
 	<View
 		android:layout_height="fill_parent"
 		android:layout_width="1dp"
-		android:background="#fff" />
+		android:background="@color/andBackground" />
 
 
 

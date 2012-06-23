@@ -103,7 +103,7 @@ public class Chart extends AbstractChart {
 		}
 		
 		// styling
-		int[] colors = new int[] { Color.parseColor("#84b325") };
+		int[] colors = new int[] { Color.parseColor("#33B5E5") };
 		XYMultipleSeriesRenderer renderer = buildBarRenderer(colors);
 		renderer.setOrientation(Orientation.HORIZONTAL);
 
@@ -241,7 +241,7 @@ public class Chart extends AbstractChart {
 		// values.add(activeArray);
 
 		// styling
-		int[] colors = new int[] { Color.parseColor("#84b325") };
+		int[] colors = new int[] { Color.parseColor("#33B5E5") };
 		PointStyle pointStye = valuesArray.length > 30 ? PointStyle.POINT : PointStyle.CIRCLE;
 		PointStyle[] styles = new PointStyle[] { pointStye };
 		XYMultipleSeriesRenderer renderer = buildRenderer(colors, styles);
