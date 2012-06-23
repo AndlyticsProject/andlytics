@@ -191,7 +191,7 @@
 			android:layout_below="@+id/main_app_ratingbar1"
 			android:id="@+id/main_package_name"
 			android:layout_height="wrap_content"
-			android:text="de.betaapps.bruttonetto"
+			android:text="com.github.andlyticsproject.bruttonetto"
 			android:paddingTop="2dp"
 			android:layout_centerHorizontal="true"
 			android:textColor="#bababa"
