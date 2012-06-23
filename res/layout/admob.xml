@@ -42,12 +42,12 @@
 				
 
 
-			<de.betaapps.andlytics.chart.ChartTextSwitcher
+			<com.github.andlyticsproject.chart.ChartTextSwitcher
 				android:id="@+id/admob_admob_type"
 				android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
 				android:paddingTop="5dp" android:layout_centerVertical="true" android:layout_toLeftOf="@+id/admob_config_button_spacer" android:layout_toRightOf="@+id/admob_back_button_spacer">
-			</de.betaapps.andlytics.chart.ChartTextSwitcher>
+			</com.github.andlyticsproject.chart.ChartTextSwitcher>
 
 			<View
 				android:id="@+id/admob_config_button_spacer"
@@ -178,7 +178,7 @@
 					android:textSize="14dp"
 					android:visibility="visible" android:layout_centerHorizontal="true" android:text=""></TextView>
 
-				<de.betaapps.andlytics.view.ChartGallery
+				<com.github.andlyticsproject.view.ChartGallery
 					xmlns:android="http://schemas.android.com/apk/res/android"
 					android:id="@+id/admob_gallery"
 					android:layout_width="fill_parent"

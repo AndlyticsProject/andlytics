@@ -19,13 +19,13 @@
 
 
 
-			<de.betaapps.andlytics.chart.ChartTextSwitcher
+			<com.github.andlyticsproject.chart.ChartTextSwitcher
 				android:layout_height="wrap_content"
 				android:id="@+id/chart_chart_type"
 				android:layout_centerInParent="true"
 				android:layout_width="fill_parent"
 				android:paddingTop="5dp">
-			</de.betaapps.andlytics.chart.ChartTextSwitcher>
+			</com.github.andlyticsproject.chart.ChartTextSwitcher>
 
 			<RelativeLayout
 				android:id="@+id/chart_button_back"
@@ -98,7 +98,7 @@
 			android:layout_marginLeft="5dp"
 			android:layout_marginRight="5dp"
 			android:layout_weight="0.5">
-			<de.betaapps.andlytics.view.ChartGallery
+			<com.github.andlyticsproject.view.ChartGallery
 				xmlns:android="http://schemas.android.com/apk/res/android"
 				android:id="@+id/chart_gallery"
 				android:layout_width="fill_parent"

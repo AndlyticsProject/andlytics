@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	package="de.betaapps.andlytics"
+	package="com.github.andlyticsproject"
 	android:installLocation="auto"
 	android:versionName="1.3.38" android:versionCode="77">
 
@@ -106,16 +106,16 @@
 			android:name=".io.ImportService" />
 
 		<provider
-			android:name="de.betaapps.andlytics.sync.ContentProvider"
-			android:authorities="de.betaapps.andlytics" />
+			android:name="com.github.andlyticsproject.sync.ContentProvider"
+			android:authorities="com.github.andlyticsproject" />
 
 		<provider
-			android:name="de.betaapps.andlytics.db.AndlyticsContentProvider"
-			android:authorities="de.betaapps.andlytics.db.AndlyticsContentProvider" />
+			android:name="com.github.andlyticsproject.db.AndlyticsContentProvider"
+			android:authorities="com.github.andlyticsproject.db.AndlyticsContentProvider" />
 
 		<receiver
 			android:process=":remote"
-			android:name="de.betaapps.andlytics.sync.AlarmReceiver"></receiver>
+			android:name="com.github.andlyticsproject.sync.AlarmReceiver"></receiver>
 
 
 	</application>
