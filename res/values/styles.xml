@@ -22,7 +22,7 @@
     <style name="MainTableHeadline" parent="@style/MainTableText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">#84b325</item>
+        <item name="android:textColor">#33B5E5</item>
     </style>
     
     <style name="Dialog" parent="android:style/Theme.Dialog">
@@ -37,6 +37,18 @@
      <style name="Animation.InfoDialog" parent="@android:style/Animation">
         <item name="@android:windowEnterAnimation">@anim/info_dialog_fade_in</item>
         <item name="@android:windowExitAnimation">@anim/info_dialog_fade_out</item>
-    </style>    
+    </style>  
+    
+        <style name="ActionBarSeparator">
+        <item name="android:layout_width">2px</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:background">@drawable/actionbar_separator</item>
+    </style>
+    
+    <style name="andRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/and_ratingbar_full</item>
+        <item name="android:minHeight">24dip</item>
+        <item name="android:maxHeight">24dip</item>
+    </style>
     
 </resources>

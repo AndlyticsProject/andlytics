@@ -22,11 +22,16 @@
 			android:id="@+id/chart_headline_text"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
-			style="@style/MainTableText"
+			android:textColor="#F7FBF5"
 			android:textStyle="bold"
+			android:shadowColor="#EE1D1F2A"
+			android:shadowDx="1"
+			android:shadowDy="1"
+			android:shadowRadius="1"
 			android:textSize="15dp"
 			android:layout_centerVertical="true"
-			android:layout_alignWithParentIfMissing="true" android:text=""/>
+			android:layout_alignWithParentIfMissing="true" 
+			android:text=""/>
 
 	</RelativeLayout>
 
