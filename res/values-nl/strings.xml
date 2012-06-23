@@ -94,7 +94,6 @@
 
     <string name="admob">admob</string>
     <string name="admob__revenue">opbrengst</string>
-    <string name="admob__epc">epc</string>
     <string name="admob__requests">verzoeken</string>
     <string name="admob__clicks">clicks</string>
     <string name="admob__fill_rate">vul ratio</string>

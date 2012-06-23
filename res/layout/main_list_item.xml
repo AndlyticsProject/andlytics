@@ -2,7 +2,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:background="#fff"
+	android:background="@color/andBackground"
 	android:paddingBottom="5dp">
 
 	<View
@@ -250,7 +250,7 @@
 
 
 			<RatingBar
-				style="?android:attr/ratingBarStyleSmall"
+				style="@style/andRatingBar"
 				android:layout_below="@+id/main_app_name"
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"

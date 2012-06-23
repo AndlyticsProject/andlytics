@@ -8,30 +8,24 @@
 	<RelativeLayout
 		android:id="@+id/chart_header_frame"
 		android:layout_width="fill_parent"
-		android:layout_height="45dp">
-
+		android:layout_height="45dp"
+		android:background="#33B5E5">
 
 		<RelativeLayout
 			android:layout_centerInParent="true"
 			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"
-			android:background="#fff">
-
-
+			android:layout_width="fill_parent">
 
 			<com.github.andlyticsproject.chart.ChartTextSwitcher
 				android:layout_height="wrap_content"
 				android:id="@+id/chart_chart_type"
 				android:layout_centerInParent="true"
-				android:layout_width="fill_parent"
-				android:paddingTop="5dp">
-			</com.github.andlyticsproject.chart.ChartTextSwitcher>
+				android:layout_width="fill_parent" />			
 
 			<RelativeLayout
 				android:id="@+id/chart_button_back"
 				android:layout_width="wrap_content"
 				android:layout_height="fill_parent"
-				android:background="@drawable/toolbar_button_background"
 				android:minWidth="45dp">
 				<ImageView
 					android:layout_width="32dp"
@@ -41,31 +35,25 @@
 					android:layout_centerInParent="true" />
 			</RelativeLayout>
 
-			<View
-				android:layout_height="fill_parent"
-				android:layout_width="1dp"
-				android:background="#dadada"
-				android:layout_toRightOf="@+id/chart_button_back"></View>
+			<ImageView style="@style/ActionBarSeparator" 
+				android:layout_toRightOf="@+id/chart_button_back" />
 
-			<View
-				android:layout_height="fill_parent"
-				android:layout_toLeftOf="@+id/chart_button_config"
-				android:layout_width="1dp"
-				android:background="#dadada"></View>
+			<ImageView style="@style/ActionBarSeparator" 
+				android:layout_toLeftOf="@+id/chart_button_config" />
+			
 			<RelativeLayout
 				android:id="@+id/chart_button_config"
 				android:layout_width="wrap_content"
 				android:layout_alignParentRight="true"
 				android:layout_centerVertical="true"
 				android:layout_height="fill_parent"
-				android:background="@drawable/toolbar_button_background"
 				android:minWidth="45dp">
 
 				<ImageView
 					android:layout_height="wrap_content"
 					android:layout_width="wrap_content"
 					android:layout_centerInParent="true"
-					android:src="@drawable/icon_settings"></ImageView>
+					android:src="@drawable/icon_settings" />
 
 			</RelativeLayout>
 
@@ -77,7 +65,7 @@
 		android:id="@+id/chart_header_frame_spacer"
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
-		android:background="#84b325"
+		android:background="#30ACD9"
 		android:layout_below="@+id/chart_header_frame" />
 
 
@@ -194,7 +182,7 @@
 				android:id="@+id/chart_listSpacer"
 				android:layout_width="fill_parent"
 				android:layout_height="2dp"
-				android:background="#84b325" />
+				android:background="#30ACD9" />
 
 		</RelativeLayout>
 
@@ -241,8 +229,7 @@
 			android:layout_marginRight="5dp"
 			android:indeterminateOnly="true"
 			android:indeterminateDrawable="@drawable/progress"
-			android:visibility="invisible"></ProgressBar>
-
+			android:visibility="invisible" />
 
 	</RelativeLayout>
 
@@ -251,27 +238,11 @@
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
 		android:layout_above="@+id/tabbar_buttonbar"
-		android:background="#84b325" />
+		android:background="#33B5E5" />
 
 	<include
 		android:id="@+id/tabbar_buttonbar"
 		layout="@layout/tabbar" />
-
-
-	<ImageView
-		android:layout_height="wrap_content"
-		android:src="@drawable/shadow_down"
-		android:layout_width="fill_parent"
-		android:scaleType="fitXY"></ImageView>
-
-
-
-	<ImageView
-		android:layout_height="wrap_content"
-		android:src="@drawable/shadow_down"
-		android:layout_width="fill_parent"
-		android:scaleType="fitXY"
-		android:layout_below="@+id/chart_header_frame_spacer" />
 
 	<ImageView
 		android:layout_height="wrap_content"

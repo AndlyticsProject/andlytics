@@ -5,7 +5,8 @@
 	android:layout_height="wrap_content"
 	android:id="@+id/comments_list_footer"
 	android:orientation="vertical"
-	android:paddingBottom="10dp">
+	android:paddingBottom="10dp"
+	android:background="@color/andBackground">
 
 	<TextView
 		style="@style/MainTableText"

@@ -8,21 +8,20 @@
 	<RelativeLayout
 		android:id="@+id/admob_header_frame"
 		android:layout_width="fill_parent"
-		android:layout_height="45dp">
+		android:layout_height="45dp"
+		android:background="#33B5E5">
 
 
 		<RelativeLayout
 			android:layout_centerInParent="true"
 			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"
-			android:background="#fff">
-
+			android:layout_width="fill_parent">
 
 			<RelativeLayout
 				android:id="@+id/admob_button_back"
 				android:layout_width="wrap_content"
 				android:layout_height="fill_parent"
-				android:background="@drawable/toolbar_button_background"
+				
 				android:minWidth="45dp">
 				<ImageView
 					android:layout_width="32dp"
@@ -32,32 +31,22 @@
 					android:layout_centerInParent="true" />
 			</RelativeLayout>
 
-			<View
+			<ImageView style="@style/ActionBarSeparator" 
 				android:id="@+id/admob_back_button_spacer"
-				android:layout_height="fill_parent"
-				android:layout_width="1dp"
-				android:background="#dadada"
-				android:layout_toRightOf="@+id/admob_button_back"></View>
-
-
-
+				android:layout_toRightOf="@+id/admob_button_back" />
 
 			<com.github.andlyticsproject.chart.ChartTextSwitcher
 				android:id="@+id/admob_admob_type"
 				android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
-				android:paddingTop="5dp" android:layout_centerVertical="true" android:layout_toLeftOf="@+id/admob_toolbar_spacer" android:layout_toRightOf="@+id/admob_back_button_spacer">
+				android:paddingTop="5dp" android:layout_centerVertical="true" 
+				android:layout_toLeftOf="@+id/admob_toolbar_spacer" 
+				android:layout_toRightOf="@+id/admob_back_button_spacer">
 			</com.github.andlyticsproject.chart.ChartTextSwitcher>
 
-
-
-			<View
-				android:id="@+id/admob_toolbar_spacer"
-				android:layout_height="fill_parent"
-				android:layout_toLeftOf="@+id/admob_toolbar_switcher"
-				android:layout_width="1dp"
-				android:background="#dadada"></View>
-
+			<ImageView style="@style/ActionBarSeparator"
+				android:id="@+id/admob_toolbar_spacer" 
+				android:layout_toLeftOf="@+id/admob_toolbar_switcher" />
 
 			<ViewSwitcher
 				android:id="@+id/admob_toolbar_switcher"
@@ -71,8 +60,9 @@
 
 				<RelativeLayout
 					android:id="@+id/admob_button_refresh"
-					android:background="@drawable/toolbar_button_background"
-					android:layout_gravity="center" android:layout_height="fill_parent" android:layout_width="fill_parent">
+					android:layout_gravity="center" 
+					android:layout_height="fill_parent" 
+					android:layout_width="fill_parent">
 
 					<ImageView
 						android:layout_width="wrap_content"
@@ -81,7 +71,9 @@
 						android:layout_centerInParent="true" />
 				</RelativeLayout>
 				<RelativeLayout
-					android:layout_gravity="center" android:layout_height="fill_parent" android:layout_width="fill_parent">
+					android:layout_gravity="center" 
+					android:layout_height="fill_parent" 
+					android:layout_width="fill_parent">
 
 					<ImageView
 						android:id="@+id/loading"
@@ -104,7 +96,7 @@
 		android:id="@+id/admob_header_frame_spacer"
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
-		android:background="#84b325"
+		android:background="#33B5E5"
 		android:layout_below="@+id/admob_header_frame"/>
 
 	<LinearLayout
@@ -261,7 +253,7 @@
 					android:id="@+id/admob_listSpacer"
 					android:layout_width="fill_parent"
 					android:layout_height="2dp"
-					android:background="#84b325" />
+					android:background="#33B5E5" />
 
 			</RelativeLayout>
 
@@ -306,27 +298,11 @@
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
 		android:layout_above="@+id/tabbar_buttonbar"
-		android:background="#84b325" />
+		android:background="#33B5E5" />
 
 	<include
 		android:id="@+id/tabbar_buttonbar"
 		layout="@layout/tabbar" />
-
-
-	<ImageView
-		android:layout_height="wrap_content"
-		android:src="@drawable/shadow_down"
-		android:layout_width="fill_parent"
-		android:scaleType="fitXY"></ImageView>
-
-
-
-	<ImageView
-		android:layout_height="wrap_content"
-		android:src="@drawable/shadow_down"
-		android:layout_width="fill_parent"
-		android:scaleType="fitXY"
-		android:layout_below="@+id/admob_header_frame_spacer" />
 
 	<ImageView
 		android:layout_height="wrap_content"

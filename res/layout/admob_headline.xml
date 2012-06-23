@@ -8,8 +8,8 @@
 		android:layout_height="wrap_content"
 		android:layout_centerVertical="true"
 		android:layout_centerHorizontal="true"
-		android:layout_width="wrap_content"
-		>
+		android:layout_width="wrap_content">
+		
 		<ImageView
 			android:id="@+id/admob_headline_image"
 			android:layout_height="wrap_content"
@@ -17,14 +17,17 @@
 			android:layout_centerVertical="true"
 			android:paddingRight="10dp" />
 
-
 		<TextView
 			android:layout_toRightOf="@+id/admob_headline_image"
 			android:id="@+id/admob_headline_text"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
-			style="@style/MainTableText"
+			android:textColor="#F7FBF5"			
 			android:textStyle="bold"
+			android:shadowColor="#EE1D1F2A"
+			android:shadowDx="1"
+			android:shadowDy="1"
+			android:shadowRadius="1"
 			android:textSize="15dp"
 			android:layout_centerVertical="true"
 			android:layout_alignWithParentIfMissing="true" android:text="" />
