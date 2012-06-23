@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.github.andlyticsproject"
 	android:installLocation="auto"
-	android:versionName="1.3.38" android:versionCode="77">
+	android:versionName="1.3.40" android:versionCode="79">
 
 	<uses-permission
 		android:name="android.permission.INTERNET" />
@@ -28,6 +28,10 @@
 	<uses-permission
 		android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+	<uses-sdk
+		android:minSdkVersion="7"
+		android:targetSdkVersion="7"
+		 />
 
 	<application
 		android:label="@string/app_name"
@@ -76,7 +80,7 @@
 
 		<service
 			android:name=".sync.SyncAdapterService"
-			android:exported="true"
+			android:exported="false"
 			android:process=":andlytics">
 			<intent-filter>
 				<action
@@ -89,7 +93,7 @@
 
 		<service
 			android:name=".admob.AdmobAccountAuthenticator"
-			android:exported="true">
+			android:exported="false">
 			<intent-filter>
 				<action
 					android:name="android.accounts.AccountAuthenticator" />
@@ -100,26 +104,29 @@
 		</service>
 
 		<service
-			android:name=".io.ExportService" />
+			android:name=".io.ExportService"
+			android:exported="false" />
 
 		<service
-			android:name=".io.ImportService" />
+			android:name=".io.ImportService"
+			android:exported="false" />
 
 		<provider
 			android:name="com.github.andlyticsproject.sync.ContentProvider"
+			android:exported="false"
 			android:authorities="com.github.andlyticsproject" />
 
 		<provider
 			android:name="com.github.andlyticsproject.db.AndlyticsContentProvider"
+			android:exported="false"
 			android:authorities="com.github.andlyticsproject.db.AndlyticsContentProvider" />
 
 		<receiver
 			android:process=":remote"
+			android:exported="false"
 			android:name="com.github.andlyticsproject.sync.AlarmReceiver"></receiver>
 
 
 	</application>
-	<uses-sdk
-		android:minSdkVersion="7" />
 
 </manifest>
