@@ -43,7 +43,7 @@
 			style="@style/MainTableText"
 			android:id="@+id/main_package_name"
 			android:layout_height="wrap_content"
-			android:text="de.betaapps.bruttonetto"
+			android:text="com.github.andlyticsproject.bruttonetto"
 			android:textColor="#aaa" android:layout_width="wrap_content" android:layout_below="@+id/main_app_iconname_frame" android:paddingBottom="10dp" android:paddingLeft="2dp"/>
 
 
