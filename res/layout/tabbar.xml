@@ -6,7 +6,7 @@
 	android:layout_height="wrap_content"
 	android:id="@+id/tabbar_buttonbar"
 	android:orientation="horizontal"
-	android:background="#b4d17a">
+	android:background="#555555">
 
 
 	<RelativeLayout
@@ -43,10 +43,6 @@
 		</LinearLayout>
 
 	</RelativeLayout>
-	<View
-		android:layout_height="fill_parent"
-		android:layout_width="1dp"
-		android:background="@color/andBackground" />
 
 
 	<RelativeLayout
@@ -83,12 +79,6 @@
 
 	</RelativeLayout>
 
-
-	<View
-		android:layout_height="fill_parent"
-		android:layout_width="1dp"
-		android:background="@color/andBackground" />
-
 	<RelativeLayout
 		android:id="@+id/tabbar_button_downloads"
 		android:layout_height="wrap_content"
@@ -122,13 +112,6 @@
 		</LinearLayout>
 
 	</RelativeLayout>
-
-	<View
-		android:layout_height="fill_parent"
-		android:layout_width="1dp"
-		android:background="@color/andBackground" />
-
-
 
 	<RelativeLayout
 		android:id="@+id/tabbar_button_back"
