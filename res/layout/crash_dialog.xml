@@ -24,8 +24,9 @@
 		android:layout_width="fill_parent"
 		android:id="@+id/RelativeLayout01"
 		android:layout_height="wrap_content"
-		android:background="#ddffffff">
-
+		android:background="#ddF7FBF5">
+
+
 		<TextView
 		    android:id="@+id/crash_dialog_title"
 		    style="@style/MainTableText"
@@ -88,7 +89,8 @@
 					android:layout_centerHorizontal="true"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content">
-
+
+
 					<TextView
 					    android:id="@+id/crash_dialog_positive_button_text"
 					    style="@style/MainTableText"
@@ -127,7 +129,8 @@
 					android:layout_centerHorizontal="true"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content">
-
+
+
 					<TextView
 					    android:id="@+id/crash_dialog_negative_button_text"
 					    style="@style/MainTableText"

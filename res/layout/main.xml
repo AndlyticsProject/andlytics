@@ -3,7 +3,8 @@
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
-	android:layout_height="wrap_content">
+	android:layout_height="wrap_content"
+	android:background="@color/andBackground">
 	<ViewSwitcher
 		android:id="@+id/main_viewswitcher"
 		android:layout_width="fill_parent"
@@ -28,7 +29,7 @@
 			android:scrollbars="vertical"
 			android:divider="#fff"
 			android:layout_height="fill_parent"
-			android:cacheColorHint="#fff"
+			android:cacheColorHint="@color/andBackground"
 			android:dividerHeight="0dp" />
 
 	</ViewSwitcher>
@@ -38,22 +39,27 @@
 		android:id="@+id/main_header_frame"
 		android:layout_width="fill_parent"
 		android:layout_height="45dp"
-		android:background="#eeffffff">
+		android:background="@color/andActionbarBackground">
 
 		<RelativeLayout
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_centerInParent="true">
-
+			android:paddingLeft="6dp"
+			android:layout_centerVertical="true">
 
 			<TextView
 				android:id="@+id/main_headline"
 				android:layout_width="wrap_content"
-				android:textColor="#84b325"
+				android:textColor="#F7FBF5"
 				android:textSize="22dp"
 				android:layout_height="wrap_content"
 				android:layout_centerVertical="true"
-				android:paddingTop="5dp" android:text="@string/app_name" android:textStyle="bold"/>
+				android:text="@string/app_name" 
+				android:textStyle="bold"
+				android:shadowColor="#CC1D1F2A"
+			    android:shadowDx="1"
+			    android:shadowDy="1"
+			    android:shadowRadius="1" />
 
 			<TextView
 			    android:id="@+id/main_headline_beta"
@@ -62,19 +68,15 @@
 			    android:layout_alignBaseline="@+id/main_headline"
 			    android:layout_toRightOf="@+id/main_headline"
 			    android:paddingLeft="5dp"
-			    android:text="open"
+			    android:text=""
 			    android:textColor="#ff0000"
 			    android:textSize="10dp"
 			    android:textStyle="bold" />
 
 		</RelativeLayout>
 
-
-		<View
-			android:layout_height="fill_parent"
-			android:layout_width="1dp"
-			android:layout_toLeftOf="@+id/main_toobar_switcher"
-			android:background="#dadada"></View>
+		<ImageView style="@style/ActionBarSeparator" 
+		    android:layout_toLeftOf="@+id/main_toobar_switcher" />
 
 		<ViewSwitcher
 			android:id="@+id/main_toobar_switcher"
@@ -89,8 +91,7 @@
 			<RelativeLayout
 				android:id="@+id/main_button_refresh"
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent"
-				android:background="@drawable/toolbar_button_background"
+				android:layout_height="fill_parent"				
 				android:layout_gravity="center">
 
 				<ImageView
@@ -116,7 +117,7 @@
 		android:id="@+id/main_headline_spacer_1"
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
-		android:background="#84b325"
+		android:background="#30ACD9"
 		android:layout_below="@+id/main_header_frame" />
 
 
@@ -126,7 +127,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
 		android:layout_above="@+id/main_app_buttonbar"
-		android:background="#84b325" />
+		android:background="#484848" />
 
 	<LinearLayout
 		android:layout_alignParentBottom="true"
@@ -134,7 +135,7 @@
 		android:layout_height="wrap_content"
 		android:id="@+id/main_app_buttonbar"
 		android:orientation="horizontal"
-		android:background="#ffffff">
+		android:background="#555555">
 
 
 		<RelativeLayout
@@ -211,27 +212,5 @@
 		</RelativeLayout>
 
 	</LinearLayout>
-
-	<ImageView
-		android:layout_height="wrap_content"
-		android:src="@drawable/shadow_down"
-		android:layout_width="fill_parent"
-		android:scaleType="fitXY"></ImageView>
-
-	<ImageView
-		android:layout_height="wrap_content"
-		android:src="@drawable/shadow_down"
-		android:layout_width="fill_parent"
-		android:scaleType="fitXY"
-		android:layout_below="@+id/main_headline_spacer_1" />
-
-	<ImageView
-		android:layout_height="wrap_content"
-		android:src="@drawable/shadow_up"
-		android:layout_width="fill_parent"
-		android:scaleType="fitXY"
-		android:layout_above="@+id/main_app_buttonbarSpacer" />
-
-
 
 </RelativeLayout>

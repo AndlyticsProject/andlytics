@@ -38,7 +38,7 @@ public class LoginActivity extends BaseActivity {
 
 		accountList = (LinearLayout) findViewById(R.id.login_input);
 
-		View addAccountButton = (View) findViewById(R.id.loign_add_account_button);
+		View addAccountButton = (View) findViewById(R.id.login_add_account_button);
 		addAccountButton.setOnClickListener(new OnClickListener() {
 
 			@Override

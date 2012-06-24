@@ -1,191 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/andBackground" >
 
-<RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/login_header_frame"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="@color/andActionbarBackground" >
 
-	<RelativeLayout
-		android:id="@+id/login_header_frame"
-		android:layout_width="fill_parent"
-		android:layout_height="45dp">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="6dp" >
 
-		<RelativeLayout
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerInParent="true">
+            <TextView
+                android:id="@+id/login_headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:shadowColor="#CC1D1F2A"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:text="@string/app_name"
+                android:textColor="#F7FBF5"
+                android:textSize="22dp"
+                android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/login_headline_beta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/login_headline"
+                android:layout_toRightOf="@+id/login_headline"
+                android:paddingLeft="5dp"
+                android:text=""
+                android:textColor="#ff0000"
+                android:textSize="10dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </RelativeLayout>
 
-			<TextView
-				android:id="@+id/login_headline"
-				android:layout_width="wrap_content"
-				android:textColor="#84b325"
-				android:textSize="22dp"
-				android:layout_height="wrap_content"
-				android:paddingTop="5dp"
-				android:layout_centerVertical="true" android:textStyle="bold" android:text="@string/app_name"/>
+    <View
+        android:id="@+id/login_headline_spacer_1"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/login_header_frame"
+        android:background="#30ACD9" />
 
-			<TextView
-			    android:id="@+id/login_headline_beta"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_alignBaseline="@+id/login_headline"
-			    android:layout_toRightOf="@+id/login_headline"
-			    android:paddingLeft="5dp"
-			    android:text="open"
-			    android:textColor="#ff0000"
-			    android:textSize="10dp"
-			    android:textStyle="bold" />
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_headline_spacer_1" >
 
-		</RelativeLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="80dp" >
 
-	</RelativeLayout>
+            <TextView
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/account_required"
+                android:textStyle="bold" />
 
+            <TextView
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/account_choose" />
 
-	<View
-		android:id="@+id/login_headline_spacer_1"
-		android:layout_width="fill_parent"
-		android:layout_height="2dp"
-		android:background="#84b325"
-		android:layout_below="@+id/login_header_frame" />
+            <View
+                android:id="@+id/main_app_buttonbarSpacer"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#dadada"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" />
 
+            <LinearLayout
+                android:id="@+id/login_input"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
+    <View
+        android:id="@+id/login_status_lineSpacer"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_above="@+id/login_buttonbar"
+        android:background="#484848" />
 
-	<ScrollView
-		android:layout_width="fill_parent"
-		android:layout_below="@+id/login_headline_spacer_1"
-		android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/login_buttonbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#555555"
+        android:orientation="horizontal" >
 
+        <RelativeLayout
+            android:id="@+id/login_add_account_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/image_button"
+            android:padding="5dp" >
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal" >
 
-		<LinearLayout
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			android:paddingBottom="80dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dp"
+                    android:src="@drawable/icon_add" >
+                </ImageView>
 
-			<TextView
-			    style="@style/MainTableText"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_marginLeft="5dp"
-			    android:layout_marginRight="5dp"
-			    android:layout_marginTop="10dp"
-			    android:paddingLeft="5dp"
-			    android:paddingRight="5dp"
-			    android:text="@string/account_required"
-			    android:textStyle="bold" />
-
-			<TextView
-			    style="@style/MainTableText"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_marginLeft="5dp"
-			    android:layout_marginRight="5dp"
-			    android:layout_marginTop="5dp"
-			    android:paddingLeft="5dp"
-			    android:paddingRight="5dp"
-			    android:text="@string/account_choose" />
-
-			<View
-				android:id="@+id/main_app_buttonbarSpacer"
-				android:layout_width="fill_parent"
-				android:layout_height="2dp"
-				android:background="#dadada"
-				android:paddingLeft="5dp"
-				android:paddingRight="5dp"
-				android:layout_marginTop="10dp"
-				android:layout_marginBottom="10dp" />
-
-			<LinearLayout
-				android:id="@+id/login_input"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:orientation="vertical">
-			</LinearLayout>
-
-
-
-		</LinearLayout>
-
-
-
-	</ScrollView>
-
-
-	<View
-		android:id="@+id/login_status_lineSpacer"
-		android:layout_width="fill_parent"
-		android:layout_height="2dp"
-		android:background="#84b325"
-		android:layout_above="@+id/login_buttonbar" />
-
-	<LinearLayout
-		android:layout_alignParentBottom="true"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:id="@+id/login_buttonbar"
-		android:orientation="horizontal"
-		android:background="#fff">
-
-
-		<RelativeLayout
-			android:id="@+id/loign_add_account_button"
-			android:layout_height="wrap_content"
-			android:layout_width="0dp"
-			android:layout_weight="1"
-			android:background="@drawable/image_button"
-			android:layout_margin="5dp"
-			android:padding="5dp">
-
-			<LinearLayout
-				android:orientation="horizontal"
-				android:layout_centerVertical="true"
-				android:layout_centerHorizontal="true"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content">
-
-				<ImageView
-					android:layout_height="wrap_content"
-					android:src="@drawable/icon_add"
-					android:layout_width="wrap_content"
-					android:paddingRight="5dp"></ImageView>
-
-				<TextView
-				    style="@style/MainTableText"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:layout_gravity="center"
-				    android:text="@string/account_add"
-				    android:textColor="#fff"
-				    android:textStyle="bold" />
-
-			</LinearLayout>
-
-		</RelativeLayout>
-
-
-	</LinearLayout>
-
-	<ImageView
-		android:layout_height="wrap_content"
-		android:src="@drawable/shadow_down"
-		android:layout_width="fill_parent"
-		android:scaleType="fitXY"></ImageView>
-
-	<ImageView
-		android:layout_height="wrap_content"
-		android:src="@drawable/shadow_down"
-		android:layout_width="fill_parent"
-		android:scaleType="fitXY"
-		android:layout_below="@+id/login_headline_spacer_1" />
-
-	<ImageView
-		android:layout_height="wrap_content"
-		android:src="@drawable/shadow_up"
-		android:layout_width="fill_parent"
-		android:scaleType="fitXY"
-		android:layout_above="@+id/login_status_lineSpacer" />
-
+                <TextView
+                    style="@style/MainTableText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/account_add"
+                    android:textColor="#fff"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

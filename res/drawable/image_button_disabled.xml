@@ -75,7 +75,7 @@
 				android:angle="270" />
 			<stroke
 				android:width="2dp"
-				android:color="#84b325" />
+				android:color="#33B5E5" />
 			<corners
 				android:radius="2dp" />
 

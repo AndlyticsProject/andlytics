@@ -4,25 +4,23 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:background="#fff">
+	android:background="@color/andBackground">
 
 	<RelativeLayout
 		android:id="@+id/comments_header_frame"
 		android:layout_width="fill_parent"
-		android:layout_height="45dp">
-
+		android:layout_height="45dp"
+		android:background="@color/andActionbarBackground">
 
 		<RelativeLayout
 			android:layout_centerInParent="true"
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent">
 
-
 			<RelativeLayout
 				android:id="@+id/comments_button_back"
 				android:layout_width="wrap_content"
 				android:layout_height="fill_parent"
-				android:background="@drawable/toolbar_button_background"
 				android:minWidth="45dp">
 				<ImageView
 					android:id="@+id/comments_app_icon"
@@ -33,30 +31,27 @@
 			</RelativeLayout>
 
 
-			<View
-				android:layout_height="fill_parent"
-				android:layout_width="1dp"
-				android:background="#dadada"
-				android:layout_toRightOf="@+id/comments_button_back"></View>
+			<ImageView style="@style/ActionBarSeparator" 
+				android:layout_toRightOf="@+id/comments_button_back" />
 
 			<TextView
 			    android:id="@+id/comments_chart_type"
-			    style="@style/MainTableText"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:layout_centerInParent="true"
 			    android:paddingBottom="2dp"
 			    android:paddingTop="5dp"
 			    android:text="@string/comments"
-			    android:textSize="15dp"
-			    android:textStyle="bold" />
+			    android:textColor="#F7FBF5"
+				android:textStyle="bold"
+				android:shadowColor="#EE1D1F2A"
+				android:shadowDx="1"
+				android:shadowDy="1"
+				android:shadowRadius="1"
+				android:textSize="15dp" />
 
-			<View
-				android:layout_height="fill_parent"
-				android:layout_width="1dp"
-				android:layout_toLeftOf="@+id/comments_toobar_switcher"
-				android:background="#dadada"></View>
-
+			<ImageView style="@style/ActionBarSeparator" 
+				android:layout_toLeftOf="@+id/comments_toobar_switcher" />
 
 			<ViewSwitcher
 				android:id="@+id/comments_toobar_switcher"
@@ -72,7 +67,6 @@
 					android:id="@+id/comments_button_refresh"
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent"
-					android:background="@drawable/toolbar_button_background"
 					android:layout_gravity="center">
 	
 					<ImageView
@@ -103,11 +97,8 @@
 		android:id="@+id/comments_header_frame_spacer"
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
-		android:background="#84b325"
+		android:background="#33B5E5"
 		android:layout_below="@+id/comments_header_frame" />
-
-
-
 
 	<RelativeLayout
 		android:layout_width="fill_parent"
@@ -118,7 +109,6 @@
 		android:id="@+id/comments_list_frame"
 		android:layout_above="@+id/comments_buttonbarSpacer">
 
-
 		<ExpandableListView
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
@@ -128,16 +118,14 @@
 			android:paddingRight="5dp"
 			android:dividerHeight="1dp"
 			android:paddingTop="5dp"
-			android:background="#fff"
-			android:divider="#fff" />
-
-
+			android:background="@color/andBackground"
+			android:divider="@color/andBackground" />
 
 		<RelativeLayout
 			android:id="@+id/comments_nocomments"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
-			android:background="#fff"
+			android:background="@color/andBackground"
 			android:visibility="invisible">
 			<TextView
 				style="@style/MainTableText"
@@ -151,43 +139,24 @@
 				android:padding="10dp" />
 		</RelativeLayout>
 
-
 		<View
 			android:id="@+id/comments_listSpacer"
 			android:layout_width="fill_parent"
 			android:layout_height="2dp"
-			android:background="#84b325" />
+			android:background="#33B5E5" />
 
 	</RelativeLayout>
-
-
-
 
 	<View
 		android:id="@+id/comments_buttonbarSpacer"
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
-		android:background="#84b325"
+		android:background="#33B5E5"
 		android:layout_above="@+id/tabbar_buttonbar" />
 
 	<include
 		android:id="@+id/tabbar_buttonbar"
 		layout="@layout/tabbar" />
-
-
-
-	<ImageView
-		android:layout_height="wrap_content"
-		android:src="@drawable/shadow_down"
-		android:layout_width="fill_parent"
-		android:scaleType="fitXY"
-		android:layout_below="@+id/comments_header_frame_spacer" />
-
-	<ImageView
-		android:layout_height="wrap_content"
-		android:src="@drawable/shadow_down"
-		android:layout_width="fill_parent"
-		android:scaleType="fitXY"></ImageView>
 
 	<ImageView
 		android:layout_height="wrap_content"
