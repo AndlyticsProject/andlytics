@@ -2,5 +2,6 @@
 <resources>
 
     <color name="andBackground">#F7FBF5</color>
+    <color name="andActionbarBackground">#454545</color>    
 
 </resources>
