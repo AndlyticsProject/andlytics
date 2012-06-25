@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello"> </string>
     <string name="app_name">Andlytics</string>
     <string name="app_name_admob">AdMob for Andlytics</string>
-    <string name="app_name_headline_full">ANDLYTICS</string>
-    <string name="app_name_headline_light">ANDLYTICS LITE</string>
 
-    <string name="autosync_off">Synchronisation ist aus</string>
-    <string name="autosync_on">Synchronisation ist an</string>
-
-    <string name="one_entry_hint_desc">Andlytics sammelt mit der Zeit Daten. Für eine sinvolle Übersicht wieder vorbeischauen sobald mehr Daten verfügbar sind.\n\nNormalerweise werden die Downloadstatistiken alle 24-48 Stunden aktualisiert.</string>
+    <string name="one_entry_hint_desc">Andlytics sammelt mit der Zeit Daten. Für eine sinvolle Übersicht wieder vorbeischauen sobald mehr Daten verfügbar sind.\n\nNormalerweise werden die Downloadstatistiken alle 24&#8211;48 Stunden aktualisiert.</string>
     <string name="one_entry_hint_demo"><u>Übersicht mit Beispieldaten</u></string>
 
     <string name="pro_desc">Andlytics donate / pro key schaltet zusätzliche benachrichtigungen frei sowie den Datenexport und -import.\n\nBitte beachte dass Google keine API dafür anbietet. Deshalb kann Andlytics nicht funktionieren wenn Änderungen im Play Store vorgenommen werden.\n\nIn diesem Fall werden wir versuchen diese Änderungen anzupassen <b>aber es kann nicht garantiert werden dass diese App korrekt in der Zukunft funktioniert</b>.\n\nNicht verfügbar in: Bulgarien, Estland, Griechenland, Ungarn, Kasachstan, Lettland, Litauen, Luxemburg, Philipinen, Rumänien, Serbien, Slovakei, Slovenien, Südafrika und Thailand</string>
@@ -50,7 +44,6 @@
     <string name="cancel">abbrechen</string>
     <string name="title">Titel</string>
     <string name="text">Text</string>
-    <string name="ok">Okay</string>
     <string name="select_files_export">Zu exportierende Daten</string>
     <string name="export_files_replaced">Bestehende Daten werden ersetzt</string>
     <string name="run_export">exportieren</string>
@@ -76,7 +69,7 @@
     <string name="login">einloggen</string>
     <string name="remove_admob">AdMob Verknüpfung entfernen</string>
     <string name="remove_admob_app">AdMob Werte von dieser App entfernen</string>
-    <string name="loading_site">Lade Seiten...</string>
+    <string name="loading_site">Lade Seiten&#8230;</string>
     <string name="select_admob_site">Die mit dieser App zu verknüpfende AdMob Seite auswählen</string>
     <string name="choose_app">App auswählen</string>
     <string name="admob_required">AdMob Account erforderlich</string>
@@ -84,9 +77,6 @@
     <string name="admob_info">Bei AdMob Accounts die mit einem Google Account verknüpft sind ist das API Passwort auf der Informationsseite zu finden:</string>
     <string name="percentage">Prozent</string>
     <string name="daily">Änderung</string>
-    <string name="feedback">Feedback</string>
-    <string name="help_us">Bitte hilf uns durch Rückmeldungen diese App zu verbessern. \n\nDanke!</string>
-    <string name="send">senden</string>
     <string name="downloads_day">Downloads pro Tag</string>
     <string name="active_installs_percent">Aktive Installationen in Prozent</string>
     <string name="swipe">Swipen um zur nächsten Übersicht zu kommen -></string>
