@@ -1,12 +1,13 @@
 package com.github.andlyticsproject;
 
 
+import org.acra.ACRA;
+import org.acra.ErrorReporter;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +15,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,11 +24,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
-
-import java.io.IOException;
-
-import org.acra.ACRA;
-import org.acra.ErrorReporter;
 
 import com.github.andlyticsproject.admob.AdmobAccountRemovedException;
 import com.github.andlyticsproject.admob.AdmobAskForPasswordException;
@@ -48,8 +43,6 @@ import com.github.andlyticsproject.exception.NoCookieSetException;
 import com.github.andlyticsproject.exception.SignupException;
 
 public class BaseActivity extends Activity {
-
-	private static final int REQUEST_AUTHENTICATE = 0;
 
     private static final String TAG = BaseActivity.class.getSimpleName();
 
@@ -525,8 +518,7 @@ public class BaseActivity extends Activity {
 		AccountManager accountManager = AccountManager.get(this.getApplicationContext());
 
         final AccountManagerCallback<Bundle> myCallback = new AccountManagerCallback<Bundle>() {
-
-            @SuppressWarnings("unchecked")
+            
             public void run(final AccountManagerFuture<Bundle> arg0) {
                 try {
 
