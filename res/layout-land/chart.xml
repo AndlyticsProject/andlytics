@@ -41,16 +41,17 @@
 				android:layout_toRightOf="@+id/chart_button_back" />
 
 			<ImageView style="@style/ActionBarSeparator" 
-				android:layout_toLeftOf="@+id/chart_button_config" />
+				android:layout_toLeftOf="@+id/dummy_chart_button_config" />
 			
 			<RelativeLayout
-				android:layout_width="wrap_content"
-				android:layout_alignParentRight="true"
-				android:layout_centerVertical="true"
-				android:layout_height="fill_parent"
-				android:minWidth="45dp">
-			
-			</RelativeLayout>
+                android:id="@+id/dummy_chart_button_config"
+                android:layout_width="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_height="fill_parent"
+                android:minWidth="45dp">
+
+            </RelativeLayout>
 		</RelativeLayout>
 
 	</RelativeLayout>

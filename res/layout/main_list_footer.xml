@@ -167,7 +167,6 @@
 			</RelativeLayout>
 
 			<TextView
-			    android:id="@+id/main_export_text"
 			    style="@style/MainTableText"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
@@ -207,7 +206,6 @@
 			</RelativeLayout>
 
 			<TextView
-			    android:id="@+id/main_autosync_text"
 			    style="@style/MainTableText"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"

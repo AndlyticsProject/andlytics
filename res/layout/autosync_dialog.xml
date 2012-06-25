@@ -7,7 +7,6 @@
 	android:layout_width="fill_parent"
 	android:orientation="vertical">
 	<RelativeLayout
-		android:id="@+id/LinearLayout01"
 		android:gravity="center"
 		android:layout_width="fill_parent"
 		android:orientation="vertical"
@@ -23,7 +22,6 @@
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:layout_above="@+id/notification_dialog_close_button"
-			android:layout_below="@+id/notification_dialog_applist_headline"
 			android:choiceMode="none"
 			android:dividerHeight="2sp"
 			android:layout_centerInParent="true"

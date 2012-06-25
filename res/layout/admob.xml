@@ -318,12 +318,11 @@
 	<include
 		android:id="@+id/tabbar_buttonbar"
 		layout="@layout/tabbar" />
-
+  
 	<ImageView
 		android:layout_height="wrap_content"
 		android:src="@drawable/shadow_up"
 		android:layout_width="fill_parent"
 		android:scaleType="fitXY"
 		android:layout_above="@+id/admob_buttonbarSpacer" />
-
 </RelativeLayout>
