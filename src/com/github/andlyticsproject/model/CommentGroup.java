@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommentGroup {
-	
+
 	private String dateString;
-	
+
 	private List<Comment> comments;
-	
+
 	public CommentGroup() {
 		comments = new ArrayList<Comment>();
 	}
@@ -55,9 +55,9 @@ public class CommentGroup {
 	}
 
 	public void addComment(Comment comment) {
-		
+
 		comments.add(comment);
-		
+
 	}
 
 

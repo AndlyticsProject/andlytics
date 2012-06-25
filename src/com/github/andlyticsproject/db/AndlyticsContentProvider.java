@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject.db;
 
 import android.content.ContentProvider;
@@ -35,11 +34,11 @@ public class AndlyticsContentProvider extends ContentProvider {
     public static final String AUTHORITY = "com.github.andlyticsproject.db.AndlyticsContentProvider";
 
     private static final UriMatcher sUriMatcher;
-    
+
     public static final String APP_VERSION_CHANGE = "appVersionChange";
-    
+
     private static class DatabaseHelper extends SQLiteOpenHelper {
-        
+
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
@@ -63,7 +62,7 @@ public class AndlyticsContentProvider extends ContentProvider {
                 db.execSQL(AppInfoTable.TABLE_CREATE_APPINFO);
                 db.execSQL(AppStatsTable.TABLE_CREATE_STATS);
             }
-            
+
             if(oldVersion == 9) {
                 Log.w(TAG, "Old version = 9 - add ghost column");
                 db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add " + AppInfoTable.KEY_APP_GHOST + " integer");
@@ -79,7 +78,7 @@ public class AndlyticsContentProvider extends ContentProvider {
             if(oldVersion < 13) {
                 Log.w(TAG, "Old version < 13 - add skip notification");
                 db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add " + AppInfoTable.KEY_APP_SKIP_NOTIFICATION + " integer");
-            } 
+            }
             if(oldVersion < 14) {
                 Log.w(TAG, "Old version < 14 - add admob table");
                 db.execSQL(AdmobTable.TABLE_CREATE_ADMOB);
@@ -87,16 +86,16 @@ public class AndlyticsContentProvider extends ContentProvider {
             if(oldVersion < 15) {
                 Log.w(TAG, "Old version < 15 - add version name");
                 db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add " + AppInfoTable.KEY_APP_VERSION_NAME + " text");
-                
+
             }
-            
+
             if(oldVersion < 16) {
                 Log.w(TAG, "Old version < 16 - add new comments colums");
                 db.execSQL("ALTER table " + CommentsTable.DATABASE_TABLE_NAME + " add " + CommentsTable.KEY_COMMENT_APP_VERSION + " text");
                 db.execSQL("ALTER table " + CommentsTable.DATABASE_TABLE_NAME + " add " + CommentsTable.KEY_COMMENT_DEVICE + " text");
             }
-            
-            
+
+
         }
     }
 
@@ -162,14 +161,14 @@ public class AndlyticsContentProvider extends ContentProvider {
 
         switch (sUriMatcher.match(uri)) {
             case ID_TABLE_STATS:
-                
+
                 rowId = getAppStatsIdByDate(values.getAsString(AppStatsTable.KEY_STATS_PACKAGENAME), parseDate(values.getAsString(AppStatsTable.KEY_STATS_REQUESTDATE)), db);
-                if(rowId > -1) { 
+                if(rowId > -1) {
 
                     db.update(AppStatsTable.DATABASE_TABLE_NAME, values, AppStatsTable.KEY_ROWID + "=" + rowId, null);
 
                 } else {
-                
+
                     rowId = db.insert(AppStatsTable.DATABASE_TABLE_NAME, null, values);
                 }
                 if (rowId > 0) {
@@ -177,9 +176,9 @@ public class AndlyticsContentProvider extends ContentProvider {
                     getContext().getContentResolver().notifyChange(noteUri, null);
                     return noteUri;
                 }
-                
+
             case ID_TABLE_APPINFO:
-                
+
                 Cursor mCursor = db.query(AppInfoTable.DATABASE_TABLE_NAME, new String[] { AppInfoTable.KEY_ROWID, AppInfoTable.KEY_APP_ACCOUNT, AppInfoTable.KEY_APP_PACKAGENAME},
                                 AppInfoTable.KEY_APP_PACKAGENAME + "='" + values.getAsString(AppInfoTable.KEY_APP_PACKAGENAME) + "'", null, null, null, null);
 
@@ -187,12 +186,12 @@ public class AndlyticsContentProvider extends ContentProvider {
                     rowId = mCursor.getInt(mCursor.getColumnIndex(AppInfoTable.KEY_ROWID));
                 }
                 mCursor.close();
-                
+
                 if(rowId > -1) {
                     db.update(AppInfoTable.DATABASE_TABLE_NAME, initialValues, AppInfoTable.KEY_ROWID + "=" + rowId, null);
-                    
+
                 } else {
-                    
+
                     rowId = db.insert(AppInfoTable.DATABASE_TABLE_NAME, null, values);
                 }
 
@@ -200,8 +199,8 @@ public class AndlyticsContentProvider extends ContentProvider {
                     Uri noteUri = ContentUris.withAppendedId(AppInfoTable.CONTENT_URI, rowId);
                     getContext().getContentResolver().notifyChange(noteUri, null);
                     return noteUri;
-                }      
-                
+                }
+
             case ID_TABLE_COMMENTS:
 
                 rowId = db.insert(CommentsTable.DATABASE_TABLE_NAME, null, values);
@@ -209,9 +208,9 @@ public class AndlyticsContentProvider extends ContentProvider {
                     Uri noteUri = ContentUris.withAppendedId(CommentsTable.CONTENT_URI, rowId);
                     getContext().getContentResolver().notifyChange(noteUri, null);
                     return noteUri;
-                }  
-                
-                
+                }
+
+
             case ID_TABLE_ADMOB:
 
                 rowId = db.insert(AdmobTable.DATABASE_TABLE_NAME, null, values);
@@ -219,7 +218,7 @@ public class AndlyticsContentProvider extends ContentProvider {
                     Uri noteUri = ContentUris.withAppendedId(AdmobTable.CONTENT_URI, rowId);
                     getContext().getContentResolver().notifyChange(noteUri, null);
                     return noteUri;
-                }                    
+                }
         }
 
         throw new SQLException("Failed to insert row into " + uri);
@@ -236,7 +235,7 @@ public class AndlyticsContentProvider extends ContentProvider {
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
         String groupBy = null;
-        
+
         switch (sUriMatcher.match(uri)) {
             case ID_TABLE_STATS:
                 qb.setTables(AppStatsTable.DATABASE_TABLE_NAME);
@@ -256,27 +255,27 @@ public class AndlyticsContentProvider extends ContentProvider {
                 qb.setTables(AdmobTable.DATABASE_TABLE_NAME);
                 qb.setProjectionMap(AdmobTable.PROJECTION_MAP);
                 break;
-            case ID_APP_VERSION_CHANGE:    
+            case ID_APP_VERSION_CHANGE:
                 qb.setTables(AppStatsTable.DATABASE_TABLE_NAME);
                 qb.setProjectionMap(AppStatsTable.PROJECTION_MAP);
                 break;
-                
+
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        
+
         Cursor c = null;
-        
+
         if(sUriMatcher.match(uri) == ID_APP_VERSION_CHANGE) {
             c = qb.query(db, projection, selection, selectionArgs, AppStatsTable.KEY_STATS_VERSIONCODE, null, sortOrder);
-            
-            
+
+
         } else {
             c = qb.query(db, projection, selection, selectionArgs, groupBy, null, sortOrder);
         }
-        
+
         c.setNotificationUri(getContext().getContentResolver(), uri);
         return c;
     }
@@ -316,31 +315,31 @@ public class AndlyticsContentProvider extends ContentProvider {
         sUriMatcher.addURI(AUTHORITY, APP_VERSION_CHANGE, ID_APP_VERSION_CHANGE);
 
     }
-    
+
     public long getAppStatsIdByDate(String packagename, Date date, SQLiteDatabase db) throws SQLException {
-        
+
         long result = -1;
-        
+
         // make sure there is only one entry / day
-        SimpleDateFormat dateFormatStart = new SimpleDateFormat("yyyy-MM-dd 00:00:00"); 
-        SimpleDateFormat dateFormatEnd = new SimpleDateFormat("yyyy-MM-dd 23:59:59"); 
+        SimpleDateFormat dateFormatStart = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+        SimpleDateFormat dateFormatEnd = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
 
         Cursor mCursor = db.query(AppStatsTable.DATABASE_TABLE_NAME, new String[] { AppStatsTable.KEY_ROWID, AppStatsTable.KEY_STATS_REQUESTDATE },
                 AppStatsTable.KEY_STATS_PACKAGENAME + "='" + packagename + "' and " + AppStatsTable.KEY_STATS_REQUESTDATE + " BETWEEN '"
                         + dateFormatStart.format(date) + "' and '" + dateFormatEnd.format(date) + "'", null,null, null, null);
         if (mCursor != null && mCursor.moveToFirst()) {
-            
+
             result = mCursor.getInt(mCursor.getColumnIndex(AppStatsTable.KEY_ROWID));
         }
-        
+
         mCursor.close();
-        
+
         return result;
     }
 
 
     private Date parseDate(String string) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             return dateFormat.parse(string);
         } catch (ParseException e) {

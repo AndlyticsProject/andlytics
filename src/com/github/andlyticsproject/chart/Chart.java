@@ -1,6 +1,4 @@
-
 package com.github.andlyticsproject.chart;
-
 
 import android.content.Context;
 import android.graphics.Color;
@@ -25,36 +23,36 @@ import com.github.andlyticsproject.model.AppStats;
 
 public class Chart extends AbstractChart {
 
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
-	
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 	public enum ChartSet {
 		DOWNLOADS, RATINGS, ADMOB
 	}
-	
+
 	public enum AdmobChartType {
         REVENUE, EPC,REQUESTS, CLICKS, FILL_RATE, ECPM, IMPRESSIONS, CTR, HOUSEAD_CLICKS
     }
 
 	public enum DownloadChartType {
-		TOTAL_DOWNLAODS, ACTIVE_INSTALLS_TOTAL, TOTAL_DOWNLAODS_BY_DAY, ACTIVE_INSTALLS_PERCENT  
+		TOTAL_DOWNLAODS, ACTIVE_INSTALLS_TOTAL, TOTAL_DOWNLAODS_BY_DAY, ACTIVE_INSTALLS_PERCENT
 	}
-	
+
 	public enum RatingChartType {
-		AVG_RATING, RATINGS_5, RATINGS_4, RATINGS_3, RATINGS_2, RATINGS_1  
-	}	
+		AVG_RATING, RATINGS_5, RATINGS_4, RATINGS_3, RATINGS_2, RATINGS_1
+	}
 
 	public interface ValueCallbackHander {
 		double getValue(Object appInfo);
 		Date getDate(Object appInfo);
         boolean isHeilightValue(Object appInfo, Object object);
-	} 
-	
+	}
+
 	public abstract class DevConValueCallbackHander implements ValueCallbackHander{
 	    @Override
 	    public Date getDate(Object appInfo) {
 	        return ((AppStats)appInfo).getRequestDate();
 	    }
-	    
+
 
         @Override
         public boolean isHeilightValue(Object current, Object previouse) {
@@ -62,31 +60,31 @@ public class Chart extends AbstractChart {
             if(previouse == null) {
                 return false;
             }
-            
+
             AppStats cstats = ((AppStats)current);
-            
+
             if(cstats.getVersionCode() == 0) {
                 return false;
             }
-            
+
             if(cstats.getVersionCode() < ((AppStats)previouse).getVersionCode()) {
                 return true;
             }
-            
+
             return false;
         }
 	}
-	
+
    public abstract class AdmobValueCallbackHander implements ValueCallbackHander{
         @Override
         public Date getDate(Object appInfo) {
             return ((Admob)appInfo).getDate();
         }
-        
+
 
         @Override
         public boolean isHeilightValue(Object current, Object previouse) {
-   
+
             return false;
         }
     }
@@ -96,12 +94,12 @@ public class Chart extends AbstractChart {
 	public View buildBarChart(Context context, Object[] appstats, ValueCallbackHander handler, double heighestValue, double lowestValue) {
 
 		String[] titles = new String[] { "" };
-		
+
 		List<Object> statsForApp = Arrays.asList(appstats);
 		if(statsForApp.size() > MAX_BAR_VALUES) {
 			statsForApp = statsForApp.subList(statsForApp.size() -MAX_BAR_VALUES, statsForApp.size());
 		}
-		
+
 		// styling
 		int[] colors = new int[] { Color.parseColor("#33B5E5") };
 		XYMultipleSeriesRenderer renderer = buildBarRenderer(colors);
@@ -118,7 +116,7 @@ public class Chart extends AbstractChart {
 		for (int i = 1; i < statsForApp.size(); i++) {
 			Object appInfo = statsForApp.get(i);
 			dates.add(getDateString(handler.getDate(appInfo)));
-			
+
 			if(i == nextXLabelPrint) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat(Preferences.getDateFormatShort(context));
 				renderer.addTextLabel(i, dateFormat.format(handler.getDate(appInfo)));
@@ -167,7 +165,7 @@ public class Chart extends AbstractChart {
 		// settings
 		setChartSettings(renderer, "", "", "", 0, statsForApp.size(), valueDistanceBottom, valueDistanceTop, Color.LTGRAY, Color.BLACK);
 
-		
+
 		renderer.setYLabels(7);
 		renderer.setXLabels(-1);
 		renderer.setShowLegend(false);
@@ -183,7 +181,7 @@ public class Chart extends AbstractChart {
 	public View buildLineChart(Context context, Object[] stats, ValueCallbackHander handler) {
 
 		String[] titles = new String[] { "" };
-		
+
 		List<Object> statsForApp = Arrays.asList(stats);
 
 		// get x values (dates) at least 10
@@ -204,11 +202,11 @@ public class Chart extends AbstractChart {
 
 		Date[] datesArray = dates.toArray(new Date[dates.size()]);
 		double[] valuesArray = new double[dates.size()];
-		
+
 	    Date[] highlightDatesArray = highlightDates.toArray(new Date[highlightDates.size()]);
         double[] highlightValuesArray = new double[highlightDates.size()];
 
-		
+
 		double heighestValue = Double.MIN_VALUE;
 		double lowestValue = Double.MAX_VALUE;
 
@@ -223,7 +221,7 @@ public class Chart extends AbstractChart {
 			if (value < lowestValue) {
 				lowestValue = value;
 			}
-			
+
 			int indexOf = highlightDates.indexOf(handler.getDate(appInfo));
 			if(indexOf > -1) {
 			    highlightValuesArray[indexOf] = value;
@@ -287,10 +285,10 @@ public class Chart extends AbstractChart {
 		View result = null;
 
 		switch (chartType) {
-		case TOTAL_DOWNLAODS: 
+		case TOTAL_DOWNLAODS:
 
 			handler = new DevConValueCallbackHander() {
-				@Override 
+				@Override
 				public double getValue(Object appInfo) {
 					return ((AppStats)appInfo).getTotalDownloads();
 				}
@@ -301,14 +299,14 @@ public class Chart extends AbstractChart {
 		case TOTAL_DOWNLAODS_BY_DAY:
 
 			handler = new DevConValueCallbackHander() {
-				@Override 
+				@Override
 				public double getValue(Object appInfo) {
 					return ((AppStats)appInfo).getDailyDownloads();
 				}
 			};
 			result = buildBarChart(context, statsForApp.toArray(), handler, Integer.MIN_VALUE, 0);
 			break;
-		
+
 		case ACTIVE_INSTALLS_TOTAL:
 			handler = new DevConValueCallbackHander() {
 				@Override
@@ -335,7 +333,7 @@ public class Chart extends AbstractChart {
 		return result;
 
 	}
-	
+
 
     public View buildRatingChart(Context context, List<AppStats> statsForApp, RatingChartType chartType, Integer heighestRatingChange, Integer lowestRatingChange) {
 
@@ -364,7 +362,7 @@ public class Chart extends AbstractChart {
 			};
 			result = buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
 			break;
-		
+
 		case RATINGS_2:
 
 			handler = new DevConValueCallbackHander() {
@@ -405,7 +403,7 @@ public class Chart extends AbstractChart {
 			};
 			result = buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
 			break;
-	
+
 		default:
 			break;
 		}
@@ -414,7 +412,7 @@ public class Chart extends AbstractChart {
 
 	}
 
-    
+
     public String getDateString(Date date) {
         return dateFormat.format(date);
     }
@@ -446,7 +444,7 @@ public class Chart extends AbstractChart {
             break;
 
         case IMPRESSIONS:
-            
+
             handler = new AdmobValueCallbackHander() {
                 @Override
                 public double getValue(Object appInfo) {
@@ -455,9 +453,9 @@ public class Chart extends AbstractChart {
             };
             result = buildLineChart(context, statsForApp.toArray(), handler);
             break;
-        
+
         case CLICKS:
-            
+
             handler = new AdmobValueCallbackHander() {
                 @Override
                 public double getValue(Object appInfo) {
@@ -476,7 +474,7 @@ public class Chart extends AbstractChart {
             };
             result = buildLineChart(context, statsForApp.toArray(), handler);
             break;
-    
+
         case ECPM:
             handler = new AdmobValueCallbackHander() {
                 @Override

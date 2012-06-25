@@ -1,6 +1,5 @@
 package com.github.andlyticsproject;
 
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -21,7 +20,7 @@ import com.github.andlyticsproject.model.CommentGroup;
 public class CommentsActivity extends BaseActivity implements AuthenticationCallback {
 
     public static final String TAG = Main.class.getSimpleName();
-    
+
     private CommentsListAdapter commentsListAdapter;
 
     private ExpandableListView list;
@@ -83,9 +82,9 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
         maxAvalibleComments = -1;
         commentGroups = new ArrayList<CommentGroup>();
         comments = new ArrayList<Comment>();
-        
+
         refreshButton.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 maxAvalibleComments = -1;
@@ -93,9 +92,9 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
                 authenticateAccountFromPreferences(false, CommentsActivity.this);
             }
         });
-        
+
         backButton.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 startActivity(Main.class, false, true);
@@ -111,7 +110,7 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
             }
         });
         footer.setVisibility(View.GONE);
-        
+
         db = getDbAdapter();
 
     }
@@ -122,14 +121,14 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
         new LoadCommentsCache().execute();
 
     }
-    
+
     private class LoadCommentsCache extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
             comments = db.getCommentsFromCache(packageName);
             rebuildCommentGroups();
-            
+
             return null;
         }
 
@@ -142,14 +141,14 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
                 }
                 commentsListAdapter.notifyDataSetChanged();
             }
-            
+
             authenticateAccountFromPreferences(false, CommentsActivity.this);
-            
+
         }
-        
+
     }
 
-    
+
     private class LoadCommentsData extends AsyncTask<Void, Void, Exception> {
 
         @Override
@@ -172,11 +171,11 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
                 DeveloperConsole console = new DeveloperConsole(CommentsActivity.this);
                 try {
 
-                    
+
                     String authtoken = getAndlyticsApplication().getAuthToken();
                     List<Comment> result = console.getAppComments(authtoken, accountname, packageName,
                                     nextCommentIndex, MAX_LOAD_COMMENTS);
-                    
+
                     // put in cache if index == 0
                     if(nextCommentIndex == 0) {
                         db.updateCommentsCache(result, packageName);
@@ -282,9 +281,9 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
 
     @Override
     public void authenticationSuccess() {
-        
+
         new LoadCommentsData().execute();
-        
+
     }
 
 }

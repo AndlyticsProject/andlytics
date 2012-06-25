@@ -1,7 +1,5 @@
 package com.github.andlyticsproject;
 
-
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

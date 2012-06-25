@@ -1,6 +1,5 @@
 package com.github.andlyticsproject.sync;
 
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
@@ -77,20 +76,20 @@ public class SyncAdapterService extends Service {
 
 	private static void performSync(Context context, Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) throws OperationCanceledException {
-		 
+
 		Bundle bundle = null;
 		String token = null;
-		
+
 		try {
 			bundle = AccountManager.get(context).getAuthToken(account, "androiddeveloper", true, null, null).getResult();
 			if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
 				token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-				
+
 				DeveloperConsole console = new DeveloperConsole(context);
 				List<AppInfo> appDownloadInfos = console.getAppDownloadInfos(token, account.name);
 
 				Log.d(TAG, "andlytics from sync adapter, size: " + appDownloadInfos.size());
-				
+
 				List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
 
 				db = new ContentAdapter(context);
@@ -99,10 +98,10 @@ public class SyncAdapterService extends Service {
 					diffs.add(db.insertOrUpdateStats(appDownloadInfo));
 				}
 				Log.d(TAG, "sucessfully synced andlytics");
-				
+
 				// check for notifications
 				NotificationHandler.handleNotificaions(context, diffs, account.name);
-				
+
 			} else {
 				Log.e(TAG, "error during sync auth, no token found");
 			}

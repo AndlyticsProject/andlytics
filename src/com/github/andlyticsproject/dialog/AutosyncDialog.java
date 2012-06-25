@@ -1,6 +1,5 @@
 package com.github.andlyticsproject.dialog;
 
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
@@ -26,7 +25,7 @@ public class AutosyncDialog extends Dialog implements OnClickListener {
 	public static final int TAG_IMAGE_REF = R.id.tag_mainlist_image_reference;
 
 	Button okButton;
-    
+
 	private LayoutInflater layoutInflater;
 
 	private Activity context;
@@ -44,28 +43,28 @@ public class AutosyncDialog extends Dialog implements OnClickListener {
     private TextView periodWarning;
 
 	public interface GhostSelectonChangeListener {
-		
+
 		public void onGhostSelectionChanged(String packageName, boolean isGhost);
 
 		public void onGhostDialogClose();
-		
-	} 
-	
+
+	}
+
     public AutosyncDialog(final Activity context, final String accountName) {
-        
+
         super(context, R.style.Dialog);
-        
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         layoutInflater = context.getLayoutInflater();
-        
+
         setContentView(R.layout.autosync_dialog);
-        
+
         periodTexts = context.getResources().getStringArray(R.array.autosync_periods);
-        
+
         View closeButton = (View) this.findViewById(R.id.notification_dialog_close_button);
         closeButton.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				dismiss();
@@ -74,22 +73,22 @@ public class AutosyncDialog extends Dialog implements OnClickListener {
         ListView lv = (ListView) this.findViewById(R.id.list_view_id);
         lv.addHeaderView(layoutInflater.inflate(R.layout.autosync_list_header, null), null, false);
         lv.setAdapter(new BaseAdapter() {
-            
+
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 return null;
             }
-            
+
             @Override
             public long getItemId(int position) {
                 return 0;
             }
-            
+
             @Override
             public Object getItem(int position) {
                 return null;
             }
-            
+
             @Override
             public int getCount() {
                 return 0;
@@ -103,39 +102,39 @@ public class AutosyncDialog extends Dialog implements OnClickListener {
         periodMinusButton = (View) this.findViewById(R.id.notification_dialog_period_minus);
         periodWarning = (TextView) this.findViewById(R.id.notification_dialog_warning);
 
-      
+
 		updatePeriod(accountName, 0);
-		
+
 		periodPlusButton.setOnClickListener(new View.OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 updatePeriod(accountName, 1);
             }
         });
-		
+
         periodMinusButton.setOnClickListener(new View.OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 updatePeriod(accountName, -1);
             }
         });
-        
+
     }
 
 
     private void updatePeriod(String accountName, int increase) {
-        
+
         AutosyncHandler autosyncHandler = AutosyncHandlerFactory.getInstance(context);
         int autosyncPeriod = autosyncHandler.getAutosyncPeriod(accountName);
-		
+
 		List<Integer> periodList = Arrays.asList(periodValues);
 		int periodIndex = periodList.indexOf(autosyncPeriod);
 		if(periodIndex < 0) {
 		    periodIndex = 0;
 		}
-		
+
 		if(increase < 0) {
 		    periodIndex--;
 		    if(periodIndex < 0) {
@@ -147,14 +146,14 @@ public class AutosyncDialog extends Dialog implements OnClickListener {
 		        periodIndex = 0;
 		    }
 		}
-		
+
 		if(autosyncPeriod != periodList.get(periodIndex)) {
 		    autosyncHandler.setAutosyncPeriod(accountName, periodList.get(periodIndex));
 		}
-		
+
 		String periodString = periodTexts[periodIndex];
 		periodTextView.setText(periodString);
-		
+
 		if(periodIndex == 0) {
 		    periodWarning.setBackgroundColor(Color.parseColor("#ff0000"));
 		    periodWarning.setTextColor(Color.parseColor("#ffffff"));
@@ -162,7 +161,7 @@ public class AutosyncDialog extends Dialog implements OnClickListener {
             periodWarning.setBackgroundColor(Color.parseColor("#ffffff"));
             periodWarning.setTextColor(Color.parseColor("#ffffff"));
 		}
-		
+
     }
 
     @Override
@@ -176,6 +175,6 @@ public class AutosyncDialog extends Dialog implements OnClickListener {
         if (v == okButton)
             dismiss();
     }
-    
-   
+
+
 }

@@ -1,6 +1,5 @@
 package com.github.andlyticsproject.sync;
 
-
 public interface AutosyncHandler {
 
     int DEFAULT_PERIOD = 60 * 60 * 3; // 3 hours

@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppStatsList {
-	
+
 	private List<AppStats> appStats = new ArrayList<AppStats>();
-	
+
 	private Integer highestRatingChange = 0;
-	
+
 	private Integer lowestRatingChange = 0;
-	
+
 	private AppStats overall;
 
 	public void setLowestRatingChange(Integer lowestRatingChange) {
@@ -44,5 +44,5 @@ public class AppStatsList {
     public AppStats getOverall() {
         return overall;
     }
-	
+
 }

@@ -11,27 +11,27 @@ public class AppInfo {
 	private String packageName;
 
 	private Date lastUpdate;
-	
+
 	private String name;
-	
+
 	private String iconUrl;
-	
+
 	private List<AppStats> history = new ArrayList<AppStats>();
-	
+
 	private AppStats latestStats;
-	
+
 	private boolean isDraftOnly;
-	
+
 	private boolean ghost;
-	
+
 	private boolean skipNotification;
-	
+
 	private boolean ratingDetailsExpanded;
-	
+
 	private String versionName;
-	
+
 	private Admob admobStats;
-	
+
 	private Integer numberOfErrors;
 
 	public String getAccount() {
@@ -73,7 +73,7 @@ public class AppInfo {
 	public String getIconUrl() {
 		return iconUrl;
 	}
-	
+
 	public String getIconName() {
 		String iconName = packageName;
 		if(iconUrl != null) {
@@ -194,7 +194,7 @@ public class AppInfo {
     public void setSkipNotification(boolean skipNotification) {
         this.skipNotification = skipNotification;
     }
- 
+
     public boolean isSkipNotification() {
         return skipNotification;
     }
@@ -223,6 +223,6 @@ public class AppInfo {
         return numberOfErrors;
     }
 
-	
-	
+
+
 }

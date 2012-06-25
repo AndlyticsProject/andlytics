@@ -24,12 +24,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
-    
+
     public static final String PARAM_AUTHTOKEN_TYPE = "authtokenType";
     public static final String PARAM_USERNAME = "username";
     public static final String PARAM_CONFIRM_CREDENTIALS = "confirmCredentials";
     public static final String PARAM_PASSWORD = "password";
-    
+
 
     private AccountManager mAccountManager;
     private Thread mAuthThread;
@@ -65,7 +65,7 @@ public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
     private void initLayout() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.admob_login);
-        
+
         TextView headline = (TextView) findViewById(R.id.admob_login_headline);
         Style.getInstance(getAssets()).styleHeadline(headline);
 
@@ -201,8 +201,8 @@ public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
             if(AdmobRequest.ERROR_REQUESET_INVALID.equals(result)) {
                 Toast.makeText(AdmobAuthenticatorActivity.this, "AdMob accounts that are linked to Google accounts are disable for API access by Google. They are working on a new version of the API that supports OAuth.", Toast.LENGTH_LONG).show();
             }
-            
-            
+
+
             if (mRequestNewAccount) {
                 mMessageView.setText("Error: Authentication failed.");
             } else {
