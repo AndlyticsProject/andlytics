@@ -8,49 +8,49 @@ import android.net.Uri;
 import org.acra.annotation.ReportsCrashes;
 
 @ReportsCrashes(
-		formKey = "dFoxNXhxUmVqemdib1UxbXNfSWZpUnc6MQ", 
-		sharedPreferencesMode=Context.MODE_PRIVATE, 
-		sharedPreferencesName=Preferences.PREF) 
+		formKey = "dFoxNXhxUmVqemdib1UxbXNfSWZpUnc6MQ",
+		sharedPreferencesMode=Context.MODE_PRIVATE,
+		sharedPreferencesName=Preferences.PREF)
 public class AndlyticsApp extends Application {
 
 	private static final String CONTENT_URI = "content://com.github.andlyticsproject.pro.ProContentProvider/pro";
-	
+
 	public static boolean proVersion = false;
-	
+
 	private String authToken;
-	
+
 	private String xsrfToken;
-	
+
 	private ContentAdapter db;
-	
+
 	private boolean skipMainReload;
-	
+
 	private String feedbackMessage;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		Preferences.disableCrashReports(this);
-		setDbAdapter(new ContentAdapter(this)); 
+		setDbAdapter(new ContentAdapter(this));
 	}
 
 	public static boolean isProVersion(Context context) {
 
 		return true;
-		
+
 		/*if (!proVersion) {
 
 			Uri allTitles = Uri.parse(CONTENT_URI);
-			
+
 			Cursor c = context.getContentResolver().query(allTitles, null, null, null, "");
-	        
+
 			if(c != null) {
 			    proVersion = true;
 			} else {
                 proVersion = false;
 			}
 			return proVersion;
-			
+
 		}
 
 		return proVersion;*/

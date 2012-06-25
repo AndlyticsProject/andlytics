@@ -5,21 +5,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Comment {
-	
+
 	private String text;
-	
+
 	private String date;
-	
+
 	private int rating;
-	
+
 	private String user;
 
 	private SimpleDateFormat format;
-	
+
 	private String appVersion;
-	
+
 	private String device;
-	
+
 	public Comment() {
 		format = new SimpleDateFormat("MMMMM dd, yyyy");
 	}
@@ -51,7 +51,7 @@ public class Comment {
 		}
 		return result;
 	}
-	
+
 	public int getRating() {
 		return rating;
 	}
@@ -67,7 +67,7 @@ public class Comment {
 	public void setUser(String user) {
 		this.user = user;
 	}
-	
+
     public void setAppVersion(String appVersion) {
         this.appVersion = appVersion;
     }
@@ -84,5 +84,5 @@ public class Comment {
         return device;
     }
 
-	
+
 }

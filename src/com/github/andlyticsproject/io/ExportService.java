@@ -1,6 +1,5 @@
 package com.github.andlyticsproject.io;
 
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -30,7 +29,7 @@ public class ExportService extends Service {
     public static final String PACKAGE_NAMES = "packageNames";
 
     public static final String ACCOUNT_NAME = "accountName";
-    
+
     private Notification notification;
 
     private String message;
@@ -53,16 +52,16 @@ public class ExportService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Log.d(TAG, "export service onStartCommand");
-        
+
         this.packageNames = intent.getStringArrayExtra(PACKAGE_NAMES);
         Log.d(TAG, "package names:: " + packageNames);
 
         this.accountName = intent.getStringExtra(ACCOUNT_NAME);
         Log.d(TAG, "account name:: " + accountName);
-        
+
 
         (new StandardServiceWorker()).execute();
-        
+
         return Service.START_NOT_STICKY;
     }
 
@@ -74,27 +73,27 @@ public class ExportService extends Service {
         @Override
         protected Boolean doInBackground(Void... params) {
 
-      
+
             message = "export started";
             sendNotification();
-            
+
             for (int i = 0; i < packageNames.length; i++) {
-                
+
                 StatsCsvReaderWriter statsWriter = new StatsCsvReaderWriter(ExportService.this);
-                
+
                 ContentAdapter db = new ContentAdapter(ExportService.this);
                 AppStatsList statsForApp = db.getStatsForApp(packageNames[i], Timeframe.UNLIMITED, false);
-                
+
                 try {
                     statsWriter.writeStats(packageNames[i], statsForApp.getAppStats());
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-                
+
                 publishProgress(i);
 
             }
-            
+
             message = "export finished";
             sendNotification();
 
@@ -111,9 +110,9 @@ public class ExportService extends Service {
         protected void onPostExecute(Boolean success) {
 
             // clear progress notification
-            NotificationManager notificationManager = (NotificationManager) 
+            NotificationManager notificationManager = (NotificationManager)
                     getSystemService(Context.NOTIFICATION_SERVICE);
-            
+
             notificationManager.cancel(NOTIFICATION_ID_PROGRESS);
 
 
@@ -123,7 +122,7 @@ public class ExportService extends Service {
             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, startActivityIntent, 0);
             notification.contentIntent = pendingIntent;
 
-            message = "Files saved to: " + StatsCsvReaderWriter.getDefaultDirectory(); 
+            message = "Files saved to: " + StatsCsvReaderWriter.getDefaultDirectory();
 
             notification.setLatestEventInfo(getApplicationContext(), "Andlytics export finished", message, pendingIntent);
             notification.defaults |= Notification.DEFAULT_SOUND;
@@ -134,7 +133,7 @@ public class ExportService extends Service {
             stopSelf();
         }
     }
-   
+
 
     /**
      * Send a notification to the progress bar.
@@ -145,7 +144,7 @@ public class ExportService extends Service {
         Intent startActivityIntent = new Intent(ExportService.this, ExportService.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, startActivityIntent, 0);
 
-        notification.setLatestEventInfo(this, "Andlytics export", message , pendingIntent);        
+        notification.setLatestEventInfo(this, "Andlytics export", message , pendingIntent);
         notificationManager.notify(NOTIFICATION_ID_PROGRESS, notification);
     }
 
@@ -154,5 +153,5 @@ public class ExportService extends Service {
         return null;
     }
 
-   
+
 }

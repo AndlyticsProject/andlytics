@@ -40,7 +40,7 @@ public class CrashDialog extends Dialog {
 
 		/**
 		 * Set the Dialog message from String
-		 * 
+		 *
 		 * @param title
 		 * @return
 		 */
@@ -51,7 +51,7 @@ public class CrashDialog extends Dialog {
 
 		/**
 		 * Set the Dialog message from resource
-		 * 
+		 *
 		 * @param title
 		 * @return
 		 */
@@ -62,7 +62,7 @@ public class CrashDialog extends Dialog {
 
 		/**
 		 * Set the Dialog title from resource
-		 * 
+		 *
 		 * @param title
 		 * @return
 		 */
@@ -73,7 +73,7 @@ public class CrashDialog extends Dialog {
 
 		/**
 		 * Set the Dialog title from String
-		 * 
+		 *
 		 * @param title
 		 * @return
 		 */
@@ -84,7 +84,7 @@ public class CrashDialog extends Dialog {
 
 		/**
 		 * Set the positive button resource and it's listener
-		 * 
+		 *
 		 * @param positiveViewText
 		 * @param listener
 		 * @return
@@ -97,7 +97,7 @@ public class CrashDialog extends Dialog {
 
 		/**
 		 * Set the positive button text and it's listener
-		 * 
+		 *
 		 * @param positiveViewText
 		 * @param listener
 		 * @return
@@ -110,7 +110,7 @@ public class CrashDialog extends Dialog {
 
 		/**
 		 * Set the negative button resource and it's listener
-		 * 
+		 *
 		 * @param negativeViewText
 		 * @param listener
 		 * @return
@@ -123,7 +123,7 @@ public class CrashDialog extends Dialog {
 
 		/**
 		 * Set the negative button text and it's listener
-		 * 
+		 *
 		 * @param negativeViewText
 		 * @param listener
 		 * @return
@@ -184,9 +184,9 @@ public class CrashDialog extends Dialog {
 			} else if ( messageStringId > 0) {
 			    ((TextView) layout.findViewById(R.id.crash_dialog_text)).setText(messageStringId);
 			}
-			
+
 			dialog.setContentView(layout);
-				
+
 			return dialog;
 		}
 

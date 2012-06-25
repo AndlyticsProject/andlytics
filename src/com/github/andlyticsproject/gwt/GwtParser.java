@@ -1,6 +1,5 @@
 package com.github.andlyticsproject.gwt;
 
-
 import android.text.format.DateFormat;
 
 import java.util.ArrayList;
@@ -18,30 +17,30 @@ import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 
 public class GwtParser {
-	
+
 	private ArrayList<String> indexList;
-	
+
 	private ArrayList<String> valueList;
-	
+
 	private String jsonCopy;
-	
+
 	private boolean debug = false;
-	
+
 	private static final String TAG = GwtParser.class.getSimpleName();
 
 	public GwtParser(String json) {
-	    
+
 	    jsonCopy = json;
-		
+
 		// remove response prefix (//OK)
 		json = json.substring(json.indexOf("[") + 1);
-		
+
 		// for large jsons there is a concat sometimes
 		json = json.replace("].concat([", ",");
-        
+
 		int seperatorIndex = json.indexOf(",[\"");
 		int endIndex = json.lastIndexOf("],");
-		
+
 		String indexes = json.substring(0, seperatorIndex);
 		String values = json.substring(seperatorIndex + 3, endIndex-1);
 
@@ -54,21 +53,21 @@ public class GwtParser {
 
 		setValueList(new ArrayList<String>());
 		valueList.add("null");
-		
+
 		String[] split = values.split("\",\"");
-		
+
 		for (int i = 0; i < split.length; i++) {
 			valueList.add(split[i]);
 		}
-		
+
 		// tokenizer fails if last value is ""
 		if(values.endsWith("\",\"")){
 			valueList.add("");
 		}
-		
+
 
 	}
-	
+
 	public long getAppInfoSize() {
 
 		long result = 0;
@@ -77,11 +76,11 @@ public class GwtParser {
 		if(string.startsWith("'")) {
 			result = decodeLong(string);
 		}
-		
+
 		return result;
 	}
 
-	
+
 	/*
 	  1"java.util.ArrayList/3821976829",
 	  18 size
@@ -133,38 +132,38 @@ public class GwtParser {
 13 30: 10=
 14 31: 16=Sree Hari Reddy
 
-	*/	
+	*/
 	public List<Comment> getComments() {
 
 		List<Comment> result = new ArrayList<Comment>();
-		
-		
+
+
 		if(valueList.size() > 2) {
-			
+
 			// remove first two values from index array - is arraylist definition
 			List<String> commentsIndexList = indexList.subList(2, indexList.size());
 			Comment comment  = new Comment();
-			
+
 			int commentNumber = 0;
 			int commentIndex = -1;
 			for (int i = 0; i < commentsIndexList.size(); i++) {
-				
+
 				String valueIndex = commentsIndexList.get(i);
-				
+
 				commentIndex++;
-				
+
 				switch (commentIndex) {
 				case 0:
 					comment = new Comment();
 					break;
                 case 1:
-                    
+
                     if("null".equals(getStringForIndex(valueIndex))) {
                         comment.setAppVersion("");
                     } else {
                         comment.setAppVersion(getStringForIndex(valueIndex));
                     }
-                    
+
                     break;
 				case 2:
 				    String text = getStringForIndex(valueIndex);
@@ -173,16 +172,16 @@ public class GwtParser {
 					comment.setText(text);
 					break;
 				case 3:
-				    
+
 				    Date date = new Date();
 				    date.setTime(decodeLong(indexList.get(commentIndex + 2 + (commentNumber))));
-				    
+
 				    String dateString = DateFormat.format("EEEEE, d MMM yyyy", date).toString();
-				    
+
 					comment.setDate(dateString);
 					break;
                 case 5:
-                    
+
                     if("null".equals(getStringForIndex(valueIndex))) {
                         comment.setDevice("");
                     } else {
@@ -190,21 +189,21 @@ public class GwtParser {
                     }
 
                     break;
-					
+
 				case 9:
 					comment.setRating(getIntForIndex(valueIndex));
 					break;
 
 				case 14:
-				    
+
 				    comment.setUser(getStringForIndex(valueIndex));
 					commentIndex = -1;
 					result.add(comment);
-					
+
 					commentNumber += 15;
-					
+
 					break;
-	
+
 				default:
 					break;
 				}
@@ -213,38 +212,38 @@ public class GwtParser {
 
 		return result;
 	}
-	
+
 
     public Map<String, Integer> getFeedbackOverview() {
 
         Map<String, Integer> result = new HashMap<String, Integer>();
-        
+
         String appStart = "[,\\\"";
         String appEnd = "\\\",";
         String valueEnd = "]\\n";
-        
+
         if(valueList.size() > 1) {
-            
+
             String value = valueList.get(2);
 
             while(true) {
-                
+
                 int startIndex = value.indexOf(appStart);
-                
+
                 if(startIndex > 0) {
 
                     value = value.substring(startIndex + appStart.length(), value.length());
-                    
+
                     int appEndIndex = value.indexOf(appEnd);
                     String appName = value.substring(0, appEndIndex);
-                    
+
                     int valueEndIndex = value.indexOf(valueEnd);
                     String number = value.substring(appEndIndex + appEnd.length(), valueEndIndex);
 
                     result.put(appName, Integer.valueOf(number));
-                    
+
                     value = value.substring(valueEndIndex + number.length(), value.length());
-                    
+
                 } else {
                     break;
                 }
@@ -254,7 +253,7 @@ public class GwtParser {
         return result;
 
     }
-    
+
 
 	private int getIntForIndex(String valueIndex) {
 		return Integer.parseInt(valueIndex);
@@ -285,7 +284,7 @@ public class GwtParser {
 	}
 
 	public List<AppInfo> getAppInfos(String accountName) throws DeveloperConsoleException {
-	    
+
 	    List<AppInfo> result = new ArrayList<AppInfo>();
 
 	    try{
@@ -294,12 +293,12 @@ public class GwtParser {
 	        Map<Integer, LongIndexValue> activeInstallIndexMap = new HashMap<Integer, LongIndexValue>();
          //   Map<Integer, LongIndexValue> commentsIndexMap = new HashMap<Integer, LongIndexValue>();
             Map<Integer, LongIndexValue> fullAssetLongIndexMap = new HashMap<Integer, LongIndexValue>();
-            
-            
+
+
 	        int tokenCount = 0;
 
 	        List<LongIndexValue> longValues = new ArrayList<GwtParser.LongIndexValue>();
-	        
+
 	        int count = 0;
 	        // build list von longs
 	        for (int i = 0; i < indexList.size(); i++) {
@@ -309,8 +308,8 @@ public class GwtParser {
 	            boolean isJsonArray = string.startsWith("[") && tokenCount != 0;
 	            boolean isJsonLong = string.startsWith("'");
 
-	            
-	            
+
+
 	            if (isJsonLong) {
 	                Long value = Long.valueOf(decodeLong(string));
 	               // debugPrint("json long: index " + count + " value " + value);
@@ -325,31 +324,31 @@ public class GwtParser {
 	            }
 
 	            tokenCount++;
-	        }       
-	        
+	        }
+
 	        // number of apps in json
 	        int numberOfAppsInJson = 0;
 	        if(indexList.size() > 1){
 	            numberOfAppsInJson = Integer.parseInt(indexList.get(1));
 	        }
-	        
-	        
+
+
 	        int longValueIndex = 0;
-	        
+
 	        debugPrint("number of apps: " + numberOfAppsInJson);
 	        debugPrint("number of long values: " + longValues.size());
-	        
+
 	        for (int i = 0; i < numberOfAppsInJson; i++) {
-	            
+
 	            if(longValues.size() > longValueIndex) {
-	                
+
 	                AppInfo info = new AppInfo();
 	                AppStats stats = new AppStats();
 	                stats.setRequestDate(now);
-	                
+
 	                // find ratings
 	                int ratingsStartIndex = findRatingsStartIndex(longValueIndex, longValues);
-	                
+
 	                // System.out.println("rating start:: " + ratingsStartIndex);
 	                // next is 0 ??? and then active installs
 
@@ -357,7 +356,7 @@ public class GwtParser {
                     int totalDownloadIndex = ratingsStartIndex-1;
                     int totalDownloads = longValues.get(totalDownloadIndex).value.intValue();
                     debugPrint("totalDownloads: " + totalDownloads);
-                    
+
                     // after download there may be money elements
                     int firstAfterMoney = findFirstAfterMoneyIndex(ratingsStartIndex-1, longValues);
 
@@ -366,7 +365,7 @@ public class GwtParser {
                     stats.setTotalDownloads(totalDownloads);
 
                     debugPrint("comments: " + comments);
-                    
+
 	                LongIndexValue activeInstallIndex = longValues.get(firstAfterMoney-2);
 	                int activeInstalls = activeInstallIndex.value.intValue();
 	                activeInstallIndexMap.put(i, activeInstallIndex);
@@ -375,9 +374,9 @@ public class GwtParser {
 
                     // total downloads is rating start -1
 
-	                
+
            //         commentsIndexMap.put(i, longValues.get(firstAfterMoney));
-                    
+
                     if(firstAfterMoney >= 2) {
                         fullAssetLongIndexMap.put(i, longValues.get(firstAfterMoney-2));
                     } else {
@@ -385,19 +384,19 @@ public class GwtParser {
                         debugPrint("full asses dummy - invalid value!!!");
                         fullAssetLongIndexMap.put(i, longValues.get(firstAfterMoney));
                     }
-                    
+
                     stats.setNumberOfComments(comments);
-	                
+
 	                // set the ratings
 	                stats.setRating1(longValues.get(ratingsStartIndex).value.intValue());
 	                stats.setRating2(longValues.get(ratingsStartIndex+1).value.intValue());
 	                stats.setRating3(longValues.get(ratingsStartIndex+2).value.intValue());
 	                stats.setRating4(longValues.get(ratingsStartIndex+3).value.intValue());
 	                stats.setRating5(longValues.get(ratingsStartIndex+4).value.intValue());
-	                
+
 	                info.setLatestStats(stats);
 	                result.add(info);
-	                
+
 
 
 	                // move index to next element
@@ -405,31 +404,31 @@ public class GwtParser {
 
 	            }
 
-	            
+
 	        }
-	        
+
 	        List<AppInfo> draftElements = new ArrayList<AppInfo>();
 
 	        for (int j = 0; j < result.size(); j++) {
 
 	            AppInfo appInfo = result.get(j);
-	            
+
 	            /*
 	            4=com.google.wireless.android.vending.developer.shared.FullAssetInfo/4240394288
 	            'SD'=1155
 	            1=1
 	            5=com.google.wireless.android.vending.developer.shared.ApkInfo/2489460190
 	            */
-	            
+
 	            int fullAssetLong = activeInstallIndexMap.get(j).index;
-	            
+
 	            debugPrint("full asset long value: " + activeInstallIndexMap.get(j).value + " (should be 0 or 'A')");
                 debugPrint("full asset long index: " + fullAssetLong);
-	            
-	            int apkinfoIndex = fullAssetLong + 2; 
 
-                int apkinfoIndexFallback = fullAssetLong + 1; 
-	            
+	            int apkinfoIndex = fullAssetLong + 2;
+
+                int apkinfoIndexFallback = fullAssetLong + 1;
+
 	            // test for apk info element, if this is not a apk-info it's most likely a draft
 	            // app, skip it
 	            boolean isDraft = true;
@@ -445,7 +444,7 @@ public class GwtParser {
 	            } catch (NumberFormatException e) {
 	                //Log.d("Andlytics", "skipping draft app, nfe.");
 	            }
-	            
+
                try {
                     int parseInt = Integer.parseInt(indexList.get(apkinfoIndexFallback));
                     if(parseInt > 0 && parseInt < valueList.size() ) {
@@ -459,14 +458,14 @@ public class GwtParser {
                 } catch (NumberFormatException e) {
                     //Log.d("Andlytics", "skipping draft app, nfe.");
                 }
-	            
+
 	            if(!isDraft) {
-	                
+
 	                // apk info is followed by apk manifest
-	                
+
 	                /*
-                    5=com.google.wireless.android.vending.developer.shared.ApkInfo/2489460190 
-1	                6=com.google.wireless.android.vending.developer.shared.ApkManifest/1869115588 
+                    5=com.google.wireless.android.vending.developer.shared.ApkInfo/2489460190
+1	                6=com.google.wireless.android.vending.developer.shared.ApkManifest/1869115588
 3	                7=com.google.wireless.android.vending.developer.shared.Dimension/2931101581
 3	                8=com.google.common.base.Pair/1879869809
 	                9=java.lang.Integer/3438268394
@@ -475,7 +474,7 @@ public class GwtParser {
 	                10000=10000
 	                0=null
 	                0=null
-	                0=null	                
+	                0=null
 	                */
 	                int intPairStartIndex = apkinfoIndex + 3;
 	                debugPrint("in pair start: " + getIndexStringValue(intPairStartIndex));
@@ -484,27 +483,27 @@ public class GwtParser {
                     int dimensionSetStart = firstNullIndex + 4;
 
 	                /*
-                    10000=10000                    
+                    10000=10000
                     0=null
                     0=null
-                    0=null              
-                    
+                    0=null
+
                     10=java.util.HashSet/3273092938
                      16=size
                       8=com.google.common.base.Pair/1879869809
                      11=com.google.wireless.android.vending.developer.shared.Dimension$ScreenSize/2766144871
                       1=1
                      12=com.google.wireless.android.vending.developer.shared.Dimension$ScreenDensity/1170511186
-                      3=3                  
+                      3=3
                       8=com.google.common.base.Pair/1879869809
                     -15=?
-                    -16=?                            
-                    */	         
+                    -16=?
+                    */
 	                SizeCallback dimensionPairLengthCallback = new SizeCallback() {
-	                    
+
 	                    @Override
 	                    public int getElementLength(int startIndex) {
-	                       
+
 	                        /*
 	                        try {
 	                            debugPrint("Pair?: " + getIndexStringValue(startIndex) + "  " + startIndex);
@@ -513,9 +512,9 @@ public class GwtParser {
                                 e.printStackTrace();
                             }
                             */
-	                        
+
 	                        int index = startIndex +1;
-	                        
+
 	                        int firstDimensionInteger = getIndexIntegerValue(index);
 	                        if(firstDimensionInteger < 1) {
 	                            index++;
@@ -528,42 +527,42 @@ public class GwtParser {
                             } else {
                                 index +=2;
                             }
-	                        
+
                             int lenght = index - startIndex;
-                            
+
 	                        return lenght;
 	                    }
 	                };
 
 	                debugPrint("dimension set start: " + getIndexStringValue(dimensionSetStart));
 	                int dimensionSetLength = getListOrSetLenght(dimensionSetStart, dimensionPairLengthCallback);
-	                
+
                     debugPrint("hash set?: " + getIndexStringValue(dimensionSetStart + dimensionSetLength) + " index: " + (dimensionSetStart + dimensionSetLength));
 
-/*	                
+/*
                     10=java.util.HashSet/3273092938
                     0=null 7398
                     0=null
                    13=http://market.android.com/publish/images/PAAAAH43890gKGWWS7kWb6xrjkHd_pfCJ6LAg2pFp0qAQmYk1F27n04Ujq-nwfFsL1OqUlzp_RvFY3OEuFpd4ES7A3kAzfqVaXHgiKrUbcU0OaioJ_tQxwLebTII.png
                    14=com.google.common.collect.RegularImmutableList/440499227
-*/	               
+*/
 
                     int iconIndex = dimensionSetStart + dimensionSetLength + 3;
-                    
+
                     if(getIndexStringValue(iconIndex) == null) {
                         iconIndex++;
                     }
-                    
+
                     debugPrint("icon: " + getIndexStringValue(iconIndex) + " index: " + iconIndex);
-                    
-                   
+
+
                     validateString(getIndexStringValue(iconIndex), "http", iconIndex);
                     //iconIndex = secondListIndex + getListOrSetLenght(secondListIndex, null);
                     appInfo.setIconUrl(getIndexStringValue(iconIndex));
-                    
+
                     int permissionListStart = iconIndex + 1;
                     int permissionListLength = getListOrSetLenght(permissionListStart, null);
-                    
+
                     // 3 more list
                     int postPermissionList1Start = permissionListStart + permissionListLength;
                     int postPermissionList1Length = getListOrSetLenght(postPermissionList1Start, null);
@@ -579,12 +578,12 @@ public class GwtParser {
                     //debugPrint("product info element: " + getIndexStringValue(productInfoIndex));
 
                     int nameIndex = productInfoIndex + 2;
-                    
-                    
+
+
 	                appInfo.setName(getIndexStringValue(nameIndex));
 	                debugPrint("app name: " + getIndexStringValue(nameIndex));
-	                
-	                   /* 
+
+	                   /*
                     6889:174=1.3.30
                     6890: 28=Andlytics
                     6891:  0=null
@@ -595,7 +594,7 @@ public class GwtParser {
                     6896: 30=com.github.andlyticsproject
                     6897:163=380k
                     */
-                    
+
 
                    /*
                     5212:  2=com.google.wireless.android.vending.developer.shared.ProductInfo/215520622
@@ -613,7 +612,7 @@ public class GwtParser {
                     5224:433=com.rsoftr.android.woodbat
                     5225:437=2.7M
                     */
-	                
+
 	                // name is followed by:
 	                /*
                     1. appname
@@ -624,12 +623,12 @@ public class GwtParser {
                     6. list
                     7. packegename
                     */
-	                	                    
+
                     int listIndex = nameIndex + 2;
-                    
+
                     //debugPrint("list set / negative " + getIndexStringValue(listIndex) + " " + listIndex);
                     int setIndex = listIndex + getListOrSetLenght(listIndex, null);
-                    
+
                     // add number 1
                     setIndex++;
 
@@ -637,32 +636,32 @@ public class GwtParser {
                     setIndex++;
 
 
-                    
+
                     // add set
                     int packageIndex = setIndex + getListOrSetLenght(setIndex, null);
-                    
+
                     String packageName = getIndexStringValue(packageIndex);
-                        
+
 
 	                debugPrint("package name: " + packageName);
 	                validatePackageName(packageName);
 	                appInfo.setPackageName(packageName);
-	                 
+
 	                appInfo.setLastUpdate(now);
 	                appInfo.setAccount(accountName);
 
-	                
+
 	                AppStats latestStats = appInfo.getLatestStats();
 	                latestStats.setVersionCode(0);
 	                appInfo.setLatestStats(latestStats);
-	                
+
 	                AppStats stats = appInfo.getLatestStats();
                     debugPrint("number of comments " + stats.getNumberOfComments());
                     debugPrint("number of installs " + stats.getActiveInstalls());
                     debugPrint("number of downloads " + stats.getTotalDownloads());
-	                
+
 	                debugPrint("-- next app --" + j);
-	                
+
 	            } else {
 	                debugPrint("-- skip draft app --" + j);
 	                appInfo.setName("draft:" + j);
@@ -676,50 +675,50 @@ public class GwtParser {
 	        throw new DeveloperConsoleException(jsonCopy, e);
 	    }
 
-	    return result;        
-	
+	    return result;
+
 
 	}
-	
+
 	private int findFirstAfterMoneyIndex(int downloadStartIndex, List<LongIndexValue> longValues) {
-	    
+
 	    LongIndexValue nextPotentialMoneyLong = longValues.get(downloadStartIndex -1);
 	    int potentialMoneyElementIndex = nextPotentialMoneyLong.index - 1;
 
 	    try {
 	        int valueKey = getIntForIndex(indexList.get(potentialMoneyElementIndex));
 	        if(valueKey < valueList.size() && valueKey > -1) {
-	            
+
 	            String moneyString = valueList.get(valueKey);
 	            if(moneyString != null && moneyString.indexOf("SimpleMoney") > -1) {
 	                //debugPrint("money string found: " + moneyString);
 	                return findFirstAfterMoneyIndex(downloadStartIndex -1, longValues);
 	            }
 	        }
-	        
+
 	    } catch (java.lang.NumberFormatException e) {
             // ignore
         }
-	    
-	    
+
+
 	    return downloadStartIndex -1;
     }
 
     private void validatePackageName(String packageName) throws GwtParserException {
-	    
-	    
+
+
 	    if(packageName.indexOf('/') > -1) {
-	        throw new GwtParserException("error while parsing package name, found / : " + packageName); 
+	        throw new GwtParserException("error while parsing package name, found / : " + packageName);
 	    }
 
 	    if(packageName.indexOf('.') < 0) {
-            throw new GwtParserException("error while parsing package name, no '.' in name : " + packageName); 
+            throw new GwtParserException("error while parsing package name, no '.' in name : " + packageName);
         }
-	    
+
 	    if(packageName.indexOf(' ') > -1) {
-            throw new GwtParserException("error while parsing package name, found space in name : " + packageName); 
+            throw new GwtParserException("error while parsing package name, found space in name : " + packageName);
         }
-	    
+
 	    if(packageName.startsWith("android.permission.")) {
 	        throw new GwtParserException("error while parsing package name, found permission for name : " + packageName);
 	    }
@@ -736,11 +735,11 @@ public class GwtParser {
 	    9=java.lang.Integer/3438268394
 	    4=4
 	    9=java.lang.Integer/3438268394
-	  10000=10000	    
+	  10000=10000
 	    */
-	    
+
 	    int lenght = 0;
-	    
+
 	    try {
             String pairString = getIndexStringValue(startIndex);
             validateString(pairString, "Pair", startIndex);
@@ -769,11 +768,11 @@ public class GwtParser {
     }
 
     private void validateString(String actual, String expected, int index) throws GwtParserException {
-        
+
         if(actual.indexOf(expected) < 0) {
             throw new GwtParserException("expected: " + expected + " at index " + index + " but found: " + actual);
         }
-        
+
     }
 
     private void debugPrint(String string) {
@@ -782,45 +781,45 @@ public class GwtParser {
             //Log.d(TAG, string);
         }
     }
-    
+
     /*
 	private void printSaveValue(int list1) {
-	    
+
 	    if(list1 < 0)
 	        debugPrint(valueList.get(Integer.parseInt(indexList.get(list1))));
-	    else 
+	    else
 	        debugPrint(Integer.parseInt(indexList.get(list1)));
         // TODO Auto-generated method stub
-   
+
     }*/
 
     private int findRatingsStartIndex(int startIndex, List<LongIndexValue> longValues) {
-		
+
 		int ratingStart = startIndex;
 
 		for (int i = startIndex; i < longValues.size() - 4; i++) {
-			
+
 			// find next 5 values with distance == 0
 			long value1 = longValues.get(i).index;
 			long value2 = longValues.get(i+1).index;
 			long value3 = longValues.get(i+2).index;
 			long value4 = longValues.get(i+3).index;
 			long value5 = longValues.get(i+4).index;
-			
+
 			if(value5 == (value4+1) && value4 == (value3+1) && value3 == (value2+1) && value2 == (value1+1)) {
 				// found rating index in index array, return
 				return i;
 			}
-			
+
 		}
-		
+
 		return ratingStart;
 	}
 
 	protected int getMapLenght(int mapIndex, List<String> devconStringArray, ArrayList<String> indexList) {
 
 		int lenght = 0;
-		
+
 		// read class name
 		try {
 			String string = getIndexStringValue(mapIndex);
@@ -834,30 +833,30 @@ public class GwtParser {
 				//(3) == class name + boolean + sizeInt /FIXME add neg value check !!!
 				lenght = 3 + (mapSize * 4);
 			}
-			
+
 			return lenght;
 		} catch (NegativeIndexValueExecption e) {
 			return 1;
-		} 
+		}
 	}
-	
+
 	private int getListOrSetLenght(int listIndex, SizeCallback callback) {
 
 		int lenght = 0;
-		
+
 		// read class name
 		try {
-			
+
 			String string = getIndexStringValue(listIndex);
-			
+
 			if(string == null) {
 			    return 1;
 			}
-			
+
 			if(string.indexOf("Empty") > 0) {
 				lenght = 1;
 			} else if (string.indexOf("Singleton") > 0) {
-			    
+
 			    lenght = 3; // classname=1 +2xvalue
 
 			    // test for negative ref in singleton
@@ -866,22 +865,22 @@ public class GwtParser {
 			    } catch (NegativeIndexValueExecption e) {
 			        lenght = 2;
 			    }
-			    
+
 			} else {
 				// filled list or set, read size
 				int listSize = getIndexIntegerValue(listIndex+1);
-				
+
 				int valuesSize = 0;
 				//(2) == class name + sizeInt
 				int valuesStartIndex = listIndex+2;
 				for (int i = 0; i < listSize; i++) {
-                    
+
 	                int number = getIndexIntegerValue(valuesStartIndex + valuesSize);
 	                if(number < 0) {
 	                    // negative is back reference, add one
 	                    valuesSize++;
 	                } else {
-	                    
+
 	                    if(callback != null) {
 
 	                        // for complex objects we need a callback
@@ -890,50 +889,50 @@ public class GwtParser {
 	                        // standard element size is 2, simple objects like String values
 	                        valuesSize += 2;
 	                    }
-	                    
+
 	                }
 
                 }
-				
+
 				lenght = 2 + valuesSize;
 			}
-			
+
 			return lenght;
 		} catch (NegativeIndexValueExecption e) {
 			return 1;
 		}
 	}
-	
+
 
 
 
 	private String getIndexStringValue(int index) throws NegativeIndexValueExecption {
-		
+
 		int indexValue = Integer.parseInt(indexList.get(index));
-		
+
 		if(indexValue == 0) {
 			return null;
-		} else  if (indexValue < 0){ 
+		} else  if (indexValue < 0){
 			throw new NegativeIndexValueExecption();
 		}
-		
+
 		return valueList.get(indexValue);
 	}
 
 	private int getIndexIntegerValue(int index) {
-	    
+
 	    String value = indexList.get(index);
-	    
+
 	    if(value.startsWith("[")) {
 	        return Integer.parseInt(value.substring(1));
 	    }
-	    
+
 	    if(value.endsWith("]")) {
 	        return Integer.parseInt(value.substring(0, value.length() -1));
 	    }
-	    
+
 		return Integer.parseInt(value);
-	}	
+	}
 
 	protected long decodeLong(final String obfuscated) {
 
@@ -942,7 +941,7 @@ public class GwtParser {
 
 		return result;
 	}
-	
+
 	class LongIndexValue {
 		public LongIndexValue(int i, Long value2) {
 			index = i;
@@ -956,7 +955,7 @@ public class GwtParser {
 	interface SizeCallback {
 
         int getElementLength(int startIndex);
-	    
+
 	}
 
 }

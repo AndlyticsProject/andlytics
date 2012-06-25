@@ -1,6 +1,5 @@
 package com.github.andlyticsproject;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -285,7 +284,7 @@ public class MainListAdapter extends BaseAdapter {
             holder.activeInstallsPercent.setTextColor(BLACK_TEXT);
 
         }
-        
+
         int height = expandViewHeight;
         Admob admobStats = appDownloadInfo.getAdmobStats();
         if(admobStats != null) {
@@ -357,7 +356,7 @@ public class MainListAdapter extends BaseAdapter {
                 activity.overridePendingTransition(R.anim.activity_next_in, R.anim.activity_next_out);
             }
         });
-        
+
         holder.admobFrame.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -391,7 +390,7 @@ public class MainListAdapter extends BaseAdapter {
             }
         });
 
-        
+
         android.widget.RelativeLayout.LayoutParams layout = ((RelativeLayout.LayoutParams) holder.ratingFrame
                         .getLayoutParams());
         if (appDownloadInfo.isRatingDetailsExpanded()) {
@@ -510,7 +509,7 @@ public class MainListAdapter extends BaseAdapter {
             value = "0";
             view.setTextColor(BLACK_TEXT);
         } else {
-            
+
             if (diff > 0) {
                 value = diffvalue;
                 view.setTextColor(GREEN_TEXT);
@@ -518,9 +517,9 @@ public class MainListAdapter extends BaseAdapter {
             } else if (diff < 0) {
                 value = diffvalue;
                 view.setTextColor(RED_TEXT);
-            } 
+            }
         }
-        
+
         view.setText(value);
 
     }

@@ -97,9 +97,9 @@ public class LoginActivity extends BaseActivity {
 					Bundle bundle = future.getResult();
 					bundle.keySet();
 					Log.d(TAG, "account added: " + bundle);
-					
+
 					showAccountList();
-					
+
 				} catch (OperationCanceledException e) {
 					Log.d(TAG, "addAccount was canceled");
 				} catch (IOException e) {

@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class CommentsTable {
 
-    
+
     public static final String DATABASE_TABLE_NAME = "comments";
 
     public static final Uri CONTENT_URI = Uri.parse("content://" + AndlyticsContentProvider.AUTHORITY + "/"
@@ -31,12 +31,12 @@ public class CommentsTable {
         + KEY_COMMENT_APP_VERSION + " text,"
         + KEY_COMMENT_TEXT + " text not null,"
         + KEY_COMMENT_RATING + " integer);";
-    
+
     public static HashMap<String, String> PROJECTION_MAP;
-    
+
     static {
         PROJECTION_MAP = new HashMap<String, String>();
-        
+
         PROJECTION_MAP.put(CommentsTable.KEY_ROWID,CommentsTable.KEY_ROWID);
         PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_PACKAGENAME,CommentsTable.KEY_COMMENT_PACKAGENAME);
         PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_TEXT,CommentsTable.KEY_COMMENT_TEXT);
@@ -45,9 +45,9 @@ public class CommentsTable {
         PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_RATING,CommentsTable.KEY_COMMENT_RATING);
         PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_APP_VERSION,CommentsTable.KEY_COMMENT_APP_VERSION);
         PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_DEVICE,CommentsTable.KEY_COMMENT_DEVICE);
-        
+
 
     }
-    
-    
+
+
 }

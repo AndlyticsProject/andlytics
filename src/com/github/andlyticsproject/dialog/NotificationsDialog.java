@@ -1,6 +1,5 @@
 package com.github.andlyticsproject.dialog;
 
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Bitmap;
@@ -36,7 +35,7 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
 	public static final int TAG_IMAGE_REF = R.id.tag_mainlist_image_reference;
 
 	Button okButton;
-    
+
 	private GhostListAdapter adapter;
 
 	private List<AppInfo> appInfos;
@@ -50,7 +49,7 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
 	private Activity context;
 
 	private Drawable spacerIcon;
-	
+
     private ViewGroup ratingChangeButton;
 
     private ViewGroup commentsChangeButton;
@@ -64,29 +63,29 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
     private ViewGroup lightButton;
 
 	public interface GhostSelectonChangeListener {
-		
+
 		public void onGhostSelectionChanged(String packageName, boolean isGhost);
 
 		public void onGhostDialogClose();
-		
-	} 
-	
+
+	}
+
     public NotificationsDialog(final Activity context, List<AppInfo> appInfos, final String accountName, final ContentAdapter db) {
-        
+
         super(context, R.style.Dialog);
         this.db = db;
-        
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         layoutInflater = context.getLayoutInflater();
-        
+
         setContentView(R.layout.notification_dialog);
-        
+
         adapter = new GhostListAdapter();
         this.setAppInfos(appInfos);
         View closeButton = (View) this.findViewById(R.id.notification_dialog_close_button);
         closeButton.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				dismiss();
@@ -96,12 +95,12 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
         lv.addHeaderView(layoutInflater.inflate(R.layout.notification_list_header, null), null, false);
 
         lv.setAdapter(adapter);
-        
+
 		this.inMemoryCache = AppIconInMemoryCache.getInstance();
 		this.cachDir = context.getCacheDir();
 		this.context = context;
 		this.spacerIcon = context.getResources().getDrawable(R.drawable.app_icon_spacer);
-		
+
         View.OnClickListener ratingOnClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,7 +111,7 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
         ratingChangeButton = (ViewGroup) this.findViewById(R.id.notification_dialog_rating_change);
         ratingChangeButton.setOnClickListener(ratingOnClick);
         ((CheckBox)ratingChangeButton.getChildAt(0)).setOnClickListener(ratingOnClick);
-        
+
         View.OnClickListener commentsOnClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +122,7 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
         commentsChangeButton = (ViewGroup) this.findViewById(R.id.notification_dialog_comments_change);
         commentsChangeButton.setOnClickListener(commentsOnClick);
         ((CheckBox)commentsChangeButton.getChildAt(0)).setOnClickListener(commentsOnClick);
-        
+
         View.OnClickListener downloadsOnClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,40 +133,40 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
         downloadsChangeButton = (ViewGroup) this.findViewById(R.id.notification_dialog_downloads_change);
         downloadsChangeButton.setOnClickListener(downloadsOnClick);
         ((CheckBox)downloadsChangeButton.getChildAt(0)).setOnClickListener(downloadsOnClick);
-        
+
         View.OnClickListener soundOnClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 togglePrefValue(context, Preferences.NOTIFICATION_SOUND, accountName);
                 updateButtons(accountName);
             }
-        };		
+        };
         soundButton = (ViewGroup) this.findViewById(R.id.notification_dialog_sound);
         soundButton.setOnClickListener(soundOnClick);
         ((CheckBox)soundButton.getChildAt(0)).setOnClickListener(soundOnClick);
-        
-        
+
+
         View.OnClickListener lightOnClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 togglePrefValue(context, Preferences.NOTIFICATION_LIGHT, accountName);
                 updateButtons(accountName);
             }
-        };      
+        };
         lightButton = (ViewGroup) this.findViewById(R.id.notification_dialog_led);
         lightButton.setOnClickListener(lightOnClick);
         ((CheckBox)lightButton.getChildAt(0)).setOnClickListener(lightOnClick);
-        
-        
+
+
         updateButtons(accountName);
-        
+
     }
 
     protected void updateButtons(String accountName) {
 
         boolean downloads = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_DOWNLOADS, accountName);
         ((CheckBox)downloadsChangeButton.getChildAt(0)).setChecked(downloads);
-        
+
         boolean comments = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_COMMENTS, accountName);
         ((CheckBox)commentsChangeButton.getChildAt(0)).setChecked(comments);
 
@@ -181,7 +180,7 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
         ((CheckBox)lightButton.getChildAt(0)).setChecked(light);
     }
 
-   
+
     @Override
     public void show() {
         super.show();
@@ -193,7 +192,7 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
         if (v == okButton)
             dismiss();
     }
-    
+
     class GhostListAdapter extends BaseAdapter {
 
         @Override
@@ -221,7 +220,7 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
 				convertView = layoutInflater.inflate(R.layout.notification_list_item, null);
 
 				holder = new ViewHolder();
-				holder.name = (TextView) convertView.findViewById(R.id.notification_app_name); 
+				holder.name = (TextView) convertView.findViewById(R.id.notification_app_name);
 				holder.icon = (ImageView) convertView.findViewById(R.id.notification_app_icon);
 				holder.row = (RelativeLayout) convertView.findViewById(R.id.notification_app_row);
 				holder.checkbox = (CheckBox)convertView.findViewById(R.id.notification_app_checkbox);
@@ -233,9 +232,9 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
 
 			final AppInfo appDownloadInfo = getItem(position);
 			holder.name.setText(appDownloadInfo.getName());
-			
+
 			final String packageName = appDownloadInfo.getPackageName();
-			
+
 			final File iconFile = new File(cachDir + "/" + appDownloadInfo.getIconName());
 
 			holder.icon.setTag(TAG_IMAGE_REF, packageName );
@@ -243,24 +242,24 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
 
 				holder.icon.setImageBitmap(inMemoryCache.get(packageName));
 				holder.icon.clearAnimation();
-				
+
 			} else {
 				holder.icon.setImageDrawable(null);
 				holder.icon.clearAnimation();
 				if(appDownloadInfo.getPackageName().startsWith("com.github.andlyticsproject.demo")) {
-					
+
 					holder.icon.setImageDrawable(context.getResources().getDrawable(R.drawable.default_app_icon));
-					
+
 				} else {
-					
+
 					new GetCachedImageTask(holder.icon, appDownloadInfo.getPackageName()).execute(new File[]{ iconFile });
-					
+
 				}
 			}
 
-			
+
 			holder.row.setOnClickListener(new View.OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 
@@ -271,23 +270,23 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
                     appDownloadInfo.setSkipNotification(!checked);
 				}
 			});
-			
+
 			holder.checkbox.setTag(packageName);
 			holder.checkbox.setChecked(!appDownloadInfo.isSkipNotification());
 			holder.checkbox.setOnClickListener(new CheckBox.OnClickListener() {
-				
+
                 @Override
                 public void onClick(View v) {
                     boolean checked = !((CheckBox)v).isChecked();
                     db.setSkipNotification(packageName, checked);
                     appDownloadInfo.setSkipNotification(checked);
-                    
+
                 }
 			});
 
 			return convertView;
 		}
-		
+
 		private class ViewHolder {
 			public RelativeLayout row;
 			public TextView name;
@@ -295,10 +294,10 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
 			public CheckBox checkbox;
 		}
     }
-    
-    
 
-	
+
+
+
 	private class GetCachedImageTask extends AsyncTask<File, Void, Bitmap> {
 
 		private ImageView imageView;
@@ -307,21 +306,21 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
 		public GetCachedImageTask(ImageView imageView, String reference) {
 			this.imageView = imageView;
 			this.reference = reference;
-		} 
+		}
 
 		protected void onPostExecute(Bitmap result) {
-			
-			// only update the image if tag==reference 
+
+			// only update the image if tag==reference
 			// (view may have been reused as convertView)
 			if (imageView.getTag(TAG_IMAGE_REF).equals(reference)) {
-				
+
 				if(result == null) {
 					imageView.setImageDrawable(spacerIcon);
 				} else {
 					inMemoryCache.put(reference, result);
 					updateMainImage(imageView, R.anim.fade_in_fast, result);
 				}
-			} 
+			}
 		}
 
 		@Override
@@ -332,8 +331,8 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
 			if(iconFile.exists()) {
 				Bitmap bm = BitmapFactory.decodeFile(iconFile.getAbsolutePath());
 				return bm;
-			} 
-			return null; 
+			}
+			return null;
 		}
 	}
 
@@ -360,5 +359,5 @@ public class NotificationsDialog extends Dialog implements OnClickListener {
     private void togglePrefValue(final Activity context, String property, final String accountName) {
         boolean enabled = Preferences.getNotificationPerf(context, property, accountName);
         Preferences.saveNotificationPref(context, property, accountName, !enabled);
-    }	
+    }
 }

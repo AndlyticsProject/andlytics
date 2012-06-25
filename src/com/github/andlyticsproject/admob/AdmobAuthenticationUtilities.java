@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2010 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,7 +15,6 @@
  */
 
 package com.github.andlyticsproject.admob;
-
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -38,7 +37,7 @@ import com.github.andlyticsproject.exception.NetworkException;
  * Provides utility methods for communicating with the server.
  */
 public class AdmobAuthenticationUtilities {
-        
+
     private static final int REQUEST_AUTHENTICATE = 0;
 
 
@@ -47,7 +46,7 @@ public class AdmobAuthenticationUtilities {
 
     /**
      * Executes the network requests on a separate thread.
-     * 
+     *
      * @param runnable
      *            The runnable instance containing network mOperations to be
      *            executed.
@@ -70,7 +69,7 @@ public class AdmobAuthenticationUtilities {
     /**
      * Connects to the Voiper server, authenticates the provided username and
      * password.
-     * 
+     *
      * @param username
      *            The user's username
      * @param password
@@ -112,7 +111,7 @@ public class AdmobAuthenticationUtilities {
     /**
      * Sends the authentication response from server back to the caller main UI
      * thread through its handler.
-     * 
+     *
      * @param result
      *            The boolean holding authentication result
      * @param handler
@@ -133,7 +132,7 @@ public class AdmobAuthenticationUtilities {
 
     /**
      * Attempts to authenticate the user credentials on the server.
-     * 
+     *
      * @param username
      *            The user's username
      * @param password
@@ -156,11 +155,11 @@ public class AdmobAuthenticationUtilities {
     }
 
     public static String authenticateAccount(String accountName, Context context) {
-        
+
         Account account = null;
-        
+
         String token = null;
-        
+
         AccountManager manager = AccountManager.get(context);
         if (accountName != null) {
             Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_ADMOB);
@@ -172,19 +171,19 @@ public class AdmobAuthenticationUtilities {
                 }
             }
         }
-        
+
         if(account != null) {
             token = authenticateAccount(manager, account, context);
-            
+
         } else {
             token = AdmobRequest.ERROR_ACCOUNT_REMOVED;
         }
-        
+
         return token;
     }
 
     protected static String authenticateAccount(final AccountManager manager, final Account account, Context context) {
-        
+
         String token = null;
 
         Bundle bundle;
@@ -192,9 +191,9 @@ public class AdmobAuthenticationUtilities {
             bundle = manager.getAuthToken(account, Constants.AUTHTOKEN_TYPE_ADMOB, true, null, null).getResult();
 
             if (bundle.containsKey(AccountManager.KEY_INTENT)) {
-                
+
                 if(context instanceof Activity) {
-                    
+
                     // ask user for permission - launch account manager intent
                     Intent intent = bundle.getParcelable(AccountManager.KEY_INTENT);
                     int flags = intent.getFlags();
@@ -206,13 +205,13 @@ public class AdmobAuthenticationUtilities {
                 }
 
                 token = AdmobRequest.ERROR_ASK_USER_PASSWORD;
-                
+
             } else if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
 
                 //  got token form manager - set in application an exit
                 final String authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                
-             
+
+
                 return authToken;
 
             }
@@ -223,7 +222,7 @@ public class AdmobAuthenticationUtilities {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        
+
         return token;
 
     }

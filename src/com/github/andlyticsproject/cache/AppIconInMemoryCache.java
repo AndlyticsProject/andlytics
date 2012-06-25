@@ -1,6 +1,5 @@
 package com.github.andlyticsproject.cache;
 
-
 public class AppIconInMemoryCache extends LRUBitmapCache {
 
 	private static final long serialVersionUID = 1L;
@@ -19,5 +18,5 @@ public class AppIconInMemoryCache extends LRUBitmapCache {
 		}
 		return instance;
 	}
-	
+
 }
