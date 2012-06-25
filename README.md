@@ -9,7 +9,7 @@ Andlytics tracks app statistics for ratings, daily downloads, total downloads an
 
 This is a Android developer tool for app tracking, only useful if you have published applications on the Android Market and access to the Android Market Developer Console.
 
-Supports auto sync of app stats with your android developer account. Statistics data can be exported to sdcard (pro only) and you can configure notifications for comments, ratings and downloads (also pro only). AdMob accounts will be managed by the Android account manager.
+Supports auto sync of app stats with your android developer account. Statistics data can be exported to sdcard and you can configure notifications for comments, ratings and downloads. AdMob accounts will be managed by the Android account manager.
 
 Please notice that Google doesn't provide a stable API to get download and rating stats. Therefore Andlytics might not work properly if something changes in the Android Market. In that case please be patient while we try to catch up with the changes.
 
