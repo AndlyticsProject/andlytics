@@ -1,16 +1,17 @@
 package com.github.andlyticsproject.sync;
 
 
+import java.util.List;
+
 import android.accounts.Account;
+import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.PeriodicSync;
 import android.os.Bundle;
 
-import java.util.List;
-
 import com.github.andlyticsproject.Constants;
 
-
+@TargetApi(8)
 public class AutosyncHandlerLevel8 implements AutosyncHandler {
 
     @Override
