@@ -2,8 +2,20 @@ package com.github.andlyticsproject;
 
 
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -20,30 +32,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.dialog.AutosyncDialog;
 import com.github.andlyticsproject.dialog.ExportDialog;
-import com.github.andlyticsproject.dialog.FeedbackDialog;
 import com.github.andlyticsproject.dialog.GhostDialog;
+import com.github.andlyticsproject.dialog.GhostDialog.GhostSelectonChangeListener;
 import com.github.andlyticsproject.dialog.ImportDialog;
 import com.github.andlyticsproject.dialog.NotificationsDialog;
-import com.github.andlyticsproject.dialog.FeedbackDialog.FeedbackDialogBuilder;
-import com.github.andlyticsproject.dialog.GhostDialog.GhostSelectonChangeListener;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.InvalidJSONResponseException;
 import com.github.andlyticsproject.exception.NetworkException;
