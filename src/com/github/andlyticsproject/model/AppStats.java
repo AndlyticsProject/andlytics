@@ -161,15 +161,13 @@ public class AppStats {
 	}
 
 
-	public void setRating(Map<Integer, Integer> rating) {
-		
-		if(rating.size() > 0) {
-			this.rating1 = rating.get(1);
-			this.rating2 = rating.get(2);
-			this.rating3 = rating.get(3);
-			this.rating4 = rating.get(4);
-			this.rating5 = rating.get(5);
-		}
+	public void setRating(Integer rating1, Integer rating2, Integer rating3,
+			Integer rating4, Integer rating5) {
+		this.rating1 = rating1;
+		this.rating2 = rating2;
+		this.rating3 = rating3;
+		this.rating4 = rating4;
+		this.rating5 = rating5;
 	}
 
 	public void addRating(int i, int value) {

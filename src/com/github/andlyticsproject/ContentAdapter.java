@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -528,15 +527,12 @@ public class ContentAdapter {
 				info.setNumberOfComments(cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_COMMENTS)));
                 info.setVersionCode(cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_VERSIONCODE)));
 				
-				Map<Integer, Integer> ratings = new HashMap<Integer,Integer>();
-
-				ratings.put(1, cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_1STARS)));
-				ratings.put(2, cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_2STARS)));
-				ratings.put(3, cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_3STARS)));
-				ratings.put(4, cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_4STARS)));
-				ratings.put(5, cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_5STARS)));
-
-				info.setRating(ratings);
+				info.setRating(
+						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_1STARS)),
+						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_2STARS)),
+						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_3STARS)),
+						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_4STARS)),
+						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_5STARS)));
 				info.init();
 				
 
@@ -768,15 +764,12 @@ public class ContentAdapter {
 				info.setNumberOfComments(cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_COMMENTS)));
                 info.setVersionCode(cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_VERSIONCODE)));
 
-				Map<Integer, Integer> ratings = new HashMap<Integer, Integer>();
-
-				ratings.put(1, cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_1STARS)));
-				ratings.put(2, cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_2STARS)));
-				ratings.put(3, cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_3STARS)));
-				ratings.put(4, cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_4STARS)));
-				ratings.put(5, cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_5STARS)));
-
-				info.setRating(ratings);
+                info.setRating(
+						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_1STARS)),
+						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_2STARS)),
+						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_3STARS)),
+						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_4STARS)),
+						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_5STARS)));
 				
 				info.init();
 
@@ -945,9 +938,10 @@ public class ContentAdapter {
         if(true) {
             return result;
         }
-        
-        Uri uri = Uri.parse("content://" + AndlyticsContentProvider.AUTHORITY + "/" + AndlyticsContentProvider.APP_VERSION_CHANGE);
-        
+
+		Uri uri = Uri.parse("content://" + AndlyticsContentProvider.AUTHORITY
+				+ "/" + AndlyticsContentProvider.APP_VERSION_CHANGE);
+
         List<String> versionCodes = new ArrayList<String>();
         
         Cursor cursor = context.getContentResolver().query(uri, new String[] { 

@@ -84,17 +84,20 @@ public class DemoDataActivity extends BaseActivity {
 				info.setName("Demo App 1");
 				info.setPackageName("com.github.andlyticsproject.demo1");
 
-				Map<Integer, Integer> ratings = new HashMap<Integer, Integer>();
-				ratings.put(1, (int) ((i + 1) * 10 * ((float) new Random().nextInt(100)) / 100.0));
-				ratings.put(2, (int) ((i + 1) * 10 * ((float) new Random().nextInt(100)) / 100.0));
-				ratings.put(3, (int) ((i + 1) * 10 * ((float) new Random().nextInt(100)) / 100.0));
-				ratings.put(4, (int) ((i + 1) * 10 * ((float) new Random().nextInt(100)) / 100.0));
-				ratings.put(5, (int) ((i + 1) * 10 * ((float) new Random().nextInt(100)) / 100.0));
-
 				downloadInfo.setTotalDownloads(count);
 
-				downloadInfo.setRating(ratings);
-				
+				downloadInfo.setRating(
+						(int) ((i + 1) * 10
+								* ((float) new Random().nextInt(100)) / 100.0),
+						(int) ((i + 1) * 10
+								* ((float) new Random().nextInt(100)) / 100.0),
+						(int) ((i + 1) * 10
+								* ((float) new Random().nextInt(100)) / 100.0),
+						(int) ((i + 1) * 10
+								* ((float) new Random().nextInt(100)) / 100.0),
+						(int) ((i + 1) * 10
+								* ((float) new Random().nextInt(100)) / 100.0));
+
 				info.setLatestStats(downloadInfo);
 				
 				if (i % 7 != 0) {
