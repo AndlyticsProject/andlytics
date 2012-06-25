@@ -1,12 +1,13 @@
 package com.github.andlyticsproject.cache;
 
-import android.graphics.Bitmap;
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import android.graphics.Bitmap;
+import android.util.FloatMath;
+import android.util.Log;
 
 public class LRUBitmapCache {
 
@@ -26,7 +27,7 @@ public class LRUBitmapCache {
 	 */
 	public LRUBitmapCache(int cacheSize) {
 		this.cacheSize = cacheSize;
-		int hashTableCapacity = (int) Math
+        int hashTableCapacity = (int) FloatMath
 				.ceil(cacheSize / hashTableLoadFactor) + 1;
 		map = new LinkedHashMap<String, Bitmap>(hashTableCapacity, hashTableLoadFactor,
 				true) {

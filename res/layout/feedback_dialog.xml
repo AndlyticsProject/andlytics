@@ -7,7 +7,6 @@
 	android:layout_width="fill_parent">
 
 	<LinearLayout
-		android:id="@+id/LinearLayout01"
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:orientation="vertical"
 		android:gravity="center"
@@ -144,6 +143,7 @@
 		<EditText
 			android:text=""
 			android:id="@+id/info_dialog_input"
+            android:inputType="text"
 			android:layout_below="@+id/info_dialog_buttonbar"
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"

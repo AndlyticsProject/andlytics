@@ -37,7 +37,6 @@
 	</RelativeLayout>
 	
 	<TextView
-	    android:id="@+id/comments_footer_loadmore"
 	    style="@style/MainTableText"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
