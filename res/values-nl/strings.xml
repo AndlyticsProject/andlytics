@@ -98,5 +98,8 @@
     <string name="admob__house_ad_clicks">house ad clicks</string>
     <string name="admob__charts_available">AdMob grafieken beschikbaar</string>
     <string name="last_update">bijgewerkt op</string>
+    
+    <string name="changelog_title">Changelog</string>
+    <string name="changelog_thanks">Thank you for installing Andlytics!</string>
 
 </resources>

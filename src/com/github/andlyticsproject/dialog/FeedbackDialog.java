@@ -180,7 +180,7 @@ public class FeedbackDialog extends Dialog {
 				                        @Override
 				                        public void run() {
 				                            ACRA.init(application);
-				                            ErrorReporter.getInstance().setUserComment(msg);
+				                            
 				                            ErrorReporter.getInstance().handleSilentException(new FeedbackException(""));
 				                            ErrorReporter.getInstance().disable();
 				                        }
