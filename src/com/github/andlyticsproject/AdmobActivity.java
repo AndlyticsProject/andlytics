@@ -1,6 +1,5 @@
 package com.github.andlyticsproject;
 
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -429,7 +428,7 @@ public class AdmobActivity extends BaseActivity implements ViewSwitcherListener 
             if(overallStats != null)
               subHeadlineText = overallStats.getEpcCents();
             break;
-            
+
         case REQUESTS:
             Preferences.saveShowChartHint(AdmobActivity.this, false);
             updateTitleTextSwitcher(this.getString(R.string.admob__requests));

@@ -1,6 +1,5 @@
 package com.github.andlyticsproject.dialog;
 
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Bitmap;
@@ -34,7 +33,7 @@ public class GhostDialog extends Dialog implements OnClickListener {
 	public static final int TAG_IMAGE_REF = R.id.tag_mainlist_image_reference;
 
 	Button okButton;
-    
+
 	private GhostListAdapter adapter;
 
 	private List<AppInfo> appInfos;
@@ -52,31 +51,31 @@ public class GhostDialog extends Dialog implements OnClickListener {
 	private GhostSelectonChangeListener listener;
 
 	public interface GhostSelectonChangeListener {
-		
+
 		public void onGhostSelectionChanged(String packageName, boolean isGhost);
 
 		public void onGhostDialogClose();
-		
+
 	}
-	
+
     public GhostDialog(Activity context, List<AppInfo> appInfos, GhostSelectonChangeListener glistener) {
-        
-    	
+
+
         super(context, R.style.Dialog);
-        
+
         this.listener = glistener;
-        
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         layoutInflater = context.getLayoutInflater();
-        
+
         setContentView(R.layout.ghost_dialog);
-        
+
         adapter = new GhostListAdapter();
         this.setAppInfos(appInfos);
         View closeButton = (View) this.findViewById(R.id.ghost_dialog_close_button);
         closeButton.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				listener.onGhostDialogClose();
@@ -85,7 +84,7 @@ public class GhostDialog extends Dialog implements OnClickListener {
 		});
         ListView lv = (ListView) this.findViewById(R.id.list_view_id);
         lv.setAdapter(adapter);
-        
+
 		this.inMemoryCache = AppIconInMemoryCache.getInstance();
 		this.cachDir = context.getCacheDir();
 		this.context = context;
@@ -93,7 +92,7 @@ public class GhostDialog extends Dialog implements OnClickListener {
 
 
 
-        
+
     }
 
     @Override
@@ -107,7 +106,7 @@ public class GhostDialog extends Dialog implements OnClickListener {
         if (v == okButton)
             dismiss();
     }
-    
+
     class GhostListAdapter extends BaseAdapter {
 
 		@Override
@@ -135,8 +134,8 @@ public class GhostDialog extends Dialog implements OnClickListener {
 				convertView = layoutInflater.inflate(R.layout.ghost_list_item, null);
 
 				holder = new ViewHolder();
-				holder.name = (TextView) convertView.findViewById(R.id.main_app_name); 
-				holder.packageName = (TextView) convertView.findViewById(R.id.main_package_name); 
+				holder.name = (TextView) convertView.findViewById(R.id.main_app_name);
+				holder.packageName = (TextView) convertView.findViewById(R.id.main_package_name);
 				holder.icon = (ImageView) convertView.findViewById(R.id.main_app_icon);
 				holder.row = (RelativeLayout) convertView.findViewById(R.id.main_app_row);
 				holder.checkbox = (CheckBox)convertView.findViewById(R.id.ghost_checkbox);
@@ -149,9 +148,9 @@ public class GhostDialog extends Dialog implements OnClickListener {
 			final AppInfo appDownloadInfo = getItem(position);
 			holder.name.setText(appDownloadInfo.getName());
 			holder.packageName.setText(appDownloadInfo.getPackageName());
-			
+
 			final String packageName = appDownloadInfo.getPackageName();
-			
+
 			final File iconFile = new File(cachDir + "/" + appDownloadInfo.getIconName());
 
 			holder.icon.setTag(TAG_IMAGE_REF, packageName );
@@ -159,24 +158,24 @@ public class GhostDialog extends Dialog implements OnClickListener {
 
 				holder.icon.setImageBitmap(inMemoryCache.get(packageName));
 				holder.icon.clearAnimation();
-				
+
 			} else {
 				holder.icon.setImageDrawable(null);
 				holder.icon.clearAnimation();
 				if(appDownloadInfo.getPackageName().startsWith("com.github.andlyticsproject.demo")) {
-					
+
 					holder.icon.setImageDrawable(context.getResources().getDrawable(R.drawable.default_app_icon));
-					
+
 				} else {
-					
+
 					new GetCachedImageTask(holder.icon, appDownloadInfo.getPackageName()).execute(new File[]{ iconFile });
-					
+
 				}
 			}
-			
-			
+
+
 			holder.row.setOnClickListener(new View.OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 
@@ -190,7 +189,7 @@ public class GhostDialog extends Dialog implements OnClickListener {
 			holder.checkbox.setTag(packageName);
 			holder.checkbox.setChecked(appDownloadInfo.isGhost());
             holder.checkbox.setOnClickListener(new CheckBox.OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
                     CheckBox buttonView = (CheckBox)v;
@@ -201,7 +200,7 @@ public class GhostDialog extends Dialog implements OnClickListener {
 
 			return convertView;
 		}
-		
+
 		private class ViewHolder {
 			public RelativeLayout row;
 			public TextView name;
@@ -210,10 +209,10 @@ public class GhostDialog extends Dialog implements OnClickListener {
 			public CheckBox checkbox;
 		}
     }
-    
-    
 
-	
+
+
+
 	private class GetCachedImageTask extends AsyncTask<File, Void, Bitmap> {
 
 		private ImageView imageView;
@@ -222,21 +221,21 @@ public class GhostDialog extends Dialog implements OnClickListener {
 		public GetCachedImageTask(ImageView imageView, String reference) {
 			this.imageView = imageView;
 			this.reference = reference;
-		} 
+		}
 
 		protected void onPostExecute(Bitmap result) {
-			
-			// only update the image if tag==reference 
+
+			// only update the image if tag==reference
 			// (view may have been reused as convertView)
 			if (imageView.getTag(TAG_IMAGE_REF).equals(reference)) {
-				
+
 				if(result == null) {
 					imageView.setImageDrawable(spacerIcon);
 				} else {
 					inMemoryCache.put(reference, result);
 					updateMainImage(imageView, R.anim.fade_in_fast, result);
 				}
-			} 
+			}
 		}
 
 		@Override
@@ -247,8 +246,8 @@ public class GhostDialog extends Dialog implements OnClickListener {
 			if(iconFile.exists()) {
 				Bitmap bm = BitmapFactory.decodeFile(iconFile.getAbsolutePath());
 				return bm;
-			} 
-			return null; 
+			}
+			return null;
 		}
 	}
 
@@ -270,5 +269,5 @@ public class GhostDialog extends Dialog implements OnClickListener {
 
 	public List<AppInfo> getAppInfos() {
 		return appInfos;
-	}	
+	}
 }

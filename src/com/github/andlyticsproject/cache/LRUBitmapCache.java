@@ -16,12 +16,12 @@ public class LRUBitmapCache {
 	private LinkedHashMap<String, Bitmap> map;
 
 	private int cacheSize;
-	
+
 	private static final String TAG = LRUBitmapCache.class.getSimpleName();
 
 	/**
 	 * Creates a new LRU cache.
-	 * 
+	 *
 	 * @param cacheSize
 	 *            the maximum number of entries that will be kept in this cache.
 	 */
@@ -50,7 +50,7 @@ public class LRUBitmapCache {
 	/**
 	 * Retrieves an entry from the cache.<br>
 	 * The retrieved entry becomes the MRU (most recently used) entry.
-	 * 
+	 *
 	 * @param key
 	 *            the key whose associated value is to be returned.
 	 * @return the value associated to this key, or null if no value with this
@@ -65,7 +65,7 @@ public class LRUBitmapCache {
 	 * used) entry. If an entry with the specified key already exists in the
 	 * cache, it is replaced by the new entry. If the cache is full, the LRU
 	 * (least recently used) entry is removed from the cache.
-	 * 
+	 *
 	 * @param key
 	 *            the key with which the specified value is to be associated.
 	 * @param value
@@ -84,13 +84,13 @@ public class LRUBitmapCache {
 
 	/**
 	 * Returns the number of used entries in the cache.
-	 * 
+	 *
 	 * @return the number of entries currently in the cache.
 	 */
 	public synchronized int usedEntries() {
 		return map.size();
 	}
-	
+
 
 	public synchronized boolean contains(String item) {
 		return map.containsKey(item);
@@ -99,7 +99,7 @@ public class LRUBitmapCache {
 	/**
 	 * Returns a <code>Collection</code> that contains a copy of all cache
 	 * entries.
-	 * 
+	 *
 	 * @return a <code>Collection</code> with a copy of the cache content.
 	 */
 	public synchronized Collection<Map.Entry<String, Bitmap>> getAll() {

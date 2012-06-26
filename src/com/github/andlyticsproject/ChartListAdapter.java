@@ -1,6 +1,5 @@
 package com.github.andlyticsproject;
 
-
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -23,13 +22,13 @@ import com.github.andlyticsproject.chart.Chart.RatingChartType;
 import com.github.andlyticsproject.model.AppStats;
 
 public class ChartListAdapter extends BaseAdapter {
-    
+
     private static final int BLACK_TEXT = Color.parseColor("#555555");
 
     private static final int RED_TEXT = Color.RED;
 
 	private List<AppStats> downloadInfos;
-	
+
 	private List<Date> versionUpdateDates;
 
 	private LayoutInflater layoutInflater;
@@ -69,14 +68,14 @@ public class ChartListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		Object baseHolder = null;
-		
+
 		AppStats appInfo = getItem(position);
-		
+
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.chart_list_item, null);
-            
+
             if(currentChart instanceof DownloadChartType) {
-            	
+
             	DownloadsViewHolder holder = new DownloadsViewHolder();
             	holder.date = createTextView("", false, false);
             	holder.smooth = createTextView("*", false, false);
@@ -84,14 +83,14 @@ public class ChartListAdapter extends BaseAdapter {
             	holder.daily = createTextView("", false, true);
             	holder.active = createTextView("", false, true);
             	holder.activeTotal =  createTextView("", false, true);
-            	
+
             	((ViewGroup)convertView).addView(holder.date);
             	((ViewGroup)convertView).addView(holder.smooth);
             	((ViewGroup)convertView).addView(holder.total);
             	((ViewGroup)convertView).addView(holder.activeTotal);
             	((ViewGroup)convertView).addView(holder.daily);
             	((ViewGroup)convertView).addView(holder.active);
-            	
+
             	convertView.setTag(holder);
             	baseHolder = holder;
             } else if (currentChart instanceof RatingChartType) {
@@ -106,7 +105,7 @@ public class ChartListAdapter extends BaseAdapter {
             	holder.rating4 = createTextView("", false, true);
             	holder.rating5 = createTextView("", false, true);
 
-            	
+
             	((ViewGroup)convertView).addView(holder.date);
             	((ViewGroup)convertView).addView(holder.smooth);
             	((ViewGroup)convertView).addView(holder.avgrating);
@@ -115,28 +114,28 @@ public class ChartListAdapter extends BaseAdapter {
             	((ViewGroup)convertView).addView(holder.rating3);
             	((ViewGroup)convertView).addView(holder.rating2);
             	((ViewGroup)convertView).addView(holder.rating1);
-            	
+
             	convertView.setTag(holder);
             	baseHolder = holder;
 
             }
-            
+
         } else {
 
             baseHolder = (Object) convertView.getTag();
         }
 
         if(currentChart instanceof DownloadChartType) {
-        	
+
         	DownloadsViewHolder holder = (DownloadsViewHolder) baseHolder;
-        	
+
 			holder.total.setText("<b>" + appInfo.getTotalDownloads() + "</b>");
 			holder.date.setText(dateFormat.format(appInfo.getRequestDate()));
 			holder.active.setText(appInfo.getActiveInstallsPercentString());
 			holder.activeTotal.setText(appInfo.getActiveInstalls() + "");
 			holder.total.setText(appInfo.getTotalDownloads() + "");
 			holder.daily.setText(appInfo.getDailyDownloads() + "");
-			
+
 			Typeface typeface = holder.date.getTypeface();
 
 			switch ((DownloadChartType)currentChart) {
@@ -145,60 +144,60 @@ public class ChartListAdapter extends BaseAdapter {
 				holder.total.setTypeface(typeface, Typeface.NORMAL);
 				holder.activeTotal.setTypeface(typeface, Typeface.NORMAL);
 				holder.daily.setTypeface(typeface, Typeface.NORMAL);
-				
+
 				break;
 			case TOTAL_DOWNLAODS:
 				holder.active.setTypeface(typeface, Typeface.NORMAL);
 				holder.total.setTypeface(typeface, Typeface.BOLD);
 				holder.activeTotal.setTypeface(typeface, Typeface.NORMAL);
 				holder.daily.setTypeface(typeface, Typeface.NORMAL);
-				
+
 				break;
 			case TOTAL_DOWNLAODS_BY_DAY:
 				holder.active.setTypeface(typeface, Typeface.NORMAL);
 				holder.total.setTypeface(typeface, Typeface.NORMAL);
 				holder.activeTotal.setTypeface(typeface, Typeface.NORMAL);
 				holder.daily.setTypeface(typeface, Typeface.BOLD);
-				
+
 				break;
 			case ACTIVE_INSTALLS_TOTAL:
 				holder.active.setTypeface(typeface, Typeface.NORMAL);
 				holder.total.setTypeface(typeface, Typeface.NORMAL);
 				holder.activeTotal.setTypeface(typeface, Typeface.BOLD);
 				holder.daily.setTypeface(typeface, Typeface.NORMAL);
-				
+
 				break;
 
 			default:
 				break;
 			}
-			
+
 	         if(versionUpdateDates.contains(appInfo.getRequestDate())) {
-	                holder.date.setTextColor(RED_TEXT); 
+	                holder.date.setTextColor(RED_TEXT);
 	                holder.active.setTextColor(RED_TEXT);
 	                holder.total.setTextColor(RED_TEXT);
 	                holder.activeTotal.setTextColor(RED_TEXT);
 	                holder.daily.setTextColor(RED_TEXT);
-	                
+
 	            } else {
-                    holder.date.setTextColor(BLACK_TEXT); 
+                    holder.date.setTextColor(BLACK_TEXT);
                     holder.active.setTextColor(BLACK_TEXT);
                     holder.total.setTextColor(BLACK_TEXT);
                     holder.activeTotal.setTextColor(BLACK_TEXT);
                     holder.daily.setTextColor(BLACK_TEXT);
-	                
+
 	            }
-			
+
 			if(!appInfo.isSmoothingApplied()) {
 				holder.smooth.setVisibility(View.INVISIBLE);
 			} else {
 				holder.smooth.setVisibility(View.VISIBLE);
 			}
-			
+
 		} else if (currentChart instanceof RatingChartType) {
-			
+
         	RatingsViewHolder holder = (RatingsViewHolder) baseHolder;
-        	
+
 			holder.date.setText(dateFormat.format(appInfo.getRequestDate()));
 			holder.avgrating.setText(appInfo.getAvgRatingString());
 			if(appInfo.getRating1Diff() > 0) {
@@ -226,33 +225,33 @@ public class ChartListAdapter extends BaseAdapter {
 			} else {
 				holder.rating5.setText(appInfo.getRating5Diff() + "");
 			}
-			
 
-			
+
+
 			Typeface typeface = holder.date.getTypeface();
-			
+
             if(versionUpdateDates.contains(appInfo.getRequestDate())) {
-			    holder.date.setTextColor(RED_TEXT); 
+			    holder.date.setTextColor(RED_TEXT);
 			    holder.avgrating.setTextColor(RED_TEXT);
 			    holder.rating1.setTextColor(RED_TEXT);
                 holder.rating2.setTextColor(RED_TEXT);
                 holder.rating3.setTextColor(RED_TEXT);
                 holder.rating4.setTextColor(RED_TEXT);
                 holder.rating5.setTextColor(RED_TEXT);
-                
+
 			} else {
-                holder.date.setTextColor(BLACK_TEXT); 
+                holder.date.setTextColor(BLACK_TEXT);
                 holder.avgrating.setTextColor(BLACK_TEXT);
                 holder.rating1.setTextColor(BLACK_TEXT);
                 holder.rating2.setTextColor(BLACK_TEXT);
                 holder.rating3.setTextColor(BLACK_TEXT);
                 holder.rating4.setTextColor(BLACK_TEXT);
                 holder.rating5.setTextColor(BLACK_TEXT);
-			    
+
 			}
 
-			
-			
+
+
 			switch ((RatingChartType)currentChart) {
 			case AVG_RATING:
 				holder.avgrating.setTypeface(typeface, Typeface.BOLD);
@@ -261,7 +260,7 @@ public class ChartListAdapter extends BaseAdapter {
 				holder.rating3.setTypeface(typeface, Typeface.NORMAL);
 				holder.rating4.setTypeface(typeface, Typeface.NORMAL);
 				holder.rating5.setTypeface(typeface, Typeface.NORMAL);
-				
+
 				break;
 			case RATINGS_1:
 				holder.avgrating.setTypeface(typeface, Typeface.NORMAL);
@@ -270,7 +269,7 @@ public class ChartListAdapter extends BaseAdapter {
 				holder.rating3.setTypeface(typeface, Typeface.NORMAL);
 				holder.rating4.setTypeface(typeface, Typeface.NORMAL);
 				holder.rating5.setTypeface(typeface, Typeface.NORMAL);
-				
+
 				break;
 			case RATINGS_2:
 				holder.avgrating.setTypeface(typeface, Typeface.NORMAL);
@@ -279,7 +278,7 @@ public class ChartListAdapter extends BaseAdapter {
 				holder.rating3.setTypeface(typeface, Typeface.NORMAL);
 				holder.rating4.setTypeface(typeface, Typeface.NORMAL);
 				holder.rating5.setTypeface(typeface, Typeface.NORMAL);
-				
+
 				break;
 			case RATINGS_3:
 				holder.avgrating.setTypeface(typeface, Typeface.NORMAL);
@@ -288,7 +287,7 @@ public class ChartListAdapter extends BaseAdapter {
 				holder.rating3.setTypeface(typeface, Typeface.BOLD);
 				holder.rating4.setTypeface(typeface, Typeface.NORMAL);
 				holder.rating5.setTypeface(typeface, Typeface.NORMAL);
-				
+
 				break;
 			case RATINGS_4:
 				holder.avgrating.setTypeface(typeface, Typeface.NORMAL);
@@ -297,7 +296,7 @@ public class ChartListAdapter extends BaseAdapter {
 				holder.rating3.setTypeface(typeface, Typeface.NORMAL);
 				holder.rating4.setTypeface(typeface, Typeface.BOLD);
 				holder.rating5.setTypeface(typeface, Typeface.NORMAL);
-				
+
 				break;
 			case RATINGS_5:
 				holder.avgrating.setTypeface(typeface, Typeface.NORMAL);
@@ -306,20 +305,20 @@ public class ChartListAdapter extends BaseAdapter {
 				holder.rating3.setTypeface(typeface, Typeface.NORMAL);
 				holder.rating4.setTypeface(typeface, Typeface.NORMAL);
 				holder.rating5.setTypeface(typeface, Typeface.BOLD);
-				
+
 				break;
 
 			default:
 				break;
 			}
-			
+
 			holder.smooth.setVisibility(View.INVISIBLE);
-			
+
 		}
-		
+
 		return convertView;
 	}
-    
+
 	static class DownloadsViewHolder {
         public TextView smooth;
 		public TextView date;
@@ -327,9 +326,9 @@ public class ChartListAdapter extends BaseAdapter {
         TextView daily;
         TextView active;
         TextView activeTotal;
-        
+
     }
-	
+
 	static class RatingsViewHolder {
         public TextView smooth;
 		public TextView date;
@@ -339,7 +338,7 @@ public class ChartListAdapter extends BaseAdapter {
 		TextView rating3;
 		TextView rating4;
 		TextView rating5;
-        
+
     }
 	private TextView createTextView(String string, boolean bold, boolean weight) {
 		TextView view = new TextView(activity);
@@ -392,7 +391,7 @@ public class ChartListAdapter extends BaseAdapter {
         return versionUpdateDates;
     }
 
-	
+
 
 
 }

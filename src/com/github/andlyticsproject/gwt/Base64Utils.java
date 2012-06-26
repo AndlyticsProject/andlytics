@@ -38,7 +38,7 @@ public class Base64Utils {
 
   /**
    * Decode a base64 string into a byte array.
-   * 
+   *
    * @param data the encoded data.
    * @return a byte array.
    * @see #fromBase64(String)
@@ -112,7 +112,7 @@ public class Base64Utils {
    * with zeros. Each 24-bit chunk is encoded as 4 characters from the sequence
    * [A-Za-z0-9$_]. If one of the source positions consists entirely of padding
    * zeros, an '=' character is used instead.
-   * 
+   *
    * @param data a byte array, which may be null or empty
    * @return a String
    */

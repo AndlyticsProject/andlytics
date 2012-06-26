@@ -1,6 +1,5 @@
 package com.github.andlyticsproject;
 
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -72,29 +71,29 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 			holder = (ViewHolderChild) convertView.getTag();
 		}
-		
+
 
 		final Comment comment = getChild(groupPosition, childPosition);
 		holder.text.setText(comment.getText());
 		holder.user.setText(comment.getUser());
-		
+
 		String deviceText = "";
-		
+
 		if(comment.getAppVersion() != null && comment.getAppVersion().length() > 0) {
 		    deviceText += "version " + comment.getAppVersion() + " ";
 		}
-		
+
 		if(comment.getDevice() != null && comment.getDevice().length() > 0) {
-		    
+
 		    if(deviceText.length() > 0) {
 		        deviceText += "on ";
 		    }
-		    
+
 		    deviceText += "device: " + comment.getDevice();
 		}
-		
+
 		holder.device.setText(deviceText);
-		 
+
 		int rating = comment.getRating();
 		switch (rating) {
 		case 1:
@@ -116,36 +115,36 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		default:
 			break;
 		}
-		
+
 
         convertView.setOnLongClickListener(new OnLongClickListener() {
-            
+
             @Override
             public boolean onLongClick(View v) {
-                
+
                 String text = comment.getText();
 
                 String displayLanguage = Locale.getDefault().getLanguage();
 
                 String url = "http://translate.google.de/m/translate?hl=<<lang>>&vi=m&text=<<text>>&langpair=auto|<<lang>>";
-                
+
                 try {
                     url = url.replaceAll("<<lang>>", URLEncoder.encode(displayLanguage,"UTF-8"));
                     url = url.replaceAll("<<text>>", URLEncoder.encode(text,"UTF-8"));
                     Log.d("CommentsTranslate", "lang: " + displayLanguage + " url: " + url);
-                    
-                    
+
+
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));
                     context.startActivity(i);
-                    
+
 //                    TranslateDialog dialog = new TranslateDialog(context, text);
 //                    dialog.show();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
 
-                    
+
                 return true;
             }
         });
@@ -172,12 +171,12 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 		CommentGroup commentGroup = getGroup(groupPosition);
 		holder.date.setText(commentGroup.getDateString());
-		
+
 		convertView.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				
+
 			}
 		});
 

@@ -18,7 +18,7 @@ import android.os.IBinder;
  * in onBind()
  */
 public class AdmobAccountAuthenticator extends Service {
-    
+
     private static Authenticator sAccountAuthenticator = null;
 
     public AdmobAccountAuthenticator() {
@@ -39,8 +39,8 @@ public class AdmobAccountAuthenticator extends Service {
     }
 
     private static class Authenticator extends AbstractAccountAuthenticator {
-        
-        
+
+
         // Authentication Service context
         private final Context mContext;
 
@@ -160,7 +160,7 @@ public class AdmobAccountAuthenticator extends Service {
             return result;
         }
 
-        /** 
+        /**
          * Validates user's password on the server
          */
         private String onlineConfirmPassword(String username, String password) {

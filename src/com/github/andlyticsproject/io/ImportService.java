@@ -1,6 +1,5 @@
 package com.github.andlyticsproject.io;
 
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -29,7 +28,7 @@ public class ImportService extends Service {
     public static final String FILE_NAMES = "fileNames";
 
     public static final String ACCOUNT_NAME = "accountName";
-    
+
     private Notification notification;
 
     private String message;
@@ -52,16 +51,16 @@ public class ImportService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Log.d(TAG, "import service onStartCommand");
-        
+
         this.fileNames = intent.getStringArrayExtra(FILE_NAMES);
         Log.d(TAG, "file names:: " + fileNames);
 
         this.accountName = intent.getStringExtra(ACCOUNT_NAME);
         Log.d(TAG, "account name:: " + accountName);
-        
+
 
         (new StandardServiceWorker()).execute();
-        
+
         return Service.START_NOT_STICKY;
     }
 
@@ -73,38 +72,38 @@ public class ImportService extends Service {
         @Override
         protected Boolean doInBackground(Void... params) {
 
-      
+
             message = "import started";
             sendNotification();
-            
+
             ContentAdapter db = new ContentAdapter(ImportService.this);
 
             for (int i = 0; i < fileNames.length; i++) {
-            
+
                 StatsCsvReaderWriter statsWriter = new StatsCsvReaderWriter(ImportService.this);
-                
+
                 String packageName;
                 try {
                     packageName = statsWriter.readPackageName(fileNames[i]);
                     message = "Import: " + packageName;
                     publishProgress(i);
-                    
+
                     List<AppStats> stats = statsWriter.readStats(fileNames[i]);
-                    
+
                     for (AppStats appStats : stats) {
-                        
+
                         db.insertOrUpdateAppStats(appStats, packageName);
-                        
+
                     }
                 } catch (Exception e) {
                     errors = true;
                     e.printStackTrace();
                 }
 
-            }                
+            }
 
-                
-            
+
+
             message = "Andlytics import finished";
             sendNotification();
 
@@ -120,9 +119,9 @@ public class ImportService extends Service {
         protected void onPostExecute(Boolean success) {
 
             // clear progress notification
-            NotificationManager notificationManager = (NotificationManager) 
+            NotificationManager notificationManager = (NotificationManager)
                     getSystemService(Context.NOTIFICATION_SERVICE);
-            
+
             notificationManager.cancel(NOTIFICATION_ID_PROGRESS);
 
 
@@ -133,13 +132,13 @@ public class ImportService extends Service {
             notification.contentIntent = pendingIntent;
 
             if(success) {
-                message = "Andlytics import finished"; 
+                message = "Andlytics import finished";
                 notification.setLatestEventInfo(getApplicationContext(), "Andlytics import finished", message, pendingIntent);
             } else {
-                message = "Andlytics: Error during import"; 
+                message = "Andlytics: Error during import";
                 notification.setLatestEventInfo(getApplicationContext(), "Andlytics import error", message, pendingIntent);
             }
-            
+
             notification.defaults |= Notification.DEFAULT_SOUND;
             notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
@@ -148,7 +147,7 @@ public class ImportService extends Service {
             stopSelf();
         }
     }
-   
+
 
     /**
      * Send a notification to the progress bar.
@@ -159,7 +158,7 @@ public class ImportService extends Service {
         Intent startActivityIntent = new Intent(ImportService.this, ImportService.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, startActivityIntent, 0);
 
-        notification.setLatestEventInfo(this, "Andlytics import", message , pendingIntent);        
+        notification.setLatestEventInfo(this, "Andlytics import", message , pendingIntent);
         notificationManager.notify(NOTIFICATION_ID_PROGRESS, notification);
     }
 
@@ -168,5 +167,5 @@ public class ImportService extends Service {
         return null;
     }
 
-   
+
 }

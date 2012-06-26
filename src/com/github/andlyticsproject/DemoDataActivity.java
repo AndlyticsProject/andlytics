@@ -1,6 +1,5 @@
 package com.github.andlyticsproject;
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -97,7 +96,7 @@ public class DemoDataActivity extends BaseActivity {
 								* ((float) new Random().nextInt(100)) / 100.0));
 
 				info.setLatestStats(downloadInfo);
-				
+
 				if (i % 7 != 0) {
 					db.insertOrUpdateStats(info);
 				}
@@ -105,7 +104,7 @@ public class DemoDataActivity extends BaseActivity {
 				publishProgress(i);
 			}
 
-			
+
 			return null;
 		}
 

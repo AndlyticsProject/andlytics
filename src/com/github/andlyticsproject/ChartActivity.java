@@ -1,6 +1,5 @@
 package com.github.andlyticsproject;
 
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -85,16 +84,16 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.chart);
-		
+
 		this.setCurrentChartSet(ChartSet.RATINGS);
 
 		currentChartPosition = -1;
-		
+
         titleTextSwitcher = (ChartTextSwitcher) findViewById(R.id.chart_chart_type);
         titleTextSwitcher.setFactory(new ViewFactory() {
 
 			public View makeView() {
-				
+
 				return getLayoutInflater().inflate(R.layout.chart_headline, null);
 			}
 		});
@@ -102,17 +101,17 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 		outNegative = AnimationUtils.loadAnimation(ChartActivity.this, R.anim.slide_out_left);
 		inPositive = AnimationUtils.loadAnimation(ChartActivity.this, R.anim.slide_in_left);
 		outPositive = AnimationUtils.loadAnimation(ChartActivity.this, R.anim.slide_out_right);
-		
+
 		db = getDbAdapter();
 		//chartFrame = (ViewSwitcher) ;
 
-        
+
 		currentTimeFrame = Preferences.getChartTimeframe(this);
 		smoothEnabled = Preferences.getChartSmooth(this);
-		
+
 		View backButton = findViewById(R.id.chart_button_back);
 		backButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				startActivity(Main.class, false, true);
@@ -120,29 +119,29 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 			}
 		});
 
-		
+
 		View configButton = findViewById(R.id.chart_button_config);
 
 		if(configButton != null) {
 
 			viewSwitcher = new ViewSwitcher3D((ViewGroup) findViewById(R.id.chart_bottom_frame));
 			viewSwitcher.setListener(this);
-			
+
 			configButton.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					chartGallery.setIgnoreLayoutCalls(true);
 					viewSwitcher.swap();
 				}
 			});
-			
+
 	         radioLastSeven = (RadioButton) findViewById(R.id.chart_config_ratio_last_seven_days);
 	            if(Timeframe.LAST_SEVEN_DAYS.equals(currentTimeFrame)) {
 	                radioLastSeven.setChecked(true);
 	            }
 	            radioLastSeven.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-	                
+
 	                @Override
 	                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 	                    if(isChecked) {
@@ -158,7 +157,7 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 				radioLastThrity.setChecked(true);
 			}
 			radioLastThrity.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-				
+
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					if(isChecked) {
@@ -173,7 +172,7 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 				radioUnlimited.setChecked(true);
 			}
 			radioUnlimited.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-				
+
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					if(isChecked) {
@@ -183,14 +182,14 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 					}
 				}
 			});
-			
+
 			String dateFormatLong = Preferences.getDateFormatLong(this);
             radioDmy = (RadioButton) findViewById(R.id.chart_config_ratio_dmy);
             if("dd/MM/yyyy".equals(dateFormatLong)) {
                 radioDmy.setChecked(true);
             }
             radioDmy.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                
+
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked) {
@@ -200,14 +199,14 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
                         new LoadChartData().execute();
                     }
                 }
-            });			
-            
+            });
+
             radioYmd = (RadioButton) findViewById(R.id.chart_config_ratio_ymd);
             if("yyyy/MM/dd".equals(dateFormatLong)) {
                 radioYmd.setChecked(true);
             }
             radioYmd.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                
+
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked) {
@@ -217,13 +216,13 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
                         new LoadChartData().execute();
                     }
                 }
-            });         
+            });
             radioMdy = (RadioButton) findViewById(R.id.chart_config_ratio_mdy);
             if("MM/dd/yyyy".equals(dateFormatLong)) {
                 radioMdy.setChecked(true);
             }
             radioMdy.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                
+
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked) {
@@ -233,17 +232,17 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
                         new LoadChartData().execute();
                     }
                 }
-            });         
+            });
 
-            
-			
+
+
 			// smoth
 			checkSmooth = (CheckBox) findViewById(R.id.chart_config_checkbox_smooth);
 			if(smoothEnabled) {
 				checkSmooth.setChecked(true);
 			}
 			checkSmooth.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-				
+
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					if(isChecked) {
@@ -259,15 +258,15 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 			});
 			View configDoneButton = (View) findViewById(R.id.chart_config_done_button);
 			configDoneButton.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					viewSwitcher.swap();
 				}
 			});
-			
+
 		}
-		
+
 		chartGallery = (ChartGallery) findViewById(R.id.chart_gallery);
 		chartGalleryAdapter = new ChartGalleryAdapter(new ArrayList<View>());
 		chartGallery.setAdapter(chartGalleryAdapter);
@@ -277,24 +276,24 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
 				chartGallery.setIgnoreLayoutCalls(true);
-				
+
 				if(currentChartPosition < position) {
 					titleTextSwitcher.setInAnimation(inNegative);
 					titleTextSwitcher.setOutAnimation(outNegative);
 				} else {
 					titleTextSwitcher.setInAnimation(inPositive);
 					titleTextSwitcher.setOutAnimation(outPositive);
-				} 
+				}
 				currentChartPosition = position;
 
-					
+
 				Object tag = view.getTag();
 				if (tag != null) {
-					
+
 					 currentChart = tag;
-					
+
 					updateChartHeadline();
-					
+
 					historyListAdapter.setCurrentChart(currentChart);
 					historyListAdapter.notifyDataSetChanged();
 
@@ -310,7 +309,7 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 
 
 		timeframeText = (TextView) findViewById(R.id.chart_timeframe);
-		
+
 		historyList = (ListView) findViewById(R.id.chart_list);
 		View inflate = getLayoutInflater().inflate(R.layout.chart_list_footer, null);
 		historyListFooter = (TextView) inflate.findViewById(R.id.chart_footer_text);
@@ -318,9 +317,9 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 
 		historyListAdapter = new ChartListAdapter(this);
 		historyList.setAdapter(historyListAdapter);
-		 
+
 		if(iconFilePath != null) {
-			
+
 			ImageView appIcon = (ImageView) findViewById(R.id.chart_app_icon);
 			Bitmap bm = BitmapFactory.decodeFile(iconFilePath);
 			appIcon.setImageBitmap(bm);
@@ -348,48 +347,48 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 
 
 	protected void updateChartHeadline() {
-	    
+
 	    String subHeadlineText = "";
-	    
+
 	    if(getCurrentChartSet().equals(ChartSet.DOWNLOADS)) {
-            
+
             switch ((DownloadChartType) currentChart) {
-            
+
             case TOTAL_DOWNLAODS:
                 titleTextSwitcher.setText(this.getString(R.string.total_downloads),null);
                 if(overallStats != null)
                     subHeadlineText = overallStats.getTotalDownloads() + "";
-                
+
                 break;
-                
+
             case TOTAL_DOWNLAODS_BY_DAY:
                 titleTextSwitcher.setText(this.getString(R.string.downloads_day),null);
                 subHeadlineText = overallStats.getDailyDownloads() + "";
                 break;
-                
+
             case ACTIVE_INSTALLS_PERCENT:
                 titleTextSwitcher.setText(this.getString(R.string.active_installs_percent),null);
                 subHeadlineText = overallStats.getActiveInstallsPercentString() + "%";
                 break;
-                
+
             case ACTIVE_INSTALLS_TOTAL:
                 Preferences.saveShowChartHint(ChartActivity.this, false);
                 titleTextSwitcher.setText(this.getString(R.string.active_installs),null);
                 subHeadlineText = overallStats.getActiveInstalls() + "";
                 break;
-                
+
             default:
                 break;
             }
-            
+
         } else if (getCurrentChartSet().equals(ChartSet.RATINGS)) {
             switch ((RatingChartType) currentChart) {
-            
+
             case AVG_RATING:
                 titleTextSwitcher.setText(this.getString(R.string.average_rating),null);
                 subHeadlineText = overallStats.getAvgRatingString() + "";
                 break;
-                
+
             case RATINGS_1:
                 titleTextSwitcher.setText(this.getString(R.string.ratings), getResources().getDrawable(R.drawable.rating_1));
                 subHeadlineText = overallStats.getRating1() + "";
@@ -411,15 +410,15 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
                 titleTextSwitcher.setText(this.getString(R.string.ratings), getResources().getDrawable(R.drawable.rating_5));
                 subHeadlineText = overallStats.getRating5() + "";
                 break;
-                
 
-                
+
+
             default:
                 break;
             }
-            
-        }        
-	    
+
+        }
+
 	    if(Preferences.getShowChartHint(ChartActivity.this)) {
             timeframeText.setText(Html.fromHtml(this.getString(R.string.swipe)));
 	    } else {
@@ -427,7 +426,7 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 	            timeframeText.setText(Html.fromHtml(timetext + ": <b>" + subHeadlineText + "</b>"));
 	        }
 	    }
-	    
+
 
     }
 
@@ -438,7 +437,7 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 		chartGallery.setIgnoreLayoutCalls(false);
 
 		dataUpdateRequested = true;
-		
+
 		new LoadChartData().execute();
 
 	}
@@ -457,7 +456,7 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 	private class LoadChartData extends AsyncTask<Void, Void, Boolean> {
 
 		private List<AppStats> statsForApp;
-		
+
 		private boolean smoothedValues = false;
 
 
@@ -473,29 +472,29 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			
+
 			if(dataUpdateRequested || statsForApp == null || statsForApp.size() == 0) {
 				AppStatsList result = db.getStatsForApp(packageName, currentTimeFrame, smoothEnabled);
 				statsForApp = result.getAppStats();
 				overallStats = result.getOverall();
 				versionUpdateDates = db.getVersionUpdateDates(packageName);
-				
+
 				heighestRatingChange = result.getHighestRatingChange();
 				lowestRatingChange = result.getLowestRatingChange();
 				dataUpdateRequested = false;
-				
+
 				smoothedValues = false;
-				
+
 				for (AppStats appInfo : statsForApp) {
 					if(appInfo.isSmoothingApplied()) {
 						smoothedValues = true;
 						break;
 					}
 				}
-				
+
 			}
-			
-						
+
+
 			return true;
 		}
 
@@ -505,11 +504,11 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 
 			if(statsForApp != null && statsForApp.size() > 0) {
 				Chart chart = new Chart();
-				
+
 				List<View> charts = new ArrayList<View>();
-				
+
 				if(getCurrentChartSet().equals(ChartSet.DOWNLOADS)) {
-					
+
 					DownloadChartType[] chartTypes = DownloadChartType.values();
 					for (int i = 0; i < chartTypes.length; i++) {
 						View chartView = chart.buildDownloadChart(ChartActivity.this, statsForApp, chartTypes[i]);
@@ -518,7 +517,7 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 						chartView.setTag(chartTypes[i]);
 						charts.add(chartView);
 					}
-					 
+
 				} else if (getCurrentChartSet().equals(ChartSet.RATINGS)) {
 					RatingChartType[] chartTypes = RatingChartType.values();
 					for (int i = 0; i < chartTypes.length; i++) {
@@ -529,7 +528,7 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 						charts.add(chartView);
 					}
 				}
-				
+
 				chartGallery.setIgnoreLayoutCalls(false);
 				chartGalleryAdapter.setViews(charts);
 				chartGalleryAdapter.notifyDataSetChanged();
@@ -544,13 +543,13 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 				historyListAdapter.setVersionUpdateDates(versionUpdateDates);
 				historyListAdapter.setCurrentChart(currentChart);
 				historyListAdapter.notifyDataSetChanged();
-				
+
 				if(smoothedValues && currentChartSet.equals(ChartSet.DOWNLOADS)) {
 					historyListFooter.setVisibility(View.VISIBLE);
 				} else {
 					historyListFooter.setVisibility(View.INVISIBLE);
 				}
-				
+
 				if(oneEntryHint != null) {
 					if(statsForApp.size() == 1) {
 						oneEntryHint.setVisibility(View.VISIBLE);
@@ -559,9 +558,9 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 					}
 				}
 
-				
+
 				//chartFrame.showNext();
-				
+
 			}
 			if(radioLastThrity != null) {
 				radioLastThrity.setEnabled(true);
@@ -570,23 +569,23 @@ public class ChartActivity extends BaseActivity implements ViewSwitcherListener 
 
 			}
 
-		} 
+		}
 
-		
+
 	}
 
 
 	@Override
 	public void onViewChanged(boolean frontsideVisible) {
 		chartGallery.setIgnoreLayoutCalls(true);
-		
+
 	}
 
 
 	@Override
 	public void onRender() {
 		chartGallery.invalidate();
-		
+
 	}
-	
+
 }

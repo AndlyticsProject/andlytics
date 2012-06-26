@@ -51,7 +51,7 @@ public class Rotate3dAnimation extends Animation {
      * @param centerX the X center of the 3D rotation
      * @param centerY the Y center of the 3D rotation
      * @param reverse true if the translation should be reversed, false otherwise
-     * @param viewSwitcherListener 
+     * @param viewSwitcherListener
      */
     public Rotate3dAnimation(float fromDegrees, float toDegrees,
             float centerX, float centerY, float depthZ, boolean reverse, ViewSwitcherListener viewSwitcherListener) {
@@ -93,7 +93,7 @@ public class Rotate3dAnimation extends Animation {
 
         matrix.preTranslate(-centerX, -centerY);
         matrix.postTranslate(centerX, centerY);
-        
+
         listener.onRender();
     }
 }

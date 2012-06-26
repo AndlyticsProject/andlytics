@@ -1,37 +1,37 @@
 package com.github.andlyticsproject;
 
 public class AppStatsDiff {
-    
+
     private String appName;
-    
+
     private String packageName;
-    
+
     private String iconName;
 
     int commentsChange;
-    
+
     int downloadsChange;
-    
+
     int activeInstallsChange;
-    
+
     float avgRatingChange;
-    
+
     int rating1Change;
-    
+
     int rating2Change;
 
     int rating3Change;
-    
+
     int rating4Change;
-    
+
     int rating5Change;
-    
+
     private boolean skipNotification;
-    
+
     private String versionName;
-    
+
     public boolean hasChanges() {
-     
+
         if(commentsChange == 0 &&
             downloadsChange == 0 &&
             activeInstallsChange == 0 &&

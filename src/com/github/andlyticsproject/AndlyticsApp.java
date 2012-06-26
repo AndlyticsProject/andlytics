@@ -5,11 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
-import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 
 @ReportsCrashes(
-		formKey = "dHBKcnZqTHMyMHlfLTB0RjhMejZfbkE6MQ", 
+		formKey = "dFoxNXhxUmVqemdib1UxbXNfSWZpUnc6MQ", 
 		sharedPreferencesMode=Context.MODE_PRIVATE, 
 		sharedPreferencesName=Preferences.PREF) 
 public class AndlyticsApp extends Application {
@@ -30,8 +29,7 @@ public class AndlyticsApp extends Application {
 
 	@Override
 	public void onCreate() {
-		ACRA.init(this);
-		super.onCreate();		
+		super.onCreate();
 		Preferences.disableCrashReports(this);
 		setDbAdapter(new ContentAdapter(this)); 
 	}

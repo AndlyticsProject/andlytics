@@ -4,27 +4,27 @@ import java.text.DecimalFormat;
 import java.util.Date;
 
 public class Admob  {
-    
+
     private String siteId;
-    private Integer requests = 0; 
-    private Integer houseadRequests = 0; 
-    private Integer interstitialRequests = 0; 
-    private Integer impressions = 0;  
-    private Float fillRate = .0f; 
-    private Float houseadFillRate = .0f; 
-    private Float overallFillRate = .0f; 
-    private Integer clicks = 0; 
-    private Integer houseAdClicks = 0; 
-    private Float ctr = .0f; 
-    private Float ecpm = .0f; 
-    private Float revenue = .0f; 
+    private Integer requests = 0;
+    private Integer houseadRequests = 0;
+    private Integer interstitialRequests = 0;
+    private Integer impressions = 0;
+    private Float fillRate = .0f;
+    private Float houseadFillRate = .0f;
+    private Float overallFillRate = .0f;
+    private Integer clicks = 0;
+    private Integer houseAdClicks = 0;
+    private Float ctr = .0f;
+    private Float ecpm = .0f;
+    private Float revenue = .0f;
     private Float cpcRevenue = .0f;
     private Float cpmRevenue = .0f;
     private Integer exchangeDownloads = 0;
     private Date date;
     private static final int XK_cent                           = 0x00a2;  /* U+00A2 CENT SIGN */
     private static final DecimalFormat centsFormatter = new DecimalFormat("0.00"+((char)XK_cent));
-    
+
     public String getSiteId() {
         return siteId;
     }

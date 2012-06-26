@@ -1,6 +1,5 @@
 package com.github.andlyticsproject;
 
-
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -24,7 +23,7 @@ import com.github.andlyticsproject.chart.Chart.AdmobChartType;
 import com.github.andlyticsproject.model.Admob;
 
 public class AdmobListAdapter extends BaseAdapter {
-    
+
     private NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
 	private List<Admob> stats;
 
@@ -37,7 +36,7 @@ public class AdmobListAdapter extends BaseAdapter {
 	private Object currentChart;
 
 	private SimpleDateFormat dateFormat;
-	
+
 	private List<AdmobChartType> secondPageCharts;
 
 	public AdmobListAdapter(Activity activity) {
@@ -74,7 +73,7 @@ public class AdmobListAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.chart_list_item, null);
 
             AdmobViewHolder holder = new AdmobViewHolder();
-            
+
             holder.date = createTextView("", false, false);
 
             holder.revenue = createTextView("", false, true);
@@ -82,7 +81,7 @@ public class AdmobListAdapter extends BaseAdapter {
             holder.fillrate = createTextView("", false, true);
             holder.requests = createTextView("", false, true);
             holder.clicks = createTextView("", false, true);
-                
+
             ((ViewGroup) convertView).addView(holder.date);
             ((ViewGroup) convertView).addView(holder.revenue);
             ((ViewGroup) convertView).addView(holder.epc);
@@ -98,8 +97,8 @@ public class AdmobListAdapter extends BaseAdapter {
             ((ViewGroup) convertView).addView(holder.impressions);
             ((ViewGroup) convertView).addView(holder.ctr);
             ((ViewGroup) convertView).addView(holder.houseAdClicks);
-            
-            
+
+
             convertView.setTag(holder);
             baseHolder = holder;
 
@@ -119,7 +118,7 @@ public class AdmobListAdapter extends BaseAdapter {
         ctr = ctr.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
         if(secondPageCharts.contains(currentChart)) {
-            
+
             holder.ecpm.setVisibility(View.VISIBLE);
             holder.impressions.setVisibility(View.VISIBLE);
             holder.ctr.setVisibility(View.VISIBLE);
@@ -134,7 +133,7 @@ public class AdmobListAdapter extends BaseAdapter {
             holder.ctr.setText(ctr.toPlainString() + "%");
             holder.houseAdClicks.setText(admob.getHouseAdClicks() +"");
         } else {
-            
+
             holder.revenue.setText(numberFormat.format(admob.getRevenue()));
           holder.epc.setText(admob.getEpcCents());
             holder.requests.setText(admob.getRequests() + "");
@@ -148,11 +147,11 @@ public class AdmobListAdapter extends BaseAdapter {
             holder.epc.setVisibility(View.VISIBLE);
             holder.requests.setVisibility(View.VISIBLE);
             holder.clicks.setVisibility(View.VISIBLE);
-            holder.fillrate.setVisibility(View.VISIBLE);            
+            holder.fillrate.setVisibility(View.VISIBLE);
         }
-			
+
         Typeface typeface = holder.date.getTypeface();
-            
+
 		switch ((AdmobChartType)currentChart) {
 			case REVENUE:
 				holder.revenue.setTypeface(typeface, Typeface.BOLD);
@@ -164,7 +163,7 @@ public class AdmobListAdapter extends BaseAdapter {
                 holder.impressions.setTypeface(typeface, Typeface.NORMAL);
                 holder.ctr.setTypeface(typeface, Typeface.NORMAL);
                 holder.houseAdClicks.setTypeface(typeface, Typeface.NORMAL);
-				
+
 				break;
 			case EPC:
                 holder.revenue.setTypeface(typeface, Typeface.NORMAL);
@@ -176,7 +175,7 @@ public class AdmobListAdapter extends BaseAdapter {
                 holder.impressions.setTypeface(typeface, Typeface.NORMAL);
                 holder.ctr.setTypeface(typeface, Typeface.NORMAL);
                 holder.houseAdClicks.setTypeface(typeface, Typeface.NORMAL);
-				
+
 				break;
 			case REQUESTS:
                 holder.revenue.setTypeface(typeface, Typeface.NORMAL);
@@ -188,7 +187,7 @@ public class AdmobListAdapter extends BaseAdapter {
                 holder.impressions.setTypeface(typeface, Typeface.NORMAL);
                 holder.ctr.setTypeface(typeface, Typeface.NORMAL);
                 holder.houseAdClicks.setTypeface(typeface, Typeface.NORMAL);
-				
+
 				break;
 			case CLICKS:
                 holder.revenue.setTypeface(typeface, Typeface.NORMAL);
@@ -200,7 +199,7 @@ public class AdmobListAdapter extends BaseAdapter {
                 holder.impressions.setTypeface(typeface, Typeface.NORMAL);
                 holder.ctr.setTypeface(typeface, Typeface.NORMAL);
                 holder.houseAdClicks.setTypeface(typeface, Typeface.NORMAL);
-				
+
 				break;
 			case FILL_RATE:
                 holder.revenue.setTypeface(typeface, Typeface.NORMAL);
@@ -212,7 +211,7 @@ public class AdmobListAdapter extends BaseAdapter {
                 holder.impressions.setTypeface(typeface, Typeface.NORMAL);
                 holder.ctr.setTypeface(typeface, Typeface.NORMAL);
                 holder.houseAdClicks.setTypeface(typeface, Typeface.NORMAL);
-				
+
 				break;
             case ECPM:
                 holder.revenue.setTypeface(typeface, Typeface.NORMAL);
@@ -224,7 +223,7 @@ public class AdmobListAdapter extends BaseAdapter {
                 holder.impressions.setTypeface(typeface, Typeface.NORMAL);
                 holder.ctr.setTypeface(typeface, Typeface.NORMAL);
                 holder.houseAdClicks.setTypeface(typeface, Typeface.NORMAL);
-                
+
                 break;
             case IMPRESSIONS:
                 holder.revenue.setTypeface(typeface, Typeface.NORMAL);
@@ -236,7 +235,7 @@ public class AdmobListAdapter extends BaseAdapter {
                 holder.impressions.setTypeface(typeface, Typeface.BOLD);
                 holder.ctr.setTypeface(typeface, Typeface.NORMAL);
                 holder.houseAdClicks.setTypeface(typeface, Typeface.NORMAL);
-                
+
                 break;
             case CTR:
                 holder.revenue.setTypeface(typeface, Typeface.NORMAL);
@@ -248,7 +247,7 @@ public class AdmobListAdapter extends BaseAdapter {
                 holder.impressions.setTypeface(typeface, Typeface.NORMAL);
                 holder.ctr.setTypeface(typeface, Typeface.BOLD);
                 holder.houseAdClicks.setTypeface(typeface, Typeface.NORMAL);
-                
+
                 break;
             case HOUSEAD_CLICKS:
                 holder.revenue.setTypeface(typeface, Typeface.NORMAL);
@@ -260,18 +259,18 @@ public class AdmobListAdapter extends BaseAdapter {
                 holder.impressions.setTypeface(typeface, Typeface.NORMAL);
                 holder.ctr.setTypeface(typeface, Typeface.NORMAL);
                 holder.houseAdClicks.setTypeface(typeface, Typeface.BOLD);
-                
+
                 break;
 
 			default:
 				break;
 			}
-			
-		
-		
+
+
+
 		return convertView;
 	}
-    
+
 	static class AdmobViewHolder {
 	    TextView clicks;
         TextView requests;
@@ -283,11 +282,11 @@ public class AdmobListAdapter extends BaseAdapter {
         TextView impressions;
         TextView ctr;
         TextView houseAdClicks;
-		
 
-        
+
+
     }
-	
+
 
 	private TextView createTextView(String string, boolean bold, boolean weight) {
 		TextView view = new TextView(activity);
@@ -341,8 +340,8 @@ public class AdmobListAdapter extends BaseAdapter {
     public List<AdmobChartType> getSecondPageCharts() {
         return secondPageCharts;
     }
-	
-    
+
+
 
 
 }

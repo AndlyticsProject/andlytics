@@ -22,7 +22,7 @@ public class ViewSwitcher3D {
 
     private long                mDuration           = 600;
     private float               mDepthOfRotation    = 300f;
-    
+
     private ViewSwitcherListener listener;
 
     public ViewSwitcher3D(ViewGroup container) {
@@ -119,15 +119,15 @@ public class ViewSwitcher3D {
             rotation.setFillAfter(true);
             rotation.setInterpolator(new DecelerateInterpolator());
             rotation.setAnimationListener(new AnimationListener() {
-                
+
                 @Override
                 public void onAnimationStart(Animation animation) {
                 }
-                
+
                 @Override
                 public void onAnimationRepeat(Animation animation) {
                 }
-                
+
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     if(listener != null) {
@@ -137,7 +137,7 @@ public class ViewSwitcher3D {
             });
 
             mContainer.startAnimation(rotation);
-            
+
         }
     }
 
@@ -148,7 +148,7 @@ public class ViewSwitcher3D {
         rotation.setFillAfter(true);
         mBackside.startAnimation(rotation);
     }
-    
+
     public void setListener(ViewSwitcherListener listener) {
         this.listener = listener;
     }
@@ -159,7 +159,7 @@ public class ViewSwitcher3D {
 
     public interface ViewSwitcherListener {
         public void onViewChanged(boolean frontsideVisible);
-        
+
         public void onRender();
     }
 }
