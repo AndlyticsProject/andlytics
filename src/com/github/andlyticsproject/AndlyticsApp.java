@@ -1,19 +1,16 @@
 package com.github.andlyticsproject;
 
-import android.app.Application;
-import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-
+import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 
+import android.app.Application;
+import android.content.Context;
+
 @ReportsCrashes(
-		formKey = "dFoxNXhxUmVqemdib1UxbXNfSWZpUnc6MQ", 
+		formKey = "dHBKcnZqTHMyMHlfLTB0RjhMejZfbkE6MQ", 
 		sharedPreferencesMode=Context.MODE_PRIVATE, 
 		sharedPreferencesName=Preferences.PREF) 
 public class AndlyticsApp extends Application {
-
-	private static final String CONTENT_URI = "content://com.github.andlyticsproject.pro.ProContentProvider/pro";
 	
 	public static boolean proVersion = false;
 	
@@ -29,7 +26,8 @@ public class AndlyticsApp extends Application {
 
 	@Override
 	public void onCreate() {
-		super.onCreate();
+		ACRA.init(this);
+		super.onCreate();		
 		Preferences.disableCrashReports(this);
 		setDbAdapter(new ContentAdapter(this)); 
 	}
