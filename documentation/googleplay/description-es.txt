@@ -1,0 +1,22 @@
+★★★ Esta es la nueva version OFICIAL de ésta aplicación  ★★★
+
+Controla las estadisticas de tus aplicaciones Android.
+Andlytics controla las estadisticas de tus aplicaciones para puntuaciones, descargas diarias, descargas totales e instalaciones activas. Permite visualizar los comentarios en todos los idiomas y las estadisticas de AdMob para ganancias, peticiones e impresiones.
+
+Esta es una herramienta para desarrolladores Android destinada al seguimiento de aplicaciones, util solamente si tiene aplicaciones publicadas en Google Play.
+
+Soporta autosincronización de las estadisticas de la aplicacion con su cuenta de desarrollador. Los datos de estadisticas pueden ser exportados a la SD externa y puede configurar notificaciones para los comentarios, puntuaciones y descargas. Las cuentas de AdMob serán gestionadas por el gestor de cuentas Android.
+
+Tenga en cuenta que Google no facilita una API estable para obtener estadisticas de descargas y puntuaciones. Por tanto Andlytics puede no funcionar correctamente si hay cambios en Google Play. En tal caso sea paciente mientras intentamos corregir éstos cambios.
+
+Esta aplicación no está relacionada con Google de ninguna manera.
+
+PROBLEMAS CONOCIDOS ★★★★★★★★★★★★★★★★★★★
+
+"Google Apps for Business" no son soportadas todavía
+
+Cuentas de desarrollador multi conectadas no son soportadas todavía.
+
+En algunos dispositivos las cuentas AdMob siguen desapareciendo, mover Andlytics de la SD esterna a la memoria interna puede solucionarlo.
+
+Para las cuentas AdMob que estan vinculadas a Cuentas Google puede encontrar la password del API en Informacion de cuenta en la página http://www.admob.com/my_account/account_info.
