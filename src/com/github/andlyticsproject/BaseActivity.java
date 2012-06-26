@@ -368,10 +368,7 @@ public class BaseActivity extends Activity {
 	}
 
     private void sendAracReport(Exception e, boolean userTriggered) {
-        ACRA.init(getApplication());
-        if(!userTriggered) {
-            ErrorReporter.getInstance().setUserComment("silent");
-        }
+        ACRA.init(getApplication());        
         ErrorReporter.getInstance().handleSilentException(e);
         ErrorReporter.getInstance().disable();
     }
