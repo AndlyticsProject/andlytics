@@ -97,5 +97,8 @@
     <string name="admob__house_ad_clicks">clicks en los anuncios</string>
     <string name="admob__charts_available">gráficas AdMob disponibles</string>
     <string name="last_update">última actualización</string>
+    
+    <string name="changelog_title">Changelog</string>
+    <string name="changelog_thanks">Thank you for installing Andlytics!</string>
 
 </resources>

@@ -1,27 +1,38 @@
 package com.github.andlyticsproject;
 
+import java.io.IOException;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.IOException;
+import com.github.andlyticsproject.util.ChangelogBuilder;
+import com.github.andlyticsproject.util.Utils;
 
 public class LoginActivity extends BaseActivity {
+
 
 
 	private static final String TAG = "Andlytics";
 
 	protected static final int CREATE_ACCOUNT_REQUEST = 1;
+	
+	/** The preferences. */
+	private SharedPreferences mPreferences;
 
 	private LinearLayout accountList;
 
@@ -29,6 +40,9 @@ public class LoginActivity extends BaseActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// Initialize preferences
+		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
 		setContentView(R.layout.login);
 		headline = (TextView) findViewById(R.id.login_headline);
@@ -46,7 +60,6 @@ public class LoginActivity extends BaseActivity {
 				addNewGoogleAccount();
 			}
 		});
-
 	}
 
 	@Override
