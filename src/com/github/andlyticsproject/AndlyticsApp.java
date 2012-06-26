@@ -12,8 +12,6 @@ import android.content.Context;
 		sharedPreferencesName=Preferences.PREF) 
 public class AndlyticsApp extends Application {
 	
-	public static boolean proVersion = false;
-	
 	private String authToken;
 	
 	private String xsrfToken;
