@@ -1,0 +1,23 @@
+★★★ Aquesta és la nova versió OFICIAL de l'aplicació ★★★
+
+Segueix les estadístiques de les teves aplicacions Android.
+
+Andlytics fa un seguiment de les estadístiques de les aplicacions pel que fa a valoracions, descàrregues diàries, descàrregues totals i instal·lacions actives. Els desenvolupadors Android poden veure els comentaris de les aplicacions en tots els idiomes i les estadístiques d'AdMob de guanys, peticions i impressions.
+
+Aquesta és una eina per a desenvolupadors Android per a fer un seguiment de les aplicacions, només és útil si tens aplicacions publicades a l'Android Market i pots accedir a la Consola de desenvolupadors de l'Android Market.
+
+Suporta la sincronització automàtica de les estadístiques de les aplicacions amb el teu compte de desenvolupador Android. Les dades de les estadístiques es poden exportar a la targeta SD i pots configurar notificaciones per a comentaris, valoracions o descàrregues noves. Els comptes d'AdMob els administrarà el gestor de comptes d'Android.
+
+Tingues en compte que Google no proporciona una API estable per obtenir les estadístiques de descàrregues i valoracions. Per tant, és possible que l'Andlytics no funcioni correctament si canvia alguna cosa a l'Android Market. En aquest cas, sigues pacient fins que ens adaptem als canvis.
+
+Aquesta aplicació no està relacionada de cap manera amb Google.
+
+PROBLEMES CONEGUTS ★★★★★★★★★★★★★★★★★★★
+
+Els comptes de "Google Apps for Business" encara no estan suportats
+
+Els comptes de desenvolupadors multiconnexió encara no estan suportats
+
+En alguns dispositius, els comptes d'AdMob desapareixen, moure l'Andlytics de la targeta SD a l'emmagatzematge intern pot arreglar-ho.
+
+Per als comptes d'AdMob que estan enllaçats a un compte Google, pots trobar-ne la contrasenya per a l'API a la pàgina d'Informació del compte http://www.admob.com/my_account/account_info.

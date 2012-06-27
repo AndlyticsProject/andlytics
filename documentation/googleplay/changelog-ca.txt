@@ -1,0 +1,5 @@
+- Arreglada l'autenticació
+- Les característiques Pro ara són gratuïtes (ja que ara és de codi obert)
+- Nou disseny
+- Guany per clic a l'AdMob
+- Nous idiomes: castellà, alemany i neerlandès

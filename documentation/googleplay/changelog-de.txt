@@ -1,0 +1,7 @@
+- Hotfix
+
+- Autentifizierungsfehler behoben
+- Pro Funktionen sind nun kostenfrei (Open Source)
+- Überarbeitetes Design
+- EPC für AdMob
+- Neue Sprachen: Spanisch, Deutsch, Niederländisch
