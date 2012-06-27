@@ -3,13 +3,13 @@
     <string name="app_name">Andlytics</string>
     <string name="app_name_admob">AdMob per Andlytics</string>
 
-    <string name="one_entry_hint_desc">"Andlytics raccoglie dati nel tempo. Per visualizzare un grafico significativo devi prima raccogliere un po' di dati.\n\nSolitamente le statistiche sono aggiornate ogni 24&#8211;48 ore."</string>
+    <string name="one_entry_hint_desc">Andlytics raccoglie dati nel tempo. Per visualizzare un grafico significativo devi prima raccogliere un po\' di dati.\n\nSolitamente le statistiche sono aggiornate ogni 24&#8211;48 ore.</string>
     <string name="one_entry_hint_demo"><u>apri grafico con dati demo</u></string>
 
-    <string name="crash_desc">"Si è verificato un errore.\n\nSi prega di riportare l'errore in modo che possa essere corretto. Per meglio identificare il problema verranno inviate informazioni sull'errore (stacktrace) e sul tuo dispositivo come il nome del produttore, del modello, la versione del sistema operativo ecc.\n\nGrazie!\n\n"</string>
-    <string name="newversion_desc">"<b>Si è verificato un errore, probabilmente perché l'interfaccia con la Console è cambiata.</b>\n\nLa buona notizia è che una nuova versione di Andlytics è già disponibile sul Market.\n\nSi prega di effettuare un aggiornamento prima di riportare l'errore.\n\nGrazie!\n\n\n"</string>
+    <string name="crash_desc">Si è verificato un errore.\n\nSi prega di riportare l\'errore in modo che possa essere corretto. Per meglio identificare il problema verranno inviate informazioni sull\'errore (stacktrace) e sul tuo dispositivo come il nome del produttore, del modello, la versione del sistema operativo ecc.\n\nGrazie!\n\n</string>
+    <string name="newversion_desc"><b>Si è verificato un errore, probabilmente perché l\'interfaccia con la Console è cambiata.</b>\n\nLa buona notizia è che una nuova versione di Andlytics è già disponibile sul Market.\n\nSi prega di effettuare un aggiornamento prima di riportare l\'errore.\n\nGrazie!\n\n\n</string>
     <string name="account_required">è necessario un account Android developer</string>
-    <string name="account_choose">"Scegli o aggiungi un account Google. L'account deve essere registrato come sviluppatore e devi avere almeno un'app pubblicata. sull'Android Market (gli account 'Google Apps for Business' non sono ancora supportati)."</string>
+    <string name="account_choose">Scegli o aggiungi un account Google. L\'account deve essere registrato come sviluppatore e devi avere almeno un\'app pubblicata. sull\'Android Market (gli account \'Google Apps for Business\' non sono ancora supportati).</string>
     <string name="account_add">aggiungi un account sviluppatore</string>
     <string name="logout">esci</string>
     <string name="refresh">aggiorna</string>
