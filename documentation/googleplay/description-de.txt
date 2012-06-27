@@ -1,0 +1,23 @@
+★★★ Dies ist das neue OFFICIELLE Release dieser App ★★★
+
+Verfolge deine Android App Statistiken.
+
+Andlytics tracked App Statistiken für BEwertungen, Tägliche Downloads, Gesamtzahl Downloads und aktive Installationen. Android Entwickler können Kommentare einsehen in allen Sprachen und AdMob Statistiken für Einnahmen, Requests und Aufrufe.
+
+Dies ist eine App für Android App Entwickler für das Google Play Tracking. Diese App ist nur sinnvoll nutzbar mit publizierten Apps in Google Play mit Zugriff auf die Google Play Developer Console.
+
+Unterstützt wird die automatische Synchronisation von App Statistiken über den Android Developer Account. Statistikdaten können auf die SD-Karte exportiert werden und es können entsprechende Benachrichtigungen eingestellt werden für neue Kommentare, Bewertungen und Downloads. AdMob Accounts werden über den Android Account Manager verwaltet.
+
+Hinweis: Google stellt keine stabile API zur Verfügung für den Zugriff auf Statistiken wie Downloads und Bewertungen. Daher kann es zu Fehlern kommen, wenn Google seine Schnittstelle ändert. In diesen Fällen ist Geduld gefragt, bis das Andlytics Project die Schnittstellenänderungen nachgezogen hat.
+
+Diese App steht nicht in Verbindung mit Google, sondern ist ein Open Source Projekt, welches durch die Community gepflegt wird.
+
+Bekannte Fehler ★★★★★★★★★★★★★★★★★★★
+
+"Google Apps for Business" Accounts werden aktuell nicht unterstützt
+
+Entwickler Accounts mit mehreren Entwicklerkonsolen werden aktuell nicht unterstützt
+
+Auf manchen Geräten verschwinden AdMob Accounts. Das Verlagern der Anwendung von Andlytics von der SD-Karte in den internen Speicher kann das Problem beheben.
+
+Sie finden ihr API Passwort für AdMob Accounts die mit einem Google Account verknüpft sind auf der Account Information Seite http://www.admob.com/my_account/account_info.
