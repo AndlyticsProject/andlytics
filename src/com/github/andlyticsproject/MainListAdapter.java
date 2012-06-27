@@ -51,7 +51,7 @@ public class MainListAdapter extends BaseAdapter {
 
     private static final int RED_TEXT = Color.RED;
 
-    private static final int GREEN_TEXT = Color.parseColor("#80A532");
+    private static final int GREEN_TEXT = Color.parseColor("#33B5E5");
 
     public static final int TAG_IMAGE_REF = R.id.tag_mainlist_image_reference;
 
