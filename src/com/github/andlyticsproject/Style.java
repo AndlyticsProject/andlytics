@@ -10,7 +10,7 @@ public class Style {
     private static Typeface tf;
 
     private Style(AssetManager mgr){
-        tf = Typeface.createFromAsset(mgr, "fonts/DroidSansBold.ttf");
+
     }
 
     public static Style getInstance(AssetManager mgr) {
