@@ -1,5 +1,6 @@
 package com.github.andlyticsproject;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -23,9 +24,8 @@ import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.AppStatsList;
 
 public class ChartActivity extends BaseChartActivity {
-
+//	private static String LOG_TAG=ChartActivity.class.toString();
 	private ContentAdapter db;
-//	private TextView chatTypeText;
 	private ListView historyList;
 	private ChartListAdapter historyListAdapter;
 	private TextView historyListFooter;
@@ -50,8 +50,25 @@ public class ChartActivity extends BaseChartActivity {
     
   }
   @Override
-	public void onCreate(Bundle savedInstanceState) {
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    setIntent(intent);
+		Bundle b = intent.getExtras();
+		if (b != null) {
+			String chartSet = b.getString(Constants.CHART_SET);
+			if(chartSet != null) {
+				currentChartSet = ChartSet.valueOf(chartSet);
+			}
+		}
 
+		if(currentChartSet == null) {
+			currentChartSet = ChartSet.DOWNLOADS;
+		}
+		setCurrentChart(currentChartSet.ordinal(),1);
+    
+  }
+  @Override
+	public void onCreate(Bundle savedInstanceState) {
 		smoothEnabled = Preferences.getChartSmooth(this);
 		super.onCreate(savedInstanceState);
 		this.setCurrentChartSet(ChartSet.RATINGS);

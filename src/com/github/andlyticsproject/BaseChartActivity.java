@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -274,7 +273,6 @@ protected void onChartSelected(int page, int column) {}
 protected void setCurrentChart(int page,int column)
 {
 	int pos = 0;
-	Log.i(LOG_TAG,"Setting possition page="+page+" column="+column);
 	for(View view:chartGalleryAdapter.getViews())
 	{
 		int pageColumn[] = (int[]) view.getTag();

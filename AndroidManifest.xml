@@ -61,6 +61,7 @@
 		</activity>
 		<activity
 			android:name=".ChartActivity"
+			android:launchMode="singleTask"
 			android:label="@string/app_name">
 		</activity>
 		<activity
