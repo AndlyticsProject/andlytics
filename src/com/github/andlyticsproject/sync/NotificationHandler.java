@@ -26,99 +26,96 @@ public class NotificationHandler {
 
     public static void handleNotificaions(Context context, List<AppStatsDiff> diffs, String accountName) {
 
-        if ( AndlyticsApp.isProVersion(context) ) {
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(ns);
 
-            String ns = Context.NOTIFICATION_SERVICE;
-            NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(ns);
+        String contentTitle = "Andlytics change detection";
+        String contentText = "";
 
-            String contentTitle = "Andlytics change detection";
-            String contentText = "";
+        boolean commentsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_COMMENTS, accountName);
+        boolean ratingsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_RATING, accountName);
+        boolean downloadsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_DOWNLOADS, accountName);
+        boolean soundEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_SOUND, accountName);
+        boolean lightEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_LIGHT, accountName);
 
-            boolean commentsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_COMMENTS, accountName);
-            boolean ratingsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_RATING, accountName);
-            boolean downloadsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_DOWNLOADS, accountName);
-            boolean soundEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_SOUND, accountName);
-            boolean lightEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_LIGHT, accountName);
+        List<String> appNameList = new ArrayList<String>();
+        for (int i = 0; i < diffs.size(); i++) {
 
-            List<String> appNameList = new ArrayList<String>();
-            for (int i = 0; i < diffs.size(); i++) {
+            AppStatsDiff diff = diffs.get(i);
+            if(!diff.isSkipNotification()) {
 
-                AppStatsDiff diff = diffs.get(i);
-                if(!diff.isSkipNotification()) {
+                if(diff.hasChanges()) {
 
-                    if(diff.hasChanges()) {
+                    List<String> changeProperties = new ArrayList<String>();
 
-                        List<String> changeProperties = new ArrayList<String>();
+                    if(commentsEnabled && diff.getCommentsChange() != 0) {
+                        changeProperties.add("comments");
+                    }
+                    if(ratingsEnabled && diff.getAvgRatingChange() != 0) {
+                        changeProperties.add("ratings");
+                    }
+                    if(downloadsEnabled && diff.getDownloadsChange() != 0) {
+                        changeProperties.add("downloads");
+                    }
 
-                        if(commentsEnabled && diff.getCommentsChange() != 0) {
-                            changeProperties.add("comments");
-                        }
-                        if(ratingsEnabled && diff.getAvgRatingChange() != 0) {
-                            changeProperties.add("ratings");
-                        }
-                        if(downloadsEnabled && diff.getDownloadsChange() != 0) {
-                            changeProperties.add("downloads");
-                        }
-
-                        if(changeProperties.size() > 0) {
-                            String name = diff.getAppName();
-                            name += " (";
-                            for (int j = 0; j < changeProperties.size(); j++) {
-                                name += changeProperties.get(j);
-                                if(j < changeProperties.size() -1) {
-                                    name += ", ";
-                                }
-
+                    if(changeProperties.size() > 0) {
+                        String name = diff.getAppName();
+                        name += " (";
+                        for (int j = 0; j < changeProperties.size(); j++) {
+                            name += changeProperties.get(j);
+                            if(j < changeProperties.size() -1) {
+                                name += ", ";
                             }
-                            name += ")";
 
-                            appNameList.add(name);
                         }
+                        name += ")";
+
+                        appNameList.add(name);
                     }
                 }
             }
+        }
 
-            if(appNameList.size() > 0) {
+        if(appNameList.size() > 0) {
 
-                for (int i = 0; i < appNameList.size(); i++) {
-                    contentText += appNameList.get(i);
-                    if(i < appNameList.size() -1) {
-                        contentText += ", ";
-                    }
+            for (int i = 0; i < appNameList.size(); i++) {
+                contentText += appNameList.get(i);
+                if(i < appNameList.size() -1) {
+                    contentText += ", ";
                 }
-
-                Notification notification = new Notification(R.drawable.statusbar_andlytics, contentTitle + ": " + contentText, System.currentTimeMillis());
-
-                Intent notificationIntent = new Intent(context, Main.class);
-                notificationIntent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
-
-
-                PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
-
-
-                if(soundEnabled) {
-                    notification.defaults |= Notification.DEFAULT_SOUND;
-                }
-                if(lightEnabled) {
-                    notification.defaults |= Notification.DEFAULT_LIGHTS;
-                }
-                notification.contentIntent = contentIntent;
-                notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
-                mNotificationManager.notify(1, notification);
-
-
-                Intent i = new Intent(GROWL_ACTION);
-                i.putExtra(EXTRA_TITLE, contentTitle);
-                i.putExtra(EXTRA_DESCRIPTION, contentText);
-                context.sendBroadcast(i);
-
             }
 
+            Notification notification = new Notification(R.drawable.statusbar_andlytics, contentTitle + ": " + contentText, System.currentTimeMillis());
+
+            Intent notificationIntent = new Intent(context, Main.class);
+            notificationIntent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+
+
+            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+
+
+            if(soundEnabled) {
+                notification.defaults |= Notification.DEFAULT_SOUND;
+            }
+            if(lightEnabled) {
+                notification.defaults |= Notification.DEFAULT_LIGHTS;
+            }
+            notification.contentIntent = contentIntent;
+            notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
+            mNotificationManager.notify(1, notification);
+
+
+            Intent i = new Intent(GROWL_ACTION);
+            i.putExtra(EXTRA_TITLE, contentTitle);
+            i.putExtra(EXTRA_DESCRIPTION, contentText);
+            context.sendBroadcast(i);
 
         }
+
+
     }
 
 }

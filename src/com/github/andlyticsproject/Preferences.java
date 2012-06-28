@@ -39,8 +39,6 @@ public class Preferences {
 
     private static final String LEVEL_7_ALARM_MANAGER_PERIOD = "level7.AlarmManagerPeriod";
 
-    private static final String PRO_DIALOG_HINT = "pro.dialog.hit";
-
     private static final String ADMOB_SITE_ID = "admob.siteid";
 
     private static final String ADMOB_ACCOUNT = "admob.account";
@@ -204,16 +202,6 @@ public class Preferences {
 
     public static int getLevel7AlarmManagerPeriod(Context context) {
         return getSettings(context).getInt(LEVEL_7_ALARM_MANAGER_PERIOD, 0);
-    }
-
-    public static Boolean getProVersionHint(Context context) {
-        return getSettings(context).getBoolean(PRO_DIALOG_HINT + getAppVersionCode(context), true);
-    }
-
-    public static void saveProVersionHint(Context context, Boolean value) {
-        SharedPreferences.Editor editor = getSettings(context).edit();
-        editor.putBoolean(PRO_DIALOG_HINT + getAppVersionCode(context), value);
-        editor.commit();
     }
 
     public static Boolean getShowChartHint(Context context) {
