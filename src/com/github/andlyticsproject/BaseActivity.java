@@ -8,16 +8,13 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -43,8 +40,6 @@ import com.github.andlyticsproject.exception.MultiAccountAcception;
 import com.github.andlyticsproject.exception.NetworkException;
 import com.github.andlyticsproject.exception.NoCookieSetException;
 import com.github.andlyticsproject.exception.SignupException;
-import com.github.andlyticsproject.util.ChangelogBuilder;
-import com.github.andlyticsproject.util.Utils;
 
 public class BaseActivity extends Activity {
 
@@ -57,10 +52,6 @@ public class BaseActivity extends Activity {
 	protected String iconFilePath;
 	protected String accountname;
 	private View ratingsButton;
-
-	public boolean isProVersion() {
-		return AndlyticsApp.isProVersion(this);
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -372,42 +363,10 @@ public class BaseActivity extends Activity {
 	}
 
     private void sendAracReport(Exception e, boolean userTriggered) {
-        ACRA.init(getApplication());        
+        ACRA.init(getApplication());
         ErrorReporter.getInstance().handleSilentException(e);
         ErrorReporter.getInstance().disable();
     }
-
-   protected void showProDialog() {
-
-        if(!isFinishing()) {
-
-            CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
-            builder.setTitle("Andlytics Donate / Pro Key");
-            builder.setMessage(R.string.pro_desc);
-            builder.setPositiveButton("buy pro key", new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface dialog, int which) {
-
-                    Intent goToMarket = null;
-                    goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.github.andlyticsproject.pro"));
-                    startActivity(goToMarket);
-
-                    dialog.dismiss();
-                }
-
-            });
-            builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-
-            });
-
-            builder.create().show();
-        }
-    }
-
 
 	protected void showGoogleErrorDialog(final Exception e) {
 

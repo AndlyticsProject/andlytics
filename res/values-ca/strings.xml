@@ -6,7 +6,6 @@
     <string name="one_entry_hint_desc">andlytics recol·lecta dades al llarg del temps. per veure una gràfica amb sentit, torna quan hi hagi més dades disponibles.\n\nnormalment, les estadístiques de descàrregues s\'actualitzen cada 24&#8211;48 hores.</string>
     <string name="one_entry_hint_demo"><u>mostra la gràfica amb dades de demostració</u></string>
 
-    <string name="pro_desc">La clau Pro / Donació de l\'Andlytics desbloqueja les característiques addicionals per a notificacions de canvis i l\'exportació i importació d\'estadístiques.\n\nTingues en compte que Google no proporciona una API estable per obtenir les dades. Per tant, l\'Andlytics pot ser que no funcioni correctament si hi ha canvis a l\'Android Market.\n\nEn aquest cas, intentem adaptar-nos als canvis, però <b>no podem garantir que l\'aplicació funcioni correctament en el futur</b>.\n\nNo disponible a: Bulgària, Estònia, Grècia, Hongria, Kazakhstan, Letònia, Lituània, Luxemburg, Filipones, Romania, Sèrbia, Eslovàquia, Eslovènia, Sudàfrica, Tailàndia</string>
     <string name="crash_desc">S\'ha produït un error inesperat.\n\nAjuda\'ns a arreglar-lo enviant-nos un informe d\'errors. Se\'ns enviarà informació sobre el teu dispositiu com ara el nom del fabricant, el número de model del dispositiu, el sistema operatiu, etc. per ajudar-nos a identificar el problema.\n\nGràcies!\n\n</string>
     <string name="newversion_desc"><b>S\'ha produït un error inesperat, probablement perquè la interfície remota ha canviat.</b>\n\nPerò la bona notícia és que hi ha una nova versió de l\'Andlytics disponible a l\'Android Market.\n\nActualitza abans d\'informat d\'aquest error..\n\nGràcies!\n\n\n</string>
     <string name="account_required">es necessita un compte de desenvolupador android</string>
@@ -93,7 +92,7 @@
     <string name="admob__house_ad_clicks">clics a anuncis propis</string>
     <string name="admob__charts_available">gràfiques d\'AdMob disponibles</string>
     <string name="last_update">última actualització</string>
-    
+
     <string name="changelog_title">Registre de canvis</string>
     <string name="changelog_thanks">Gràcies per instal·lar l\'Andlytics!</string>
 

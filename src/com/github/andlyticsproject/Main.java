@@ -196,13 +196,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
             @Override
             public void onClick(View v) {
-
-                if(!isProVersion()) {
-                    showProDialog();
-                } else {
-                    (new LoadExportDialog()).execute();
-                }
-
+            	(new LoadExportDialog()).execute();
             }
         });
 
@@ -210,11 +204,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
             @Override
             public void onClick(View v) {
-                if(!isProVersion()) {
-                    showProDialog();
-                } else {
-                    (new LoadImportDialog()).execute();
-                }
+            	(new LoadImportDialog()).execute();
             }
         });
 
@@ -222,11 +212,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
             @Override
             public void onClick(View v) {
-                if(!isProVersion()) {
-                    showProDialog();
-                } else {
-                    (new LoadNotificationDialog()).execute();
-                }
+            	(new LoadNotificationDialog()).execute();
             }
         });
 
@@ -439,12 +425,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
             } else {
                 new LoadDbEntries().execute(false);
-
-                if(Preferences.getProVersionHint(Main.this) && !isProVersion()) {
-                    showProDialog();
-                    Preferences.saveProVersionHint(Main.this, false);
-                }
-
             }
 
         }

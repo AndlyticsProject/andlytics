@@ -6,7 +6,6 @@
     <string name="one_entry_hint_desc">Andlytics sammelt mit der Zeit Daten. Für eine sinvolle Übersicht wieder vorbeischauen sobald mehr Daten verfügbar sind.\n\nNormalerweise werden die Downloadstatistiken alle 24&#8211;48 Stunden aktualisiert.</string>
     <string name="one_entry_hint_demo"><u>Übersicht mit Beispieldaten</u></string>
 
-    <string name="pro_desc">Andlytics donate / pro key schaltet zusätzliche benachrichtigungen frei sowie den Datenexport und -import.\n\nBitte beachte dass Google keine API dafür anbietet. Deshalb kann Andlytics nicht funktionieren wenn Änderungen im Play Store vorgenommen werden.\n\nIn diesem Fall werden wir versuchen diese Änderungen anzupassen <b>aber es kann nicht garantiert werden dass diese App korrekt in der Zukunft funktioniert</b>.\n\nNicht verfügbar in: Bulgarien, Estland, Griechenland, Ungarn, Kasachstan, Lettland, Litauen, Luxemburg, Philipinen, Rumänien, Serbien, Slovakei, Slovenien, Südafrika und Thailand</string>
     <string name="crash_desc">Ein unvorhergesehener Fehler trat auf.\n\nBitte helft uns diesen Fehler zu beheben durch Senden eines Fehlerberichtes. Informationen über den Fehler (Stacktrace) und Information über das Gerät wie Hersteller, Gerätename, betriebssystem usw helfen uns den Fehler zu finden.\n\nDanke!\n\n</string>
     <string name="newversion_desc"><b>Ein unvorhergesehener Fehler trat auf, womöglich weil es Änderungen im Play Store gab.</b>\n\nDie gute Nachrichtt: Es gibt bereits eine neue Version von Andlytics.\n\nBitte updaten befor dieser Fehler gemeldet wird.\n\nDanke!\n\n\n</string>
     <string name="account_required">Android Developer Account benötigt</string>
@@ -96,5 +95,7 @@
 
     <string name="changelog_title">Changelog</string>
     <string name="changelog_thanks">Danke für die Nutzung von Andlytics!</string>
+
+    <string name="notification_title">Andlytics Benachrichtigung</string>
 
 </resources>
