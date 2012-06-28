@@ -44,7 +44,6 @@
     <string name="cancel">cancelar</string>
     <string name="title">Título</string>
     <string name="text">Texto</string>
-    <string name="ok">aceptar</string>
     <string name="select_files_export">Selecciona los archivos a exportar</string>
     <string name="export_files_replaced">Los archivos existentes serán reemplazados</string>
     <string name="run_export">exportar</string>
@@ -78,9 +77,6 @@
     <string name="admob_info">Para cuentas AdMob enlazadas a una cuenta Google puedes encontrar la contraseña del API en la página de información de tu cuenta de admob:</string>
     <string name="percentage">porcentajes</string>
     <string name="daily">cambios diarios</string>
-    <string name="feedback">Feedback</string>
-    <string name="help_us">Por favor, ayudanos a mejorar la aplicación enviandonos comentarios. \n\nGracias!</string>
-    <string name="send">enviar</string>
     <string name="downloads_day">descargas por día</string>
     <string name="active_installs_percent">porcentaje de instalaciones activas</string>
     <string name="swipe">desliza para ver la siguiente gráfica -></string>
@@ -97,7 +93,7 @@
     <string name="admob__house_ad_clicks">clicks en los anuncios</string>
     <string name="admob__charts_available">gráficas AdMob disponibles</string>
     <string name="last_update">última actualización</string>
-    
+
     <string name="changelog_title">Changelog</string>
     <string name="changelog_thanks">Thank you for installing Andlytics!</string>
 
