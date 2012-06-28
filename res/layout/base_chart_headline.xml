@@ -27,7 +27,7 @@
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="1"
-            android:text="@string/app_name_admob"
+            android:text="@string/app_name"
             android:textColor="#F7FBF5"
             android:textSize="15dp"
             android:textStyle="bold" />
