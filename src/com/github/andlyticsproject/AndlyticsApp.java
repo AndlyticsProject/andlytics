@@ -7,49 +7,27 @@ import android.app.Application;
 import android.content.Context;
 
 @ReportsCrashes(
-		formKey = "dHBKcnZqTHMyMHlfLTB0RjhMejZfbkE6MQ", 
-		sharedPreferencesMode=Context.MODE_PRIVATE, 
-		sharedPreferencesName=Preferences.PREF) 
+		formKey = "dHBKcnZqTHMyMHlfLTB0RjhMejZfbkE6MQ",
+		sharedPreferencesMode=Context.MODE_PRIVATE,
+		sharedPreferencesName=Preferences.PREF)
 public class AndlyticsApp extends Application {
-	
+
 	private String authToken;
-	
+
 	private String xsrfToken;
-	
+
 	private ContentAdapter db;
-	
+
 	private boolean skipMainReload;
-	
+
 	private String feedbackMessage;
 
 	@Override
 	public void onCreate() {
 		ACRA.init(this);
-		super.onCreate();		
+		super.onCreate();
 		Preferences.disableCrashReports(this);
-		setDbAdapter(new ContentAdapter(this)); 
-	}
-
-	public static boolean isProVersion(Context context) {
-
-		return true;
-		
-		/*if (!proVersion) {
-
-			Uri allTitles = Uri.parse(CONTENT_URI);
-			
-			Cursor c = context.getContentResolver().query(allTitles, null, null, null, "");
-	        
-			if(c != null) {
-			    proVersion = true;
-			} else {
-                proVersion = false;
-			}
-			return proVersion;
-			
-		}
-
-		return proVersion;*/
+		setDbAdapter(new ContentAdapter(this));
 	}
 
 	@Override
