@@ -55,15 +55,8 @@ public class ChartActivity extends BaseChartActivity {
 		smoothEnabled = Preferences.getChartSmooth(this);
 		super.onCreate(savedInstanceState);
 		this.setCurrentChartSet(ChartSet.RATINGS);
-
-
-
 		db = getDbAdapter();
 		//chartFrame = (ViewSwitcher) ;
-
-
-
-
 
 		View configButton = findViewById(R.id.base_chart_button_config);
 
@@ -105,11 +98,7 @@ public class ChartActivity extends BaseChartActivity {
 		if(currentChartSet == null) {
 			currentChartSet = ChartSet.DOWNLOADS;
 		}
-		if(currentChartSet.equals(ChartSet.DOWNLOADS)) {
-			historyListAdapter.setCurrentChart(0,1);
-		} else {
-			historyListAdapter.setCurrentChart(1,1);
-		}
+		historyListAdapter.setCurrentChart(currentChartSet.ordinal(),1);
 
 
 	}
@@ -279,7 +268,16 @@ protected String getChartHint() {
     return ret;
   }
 
-
+@Override
+protected void onChartSelected(int page, int column) {
+  super.onChartSelected(page, column);
+  if(page!=currentChartSet.ordinal())
+  {
+  	currentChartSet=ChartSet.values()[page];
+  	updateTabbarButtons();
+  }
+  	
+}
 
 
 

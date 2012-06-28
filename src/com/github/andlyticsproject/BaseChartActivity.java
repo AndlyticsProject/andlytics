@@ -241,8 +241,8 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 					int pageColumn[] = (int[]) view.getTag();
 					myAdapter.setCurrentChart(pageColumn[0], pageColumn[1]);
 					updateChartHeadline();
-
 					myAdapter.notifyDataSetChanged();
+					onChartSelected(pageColumn[0], pageColumn[1]);
 
 				}
 
@@ -265,6 +265,12 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 		}
 
 	}
+	/**
+	 * Called when chart is selected
+	 * @param page
+	 * @param column
+	 */
+protected void onChartSelected(int page, int column) {}
 protected void setCurrentChart(int page,int column)
 {
 	int pos = 0;

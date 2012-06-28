@@ -26,7 +26,7 @@ public class Chart extends AbstractChart {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public enum ChartSet {
-		DOWNLOADS, RATINGS, ADMOB
+		RATINGS, DOWNLOADS, ADMOB
 	}
 
 /*	public enum AdmobChartType {

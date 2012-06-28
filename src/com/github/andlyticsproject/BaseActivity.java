@@ -75,13 +75,8 @@ public class BaseActivity extends Activity {
 
 	}
 
-	public void setupTabbar() {
-
-		downloadsButton = findViewById(R.id.tabbar_button_downloads);
-		ratingsButton = findViewById(R.id.tabbar_button_ratings);
-		commentsButton = findViewById(R.id.tabbar_button_comments);
-		admobButton = findViewById(R.id.tabbar_button_back);
-
+	public void updateTabbarButtons()
+	{
 		if (this instanceof ChartActivity) {
 			ChartSet currentChartSet = ((ChartActivity) this).getCurrentChartSet();
 			if (currentChartSet.equals(ChartSet.DOWNLOADS)) {
@@ -108,6 +103,15 @@ public class BaseActivity extends Activity {
             downloadsButton.setSelected(false);
             ratingsButton.setSelected(false);
 		}
+	}
+	public void setupTabbar() {
+
+		downloadsButton = findViewById(R.id.tabbar_button_downloads);
+		ratingsButton = findViewById(R.id.tabbar_button_ratings);
+		commentsButton = findViewById(R.id.tabbar_button_comments);
+		admobButton = findViewById(R.id.tabbar_button_back);
+
+		updateTabbarButtons();
 
 		downloadsButton.setOnClickListener(new OnClickListener() {
 

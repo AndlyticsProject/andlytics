@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.github.andlyticsproject.chart.Chart;
+import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.chart.Chart.ValueCallbackHander;
 import com.github.andlyticsproject.model.AppStats;
 
@@ -112,11 +113,11 @@ public class ChartListAdapter extends BaseChartListAdapter {
     @Override
     public int getNumCharts(int page) throws IndexOutOfBoundsException
     {
-      switch(page)
+      switch (ChartSet.values()[page])
       {
-        case 0:
+        case DOWNLOADS:
           return 5;
-        case 1:
+        case RATINGS:
           return 7;
       }
       throw new IndexOutOfBoundsException("page="+page);
@@ -132,9 +133,9 @@ public class ChartListAdapter extends BaseChartListAdapter {
       {
         return "";
       }
-      switch (page)
+      switch (ChartSet.values()[page])
       {
-        case 0:
+        case DOWNLOADS:
         {
           switch (column)
           {
@@ -152,7 +153,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
           }
         }
         break;
-        case 1:
+        case RATINGS:
         {
           switch (column)
           {
@@ -194,9 +195,9 @@ public class ChartListAdapter extends BaseChartListAdapter {
         return;
       }
       int textColor=versionUpdateDates.contains(appInfo.getRequestDate())?RED_TEXT:BLACK_TEXT;
-      switch (page)
+      switch (ChartSet.values()[page])
       {
-        case 0:
+        case DOWNLOADS:
         {
           
           switch (column)
@@ -220,7 +221,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
           }
         }
         break;
-        case 1:
+        case RATINGS:
         {
           
           switch (column)
@@ -311,9 +312,9 @@ public class ChartListAdapter extends BaseChartListAdapter {
     {
 //    	Log.i(LOG_TAG,"buildChart p="+page+" c="+column);
       ValueCallbackHander handler = null;
-      switch (page)
+      switch (ChartSet.values()[page])
       {
-        case 0:
+        case DOWNLOADS:
         {
           switch (column)
           {
@@ -360,7 +361,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
         
         break;
         
-        case 1:
+        case RATINGS:
         {
           switch (column)
           {
@@ -444,9 +445,9 @@ public class ChartListAdapter extends BaseChartListAdapter {
       {
         return null;
       }
-      switch (page)
+      switch (ChartSet.values()[page])
       {
-        case 0:
+        case DOWNLOADS:
         {
           switch (column)
           {
@@ -458,7 +459,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
           }
         }
         break;
-        case 1:
+        case RATINGS:
         {
           switch (column)
           {
@@ -488,8 +489,8 @@ public class ChartListAdapter extends BaseChartListAdapter {
 		if (column == DATE) {
 			return "";
 		}
-		switch (page) {
-		case 0: {
+		switch (ChartSet.values()[page]) {
+		case DOWNLOADS: {
 			switch (column) {
 			case TOTAL_DOWNLAODS:
 				return (overallStats != null) ? overallStats.getTotalDownloads() + "" : "";
@@ -506,7 +507,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 			}
 		}
 			break;
-		case 1: {
+		case RATINGS: {
 			switch (column) {
 			case AVG_RATING:
 				return overallStats.getAvgRatingString() + "";
