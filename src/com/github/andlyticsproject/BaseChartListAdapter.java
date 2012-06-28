@@ -7,9 +7,11 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,10 +27,11 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 	 */
 	private final int numPages, numColumns[];
 	private final int maxColumns;
-	private final Activity activity;
+	private final BaseChartActivity activity;
 	private float scale;
 	private int currentPage, currentColumn;
 	private final boolean usesSmooth;
+	private final OnClickListener columnClickListener;
 
 	public abstract int getNumPages();
 
@@ -78,7 +81,7 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 	public abstract void updateChartValue(int position, int page, int column, TextView tv)
 	    throws IndexOutOfBoundsException;
 
-	public BaseChartListAdapter(Activity activity) {
+	public BaseChartListAdapter(BaseChartActivity activity) {
 		this.activity = activity;
 		numPages = getNumPages();
 		int max = -1;
@@ -95,6 +98,18 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		this.scale = activity.getResources().getDisplayMetrics().density;
 		currentPage = 0;
 		currentColumn = 1;
+		
+		
+		columnClickListener=new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				int column=(Integer) v.getTag();
+				Log.i(LOG_TAG,"Pressed "+column);
+				BaseChartListAdapter.this.activity.setCurrentChart(currentPage, column);
+				
+			}
+		};
 
 	}
 
@@ -111,15 +126,23 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 
 		int i;
 		ViewHolder holder;
-		int realColumns = maxColumns + (usesSmooth ? 1 : 0);
-		int firstRealColumn = (usesSmooth ? 2 : 1);
 		if (convertView == null) {
 			convertView = activity.getLayoutInflater().inflate(R.layout.base_chart_list_item, null);
-			holder = new ViewHolder(realColumns);
+			holder = new ViewHolder(maxColumns+ (usesSmooth ? 1 : 0));
 
-			for (i = 0; i < realColumns; i++) {
-				holder.fields[i] = createTextView("*", false, i > firstRealColumn);
+			for (i = 0; i < maxColumns; i++) {
+				holder.fields[i] = createTextView("", false, i > 0);
+				if(i>0)
+				{
+					holder.fields[i].setOnClickListener(columnClickListener);
+					holder.fields[i].setTag(i);
+				}
 				((ViewGroup) convertView).addView(holder.fields[i]);
+			}
+			if(usesSmooth)
+			{
+				holder.fields[i] = createTextView("*", false, false);
+				((ViewGroup) convertView).addView(holder.fields[i], 1);
 			}
 			convertView.setTag(holder);
 
@@ -129,22 +152,21 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		}
 		// First field always will be the date
 		Typeface typeface = holder.fields[0].getTypeface();
-		for (i = 0; i < realColumns; i++)
+		for (i = 0; i < maxColumns; i++)
 			holder.fields[i].setTypeface(typeface, Typeface.NORMAL);
 		int diff = maxColumns - numColumns[currentPage];
-		for (i = 0; i < realColumns; i++)
+		for (i = 0; i < maxColumns; i++)
 			holder.fields[i].setVisibility(View.VISIBLE);
 		if (numColumns[currentPage] < maxColumns) {
-			for (i = firstRealColumn; i < (diff + firstRealColumn); i++)
+			for (i = maxColumns-diff; i <maxColumns ; i++)
 				holder.fields[i].setVisibility(View.GONE);
 		}
 		updateChartValue(position, currentPage, 0, holder.fields[0]);
 		for (i = 1; i < numColumns[currentPage]; i++)
-			updateChartValue(position, currentPage, i, holder.fields[i + diff + (usesSmooth ? 1 : 0)]);
-		holder.fields[(currentColumn + diff + (usesSmooth ? 1 : 0))].setTypeface(typeface,
-		    Typeface.BOLD);
+			updateChartValue(position, currentPage, i, holder.fields[i]);
+		holder.fields[currentColumn].setTypeface(typeface,Typeface.BOLD);
 		if (usesSmooth) {
-			holder.fields[1].setVisibility(isSmothValue(currentPage, position) ? View.VISIBLE
+			holder.fields[holder.fields.length-1].setVisibility(isSmothValue(currentPage, position) ? View.VISIBLE
 			    : View.INVISIBLE);
 		}
 

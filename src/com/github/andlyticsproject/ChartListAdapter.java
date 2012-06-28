@@ -1,51 +1,60 @@
 package com.github.andlyticsproject;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.github.andlyticsproject.chart.Chart.DownloadChartType;
-import com.github.andlyticsproject.chart.Chart.RatingChartType;
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.view.View;
+import android.widget.TextView;
+
+import com.github.andlyticsproject.chart.Chart;
+import com.github.andlyticsproject.chart.Chart.ValueCallbackHander;
 import com.github.andlyticsproject.model.AppStats;
 
-public class ChartListAdapter extends BaseAdapter {
+public class ChartListAdapter extends BaseChartListAdapter {
+//		private static String LOG_TAG=ChartListAdapter.class.toString();
 
     private static final int BLACK_TEXT = Color.parseColor("#555555");
 
     private static final int RED_TEXT = Color.RED;
+    
+    private static final int DATE=0;
+    private static final int TOTAL_DOWNLAODS=1;
+    private static final int ACTIVE_INSTALLS_TOTAL=2;
+    private static final int TOTAL_DOWNLAODS_BY_DAY=3;
+    private static final int ACTIVE_INSTALLS_PERCENT=4;
+
+    private static final int AVG_RATING=1;
+    private static final int RATINGS_5=2;
+    private static final int RATINGS_4=3;
+    private static final int RATINGS_3=4;
+    private static final int RATINGS_2=5;
+    private static final int RATINGS_1=6;
+    
+    private Integer heighestRatingChange;
+    private Integer lowestRatingChange;
+    
 
 	private List<AppStats> downloadInfos;
 
 	private List<Date> versionUpdateDates;
 
-	private LayoutInflater layoutInflater;
 
 	private Activity activity;
 
-	private float scale;
-
-	private Object currentChart;
 
 	private SimpleDateFormat dateFormat;
+  private AppStats overallStats;
 
-	public ChartListAdapter(Activity activity) {
+	public ChartListAdapter(BaseChartActivity activity) {
+	  super(activity);
 		this.setDownloadInfos(new ArrayList<AppStats>());
-		this.layoutInflater = activity.getLayoutInflater();
 		this.activity = activity;
-		this.scale = activity.getResources().getDisplayMetrics().density;
 		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatShort(activity));
 	}
 
@@ -64,311 +73,14 @@ public class ChartListAdapter extends BaseAdapter {
 		return position;
 	}
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-
-		Object baseHolder = null;
-
-		AppStats appInfo = getItem(position);
-
-        if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.chart_list_item, null);
-
-            if(currentChart instanceof DownloadChartType) {
-
-            	DownloadsViewHolder holder = new DownloadsViewHolder();
-            	holder.date = createTextView("", false, false);
-            	holder.smooth = createTextView("*", false, false);
-            	holder.total = createTextView("", false, true);
-            	holder.daily = createTextView("", false, true);
-            	holder.active = createTextView("", false, true);
-            	holder.activeTotal =  createTextView("", false, true);
-
-            	((ViewGroup)convertView).addView(holder.date);
-            	((ViewGroup)convertView).addView(holder.smooth);
-            	((ViewGroup)convertView).addView(holder.total);
-            	((ViewGroup)convertView).addView(holder.activeTotal);
-            	((ViewGroup)convertView).addView(holder.daily);
-            	((ViewGroup)convertView).addView(holder.active);
-
-            	convertView.setTag(holder);
-            	baseHolder = holder;
-            } else if (currentChart instanceof RatingChartType) {
-
-            	RatingsViewHolder holder = new RatingsViewHolder();
-            	holder.date = createTextView("", false, false);
-            	holder.smooth = createTextView("*", false, false);
-            	holder.avgrating = createTextView("", false, true);
-            	holder.rating1 = createTextView("", false, true);
-            	holder.rating2 = createTextView("", false, true);
-            	holder.rating3 = createTextView("", false, true);
-            	holder.rating4 = createTextView("", false, true);
-            	holder.rating5 = createTextView("", false, true);
-
-
-            	((ViewGroup)convertView).addView(holder.date);
-            	((ViewGroup)convertView).addView(holder.smooth);
-            	((ViewGroup)convertView).addView(holder.avgrating);
-            	((ViewGroup)convertView).addView(holder.rating5);
-            	((ViewGroup)convertView).addView(holder.rating4);
-            	((ViewGroup)convertView).addView(holder.rating3);
-            	((ViewGroup)convertView).addView(holder.rating2);
-            	((ViewGroup)convertView).addView(holder.rating1);
-
-            	convertView.setTag(holder);
-            	baseHolder = holder;
-
-            }
-
-        } else {
-
-            baseHolder = (Object) convertView.getTag();
-        }
-
-        if(currentChart instanceof DownloadChartType) {
-
-        	DownloadsViewHolder holder = (DownloadsViewHolder) baseHolder;
-
-			holder.total.setText("<b>" + appInfo.getTotalDownloads() + "</b>");
-			holder.date.setText(dateFormat.format(appInfo.getRequestDate()));
-			holder.active.setText(appInfo.getActiveInstallsPercentString());
-			holder.activeTotal.setText(appInfo.getActiveInstalls() + "");
-			holder.total.setText(appInfo.getTotalDownloads() + "");
-			holder.daily.setText(appInfo.getDailyDownloads() + "");
-
-			Typeface typeface = holder.date.getTypeface();
-
-			switch ((DownloadChartType)currentChart) {
-			case ACTIVE_INSTALLS_PERCENT:
-				holder.active.setTypeface(typeface, Typeface.BOLD);
-				holder.total.setTypeface(typeface, Typeface.NORMAL);
-				holder.activeTotal.setTypeface(typeface, Typeface.NORMAL);
-				holder.daily.setTypeface(typeface, Typeface.NORMAL);
-
-				break;
-			case TOTAL_DOWNLAODS:
-				holder.active.setTypeface(typeface, Typeface.NORMAL);
-				holder.total.setTypeface(typeface, Typeface.BOLD);
-				holder.activeTotal.setTypeface(typeface, Typeface.NORMAL);
-				holder.daily.setTypeface(typeface, Typeface.NORMAL);
-
-				break;
-			case TOTAL_DOWNLAODS_BY_DAY:
-				holder.active.setTypeface(typeface, Typeface.NORMAL);
-				holder.total.setTypeface(typeface, Typeface.NORMAL);
-				holder.activeTotal.setTypeface(typeface, Typeface.NORMAL);
-				holder.daily.setTypeface(typeface, Typeface.BOLD);
-
-				break;
-			case ACTIVE_INSTALLS_TOTAL:
-				holder.active.setTypeface(typeface, Typeface.NORMAL);
-				holder.total.setTypeface(typeface, Typeface.NORMAL);
-				holder.activeTotal.setTypeface(typeface, Typeface.BOLD);
-				holder.daily.setTypeface(typeface, Typeface.NORMAL);
-
-				break;
-
-			default:
-				break;
-			}
-
-	         if(versionUpdateDates.contains(appInfo.getRequestDate())) {
-	                holder.date.setTextColor(RED_TEXT);
-	                holder.active.setTextColor(RED_TEXT);
-	                holder.total.setTextColor(RED_TEXT);
-	                holder.activeTotal.setTextColor(RED_TEXT);
-	                holder.daily.setTextColor(RED_TEXT);
-
-	            } else {
-                    holder.date.setTextColor(BLACK_TEXT);
-                    holder.active.setTextColor(BLACK_TEXT);
-                    holder.total.setTextColor(BLACK_TEXT);
-                    holder.activeTotal.setTextColor(BLACK_TEXT);
-                    holder.daily.setTextColor(BLACK_TEXT);
-
-	            }
-
-			if(!appInfo.isSmoothingApplied()) {
-				holder.smooth.setVisibility(View.INVISIBLE);
-			} else {
-				holder.smooth.setVisibility(View.VISIBLE);
-			}
-
-		} else if (currentChart instanceof RatingChartType) {
-
-        	RatingsViewHolder holder = (RatingsViewHolder) baseHolder;
-
-			holder.date.setText(dateFormat.format(appInfo.getRequestDate()));
-			holder.avgrating.setText(appInfo.getAvgRatingString());
-			if(appInfo.getRating1Diff() > 0) {
-				holder.rating1.setText("+" + appInfo.getRating1Diff());
-			} else {
-				holder.rating1.setText(appInfo.getRating1Diff() + "");
-			}
-			if(appInfo.getRating2Diff() > 0) {
-				holder.rating2.setText("+" + appInfo.getRating2Diff());
-			} else {
-				holder.rating2.setText(appInfo.getRating2Diff() + "");
-			}
-			if(appInfo.getRating3Diff() > 0) {
-				holder.rating3.setText("+" + appInfo.getRating3Diff());
-			} else {
-				holder.rating3.setText(appInfo.getRating3Diff() + "");
-			}
-			if(appInfo.getRating4Diff() > 0) {
-				holder.rating4.setText("+" + appInfo.getRating4Diff());
-			} else {
-				holder.rating4.setText(appInfo.getRating4Diff() + "");
-			}
-			if(appInfo.getRating5Diff() > 0) {
-				holder.rating5.setText("+" + appInfo.getRating5Diff());
-			} else {
-				holder.rating5.setText(appInfo.getRating5Diff() + "");
-			}
-
-
-
-			Typeface typeface = holder.date.getTypeface();
-
-            if(versionUpdateDates.contains(appInfo.getRequestDate())) {
-			    holder.date.setTextColor(RED_TEXT);
-			    holder.avgrating.setTextColor(RED_TEXT);
-			    holder.rating1.setTextColor(RED_TEXT);
-                holder.rating2.setTextColor(RED_TEXT);
-                holder.rating3.setTextColor(RED_TEXT);
-                holder.rating4.setTextColor(RED_TEXT);
-                holder.rating5.setTextColor(RED_TEXT);
-
-			} else {
-                holder.date.setTextColor(BLACK_TEXT);
-                holder.avgrating.setTextColor(BLACK_TEXT);
-                holder.rating1.setTextColor(BLACK_TEXT);
-                holder.rating2.setTextColor(BLACK_TEXT);
-                holder.rating3.setTextColor(BLACK_TEXT);
-                holder.rating4.setTextColor(BLACK_TEXT);
-                holder.rating5.setTextColor(BLACK_TEXT);
-
-			}
-
-
-
-			switch ((RatingChartType)currentChart) {
-			case AVG_RATING:
-				holder.avgrating.setTypeface(typeface, Typeface.BOLD);
-				holder.rating1.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating2.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating3.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating4.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating5.setTypeface(typeface, Typeface.NORMAL);
-
-				break;
-			case RATINGS_1:
-				holder.avgrating.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating1.setTypeface(typeface, Typeface.BOLD);
-				holder.rating2.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating3.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating4.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating5.setTypeface(typeface, Typeface.NORMAL);
-
-				break;
-			case RATINGS_2:
-				holder.avgrating.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating1.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating2.setTypeface(typeface, Typeface.BOLD);
-				holder.rating3.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating4.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating5.setTypeface(typeface, Typeface.NORMAL);
-
-				break;
-			case RATINGS_3:
-				holder.avgrating.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating1.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating2.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating3.setTypeface(typeface, Typeface.BOLD);
-				holder.rating4.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating5.setTypeface(typeface, Typeface.NORMAL);
-
-				break;
-			case RATINGS_4:
-				holder.avgrating.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating1.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating2.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating3.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating4.setTypeface(typeface, Typeface.BOLD);
-				holder.rating5.setTypeface(typeface, Typeface.NORMAL);
-
-				break;
-			case RATINGS_5:
-				holder.avgrating.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating1.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating2.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating3.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating4.setTypeface(typeface, Typeface.NORMAL);
-				holder.rating5.setTypeface(typeface, Typeface.BOLD);
-
-				break;
-
-			default:
-				break;
-			}
-
-			holder.smooth.setVisibility(View.INVISIBLE);
-
-		}
-
-		return convertView;
-	}
-
-	static class DownloadsViewHolder {
-        public TextView smooth;
-		public TextView date;
-		TextView total;
-        TextView daily;
-        TextView active;
-        TextView activeTotal;
-
-    }
-
-	static class RatingsViewHolder {
-        public TextView smooth;
-		public TextView date;
-		TextView avgrating;
-		TextView rating1;
-		TextView rating2;
-		TextView rating3;
-		TextView rating4;
-		TextView rating5;
-
-    }
-	private TextView createTextView(String string, boolean bold, boolean weight) {
-		TextView view = new TextView(activity);
-		view.setText(string);
-		int top = (int) (2 * scale);
-		int left = (int) (2 * scale);
-		view.setPadding(left, top, left, top);
-		view.setTextColor(Color.parseColor("#555555"));
-		if(weight) {
-			view.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, .2f));
-		} else {
-			view.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		}
-		view.setGravity(Gravity.RIGHT);
-		if(bold) {
-			view.setTypeface(view.getTypeface(), Typeface.BOLD);
-		}
-
-		return view;
-	}
-
-
-	public Object getCurrentChart() {
+/*	public Object getCurrentChart() {
 		return currentChart;
 	}
 
 	public void setCurrentChart(Object currentChart) {
 		this.currentChart = currentChart;
 	}
-
+*/
 	public void setDownloadInfos(List<AppStats> downloadInfos) {
 		this.downloadInfos = downloadInfos;
 	}
@@ -391,7 +103,430 @@ public class ChartListAdapter extends BaseAdapter {
         return versionUpdateDates;
     }
 
+    @Override
+    public int getNumPages()
+    {
+      return 2;
+    }
 
+    @Override
+    public int getNumCharts(int page) throws IndexOutOfBoundsException
+    {
+      switch(page)
+      {
+        case 0:
+          return 5;
+        case 1:
+          return 7;
+      }
+      throw new IndexOutOfBoundsException("page="+page);
+    }
+    public void setOverallStats(AppStats overallStats) {
+	    this.overallStats = overallStats;
+    }
+
+    @Override
+    public String getChartTitle(int page, int column) throws IndexOutOfBoundsException
+    {
+      if(column==DATE)
+      {
+        return "";
+      }
+      switch (page)
+      {
+        case 0:
+        {
+          switch (column)
+          {
+          case TOTAL_DOWNLAODS:
+            return activity.getString(R.string.total_downloads);
+
+        case TOTAL_DOWNLAODS_BY_DAY:
+        	return activity.getString(R.string.downloads_day);
+
+        case ACTIVE_INSTALLS_PERCENT:
+        	return activity.getString(R.string.active_installs_percent);
+
+        case ACTIVE_INSTALLS_TOTAL:
+        	return activity.getString(R.string.active_installs);
+          }
+        }
+        break;
+        case 1:
+        {
+          switch (column)
+          {
+          case AVG_RATING:
+          	return activity.getString(R.string.average_rating);
+
+        case RATINGS_1:
+        case RATINGS_2:
+        case RATINGS_3:
+        case RATINGS_4:
+        case RATINGS_5:
+        	return activity.getString(R.string.ratings);
+          }
+          
+        }
+        break;
+      }
+      throw new IndexOutOfBoundsException("page="+page+" columnt="+column);
+      
+    }
+
+    @Override
+      protected boolean isSmothValue(int page, int position) {
+    	
+    	  return page==0?getItem(position).isSmoothingApplied():false;
+      }
+    @Override
+      protected boolean useSmothColumn(int page) {
+    	  return page==0;
+      }
+    @Override
+    public void updateChartValue(int position, int page, int column, TextView tv)
+        throws IndexOutOfBoundsException
+    {
+      AppStats appInfo = getItem(position);
+      if(column==DATE)
+      {
+        tv.setText(dateFormat.format(appInfo.getRequestDate()));
+        return;
+      }
+      int textColor=versionUpdateDates.contains(appInfo.getRequestDate())?RED_TEXT:BLACK_TEXT;
+      switch (page)
+      {
+        case 0:
+        {
+          
+          switch (column)
+          {
+            case TOTAL_DOWNLAODS:
+              tv.setText(appInfo.getTotalDownloads()+"");
+              tv.setTextColor(textColor);
+              return;
+            case ACTIVE_INSTALLS_TOTAL:
+              tv.setText(appInfo.getActiveInstalls() + "");
+              tv.setTextColor(textColor);
+              return;
+            case TOTAL_DOWNLAODS_BY_DAY:
+              tv.setText(appInfo.getDailyDownloads() + "");
+              tv.setTextColor(textColor);
+              return;
+            case ACTIVE_INSTALLS_PERCENT:
+              tv.setText(appInfo.getActiveInstallsPercentString());
+              tv.setTextColor(textColor);
+              return;
+          }
+        }
+        break;
+        case 1:
+        {
+          
+          switch (column)
+          {
+            case AVG_RATING:
+              tv.setText(appInfo.getAvgRatingString());
+              tv.setTextColor(textColor);
+              return;
+            case RATINGS_5:
+              if(appInfo.getRating5Diff() > 0) {
+                tv.setText("+" + appInfo.getRating5Diff());
+              } else {
+                tv.setText(appInfo.getRating5Diff() + "");
+              }
+              tv.setTextColor(textColor);
+              return;
+            case RATINGS_4:
+              if(appInfo.getRating4Diff() > 0) {
+                tv.setText("+" + appInfo.getRating4Diff());
+              } else {
+                tv.setText(appInfo.getRating4Diff() + "");
+              }
+              tv.setTextColor(textColor);
+              return;
+            case RATINGS_3:
+              if(appInfo.getRating3Diff() > 0) {
+                tv.setText("+" + appInfo.getRating3Diff());
+              } else {
+                tv.setText(appInfo.getRating3Diff() + "");
+              }
+              tv.setTextColor(textColor);
+              return;
+            case RATINGS_2:
+              if(appInfo.getRating2Diff() > 0) {
+                tv.setText("+" + appInfo.getRating2Diff());
+              } else {
+                tv.setText(appInfo.getRating2Diff() + "");
+              }
+              tv.setTextColor(textColor);
+              return;
+            case RATINGS_1:
+              if(appInfo.getRating1Diff() > 0) {
+                tv.setText("+" + appInfo.getRating1Diff());
+              } else {
+                tv.setText(appInfo.getRating1Diff() + "");
+              }
+              tv.setTextColor(textColor);
+              return;
+          }
+          
+        }
+        break;
+      }
+      throw new IndexOutOfBoundsException("page="+page+" columnt="+column);
+      
+    }
+    public static abstract class DevConValueCallbackHander implements ValueCallbackHander{
+      @Override
+      public Date getDate(Object appInfo) {
+          return ((AppStats)appInfo).getRequestDate();
+      }
+
+
+        @Override
+        public boolean isHeilightValue(Object current, Object previouse) {
+
+            if(previouse == null) {
+                return false;
+            }
+
+            AppStats cstats = ((AppStats)current);
+
+            if(cstats.getVersionCode() == 0) {
+                return false;
+            }
+
+            if(cstats.getVersionCode() < ((AppStats)previouse).getVersionCode()) {
+                return true;
+            }
+
+            return false;
+        }
+  }
+
+    @Override
+    protected View buildChart(Context context, Chart baseChart, List<?> statsForApp, int page,
+        int column) throws IndexOutOfBoundsException
+    {
+//    	Log.i(LOG_TAG,"buildChart p="+page+" c="+column);
+      ValueCallbackHander handler = null;
+      switch (page)
+      {
+        case 0:
+        {
+          switch (column)
+          {
+            case TOTAL_DOWNLAODS:
+
+              handler = new DevConValueCallbackHander() {
+                @Override
+                public double getValue(Object appInfo) {
+                  return ((AppStats)appInfo).getTotalDownloads();
+                }
+              };
+              return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
+
+            case TOTAL_DOWNLAODS_BY_DAY:
+
+              handler = new DevConValueCallbackHander() {
+                @Override
+                public double getValue(Object appInfo) {
+                  return ((AppStats)appInfo).getDailyDownloads();
+                }
+              };
+              return baseChart.buildBarChart(context, statsForApp.toArray(), handler, Integer.MIN_VALUE, 0);
+
+            case ACTIVE_INSTALLS_TOTAL:
+              handler = new DevConValueCallbackHander() {
+                @Override
+                public double getValue(Object appInfo) {
+                  return ((AppStats)appInfo).getActiveInstalls();
+                }
+              };
+              return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
+
+            case ACTIVE_INSTALLS_PERCENT:
+              handler = new DevConValueCallbackHander() {
+                @Override
+                public double getValue(Object appInfo) {
+                  return ((AppStats)appInfo).getActiveInstallsPercent();
+                }
+              };
+              return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
+            }
+
+          }
+        
+        break;
+        
+        case 1:
+        {
+          switch (column)
+          {
+            case AVG_RATING:
+
+              handler = new DevConValueCallbackHander() {
+                @Override
+                public double getValue(Object appInfo) {
+                  return ((AppStats)appInfo).getAvgRating();
+                }
+              };
+              return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
+
+            case RATINGS_1:
+
+              handler = new DevConValueCallbackHander() {
+                @Override
+                public double getValue(Object appInfo) {
+                  return ((AppStats)appInfo).getRating1Diff();
+                }
+              };
+              return baseChart.buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
+
+            case RATINGS_2:
+
+              handler = new DevConValueCallbackHander() {
+                @Override
+                public double getValue(Object appInfo) {
+                  return ((AppStats)appInfo).getRating2Diff();
+                }
+              };
+              return baseChart.buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
+            case RATINGS_3:
+
+              handler = new DevConValueCallbackHander() {
+                @Override
+                public double getValue(Object appInfo) {
+                  return ((AppStats)appInfo).getRating3Diff();
+                }
+              };
+              return baseChart.buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
+            case RATINGS_4:
+
+              handler = new DevConValueCallbackHander() {
+                @Override
+                public double getValue(Object appInfo) {
+                  return ((AppStats)appInfo).getRating4Diff();
+                }
+              };
+              return baseChart.buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
+            case RATINGS_5:
+
+              handler = new DevConValueCallbackHander() {
+                @Override
+                public double getValue(Object appInfo) {
+                  return ((AppStats)appInfo).getRating5Diff();
+                }
+              };
+              return baseChart.buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
+          }
+          
+        }
+        break;
+      }
+      throw new IndexOutOfBoundsException("page="+page+" columnt="+column);
+    }
+
+    public void setHeighestRatingChange(Integer heighestRatingChange)
+    {
+      this.heighestRatingChange = heighestRatingChange;
+    }
+
+    public void setLowestRatingChange(Integer lowestRatingChange)
+    {
+      this.lowestRatingChange = lowestRatingChange;
+    }
+
+		@Override
+    protected Drawable getChartTitleDrawable(int page, int column) {
+	      if(column==DATE)
+      {
+        return null;
+      }
+      switch (page)
+      {
+        case 0:
+        {
+          switch (column)
+          {
+            case TOTAL_DOWNLAODS:
+            case ACTIVE_INSTALLS_TOTAL:
+            case TOTAL_DOWNLAODS_BY_DAY:
+            case ACTIVE_INSTALLS_PERCENT:
+              return null;
+          }
+        }
+        break;
+        case 1:
+        {
+          switch (column)
+          {
+          case AVG_RATING:
+            return null;
+
+        case RATINGS_1:
+        	return activity.getResources().getDrawable(R.drawable.rating_1);
+        case RATINGS_2:
+        	return activity.getResources().getDrawable(R.drawable.rating_2);
+        case RATINGS_3:
+        	return activity.getResources().getDrawable(R.drawable.rating_3);
+        case RATINGS_4:
+        	return activity.getResources().getDrawable(R.drawable.rating_4);
+        case RATINGS_5:
+            return activity.getResources().getDrawable(R.drawable.rating_5);
+          }
+          
+        }
+        break;
+      }
+      throw new IndexOutOfBoundsException("page="+page+" columnt="+column);
+    }
+
+	@Override
+	public String getSubHeadLine(int page, int column) throws IndexOutOfBoundsException {
+		if (column == DATE) {
+			return "";
+		}
+		switch (page) {
+		case 0: {
+			switch (column) {
+			case TOTAL_DOWNLAODS:
+				return (overallStats != null) ? overallStats.getTotalDownloads() + "" : "";
+
+			case TOTAL_DOWNLAODS_BY_DAY:
+				return overallStats.getDailyDownloads() + "";
+
+			case ACTIVE_INSTALLS_PERCENT:
+				return overallStats.getActiveInstallsPercentString() + "%";
+
+			case ACTIVE_INSTALLS_TOTAL:
+				Preferences.saveShowChartHint(activity, false);
+				return overallStats.getActiveInstalls() + "";
+			}
+		}
+			break;
+		case 1: {
+			switch (column) {
+			case AVG_RATING:
+				return overallStats.getAvgRatingString() + "";
+
+			case RATINGS_1:
+				return overallStats.getRating1() + "";
+			case RATINGS_2:
+				return overallStats.getRating2() + "";
+			case RATINGS_3:
+				return overallStats.getRating3() + "";
+			case RATINGS_4:
+				return overallStats.getRating4() + "";
+			case RATINGS_5:
+				Preferences.saveShowChartHint(activity, false);
+				return overallStats.getRating5() + "";
+			}
+		}
+		}
+		throw new IndexOutOfBoundsException("page=" + page + " columnt=" + column);
+	}
 
 
 }
