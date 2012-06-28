@@ -96,4 +96,6 @@
     <string name="changelog_title">Changelog</string>
     <string name="changelog_thanks">Thank you for installing Andlytics!</string>
 
+    <string name="notification_title">Andlytics change detection</string>
+
 </resources>

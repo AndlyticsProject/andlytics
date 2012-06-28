@@ -1,15 +1,14 @@
 package com.github.andlyticsproject.sync;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.AppStatsDiff;
 import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.Main;
@@ -29,7 +28,7 @@ public class NotificationHandler {
         String ns = Context.NOTIFICATION_SERVICE;
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(ns);
 
-        String contentTitle = "Andlytics change detection";
+        String contentTitle = context.getString(R.string.notification_title);
         String contentText = "";
 
         boolean commentsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_COMMENTS, accountName);
@@ -49,13 +48,13 @@ public class NotificationHandler {
                     List<String> changeProperties = new ArrayList<String>();
 
                     if(commentsEnabled && diff.getCommentsChange() != 0) {
-                        changeProperties.add("comments");
+                        changeProperties.add(context.getString(R.string.comments));
                     }
                     if(ratingsEnabled && diff.getAvgRatingChange() != 0) {
-                        changeProperties.add("ratings");
+                        changeProperties.add(context.getString(R.string.ratings));
                     }
                     if(downloadsEnabled && diff.getDownloadsChange() != 0) {
-                        changeProperties.add("downloads");
+                        changeProperties.add(context.getString(R.string.downloads));
                     }
 
                     if(changeProperties.size() > 0) {
