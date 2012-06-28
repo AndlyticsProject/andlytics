@@ -55,7 +55,7 @@ import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.Utils;
 
 public class Main extends BaseActivity implements GhostSelectonChangeListener, AuthenticationCallback {
-	
+
 	/** Key for latest version code preference. */
 	private static final String LAST_VERSION_CODE_KEY = "last_version_code";
 
@@ -249,7 +249,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
             getAndlyticsApplication().setSkipMainReload(true);
 
         }
-        
+
      // show changelog
 		if (isUpdate()) {
 			showChangelog();
@@ -864,10 +864,11 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
     }
 
 
-    
+    //FIXME isUpdate
+
 	/**
 	 * checks if the app is started for the first time (after an update).
-	 * 
+	 *
 	 * @return <code>true</code> if this is the first start (after an update)
 	 *         else <code>false</code>
 	 */
@@ -891,7 +892,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 			return false;
 		}
 	}
-	
+
 	private void showChangelog() {
 		final int versionCode = Utils.getActualVersionCode(this);
 		final SharedPreferences sp = PreferenceManager
@@ -901,7 +902,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 			public void onClick(DialogInterface dialogInterface, int i) {
 				// Mark this version as read
 				sp.edit().putLong(LAST_VERSION_CODE_KEY, versionCode).commit();
-				
+
 				dialogInterface.dismiss();
 			}
 		}).show();
