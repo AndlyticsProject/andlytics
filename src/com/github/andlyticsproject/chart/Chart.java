@@ -26,10 +26,10 @@ public class Chart extends AbstractChart {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public enum ChartSet {
-		DOWNLOADS, RATINGS, ADMOB
+		RATINGS, DOWNLOADS, ADMOB
 	}
 
-	public enum AdmobChartType {
+/*	public enum AdmobChartType {
         REVENUE, EPC,REQUESTS, CLICKS, FILL_RATE, ECPM, IMPRESSIONS, CTR, HOUSEAD_CLICKS
     }
 
@@ -40,54 +40,14 @@ public class Chart extends AbstractChart {
 	public enum RatingChartType {
 		AVG_RATING, RATINGS_5, RATINGS_4, RATINGS_3, RATINGS_2, RATINGS_1
 	}
-
+*/
 	public interface ValueCallbackHander {
 		double getValue(Object appInfo);
 		Date getDate(Object appInfo);
         boolean isHeilightValue(Object appInfo, Object object);
 	}
 
-	public abstract class DevConValueCallbackHander implements ValueCallbackHander{
-	    @Override
-	    public Date getDate(Object appInfo) {
-	        return ((AppStats)appInfo).getRequestDate();
-	    }
 
-
-        @Override
-        public boolean isHeilightValue(Object current, Object previouse) {
-
-            if(previouse == null) {
-                return false;
-            }
-
-            AppStats cstats = ((AppStats)current);
-
-            if(cstats.getVersionCode() == 0) {
-                return false;
-            }
-
-            if(cstats.getVersionCode() < ((AppStats)previouse).getVersionCode()) {
-                return true;
-            }
-
-            return false;
-        }
-	}
-
-   public abstract class AdmobValueCallbackHander implements ValueCallbackHander{
-        @Override
-        public Date getDate(Object appInfo) {
-            return ((Admob)appInfo).getDate();
-        }
-
-
-        @Override
-        public boolean isHeilightValue(Object current, Object previouse) {
-
-            return false;
-        }
-    }
 
 	private static final int MAX_BAR_VALUES = Integer.MAX_VALUE;
 
@@ -279,244 +239,9 @@ public class Chart extends AbstractChart {
 
 	}
 
-	public View buildDownloadChart(Context context, List<AppStats> statsForApp, DownloadChartType chartType) {
-
-		ValueCallbackHander handler = null;
-		View result = null;
-
-		switch (chartType) {
-		case TOTAL_DOWNLAODS:
-
-			handler = new DevConValueCallbackHander() {
-				@Override
-				public double getValue(Object appInfo) {
-					return ((AppStats)appInfo).getTotalDownloads();
-				}
-			};
-			result = buildLineChart(context, statsForApp.toArray(), handler);
-			break;
-
-		case TOTAL_DOWNLAODS_BY_DAY:
-
-			handler = new DevConValueCallbackHander() {
-				@Override
-				public double getValue(Object appInfo) {
-					return ((AppStats)appInfo).getDailyDownloads();
-				}
-			};
-			result = buildBarChart(context, statsForApp.toArray(), handler, Integer.MIN_VALUE, 0);
-			break;
-
-		case ACTIVE_INSTALLS_TOTAL:
-			handler = new DevConValueCallbackHander() {
-				@Override
-				public double getValue(Object appInfo) {
-					return ((AppStats)appInfo).getActiveInstalls();
-				}
-			};
-			result = buildLineChart(context, statsForApp.toArray(), handler);
-			break;
-
-		case ACTIVE_INSTALLS_PERCENT:
-			handler = new DevConValueCallbackHander() {
-				@Override
-				public double getValue(Object appInfo) {
-					return ((AppStats)appInfo).getActiveInstallsPercent();
-				}
-			};
-			result = buildLineChart(context, statsForApp.toArray(), handler);
-			break;
-		default:
-			break;
-		}
-
-		return result;
-
-	}
-
-
-    public View buildRatingChart(Context context, List<AppStats> statsForApp, RatingChartType chartType, Integer heighestRatingChange, Integer lowestRatingChange) {
-
-		ValueCallbackHander handler = null;
-		View result = null;
-
-		switch (chartType) {
-		case AVG_RATING:
-
-			handler = new DevConValueCallbackHander() {
-				@Override
-				public double getValue(Object appInfo) {
-					return ((AppStats)appInfo).getAvgRating();
-				}
-			};
-			result = buildLineChart(context, statsForApp.toArray(), handler);
-			break;
-
-		case RATINGS_1:
-
-			handler = new DevConValueCallbackHander() {
-				@Override
-				public double getValue(Object appInfo) {
-					return ((AppStats)appInfo).getRating1Diff();
-				}
-			};
-			result = buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
-			break;
-
-		case RATINGS_2:
-
-			handler = new DevConValueCallbackHander() {
-				@Override
-				public double getValue(Object appInfo) {
-					return ((AppStats)appInfo).getRating2Diff();
-				}
-			};
-			result = buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
-			break;
-		case RATINGS_3:
-
-			handler = new DevConValueCallbackHander() {
-				@Override
-				public double getValue(Object appInfo) {
-					return ((AppStats)appInfo).getRating3Diff();
-				}
-			};
-			result = buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
-			break;
-		case RATINGS_4:
-
-			handler = new DevConValueCallbackHander() {
-				@Override
-				public double getValue(Object appInfo) {
-					return ((AppStats)appInfo).getRating4Diff();
-				}
-			};
-			result = buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
-			break;
-		case RATINGS_5:
-
-			handler = new DevConValueCallbackHander() {
-				@Override
-				public double getValue(Object appInfo) {
-					return ((AppStats)appInfo).getRating5Diff();
-				}
-			};
-			result = buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
-			break;
-
-		default:
-			break;
-		}
-
-		return result;
-
-	}
 
 
     public String getDateString(Date date) {
         return dateFormat.format(date);
     }
-
-    public View buildAdmobChart(Context context, List<Admob> statsForApp, AdmobChartType chartType) {
-        ValueCallbackHander handler = null;
-        View result = null;
-
-        switch (chartType) {
-        case REVENUE:
-
-            handler = new AdmobValueCallbackHander() {
-                @Override
-                public double getValue(Object appInfo) {
-                    return ((Admob)appInfo).getRevenue();
-                }
-            };
-            result = buildLineChart(context, statsForApp.toArray(), handler);
-            break;
-          case EPC:
-
-            handler = new AdmobValueCallbackHander() {
-                @Override
-                public double getValue(Object appInfo) {
-                    return ((Admob)appInfo).getEpc();
-                }
-            };
-            result = buildLineChart(context, statsForApp.toArray(), handler);
-            break;
-
-        case IMPRESSIONS:
-
-            handler = new AdmobValueCallbackHander() {
-                @Override
-                public double getValue(Object appInfo) {
-                    return ((Admob)appInfo).getImpressions();
-                }
-            };
-            result = buildLineChart(context, statsForApp.toArray(), handler);
-            break;
-
-        case CLICKS:
-
-            handler = new AdmobValueCallbackHander() {
-                @Override
-                public double getValue(Object appInfo) {
-                    return ((Admob)appInfo).getClicks();
-                }
-            };
-            result = buildLineChart(context, statsForApp.toArray(), handler);
-            break;
-
-        case CTR:
-            handler = new AdmobValueCallbackHander() {
-                @Override
-                public double getValue(Object appInfo) {
-                    return ((Admob)appInfo).getCtr();
-                }
-            };
-            result = buildLineChart(context, statsForApp.toArray(), handler);
-            break;
-
-        case ECPM:
-            handler = new AdmobValueCallbackHander() {
-                @Override
-                public double getValue(Object appInfo) {
-                    return ((Admob)appInfo).getEcpm();
-                }
-            };
-            result = buildLineChart(context, statsForApp.toArray(), handler);
-            break;
-        case FILL_RATE:
-            handler = new AdmobValueCallbackHander() {
-                @Override
-                public double getValue(Object appInfo) {
-                    return ((Admob)appInfo).getFillRate();
-                }
-            };
-            result = buildLineChart(context, statsForApp.toArray(), handler);
-            break;
-        case HOUSEAD_CLICKS:
-            handler = new AdmobValueCallbackHander() {
-                @Override
-                public double getValue(Object appInfo) {
-                    return ((Admob)appInfo).getHouseAdClicks();
-                }
-            };
-            result = buildLineChart(context, statsForApp.toArray(), handler);
-            break;
-        case REQUESTS:
-            handler = new AdmobValueCallbackHander() {
-                @Override
-                public double getValue(Object appInfo) {
-                    return ((Admob)appInfo).getRequests();
-                }
-            };
-            result = buildLineChart(context, statsForApp.toArray(), handler);
-            break;
-        default:
-            break;
-        }
-
-        return result;
-
-    }
-
 }

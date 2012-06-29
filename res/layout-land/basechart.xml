@@ -6,81 +6,70 @@
 	android:layout_height="fill_parent">
 
 	<RelativeLayout
-		android:id="@+id/admob_header_frame"
+		android:id="@+id/base_chart_header_frame"
 		android:layout_width="fill_parent"
 		android:layout_height="45dp"
 		android:background="@color/andActionbarBackground">
+
 
 		<RelativeLayout
 			android:layout_centerInParent="true"
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent">
 
-
 			<RelativeLayout
-				android:id="@+id/admob_button_back"
+				android:id="@+id/base_chart_button_back"
 				android:layout_width="wrap_content"
 				android:layout_height="fill_parent"
+				
 				android:minWidth="45dp">
 				<ImageView
 					android:layout_width="32dp"
 					android:layout_height="32dp"
-					android:id="@+id/admob_app_icon"
+					android:id="@+id/base_chart_app_icon"
 					android:src="@drawable/default_app_icon"
 					android:layout_centerInParent="true" />
 			</RelativeLayout>
 
 			<ImageView style="@style/ActionBarSeparator" 
-				android:id="@+id/admob_back_button_spacer"				
-				android:layout_toRightOf="@+id/admob_button_back" />								
+				android:id="@+id/base_chart_back_button_spacer"
+				android:layout_toRightOf="@+id/base_chart_button_back" />
 
 			<com.github.andlyticsproject.chart.ChartTextSwitcher
-				android:id="@+id/admob_admob_type"
+				android:id="@+id/base_chart_base_chart_type"
 				android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
-				android:paddingTop="5dp" 
-				android:layout_centerVertical="true" 
-				android:layout_toLeftOf="@+id/admob_config_button_spacer" 
-				android:layout_toRightOf="@+id/admob_back_button_spacer" />
+				android:paddingTop="5dp" android:layout_centerVertical="true" 
+				android:layout_toLeftOf="@+id/base_chart_toolbar_spacer" 
+				android:layout_toRightOf="@+id/base_chart_back_button_spacer">
+			</com.github.andlyticsproject.chart.ChartTextSwitcher>
 
-			<ImageView style="@style/ActionBarSeparator" 
-				android:id="@+id/admob_config_button_spacer"	
-				android:layout_toLeftOf="@+id/admob_button_config" />
-				
-			<RelativeLayout
-				android:id="@+id/admob_button_config"
-				android:layout_height="fill_parent"
-				android:layout_toLeftOf="@+id/admob_toobar_spacer"								
-				android:layout_width="wrap_content" android:minWidth="45dp">
+			<ImageView style="@style/ActionBarSeparator"
+				android:id="@+id/base_chart_toolbar_spacer" 
+				android:layout_toLeftOf="@+id/base_chart_toobar_switcher_container" />				
 
-				<ImageView
-					android:layout_height="wrap_content"
-					android:layout_width="wrap_content"
-					android:layout_centerInParent="true"
-					android:src="@drawable/icon_settings" />
-
-			</RelativeLayout>		
-				
-			<ImageView style="@style/ActionBarSeparator" 
-				android:id="@+id/admob_toobar_spacer"
-				android:layout_toLeftOf="@+id/admob_toobar_switcher" />				
-
-			<ViewSwitcher
-				android:id="@+id/admob_toobar_switcher"
+			
+			<LinearLayout
+				android:id="@+id/base_chart_toobar_switcher_container"
 				android:layout_width="wrap_content"
 				android:layout_alignParentRight="true"
+				android:layout_height="fill_parent">
+			<ViewSwitcher
+				android:id="@+id/base_chart_toobar_switcher"
+				android:layout_width="wrap_content"
 				android:layout_centerVertical="true"
 				android:layout_height="fill_parent"
 				android:minWidth="45dp"
 				android:outAnimation="@anim/activity_fade_out"
-				android:inAnimation="@anim/activity_fade_in">
-
+				android:inAnimation="@anim/activity_fade_in"
+				android:visibility="gone">
+						
 				<RelativeLayout
-					android:id="@+id/admob_button_refresh"
+					android:id="@+id/base_chart_button_refresh"
 					android:layout_gravity="center" 
 					android:layout_height="fill_parent" 
 					android:layout_width="fill_parent">
-					
+
 					<ImageView
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
@@ -91,7 +80,7 @@
 					android:layout_gravity="center" 
 					android:layout_height="fill_parent" 
 					android:layout_width="fill_parent">
-			
+
 					<ImageView
 						android:id="@+id/loading"
 						android:layout_width="wrap_content"
@@ -100,9 +89,10 @@
 						android:src="@drawable/loader2" />
 				</RelativeLayout>
 			</ViewSwitcher>
+			</LinearLayout>
 
 
-				
+
 
 
 
@@ -110,38 +100,32 @@
 
 	</RelativeLayout>
 	<View
-		android:id="@+id/admob_header_frame_spacer"
+		android:id="@+id/base_chart_header_frame_spacer"
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
 		android:background="#33B5E5"
-		android:layout_below="@+id/admob_header_frame"/>
+		android:layout_below="@+id/base_chart_header_frame"/>
 
 	<LinearLayout
 		android:orientation="vertical"
 		android:layout_width="fill_parent"
-		android:layout_below="@+id/admob_header_frame_spacer"
+		android:layout_below="@+id/base_chart_header_frame_spacer"
 		android:layout_height="fill_parent"
-		android:id="@+id/admob_main_frame"
-		android:layout_above="@+id/admob_buttonbarSpacer">
+		android:id="@+id/base_chart_main_frame"
+		android:layout_above="@+id/base_chart_buttonbarSpacer">
 
 
 		<RelativeLayout
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:visibility="gone">
-			
 			<ViewSwitcher
-				android:id="@+id/admob_viewswitcher_config"
+				android:id="@+id/base_chart_viewswitcher_config"
 				android:layout_width="fill_parent"
 				android:layout_height="fill_parent">
-				<include
-					android:id="@+id/admob_config"
-					layout="@layout/admob_config" />
-				<include
-					android:id="@+id/admob_config2"
-					layout="@layout/admob_config2" />
 
 			</ViewSwitcher>
+		    
 
 
 		</RelativeLayout>
@@ -161,15 +145,16 @@
 				<TextView
 					style="@style/MainTableText"
 					android:layout_height="wrap_content"
-					android:id="@+id/admob_timeframe"
+					android:id="@+id/base_chart_timeframe"
 					android:layout_width="wrap_content"
-					android:layout_marginTop="5dp"
 					android:textSize="14dp"
-					android:visibility="visible" android:layout_centerHorizontal="true" android:text=""></TextView>
+					android:layout_marginTop="5dp"
+					android:visibility="visible" android:layout_centerHorizontal="true" android:text="" ></TextView>
 
 				<com.github.andlyticsproject.view.ChartGallery
+					android:layout_marginTop="25dp"
 					xmlns:android="http://schemas.android.com/apk/res/android"
-					android:id="@+id/admob_gallery"
+					android:id="@+id/base_chart_gallery"
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent"
 					android:clipChildren="true"
@@ -187,34 +172,35 @@
 			<RelativeLayout
 				android:layout_width="fill_parent"
 				android:layout_height="fill_parent"
+				android:visibility="gone"
 				android:layout_weight="0.5">
 
 				<LinearLayout
-					android:id="@+id/admob_bottom_frame"
+					android:id="@+id/base_chart_bottom_frame"
 					android:orientation="vertical"
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent">
-					
 
-	
+
+
 					<RelativeLayout
 						android:layout_width="fill_parent"
 						android:layout_height="fill_parent"
 						android:visibility="gone">
 						<include
-							android:id="@+id/admob_config3"
-							layout="@layout/admob_config3" />
-					</RelativeLayout>					
+							android:id="@+id/base_chart_config"
+							layout="@layout/base_chart_config" />
+					</RelativeLayout>
 
 					<RelativeLayout
-						android:id="@+id/admob_list_frame"
+						android:id="@+id/base_chart_list_frame"
 						android:layout_width="fill_parent"
 						android:layout_height="fill_parent">
 
 						<ListView
 							android:layout_width="fill_parent"
 							android:layout_height="fill_parent"
-							android:id="@+id/admob_list"
+							android:id="@+id/base_chart_list"
 							android:cacheColorHint="#00000000"
 							android:paddingLeft="5dp"
 							android:paddingRight="5dp"
@@ -227,7 +213,7 @@
 							android:layout_width="fill_parent"
 							android:layout_height="wrap_content"
 							android:paddingTop="35dp"
-							android:id="@+id/admob_one_entry_hint"
+							android:id="@+id/base_chart_one_entry_hint"
 							android:visibility="invisible">
 							<LinearLayout
 								android:orientation="vertical"
@@ -248,7 +234,7 @@
 								<TextView
 									style="@style/MainTableText"
 									android:text="@string/one_entry_hint_demo"
-									android:id="@+id/admob_one_entry_link"
+									android:id="@+id/base_chart_one_entry_link"
 									android:paddingLeft="5dp"
 									android:paddingRight="5dp"
 									android:layout_height="wrap_content"
@@ -261,11 +247,11 @@
 							</LinearLayout>
 						</ScrollView>
 					</RelativeLayout>
-	
-					
+
+
 				</LinearLayout>
 				<View
-					android:id="@+id/admob_listSpacer"
+					android:id="@+id/base_chart_listSpacer"
 					android:layout_width="fill_parent"
 					android:layout_height="2dp"
 					android:background="#33B5E5" />
@@ -280,13 +266,13 @@
 	<RelativeLayout
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:id="@+id/admob_app_status_line_frame"
+		android:id="@+id/base_chart_app_status_line_frame"
 		android:orientation="horizontal"
-		android:layout_above="@+id/admob_buttonbarSpacer">
+		android:layout_above="@+id/base_chart_buttonbarSpacer">
 
 		<TextView
 			style="@style/MainTableText"
-			android:id="@+id/admob_status_line"
+			android:id="@+id/base_chart_status_line"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:paddingLeft="10dp"
@@ -294,7 +280,7 @@
 			android:layout_centerVertical="true" />
 
 		<ProgressBar
-			android:id="@+id/admob_status_line_progress"
+			android:id="@+id/base_chart_status_line_progress"
 			style="?android:attr/android:progressBarStyleSmall"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -309,7 +295,7 @@
 	</RelativeLayout>
 
 	<View
-		android:id="@+id/admob_buttonbarSpacer"
+		android:id="@+id/base_chart_buttonbarSpacer"
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
 		android:layout_above="@+id/tabbar_buttonbar"
@@ -318,11 +304,12 @@
 	<include
 		android:id="@+id/tabbar_buttonbar"
 		layout="@layout/tabbar" />
-  
+
 	<ImageView
 		android:layout_height="wrap_content"
 		android:src="@drawable/shadow_up"
 		android:layout_width="fill_parent"
 		android:scaleType="fitXY"
-		android:layout_above="@+id/admob_buttonbarSpacer" />
+		android:layout_above="@+id/base_chart_buttonbarSpacer" />
+
 </RelativeLayout>
