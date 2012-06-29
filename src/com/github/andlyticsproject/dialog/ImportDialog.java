@@ -69,21 +69,17 @@ public class ImportDialog extends Dialog implements OnClickListener {
 
                 if (!android.os.Environment.getExternalStorageState().equals(
                                 android.os.Environment.MEDIA_MOUNTED)) {
-                    Toast.makeText(context, "SD-Card not mounted, can't import!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, context.getString(R.string.import_no_sdcard), Toast.LENGTH_LONG).show();
 
                 } else {
 
                     if (importFileNames.size() == 0) {
-
-                        Toast.makeText(context, "No app selected, can't import!", Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(context, context.getString(R.string.import_no_app), Toast.LENGTH_LONG).show();
                     } else {
-
                         Intent intent = new Intent(context, ImportService.class);
                         intent.putExtra(ImportService.FILE_NAMES, importFileNames.toArray(new String[importFileNames.size()]));
                         intent.putExtra(ImportService.ACCOUNT_NAME, accountName);
                         context.startService(intent);
-
                         dismiss();
                     }
 

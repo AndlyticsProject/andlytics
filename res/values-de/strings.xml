@@ -77,7 +77,7 @@
     <string name="percentage">Prozent</string>
     <string name="daily">Änderung</string>
     <string name="downloads_day">Downloads pro Tag</string>
-    <string name="active_installs_percent">Aktive Installationen in Prozent</string>
+    <string name="active_installs_percent">Installationen in Prozent</string>
     <string name="swipe">Swipen um zur nächsten Übersicht zu kommen -></string>
 
     <string name="admob">Admob</string>
@@ -97,5 +97,24 @@
     <string name="changelog_thanks">Danke für die Nutzung von Andlytics!</string>
 
     <string name="notification_title">Andlytics Benachrichtigung</string>
+
+    <string name="export_start">Andlytics Benachrichtigung</string>
+    <string name="export_finish">Andlytics Benachrichtigung</string>
+    <string name="import_start">Andlytics Benachrichtigung</string>
+    <string name="import_f">Andlytics Benachrichtigung</string>
+
+    <string name="import_">Import</string>
+    <string name="import_no_sdcard">Kann nicht importieren, keine SD-Karte erkannt!</string>
+    <string name="import_no_app">Keine App zum importieren ausgewählt!</string>
+    <string name="importing">Importiere</string>
+    <string name="import_started">Import gestartet</string>
+    <string name="import_finished">Import beendet</string>
+    <string name="import_error">fehler beim Importieren</string>
+	<string name="export_">Export</string>
+	<string name="export_no_sdcard">Kann nicht exportieren, keine SD-Karte erkannt!</string>
+	<string name="export_no_app">Keine App zum exportieren ausgewählt!</string>
+    <string name="export_started">Export gestartet</string>
+    <string name="export_finished">Export beendet</string>
+    <string name="export_saved_to">Gespeichert unter</string>
 
 </resources>
