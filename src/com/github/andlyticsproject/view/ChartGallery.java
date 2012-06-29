@@ -8,6 +8,7 @@ import android.widget.Gallery;
 
 public class ChartGallery extends Gallery {
 
+//  private static String LOG_TAG=ChartGallery.class.toString();
 	private static final float SWIPE_MIN_DISTANCE = 100;
 
 	private boolean interceptTouchEvents;
@@ -16,6 +17,7 @@ public class ChartGallery extends Gallery {
 
 	private boolean ignoreLayoutCalls;
 
+	private boolean allowChangePageSliding=true;
 	public ChartGallery(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
@@ -84,6 +86,23 @@ public class ChartGallery extends Gallery {
 
 		}
 	}
+  
+  @Override
+  public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
+  {
+    if (!allowChangePageSliding)
+    {
+      int[] tag = (int[]) getSelectedView().getTag();
+      if (tag != null)
+      {
+        if (distanceX < 0 && tag[1] <= 1)
+          return true;
+        if (distanceX > 0 && tag[1] >= ( tag[2] - 1 ))
+          return true;
+      }
+    }
+    return super.onScroll(e1, e2, distanceX, distanceY);
+  }
 
 	public void setInterceptTouchEvents(boolean interceptTouchEvents) {
 		this.interceptTouchEvents = interceptTouchEvents;
@@ -108,6 +127,10 @@ public class ChartGallery extends Gallery {
 	public boolean isIgnoreLayoutCalls() {
 		return ignoreLayoutCalls;
 	}
-
-
+  
+  public void setAllowChangePageSliding(boolean allowChangePageSliding)
+  {
+    this.allowChangePageSliding = allowChangePageSliding;
+  }
+  
 }

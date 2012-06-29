@@ -361,7 +361,7 @@ protected void setCurrentChart(int page,int column)
 		int pos = 0;
 		for (int i = 0; i < myAdapter.getNumPages(); i++)
 			for (int j = 1; j < myAdapter.getNumCharts(i); j++) {
-				int pageColumn[] = new int[2];
+				int pageColumn[] = new int[3];
 				View chartView = myAdapter.buildChart(this, chart, statsForApp, i, j);
 				/*
 				 * if(chartView==null) {
@@ -373,6 +373,7 @@ protected void setCurrentChart(int page,int column)
 				chartView.setLayoutParams(params);
 				pageColumn[0] = i;
 				pageColumn[1] = j;
+				pageColumn[2] = myAdapter.getNumCharts(i);
 				if (i == page && j == column)
 					position = pos;
 				pos++;
@@ -417,5 +418,9 @@ protected void setCurrentChart(int page,int column)
 	}
 
 	protected abstract String getChartHint();
+	public void setAllowChangePageSliding(boolean allowChangePageSliding)
+	{
+	  chartGallery.setAllowChangePageSliding(allowChangePageSliding);
+	}
 
 }

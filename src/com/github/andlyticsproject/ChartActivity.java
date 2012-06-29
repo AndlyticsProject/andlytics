@@ -116,6 +116,7 @@ public class ChartActivity extends BaseChartActivity {
 			currentChartSet = ChartSet.DOWNLOADS;
 		}
 		historyListAdapter.setCurrentChart(currentChartSet.ordinal(),1);
+		setAllowChangePageSliding(false);
 
 
 	}
