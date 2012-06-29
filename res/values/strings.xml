@@ -98,4 +98,18 @@
 
     <string name="notification_title">Andlytics change detection</string>
 
+    <string name="import_">Import</string>
+    <string name="import_no_sdcard">SD-Card not mounted, can\'t import!</string>
+    <string name="import_no_app">No app selected, can\'t import!</string>
+    <string name="importing">Importing</string>
+    <string name="import_started">Import started</string>
+    <string name="import_finished">Import finished</string>
+    <string name="import_error">Error during import</string>
+	<string name="export_">Export</string>
+	<string name="export_no_sdcard">SD-Card not mounted, can\'t export!</string>
+	<string name="export_no_app">No app selected, can\'t export!</string>
+	<string name="export_started">Export started</string>
+    <string name="export_finished">Export finished</string>
+    <string name="export_saved_to">Saved to</string>
+
 </resources>
