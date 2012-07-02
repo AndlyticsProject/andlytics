@@ -9,7 +9,6 @@
 	android:orientation="vertical">
 
 	<LinearLayout
-		android:id="@+id/LinearLayout01"
 		android:layout_height="0dp"
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:orientation="vertical"

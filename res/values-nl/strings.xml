@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello"> </string>
     <string name="app_name">Andlytics</string>
     <string name="app_name_admob">AdMob voor Andlytics</string>
-    <string name="app_name_headline_full">ANDLYTICS</string>
-    <string name="app_name_headline_light">ANDLYTICS LITE</string>
 
-    <string name="autosync_off">auto sync is uitgeschakeld</string>
-    <string name="autosync_on">auto sync is uitgeschakeld</string>
-
-    <string name="one_entry_hint_desc">andlytics verzameld data in de tijd. zodra meer data beschikbaar is kunt u terugkomen om een zinvole grafiek te zien.\n\ngewoonlijk worden download statistieken elke 24-48 uur bijgewerkt.</string>
+    <string name="one_entry_hint_desc">andlytics verzameld data in de tijd. zodra meer data beschikbaar is kunt u terugkomen om een zinvole grafiek te zien.\n\ngewoonlijk worden download statistieken elke 24&#8211;48 uur bijgewerkt.</string>
     <string name="one_entry_hint_demo"><u>bekijk grafiek met demo data</u></string>
 
-    <string name="pro_desc">Andlytics donatie / pro sleutel ontsluit de extra\'s notificatie bij veranderingen en ook export en import van statistieken.\n\nNB Google levert geen stabiele API om de getallen te verkrijgen. Daardoor kan het zijn dat Andlytics niet naar behoren werkt als er weer veranderingen in Google Play zijn.\n\nIn dat geval proberen we de veranderingen door te voeren <b>maar we kunnen niet garanderen dat de app in de toekomst functioneert</b>.\n\nNiet beschikbaar in: Bulgarije Estland Griekenland Hongarije Kazachstan Letland Litouwen Luxemburg Filippijnen Roemenië Servië Slowakije Slovenië Zuid-Afrika Thailand</string>
     <string name="crash_desc">Er is een onverwachte fout opgetreden.\n\nHelp ons dit op te lossen door ons het rapport met de foutgegevens op te sturen. Informatie over de foutmelding (stacktrace) en informatie over uw toestel zoals de naam van de fabrikant, het modelnummer, besturingssysteem etc. zal worden verstuurd om ons te helpen het probleem te identificeren.\n\nBedankt!\n\n</string>
     <string name="newversion_desc"><b>Er is een onverwachte fout opgetreden,waarschijnlijk doordat externe interface is gewijzigd.</b>\n\nMaar het goede nieuws is dat er een nieuwe versie van Andlytics beschikbaar is op Google Play.\n\nWerk deze versie bij voordat u dit probleem rapporteert.\n\nBedankt!\n\n\n</string>
     <string name="account_required">android ontwikkelaar-account vereist</string>
@@ -24,7 +17,6 @@
     <string name="total_downloads">downloads in totaal</string>
     <string name="active_installs">actieve installaties</string>
     <string name="admob_revenue">admob opbrengst</string>
-    <string name="admob_epc">epc</string>
     <string name="admob_requests">admob verzoeken</string>
     <string name="average_rating">gemiddelde beoordeling</string>
     <string name="ratings">beoordelingen</string>
@@ -77,7 +69,7 @@
     <string name="login">inlognaam</string>
     <string name="remove_admob">Verwijder AdMob site koppeling</string>
     <string name="remove_admob_app">Verwijder AdMob waarden voor deze app</string>
-    <string name="loading_site">Ophalen van site lijst...</string>
+    <string name="loading_site">Ophalen van site lijst&#8230;</string>
     <string name="select_admob_site">selecteer AdMob site om aan deze app te koppelen</string>
     <string name="choose_app">Kies app</string>
     <string name="admob_required">AdMob account vereist</string>
@@ -94,6 +86,7 @@
 
     <string name="admob">admob</string>
     <string name="admob__revenue">opbrengst</string>
+    <string name="admob__epc">epc</string>
     <string name="admob__requests">verzoeken</string>
     <string name="admob__clicks">clicks</string>
     <string name="admob__fill_rate">vul ratio</string>
@@ -103,5 +96,8 @@
     <string name="admob__house_ad_clicks">house ad clicks</string>
     <string name="admob__charts_available">AdMob grafieken beschikbaar</string>
     <string name="last_update">bijgewerkt op</string>
+
+    <string name="changelog_title">Changelog</string>
+    <string name="changelog_thanks">Thank you for installing Andlytics!</string>
 
 </resources>

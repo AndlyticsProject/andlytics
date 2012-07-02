@@ -3,9 +3,9 @@ package com.github.andlyticsproject.model;
 import java.util.List;
 
 public class AdmobList {
-    
+
     private List<Admob> admobs;
-    
+
     private Admob overallStats;
 
     public void setOverallStats(Admob overallStats) {

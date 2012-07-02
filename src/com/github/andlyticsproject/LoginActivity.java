@@ -1,5 +1,7 @@
 package com.github.andlyticsproject;
 
+import java.io.IOException;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -14,9 +16,8 @@ import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.IOException;
-
 public class LoginActivity extends BaseActivity {
+
 
 
 	private static final String TAG = "Andlytics";
@@ -46,7 +47,6 @@ public class LoginActivity extends BaseActivity {
 				addNewGoogleAccount();
 			}
 		});
-
 	}
 
 	@Override
@@ -97,9 +97,9 @@ public class LoginActivity extends BaseActivity {
 					Bundle bundle = future.getResult();
 					bundle.keySet();
 					Log.d(TAG, "account added: " + bundle);
-					
+
 					showAccountList();
-					
+
 				} catch (OperationCanceledException e) {
 					Log.d(TAG, "addAccount was canceled");
 				} catch (IOException e) {

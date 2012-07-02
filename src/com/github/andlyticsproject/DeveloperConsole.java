@@ -1,17 +1,11 @@
 package com.github.andlyticsproject;
 
-
-import android.content.Context;
-import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.SocketException;
 import java.net.URI;
@@ -52,12 +46,14 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.content.Context;
+import android.util.Log;
 
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
@@ -77,7 +73,7 @@ public class DeveloperConsole {
 
 	private static final String PARAM_XSRFTOKEN = "<<xsrftoken>>";
 
-	private static final String GET_FULL_ASSET_INFO_FOR_USER_REQUEST = "7|2|8|https://play.google.com/apps/publish/gwt/|3B7A8BF63F2CA8EABDB009A5A41DB7E4|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.AppEditorService|getProductInfosForUser|java.lang.String/2004016611|J|1|2|3|4|5|6|3|7|8|8|0|A|Bk|";
+	private static final String GET_FULL_ASSET_INFO_FOR_USER_REQUEST = "7|2|8|https://play.google.com/apps/publish/gwt/|F760B0D40756F1F82FE1034DCEDAF8DA|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.AppEditorService|getProductInfosForUser|java.lang.String/2004016611|J|1|2|3|4|5|6|3|7|8|8|0|A|Bk|";
 
 	private static final String GET_ASSET_FOR_USER_COUNT_REQUEST = "7|0|4|https://play.google.com/apps/publish/gwt/|11B29A336607683DE538737452FFF924|com.google.wireless.android.vending.developer.shared.AppEditorService|getAssetForUserCount|1|2|3|4|0|";
 

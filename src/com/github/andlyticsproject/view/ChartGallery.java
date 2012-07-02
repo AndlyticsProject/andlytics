@@ -7,15 +7,17 @@ import android.view.MotionEvent;
 import android.widget.Gallery;
 
 public class ChartGallery extends Gallery {
-	
+
+//  private static String LOG_TAG=ChartGallery.class.toString();
 	private static final float SWIPE_MIN_DISTANCE = 100;
 
 	private boolean interceptTouchEvents;
-	
+
 	private boolean useMultiImageFling;
-	
+
 	private boolean ignoreLayoutCalls;
 
+	private boolean allowChangePageSliding=true;
 	public ChartGallery(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
@@ -45,11 +47,11 @@ public class ChartGallery extends Gallery {
 
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
-		
-		
+
+
 		if(useMultiImageFling) {
 			return super.onFling(e1, e2, velocityX, velocityY);
-		
+
 		} else {
 			boolean result = false;
 
@@ -63,27 +65,44 @@ public class ChartGallery extends Gallery {
 
 					rightKey = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT);
 					onKeyUp(KeyEvent.KEYCODE_DPAD_RIGHT, rightKey);
-					
+
 					result = true;
 
 				} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE) {
-					
+
 					// hack - send event to simulate left key press
 					KeyEvent leftKey = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT);
 					onKeyDown(KeyEvent.KEYCODE_DPAD_LEFT, leftKey);
 
 					leftKey = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT);
 					onKeyUp(KeyEvent.KEYCODE_DPAD_LEFT, leftKey);
-					
+
 					result = true;
 				}
-				
+
 			}
 
 			return result;
-			
+
 		}
 	}
+  
+  @Override
+  public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
+  {
+    if (!allowChangePageSliding)
+    {
+      int[] tag = (int[]) getSelectedView().getTag();
+      if (tag != null)
+      {
+        if (distanceX < 0 && tag[1] <= 1)
+          return true;
+        if (distanceX > 0 && tag[1] >= ( tag[2] - 1 ))
+          return true;
+      }
+    }
+    return super.onScroll(e1, e2, distanceX, distanceY);
+  }
 
 	public void setInterceptTouchEvents(boolean interceptTouchEvents) {
 		this.interceptTouchEvents = interceptTouchEvents;
@@ -108,6 +127,10 @@ public class ChartGallery extends Gallery {
 	public boolean isIgnoreLayoutCalls() {
 		return ignoreLayoutCalls;
 	}
-
-
+  
+  public void setAllowChangePageSliding(boolean allowChangePageSliding)
+  {
+    this.allowChangePageSliding = allowChangePageSliding;
+  }
+  
 }

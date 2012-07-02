@@ -1,4 +1,5 @@
 package com.github.andlyticsproject.db;
+
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -6,16 +7,16 @@ import java.util.HashMap;
 
 public final class AdmobTable implements BaseColumns {
 
-    
+
     public static final String DATABASE_TABLE_NAME = "admob";
-    
+
     public static final Uri CONTENT_URI = Uri.parse("content://" + AndlyticsContentProvider.AUTHORITY + "/"
                     + DATABASE_TABLE_NAME);
 
     public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.andlytics." + DATABASE_TABLE_NAME;
 
     public static final String KEY_ROWID = "_id";
-    
+
     public static final String KEY_SITE_ID = "site_id";
     public static final String KEY_REQUESTS = "requests";
     public static final String KEY_HOUSEAD_REQUESTS = "housead_requests";
@@ -52,14 +53,14 @@ public final class AdmobTable implements BaseColumns {
         + AdmobTable.KEY_CPC_REVENUE + " float,"
         + AdmobTable.KEY_CPM_REVENUE + " float,"
         + AdmobTable.KEY_EXCHANGE_DOWNLOADS + " integer,"
-        + AdmobTable.KEY_DATE + " date not null)";  
-        
-            
+        + AdmobTable.KEY_DATE + " date not null)";
+
+
     public static HashMap<String, String> PROJECTION_MAP;
-    
+
     static {
         PROJECTION_MAP = new HashMap<String, String>();
-        
+
         PROJECTION_MAP.put(KEY_ROWID,KEY_ROWID);
         PROJECTION_MAP.put(KEY_SITE_ID,KEY_SITE_ID);
         PROJECTION_MAP.put(KEY_REQUESTS,KEY_REQUESTS);
@@ -79,6 +80,6 @@ public final class AdmobTable implements BaseColumns {
         PROJECTION_MAP.put(KEY_EXCHANGE_DOWNLOADS,KEY_EXCHANGE_DOWNLOADS);
         PROJECTION_MAP.put(KEY_DATE,KEY_DATE);
     }
-    
-    
+
+
 }

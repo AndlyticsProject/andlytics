@@ -14,7 +14,7 @@ public class ChartGalleryAdapter extends BaseAdapter {
 		this.setViews(views);
 	}
 
-	
+
 	public View getView(int position, View convertView, ViewGroup parent) {
 		return getItem(position);
 	}
@@ -47,5 +47,5 @@ public class ChartGalleryAdapter extends BaseAdapter {
 		return views;
 	}
 
-	
+
 }

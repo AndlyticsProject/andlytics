@@ -43,7 +43,7 @@ public class ChartTextSwitcher extends ViewSwitcher {
 	        if (!(child instanceof RelativeLayout)) {
 	            throw new IllegalArgumentException(
 	                    "ChartRatingSwitcher children must be instances of RelativeLayout");
-	        } 
+	        }
 
 	        super.addView(child, index, params);
 	    }
@@ -85,7 +85,7 @@ public class ChartTextSwitcher extends ViewSwitcher {
 	        	i.setVisibility(View.VISIBLE);
 	        	i.setImageDrawable(image);
 	        }
-	        
+
 	        TextView t = (TextView) r.getChildAt(1);
 	        t.setText(text);	    }
 	}

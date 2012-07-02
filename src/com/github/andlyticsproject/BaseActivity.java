@@ -1,12 +1,12 @@
 package com.github.andlyticsproject;
 
+import org.acra.ACRA;
+import org.acra.ErrorReporter;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,11 +23,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
-
-import java.io.IOException;
-
-import org.acra.ACRA;
-import org.acra.ErrorReporter;
 
 import com.github.andlyticsproject.admob.AdmobAccountRemovedException;
 import com.github.andlyticsproject.admob.AdmobAskForPasswordException;
@@ -49,8 +43,6 @@ import com.github.andlyticsproject.exception.SignupException;
 
 public class BaseActivity extends Activity {
 
-	private static final int REQUEST_AUTHENTICATE = 0;
-
     private static final String TAG = BaseActivity.class.getSimpleName();
 
 	private View downloadsButton;
@@ -60,10 +52,6 @@ public class BaseActivity extends Activity {
 	protected String iconFilePath;
 	protected String accountname;
 	private View ratingsButton;
-
-	public boolean isProVersion() {
-		return AndlyticsApp.isProVersion(this);
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,13 +75,8 @@ public class BaseActivity extends Activity {
 
 	}
 
-	public void setupTabbar() {
-
-		downloadsButton = findViewById(R.id.tabbar_button_downloads);
-		ratingsButton = findViewById(R.id.tabbar_button_ratings);
-		commentsButton = findViewById(R.id.tabbar_button_comments);
-		admobButton = findViewById(R.id.tabbar_button_back);
-
+	public void updateTabbarButtons()
+	{
 		if (this instanceof ChartActivity) {
 			ChartSet currentChartSet = ((ChartActivity) this).getCurrentChartSet();
 			if (currentChartSet.equals(ChartSet.DOWNLOADS)) {
@@ -120,6 +103,15 @@ public class BaseActivity extends Activity {
             downloadsButton.setSelected(false);
             ratingsButton.setSelected(false);
 		}
+	}
+	public void setupTabbar() {
+
+		downloadsButton = findViewById(R.id.tabbar_button_downloads);
+		ratingsButton = findViewById(R.id.tabbar_button_ratings);
+		commentsButton = findViewById(R.id.tabbar_button_comments);
+		admobButton = findViewById(R.id.tabbar_button_back);
+
+		updateTabbarButtons();
 
 		downloadsButton.setOnClickListener(new OnClickListener() {
 
@@ -199,7 +191,7 @@ public class BaseActivity extends Activity {
 			intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		}
 		if(skipDataReload) {
-		    getAndlyticsApplication().setSkipMainReload(true); 
+		    getAndlyticsApplication().setSkipMainReload(true);
 		}
 
 		startActivity(intent);
@@ -228,24 +220,24 @@ public class BaseActivity extends Activity {
 					accountname + " is not an android developer account, sign up at:\n\n" + e.getMessage(),
 					Toast.LENGTH_LONG).show();
 		} else if (e instanceof AuthenticationException || e instanceof NoCookieSetException) {
-			
+
 			Toast.makeText(BaseActivity.this,
 					"authentication failed for: " + accountname,
 					Toast.LENGTH_LONG).show();
 
 		} else if (e instanceof AdmobRateLimitExceededException) {
-            
+
             Toast.makeText(BaseActivity.this,
                     "Can't load Admob data because Admob has restricted the number of requests from this app, try again later.",
                     Toast.LENGTH_LONG).show();
 
         } else if (e instanceof AdmobAskForPasswordException) {
-            
+
             Log.w(TAG, "ask for admob credentials");
             getAndlyticsApplication().setSkipMainReload(true);
-            
+
 		} else if (e instanceof AdmobAccountRemovedException) {
-            
+
             Toast.makeText(BaseActivity.this,
                     "AdMob account \"" + ((AdmobAccountRemovedException)e).getAccountName() + "\" is missing. If this happens repeatedly try moving Andlytics from sdcard to internal storage.",
                     Toast.LENGTH_LONG).show();
@@ -254,120 +246,120 @@ public class BaseActivity extends Activity {
                             Toast.LENGTH_LONG).show();
 
         } else if (e instanceof AdmobInvalidRequestException) {
-            
+
             Toast.makeText(BaseActivity.this, "Error while requesting AdMob API", Toast.LENGTH_LONG).show();
 
         } else if (e instanceof AdmobInvalidTokenException) {
-            
-            
+
+
             Toast.makeText(BaseActivity.this,
                     "Error while authenticating admob account. Please try again later.",
                     Toast.LENGTH_LONG).show();
 
 		} else if (e instanceof AdmobGenericException) {
-            
+
 		    Log.w(TAG, e.getMessage(), e);
-		    
+
             Toast.makeText(BaseActivity.this,
                     "Unabled to load Admob data, please try again later.",
                     Toast.LENGTH_LONG).show();
-			
+
         } else if (e instanceof DeveloperConsoleException) {
-            
+
             int appVersionCode = getAppVersionCode(this);
             if(Preferences.getLatestVersionCode(this) > appVersionCode) {
                 showNewVersionDialog(e);
             } else {
-                
+
                 showCrashDialog(e);
             }
 
-        
+
 		} else if (e instanceof InvalidJSONResponseException) {
-			
+
 		    int appVersionCode = getAppVersionCode(this);
             if(Preferences.getLatestVersionCode(this) > appVersionCode) {
                 showNewVersionDialog(e);
             } else {
-                
+
                 showGoogleErrorDialog(e);
             }
 
         } else if (e instanceof MultiAccountAcception) {
-            
+
                 showAspErrorDialog(e);
-            
+
 
         }
 	}
 
 	private void showNewVersionDialog(Exception e) {
         if(!isFinishing()) {
-            
+
             CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
             builder.setTitle("Sorry, update required.");
             builder.setMessage(R.string.newversion_desc);
             builder.setPositiveButton("update", new DialogInterface.OnClickListener() {
-    
+
                 public void onClick(DialogInterface dialog, int which) {
-                    
+
                     Intent goToMarket = null;
                     goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.github.andlyticsproject"));
                     startActivity(goToMarket);
-                    
+
                     dialog.dismiss();
                 }
-    
+
             });
             builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-    
+
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                 }
-    
+
             });
-    
+
             builder.create().show();
         }
-	            
+
     }
 
     protected void showCrashDialog(final Exception e) {
-		
+
 		if(!isFinishing()) {
-			
+
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
 			builder.setTitle("Sorry...");
 			builder.setMessage(R.string.crash_desc);
 			builder.setPositiveButton("send report", new DialogInterface.OnClickListener() {
-	
+
 				public void onClick(DialogInterface dialog, int which) {
-				    
+
 				    if(!isFinishing()) {
-				        
+
 				        Thread thread = new Thread(new Runnable() {
-				            
+
 				            @Override
 				            public void run() {
 				                sendAracReport(e, true);
 				            }
-				            
+
 				        });
 				        thread.run();
 				        dialog.dismiss();
 				    }
-	
+
 				}
-	
+
 			});
 			builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-	
+
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
 				}
-	
+
 			});
-	
+
 			builder.create().show();
 		}
 
@@ -376,58 +368,23 @@ public class BaseActivity extends Activity {
 
     private void sendAracReport(Exception e, boolean userTriggered) {
         ACRA.init(getApplication());
-        if(!userTriggered) {
-            ErrorReporter.getInstance().setUserComment("silent");
-        }
         ErrorReporter.getInstance().handleSilentException(e);
         ErrorReporter.getInstance().disable();
     }
 
-   protected void showProDialog() {
-         
-        if(!isFinishing()) {
-            
-            CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
-            builder.setTitle("Andlytics Donate / Pro Key");
-            builder.setMessage(R.string.pro_desc);
-            builder.setPositiveButton("buy pro key", new DialogInterface.OnClickListener() {
-    
-                public void onClick(DialogInterface dialog, int which) {
-                    
-                    Intent goToMarket = null;
-                    goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.github.andlyticsproject.pro"));
-                    startActivity(goToMarket);
-                    
-                    dialog.dismiss();
-                }
-    
-            });
-            builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-    
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-    
-            });
-    
-            builder.create().show();
-        }
-    }
-
-	
 	protected void showGoogleErrorDialog(final Exception e) {
-		
+
 		if(!isFinishing()) {
 
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
 			builder.setTitle("Sorry... ");
 			builder.setMessage("Updates are currently not possible, probably because the remote interface changed.\n\nPlease help us to fix this by sending us error report data. Information about the error (stacktrace) and information about your device such as device manufacturer's name, device model number, operating system, etc. will be sent to help us identifying the problem.\n\nThank you!");
 			builder.setPositiveButton("send report", new DialogInterface.OnClickListener() {
-	
+
 				public void onClick(DialogInterface dialog, int which) {
-	
+
 					Thread thread = new Thread(new Runnable() {
-	
+
 						@Override
 						public void run() {
 						    sendAracReport(e, true);
@@ -436,31 +393,31 @@ public class BaseActivity extends Activity {
 					thread.run();
 					dialog.dismiss();
 				}
-	
+
 			});
 			builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-	
+
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
 				}
-	
+
 			});
-	
+
 			builder.create().show();
-		
+
 		}
 
 	}
-	
+
     protected void showAspErrorDialog(final Exception e) {
-        
+
         if(!isFinishing()) {
 
             CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
             builder.setTitle("Multiple Developer Accounts");
             builder.setMessage("Your account is linked to multiple developer consoles. This feature is not supported in andlytics.\n\nYou can unlink additional accounts or ask Google for a public app stats API at: \n\nhttp://support.google.com/googleplay\n\nSorry :(");
             builder.setPositiveButton("logout", new DialogInterface.OnClickListener() {
-    
+
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     Preferences.removeAccountName(BaseActivity.this);
@@ -470,10 +427,10 @@ public class BaseActivity extends Activity {
                     overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
 
                 }
-    
+
             });
             builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-    
+
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     Preferences.removeAccountName(BaseActivity.this);
@@ -482,21 +439,21 @@ public class BaseActivity extends Activity {
                     startActivity(intent);
                     overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
                 }
-    
+
             });
-    
+
             builder.create().show();
-        
+
         }
 
-    }	
-	
+    }
+
 	public ContentAdapter getDbAdapter() {
 		return getAndlyticsApplication().getDbAdapter();
 	}
 
 	protected void authenticateAccountFromPreferences(boolean invalidateToken, AuthenticationCallback callback) {
-		
+
 		String accountName = Preferences.getAccountName(this);
 
 		if (accountName != null) {
@@ -521,25 +478,24 @@ public class BaseActivity extends Activity {
 	private void authenticateAccount(final AccountManager manager, final Account account, final AuthenticationCallback callback) {
 
 		Preferences.saveAccountName(this, account.name);
-		
+
 		AccountManager accountManager = AccountManager.get(this.getApplicationContext());
 
         final AccountManagerCallback<Bundle> myCallback = new AccountManagerCallback<Bundle>() {
 
-            @SuppressWarnings("unchecked")
             public void run(final AccountManagerFuture<Bundle> arg0) {
                 try {
 
                     String authToken = arg0.getResult().getString(
                             AccountManager.KEY_AUTHTOKEN);
 
-                    if (authToken != null) {            
-                                            //do something with the auth token    
+                    if (authToken != null) {
+                                            //do something with the auth token
                     //  got token form manager - set in application an exit
                         getAndlyticsApplication().setAuthToken(authToken);
-                       
+
                         runOnUiThread(new Runnable() {
-                            
+
                             @Override
                             public void run() {
                                 callback.authenticationSuccess();
@@ -547,25 +503,25 @@ public class BaseActivity extends Activity {
                         });
 
                     } else {
-                        
+
                         Log.e(TAG, "auth token is null, authentication failed");
                                                    //not expected at all
                     }
 
-                } catch (Exception e) {     
+                } catch (Exception e) {
                     getAndlyticsApplication().setSkipMainReload(true);
                     Log.e(TAG, "error during authentication", e);
                                             //error
                 }
-                
+
             }
 
         };
-        
+
 
         accountManager.getAuthToken(account,
                         Constants.AUTH_TOKEN_TYPE_ANDROID_DEVLOPER,null, BaseActivity.this, myCallback, null);
-		
+
         /*
 
 		Bundle bundle;
@@ -573,7 +529,7 @@ public class BaseActivity extends Activity {
 			bundle = manager.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVLOPER, true, null, null).getResult();
 
 			if (bundle.containsKey(AccountManager.KEY_INTENT)) {
-				
+
 				// ask user for permission - launch account manager intent
 				Intent intent = bundle.getParcelable(AccountManager.KEY_INTENT);
 				int flags = intent.getFlags();
@@ -588,7 +544,7 @@ public class BaseActivity extends Activity {
 				//  got token form manager - set in application an exit
 				String authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
 				getAndlyticsApplication().setAuthToken(authToken);
-				
+
 				//manager.invalidateAuthToken(Constants.ACCOUNT_TYPE_GOOGLE, authToken);
 
 
@@ -613,7 +569,7 @@ public class BaseActivity extends Activity {
 			getAndlyticsApplication().setRunningAuthenticationRequestIntent(false);
 
 			if (resultCode == RESULT_OK) {
-				
+
 				AsyncTask<Void, Void, Void> t = new AsyncTask<Void, Void, Void>() {
 
 					@Override
@@ -626,8 +582,8 @@ public class BaseActivity extends Activity {
 					protected void onPostExecute(Void result) {
 						onPostAuthentication();
 					}
-					
-					
+
+
 				};
 				t.execute();
 
@@ -637,7 +593,7 @@ public class BaseActivity extends Activity {
 			}
 		}
 	}*/
-	
+
 	protected void showLoadingIndecator(ViewSwitcher switcher) {
         Animation loadingAnim = AnimationUtils.loadAnimation(this, R.anim.loading);
         loadingAnim.setInterpolator(new LinearInterpolator());
@@ -655,14 +611,14 @@ public class BaseActivity extends Activity {
 	public AndlyticsApp getAndlyticsApplication() {
 		return (AndlyticsApp) getApplication();
 	}
-	
+
 	protected void onPostAuthentication() {
 	}
-	
+
     @Override
     public void onBackPressed() {
         if(this instanceof ChartActivity ||
-            this instanceof AdmobActivity || 
+            this instanceof AdmobActivity ||
             this instanceof CommentsActivity) {
             commentsButton.setSelected(false);
             downloadsButton.setSelected(false);
@@ -686,5 +642,4 @@ public class BaseActivity extends Activity {
         }
         return 0;
     }
-
 }

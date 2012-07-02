@@ -15,10 +15,9 @@
 	    android:paddingTop="15dp"
 	    android:text="@string/notification_trigger"
 	    android:textStyle="bold" >
-</TextView>
+    </TextView>
 
 	<TextView
-	    android:id="@+id/notification_dialog_change_title"
 	    style="@style/MainTableText"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
@@ -26,7 +25,7 @@
 	    android:paddingBottom="5dp"
 	    android:paddingTop="5dp"
 	    android:text="@string/disable_notifications" >
-</TextView>
+    </TextView>
 
 	<RelativeLayout
 		android:layout_width="fill_parent"

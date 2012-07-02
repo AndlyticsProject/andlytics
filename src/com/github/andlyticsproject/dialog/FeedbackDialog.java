@@ -1,6 +1,5 @@
 package com.github.andlyticsproject.dialog;
 
-
 import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
@@ -50,7 +49,7 @@ public class FeedbackDialog extends Dialog {
 
 		/**
 		 * Set the Dialog message from String
-		 * 
+		 *
 		 * @param title
 		 * @return
 		 */
@@ -61,7 +60,7 @@ public class FeedbackDialog extends Dialog {
 
 		/**
 		 * Set the Dialog message from resource
-		 * 
+		 *
 		 * @param title
 		 * @return
 		 */
@@ -72,7 +71,7 @@ public class FeedbackDialog extends Dialog {
 
 		/**
 		 * Set the Dialog title from resource
-		 * 
+		 *
 		 * @param title
 		 * @return
 		 */
@@ -83,7 +82,7 @@ public class FeedbackDialog extends Dialog {
 
 		/**
 		 * Set the Dialog title from String
-		 * 
+		 *
 		 * @param title
 		 * @return
 		 */
@@ -94,7 +93,7 @@ public class FeedbackDialog extends Dialog {
 
 		/**
 		 * Set the positive button resource and it's listener
-		 * 
+		 *
 		 * @param positiveViewText
 		 * @param listener
 		 * @return
@@ -107,7 +106,7 @@ public class FeedbackDialog extends Dialog {
 
 		/**
 		 * Set the positive button text and it's listener
-		 * 
+		 *
 		 * @param positiveViewText
 		 * @param listener
 		 * @return
@@ -120,7 +119,7 @@ public class FeedbackDialog extends Dialog {
 
 		/**
 		 * Set the negative button resource and it's listener
-		 * 
+		 *
 		 * @param negativeViewText
 		 * @param listener
 		 * @return
@@ -133,7 +132,7 @@ public class FeedbackDialog extends Dialog {
 
 		/**
 		 * Set the negative button text and it's listener
-		 * 
+		 *
 		 * @param negativeViewText
 		 * @param listener
 		 * @return
@@ -159,9 +158,9 @@ public class FeedbackDialog extends Dialog {
 			Editable etext = input.getText();
 			int position = etext.length();  // end of buffer, for instance
 			Selection.setSelection(etext, position);
-			
+
 			dialog.setInputField(input);
-			
+
 			dialog.addContentView(layout, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 
 			// set the dialog title
@@ -175,25 +174,25 @@ public class FeedbackDialog extends Dialog {
 								public void onClick(View v) {
 
 								    final String msg = input.getText().toString();
-								    
+
 				                    Thread thread = new Thread(new Runnable() {
 
 				                        @Override
 				                        public void run() {
 				                            ACRA.init(application);
-				                            ErrorReporter.getInstance().setUserComment(msg);
+				                            
 				                            ErrorReporter.getInstance().handleSilentException(new FeedbackException(""));
 				                            ErrorReporter.getInstance().disable();
 				                        }
 				                    });
 				                    thread.run();
-				                    
+
 				                    input.setText(defaultMessage);
 				                    Editable etext = input.getText();
 				                    int position = etext.length();  // end of buffer, for instance
 				                    Selection.setSelection(etext, position);
 
-								    
+
 									positiveViewClickListener.onClick(dialog, DialogInterface.BUTTON_POSITIVE);
 								}
 							});
@@ -223,7 +222,7 @@ public class FeedbackDialog extends Dialog {
 			}
 			dialog.setContentView(layout);
 
-			
+
 			return dialog;
 		}
 

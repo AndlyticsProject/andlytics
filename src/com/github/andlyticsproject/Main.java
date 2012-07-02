@@ -1,25 +1,5 @@
 package com.github.andlyticsproject;
 
-
-
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ViewSwitcher;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,17 +13,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewSwitcher;
+
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.dialog.AutosyncDialog;
 import com.github.andlyticsproject.dialog.ExportDialog;
-import com.github.andlyticsproject.dialog.FeedbackDialog;
 import com.github.andlyticsproject.dialog.GhostDialog;
+import com.github.andlyticsproject.dialog.GhostDialog.GhostSelectonChangeListener;
 import com.github.andlyticsproject.dialog.ImportDialog;
 import com.github.andlyticsproject.dialog.NotificationsDialog;
-import com.github.andlyticsproject.dialog.FeedbackDialog.FeedbackDialogBuilder;
-import com.github.andlyticsproject.dialog.GhostDialog.GhostSelectonChangeListener;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.InvalidJSONResponseException;
 import com.github.andlyticsproject.exception.NetworkException;
@@ -53,8 +51,13 @@ import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.sync.AutosyncHandler;
 import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
+import com.github.andlyticsproject.util.ChangelogBuilder;
+import com.github.andlyticsproject.util.Utils;
 
 public class Main extends BaseActivity implements GhostSelectonChangeListener, AuthenticationCallback {
+
+	/** Key for latest version code preference. */
+	private static final String LAST_VERSION_CODE_KEY = "last_version_code";
 
     public static final String TAG = Main.class.getSimpleName();
     private View buttonRefresh;
@@ -193,13 +196,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
             @Override
             public void onClick(View v) {
-
-                if(!isProVersion()) {
-                    showProDialog();
-                } else {
-                    (new LoadExportDialog()).execute();
-                }
-
+            	(new LoadExportDialog()).execute();
             }
         });
 
@@ -207,11 +204,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
             @Override
             public void onClick(View v) {
-                if(!isProVersion()) {
-                    showProDialog();
-                } else {
-                    (new LoadImportDialog()).execute();
-                }
+            	(new LoadImportDialog()).execute();
             }
         });
 
@@ -219,11 +212,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
             @Override
             public void onClick(View v) {
-                if(!isProVersion()) {
-                    showProDialog();
-                } else {
-                    (new LoadNotificationDialog()).execute();
-                }
+            	(new LoadNotificationDialog()).execute();
             }
         });
 
@@ -247,6 +236,10 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
         }
 
+     // show changelog
+		if (isUpdate()) {
+			showChangelog();
+		}
     }
 
     @Override
@@ -432,12 +425,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
             } else {
                 new LoadDbEntries().execute(false);
-
-                if(Preferences.getProVersionHint(Main.this) && !isProVersion()) {
-                    showProDialog();
-                    Preferences.saveProVersionHint(Main.this, false);
-                }
-
             }
 
         }
@@ -857,6 +844,48 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
     }
 
 
+    //FIXME isUpdate
 
+	/**
+	 * checks if the app is started for the first time (after an update).
+	 *
+	 * @return <code>true</code> if this is the first start (after an update)
+	 *         else <code>false</code>
+	 */
+	private boolean isUpdate() {
+		// Get the versionCode of the Package, which must be different
+		// (incremented) in each release on the market in the
+		// AndroidManifest.xml
+		final int versionCode = Utils.getActualVersionCode(this);
+
+		final SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		final long lastVersionCode = prefs.getLong(LAST_VERSION_CODE_KEY, 0);
+
+		if (versionCode != lastVersionCode) {
+			Log.i(TAG, "versionCode " + versionCode
+					+ " is different from the last known version "
+					+ lastVersionCode);
+			return true;
+		} else {
+			Log.i(TAG, "versionCode " + versionCode + " is already known");
+			return false;
+		}
+	}
+
+	private void showChangelog() {
+		final int versionCode = Utils.getActualVersionCode(this);
+		final SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		ChangelogBuilder.create(this, new Dialog.OnClickListener() {
+
+			public void onClick(DialogInterface dialogInterface, int i) {
+				// Mark this version as read
+				sp.edit().putLong(LAST_VERSION_CODE_KEY, versionCode).commit();
+
+				dialogInterface.dismiss();
+			}
+		}).show();
+	}
 
 }

@@ -1,0 +1,5 @@
+- Corretto problema autenticazione
+- Funzioni "pro" ora disponibili gratuitamente (l'app è ora open source)
+- Nuove grafiche
+- EPC per AdMob
+- Nuove lingue: Italiano, Spagnolo, Tedesco, Olandese

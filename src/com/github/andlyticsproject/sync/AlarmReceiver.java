@@ -1,6 +1,5 @@
 package com.github.andlyticsproject.sync;
 
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.BroadcastReceiver;
@@ -20,13 +19,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        
+
         Log.d(TAG, "onReceive called at:: " + new Date(System.currentTimeMillis()).toGMTString());
 
         final AccountManager manager = AccountManager.get(context);
         final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
         for (Account account : accounts) {
-            
+
             boolean syncAutomatically = ContentResolver.getSyncAutomatically(account, Constants.ACCOUNT_AUTHORITY);
             if(syncAutomatically) {
                 Bundle extras = new Bundle();

@@ -4,52 +4,51 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 public class AppStats {
-    
+
 	private int totalDownloads;
-	
+
 	private int activeInstalls;
 
 	private int activeInstallsDiff;
-	
+
 	private int numberOfComments;
 
 	private int numberOfCommentsDiff;
-	
+
 	private Date requestDate;
-	
+
 	private int dailyDownloads;
-	
+
 	private boolean smoothingApplied;
 
 	private Integer versionCode;
-	
+
 	private Integer rating1 = 0;
 
 	private Integer rating2 = 0;
-	
+
 	private Integer rating3 = 0;
-	
+
 	private Integer rating4 = 0;
-	
+
 	private Integer rating5 = 0;
 
 	private Integer rating1Diff = 0;
 
 	private Integer rating2Diff = 0;
-	
+
 	private Integer rating3Diff = 0;
-	
+
 	private Integer rating4Diff = 0;
-	
+
 	private Integer rating5Diff = 0;
-	
+
 	private float avgRating;
-	
+
     private float avgRatingDiff;
-	
+
 	private int ratingCount;
 
 	private int ratingCountDiff;
@@ -65,15 +64,15 @@ public class AppStats {
 	private String activeInstallsPercentString;
 
     private String avgRatingDiffString;
-	
+
 	public AppStats(){}
-	
+
 	/**
 	 * Copy Constructor
 	 *
 	 * @param appStats a <code>AppStats</code> object
 	 */
-	public AppStats(AppStats appStats) 
+	public AppStats(AppStats appStats)
 	{
 	    this.totalDownloads = appStats.totalDownloads;
 	    this.activeInstalls = appStats.activeInstalls;
@@ -100,7 +99,7 @@ public class AppStats {
 	    this.setActiveInstallsPercentString(appStats.getActiveInstallsPercentString());
 	    this.versionCode = appStats.versionCode;
 	}
-	
+
 	public void init() {
 		calcAvgRating();
 		calcAvgRatingString();
@@ -111,7 +110,7 @@ public class AppStats {
 		calcActiveInstallsPercentString();
 		calcAvgRatingDiffString();
 	}
-	
+
 	public int getTotalDownloads() {
 		return totalDownloads;
 	}
@@ -161,19 +160,17 @@ public class AppStats {
 	}
 
 
-	public void setRating(Map<Integer, Integer> rating) {
-		
-		if(rating.size() > 0) {
-			this.rating1 = rating.get(1);
-			this.rating2 = rating.get(2);
-			this.rating3 = rating.get(3);
-			this.rating4 = rating.get(4);
-			this.rating5 = rating.get(5);
-		}
+	public void setRating(Integer rating1, Integer rating2, Integer rating3,
+			Integer rating4, Integer rating5) {
+		this.rating1 = rating1;
+		this.rating2 = rating2;
+		this.rating3 = rating3;
+		this.rating4 = rating4;
+		this.rating5 = rating5;
 	}
 
 	public void addRating(int i, int value) {
-		
+
 		switch (i) {
 		case 1:
 			this.rating1 = value;
@@ -198,20 +195,20 @@ public class AppStats {
 	}
 
 	public float getAvgRating() {
-		
+
 		return avgRating;
-		
+
 	}
-	
+
 	public void calcAvgRating() {
-		
+
 		float ratings = 0;
 		float count = 0;
-		
+
 		for (int i = 1; i < 6; i++) {
-		
+
 			int value = 0;
-			
+
 			switch (i) {
 			case 1:
 				value = rating1;
@@ -232,7 +229,7 @@ public class AppStats {
 			default:
 				break;
 			}
-			
+
 			ratings += i * value;
 			count += value;
 		}
@@ -245,29 +242,29 @@ public class AppStats {
 	}
 
 	public int getRatingCount() {
-		
+
 		return ratingCount;
-		
+
 	}
-	
+
 
 	public void calcRatingCount() {
 		this.ratingCount = rating1 + rating2 + rating3 + rating4 + rating5;
-		
+
 	}
-	
+
 	public void calcAvgRatingString() {
 		BigDecimal ratingBigDecimal = new BigDecimal(getAvgRating());
 		ratingBigDecimal = ratingBigDecimal.setScale(3, BigDecimal.ROUND_HALF_UP);
 		this.setAvgRatingString(ratingBigDecimal.toPlainString());
 	}
-	
+
 	public void calcAvgRatingDiffString() {
         BigDecimal ratingBigDecimal = new BigDecimal(getAvgRatingDiff());
         ratingBigDecimal = ratingBigDecimal.setScale(3, BigDecimal.ROUND_HALF_UP);
         this.setAvgRatingDiffString(ratingBigDecimal.toPlainString());
     }
-	
+
 	public String getAvgRatingString() {
 		return this.avgRatingString;
 	}
@@ -282,12 +279,12 @@ public class AppStats {
 		int sum = getRatingCount();
 
 		for (int i = 1; i < 6; i++) {
-			
+
 			BigDecimal ratingBigDecimal = new BigDecimal(20);
 			if(sum != 0) {
-				
+
 				Integer rate = null;
-				
+
 				switch (i) {
 				case 1:
 					rate = rating1;
@@ -308,7 +305,7 @@ public class AppStats {
 				default:
 					break;
 				}
-				
+
 				if(rate == null || rate < 1) {
 					rate = 0;
 				}
@@ -319,7 +316,7 @@ public class AppStats {
 		}
 	}
 
-	
+
 	public String getActiveInstallsPercentString() {
 		return activeInstallsPercentString;
 	}
@@ -329,18 +326,18 @@ public class AppStats {
 		percentBigDecimal = percentBigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
 		this.setActiveInstallsPercentString(percentBigDecimal.toPlainString());
 	}
-	
+
 	public String getRequestDateString() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return dateFormat.format(getRequestDate());
 	}
-	
+
 	public double getActiveInstallsPercent(){
-		
+
 		if(totalDownloads < 1) {
 			return 0;
 		}
-		
+
 		return (activeInstalls * 100.0) / totalDownloads;
 
 	}
@@ -388,10 +385,10 @@ public class AppStats {
 	public String getNumberOfCommentsPercentString() {
 		return numberOfCommentsPercentString;
 	}
-	
+
 
 	public void calcNumberOfCommentsPercentString() {
-		
+
 		int numberOfComments = getNumberOfComments();
 		float percent = 0.0f;
 		if(totalDownloads > 0) {
@@ -405,7 +402,7 @@ public class AppStats {
 	public String getRatingCountPercentString() {
 		return ratingCountPercentString;
 	}
-	
+
 	public void calcRatingCountPercentString() {
 		int numberOfComments = getRatingCount();
 		float percent = 0.0f;
@@ -416,7 +413,7 @@ public class AppStats {
 		percentBigDecimal = percentBigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
 		this.ratingCountPercentString = percentBigDecimal.toPlainString();
 	}
-	
+
 
 	public Integer getRating1() {
 		return rating1;

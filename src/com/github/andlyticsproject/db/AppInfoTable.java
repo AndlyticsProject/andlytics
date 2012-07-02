@@ -6,9 +6,9 @@ import java.util.HashMap;
 
 public class AppInfoTable {
 
-    
+
     public static final String DATABASE_TABLE_NAME = "appinfo";
-    
+
     public static final Uri CONTENT_URI = Uri.parse("content://" + AndlyticsContentProvider.AUTHORITY + "/"
                     + DATABASE_TABLE_NAME);
 
@@ -28,7 +28,7 @@ public class AppInfoTable {
     public static final String KEY_APP_VERSION_NAME = "versionname";
 
 
-    
+
     public static final String TABLE_CREATE_APPINFO = "create table "  + DATABASE_TABLE_NAME + " (_id integer primary key autoincrement, "
         + KEY_APP_PACKAGENAME + " text not null,"
         + KEY_APP_ACCOUNT + " text not null,"
@@ -37,19 +37,19 @@ public class AppInfoTable {
         + KEY_APP_ICONURL  + " text,"
         + KEY_APP_CATEGORY  + " text,"
         + KEY_APP_PUBLISHSTATE  + " integer,"
-        + KEY_APP_GHOST  + " integer," 
-        + KEY_APP_RATINGS_EXPANDED  + " integer," 
-        + KEY_APP_SKIP_NOTIFICATION  + " integer," 
+        + KEY_APP_GHOST  + " integer,"
+        + KEY_APP_RATINGS_EXPANDED  + " integer,"
+        + KEY_APP_SKIP_NOTIFICATION  + " integer,"
         + KEY_APP_VERSION_NAME + " text)";
-    
+
     public static HashMap<String, String> PROJECTION_MAP;
-    
+
     static {
         PROJECTION_MAP = new HashMap<String, String>();
-        
+
         PROJECTION_MAP.put(AppInfoTable.KEY_ROWID,AppInfoTable.KEY_ROWID);
         PROJECTION_MAP.put(AppInfoTable.KEY_APP_PACKAGENAME,AppInfoTable.KEY_APP_PACKAGENAME);
-        PROJECTION_MAP.put(AppInfoTable.KEY_APP_ACCOUNT, AppInfoTable.KEY_APP_ACCOUNT); 
+        PROJECTION_MAP.put(AppInfoTable.KEY_APP_ACCOUNT, AppInfoTable.KEY_APP_ACCOUNT);
         PROJECTION_MAP.put(AppInfoTable.KEY_APP_LASTUPDATE,AppInfoTable.KEY_APP_LASTUPDATE);
         PROJECTION_MAP.put(AppInfoTable.KEY_APP_NAME,AppInfoTable.KEY_APP_NAME);
         PROJECTION_MAP.put(AppInfoTable.KEY_APP_CATEGORY,AppInfoTable.KEY_APP_CATEGORY);
@@ -61,6 +61,6 @@ public class AppInfoTable {
         PROJECTION_MAP.put(AppInfoTable.KEY_APP_VERSION_NAME,AppInfoTable.KEY_APP_VERSION_NAME);
 
     }
-    
-    
+
+
 }

@@ -13,11 +13,11 @@ public class AutosyncHandlerFactory {
         }
         return autosyncHandler;
     }
-    
+
     private static boolean isFroyoOrAbove() {
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
         return currentapiVersion >= android.os.Build.VERSION_CODES.FROYO;
     }
 
-    
+
 }
