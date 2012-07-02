@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >    
+    <item
+        android:id="@+id/itemMainmenuRefresh"        
+        android:icon="@drawable/icon_refresh"
+        android:showAsAction="always"
+        android:title="@string/refresh">
+    </item>
+    <item
+        android:id="@+id/itemMainmenuImport"        
+        android:icon="@drawable/icon_import"
+        android:showAsAction="never"
+        android:title="@string/statistics_import">
+    </item>
+    <item
+        android:id="@+id/itemMainmenuExport"        
+        android:icon="@drawable/icon_export"
+        android:showAsAction="never"
+        android:title="@string/statistics_export">
+    </item>
+</menu>

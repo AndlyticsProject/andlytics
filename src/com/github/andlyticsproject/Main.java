@@ -33,6 +33,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
@@ -60,7 +63,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 	private static final String LAST_VERSION_CODE_KEY = "last_version_code";
 
     public static final String TAG = Main.class.getSimpleName();
-    private View buttonRefresh;
     private boolean cancelRequested;
     private ListView mainListView;
     private ContentAdapter db;
@@ -96,18 +98,14 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
+    	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+    	setSupportProgressBarIndeterminateVisibility(false);
+    	
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
         db = getDbAdapter();
         LayoutInflater layoutInflater = getLayoutInflater();
-
-        // style headline
-        TextView headline = (TextView) findViewById(R.id.main_headline);
-        Style.getInstance(getAssets()).styleHeadline(headline);
-        TextView headlineBeta = (TextView) findViewById(R.id.main_headline_beta);
-        Style.getInstance(getAssets()).styleHeadline(headlineBeta);
 
         // setup main list
         mainListView = (ListView) findViewById(R.id.main_app_list);
@@ -127,9 +125,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
         ghostButton = (View) findViewById(R.id.main_ghost_button);
         notificationButton = (View) findViewById(R.id.main_notification_button);
         autosyncButton = (View) findViewById(R.id.main_autosync_button);
-        exportButton = (View) findViewById(R.id.main_export_button);
-        importButton = (View) findViewById(R.id.main_import_button);
-        progressSwitcher = (ViewSwitcher) findViewById(R.id.main_toobar_switcher);
 
         statsModeToggle = (View) findViewById(R.id.main_button_statsmode);
         statsModeText = (TextView) findViewById(R.id.main_button_statsmode_text);
@@ -166,15 +161,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
             }
         });
 
-        buttonRefresh = (View) findViewById(R.id.main_button_refresh);
-        buttonRefresh.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                authenticateAccountFromPreferences(false, Main.this);
-            }
-        });
-
         feedbackButton.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -189,22 +175,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
             @Override
             public void onClick(View v) {
                 (new LoadGhostDialog()).execute();
-            }
-        });
-
-        exportButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-            	(new LoadExportDialog()).execute();
-            }
-        });
-
-        importButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-            	(new LoadImportDialog()).execute();
             }
         });
 
@@ -255,6 +225,38 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
         getAndlyticsApplication().setSkipMainReload(false);
     }
+    
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		getSupportMenuInflater().inflate(R.menu.main_menu, menu);
+		return true;
+	}
+	
+	/**
+	 * Called if item in option menu is selected.
+	 * 
+	 * @param item
+	 *            The chosen menu item
+	 * @return boolean true/false
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.itemMainmenuRefresh:			
+			authenticateAccountFromPreferences(false, Main.this);
+			break;
+		case R.id.itemMainmenuImport:			
+			(new LoadImportDialog()).execute();
+			break;
+		case R.id.itemMainmenuExport:			
+			(new LoadExportDialog()).execute();
+			break;			
+		default:
+			return false;
+		}
+		return true;
+	}
 
     @Override
     public Object onRetainNonConfigurationInstance() {
@@ -405,9 +407,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
         @Override
         protected void onPostExecute(Exception e) {
 
-            hideLoadingIndecator(progressSwitcher);
-
-            buttonRefresh.setEnabled(true);
+            setSupportProgressBarIndeterminateVisibility(false);
 
             if (e != null) {
 
@@ -436,11 +436,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
          */
         @Override
         protected void onPreExecute() {
-
-            buttonRefresh.setEnabled(false);
-
-            showLoadingIndecator(progressSwitcher);
-
+            setSupportProgressBarIndeterminateVisibility(true);
         }
 
     }

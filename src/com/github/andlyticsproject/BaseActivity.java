@@ -24,6 +24,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.github.andlyticsproject.admob.AdmobAccountRemovedException;
 import com.github.andlyticsproject.admob.AdmobAskForPasswordException;
 import com.github.andlyticsproject.admob.AdmobGenericException;
@@ -41,7 +42,7 @@ import com.github.andlyticsproject.exception.NetworkException;
 import com.github.andlyticsproject.exception.NoCookieSetException;
 import com.github.andlyticsproject.exception.SignupException;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends SherlockActivity {
 
     private static final String TAG = BaseActivity.class.getSimpleName();
 
