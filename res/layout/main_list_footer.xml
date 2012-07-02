@@ -57,7 +57,6 @@
 		</LinearLayout>
 	</RelativeLayout>
 	
-	
 	<RelativeLayout
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
@@ -94,85 +93,6 @@
 			    android:layout_gravity="center"
 			    android:layout_marginLeft="5dp"
 			    android:text="@string/notifications" />
-
-		</LinearLayout>
-	</RelativeLayout>
-	
-	<RelativeLayout
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:padding="15dp"
-		android:id="@+id/main_export_button"
-		android:background="@drawable/button_background">
-
-		<LinearLayout
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:visibility="visible"
-			android:paddingLeft="20dp">
-
-			<RelativeLayout
-				android:id="@+id/main_button_export"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:background="@drawable/image_button"
-				android:layout_gravity="center">
-
-				<ImageView
-					android:layout_height="wrap_content"
-					android:src="@drawable/icon_export"
-					android:layout_width="wrap_content"
-					android:padding="4dp"></ImageView>
-
-			</RelativeLayout>
-
-			<TextView
-			    android:id="@+id/main_export_text"
-			    style="@style/MainTableText"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_gravity="center"
-			    android:layout_marginLeft="5dp"
-			    android:text="@string/statistics_export" />
-
-		</LinearLayout>
-	</RelativeLayout>
-
-	<RelativeLayout
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:padding="15dp"
-		android:id="@+id/main_import_button"
-		android:background="@drawable/button_background">
-
-		<LinearLayout
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:visibility="visible"
-			android:paddingLeft="20dp">
-
-			<RelativeLayout
-				android:id="@+id/main_button_import"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:background="@drawable/image_button"
-				android:layout_gravity="center">
-
-				<ImageView
-					android:layout_height="wrap_content"
-					android:src="@drawable/icon_import"
-					android:layout_width="wrap_content"
-					android:padding="4dp"></ImageView>
-
-			</RelativeLayout>
-
-			<TextView
-			    style="@style/MainTableText"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_gravity="center"
-			    android:layout_marginLeft="5dp"
-			    android:text="@string/statistics_import" />
 
 		</LinearLayout>
 	</RelativeLayout>

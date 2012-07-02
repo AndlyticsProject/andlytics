@@ -600,13 +600,10 @@ public class BaseActivity extends SherlockActivity {
         loadingAnim.setInterpolator(new LinearInterpolator());
 
         switcher.showNext();
-        switcher.findViewById(R.id.loading).startAnimation(loadingAnim);
 	}
 
 	protected void hideLoadingIndecator(ViewSwitcher switcher) {
 	    switcher.showPrevious();
-	    switcher.findViewById(R.id.loading).clearAnimation();
-        switcher.findViewById(R.id.loading).setAnimation(null);
     }
 
 	public AndlyticsApp getAndlyticsApplication() {

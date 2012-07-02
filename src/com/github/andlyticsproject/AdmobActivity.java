@@ -56,8 +56,6 @@ public class AdmobActivity extends BaseChartActivity {
   
   private ViewGroup siteList;
   
-  private ViewSwitcher toolbarViewSwitcher;
-  
   @Override
   protected void executeLoadData(Timeframe timeFrame)
   {
@@ -73,10 +71,9 @@ public class AdmobActivity extends BaseChartActivity {
   
   public void onCreate(Bundle savedInstanceState)
   {
+	// TODO request processing window feature
   	super.onCreate(savedInstanceState);
   	getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-  	
-    toolbarViewSwitcher = (ViewSwitcher) findViewById(R.id.base_chart_toobar_switcher);
     
     db = getDbAdapter();
     // chartFrame = (ViewSwitcher) ;
@@ -291,8 +288,8 @@ public class AdmobActivity extends BaseChartActivity {
     @Override
     protected void onPreExecute()
     {
-      
-      showLoadingIndecator(toolbarViewSwitcher);
+      // TODO switch precess (request feature first)
+      //showLoadingIndecator(toolbarViewSwitcher);
       isRunning = true;
       
     }
@@ -363,8 +360,10 @@ public class AdmobActivity extends BaseChartActivity {
         
       }
       
-      if (isRunning)
-        hideLoadingIndecator(toolbarViewSwitcher);
+      if (isRunning) {
+    	// TODO show/hide process feature (request in onCreate)
+        //hideLoadingIndecator(toolbarViewSwitcher);
+      }
     }
   };
   
@@ -381,7 +380,8 @@ public class AdmobActivity extends BaseChartActivity {
     @Override
     protected void onPreExecute()
     {
-      showLoadingIndecator(toolbarViewSwitcher);
+    	// TODO show/hide process feature (request in onCreate)
+        //showLoadingIndecator(toolbarViewSwitcher);
     }
     
     @Override
@@ -445,7 +445,8 @@ public class AdmobActivity extends BaseChartActivity {
         }
       }
       
-      hideLoadingIndecator(toolbarViewSwitcher);
+      // TODO show/hide process feature (request in onCreate)
+      //hideLoadingIndecator(toolbarViewSwitcher);
     }
   };
   
@@ -491,8 +492,6 @@ public class AdmobActivity extends BaseChartActivity {
   @Override
   protected List<View> getExtraConfig()
   {
-    if (findViewById(R.id.base_chart_button_config) == null)
-      return null;
     LinearLayout ll = (LinearLayout) getLayoutInflater().inflate(R.layout.admob_extra_config, null);
     View removeButton = (View) ll.findViewById(R.id.admob_config3_remove_button);
     removeButton.setOnClickListener(new OnClickListener() {

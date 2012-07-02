@@ -78,10 +78,7 @@ public class ChartActivity extends BaseChartActivity {
 		db = getDbAdapter();
 		//chartFrame = (ViewSwitcher) ;
 
-
 		oneEntryHint = (View)findViewById(R.id.base_chart_one_entry_hint);
-
-
 
 		historyList = (ListView) findViewById(R.id.base_chart_list);
 		View inflate = getLayoutInflater().inflate(R.layout.chart_list_footer, null);
@@ -90,7 +87,6 @@ public class ChartActivity extends BaseChartActivity {
 
 		historyListAdapter = new ChartListAdapter(this);
 		setAdapter(historyListAdapter);
-
 
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
@@ -103,10 +99,14 @@ public class ChartActivity extends BaseChartActivity {
 		if(currentChartSet == null) {
 			currentChartSet = ChartSet.DOWNLOADS;
 		}
+		
+		if (ChartSet.RATINGS.equals(currentChartSet)) {
+			getSupportActionBar().setTitle(R.string.ratings);
+		} else {
+			getSupportActionBar().setTitle(R.string.downloads);
+		}
 		historyListAdapter.setCurrentChart(currentChartSet.ordinal(),1);
 		setAllowChangePageSliding(false);
-
-
 	}
 
   @Override
@@ -284,8 +284,6 @@ protected String getChartHint() {
   @Override
   protected List<View> getExtraConfig()
   {
-    if (findViewById(R.id.base_chart_button_config) == null)
-      return null;
     LinearLayout ll = (LinearLayout) getLayoutInflater().inflate(R.layout.chart_extra_config, null);
 
     // smoth
