@@ -1,4 +1,6 @@
-2.0.2
+
+2.1.0
+
 - ICS compatible ActionBar
 - HD icons for xlarge screens
 - New settings screen
