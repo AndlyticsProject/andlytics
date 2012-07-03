@@ -251,6 +251,7 @@
 
 			<RatingBar
 				style="@style/andRatingBar"
+				android:isIndicator="true"
 				android:layout_below="@+id/main_app_name"
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"

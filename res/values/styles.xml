@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Normal" parent="android:Theme.NoTitleBar">
-        <item name="android:windowBackground">@drawable/app_background</item>
-        <item name="android:windowNoTitle">true</item>
+    <style name="Theme.Andlytics" parent="Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
     </style>
     
     <style name="MainTableText" parent="@android:style/TextAppearance.Small">

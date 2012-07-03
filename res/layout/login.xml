@@ -1,60 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
     android:background="@color/andBackground" >
-
-    <RelativeLayout
-        android:id="@+id/login_header_frame"
-        android:layout_width="fill_parent"
-        android:layout_height="45dp"
-        android:background="@color/andActionbarBackground" >
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:paddingLeft="6dp" >
-
-            <TextView
-                android:id="@+id/login_headline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:shadowColor="#CC1D1F2A"
-                android:shadowDx="1"
-                android:shadowDy="1"
-                android:shadowRadius="1"
-                android:text="@string/app_name"
-                android:textColor="#F7FBF5"
-                android:textSize="22dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/login_headline_beta"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/login_headline"
-                android:layout_toRightOf="@+id/login_headline"
-                android:paddingLeft="5dp"
-                android:text=""
-                android:textColor="#ff0000"
-                android:textSize="10dp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-    </RelativeLayout>
-
-    <View
-        android:id="@+id/login_headline_spacer_1"
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:layout_below="@+id/login_header_frame"
-        android:background="#30ACD9" />
-
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/login_headline_spacer_1" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -102,56 +50,4 @@
                 android:orientation="vertical" >
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
-
-    <View
-        android:id="@+id/login_status_lineSpacer"
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:layout_above="@+id/login_buttonbar"
-        android:background="#484848" />
-
-    <LinearLayout
-        android:id="@+id/login_buttonbar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#555555"
-        android:orientation="horizontal" >
-
-        <RelativeLayout
-            android:id="@+id/login_add_account_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/image_button"
-            android:padding="5dp" >
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="5dp"
-                    android:src="@drawable/icon_add" >
-                </ImageView>
-
-                <TextView
-                    style="@style/MainTableText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/account_add"
-                    android:textColor="#fff"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </RelativeLayout>
-    </LinearLayout>
-
-</RelativeLayout>
+</ScrollView>
