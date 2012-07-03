@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Andlytics</string>
-    <string name="app_name_admob">AdMob for Andlytics</string>
+    <string name="app_name_admob">AdMob</string>
 
     <string name="one_entry_hint_desc">andlytics recolecta datos en el tiempo. para ver la gráfica rellenada inténtalo de nuevo cuando haya más datos.\n\nnormalmente las estadísticas se actualizan cada 24&#8211;48 horas.</string>
     <string name="one_entry_hint_demo"><u>ver gráfica con datos de demostración</u></string>
