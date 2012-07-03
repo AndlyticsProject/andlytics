@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Andlytics</string>
-    <string name="app_name_admob">AdMob for Andlytics</string>
+    <string name="app_name_admob">AdMob</string>
 
     <string name="one_entry_hint_desc">Andlytics sammelt mit der Zeit Daten. Für eine sinvolle Übersicht wieder vorbeischauen sobald mehr Daten verfügbar sind.\n\nNormalerweise werden die Downloadstatistiken alle 24&#8211;48 Stunden aktualisiert.</string>
     <string name="one_entry_hint_demo"><u>Übersicht mit Beispieldaten</u></string>

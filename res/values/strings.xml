@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Andlytics</string>
-    <string name="app_name_admob">AdMob for Andlytics</string>
+    <string name="app_name_admob">AdMob</string>
 
     <string name="one_entry_hint_desc">andlytics collects data over time. to see a meaningful chart come back as soon as more data is available.\n\nusually download stats are updated every 24&#8211;48 hours.</string>
     <string name="one_entry_hint_demo"><u>view chart with demo data</u></string>
