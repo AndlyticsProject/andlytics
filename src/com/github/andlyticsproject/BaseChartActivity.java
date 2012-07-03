@@ -37,14 +37,9 @@ import com.github.andlyticsproject.view.ViewSwitcher3D.ViewSwitcherListener;
 
 public abstract class BaseChartActivity extends BaseActivity implements ViewSwitcherListener {
 	 private static String LOG_TAG=BaseChartActivity.class.toString();
-	private Animation inNegative;
-	private Animation outNegative;
-	private Animation inPositive;
-	private Animation outPositive;
 
 	private ChartGalleryAdapter chartGalleryAdapter;
 	private ChartGallery chartGallery;
-	private int currentChartPosition;
 	private ListView dataList;
 	private TextView timeframeText;
 	protected String timetext;
@@ -62,7 +57,6 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.basechart);
-		currentChartPosition = -1;
 		List<View> extras;
 		extras = getExtraConfig();
 		if (extras != null) {
@@ -189,11 +183,6 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 				}
 			});
 
-		inNegative = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
-		outNegative = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
-		inPositive = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
-		outPositive = AnimationUtils.loadAnimation(this, R.anim.slide_out_right);
-
 		chartGallery = (ChartGallery) findViewById(R.id.base_chart_gallery);
 		chartGalleryAdapter = new ChartGalleryAdapter(new ArrayList<View>());
 		chartGallery.setAdapter(chartGalleryAdapter);
@@ -203,8 +192,6 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
 				chartGallery.setIgnoreLayoutCalls(true);
-
-				currentChartPosition = position;
 
 				if (view.getTag() != null) {
 					int pageColumn[] = (int[]) view.getTag();

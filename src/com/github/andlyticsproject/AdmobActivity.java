@@ -30,6 +30,7 @@ import android.widget.ViewSwitcher;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.admob.AdmobRequest.SyncCallback;
@@ -69,44 +70,42 @@ public class AdmobActivity extends BaseChartActivity {
     
   }
   
-  public void onCreate(Bundle savedInstanceState)
-  {
-	// TODO request processing window feature
-  	super.onCreate(savedInstanceState);
-  	getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    
-    db = getDbAdapter();
-    // chartFrame = (ViewSwitcher) ;
-    
-    mainViewSwitcher = new ViewSwitcher3D((ViewGroup) findViewById(R.id.base_chart_main_frame));
-    mainViewSwitcher.setListener(this);
-    
-    admobListAdapter = new AdmobListAdapter(this);
-    
-    setAdapter(admobListAdapter);
-    
-    String currentAdmobAccount = null;
-    String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
-    if (currentSiteId != null)
-    {
-      currentAdmobAccount = Preferences.getAdmobAccount(this, currentSiteId);
-    }
-    
-    if (currentAdmobAccount == null)
-    {
-      mainViewSwitcher.swap();
-      if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config)
-      {
-        configSwitcher.showPrevious();
-      }
-      showAccountList();
-    }
-    else
-    {
-      executeLoadDataDefault(false);
-    }
-    
-  }
+	public void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);		
+
+		super.onCreate(savedInstanceState);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		db = getDbAdapter();
+
+		mainViewSwitcher = new ViewSwitcher3D(
+				(ViewGroup) findViewById(R.id.base_chart_main_frame));
+		mainViewSwitcher.setListener(this);
+
+		admobListAdapter = new AdmobListAdapter(this);
+
+		setAdapter(admobListAdapter);
+
+		String currentAdmobAccount = null;
+		String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this,
+				packageName);
+		if (currentSiteId != null) {
+			currentAdmobAccount = Preferences.getAdmobAccount(this,
+					currentSiteId);
+		}
+
+		if (currentAdmobAccount == null) {
+			mainViewSwitcher.swap();
+			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
+				configSwitcher.showPrevious();
+			}
+			showAccountList();
+		} else {
+			executeLoadDataDefault(false);
+		}
+
+		setSupportProgressBarIndeterminateVisibility(false);
+	}
   
   @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -278,6 +277,8 @@ public class AdmobActivity extends BaseChartActivity {
         new LoadRemoteEntiesTask().execute();
       }
       
+      setSupportProgressBarIndeterminateVisibility(false);
+      
     }
   };
   
@@ -288,10 +289,8 @@ public class AdmobActivity extends BaseChartActivity {
     @Override
     protected void onPreExecute()
     {
-      // TODO switch precess (request feature first)
-      //showLoadingIndecator(toolbarViewSwitcher);
-      isRunning = true;
-      
+      setSupportProgressBarIndeterminateVisibility(true);
+      isRunning = true;      
     }
     
     @Override
@@ -361,8 +360,7 @@ public class AdmobActivity extends BaseChartActivity {
       }
       
       if (isRunning) {
-    	// TODO show/hide process feature (request in onCreate)
-        //hideLoadingIndecator(toolbarViewSwitcher);
+    	setSupportProgressBarIndeterminateVisibility(false);
       }
     }
   };
@@ -380,8 +378,7 @@ public class AdmobActivity extends BaseChartActivity {
     @Override
     protected void onPreExecute()
     {
-    	// TODO show/hide process feature (request in onCreate)
-        //showLoadingIndecator(toolbarViewSwitcher);
+    	setSupportProgressBarIndeterminateVisibility(true);
     }
     
     @Override
@@ -445,8 +442,7 @@ public class AdmobActivity extends BaseChartActivity {
         }
       }
       
-      // TODO show/hide process feature (request in onCreate)
-      //hideLoadingIndecator(toolbarViewSwitcher);
+      setSupportProgressBarIndeterminateVisibility(false);
     }
   };
   
