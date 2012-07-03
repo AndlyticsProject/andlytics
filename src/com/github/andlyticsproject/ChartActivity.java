@@ -74,20 +74,8 @@ public class ChartActivity extends BaseChartActivity {
 		super.onCreate(savedInstanceState);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
-		this.setCurrentChartSet(ChartSet.RATINGS);
-		db = getDbAdapter();
-		//chartFrame = (ViewSwitcher) ;
-
-		oneEntryHint = (View)findViewById(R.id.base_chart_one_entry_hint);
-
-		historyList = (ListView) findViewById(R.id.base_chart_list);
-		View inflate = getLayoutInflater().inflate(R.layout.chart_list_footer, null);
-		historyListFooter = (TextView) inflate.findViewById(R.id.chart_footer_text);
-		historyList.addFooterView(inflate, null, false);
-
-		historyListAdapter = new ChartListAdapter(this);
-		setAdapter(historyListAdapter);
-
+		setCurrentChartSet(ChartSet.RATINGS);
+		
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
 			String chartSet = b.getString(Constants.CHART_SET);
@@ -105,6 +93,20 @@ public class ChartActivity extends BaseChartActivity {
 		} else {
 			getSupportActionBar().setTitle(R.string.downloads);
 		}
+				
+		db = getDbAdapter();
+		//chartFrame = (ViewSwitcher) ;
+
+		oneEntryHint = (View)findViewById(R.id.base_chart_one_entry_hint);
+
+		historyList = (ListView) findViewById(R.id.base_chart_list);
+		View inflate = getLayoutInflater().inflate(R.layout.chart_list_footer, null);
+		historyListFooter = (TextView) inflate.findViewById(R.id.chart_footer_text);
+		historyList.addFooterView(inflate, null, false);
+
+		historyListAdapter = new ChartListAdapter(this);
+		setAdapter(historyListAdapter);
+		
 		historyListAdapter.setCurrentChart(currentChartSet.ordinal(),1);
 		setAllowChangePageSliding(false);
 	}
