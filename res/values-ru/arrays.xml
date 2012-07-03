@@ -1,0 +1,15 @@
+
+    <resources>
+        <string-array name="autosync_periods">
+            <item>отключено</item>
+            <item>15 минут</item>
+            <item>30 минут</item>
+            <item>1 час</item>
+            <item>2 часа</item>
+            <item>3 часа</item>
+            <item>6 часов</item>
+            <item>8 часов</item>
+            <item>12 часов</item>
+            <item>24 часа</item>
+        </string-array>
+    </resources>
