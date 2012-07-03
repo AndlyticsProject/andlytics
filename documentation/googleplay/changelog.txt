@@ -1,3 +1,9 @@
+2.0.2
+- ICS compatible ActionBar
+- HD icons for xlarge screens
+- New languages: Catalan, Italian, Russian
+
+2.0.1
 - Fixed Authentication
 - Pro features are now free (since it is open source now)
 - New design
