@@ -18,4 +18,10 @@
         android:showAsAction="never"
         android:title="@string/statistics_export">
     </item>
+    <item
+        android:id="@+id/itemMainmenuFeedback"        
+        android:icon="@drawable/icon_feedback"
+        android:showAsAction="never"
+        android:title="@string/report_bugs">
+    </item>
 </menu>

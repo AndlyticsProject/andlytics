@@ -136,46 +136,6 @@
 		</LinearLayout>
 	</RelativeLayout>
 
-	<RelativeLayout
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:padding="15dp"
-		android:id="@+id/main_feedback_button"
-		android:background="@drawable/button_background">
-
-		<LinearLayout
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:visibility="visible"
-			android:paddingLeft="20dp">
-
-			<RelativeLayout
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:background="@drawable/image_button"
-				android:layout_gravity="center">
-
-				<ImageView
-					android:layout_height="wrap_content"
-					android:src="@drawable/icon_feedback"
-					android:layout_width="wrap_content"
-					android:padding="4dp"></ImageView>
-
-			</RelativeLayout>
-
-			<TextView
-			    style="@style/MainTableText"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_gravity="center"
-			    android:layout_marginLeft="5dp"
-			    android:text="@string/report_bugs" />
-
-		</LinearLayout>
-
-	</RelativeLayout>
-
-
 	<TextView
 		style="@style/MainTableText"
 		android:id="@+id/main_app_account_name"
@@ -185,6 +145,5 @@
 		android:layout_gravity="center"
 		android:paddingBottom="5dp"
 		android:paddingTop="15dp" />
-
 
 </LinearLayout>

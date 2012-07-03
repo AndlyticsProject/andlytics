@@ -71,12 +71,10 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
     private MainListAdapter adapter;
     public boolean dotracking;
     private View footer;
-    private View feedbackButton;
     private View ghostButton;
     public GhostDialog ghostDialog;
 
-    private boolean isAuthenticationRetry;
-    private ViewSwitcher progressSwitcher;
+    private boolean isAuthenticationRetry;    
     public Animation aniPrevIn;
     private View statsModeToggle;
     private StatsMode currentStatsMode;
@@ -85,8 +83,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
     private View notificationButton;
     private View autosyncButton;
     public NotificationsDialog notificationDialog;
-    private View exportButton;
-    private View importButton;
     public ExportDialog exportDialog;
     public ImportDialog importDialog;
 
@@ -121,7 +117,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
         // status & progess bar
         statusText = (TextView) findViewById(R.id.main_app_status_line);
-        feedbackButton = (View) findViewById(R.id.main_feedback_button);
         ghostButton = (View) findViewById(R.id.main_ghost_button);
         notificationButton = (View) findViewById(R.id.main_notification_button);
         autosyncButton = (View) findViewById(R.id.main_autosync_button);
@@ -158,15 +153,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
                 Intent intent = new Intent(Main.this, LoginActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
-            }
-        });
-
-        feedbackButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-               showDialog(FEEDBACK_DIALOG);
             }
         });
 
@@ -251,7 +237,9 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 			break;
 		case R.id.itemMainmenuExport:			
 			(new LoadExportDialog()).execute();
-			break;			
+			break;
+		case R.id.itemMainmenuFeedback:
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/AndlyticsProject/andlytics/issues")));
 		default:
 			return false;
 		}
@@ -795,6 +783,7 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
         return false;
     }*/
 
+    //TODO remove...
     @Override
     protected Dialog onCreateDialog(int id) {
 
