@@ -98,11 +98,6 @@
 
     <string name="notification_title">Andlytics Benachrichtigung</string>
 
-    <string name="export_start">Andlytics Benachrichtigung</string>
-    <string name="export_finish">Andlytics Benachrichtigung</string>
-    <string name="import_start">Andlytics Benachrichtigung</string>
-    <string name="import_f">Andlytics Benachrichtigung</string>
-
     <string name="import_">Import</string>
     <string name="import_no_sdcard">Kann nicht importieren, keine SD-Karte erkannt!</string>
     <string name="import_no_app">Keine App zum importieren ausgewählt!</string>
