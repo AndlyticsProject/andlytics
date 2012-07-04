@@ -20,12 +20,16 @@
     <string name="admob_requests">запросы admob</string>
     <string name="average_rating">средний рейтинг</string>
     <string name="ratings">рейтинги</string>
+    <string name="num_comments">комментарии</string>
+    <string name="num_total_downloads">общее число загрузок</string>
+    <string name="num_active_installs">активные установки</string>
+    <string name="num_average_rating">средний рейтинг</string>
+    <string name="num_ratings">рейтинги</string>
     <string name="auto_sync">автосинхронизация</string>
     <string name="notifications">уведомления</string>
     <string name="statistics_export">экспорт данных статистики</string>
     <string name="statistics_import">импорт данных статистики</string>
     <string name="apps_hide">выберите приложения, которые нужно спрятать</string>
-    <string name="report_bugs">сообщить об ошибках и попросить о новых возможностях</string>
     <string name="downloads">загрузки</string>
     <string name="close">закрыть</string>
     <string name="rating_changes">изменения рейтинга</string>
@@ -80,7 +84,7 @@
     <string name="active_installs_percent">активных установок в процентах</string>
     <string name="swipe">Переключиться жестом на следующий график -></string>
 
-    <string name="admob">admob</string>
+    <string name="admob">AdMob</string>
     <string name="admob__revenue">выручка</string>
     <string name="admob__epc">epc</string>
     <string name="admob__requests">запросы</string>

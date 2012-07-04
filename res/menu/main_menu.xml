@@ -3,25 +3,25 @@
     <item
         android:id="@+id/itemMainmenuRefresh"        
         android:icon="@drawable/icon_refresh"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/refresh">
     </item>
     <item
         android:id="@+id/itemMainmenuImport"        
         android:icon="@drawable/icon_import"
         android:showAsAction="never"
-        android:title="@string/statistics_import">
+        android:title="@string/import_">
     </item>
     <item
         android:id="@+id/itemMainmenuExport"        
         android:icon="@drawable/icon_export"
         android:showAsAction="never"
-        android:title="@string/statistics_export">
+        android:title="@string/export_">
     </item>
     <item
         android:id="@+id/itemMainmenuFeedback"        
         android:icon="@drawable/icon_feedback"
         android:showAsAction="never"
-        android:title="@string/report_bugs">
+        android:title="@string/feedback">
     </item>
 </menu>
