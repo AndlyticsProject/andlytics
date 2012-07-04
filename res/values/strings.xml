@@ -9,7 +9,7 @@
 
     <string name="crash_desc">An unexpected error occurred.\n\nPlease help us to fix this by sending us error report data. Information about the error (stacktrace) and information about your device such as device manufacturer\'s name, device model number, operating system, etc. will be sent to help us identifying the problem.\n\nThanks!\n\n</string>
     <string name="newversion_desc"><b>An unexpected error occurred, probably because the remote interface changed.</b>\n\nBut the good news is that a new version of Andlytics is available in the Android Market.\n\nPlease update before reporting this issue.\n\nThanks!\n\n\n</string>
-    <string name="account_required">android developer account required</string>
+    <string name="account_required">Android developer account required</string>
     <string name="account_choose">Please choose or add a Google account. The account must be a registered developer account with apps published in the Android Market (\'Google Apps for Business\' accounts are not supported yet).</string>
     <string name="account_add">Add android developer account</string>
     <string name="logout">Logout</string>
