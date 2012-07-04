@@ -21,11 +21,11 @@
     <string name="admob_requests">AdMob Anfragen</string>
     <string name="average_rating">Durchschnitt</string>
     <string name="ratings">Bewertungen</string>
-    <string name="num_comments">kommentare</string>
-    <string name="num_total_downloads">downloads</string>
-    <string name="num_active_installs">installationen</string>
-    <string name="num_average_rating">durchschnitt</string>
-    <string name="num_ratings">bewertungen</string>
+    <string name="num_comments">Kommentare</string>
+    <string name="num_total_downloads">Downloads</string>
+    <string name="num_active_installs">Installationen</string>
+    <string name="num_average_rating">Durchschnitt</string>
+    <string name="num_ratings">Bewertungen</string>
     <string name="auto_sync">Synchronization</string>
     <string name="notifications">Benachrichtigungen</string>
     <string name="statistics_export">Statistiken exportieren</string>
