@@ -155,15 +155,15 @@ public class ChartListAdapter extends BaseChartListAdapter {
 				return activity.getString(R.string.average_rating);
 
 			case RATINGS_1:
-				return "1* " + activity.getString(R.string.ratings);
+				return "1* " + activity.getString(R.string.num_ratings);
 			case RATINGS_2:
-				return "2* " + activity.getString(R.string.ratings);
+				return "2* " + activity.getString(R.string.num_ratings);
 			case RATINGS_3:
-				return "3* " + activity.getString(R.string.ratings);
+				return "3* " + activity.getString(R.string.num_ratings);
 			case RATINGS_4:
-				return "4* " + activity.getString(R.string.ratings);
+				return "4* " + activity.getString(R.string.num_ratings);
 			case RATINGS_5:
-				return "5* " + activity.getString(R.string.ratings);
+				return "5* " + activity.getString(R.string.num_ratings);
 			}
 
 		}

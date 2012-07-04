@@ -3,13 +3,13 @@
     <item
         android:id="@+id/itemAdmobsmenuRefresh"        
         android:icon="@drawable/icon_refresh"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/refresh">
     </item>
     <item
         android:id="@+id/itemAdmobsmenuSettings"        
         android:icon="@drawable/icon_settings"
-        android:showAsAction="always"
-        android:title="@string/refresh">
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/settings">
     </item>
 </menu>
