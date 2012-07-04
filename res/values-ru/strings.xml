@@ -30,7 +30,6 @@
     <string name="statistics_export">экспорт данных статистики</string>
     <string name="statistics_import">импорт данных статистики</string>
     <string name="apps_hide">выберите приложения, которые нужно спрятать</string>
-    <string name="report_bugs">сообщить об ошибках и попросить о новых возможностях</string>
     <string name="downloads">загрузки</string>
     <string name="close">закрыть</string>
     <string name="rating_changes">изменения рейтинга</string>

@@ -3,7 +3,7 @@
     <item
         android:id="@+id/itemChartsmenuSettings"        
         android:icon="@drawable/icon_settings"
-        android:showAsAction="always"
-        android:title="Settings">
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/settings">
     </item>
 </menu>
