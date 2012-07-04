@@ -10,9 +10,9 @@
     <string name="newversion_desc"><b>Ha ocurrido un error inesperado, probablemente porque haya cambiado la interfaz web.</b>\n\nPero las buenas noticias son que hay una nueva versión de Andlytics en el Android Market.\n\nPor favor, actualiza antes de avisarnos del error.\n\nGracias!\n\n\n</string>
     <string name="account_required">cuenta de desarrollador android necesaria</string>
     <string name="account_choose">Elige o añade una cuenta de Google. La cuenta tiene que ser una cuenta de desarrollador android con aplicaciones publicadas en el Android Market (\'Las cuentas Google Apps for Business\' no están soportadas todavía).</string>
+    <string name="account_add">añadir cuenta</string>
     <string name="logout">logout</string>
     <string name="refresh">actualizar</string>
-    <string name="account_add">añadir cuenta</string>
     <string name="comments">comentarios</string>
     <string name="total_downloads">descargas totales</string>
     <string name="active_installs">instalaciones activas</string>
@@ -51,7 +51,7 @@
     <string name="long_click_translate">mantenga pulsado un comentario para traducirlo</string>
     <string name="load_more_comments">cargar más comentarios</string>
     <string name="info_comments">El número de comentarios reportados en la pantalla principal puede ser mayor a los que aparecen aquí a causa de los comentarios modificados.</string>
-	<string name="time_frame">Intervalo de tiempo</string>
+    <string name="time_frame">Intervalo de tiempo</string>
     <string name="seven_days">Últimos 7 días</string>
     <string name="thirty_days">Últimos 30 días</string>
     <string name="unlimited">Ilimitado</string>
@@ -89,11 +89,27 @@
     <string name="admob__eCPM">eCPM</string>
     <string name="admob__impressions">impresiones</string>
     <string name="admob__CTR">CTR</string>
-    <string name="admob__house_ad_clicks">clicks en los anuncios</string>
+    <string name="admob__house_ad_clicks">clicks en autopublicidad</string>
     <string name="admob__charts_available">gráficas AdMob disponibles</string>
     <string name="last_update">última actualización</string>
 
     <string name="changelog_title">Changelog</string>
-    <string name="changelog_thanks">Thank you for installing Andlytics!</string>
+    <string name="changelog_thanks">Gracias por usar Andlitycs!</string>
+
+    <string name="notification_title">Cambios detectados en Andlytics</string>
+
+    <string name="import_">Importar</string>
+    <string name="import_no_sdcard">No se encuentra la tarjeta SD, imposible importar!</string>
+    <string name="import_no_app">No se ha seleccioando ninguna aplicación, imposible importar!</string>
+    <string name="importing">Importando</string>
+    <string name="import_started">Importación comenzada</string>
+    <string name="import_finished">Importación finalizada</string>
+    <string name="import_error">Error importando</string>
+	<string name="export_">Exportar</string>
+	<string name="export_no_sdcard">No se encuentra la tarjeta SD, imposible exportar!</string>
+	<string name="export_no_app">No hay seleccionada ninguna aplicación, imposible exportar!</string>
+	<string name="export_started">Exportación comenzada</string>
+    <string name="export_finished">Exportación finalizada</string>
+    <string name="export_saved_to">Guardado en</string>
 
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Andlytics</string>
-    <string name="app_name_admob">AdMob для Andlytics</string>
+    <string name="app_name_admob">AdMob</string>
 
     <string name="one_entry_hint_desc">Andlytics собирает данные в течение времени. Чтобы увидеть наглядный график, загляните сюда позже, как только появится больше данных.\n\nОбычно информация о загрузках обновляется каждые 24&#8211;48 часа.</string>
     <string name="one_entry_hint_demo"><u>График с демо-данными</u></string>
@@ -97,5 +97,19 @@
     <string name="changelog_thanks">Спасибо, что установили Andlytics!</string>
 
     <string name="notification_title">Проверка изменений Andlytics</string>
+
+    <string name="import_">Импорт</string>
+    <string name="import_no_sdcard">SD-карта не примонтирована, не получается импортировать!</string>
+    <string name="import_no_app">Не выбрано приложение, не получается импортировать!</string>
+    <string name="importing">Импортируется</string>
+    <string name="import_started">Импорт начат</string>
+    <string name="import_finished">Импорт завершен</string>
+    <string name="import_error">Ошибка во время импорта</string>
+	<string name="export_">Экспорт</string>
+	<string name="export_no_sdcard">SD-карта не примонтирована, не получается экспортировать!</string>
+	<string name="export_no_app">Не выбрано приложение, не получается экспортировать!</string>
+	<string name="export_started">Экспорт начат</string>
+    <string name="export_finished">Экспорт завершен</string>
+    <string name="export_saved_to">Сохранить в</string>
 
 </resources>

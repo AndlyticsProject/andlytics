@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Andlytics</string>
-    <string name="app_name_admob">AdMob per Andlytics</string>
+    <string name="app_name_admob">AdMob</string>
 
     <string name="one_entry_hint_desc">Andlytics raccoglie dati nel tempo. Per visualizzare un grafico significativo devi prima raccogliere un po\' di dati.\n\nSolitamente le statistiche sono aggiornate ogni 24&#8211;48 ore.</string>
     <string name="one_entry_hint_demo"><u>apri grafico con dati demo</u></string>
@@ -62,18 +62,18 @@
     <string name="smooth_values">Interpola valori</string>
     <string name="info_smooth">"I valori di download e installazioni attive non sono aggiornate da Google su base giornaliera perciò è possibile interpolare i valori ricevuti. Questa impostazione non si applica ai rating che invece vengono caricati quasi istantaneamente."</string>
     <string name="auto_sync_period">Intervallo sincronizzazione automatica</string>
-    <string name="info_autosync">"Disabilitando l'aggiornamento automatico è probabile che alcuni dati vadano perduti"</string>
+    <string name="info_autosync">"Disabilitando l\'aggiornamento automatico è probabile che alcuni dati vadano perduti"</string>
     <string name="admob_login">LOGIN ACCOUNT ADMOB</string>
     <string name="password">password</string>
     <string name="login">login</string>
     <string name="remove_admob">Elimina associazione AdMob</string>
-    <string name="remove_admob_app">"Elimina dati AdMob dall'app"</string>
+    <string name="remove_admob_app">"Elimina dati AdMob dall\'app"</string>
     <string name="loading_site">Caricamento elenco siti&#8230;</string>
     <string name="select_admob_site">Seleziona un sito AdMob da associare a questo account</string>
     <string name="choose_app">Seleziona la tua app</string>
     <string name="admob_required">account AdMob obbligatorio</string>
     <string name="admob_add">aggiungi account AdMob</string>
-    <string name="admob_info">"Per gli account AdMob collegati a un account Google trovi la password per le API nella pagina con le informazioni sull'account:"</string>
+    <string name="admob_info">"Per gli account AdMob collegati a un account Google trovi la password per le API nella pagina con le informazioni sull\'account:"</string>
     <string name="percentage">percentuale</string>
     <string name="daily">incr. giornalieri</string>
     <string name="downloads_day">download giornalieri</string>
@@ -92,8 +92,24 @@
     <string name="admob__house_ad_clicks">click house ad</string>
     <string name="admob__charts_available">grafici AdMob disponibili</string>
     <string name="last_update">ultimo aggiornamento</string>
-    
+
     <string name="changelog_title">Ultime modifiche</string>
     <string name="changelog_thanks">Grazie per aver installato Andlytics!</string>
+
+    <string name="notification_title">Andlytics: rilevamento cambiamenti</string>
+
+    <string name="import_">Importa</string>
+    <string name="import_no_sdcard">SD Card non montata, impossibile importare!</string>
+    <string name="import_no_app">Nessuna app selezione, non è possibile importare!</string>
+    <string name="importing">Importando...</string>
+    <string name="import_started">Importazione iniziata</string>
+    <string name="import_finished">Importazione completata</string>
+    <string name="import_error">Errore durante l\'importazione</string>
+	<string name="export_">Esporta</string>
+	<string name="export_no_sdcard">SD Card non montata, non è possibile esportare!</string>
+	<string name="export_no_app">Nessuna app selezionata, non è possibile esportare!</string>
+	<string name="export_started">Salvataggio iniziato</string>
+    <string name="export_finished">Salvataggio completato</string>
+    <string name="export_saved_to">Salvato in</string>
 
 </resources>
