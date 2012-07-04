@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Andlytics</string>
-    <string name="app_name_admob">AdMob voor Andlytics</string>
+    <string name="app_name_admob">AdMob</string>
 
     <string name="one_entry_hint_desc">andlytics verzameld data in de tijd. zodra meer data beschikbaar is kunt u terugkomen om een zinvole grafiek te zien.\n\ngewoonlijk worden download statistieken elke 24&#8211;48 uur bijgewerkt.</string>
     <string name="one_entry_hint_demo"><u>bekijk grafiek met demo data</u></string>
@@ -43,7 +43,6 @@
     <string name="cancel">annuleren</string>
     <string name="title">Titel</string>
     <string name="text">Tekst</string>
-    <string name="ok">ok</string>
     <string name="select_files_export">Selecteer bestanden om te exporteren</string>
     <string name="export_files_replaced">Bestaande exportdata wordt overschreven</string>
     <string name="run_export">start exporteren</string>
@@ -77,9 +76,6 @@
     <string name="admob_info">Voor AdMob accounts die zijn gekoppeld aan een Google account kunt u het API wachtwoord vinden op de informatiepagina van uw admob account:</string>
     <string name="percentage">in procenten</string>
     <string name="daily">dagelijkse veranderingen</string>
-    <string name="feedback">Feedback</string>
-    <string name="help_us">Help ons deze app verbeteren door feedback te geven. \n\nBedankt!</string>
-    <string name="send">versturen</string>
     <string name="downloads_day">downloads per dag</string>
     <string name="active_installs_percent">actieve installaties in procenten</string>
     <string name="swipe">veeg om de volgende grafiek te zien -></string>
@@ -98,6 +94,22 @@
     <string name="last_update">bijgewerkt op</string>
 
     <string name="changelog_title">Changelog</string>
-    <string name="changelog_thanks">Thank you for installing Andlytics!</string>
+    <string name="changelog_thanks">Bedankt voor het installeren van Andlytics!</string>
+
+    <string name="notification_title">Andlystics gedetecteerde veranderingen</string>
+
+    <string name="import_">Importeren</string>
+    <string name="import_no_sdcard">SDkaart is niet gekoppeld, kan niet importeren!</string>
+    <string name="import_no_app">Geen app geselecteerd; kan niet importeren!</string>
+    <string name="importing">Importeren</string>
+    <string name="import_started">Importeren gestart</string>
+    <string name="import_finished">Importeren klaar</string>
+    <string name="import_error">Fout tijdens importeren</string>
+	<string name="export_">Exporteren</string>
+	<string name="export_no_sdcard">SDkaart niet gekoppeld; kan niet exporteren!</string>
+	<string name="export_no_app">Geen app geselecteerd; kan niet exporteren!</string>
+	<string name="export_started">Exporteren gestart</string>
+    <string name="export_finished">Exporteren klaar</string>
+    <string name="export_saved_to">Weggeschreven naar</string>
 
 </resources>

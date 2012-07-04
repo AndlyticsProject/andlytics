@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Andlytics</string>
-    <string name="app_name_admob">AdMob per a l\'Andlytics</string>
+    <string name="app_name_admob">AdMob</string>
 
     <string name="one_entry_hint_desc">andlytics recol·lecta dades al llarg del temps. per veure una gràfica amb sentit, torna quan hi hagi més dades disponibles.\n\nnormalment, les estadístiques de descàrregues s\'actualitzen cada 24&#8211;48 hores.</string>
     <string name="one_entry_hint_demo"><u>mostra la gràfica amb dades de demostració</u></string>
@@ -80,7 +80,7 @@
     <string name="active_installs_percent">instal·lacions actives en percentatge</string>
     <string name="swipe">llisca per veure la següent gràfica -></string>
 
-    <string name="admob">admob</string>
+    <string name="admob">AdMob</string>
     <string name="admob__revenue">guanys</string>
     <string name="admob__epc">epc (guanys per clic)</string>
     <string name="admob__requests">peticions</string>
@@ -95,5 +95,21 @@
 
     <string name="changelog_title">Registre de canvis</string>
     <string name="changelog_thanks">Gràcies per instal·lar l\'Andlytics!</string>
+
+    <string name="notification_title">Canvi detectat a l\'Andlytics</string>
+
+    <string name="import_">Importa</string>
+    <string name="import_no_sdcard">La targeta SD no està muntada, no es pot importar!</string>
+    <string name="import_no_app">No has seleccionat cap aplicació, no es pot importar!</string>
+    <string name="importing">S\'està important</string>
+    <string name="import_started">S\'ha iniciat la importació</string>
+    <string name="import_finished">S\'ha finalitzat la importació</string>
+    <string name="import_error">S\'ha produït un error durant la importació</string>
+	<string name="export_">Exporta</string>
+	<string name="export_no_sdcard">La targeta SD no està muntada, no es pot exportar!</string>
+	<string name="export_no_app">No has seleccionat cap aplicació, no es pot exportar!</string>
+	<string name="export_started">S\'ha iniciat l\'exportació</string>
+    <string name="export_finished">S\'ha finalitzat l\'exportació</string>
+    <string name="export_saved_to">Desat a</string>
 
 </resources>

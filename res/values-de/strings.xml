@@ -108,7 +108,7 @@
 	<string name="export_">Export</string>
 	<string name="export_no_sdcard">Kann nicht exportieren, keine SD-Karte erkannt!</string>
 	<string name="export_no_app">Keine App zum exportieren ausgewählt!</string>
-    <string name="export_started">Export gestartet</string>
+	<string name="export_started">Export gestartet</string>
     <string name="export_finished">Export beendet</string>
     <string name="export_saved_to">Gespeichert unter</string>
 
