@@ -33,7 +33,7 @@
     <string name="statistics_export">Exportació d\'estadístiques</string>
     <string name="statistics_import">Importació d\'estadístiques</string>
     <string name="apps_hide">Amaga aplicacions</string>
-    <string name="feedback">Send feedback</string>
+    <string name="feedback">Envia comentaris</string>
     <string name="settings">Configuració</string>
     <string name="downloads">Descàrregues</string>
     <string name="close">Tanca</string>
@@ -81,7 +81,7 @@
     <string name="loading_site">S\'està carregant la llista de llocs&#8230;</string>
     <string name="select_admob_site">Escull el lloc d\'AdMob amb què associar aquesta aplicació</string>
     <string name="choose_app">Escull la teva aplicació</string>
-    <string name="admob_required">Es necessita un compte d\'AdMob</string>
+    <string name="admob_required">es necessita un compte d\'AdMob</string>
     <string name="admob_add">Afegeix un compte d\'AdMob</string>
     <string name="admob_info">Per als comptes d\'AdMob que estiguin enllaçats a un compte de Google, pots trobar-ne la contrasenya de l\'API a la pàgina d\'informació del compte d\'AdMob.</string>
     <string name="percentage">Percentatges</string>
@@ -100,7 +100,7 @@
     <string name="admob__impressions">Impressions</string>
     <string name="admob__CTR">CTR (% de clics)</string>
     <string name="admob__house_ad_clicks">Clics a anuncis propis</string>
-    <string name="admob__charts_available">Gràfiques d\'AdMob disponibles</string>
+    <string name="admob__charts_available">gràfiques d\'AdMob disponibles</string>
     <string name="last_update">Última actualització</string>
 
     <string name="changelog_title">Registre de canvis</string>

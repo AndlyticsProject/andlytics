@@ -33,7 +33,7 @@
     <string name="statistics_export">Экспорт данных статистики</string>
     <string name="statistics_import">Импорт данных статистики</string>
     <string name="apps_hide">Выберите приложения, которые нужно спрятать</string>
-    <string name="feedback">Send feedback</string>
+    <string name="feedback">Отправить отзыв</string>
     <string name="settings">Настройки</string>
     <string name="downloads">Загрузки</string>
     <string name="close">Закрыть</string>
