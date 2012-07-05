@@ -9,7 +9,7 @@
 
     <string name="crash_desc">Si è verificato un errore.\n\nSi prega di riportare l\'errore in modo che possa essere corretto. Per meglio identificare il problema verranno inviate informazioni sull\'errore (stacktrace) e sul tuo dispositivo come il nome del produttore, del modello, la versione del sistema operativo ecc.\n\nGrazie!\n\n</string>
     <string name="newversion_desc"><b>Si è verificato un errore, probabilmente perché l\'interfaccia con la Console è cambiata.</b>\n\nLa buona notizia è che una nuova versione di Andlytics è già disponibile sul Market.\n\nSi prega di effettuare un aggiornamento prima di riportare l\'errore.\n\nGrazie!\n\n\n</string>
-    <string name="account_required">è necessario un account Android developer</string>
+    <string name="account_required">E necessario un account Android developer</string>
     <string name="account_choose">Scegli o aggiungi un account Google. L\'account deve essere registrato come sviluppatore e devi avere almeno un\'app pubblicata. sull\'Android Market (gli account \'Google Apps for Business\' non sono ancora supportati).</string>
     <string name="account_add">Aggiungi un account sviluppatore</string>
     <string name="logout">Esci</string>
@@ -21,16 +21,20 @@
     <string name="admob_requests">Richieste AdMob</string>
     <string name="average_rating">Media rating</string>
     <string name="ratings">Rating</string>
+    <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">commenti</string>
     <string name="num_total_downloads">download totali</string>
     <string name="num_active_installs">active installs</string>
     <string name="num_average_rating">media rating</string>
     <string name="num_ratings">rating</string>
+    
     <string name="auto_sync">Sincronizzazione automatica</string>
     <string name="notifications">Notifiche</string>
     <string name="statistics_export">Esporta statistiche</string>
     <string name="statistics_import">Importa statistiche</string>
     <string name="apps_hide">Nascondi app</string>
+    <string name="feedback">Send feedback</string>
+    <string name="settings">Impostazioni</string>
     <string name="downloads">Download</string>
     <string name="close">Chiudi</string>
     <string name="rating_changes">Andamento rating</string>
@@ -46,6 +50,7 @@
     <string name="data_replaced">I dati esistenti verranno sostituiti</string>
     <string name="run_import">Importa dati</string>
     <string name="cancel">Annulla</string>
+    <string name="ok">OK</string>
     <string name="title">Titolo</string>
     <string name="text">Testo</string>
     <string name="select_files_export">Seleziona i file da esportare</string>

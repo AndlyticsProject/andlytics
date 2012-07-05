@@ -21,16 +21,20 @@
     <string name="admob_requests">AdMob Anfragen</string>
     <string name="average_rating">Durchschnitt</string>
     <string name="ratings">Bewertungen</string>
+    <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">Kommentare</string>
     <string name="num_total_downloads">Downloads</string>
     <string name="num_active_installs">Installationen</string>
     <string name="num_average_rating">Durchschnitt</string>
     <string name="num_ratings">Bewertungen</string>
+    
     <string name="auto_sync">Synchronization</string>
     <string name="notifications">Benachrichtigungen</string>
     <string name="statistics_export">Statistiken exportieren</string>
     <string name="statistics_import">Statistiken importieren</string>
     <string name="apps_hide">Zu versteckende Apps auswählen</string>
+    <string name="feedback">Feedback senden</string>
+    <string name="settings">Einstellungen</string>
     <string name="downloads">Downloads</string>
     <string name="close">Schliessen</string>
     <string name="rating_changes">Durch Bewertungen</string>
@@ -46,6 +50,7 @@
     <string name="data_replaced">Bestehende Daten werden ersetzt</string>
     <string name="run_import">Importieren</string>
     <string name="cancel">Abbrechen</string>
+    <string name="ok">OK</string>
     <string name="title">Titel</string>
     <string name="text">Text</string>
     <string name="select_files_export">Zu exportierende Daten</string>

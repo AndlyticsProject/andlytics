@@ -3,13 +3,13 @@
     <string name="app_name">Andlytics</string>
     <string name="app_name_admob">AdMob</string>
 
-    <string name="one_entry_hint_desc">Andlytics собирает данные в течение времени. Чтобы увидеть наглядный график, загляните сюда позже, как только появится больше данных.\n\n
-Обычно информация о загрузках обновляется каждые 24&#8211;48 часа.</string>
+    <string name="one_entry_hint_desc">Andlytics collects data over time. to see a meaningful chart come back as soon as more data is available.
+        \n\nUsually download stats are updated every 24&#8211;48 hours.</string>
     <string name="one_entry_hint_demo"><u>График с демо-данными</u></string>
 
     <string name="crash_desc">Произошла неожиданная ошибка.\n\nПожалуйста, помогите нам решить проблему, отослав отчет об ошибке. Информация об ошибке и о вашем устройстве (такая как производитель, модель, версия операционной системы и т.д.) будет отправлена нам и поможет решить проблему.\n\nСпасибо!\n\n</string>
     <string name="newversion_desc"><b>Произошла неожиданная ошибка, возможно из-за изменений в интерфейсе на серверной стороне.</b>\n\nНо у нас есть хорошая новость, новая версия Andlytics доступна в Android Market.\n\nПожалуйста, обновитесь прежде чем сообщать об ошибке.\n\nСпасибо!\n\n\n</string>
-    <string name="account_required">необходим аккаунт Android-разработчика</string>
+    <string name="account_required">Android developer account required</string>
     <string name="account_choose">Пожалуйста выберите или добавьте аккаунт Google. Это должен быть зарегистрированный аккаунт разработчика, с приложениями, опубликованными в Android Market (аккаунты \'Google Apps for Business\' пока не поддерживаются).</string>
     <string name="account_add">Добавьте аккаунт Android-разработчика</string>
     <string name="logout">Выйти</string>
@@ -33,7 +33,8 @@
     <string name="statistics_export">Экспорт данных статистики</string>
     <string name="statistics_import">Импорт данных статистики</string>
     <string name="apps_hide">Выберите приложения, которые нужно спрятать</string>
-    <string name="report_bugs">Сообщить об ошибках и попросить о новых возможностях</string>
+    <string name="feedback">Send feedback</string>
+    <string name="settings">Настройки</string>
     <string name="downloads">Загрузки</string>
     <string name="close">Закрыть</string>
     <string name="rating_changes">Изменения рейтинга</string>
