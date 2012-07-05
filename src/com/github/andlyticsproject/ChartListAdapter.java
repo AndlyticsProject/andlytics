@@ -127,53 +127,52 @@ public class ChartListAdapter extends BaseChartListAdapter {
     }
 
     @Override
-    public String getChartTitle(int page, int column) throws IndexOutOfBoundsException
-    {
-      if(column==DATE)
-      {
-        return "";
-      }
-      switch (ChartSet.values()[page])
-      {
-        case DOWNLOADS:
-        {
-          switch (column)
-          {
-          case TOTAL_DOWNLAODS:
-            return activity.getString(R.string.total_downloads);
+	public String getChartTitle(int page, int column)
+			throws IndexOutOfBoundsException {
+		if (column == DATE) {
+			return "";
+		}
+		switch (ChartSet.values()[page]) {
+		case DOWNLOADS: {
+			switch (column) {
+			case TOTAL_DOWNLAODS:
+				return activity.getString(R.string.total_downloads);
 
-        case TOTAL_DOWNLAODS_BY_DAY:
-        	return activity.getString(R.string.downloads_day);
+			case TOTAL_DOWNLAODS_BY_DAY:
+				return activity.getString(R.string.downloads_day);
 
-        case ACTIVE_INSTALLS_PERCENT:
-        	return activity.getString(R.string.active_installs_percent);
+			case ACTIVE_INSTALLS_PERCENT:
+				return activity.getString(R.string.active_installs_percent);
 
-        case ACTIVE_INSTALLS_TOTAL:
-        	return activity.getString(R.string.active_installs);
-          }
-        }
-        break;
-        case RATINGS:
-        {
-          switch (column)
-          {
-          case AVG_RATING:
-          	return activity.getString(R.string.average_rating);
+			case ACTIVE_INSTALLS_TOTAL:
+				return activity.getString(R.string.active_installs);
+			}
+		}
+			break;
+		case RATINGS: {
+			switch (column) {
+			case AVG_RATING:
+				return activity.getString(R.string.average_rating);
 
-        case RATINGS_1:
-        case RATINGS_2:
-        case RATINGS_3:
-        case RATINGS_4:
-        case RATINGS_5:
-        	return activity.getString(R.string.ratings);
-          }
-          
-        }
-        break;
-      }
-      throw new IndexOutOfBoundsException("page="+page+" columnt="+column);
-      
-    }
+			case RATINGS_1:
+				return "1* " + activity.getString(R.string.num_ratings);
+			case RATINGS_2:
+				return "2* " + activity.getString(R.string.num_ratings);
+			case RATINGS_3:
+				return "3* " + activity.getString(R.string.num_ratings);
+			case RATINGS_4:
+				return "4* " + activity.getString(R.string.num_ratings);
+			case RATINGS_5:
+				return "5* " + activity.getString(R.string.num_ratings);
+			}
+
+		}
+			break;
+		}
+		throw new IndexOutOfBoundsException("page=" + page + " columnt="
+				+ column);
+
+	}
 
     @Override
       protected boolean isSmothValue(int page, int position) {

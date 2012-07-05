@@ -1,5 +1,11 @@
-- Hotfix
+2.1.0
+- ICS kompatible ActionBar
+- HD Icons für xlarge Bildschirme
+- Neue Einstellungsseite
+- Admob kann per Konfiguration ausgeblendet werden
+- Neue Sprachen: Katalanisch, Italienisch, Russisch
 
+2.0.1
 - Autentifizierungsfehler behoben
 - Pro Funktionen sind nun kostenfrei (Open Source)
 - Überarbeitetes Design

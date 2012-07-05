@@ -66,10 +66,6 @@ public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.admob_login);
 
-        TextView headline = (TextView) findViewById(R.id.admob_login_headline);
-        Style.getInstance(getAssets()).styleHeadline(headline);
-
-
         mMessageView = (TextView) findViewById(R.id.admob_login_message);
         mUsernameEdit = (EditText) findViewById(R.id.admob_login_username_edit);
         mPasswordEdit = (EditText) findViewById(R.id.admob_login_password_edit);

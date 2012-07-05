@@ -1,18 +1,18 @@
 package com.github.andlyticsproject;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
-import android.widget.ViewSwitcher;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
@@ -26,8 +26,6 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
     private ExpandableListView list;
 
     private View footer;
-
-    private ViewSwitcher toolbarViewSwitcher;
 
     private int maxAvalibleComments;
 
@@ -43,19 +41,16 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
 
     private ContentAdapter db;
 
-    private View refreshButton;
-
-    private View backButton;
-
     private static final int MAX_LOAD_COMMENTS = 20;
 
     public void onCreate(Bundle savedInstanceState) {
+    	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+    	setSupportProgressBarIndeterminateVisibility(false);
+    	
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.comments);
-        toolbarViewSwitcher = (ViewSwitcher) findViewById(R.id.comments_toobar_switcher);
-        refreshButton = (View)findViewById(R.id.comments_button_refresh);
-        backButton = (View)findViewById(R.id.comments_button_back);
         list = (ExpandableListView) findViewById(R.id.comments_list);
         nocomments = (View) findViewById(R.id.comments_nocomments);
 
@@ -72,35 +67,9 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
         commentsListAdapter = new CommentsListAdapter(this);
         list.setAdapter(commentsListAdapter);
 
-        if (iconFilePath != null) {
-
-            ImageView appIcon = (ImageView) findViewById(R.id.comments_app_icon);
-            Bitmap bm = BitmapFactory.decodeFile(iconFilePath);
-            appIcon.setImageBitmap(bm);
-        }
-
         maxAvalibleComments = -1;
         commentGroups = new ArrayList<CommentGroup>();
         comments = new ArrayList<Comment>();
-
-        refreshButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                maxAvalibleComments = -1;
-                nextCommentIndex = 0;
-                authenticateAccountFromPreferences(false, CommentsActivity.this);
-            }
-        });
-
-        backButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                startActivity(Main.class, false, true);
-                overridePendingTransition(R.anim.activity_prev_in, R.anim.activity_prev_out);
-            }
-        });
 
         footer.setOnClickListener(new OnClickListener() {
 
@@ -121,6 +90,48 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
         new LoadCommentsCache().execute();
 
     }
+    
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		getSupportMenuInflater().inflate(R.menu.comments_menu, menu);
+		return true;
+	}
+	
+	/**
+	 * Called if item in option menu is selected.
+	 * 
+	 * @param item
+	 *            The chosen menu item
+	 * @return boolean true/false
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			startActivityAfterCleanup(Main.class);
+			return true;
+		case R.id.itemCommentsmenuRefresh:			
+			maxAvalibleComments = -1;
+            nextCommentIndex = 0;
+            authenticateAccountFromPreferences(false, CommentsActivity.this);
+            return true;
+		default:
+			return (super.onOptionsItemSelected(item));
+		}		
+	}
+	
+	/**
+	 * starts a given activity with a clear flag.
+	 * 
+	 * @param activity
+	 *            Activity to be started
+	 */
+	private void startActivityAfterCleanup(Class<?> activity) {
+		Intent intent = new Intent(getApplicationContext(), activity);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+	}
 
     private class LoadCommentsCache extends AsyncTask<Void, Void, Void> {
 
@@ -231,12 +242,12 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
 
             }
 
-            hideLoadingIndecator(toolbarViewSwitcher);
+        	setSupportProgressBarIndeterminateVisibility(false);
         }
 
         @Override
         protected void onPreExecute() {
-            showLoadingIndecator(toolbarViewSwitcher);
+        	setSupportProgressBarIndeterminateVisibility(true);
             footer.setEnabled(false);
         }
 

@@ -251,6 +251,7 @@
 
 			<RatingBar
 				style="@style/andRatingBar"
+				android:isIndicator="true"
 				android:layout_below="@+id/main_app_name"
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
@@ -287,7 +288,7 @@
 			    android:layout_toRightOf="@+id/main_app_commentscount"
 			    android:minWidth="110dp"
 			    android:paddingRight="5dp"
-			    android:text="@string/comments" />
+			    android:text="@string/num_comments" />
 
 			<TextView
 				android:id="@+id/main_app_commentscountPercent"
@@ -348,7 +349,7 @@
 			    android:layout_height="wrap_content"
 			    android:layout_alignBaseline="@+id/main_app_downloads"
 			    android:layout_toRightOf="@+id/main_app_downloads"
-			    android:text="@string/total_downloads" />
+			    android:text="@string/num_total_downloads" />
 
 			<TextView
 				android:id="@+id/main_app_downloadsPercent"
@@ -380,7 +381,7 @@
 			    android:layout_toRightOf="@+id/main_app_activeinstalls"
 			    android:minWidth="110dp"
 			    android:paddingRight="5dp"
-			    android:text="@string/active_installs" />
+			    android:text="@string/num_active_installs" />
 
 			<TextView
 				android:id="@+id/main_app_activeinstallsPercent"
@@ -538,7 +539,7 @@
 			    android:layout_alignBaseline="@+id/main_app_avgrating"
 			    android:layout_toRightOf="@+id/main_app_avgrating"
 			    android:paddingRight="5dp"
-			    android:text="@string/average_rating" />
+			    android:text="@string/num_average_rating" />
 
 			<TextView
 				android:layout_below="@+id/main_app_avgrating"
@@ -572,7 +573,7 @@
 			    android:layout_toRightOf="@+id/main_app_rating"
 			    android:minWidth="110dp"
 			    android:paddingRight="5dp"
-			    android:text="@string/ratings" />
+			    android:text="@string/num_ratings" />
 
 			<TextView
 				android:id="@+id/main_app_ratingPercent"

@@ -1,23 +1,24 @@
 package com.github.andlyticsproject;
 
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.model.AppStats;
@@ -71,39 +72,10 @@ public class ChartActivity extends BaseChartActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		smoothEnabled = Preferences.getChartSmooth(this);
 		super.onCreate(savedInstanceState);
-		this.setCurrentChartSet(ChartSet.RATINGS);
-		db = getDbAdapter();
-		//chartFrame = (ViewSwitcher) ;
-
-		View configButton = findViewById(R.id.base_chart_button_config);
-
-		if(configButton != null) {
-
-			configButton.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-				  setChartIgnoreCallLayouts(true);
-				  getListViewSwitcher().swap();
-				}
-			});
-
-		}
-
-
-		oneEntryHint = (View)findViewById(R.id.base_chart_one_entry_hint);
-
-
-
-		historyList = (ListView) findViewById(R.id.base_chart_list);
-		View inflate = getLayoutInflater().inflate(R.layout.chart_list_footer, null);
-		historyListFooter = (TextView) inflate.findViewById(R.id.chart_footer_text);
-		historyList.addFooterView(inflate, null, false);
-
-		historyListAdapter = new ChartListAdapter(this);
-		setAdapter(historyListAdapter);
-
-
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		setCurrentChartSet(ChartSet.RATINGS);
+		
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
 			String chartSet = b.getString(Constants.CHART_SET);
@@ -115,12 +87,70 @@ public class ChartActivity extends BaseChartActivity {
 		if(currentChartSet == null) {
 			currentChartSet = ChartSet.DOWNLOADS;
 		}
+		
+		if (ChartSet.RATINGS.equals(currentChartSet)) {
+			getSupportActionBar().setTitle(R.string.ratings);
+		} else {
+			getSupportActionBar().setTitle(R.string.downloads);
+		}
+				
+		db = getDbAdapter();
+		//chartFrame = (ViewSwitcher) ;
+
+		oneEntryHint = (View)findViewById(R.id.base_chart_one_entry_hint);
+
+		historyList = (ListView) findViewById(R.id.base_chart_list);
+		View inflate = getLayoutInflater().inflate(R.layout.chart_list_footer, null);
+		historyListFooter = (TextView) inflate.findViewById(R.id.chart_footer_text);
+		historyList.addFooterView(inflate, null, false);
+
+		historyListAdapter = new ChartListAdapter(this);
+		setAdapter(historyListAdapter);
+		
 		historyListAdapter.setCurrentChart(currentChartSet.ordinal(),1);
 		setAllowChangePageSliding(false);
-
-
 	}
 
+  @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		getSupportMenuInflater().inflate(R.menu.charts_menu, menu);
+		return true;
+	}
+	
+	/**
+	 * Called if item in option menu is selected.
+	 * 
+	 * @param item
+	 *            The chosen menu item
+	 * @return boolean true/false
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			startActivityAfterCleanup(Main.class);
+			return true;
+		case R.id.itemChartsmenuSettings:
+			setChartIgnoreCallLayouts(true);
+			getListViewSwitcher().swap();
+			return true;
+		default:
+			return (super.onOptionsItemSelected(item));
+		}
+	}
+	
+	/**
+	 * starts a given activity with a clear flag.
+	 * 
+	 * @param activity
+	 *            Activity to be started
+	 */
+	private void startActivityAfterCleanup(Class<?> activity) {
+		Intent intent = new Intent(getApplicationContext(), activity);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+	}
 
 
 @Override
@@ -256,8 +286,6 @@ protected String getChartHint() {
   @Override
   protected List<View> getExtraConfig()
   {
-    if (findViewById(R.id.base_chart_button_config) == null)
-      return null;
     LinearLayout ll = (LinearLayout) getLayoutInflater().inflate(R.layout.chart_extra_config, null);
 
     // smoth
