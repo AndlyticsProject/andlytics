@@ -11,7 +11,7 @@
 		android:inAnimation="@anim/view_switcher_fade_in"
 		android:outAnimation="@anim/view_switcher_fade_out"
 		android:layout_height="fill_parent"
-		android:layout_below="@+id/main_header_frame" android:layout_above="@+id/main_app_buttonbar">
+		android:layout_above="@+id/main_app_buttonbar">
 
 		<TextView
 			android:id="@+id/main_app_list_loading"
