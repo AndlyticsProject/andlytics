@@ -33,7 +33,7 @@
     <string name="statistics_export">Exporteer statistieken</string>
     <string name="statistics_import">Importeer statistieken</string>
     <string name="apps_hide">Selecteer apps om te verbergen</string>
-    <string name="feedback">Send feedback</string>
+    <string name="feedback">Stuur feedback</string>
     <string name="settings">Instellingen</string>
     <string name="downloads">Downloads</string>
     <string name="close">Sluiten</string>
@@ -44,7 +44,7 @@
     <string name="disable_notifications">Hef selectie van alle notificaties op</string>
     <string name="notification_signal">Notificatiesignaal</string>
     <string name="notification_sound">Meldingsgeluid</string>
-    <string name="notification_light">Meldingslamp</string>
+    <string name="notification_light">Meldingslicht</string>
     <string name="apss_notification">Apps voor veranderingnotificatie</string>
     <string name="select_files_import">Selecteer bestanden om te importeren</string>
     <string name="data_replaced">Bestaande data wordt overschreven</string>
@@ -58,14 +58,14 @@
     <string name="run_export">Start exporteren</string>
     <string name="by">door</string>
     <string name="device">toestel</string>
-    <string name="long_click_translate">Lange klik op opmerking om te vertalen</string>
+    <string name="long_click_translate">Lange klik op opmerking voor de vertaling</string>
     <string name="load_more_comments">Laad meer opmerkingen</string>
     <string name="info_comments">Het gemelde aantal opmerking op het hoofdscherm kan hoger uitvallen dan het aantal opmerkingen getoond hier, doordat opmerkingen zijn teruggetrokken of veranderd.</string>
     <string name="time_frame">Tijdspanne</string>
     <string name="seven_days">Afgelopen 7 dagen</string>
     <string name="thirty_days">Afgelopen 30 dagen</string>
     <string name="unlimited">Ongelimiteerd</string>
-    <string name="date_format">Datumnotatie</string>
+    <string name="date_format">datumnotatie</string>
     <string name="ddmmyy">Dag/Maand/Jaar</string>
     <string name="yymmdd">Jaar/Maand/Dag</string>
     <string name="mmddyy">Maand/Dag/Jaar</string>
