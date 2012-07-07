@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -48,7 +51,9 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
     	setSupportProgressBarIndeterminateVisibility(false);
     	
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);        
+
+		getSupportActionBar().setSubtitle(packageName);
 
         setContentView(R.layout.comments);
         list = (ExpandableListView) findViewById(R.id.comments_list);
@@ -81,6 +86,12 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
         footer.setVisibility(View.GONE);
 
         db = getDbAdapter();
+        
+        if (iconFilePath != null) {
+			Bitmap bm = BitmapFactory.decodeFile(iconFilePath);
+			BitmapDrawable icon = new BitmapDrawable(getResources(),bm);
+			getSupportActionBar().setIcon(icon);
+		}
 
     }
 
