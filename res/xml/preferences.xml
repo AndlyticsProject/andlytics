@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="@string/preferences">
-    <ListPreference android:title="@string/auto_sync" android:entries="@array/autosync_periods" android:key="prefAutoSyncPeriod" android:entryValues="@array/autosync_periods_values" android:dialogTitle="@string/auto_sync_period"/>
-    
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/preferences" >
+
+    <ListPreference
+        android:dialogTitle="@string/auto_sync_period"
+        android:entries="@array/autosync_periods"
+        android:entryValues="@array/autosync_periods_values"
+        android:key="prefAutoSyncPeriod"
+        android:title="@string/auto_sync" />
+
+    <Preference
+        android:key="prefNotifications"
+        android:title="@string/notifications" />
 
 </PreferenceScreen>

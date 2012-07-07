@@ -124,5 +124,6 @@
     
     
     <string name="preferences">Preferences</string>
+    <string name="loading_app_list">Loading app list…</string>
 
 </resources>

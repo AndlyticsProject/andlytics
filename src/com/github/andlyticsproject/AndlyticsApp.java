@@ -21,13 +21,20 @@ public class AndlyticsApp extends Application {
 	private boolean skipMainReload;
 
 	private String feedbackMessage;
+	
+	private static AndlyticsApp sInstance;
 
 	@Override
 	public void onCreate() {
-		//ACRA.init(this);
+		ACRA.init(this);
 		super.onCreate();
 		Preferences.disableCrashReports(this);
 		setDbAdapter(new ContentAdapter(this));
+		sInstance = this;
+	}
+	
+	public static AndlyticsApp getInstance(){
+		return sInstance;
 	}
 
 	@Override

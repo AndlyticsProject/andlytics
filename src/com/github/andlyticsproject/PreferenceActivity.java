@@ -1,12 +1,15 @@
 package com.github.andlyticsproject;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
@@ -15,11 +18,12 @@ import com.github.andlyticsproject.sync.AutosyncHandler;
 import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
 
 
-//Suppressing warnings as there is no SherlockPreferenceFragment
+// Suppressing warnings as there is no SherlockPreferenceFragment
 // for us to use instead of a PreferencesActivity
 @SuppressWarnings("deprecation")
 public class PreferenceActivity extends SherlockPreferenceActivity
-		implements OnPreferenceChangeListener, OnSharedPreferenceChangeListener {
+		implements OnPreferenceChangeListener, OnSharedPreferenceChangeListener,
+		OnPreferenceClickListener {
 	
 	private String mAccountName;
 
@@ -30,17 +34,34 @@ public class PreferenceActivity extends SherlockPreferenceActivity
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		mAccountName = getIntent().getExtras().getString(Constants.AUTH_ACCOUNT_NAME);
-		getSupportActionBar().setSubtitle(mAccountName);
-
+		
+		PreferenceManager prefMgr = getPreferenceManager();
+		prefMgr.setSharedPreferencesName(Preferences.PREF);
 		addPreferencesFromResource(R.xml.preferences);
 		
-		getPreferenceScreen().findPreference(Preferences.PREF_AUTO_SYNC_PERIOD)
-				.setOnPreferenceChangeListener(this);
+		ListPreference autoSync = (ListPreference) getPreferenceScreen().findPreference(Preferences.PREF_AUTO_SYNC_PERIOD);
+		autoSync.setOnPreferenceChangeListener(this);
+		AutosyncHandler autosyncHandler = AutosyncHandlerFactory.getInstance(this);
+        int autosyncPeriod = autosyncHandler.getAutosyncPeriod(mAccountName) / 60;
+		autoSync.setValue(Integer.toString(autosyncPeriod));
+		getPreferenceScreen().findPreference(Preferences.PREF_NOTIFICATIONS)
+				.setOnPreferenceClickListener(this);
 
 		for(int i=0;i<getPreferenceScreen().getPreferenceCount();i++){
 			initSummary(getPreferenceScreen().getPreference(i));
 		}
 	}
+
+	@Override
+	public boolean onPreferenceClick(Preference preference) {
+		if (preference.getKey().equals(Preferences.PREF_NOTIFICATIONS)){
+			Intent i = new Intent(this, NotificationPreferenceActivity.class);
+			i.putExtra(Constants.AUTH_ACCOUNT_NAME, mAccountName);
+			startActivity(i);
+		}
+		return true;
+	}
+
 
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
