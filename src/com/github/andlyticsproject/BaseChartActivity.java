@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
@@ -56,6 +57,7 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getSupportActionBar().setSubtitle(packageName);
 		setContentView(R.layout.basechart);
 		List<View> extras;
 		extras = getExtraConfig();
@@ -215,8 +217,8 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 
 		if (iconFilePath != null) {
 			Bitmap bm = BitmapFactory.decodeFile(iconFilePath);
-			// TODO remove / reuse
-			//appIcon.setImageBitmap(bm);
+			BitmapDrawable icon = new BitmapDrawable(getResources(),bm);
+			getSupportActionBar().setIcon(icon);
 		}
 
 	}
@@ -278,7 +280,7 @@ protected void setCurrentChart(int page,int column)
 		 */
 
 		{
-			getSupportActionBar().setSubtitle(string);
+			getSupportActionBar().setTitle(string);
 		}
 
 	}

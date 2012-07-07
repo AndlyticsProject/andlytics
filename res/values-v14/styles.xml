@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Android prefixed versions of ActionBar related styles -->
+    <!-- These go in values-v14 to avoid exceptions on some devices -->
+    <!-- https://github.com/JakeWharton/ActionBarSherlock/issues/446 -->
+
+    <style name="Theme.Andlytics" parent="Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
+        <item name="android:actionBarStyle">@style/Widget.Andlytics.ActionBar</item>
+    </style>
+
+    <style name="Widget.Andlytics.ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="android:subtitleTextStyle">@style/TextAppearance.Andlytics.Widget.ActionBar.Subtitle</item>
+    </style>
+    
+    
+</resources>
