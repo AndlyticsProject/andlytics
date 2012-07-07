@@ -9,6 +9,8 @@ import android.util.Log;
 public class Preferences {
 
 	public static final String PREF = "andlytics_pref";
+	
+	public static final String PREF_AUTO_SYNC_PERIOD = "prefAutoSyncPeriod";
 
 	private static final String ACCOUNT_NAME = "accountName";
 	private static final String GWTPERMUTATION = "permutation";

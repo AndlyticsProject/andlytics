@@ -39,7 +39,6 @@ import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
-import com.github.andlyticsproject.dialog.AutosyncDialog;
 import com.github.andlyticsproject.dialog.ExportDialog;
 import com.github.andlyticsproject.dialog.GhostDialog;
 import com.github.andlyticsproject.dialog.GhostDialog.GhostSelectonChangeListener;
@@ -81,7 +80,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
     private TextView statsModeText;
     private ImageView statsModeIcon;
     private View notificationButton;
-    private View autosyncButton;
     public NotificationsDialog notificationDialog;
     public ExportDialog exportDialog;
     public ImportDialog importDialog;
@@ -119,7 +117,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
         statusText = (TextView) findViewById(R.id.main_app_status_line);
         ghostButton = (View) findViewById(R.id.main_ghost_button);
         notificationButton = (View) findViewById(R.id.main_notification_button);
-        autosyncButton = (View) findViewById(R.id.main_autosync_button);
 
         statsModeToggle = (View) findViewById(R.id.main_button_statsmode);
         statsModeText = (TextView) findViewById(R.id.main_button_statsmode_text);
@@ -169,14 +166,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
             @Override
             public void onClick(View v) {
             	(new LoadNotificationDialog()).execute();
-            }
-        });
-
-        autosyncButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                showAutosyncDialog();
             }
         });
 
@@ -240,6 +229,12 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 			break;
 		case R.id.itemMainmenuFeedback:
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/AndlyticsProject/andlytics/issues")));
+			break;
+		case R.id.itemMainmenuPreferences:
+			Intent i = new Intent(this, PreferenceActivity.class);
+			i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
+			startActivity(i);
+			break;
 		default:
 			return false;
 		}
@@ -639,17 +634,8 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
         }
 
     }
-
-
-    protected void showAutosyncDialog() {
-
-        if(!isFinishing()) {
-
-            AutosyncDialog autosyncDialog = new AutosyncDialog(Main.this, accountname);
-            autosyncDialog.show();
-        }
-    }
-
+    
+    
     private class LoadNotificationDialog extends AsyncTask<Boolean, Void, Boolean> {
 
         private List<AppInfo> allStats;

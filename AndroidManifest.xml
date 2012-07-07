@@ -77,7 +77,11 @@
 			android:label="@string/app_name_admob"
 			android:theme="@android:style/Theme.Dialog"
 			android:excludeFromRecents="true" />
-
+		
+		<activity
+			android:name=".PreferenceActivity"
+			android:label="@string/preferences">
+		</activity>
 		<service
 			android:name=".sync.SyncAdapterService"
 			android:exported="false"

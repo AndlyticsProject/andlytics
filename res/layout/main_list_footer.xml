@@ -17,45 +17,6 @@
 		android:layout_gravity="center"
 		android:paddingBottom="15dp"
 		android:paddingTop="10dp" />
-
-	<RelativeLayout
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:padding="15dp"
-		android:background="@drawable/button_background" android:id="@+id/main_autosync_button">
-
-		<LinearLayout
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:visibility="visible"
-			android:paddingLeft="20dp">
-
-			<RelativeLayout
-				android:id="@+id/main_button_autosync"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:background="@drawable/image_button"
-				android:layout_gravity="center">
-
-				<ImageView
-					android:layout_height="wrap_content"
-					android:src="@drawable/icon_sync"
-					android:layout_width="wrap_content"
-					android:padding="4dp"></ImageView>
-
-			</RelativeLayout>
-
-			<TextView
-			    android:id="@+id/main_autosync_text"
-			    style="@style/MainTableText"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_gravity="center"
-			    android:layout_marginLeft="5dp"
-			    android:text="@string/auto_sync" />
-
-		</LinearLayout>
-	</RelativeLayout>
 	
 	<RelativeLayout
 		android:layout_width="fill_parent"

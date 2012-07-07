@@ -24,7 +24,7 @@ public class AndlyticsApp extends Application {
 
 	@Override
 	public void onCreate() {
-		ACRA.init(this);
+		//ACRA.init(this);
 		super.onCreate();
 		Preferences.disableCrashReports(this);
 		setDbAdapter(new ContentAdapter(this));
