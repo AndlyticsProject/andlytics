@@ -2,6 +2,9 @@ package com.github.andlyticsproject;
 
 import java.io.IOException;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -18,35 +21,24 @@ import android.widget.TextView;
 
 public class LoginActivity extends BaseActivity {
 
-
-
 	private static final String TAG = "Andlytics";
 
 	protected static final int CREATE_ACCOUNT_REQUEST = 1;
 
 	private LinearLayout accountList;
 
-	private TextView headline;
-
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.login);
-		headline = (TextView) findViewById(R.id.login_headline);
-		Style.getInstance(getAssets()).styleHeadline(headline);
-        TextView headlineBeta = (TextView) findViewById(R.id.login_headline_beta);
-        Style.getInstance(getAssets()).styleHeadline(headlineBeta);
+//		headline = (TextView) findViewById(R.id.login_headline);
+//		Style.getInstance(getAssets()).styleHeadline(headline);
+//        TextView headlineBeta = (TextView) findViewById(R.id.login_headline_beta);
+//        Style.getInstance(getAssets()).styleHeadline(headlineBeta);
 
 		accountList = (LinearLayout) findViewById(R.id.login_input);
-
-		View addAccountButton = (View) findViewById(R.id.login_add_account_button);
-		addAccountButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				addNewGoogleAccount();
-			}
-		});
+		
+		//getSupportActionBar().setTitle(R.string.app_name);
 	}
 
 	@Override
@@ -61,6 +53,32 @@ public class LoginActivity extends BaseActivity {
 		} else {
 			showAccountList();
 		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		getSupportMenuInflater().inflate(R.menu.login_menu, menu);
+		return true;
+	}
+	
+	/**
+	 * Called if item in option menu is selected.
+	 * 
+	 * @param item
+	 *            The chosen menu item
+	 * @return boolean true/false
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.itemLoginmenuAdd:			
+			addNewGoogleAccount();
+			break;
+		default:
+			return false;
+		}
+		return true;
 	}
 
 	protected void showAccountList() {

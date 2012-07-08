@@ -1,12 +1,10 @@
 package com.github.andlyticsproject;
 
 import java.io.IOException;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,12 +14,13 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -29,6 +28,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.admob.AdmobRequest.SyncCallback;
@@ -37,10 +39,7 @@ import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AdmobList;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
 
-public class AdmobActivity extends BaseChartActivity {
-  
-  private NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
-  
+public class AdmobActivity extends BaseChartActivity { 
   public static final String TAG = AdmobActivity.class.getSimpleName();
   
   protected ContentAdapter db;
@@ -58,8 +57,6 @@ public class AdmobActivity extends BaseChartActivity {
   
   private ViewGroup siteList;
   
-  private ViewSwitcher toolbarViewSwitcher;
-  
   @Override
   protected void executeLoadData(Timeframe timeFrame)
   {
@@ -73,96 +70,101 @@ public class AdmobActivity extends BaseChartActivity {
     
   }
   
-  public void onCreate(Bundle savedInstanceState)
-  {
-  	super.onCreate(savedInstanceState);
-    
-    toolbarViewSwitcher = (ViewSwitcher) findViewById(R.id.base_chart_toobar_switcher);
-    
-    db = getDbAdapter();
-    // chartFrame = (ViewSwitcher) ;
-    
-    View refreshButton = findViewById(R.id.base_chart_button_refresh);
-    if (refreshButton != null)
-    {
-      findViewById(R.id.base_chart_toobar_switcher).setVisibility(View.VISIBLE);
-      refreshButton.setOnClickListener(new OnClickListener() {
-        
-        @Override
-        public void onClick(View v)
-        {
-          
-          setChartIgnoreCallLayouts(true);
-          new LoadRemoteEntiesTask().execute();
-          
-        }
-      });
-    }
-    
-    View configButton = findViewById(R.id.base_chart_button_config);
-    
-    mainViewSwitcher = new ViewSwitcher3D((ViewGroup) findViewById(R.id.base_chart_main_frame));
-    mainViewSwitcher.setListener(this);
-    
-    if (configButton != null)
-    {
-      
-      configButton.setOnClickListener(new OnClickListener() {
-        
-        @Override
-        public void onClick(View v)
-        {
-          setChartIgnoreCallLayouts(true);
-          
-          String admobSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
-          
-          if (admobSiteId == null)
-          {
-            
-            View currentView = configSwitcher.getCurrentView();
-            if (currentView.getId() != R.id.base_chart_config)
-            {
-              configSwitcher.showPrevious();
-            }
-            mainViewSwitcher.swap();
-            showAccountList();
-          }
-          else
-          {
-            getListViewSwitcher().swap();
-          }
-          
-        }
-      });
-      
-    }
-    
-    admobListAdapter = new AdmobListAdapter(this);
-    
-    setAdapter(admobListAdapter);
-    
-    String currentAdmobAccount = null;
-    String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
-    if (currentSiteId != null)
-    {
-      currentAdmobAccount = Preferences.getAdmobAccount(this, currentSiteId);
-    }
-    
-    if (currentAdmobAccount == null)
-    {
-      mainViewSwitcher.swap();
-      if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config)
-      {
-        configSwitcher.showPrevious();
-      }
-      showAccountList();
-    }
-    else
-    {
-      executeLoadDataDefault(false);
-    }
-    
-  }
+	public void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);		
+
+		super.onCreate(savedInstanceState);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		db = getDbAdapter();
+
+		mainViewSwitcher = new ViewSwitcher3D(
+				(ViewGroup) findViewById(R.id.base_chart_main_frame));
+		mainViewSwitcher.setListener(this);
+
+		admobListAdapter = new AdmobListAdapter(this);
+
+		setAdapter(admobListAdapter);
+
+		String currentAdmobAccount = null;
+		String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this,
+				packageName);
+		if (currentSiteId != null) {
+			currentAdmobAccount = Preferences.getAdmobAccount(this,
+					currentSiteId);
+		}
+
+		if (currentAdmobAccount == null) {
+			mainViewSwitcher.swap();
+			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
+				configSwitcher.showPrevious();
+			}
+			showAccountList();
+		} else {
+			executeLoadDataDefault(false);
+		}
+
+		setSupportProgressBarIndeterminateVisibility(false);
+	}
+  
+  @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		getSupportMenuInflater().inflate(R.menu.admob_menu, menu);
+		return true;
+	}
+	
+	/**
+	 * Called if item in option menu is selected.
+	 * 
+	 * @param item
+	 *            The chosen menu item
+	 * @return boolean true/false
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			startActivityAfterCleanup(Main.class);
+			return true;
+		case R.id.itemAdmobsmenuRefresh:
+			setChartIgnoreCallLayouts(true);
+			new LoadRemoteEntiesTask().execute();
+			return true;
+		case R.id.itemAdmobsmenuSettings:
+			setChartIgnoreCallLayouts(true);
+
+			String admobSiteId = Preferences.getAdmobSiteId(AdmobActivity.this,
+					packageName);
+
+			if (admobSiteId == null) {
+
+				View currentView = configSwitcher.getCurrentView();
+				if (currentView.getId() != R.id.base_chart_config) {
+					configSwitcher.showPrevious();
+				}
+				mainViewSwitcher.swap();
+				showAccountList();
+			} else {
+				getListViewSwitcher().swap();
+			}
+			return true;
+		default:
+			return (super.onOptionsItemSelected(item));
+		}
+	}
+	
+	/**
+	 * starts a given activity with a clear flag.
+	 * 
+	 * @param activity
+	 *            Activity to be started
+	 */
+	private void startActivityAfterCleanup(Class<?> activity) {
+		Intent intent = new Intent(getApplicationContext(), activity);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+	}
   
   @Override
   protected String getChartHint()
@@ -275,6 +277,8 @@ public class AdmobActivity extends BaseChartActivity {
         new LoadRemoteEntiesTask().execute();
       }
       
+      setSupportProgressBarIndeterminateVisibility(false);
+      
     }
   };
   
@@ -285,10 +289,8 @@ public class AdmobActivity extends BaseChartActivity {
     @Override
     protected void onPreExecute()
     {
-      
-      showLoadingIndecator(toolbarViewSwitcher);
-      isRunning = true;
-      
+      setSupportProgressBarIndeterminateVisibility(true);
+      isRunning = true;      
     }
     
     @Override
@@ -357,8 +359,9 @@ public class AdmobActivity extends BaseChartActivity {
         
       }
       
-      if (isRunning)
-        hideLoadingIndecator(toolbarViewSwitcher);
+      if (isRunning) {
+    	setSupportProgressBarIndeterminateVisibility(false);
+      }
     }
   };
   
@@ -375,7 +378,7 @@ public class AdmobActivity extends BaseChartActivity {
     @Override
     protected void onPreExecute()
     {
-      showLoadingIndecator(toolbarViewSwitcher);
+    	setSupportProgressBarIndeterminateVisibility(true);
     }
     
     @Override
@@ -439,7 +442,7 @@ public class AdmobActivity extends BaseChartActivity {
         }
       }
       
-      hideLoadingIndecator(toolbarViewSwitcher);
+      setSupportProgressBarIndeterminateVisibility(false);
     }
   };
   
@@ -485,8 +488,6 @@ public class AdmobActivity extends BaseChartActivity {
   @Override
   protected List<View> getExtraConfig()
   {
-    if (findViewById(R.id.base_chart_button_config) == null)
-      return null;
     LinearLayout ll = (LinearLayout) getLayoutInflater().inflate(R.layout.admob_extra_config, null);
     View removeButton = (View) ll.findViewById(R.id.admob_config3_remove_button);
     removeButton.setOnClickListener(new OnClickListener() {

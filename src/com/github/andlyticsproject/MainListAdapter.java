@@ -347,6 +347,7 @@ public class MainListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(activity, ChartActivity.class);
                 intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
+                intent.putExtra(Constants.CHART_NAME, R.string.downloads);
                 if (iconFile.exists()) {
                     intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
                 }
@@ -379,6 +380,7 @@ public class MainListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(activity, ChartActivity.class);
                 intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
+                intent.putExtra(Constants.CHART_NAME, R.string.ratings);
                 if (iconFile.exists()) {
                     intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
                 }

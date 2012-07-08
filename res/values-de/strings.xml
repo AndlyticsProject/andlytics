@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Andlytics</string>
-    <string name="app_name_admob">AdMob for Andlytics</string>
+    <string name="app_name_admob">AdMob</string>
 
-    <string name="one_entry_hint_desc">Andlytics sammelt mit der Zeit Daten. Für eine sinvolle Übersicht wieder vorbeischauen sobald mehr Daten verfügbar sind.\n\nNormalerweise werden die Downloadstatistiken alle 24&#8211;48 Stunden aktualisiert.</string>
+    <string name="one_entry_hint_desc">Andlytics sammelt mit der Zeit Daten. Für eine sinvolle Übersicht wieder vorbeischauen sobald mehr Daten verfügbar sind.
+        \n\nNormalerweise werden die Downloadstatistiken alle 24&#8211;48 Stunden aktualisiert.</string>
     <string name="one_entry_hint_demo"><u>Übersicht mit Beispieldaten</u></string>
 
     <string name="crash_desc">Ein unvorhergesehener Fehler trat auf.\n\nBitte helft uns diesen Fehler zu beheben durch Senden eines Fehlerberichtes. Informationen über den Fehler (Stacktrace) und Information über das Gerät wie Hersteller, Gerätename, betriebssystem usw helfen uns den Fehler zu finden.\n\nDanke!\n\n</string>
@@ -11,45 +12,54 @@
     <string name="account_required">Android Developer Account benötigt</string>
     <string name="account_choose">Bitte einen Google Account wählen oder hinzufügen. Der Zugang muss ein Developer Account mit veröffentlichten Apps sein (\'Google Apps for Business\' werden nicht unterstützt).</string>
     <string name="account_add">Android Developer Account hinzufügen</string>
-    <string name="logout">ausloggen</string>
-    <string name="refresh">refresh</string>
+    <string name="logout">Ausloggen</string>
+    <string name="refresh">Refresh</string>
     <string name="comments">Kommentare</string>
     <string name="total_downloads">Downloads</string>
     <string name="active_installs">Installationen</string>
-    <string name="admob_revenue">Admob Einnahmen</string>
-    <string name="admob_requests">Admob Anfragen</string>
+    <string name="admob_revenue">AdMob Einnahmen</string>
+    <string name="admob_requests">AdMob Anfragen</string>
     <string name="average_rating">Durchschnitt</string>
     <string name="ratings">Bewertungen</string>
+    <!-- Lower case versions for main screen e.g. X comments -->
+    <string name="num_comments">Kommentare</string>
+    <string name="num_total_downloads">Downloads</string>
+    <string name="num_active_installs">Installationen</string>
+    <string name="num_average_rating">Durchschnitt</string>
+    <string name="num_ratings">Bewertungen</string>
+    
     <string name="auto_sync">Synchronization</string>
     <string name="notifications">Benachrichtigungen</string>
     <string name="statistics_export">Statistiken exportieren</string>
     <string name="statistics_import">Statistiken importieren</string>
     <string name="apps_hide">Zu versteckende Apps auswählen</string>
-    <string name="report_bugs">Fehler und Features melden</string>
+    <string name="feedback">Feedback senden</string>
+    <string name="settings">Einstellungen</string>
     <string name="downloads">Downloads</string>
-    <string name="close">schliessen</string>
-    <string name="rating_changes">durch Bewertungen</string>
-    <string name="comment_changes">durch Kommentare</string>
-    <string name="download_changes">durch Downloads</string>
+    <string name="close">Schliessen</string>
+    <string name="rating_changes">Durch Bewertungen</string>
+    <string name="comment_changes">Durch Kommentare</string>
+    <string name="download_changes">Durch Downloads</string>
     <string name="notification_trigger">Auslöser für Benachrichtigungen</string>
     <string name="disable_notifications">Keine auswählen um Benachrichtigungen zu deaktivieren</string>
     <string name="notification_signal">Benachrichtigungen</string>
-    <string name="notification_sound">akustisch</string>
-    <string name="notification_light">optisch</string>
+    <string name="notification_sound">Akustisch</string>
+    <string name="notification_light">Optisch</string>
     <string name="apss_notification">Apps für Benachrichtigungen</string>
     <string name="select_files_import">Zu importierende Daten</string>
     <string name="data_replaced">Bestehende Daten werden ersetzt</string>
-    <string name="run_import">importieren</string>
-    <string name="cancel">abbrechen</string>
+    <string name="run_import">Importieren</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="ok">OK</string>
     <string name="title">Titel</string>
     <string name="text">Text</string>
     <string name="select_files_export">Zu exportierende Daten</string>
     <string name="export_files_replaced">Bestehende Daten werden ersetzt</string>
-    <string name="run_export">exportieren</string>
+    <string name="run_export">Exportieren</string>
     <string name="by">von</string>
     <string name="device">gerät</string>
     <string name="long_click_translate">Lange auf Kommentaren halten für eine Übersetzung.</string>
-    <string name="load_more_comments">mehr Kommentare laden</string>
+    <string name="load_more_comments">Mehr Kommentare laden</string>
     <string name="info_comments">Die Anzahl der auf der Hauptseite angezeigten Kommentare kann wegen zurückgezogener/geänderter Kommentaren abweichen.</string>
     <string name="time_frame">Zeitfenster</string>
     <string name="seven_days">Letzte Woche</string>
@@ -65,7 +75,7 @@
     <string name="info_autosync">Wenn die Synchronization deaktiviert ist, fehlen eventuell zukünftige Werte</string>
     <string name="admob_login">ADMOB ACCOUNT LOGIN</string>
     <string name="password">Passwort</string>
-    <string name="login">einloggen</string>
+    <string name="login">Einloggen</string>
     <string name="remove_admob">AdMob Verknüpfung entfernen</string>
     <string name="remove_admob_app">AdMob Werte von dieser App entfernen</string>
     <string name="loading_site">Lade Seiten&#8230;</string>
@@ -80,7 +90,7 @@
     <string name="active_installs_percent">Installationen in Prozent</string>
     <string name="swipe">Swipen um zur nächsten Übersicht zu kommen -></string>
 
-    <string name="admob">Admob</string>
+    <string name="admob">AdMob</string>
     <string name="admob__revenue">Einnahmen</string>
     <string name="admob__epc">Verdienst je Klick</string>
     <string name="admob__requests">Anfragen</string>
@@ -98,11 +108,6 @@
 
     <string name="notification_title">Andlytics Benachrichtigung</string>
 
-    <string name="export_start">Andlytics Benachrichtigung</string>
-    <string name="export_finish">Andlytics Benachrichtigung</string>
-    <string name="import_start">Andlytics Benachrichtigung</string>
-    <string name="import_f">Andlytics Benachrichtigung</string>
-
     <string name="import_">Import</string>
     <string name="import_no_sdcard">Kann nicht importieren, keine SD-Karte erkannt!</string>
     <string name="import_no_app">Keine App zum importieren ausgewählt!</string>
@@ -113,7 +118,7 @@
 	<string name="export_">Export</string>
 	<string name="export_no_sdcard">Kann nicht exportieren, keine SD-Karte erkannt!</string>
 	<string name="export_no_app">Keine App zum exportieren ausgewählt!</string>
-    <string name="export_started">Export gestartet</string>
+	<string name="export_started">Export gestartet</string>
     <string name="export_finished">Export beendet</string>
     <string name="export_saved_to">Gespeichert unter</string>
 

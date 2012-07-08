@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
@@ -37,15 +38,9 @@ import com.github.andlyticsproject.view.ViewSwitcher3D.ViewSwitcherListener;
 
 public abstract class BaseChartActivity extends BaseActivity implements ViewSwitcherListener {
 	 private static String LOG_TAG=BaseChartActivity.class.toString();
-	private ChartTextSwitcher titleTextSwitcher;
-	private Animation inNegative;
-	private Animation outNegative;
-	private Animation inPositive;
-	private Animation outPositive;
 
 	private ChartGalleryAdapter chartGalleryAdapter;
 	private ChartGallery chartGallery;
-	private int currentChartPosition;
 	private ListView dataList;
 	private TextView timeframeText;
 	protected String timetext;
@@ -62,8 +57,8 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getSupportActionBar().setSubtitle(packageName);
 		setContentView(R.layout.basechart);
-		currentChartPosition = -1;
 		List<View> extras;
 		extras = getExtraConfig();
 		if (extras != null) {
@@ -82,19 +77,7 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 		}
 
 		currentTimeFrame = Preferences.getChartTimeframe(this);
-		
-		View backButton = findViewById(R.id.base_chart_button_back);
-		backButton.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				startActivity(Main.class, false, true);
-				overridePendingTransition(R.anim.activity_prev_in, R.anim.activity_prev_out);
-			}
-		});
-
-		View configButton = findViewById(R.id.base_chart_button_config);
-		if (configButton != null) {
 			listViewSwitcher = new ViewSwitcher3D((ViewGroup) findViewById(R.id.base_chart_bottom_frame));
 			listViewSwitcher.setListener(this);
 
@@ -201,21 +184,6 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 					}
 				}
 			});
-			
-		}// End if(configButton!=null)
-
-		titleTextSwitcher = (ChartTextSwitcher) findViewById(R.id.base_chart_base_chart_type);
-		titleTextSwitcher.setFactory(new ViewFactory() {
-
-			public View makeView() {
-
-				return getLayoutInflater().inflate(R.layout.base_chart_headline, null);
-			}
-		});
-		inNegative = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
-		outNegative = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
-		inPositive = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
-		outPositive = AnimationUtils.loadAnimation(this, R.anim.slide_out_right);
 
 		chartGallery = (ChartGallery) findViewById(R.id.base_chart_gallery);
 		chartGalleryAdapter = new ChartGalleryAdapter(new ArrayList<View>());
@@ -226,15 +194,6 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
 				chartGallery.setIgnoreLayoutCalls(true);
-
-				if (currentChartPosition < position) {
-					titleTextSwitcher.setInAnimation(inNegative);
-					titleTextSwitcher.setOutAnimation(outNegative);
-				} else {
-					titleTextSwitcher.setInAnimation(inPositive);
-					titleTextSwitcher.setOutAnimation(outPositive);
-				}
-				currentChartPosition = position;
 
 				if (view.getTag() != null) {
 					int pageColumn[] = (int[]) view.getTag();
@@ -257,10 +216,9 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 
 
 		if (iconFilePath != null) {
-
-			ImageView appIcon = (ImageView) findViewById(R.id.base_chart_app_icon);
 			Bitmap bm = BitmapFactory.decodeFile(iconFilePath);
-			appIcon.setImageBitmap(bm);
+			BitmapDrawable icon = new BitmapDrawable(getResources(),bm);
+			getSupportActionBar().setIcon(icon);
 		}
 
 	}
@@ -322,8 +280,7 @@ protected void setCurrentChart(int page,int column)
 		 */
 
 		{
-			titleTextSwitcher.setTag(string);
-			titleTextSwitcher.setText(string, image);
+			getSupportActionBar().setTitle(string);
 		}
 
 	}

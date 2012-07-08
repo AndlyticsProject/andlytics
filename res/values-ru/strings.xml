@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Andlytics</string>
+    <string name="app_name_admob">AdMob</string>
+
+    <string name="one_entry_hint_desc">Andlytics собирает данные в течение времени. Чтобы увидеть наглядный график, загляните сюда позже, как только появится больше данных.\n\n
+	Обычно информация о загрузках обновляется каждые 24&#8211;48 часа.</string>
+    <string name="one_entry_hint_demo"><u>График с демо-данными</u></string>
+
+    <string name="crash_desc">Произошла неожиданная ошибка.\n\nПожалуйста, помогите нам решить проблему, отослав отчет об ошибке. Информация об ошибке и о вашем устройстве (такая как производитель, модель, версия операционной системы и т.д.) будет отправлена нам и поможет решить проблему.\n\nСпасибо!\n\n</string>
+    <string name="newversion_desc"><b>Произошла неожиданная ошибка, возможно из-за изменений в интерфейсе на серверной стороне.</b>\n\nНо у нас есть хорошая новость, новая версия Andlytics доступна в Android Market.\n\nПожалуйста, обновитесь прежде чем сообщать об ошибке.\n\nСпасибо!\n\n\n</string>
+    <string name="account_required">необходим аккаунт Android-разработчика</string>
+    <string name="account_choose">Пожалуйста выберите или добавьте аккаунт Google. Это должен быть зарегистрированный аккаунт разработчика, с приложениями, опубликованными в Android Market (аккаунты \'Google Apps for Business\' пока не поддерживаются).</string>
+    <string name="account_add">Добавьте аккаунт Android-разработчика</string>
+    <string name="logout">Выйти</string>
+    <string name="refresh">Обновить</string>
+    <string name="comments">Комментарии</string>
+    <string name="total_downloads">Общее число загрузок</string>
+    <string name="active_installs">Активные установки</string>
+    <string name="admob_revenue">Доход AdMob</string>
+    <string name="admob_requests">Запросы AdMob</string>
+    <string name="average_rating">Средний рейтинг</string>
+    <string name="ratings">Рейтинги</string>
+    <!-- Lower case versions for main screen e.g. X comments -->
+    <string name="num_comments">комментарии</string>
+    <string name="num_total_downloads">общее число загрузок</string>
+    <string name="num_active_installs">активные установки</string>
+    <string name="num_average_rating">средний рейтинг</string>
+    <string name="num_ratings">рейтинги</string>
+    
+    <string name="auto_sync">Автосинхронизация</string>
+    <string name="notifications">Уведомления</string>
+    <string name="statistics_export">Экспорт данных статистики</string>
+    <string name="statistics_import">Импорт данных статистики</string>
+    <string name="apps_hide">Выберите приложения, которые нужно спрятать</string>
+    <string name="feedback">Отправить отзыв</string>
+    <string name="settings">Настройки</string>
+    <string name="downloads">Загрузки</string>
+    <string name="close">Закрыть</string>
+    <string name="rating_changes">Изменения рейтинга</string>
+    <string name="comment_changes">Изменения в комментариях</string>
+    <string name="download_changes">Изменения в загрузках</string>
+    <string name="notification_trigger">Триггер для уведомлений</string>
+    <string name="disable_notifications">Уведомления включены для</string>
+    <string name="notification_signal">Тип уведомления</string>
+    <string name="notification_sound">Звук уведомления</string>
+    <string name="notification_light">Подсветка уведомления</string>
+    <string name="apss_notification">Уведомления об изменениях для приложений</string>
+    <string name="select_files_import">Выберите файлы для импорта</string>
+    <string name="data_replaced">Существующие данные будут перезаписаны</string>
+    <string name="run_import">Запустить импорт</string>
+    <string name="cancel">Отмена</string>
+    <string name="ok">OK</string>
+    <string name="title">Название</string>
+    <string name="text">Текст</string>
+    <string name="select_files_export">Выберите файлы для экспорта</string>
+    <string name="export_files_replaced">Существующие экспортные файлы будут перезаписаны</string>
+    <string name="run_export">Запустить экспорт</string>
+    <string name="by">от</string>
+    <string name="device">устройство</string>
+    <string name="long_click_translate">Длинный клик на комментарий для перевода</string>
+    <string name="load_more_comments">Загрузить еще комментарии</string>
+    <string name="info_comments">Число комментариев на главном экране может быть больше числа, отображенного здесь, из-за отмененных/изменненых комментариев.</string>
+    <string name="time_frame">Временной отрезок</string>
+    <string name="seven_days">Последние 7 дней</string>
+    <string name="thirty_days">Последние 30 дней</string>
+    <string name="unlimited">Неограниченный</string>
+    <string name="date_format">Формат даты</string>
+    <string name="ddmmyy">День/Месяц/Год</string>
+    <string name="yymmdd">Год/Месяц/День</string>
+    <string name="mmddyy">Месяц/День/Год</string>
+    <string name="smooth_values">Сглаженные значения</string>
+    <string name="info_smooth">Количество скачиваний и активных установок не обновляется Google каждый день. Вы можете выбрать сглаживание для этих значений. Рейтинги не подвержены этому, так как обновляются почти мгновенно.</string>
+    <string name="auto_sync_period">Период автосинхронизации</string>
+    <string name="info_autosync">Если автосинхронизация будет выключена, графики не будут обновляться</string>
+    <string name="admob_login">ВХОД В ADMOB</string>
+    <string name="password">Пароль</string>
+    <string name="login">Логин</string>
+    <string name="remove_admob">Убрать связь с сайтом AdMob</string>
+    <string name="remove_admob_app">Убрать значения AdMob для этого приложения</string>
+    <string name="loading_site">Загрузка списка сайтов&#8230;</string>
+    <string name="select_admob_site">Выберите сайт AdMob для настройки связи с приложением</string>
+    <string name="choose_app">Выберите приложение</string>
+    <string name="admob_required">Нужен аккаунт AdMob</string>
+    <string name="admob_add">Добавить аккаунт AdMob</string>
+    <string name="admob_info">Для аккаунтов AdMob, присоединенных к аккаунтам Google, вы можете найти пароль API на странице информации об аккаунте:</string>
+    <string name="percentage">Проценты</string>
+    <string name="daily">Изменения за день</string>
+    <string name="downloads_day">Загрузок за день</string>
+    <string name="active_installs_percent">Активных установок в процентах</string>
+    <string name="swipe">Переключиться жестом на следующий график -></string>
+
+    <string name="admob">AdMob</string>
+    <string name="admob__revenue">Доход</string>
+    <string name="admob__epc">epc</string>
+    <string name="admob__requests">Запросы</string>
+    <string name="admob__clicks">Клики</string>
+    <string name="admob__fill_rate">Уровень заполнения</string>
+    <string name="admob__eCPM">eCPM</string>
+    <string name="admob__impressions">Мнения</string>
+    <string name="admob__CTR">CTR</string>
+    <string name="admob__house_ad_clicks">Рекламные клики</string>
+    <string name="admob__charts_available">Доступные графики AdMob</string>
+    <string name="last_update">Последнее обновление</string>
+
+    <string name="changelog_title">Список изменений</string>
+    <string name="changelog_thanks">Спасибо, что установили Andlytics!</string>
+
+    <string name="notification_title">Проверка изменений Andlytics</string>
+
+    <string name="import_">Импорт</string>
+    <string name="import_no_sdcard">SD-карта не примонтирована, не получается импортировать!</string>
+    <string name="import_no_app">Не выбрано приложение, не получается импортировать!</string>
+    <string name="importing">Импортируется</string>
+    <string name="import_started">Импорт начат</string>
+    <string name="import_finished">Импорт завершен</string>
+    <string name="import_error">Ошибка во время импорта</string>
+	<string name="export_">Экспорт</string>
+	<string name="export_no_sdcard">SD-карта не примонтирована, не получается экспортировать!</string>
+	<string name="export_no_app">Не выбрано приложение, не получается экспортировать!</string>
+	<string name="export_started">Экспорт начат</string>
+    <string name="export_finished">Экспорт завершен</string>
+    <string name="export_saved_to">Сохранить в</string>
+
+</resources>

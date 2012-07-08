@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Normal" parent="android:Theme.NoTitleBar">
-        <item name="android:windowBackground">@drawable/app_background</item>
-        <item name="android:windowNoTitle">true</item>
+    <style name="Theme.Andlytics" parent="Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
+        <item name="actionBarStyle">@style/Widget.Andlytics.ActionBar</item>
+    </style>
+
+    <style name="Widget.Andlytics.ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="subtitleTextStyle">@style/TextAppearance.Andlytics.Widget.ActionBar.Subtitle</item>
+    </style>
+    
+    <style name="TextAppearance.Andlytics.Widget.ActionBar.Subtitle" parent="Widget">
+        <item name="android:textSize">@dimen/abs__action_bar_subtitle_text_size</item>
+        <item name="android:textColor">@android:color/secondary_text_dark</item>
     </style>
     
     <style name="MainTableText" parent="@android:style/TextAppearance.Small">
@@ -39,7 +47,7 @@
         <item name="@android:windowExitAnimation">@anim/info_dialog_fade_out</item>
     </style>  
     
-        <style name="ActionBarSeparator">
+    <style name="ActionBarSeparator">
         <item name="android:layout_width">2px</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:background">@drawable/actionbar_separator</item>
