@@ -43,7 +43,6 @@ import com.github.andlyticsproject.dialog.ExportDialog;
 import com.github.andlyticsproject.dialog.GhostDialog;
 import com.github.andlyticsproject.dialog.GhostDialog.GhostSelectonChangeListener;
 import com.github.andlyticsproject.dialog.ImportDialog;
-import com.github.andlyticsproject.dialog.NotificationsDialog;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.InvalidJSONResponseException;
 import com.github.andlyticsproject.exception.NetworkException;
@@ -79,8 +78,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
     private StatsMode currentStatsMode;
     private TextView statsModeText;
     private ImageView statsModeIcon;
-    private View notificationButton;
-    public NotificationsDialog notificationDialog;
     public ExportDialog exportDialog;
     public ImportDialog importDialog;
 
@@ -116,7 +113,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
         // status & progess bar
         statusText = (TextView) findViewById(R.id.main_app_status_line);
         ghostButton = (View) findViewById(R.id.main_ghost_button);
-        notificationButton = (View) findViewById(R.id.main_notification_button);
 
         statsModeToggle = (View) findViewById(R.id.main_button_statsmode);
         statsModeText = (TextView) findViewById(R.id.main_button_statsmode_text);
@@ -158,14 +154,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
             @Override
             public void onClick(View v) {
                 (new LoadGhostDialog()).execute();
-            }
-        });
-
-        notificationButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-            	(new LoadNotificationDialog()).execute();
             }
         });
 
@@ -630,30 +618,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
                 } else {
                     Toast.makeText(Main.this, "SD-Card not mounted or invalid file format, can't import!", Toast.LENGTH_LONG).show();
                 }
-            }
-        }
-
-    }
-    
-    
-    private class LoadNotificationDialog extends AsyncTask<Boolean, Void, Boolean> {
-
-        private List<AppInfo> allStats;
-
-        @Override
-        protected Boolean doInBackground(Boolean... params) {
-
-            allStats = db.getAllAppsLatestStats(accountname);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-
-            if (!isFinishing()) {
-                notificationDialog = new NotificationsDialog(Main.this, allStats, accountname, db);
-                notificationDialog.show();
             }
         }
 

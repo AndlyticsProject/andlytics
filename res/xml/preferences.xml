@@ -10,7 +10,13 @@
         android:title="@string/auto_sync" />
 
     <Preference
+        android:icon="@drawable/icon_notification"
         android:key="prefNotifications"
         android:title="@string/notifications" />
+    
+    <Preference
+        android:icon="@drawable/icon_ghost"
+        android:key="prefHiddenApps"
+        android:title="@string/apps_hide" />
 
 </PreferenceScreen>

@@ -68,7 +68,8 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity i
 
 
 		// App list
-		PreferenceCategory appList = (PreferenceCategory) getPreferenceScreen().findPreference("prefCatNotificationApps");	
+		PreferenceCategory appList = (PreferenceCategory) getPreferenceScreen().findPreference("prefCatNotificationApps");
+		// Create a dummy preference while we load the app list as it can be blocked by other db opperations
 		mDummyAppPreference = new Preference(this);
 		mDummyAppPreference.setTitle(R.string.loading_app_list);
 		appList.addPreference(mDummyAppPreference);
@@ -85,7 +86,6 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity i
 			}
 		}
 	}
-
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
@@ -106,20 +106,21 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity i
 			pref.setTitle(app.getName());
 			pref.setSummary(app.getPackageName());
 			pref.setChecked(!app.isSkipNotification());
-			pref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-				@Override
-				public boolean onPreferenceChange(Preference preference, Object newValue) {
-					// TODO Should this be done in a different thread?
-					AndlyticsApp.getInstance().getDbAdapter().setSkipNotification((String) preference.getSummary(), !(Boolean)newValue);
-					return true;
-				}
-			});
+			pref.setOnPreferenceChangeListener(mAppPrefChangedListener);
 			appList.addPreference(pref);
-			// TODO Create a special preference and add the app icon to it
+			// TODO Load the app's icon from cache and add it?
 		}
 
 	}	
 
+	OnPreferenceChangeListener mAppPrefChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			// TODO Should this be done in a different thread?
+			AndlyticsApp.getInstance().getDbAdapter().setSkipNotification((String) preference.getSummary(), !(Boolean)newValue);
+			return true;
+		}
+	};
 
 
 	@Override
