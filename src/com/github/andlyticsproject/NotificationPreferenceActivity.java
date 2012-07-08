@@ -40,17 +40,20 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity i
 		CheckBoxPreference ratings = new CheckBoxPreference(this);
 		ratings.setKey(Preferences.NOTIFICATION_CHANGES_RATING + mAccountName);
 		ratings.setTitle(R.string.rating_changes);
+		ratings.setDefaultValue(true);
 		notificationTrigger.addPreference(ratings);
 
 		CheckBoxPreference comments = new CheckBoxPreference(this);
 		comments.setKey(Preferences.NOTIFICATION_CHANGES_COMMENTS + mAccountName);
 		comments.setTitle(R.string.comment_changes);
+		comments.setDefaultValue(true);
 		notificationTrigger.addPreference(comments);
 
 
 		CheckBoxPreference downloads = new CheckBoxPreference(this);
 		downloads.setKey(Preferences.NOTIFICATION_CHANGES_DOWNLOADS + mAccountName);
 		downloads.setTitle(R.string.download_changes);
+		downloads.setDefaultValue(true);
 		notificationTrigger.addPreference(downloads);
 
 		// Notification signal
@@ -58,11 +61,13 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity i
 		CheckBoxPreference sound = new CheckBoxPreference(this);
 		sound.setKey(Preferences.NOTIFICATION_SOUND + mAccountName);
 		sound.setTitle(R.string.notification_sound);
+		sound.setDefaultValue(true);
 		notificationSignal.addPreference(sound);
 
 		CheckBoxPreference light = new CheckBoxPreference(this);
 		light.setKey(Preferences.NOTIFICATION_LIGHT + mAccountName);
 		light.setTitle(R.string.notification_light);
+		light.setDefaultValue(true);
 		notificationSignal.addPreference(light);
 
 
