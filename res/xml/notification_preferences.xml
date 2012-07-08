@@ -4,6 +4,7 @@
 
     <PreferenceCategory android:title="@string/notification_trigger" 
         android:key="prefCatNotificationTrigger">
+        <!-- Actual preferences are added in java as their key contains the account name -->
         <!-- CheckBoxPreference
             android:defaultValue="true"
             android:title="@string/rating_changes" />

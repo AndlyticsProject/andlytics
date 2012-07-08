@@ -25,7 +25,6 @@ public class HiddenAppsPreferenceActivity extends SherlockPreferenceActivity imp
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 
 		mAccountName = getIntent().getExtras().getString(Constants.AUTH_ACCOUNT_NAME);

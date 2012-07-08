@@ -28,6 +28,6 @@
 		android:text="account name"
 		android:layout_gravity="center"
 		android:paddingBottom="5dp"
-		android:paddingTop="15dp" />
+		android:paddingTop="5dp" />
 
 </LinearLayout>

@@ -25,7 +25,6 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity i
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 
 		mAccountName = getIntent().getExtras().getString(Constants.AUTH_ACCOUNT_NAME);
@@ -35,7 +34,7 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity i
 		prefMgr.setSharedPreferencesName(Preferences.PREF);
 		addPreferencesFromResource(R.xml.notification_preferences);
 
-		// Have to built these up dynamically as the key contains the account name		
+		// Have to build these up dynamically as the key contains the account name		
 		// Notification trigger
 		PreferenceCategory notificationTrigger = (PreferenceCategory) getPreferenceScreen().findPreference("prefCatNotificationTrigger");	
 		CheckBoxPreference ratings = new CheckBoxPreference(this);

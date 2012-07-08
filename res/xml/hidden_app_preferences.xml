@@ -2,4 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/apps_hide" >
 
+    <!-- Actual preferences are added in java as they are dynamic -->
+
 </PreferenceScreen>
