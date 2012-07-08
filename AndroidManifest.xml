@@ -80,10 +80,15 @@
 		<activity
 			android:name=".PreferenceActivity"
 			android:label="@string/preferences">
-		</activity><activity
+		</activity>
+		<activity
 			android:name=".NotificationPreferenceActivity"
 			android:label="@string/notifications">
 		</activity>
+		<activity
+			android:name=".HiddenAppsPreferenceActivity"
+			android:label="@string/notifications">
+		</activity>		
 		<service
 			android:name=".sync.SyncAdapterService"
 			android:exported="false"

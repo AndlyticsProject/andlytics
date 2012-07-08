@@ -39,12 +39,17 @@ public class PreferenceActivity extends SherlockPreferenceActivity
 		prefMgr.setSharedPreferencesName(Preferences.PREF);
 		addPreferencesFromResource(R.xml.preferences);
 		
+		// Find and setup the auto sync pref
 		ListPreference autoSync = (ListPreference) getPreferenceScreen().findPreference(Preferences.PREF_AUTO_SYNC_PERIOD);
 		autoSync.setOnPreferenceChangeListener(this);
 		AutosyncHandler autosyncHandler = AutosyncHandlerFactory.getInstance(this);
         int autosyncPeriod = autosyncHandler.getAutosyncPeriod(mAccountName) / 60;
 		autoSync.setValue(Integer.toString(autosyncPeriod));
+		
+		
 		getPreferenceScreen().findPreference(Preferences.PREF_NOTIFICATIONS)
+				.setOnPreferenceClickListener(this);
+		getPreferenceScreen().findPreference(Preferences.PREF_HIDDEN_APPS)
 				.setOnPreferenceClickListener(this);
 
 		for(int i=0;i<getPreferenceScreen().getPreferenceCount();i++){
@@ -56,6 +61,10 @@ public class PreferenceActivity extends SherlockPreferenceActivity
 	public boolean onPreferenceClick(Preference preference) {
 		if (preference.getKey().equals(Preferences.PREF_NOTIFICATIONS)){
 			Intent i = new Intent(this, NotificationPreferenceActivity.class);
+			i.putExtra(Constants.AUTH_ACCOUNT_NAME, mAccountName);
+			startActivity(i);
+		} else if (preference.getKey().equals(Preferences.PREF_HIDDEN_APPS)){
+			Intent i = new Intent(this, HiddenAppsPreferenceActivity.class);
 			i.putExtra(Constants.AUTH_ACCOUNT_NAME, mAccountName);
 			startActivity(i);
 		}
@@ -91,6 +100,7 @@ public class PreferenceActivity extends SherlockPreferenceActivity
 	
 	
 	// Generic code to provide summaries for preferences based on their values
+	// Overkill at the moment, but may be useful in the future as we add more options
 
 	private void initSummary(Preference p){
 		if (p instanceof PreferenceCategory){

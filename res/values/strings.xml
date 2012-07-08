@@ -125,5 +125,6 @@
     
     <string name="preferences">Preferences</string>
     <string name="loading_app_list">Loading app list…</string>
+    <string name="no_published_apps">No published apps found</string>
 
 </resources>
