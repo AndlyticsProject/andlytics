@@ -17,10 +17,16 @@ import com.github.andlyticsproject.model.AppInfo;
 
 // See PreferenceActivity for warning suppression justification
 @SuppressWarnings("deprecation")
-public class NotificationPreferenceActivity extends SherlockPreferenceActivity implements LoadAppListTaskCompleteListener {
+public class NotificationPreferenceActivity extends SherlockPreferenceActivity implements
+		LoadAppListTaskCompleteListener {
 
 	private String mAccountName;
-	private Preference mDummyAppPreference;
+	private Preference mPrefDummyApp;
+	private CheckBoxPreference mPrefDownloads;
+	private CheckBoxPreference mPrefRatings;
+	private CheckBoxPreference mPrefComments;
+	private PreferenceCategory mPrefCatNotificationSignal;
+	private PreferenceCategory mPrefCatAppsList;
 	private LoadAppListTask mTask;
 
 	@Override
@@ -37,47 +43,79 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity i
 		// Have to build these up dynamically as the key contains the account name		
 		// Notification trigger
 		PreferenceCategory notificationTrigger = (PreferenceCategory) getPreferenceScreen().findPreference("prefCatNotificationTrigger");	
-		CheckBoxPreference ratings = new CheckBoxPreference(this);
-		ratings.setKey(Preferences.NOTIFICATION_CHANGES_RATING + mAccountName);
-		ratings.setTitle(R.string.rating_changes);
-		ratings.setDefaultValue(true);
-		notificationTrigger.addPreference(ratings);
+		mPrefRatings = new CheckBoxPreference(this);
+		mPrefRatings.setKey(Preferences.NOTIFICATION_CHANGES_RATING + mAccountName);
+		mPrefRatings.setTitle(R.string.rating_changes);
+		mPrefRatings.setDefaultValue(true);
+		mPrefRatings.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {			
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				Boolean notificationsEnabled = (Boolean) newValue || mPrefComments.isChecked() || mPrefDownloads.isChecked();
+				mPrefCatNotificationSignal.setEnabled(notificationsEnabled);
+				mPrefCatAppsList.setEnabled(notificationsEnabled);
+				return true;
+			}
+		});
+		notificationTrigger.addPreference(mPrefRatings);
 
-		CheckBoxPreference comments = new CheckBoxPreference(this);
-		comments.setKey(Preferences.NOTIFICATION_CHANGES_COMMENTS + mAccountName);
-		comments.setTitle(R.string.comment_changes);
-		comments.setDefaultValue(true);
-		notificationTrigger.addPreference(comments);
+		mPrefComments = new CheckBoxPreference(this);
+		mPrefComments.setKey(Preferences.NOTIFICATION_CHANGES_COMMENTS + mAccountName);
+		mPrefComments.setTitle(R.string.comment_changes);
+		mPrefComments.setDefaultValue(true);
+		mPrefComments.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {			
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				Boolean notificationsEnabled = (Boolean) newValue || mPrefRatings.isChecked() || mPrefDownloads.isChecked();
+				mPrefCatNotificationSignal.setEnabled(notificationsEnabled);
+				mPrefCatAppsList.setEnabled(notificationsEnabled);
+				return true;
+			}
+		});
+		notificationTrigger.addPreference(mPrefComments);
 
-
-		CheckBoxPreference downloads = new CheckBoxPreference(this);
-		downloads.setKey(Preferences.NOTIFICATION_CHANGES_DOWNLOADS + mAccountName);
-		downloads.setTitle(R.string.download_changes);
-		downloads.setDefaultValue(true);
-		notificationTrigger.addPreference(downloads);
+		mPrefDownloads = new CheckBoxPreference(this);
+		mPrefDownloads.setKey(Preferences.NOTIFICATION_CHANGES_DOWNLOADS + mAccountName);
+		mPrefDownloads.setTitle(R.string.download_changes);
+		mPrefDownloads.setDefaultValue(true);
+		mPrefDownloads.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {			
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				Boolean notificationsEnabled = (Boolean) newValue || mPrefRatings.isChecked() || mPrefComments.isChecked();
+				mPrefCatNotificationSignal.setEnabled(notificationsEnabled);
+				mPrefCatAppsList.setEnabled(notificationsEnabled);
+				return true;
+			}
+		});
+		notificationTrigger.addPreference(mPrefDownloads);
 
 		// Notification signal
-		PreferenceCategory notificationSignal = (PreferenceCategory) getPreferenceScreen().findPreference("prefCatNotificationSignal");	
+		mPrefCatNotificationSignal = (PreferenceCategory) getPreferenceScreen().findPreference("prefCatNotificationSignal");	
 		CheckBoxPreference sound = new CheckBoxPreference(this);
 		sound.setKey(Preferences.NOTIFICATION_SOUND + mAccountName);
 		sound.setTitle(R.string.notification_sound);
 		sound.setDefaultValue(true);
-		notificationSignal.addPreference(sound);
+		mPrefCatNotificationSignal.addPreference(sound);
 
 		CheckBoxPreference light = new CheckBoxPreference(this);
 		light.setKey(Preferences.NOTIFICATION_LIGHT + mAccountName);
 		light.setTitle(R.string.notification_light);
 		light.setDefaultValue(true);
-		notificationSignal.addPreference(light);
+		mPrefCatNotificationSignal.addPreference(light);
 
 
 		// App list
-		PreferenceCategory appList = (PreferenceCategory) getPreferenceScreen().findPreference("prefCatNotificationApps");
+		mPrefCatAppsList = (PreferenceCategory) getPreferenceScreen().findPreference("prefCatNotificationApps");
 		// Create a dummy preference while we load the app list as it can be blocked by other db opperations
-		mDummyAppPreference = new Preference(this);
-		mDummyAppPreference.setTitle(R.string.loading_app_list);
-		appList.addPreference(mDummyAppPreference);
+		mPrefDummyApp = new Preference(this);
+		mPrefDummyApp.setTitle(R.string.loading_app_list);
+		mPrefCatAppsList.addPreference(mPrefDummyApp);		
+		
+		// Set initial enabled state
+		Boolean notificationsEnabled = mPrefComments.isChecked() || mPrefRatings.isChecked() || mPrefDownloads.isChecked();
+		mPrefCatNotificationSignal.setEnabled(notificationsEnabled);
+		mPrefCatAppsList.setEnabled(notificationsEnabled);
 
+		// Load app list
 		mTask = (LoadAppListTask) getLastNonConfigurationInstance();
 		if (mTask == null){
 			mTask = new LoadAppListTask(this);
@@ -104,19 +142,18 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity i
 		mTask.detach();
 		mTask = null;
 		if (apps != null && apps.size() > 0){
-			PreferenceCategory appList = (PreferenceCategory) getPreferenceScreen().findPreference("prefCatNotificationApps");
-			appList.removePreference(mDummyAppPreference);
+			mPrefCatAppsList.removePreference(mPrefDummyApp);
 			for (AppInfo app : apps){
 				CheckBoxPreference pref = new CheckBoxPreference(this);
 				pref.setTitle(app.getName());
 				pref.setSummary(app.getPackageName());
 				pref.setChecked(!app.isSkipNotification());
 				pref.setOnPreferenceChangeListener(mAppPrefChangedListener);
-				appList.addPreference(pref);
+				mPrefCatAppsList.addPreference(pref);
 				// TODO Load the app's icon from cache and add it?
 			}
 		} else {
-			mDummyAppPreference.setTitle(R.string.no_published_apps);
+			mPrefDummyApp.setTitle(R.string.no_published_apps);
 		}
 	}	
 
@@ -128,7 +165,7 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity i
 			return true;
 		}
 	};
-
+	
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
