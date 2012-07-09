@@ -39,12 +39,8 @@ import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
-import com.github.andlyticsproject.dialog.AutosyncDialog;
 import com.github.andlyticsproject.dialog.ExportDialog;
-import com.github.andlyticsproject.dialog.GhostDialog;
-import com.github.andlyticsproject.dialog.GhostDialog.GhostSelectonChangeListener;
 import com.github.andlyticsproject.dialog.ImportDialog;
-import com.github.andlyticsproject.dialog.NotificationsDialog;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.InvalidJSONResponseException;
 import com.github.andlyticsproject.exception.NetworkException;
@@ -57,7 +53,7 @@ import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
 import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.Utils;
 
-public class Main extends BaseActivity implements GhostSelectonChangeListener, AuthenticationCallback {
+public class Main extends BaseActivity implements AuthenticationCallback {
 
 	/** Key for latest version code preference. */
 	private static final String LAST_VERSION_CODE_KEY = "last_version_code";
@@ -71,8 +67,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
     private MainListAdapter adapter;
     public boolean dotracking;
     private View footer;
-    private View ghostButton;
-    public GhostDialog ghostDialog;
 
     private boolean isAuthenticationRetry;    
     public Animation aniPrevIn;
@@ -80,9 +74,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
     private StatsMode currentStatsMode;
     private TextView statsModeText;
     private ImageView statsModeIcon;
-    private View notificationButton;
-    private View autosyncButton;
-    public NotificationsDialog notificationDialog;
     public ExportDialog exportDialog;
     public ImportDialog importDialog;
 
@@ -117,9 +108,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
         // status & progess bar
         statusText = (TextView) findViewById(R.id.main_app_status_line);
-        ghostButton = (View) findViewById(R.id.main_ghost_button);
-        notificationButton = (View) findViewById(R.id.main_notification_button);
-        autosyncButton = (View) findViewById(R.id.main_autosync_button);
 
         statsModeToggle = (View) findViewById(R.id.main_button_statsmode);
         statsModeText = (TextView) findViewById(R.id.main_button_statsmode_text);
@@ -153,30 +141,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
                 Intent intent = new Intent(Main.this, LoginActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
-            }
-        });
-
-        ghostButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                (new LoadGhostDialog()).execute();
-            }
-        });
-
-        notificationButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-            	(new LoadNotificationDialog()).execute();
-            }
-        });
-
-        autosyncButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                showAutosyncDialog();
             }
         });
 
@@ -240,6 +204,12 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 			break;
 		case R.id.itemMainmenuFeedback:
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/AndlyticsProject/andlytics/issues")));
+			break;
+		case R.id.itemMainmenuPreferences:
+			Intent i = new Intent(this, PreferenceActivity.class);
+			i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
+			startActivity(i);
+			break;
 		default:
 			return false;
 		}
@@ -474,12 +444,8 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
             } else {
 
                 if (allStats.size() == 0) {
-                    Toast.makeText(Main.this, "no published apps found", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Main.this, R.string.no_published_apps, Toast.LENGTH_LONG).show();
                 }
-            }
-
-            if (ghostDialog != null && ghostDialog.isShowing()) {
-                ghostDialog.setAppInfos(allStats);
             }
 
         }
@@ -552,29 +518,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
     }
 
-    private class LoadGhostDialog extends AsyncTask<Boolean, Void, Boolean> {
-
-        private List<AppInfo> allStats;
-
-        @Override
-        protected Boolean doInBackground(Boolean... params) {
-
-            allStats = db.getAllAppsLatestStats(accountname);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-
-            if (!isFinishing()) {
-                ghostDialog = new GhostDialog(Main.this, allStats, Main.this);
-                ghostDialog.show();
-            }
-        }
-
-    }
-
     private class LoadExportDialog extends AsyncTask<Boolean, Void, Boolean> {
 
         private List<AppInfo> allStats;
@@ -640,39 +583,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
 
     }
 
-
-    protected void showAutosyncDialog() {
-
-        if(!isFinishing()) {
-
-            AutosyncDialog autosyncDialog = new AutosyncDialog(Main.this, accountname);
-            autosyncDialog.show();
-        }
-    }
-
-    private class LoadNotificationDialog extends AsyncTask<Boolean, Void, Boolean> {
-
-        private List<AppInfo> allStats;
-
-        @Override
-        protected Boolean doInBackground(Boolean... params) {
-
-            allStats = db.getAllAppsLatestStats(accountname);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-
-            if (!isFinishing()) {
-                notificationDialog = new NotificationsDialog(Main.this, allStats, accountname, db);
-                notificationDialog.show();
-            }
-        }
-
-    }
-
     @Override
     public void onBackPressed() {
         Preferences.removeAccountName(Main.this);
@@ -683,21 +593,6 @@ public class Main extends BaseActivity implements GhostSelectonChangeListener, A
     @Override
     protected void onStop() {
         super.onStop();
-    }
-
-    @Override
-    public void onGhostSelectionChanged(String packageName, boolean isGhost) {
-
-        db.setGhost(accountname, packageName, isGhost);
-        (new LoadDbEntries()).execute(false);
-
-    }
-
-    @Override
-    public void onGhostDialogClose() {
-
-        (new LoadDbEntries()).execute(false);
-
     }
 
     private void updateStatsMode() {

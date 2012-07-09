@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/preferences" >
+
+    <ListPreference
+        android:dialogTitle="@string/auto_sync_period"
+        android:entries="@array/autosync_periods"
+        android:entryValues="@array/autosync_periods_values"
+        android:key="prefAutoSyncPeriod"
+        android:title="@string/auto_sync" />
+
+    <Preference
+        android:icon="@drawable/icon_notification"
+        android:key="prefNotifications"
+        android:title="@string/notifications" />
+    
+    <Preference
+        android:icon="@drawable/icon_ghost"
+        android:key="prefHiddenApps"
+        android:title="@string/apps_hide" />
+
+</PreferenceScreen>

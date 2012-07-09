@@ -121,5 +121,10 @@
 	<string name="export_started">Export started</string>
     <string name="export_finished">Export finished</string>
     <string name="export_saved_to">Saved to</string>
+    
+    
+    <string name="preferences">Preferences</string>
+    <string name="loading_app_list">Loading app list…</string>
+    <string name="no_published_apps">No published apps found</string>
 
 </resources>
