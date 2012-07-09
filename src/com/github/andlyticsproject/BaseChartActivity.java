@@ -57,7 +57,6 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getSupportActionBar().setSubtitle(packageName);
 		setContentView(R.layout.basechart);
 		List<View> extras;
 		extras = getExtraConfig();
@@ -214,7 +213,11 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 		dataList = (ListView) findViewById(R.id.base_chart_list);
 		timeframeText = (TextView) findViewById(R.id.base_chart_timeframe);
 
-
+		String appName = getDbAdapter().getAppName(packageName);
+        if (appName != null){
+        	getSupportActionBar().setSubtitle(appName);
+        }		
+		
 		if (iconFilePath != null) {
 			Bitmap bm = BitmapFactory.decodeFile(iconFilePath);
 			BitmapDrawable icon = new BitmapDrawable(getResources(),bm);
