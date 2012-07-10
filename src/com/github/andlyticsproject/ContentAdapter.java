@@ -342,6 +342,26 @@ public class ContentAdapter {
 			return null;
 		}
 	}
+	
+	
+	public String getAppName(String packageName){
+		if (packageName == null){
+			return null;
+		}
+		String appName = null;
+		
+		Cursor cursor = context.getContentResolver().query(AppInfoTable.CONTENT_URI,
+				new String[] {AppInfoTable.KEY_APP_NAME},
+				AppInfoTable.KEY_APP_PACKAGENAME + "='" + packageName + "'",
+				null, null);
+		
+		if (cursor.moveToFirst()){
+			appName = cursor.getString(cursor.getColumnIndex(AppInfoTable.KEY_APP_NAME));
+		}
+		cursor.close();
+		
+		return appName;
+	}
 
 
 	public List<AppInfo> getAllAppsLatestStats(String account) {

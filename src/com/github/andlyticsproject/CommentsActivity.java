@@ -51,9 +51,7 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
     	setSupportProgressBarIndeterminateVisibility(false);
     	
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);        
-
-		getSupportActionBar().setSubtitle(packageName);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.comments);
         list = (ExpandableListView) findViewById(R.id.comments_list);
@@ -86,6 +84,11 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
         footer.setVisibility(View.GONE);
 
         db = getDbAdapter();
+        
+        String appName = db.getAppName(packageName);
+        if (appName != null){
+        	getSupportActionBar().setSubtitle(appName);
+        }
         
         if (iconFilePath != null) {
 			Bitmap bm = BitmapFactory.decodeFile(iconFilePath);
