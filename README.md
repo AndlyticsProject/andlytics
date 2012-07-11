@@ -43,5 +43,6 @@ Please fork this repository and contribute back using
 [pull requests](https://github.com/AndlyticsProject/andlytics/pulls).
 
 Any contributions, large or small, major features, bug fixes, additional language translations, 
-unit/integration tests are welcomed and appreciated
-but will be thoroughly reviewed and discussed.
+unit/integration tests are welcomed and appreciated but will be thoroughly reviewed and discussed.
+
+Translations should be done via [GetLocalization](http://www.getlocalization.com/andlyticsproject/)
