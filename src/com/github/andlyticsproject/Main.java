@@ -85,12 +85,12 @@ public class Main extends BaseActivity implements AuthenticationCallback {
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-    	setSupportProgressBarIndeterminateVisibility(false);
-    	
+    	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);    	
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.main);
+        setSupportProgressBarIndeterminateVisibility(false);
+        
+        
         db = getDbAdapter();
         LayoutInflater layoutInflater = getLayoutInflater();
 
