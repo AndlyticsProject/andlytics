@@ -71,9 +71,9 @@ public class AdmobActivity extends BaseChartActivity {
   }
   
 	public void onCreate(Bundle savedInstanceState) {
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);		
-
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
+        setSupportProgressBarIndeterminateVisibility(false);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		db = getDbAdapter();
@@ -104,7 +104,6 @@ public class AdmobActivity extends BaseChartActivity {
 			executeLoadDataDefault(false);
 		}
 
-		setSupportProgressBarIndeterminateVisibility(false);
 	}
   
   @Override
