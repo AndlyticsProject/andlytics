@@ -50,6 +50,7 @@ import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.sync.AutosyncHandler;
 import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
+import com.github.andlyticsproject.sync.NotificationHandler;
 import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.Utils;
 
@@ -300,10 +301,12 @@ public class Main extends BaseActivity implements AuthenticationCallback {
                     }
 
                     Map<String, List<String>> admobAccountSiteMap = new HashMap<String, List<String>>();
-
+                    
+                    List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
+                    
                     for (AppInfo appDownloadInfo : appDownloadInfos) {
-                        // update in database
-                        db.insertOrUpdateStats(appDownloadInfo);
+                        // update in database and check for diffs
+                        diffs.add(db.insertOrUpdateStats(appDownloadInfo));
                         String admobSiteId = Preferences.getAdmobSiteId(Main.this, appDownloadInfo.getPackageName());
                         if(admobSiteId != null) {
                             String admobAccount = Preferences.getAdmobAccount(Main.this, admobSiteId);
@@ -316,7 +319,10 @@ public class Main extends BaseActivity implements AuthenticationCallback {
                                 admobAccountSiteMap.put(admobAccount, siteList);
                             }
                         }
-                    }
+                    }                    
+
+                    // check for notifications
+                    NotificationHandler.handleNotificaions(Main.this, diffs, accountname);
 
                     // sync admob accounts
                     Set<String> admobAccuntKeySet = admobAccountSiteMap.keySet();
