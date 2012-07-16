@@ -2,7 +2,6 @@
 - ActionBar compatibile con ICS
 - Icone HD per schermi xlarge
 - Nuova schermata delle impostazioni
-- Admob può essere nascosto dalle impostazioni
 - Nuovi linguaggu: Catalano, Italiano, Russo
 
 2.0.1
