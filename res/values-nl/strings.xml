@@ -121,5 +121,8 @@
 	<string name="export_started">Exporteren gestart</string>
     <string name="export_finished">Exporteren klaar</string>
     <string name="export_saved_to">Weggeschreven naar</string>
+    
+    
+    <string name="preferences">Voorkeuren</string>
 
 </resources>

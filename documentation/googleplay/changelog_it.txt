@@ -1,0 +1,13 @@
+2.1.0
+- ActionBar compatibile con ICS
+- Icone HD per schermi xlarge
+- Nuova schermata delle impostazioni
+- Admob può essere nascosto dalle impostazioni
+- Nuovi linguaggu: Catalano, Italiano, Russo
+
+2.0.1
+- Corretto problema autenticazione
+- Funzioni "pro" ora disponibili gratuitamente (l'app è ora open source)
+- Nuove grafiche
+- EPC per AdMob
+- Nuove lingue: Italiano, Spagnolo, Tedesco, Olandese

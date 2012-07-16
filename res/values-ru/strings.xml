@@ -3,8 +3,8 @@
     <string name="app_name">Andlytics</string>
     <string name="app_name_admob">AdMob</string>
 
-    <string name="one_entry_hint_desc">Andlytics собирает данные в течение времени. Чтобы увидеть наглядный график, загляните сюда позже, как только появится больше данных.\n\n
-	Обычно информация о загрузках обновляется каждые 24&#8211;48 часа.</string>
+    <string name="one_entry_hint_desc">Andlytics собирает данные в течение времени. Чтобы увидеть наглядный график, загляните сюда позже, как только появится больше данных.
+\n\nОбычно информация о загрузках обновляется каждые 24&#8211;48 часа.</string>
     <string name="one_entry_hint_demo"><u>График с демо-данными</u></string>
 
     <string name="crash_desc">Произошла неожиданная ошибка.\n\nПожалуйста, помогите нам решить проблему, отослав отчет об ошибке. Информация об ошибке и о вашем устройстве (такая как производитель, модель, версия операционной системы и т.д.) будет отправлена нам и поможет решить проблему.\n\nСпасибо!\n\n</string>
@@ -121,5 +121,8 @@
 	<string name="export_started">Экспорт начат</string>
     <string name="export_finished">Экспорт завершен</string>
     <string name="export_saved_to">Сохранить в</string>
+    
+    
+    <string name="preferences">Настройки</string>
 
 </resources>

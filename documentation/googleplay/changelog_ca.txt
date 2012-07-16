@@ -1,3 +1,9 @@
+2.1.0
+- ActionBar compatible amb ICS
+- Icones en alta definició per a les pantalles extragrans
+- Nous idiomes: català, italià i rus
+
+2.0.1
 - Arreglada l'autenticació
 - Les característiques Pro ara són gratuïtes (ja que ara és de codi obert)
 - Nou disseny
