@@ -3,8 +3,7 @@
     <string name="app_name">Andlytics</string>
     <string name="app_name_admob">AdMob</string>
 
-    <string name="one_entry_hint_desc">Andlytics recol·lecta dades al llarg del temps. Per veure una gràfica amb sentit, torna quan hi hagi més dades disponibles.
-        \n\nNormalment, les estadístiques de descàrregues s\'actualitzen cada 24&#8211;48 hores.</string>
+    <string name="one_entry_hint_desc">Andlytics recol·lecta dades al llarg del temps, per veure una gràfica amb sentit, torna quan hi hagi més dades disponibles.  \n\nNormalment, les estadístiques de descàrregues s\'actualitzen cada 24&#8211;48 hores.</string>
     <string name="one_entry_hint_demo"><u>Mostra la gràfica amb dades de demostració</u></string>
 
     <string name="crash_desc">S\'ha produït un error inesperat.\n\nAjuda\'ns a arreglar-lo enviant-nos un informe d\'errors. Se\'ns enviarà informació sobre el teu dispositiu com ara el nom del fabricant, el número de model del dispositiu, el sistema operatiu, etc. per ajudar-nos a identificar el problema.\n\nGràcies!\n\n</string>
@@ -121,5 +120,8 @@
 	<string name="export_started">S\'ha iniciat l\'exportació</string>
     <string name="export_finished">S\'ha finalitzat l\'exportació</string>
     <string name="export_saved_to">Desat a</string>
+    
+    
+    <string name="preferences">Preferències</string>
 
 </resources>

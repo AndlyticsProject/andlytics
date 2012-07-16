@@ -121,5 +121,8 @@
 	<string name="export_started">Salvataggio iniziato</string>
     <string name="export_finished">Salvataggio completato</string>
     <string name="export_saved_to">Salvato in</string>
+    
+    
+    <string name="preferences">Preferenze</string>
 
 </resources>

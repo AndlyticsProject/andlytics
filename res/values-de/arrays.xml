@@ -1,7 +1,7 @@
 
     <resources>
         <string-array name="autosync_periods">
-            <item>deaktiviert</item>
+            <item>Deaktiviert</item>
             <item>15 Minuten</item>
             <item>30 Minuten</item>
             <item>1 Stunde</item>
@@ -11,5 +11,17 @@
             <item>8 Stunden</item>
             <item>12 Stunden</item>
             <item>24 Stunden</item>
+        </string-array>
+        <string-array name="autosync_periods_values">
+            <item>0</item>
+            <item>15</item>
+            <item>30</item>
+            <item>60</item>
+            <item>120</item>
+            <item>180</item>
+            <item>360</item>
+            <item>360</item>
+            <item>720</item>
+            <item>1440</item>
         </string-array>
     </resources>

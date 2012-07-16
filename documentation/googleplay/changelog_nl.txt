@@ -1,0 +1,11 @@
+2.1.0
+- ICS compatibele ActionBar
+- HD iconen for xlarge schermen
+- Nieuwe talen: Catalaans, Italiaans, Russisch
+
+2.0.1
+- Authenticatie gefixt
+- Pro extra's zijn nu gratis (omdat het nu open source is)
+- Nieuw ontwerp
+- EPC voor AdMob
+- Nieuwe talen: Spaans, Duits, Nederlands
