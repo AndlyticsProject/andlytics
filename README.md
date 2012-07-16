@@ -1,5 +1,21 @@
-Andlytics
-=========
+# Andlytics
+
+This repository contains the source code for the Andlytics Android app.
+
+<a href="https://play.google.com/store/apps/details?id=com.github.andlyticsproject" alt="Download from Google Play">
+  <img src="http://www.android.com/images/brand/android_app_on_play_large.png">
+</a>
+
+![](https://lh5.ggpht.com/2jUCISLj0lFDeZX3_xq2gdVN29rmudQqnGihq-Kvfkh3oO9oStVGD-v_wouQududorY=w705)
+
+Please see the [issues](https://github.com/AndlyticsProject/andlytics/issues) section to
+report any bugs or feature requests and to see the list of known issues.
+
+## License
+
+* [Apache Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
+
+# Description
 
 Project imported from last source code released by Timelappse (@andlytics) with fix by Maurizio Pinotti (@wwtwister).
 
@@ -20,3 +36,13 @@ KNOWN ISSUES
 - "Google Apps for Business" accounts are not supported yet
 - On some devices AdMob accounts keep disappearing, moving Andlytics from sdcard to internal storage might fix this
 - For AdMob accounts that are linked to a Google Account you can find the API password on the Account Information page http://www.admob.com/my_account/account_info.
+
+## Contributing
+
+Please fork this repository and contribute back using
+[pull requests](https://github.com/AndlyticsProject/andlytics/pulls).
+
+Any contributions, large or small, major features, bug fixes, additional language translations, 
+unit/integration tests are welcomed and appreciated but will be thoroughly reviewed and discussed.
+
+Translations should be done via [GetLocalization](http://www.getlocalization.com/andlyticsproject/).
