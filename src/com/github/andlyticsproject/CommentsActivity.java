@@ -47,13 +47,13 @@ public class CommentsActivity extends BaseActivity implements AuthenticationCall
     private static final int MAX_LOAD_COMMENTS = 20;
 
     public void onCreate(Bundle savedInstanceState) {
-    	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-    	setSupportProgressBarIndeterminateVisibility(false);
-    	
+    	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);    	
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         setContentView(R.layout.comments);
+        setSupportProgressBarIndeterminateVisibility(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        
+        
         list = (ExpandableListView) findViewById(R.id.comments_list);
         nocomments = (View) findViewById(R.id.comments_nocomments);
 
