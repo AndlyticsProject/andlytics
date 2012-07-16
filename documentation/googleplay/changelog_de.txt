@@ -2,7 +2,6 @@
 - ICS kompatible ActionBar
 - HD Icons für xlarge Bildschirme
 - Neue Einstellungsseite
-- Admob kann per Konfiguration ausgeblendet werden
 - Neue Sprachen: Katalanisch, Italienisch, Russisch
 
 2.0.1
