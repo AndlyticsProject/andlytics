@@ -71,42 +71,28 @@ public class DeveloperConsole {
 
 	private static final String GWT_PERMUTATION = "6D75CBE66FE85272BB1AD2C64A98B720";
 
-	private static final String PARAM_XSRFTOKEN = "<<xsrftoken>>";
-
-	private static final String GET_FULL_ASSET_INFO_FOR_USER_REQUEST = "7|2|8|https://play.google.com/apps/publish/gwt/|F760B0D40756F1F82FE1034DCEDAF8DA|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.AppEditorService|getProductInfosForUser|java.lang.String/2004016611|J|1|2|3|4|5|6|3|7|8|8|0|A|Bk|";
-
-	private static final String GET_ASSET_FOR_USER_COUNT_REQUEST = "7|0|4|https://play.google.com/apps/publish/gwt/|11B29A336607683DE538737452FFF924|com.google.wireless.android.vending.developer.shared.AppEditorService|getAssetForUserCount|1|2|3|4|0|";
-
-	private static final String GET_USER_COMMENTS_REQUEST = "7|2|11|https://play.google.com/apps/publish/gwt/|3B4252B1EA6FFDBEAC02B41B3975C468|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.CommentsService|getUserComments|java.lang.String/2004016611|J|java.lang.Iterable|<<appname>>|java.util.ArrayList/4159755760|1|2|3|4|5|6|7|7|8|8|9|9|9|7|10|<<start>>|<<length>>|11|0|11|0|11|0|0|";
-
-	private static final String GET_FEEDBACK_OVERVIEW = "7|0|6|https://play.google.com/apps/publish/gwt/|8A88A8C8E8E60107C7E013322C6CE8F2|com.google.wireless.android.vending.developer.shared.FeedbackService|getOverviewsForPackages|com.google.protos.userfeedback.gwt.AndroidFrontend$AndroidPackageListRequest$Json/4146859527|[,[<<packagelist>>] ] |1|2|3|4|1|5|5|6|";
-
-	//private static final String GET_FEEDBACK_REQUEST = "7|0|6|https://play.google.com/apps/publish/gwt/|8A88A8C8E8E60107C7E013322C6CE8F2|com.google.wireless.android.vending.developer.shared.FeedbackService|getDetailForPackage|com.google.protos.userfeedback.gwt.AndroidFrontend$AndroidPackageRequest$Json/2133352596|[,<<appname>>] |1|2|3|4|1|5|5|6|";
-
-	//"com.github.andlyticsproject"
+	//"com.github.andlyticsproject", but it seems "Andlytics"
 	private static final String PARAM_APPNAME = "<<appname>>";
-
+	private static final String PARAM_XSRFTOKEN = "<<xsrftoken>>";
 	private static final String PARAM_LENGTH = "<<length>>";
-
 	private static final String PARAM_PACKAGELIST = "<<packagelist>>";
-
 	private static final String PARAM_STARTINDEX = "<<start>>";
 
 	private static final long PARAM_MAX_APPS_NUMBER = 9;
-
 	public static final String ACCOUNT_TYPE = "GOOGLE";
-
 	public static final String SERVICE = "androiddeveloper";
 
 	private static final String URL_GOOGLE_LOGIN = "https://www.google.com/accounts/ClientLogin";
-
 	private static final String URL_DEVELOPER_CONSOLE = "https://play.google.com/apps/publish";
-
 	private static final String URL_DEVELOPER_EDIT_APP = "https://play.google.com/apps/publish/editapp";
-
 	private static final String URL_COMMENTS = "https://play.google.com/apps/publish/comments";
+	private static final String URL_FEEDBACK = "https://play.google.com/apps/publish/feedback";
 
-    private static final String URL_FEEDBACK = "https://play.google.com/apps/publish/feedback";
+	private static final String GET_FULL_ASSET_INFO_FOR_USER_REQUEST = "7|2|9|https://play.google.com/apps/publish/gwt/|3DF4994263B7BFE1C6E2AB34E241C0F5|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.AppEditorService|getProductInfosForUser|java.lang.String/2004016611|I|"+PARAM_APPNAME+"|1|2|3|4|5|6|4|7|8|8|7|9|0|2|0|";
+	private static final String GET_ASSET_FOR_USER_COUNT_REQUEST = "7|0|4|https://play.google.com/apps/publish/gwt/|11B29A336607683DE538737452FFF924|com.google.wireless.android.vending.developer.shared.AppEditorService|getAssetForUserCount|1|2|3|4|0|";
+	private static final String GET_USER_COMMENTS_REQUEST = "7|2|11|https://play.google.com/apps/publish/gwt/|3B4252B1EA6FFDBEAC02B41B3975C468|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.CommentsService|getUserComments|java.lang.String/2004016611|J|java.lang.Iterable|<<appname>>|java.util.ArrayList/4159755760|1|2|3|4|5|6|7|7|8|8|9|9|9|7|10|<<start>>|<<length>>|11|0|11|0|11|0|0|";
+	private static final String GET_FEEDBACK_OVERVIEW = "7|0|6|https://play.google.com/apps/publish/gwt/|8A88A8C8E8E60107C7E013322C6CE8F2|com.google.wireless.android.vending.developer.shared.FeedbackService|getOverviewsForPackages|com.google.protos.userfeedback.gwt.AndroidFrontend$AndroidPackageListRequest$Json/4146859527|[,[<<packagelist>>] ] |1|2|3|4|1|5|5|6|";
+	//private static final String GET_FEEDBACK_REQUEST = "7|0|6|https://play.google.com/apps/publish/gwt/|8A88A8C8E8E60107C7E013322C6CE8F2|com.google.wireless.android.vending.developer.shared.FeedbackService|getDetailForPackage|com.google.protos.userfeedback.gwt.AndroidFrontend$AndroidPackageRequest$Json/2133352596|[,<<appname>>] |1|2|3|4|1|5|5|6|";
 
 	private String cookie;
 
@@ -321,6 +307,8 @@ public class DeveloperConsole {
 			developerPostData = GET_FULL_ASSET_INFO_FOR_USER_REQUEST;
 		}
 
+		//TODO: replace by packageName as in grapComments()
+		developerPostData = developerPostData.replace(PARAM_APPNAME, "");
 		developerPostData = developerPostData.replace(PARAM_STARTINDEX, "A");
 		developerPostData = developerPostData.replace(PARAM_LENGTH, "P");
 
@@ -543,6 +531,7 @@ public class DeveloperConsole {
 			    	String xsrfToken = new JSONObject(m1.group(1)).getString("gwtRpcXsrfToken");
 			    	((AndlyticsApp) this.context.getApplicationContext()).setXsrfToken(xsrfToken);
 			    }
+			    //TODO this is /apps/publish authorization's header payload (multi-acc)
 
                 final int statusCode = httpResponse.getStatusLine().getStatusCode();
                 if (statusCode != HttpStatus.SC_OK) {
@@ -550,7 +539,7 @@ public class DeveloperConsole {
                         + " (" + httpResponse.getStatusLine().getReasonPhrase() + ')');
                 }
 
-                boolean asp = false;
+                boolean asp = false;		//TODO get hasher here?
 
 			    Object obj = context.getAttribute("http.protocol.redirect-locations");
                 if(obj != null) {
