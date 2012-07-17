@@ -1,13 +1,12 @@
 2.1.0
 - ICS kompatible ActionBar
-- HD Icons für xlarge Bildschirme
+- HD Icons fÃ¼r xlarge Bildschirme
 - Neue Einstellungsseite
-- Admob kann per Konfiguration ausgeblendet werden
 - Neue Sprachen: Katalanisch, Italienisch, Russisch
 
 2.0.1
 - Autentifizierungsfehler behoben
 - Pro Funktionen sind nun kostenfrei (Open Source)
-- Überarbeitetes Design
-- EPC für AdMob
-- Neue Sprachen: Spanisch, Deutsch, Niederländisch
+- Ãœberarbeitetes Design
+- EPC fÃ¼r AdMob
+- Neue Sprachen: Spanisch, Deutsch, NiederlÃ¤ndisch

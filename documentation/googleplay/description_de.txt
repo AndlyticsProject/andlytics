@@ -1,10 +1,10 @@
-★★★ Dies ist das neue OFFICIELLE Release dieser App ★★★
+★★★ Dies ist das neue, OFFIZIELLE Release dieser App ★★★
 
 Verfolge deine Android App Statistiken.
 
-Andlytics tracked App Statistiken für BEwertungen, Tägliche Downloads, Gesamtzahl Downloads und aktive Installationen. Android Entwickler können Kommentare einsehen in allen Sprachen und AdMob Statistiken für Einnahmen, Requests und Aufrufe.
+Andlytics tracket App Statistiken für Bewertungen, tägliche Downloads, Gesamtzahl Downloads und aktive Installationen. Android Entwickler können Kommentare einsehen in allen Sprachen und AdMob Statistiken für Einnahmen, Anfragen und Aufrufe.
 
-Dies ist eine App für Android App Entwickler für das Google Play Tracking. Diese App ist nur sinnvoll nutzbar mit publizierten Apps in Google Play mit Zugriff auf die Google Play Developer Console.
+Dies ist eine App für Android App Entwickler für das Google Play Tracking. Diese App ist nur sinnvoll nutzbar mit veröffentlichten Apps in Google Play mit Zugriff auf die Google Play Developer Console.
 
 Unterstützt wird die automatische Synchronisation von App Statistiken über den Android Developer Account. Statistikdaten können auf die SD-Karte exportiert werden und es können entsprechende Benachrichtigungen eingestellt werden für neue Kommentare, Bewertungen und Downloads. AdMob Accounts werden über den Android Account Manager verwaltet.
 
