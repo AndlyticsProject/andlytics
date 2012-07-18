@@ -54,8 +54,7 @@ public class SyncAdapterService extends Service {
 		public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider,
 				SyncResult syncResult) {
 			try {
-				//TODO change 1st parameter to "packageName"
-				SyncAdapterService.performSync("", mContext, account, extras, authority, provider, syncResult);
+				SyncAdapterService.performSync(mContext, account, extras, authority, provider, syncResult);
 			} catch (OperationCanceledException e) {
 				Log.w(TAG, "operation canceled", e);
 			}
@@ -75,7 +74,7 @@ public class SyncAdapterService extends Service {
 		return sSyncAdapter;
 	}
 
-	private static void performSync(String packageName, Context context, Account account, Bundle extras, String authority,
+	private static void performSync(Context context, Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) throws OperationCanceledException {
 
 		Bundle bundle = null;
@@ -87,7 +86,7 @@ public class SyncAdapterService extends Service {
 				token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
 
 				DeveloperConsole console = new DeveloperConsole(context);
-				List<AppInfo> appDownloadInfos = console.getAppDownloadInfos(packageName, token, account.name);
+				List<AppInfo> appDownloadInfos = console.getAppDownloadInfos(token, account.name);
 
 				Log.d(TAG, "andlytics from sync adapter, size: " + appDownloadInfos.size());
 

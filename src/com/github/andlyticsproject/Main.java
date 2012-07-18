@@ -293,7 +293,7 @@ public class Main extends BaseActivity implements AuthenticationCallback {
                 try {
 
                     DeveloperConsole console = new DeveloperConsole(Main.this);
-                    appDownloadInfos = console.getAppDownloadInfos(packageName,authtoken, accountname);
+                    appDownloadInfos = console.getAppDownloadInfos(authtoken, accountname);
 
                     if (cancelRequested) {
                         cancelRequested = false;
