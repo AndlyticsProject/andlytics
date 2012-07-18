@@ -2,6 +2,7 @@
     <resources>
         <string-array name="autosync_periods">
             <item>Disabilitato</item>
+            <item>1 minut</item>
             <item>15 minuti</item>
             <item>30 minuti</item>
             <item>1 ora</item>
@@ -14,6 +15,7 @@
         </string-array>
         <string-array name="autosync_periods_values">
             <item>0</item>
+            <item>1</item>
             <item>15</item>
             <item>30</item>
             <item>60</item>
