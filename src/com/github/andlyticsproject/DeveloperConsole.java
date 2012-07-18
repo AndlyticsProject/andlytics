@@ -88,7 +88,7 @@ public class DeveloperConsole {
 	private static final String URL_COMMENTS = "https://play.google.com/apps/publish/comments";
 	private static final String URL_FEEDBACK = "https://play.google.com/apps/publish/feedback";
 
-	private static final String GET_FULL_ASSET_INFO_FOR_USER_REQUEST = "7|2|9|https://play.google.com/apps/publish/gwt/|3DF4994263B7BFE1C6E2AB34E241C0F5|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.AppEditorService|getProductInfosForUser|java.lang.String/2004016611|I|"+PARAM_APPNAME+"|1|2|3|4|5|6|4|7|8|8|7|9|0|2|0|";
+	private static final String GET_FULL_ASSET_INFO_FOR_USER_REQUEST = "7|2|7|https://play.google.com/apps/publish/gwt/|3DF4994263B7BFE1C6E2AB34E241C0F5|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.AppEditorService|getAssetIndexForUser|I|1|2|3|4|5|6|1|7|100|";
 	private static final String GET_ASSET_FOR_USER_COUNT_REQUEST = "7|0|4|https://play.google.com/apps/publish/gwt/|11B29A336607683DE538737452FFF924|com.google.wireless.android.vending.developer.shared.AppEditorService|getAssetForUserCount|1|2|3|4|0|";
 	private static final String GET_USER_COMMENTS_REQUEST = "7|2|11|https://play.google.com/apps/publish/gwt/|3B4252B1EA6FFDBEAC02B41B3975C468|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.CommentsService|getUserComments|java.lang.String/2004016611|J|java.lang.Iterable|"+PARAM_APPNAME+"|java.util.ArrayList/4159755760|1|2|3|4|5|6|7|7|8|8|9|9|9|7|10|"+PARAM_STARTINDEX+"|"+PARAM_LENGTH+"|11|0|11|0|11|0|0|";
 	private static final String GET_FEEDBACK_OVERVIEW = "7|0|6|https://play.google.com/apps/publish/gwt/|8A88A8C8E8E60107C7E013322C6CE8F2|com.google.wireless.android.vending.developer.shared.FeedbackService|getOverviewsForPackages|com.google.protos.userfeedback.gwt.AndroidFrontend$AndroidPackageListRequest$Json/4146859527|[,[<<packagelist>>] ] |1|2|3|4|1|5|5|6|";
@@ -104,18 +104,18 @@ public class DeveloperConsole {
 		this.context = context;
 	}
 
-	public List<AppInfo> getAppDownloadInfos(String packageName, String authtoken, String accountName) throws NetworkException, InvalidJSONResponseException, DeveloperConsoleException, SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception {
+	public List<AppInfo> getAppDownloadInfos(String authtoken, String accountName) throws NetworkException, InvalidJSONResponseException, DeveloperConsoleException, SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception {
 
-		return getFullAssetListRequest(packageName, accountName, authtoken, false);
+		return getFullAssetListRequest(accountName, authtoken, false);
 	}
 
 
-	private List<AppInfo> getFullAssetListRequest(String packageName, String accountName, String authtoken, boolean reuseAuthentication) throws NetworkException, DeveloperConsoleException, InvalidJSONResponseException, SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception{
+	private List<AppInfo> getFullAssetListRequest(String accountName, String authtoken, boolean reuseAuthentication) throws NetworkException, DeveloperConsoleException, InvalidJSONResponseException, SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception{
 
 		developerConsoleAuthentication(authtoken, reuseAuthentication);
 
 
-		String json = grapAppStatistics(packageName);
+		String json = grapAppStatistics();
 		List<AppInfo> result = parseAppStatisticsResponse(json, accountName);
 
 		// user with more than 9 apps
@@ -291,11 +291,11 @@ public class DeveloperConsole {
 
 
 
-	protected String grapAppStatistics(String packageName) throws DeveloperConsoleException {
-		return grapAppStatistics(packageName, 0, PARAM_MAX_APPS_NUMBER);
+	protected String grapAppStatistics() throws DeveloperConsoleException {
+		return grapAppStatistics(0, PARAM_MAX_APPS_NUMBER);
 	}
 
-	private String grapAppStatistics(String packageName, int startIndex, long lenght) throws DeveloperConsoleException {
+	private String grapAppStatistics(int startIndex, long lenght) throws DeveloperConsoleException {
 
 		String developerPostData = Preferences.getRequestFullAssetInfo(context);
 
@@ -309,7 +309,6 @@ public class DeveloperConsole {
 
 		developerPostData = developerPostData.replace(PARAM_STARTINDEX, startIndexString);
 		developerPostData = developerPostData.replace(PARAM_LENGTH, lengthString);
-		developerPostData = developerPostData.replace(PARAM_APPNAME, packageName!=null ? packageName:"");
 		developerPostData = developerPostData.replace(PARAM_XSRFTOKEN, xsrfToken!=null ? xsrfToken:"");
 
 		String result = null;
@@ -365,14 +364,12 @@ public class DeveloperConsole {
 
 		String startIndexString = Base64Utils.toBase64(startIndex);
 		String lengthString = Base64Utils.toBase64(lenght);
+		String xsrfToken = ((AndlyticsApp) context.getApplicationContext()).getXsrfToken();
 
 		postData = postData.replace(PARAM_APPNAME, packageName);
 		postData = postData.replace(PARAM_STARTINDEX, startIndexString);
 		postData = postData.replace(PARAM_LENGTH, lengthString);
-
-		// 8p8 fix for xsrfToken
-		String xsrfToken = ((AndlyticsApp) context.getApplicationContext()).getXsrfToken();
-		if (xsrfToken != null) postData = postData.replace(PARAM_XSRFTOKEN, xsrfToken);
+		postData = postData.replace(PARAM_XSRFTOKEN, xsrfToken!=null ? xsrfToken:"");
 
 		String result = null;
 
