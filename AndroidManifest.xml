@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.github.andlyticsproject"
 	android:installLocation="auto"
-	android:versionName="2.1.2" android:versionCode="212">
+	android:versionName="2.1.2" android:versionCode="103">
 
 	<uses-permission
 		android:name="android.permission.INTERNET" />
