@@ -307,6 +307,7 @@ public class DeveloperConsole {
 		String lengthString = Base64Utils.toBase64(lenght);
 		String xsrfToken = ((AndlyticsApp) context.getApplicationContext()).getXsrfToken();
 
+		developerPostData = developerPostData.replace(PARAM_APPNAME, " ");	//TODO
 		developerPostData = developerPostData.replace(PARAM_STARTINDEX, startIndexString);
 		developerPostData = developerPostData.replace(PARAM_LENGTH, lengthString);
 		developerPostData = developerPostData.replace(PARAM_XSRFTOKEN, xsrfToken!=null ? xsrfToken:"");
