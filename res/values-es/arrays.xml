@@ -1,29 +1,17 @@
+<resources>
 
-    <resources>
-        <string-array name="autosync_periods">
-            <item>Desactivado</item>
-            <item>1 minuto</item>
-            <item>15 minutos</item>
-            <item>30 minutos</item>
-            <item>1 hora</item>
-            <item>2 horas</item>
-            <item>3 horas</item>
-            <item>6 horas</item>
-            <item>8 horas</item>
-            <item>12 horas</item>
-            <item>24 horas</item>
-        </string-array>
-        <string-array name="autosync_periods_values">
-            <item>0</item>
-            <item>1</item>
-            <item>15</item>
-            <item>30</item>
-            <item>60</item>
-            <item>120</item>
-            <item>180</item>
-            <item>360</item>
-            <item>480</item>
-            <item>720</item>
-            <item>1440</item>
-        </string-array>
-    </resources>
+    <string-array name="autosync_periods">
+        <item>Desactivado</item>
+        <item>1 minuto</item>
+        <item>15 minutos</item>
+        <item>30 minutos</item>
+        <item>1 hora</item>
+        <item>2 horas</item>
+        <item>3 horas</item>
+        <item>6 horas</item>
+        <item>8 horas</item>
+        <item>12 horas</item>
+        <item>24 horas</item>
+    </string-array>
+
+</resources>
