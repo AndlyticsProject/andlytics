@@ -69,7 +69,7 @@ public class Main extends BaseActivity implements AuthenticationCallback {
     public boolean dotracking;
     private View footer;
 
-    private boolean isAuthenticationRetry;    
+    private boolean isAuthenticationRetry;
     public Animation aniPrevIn;
     private View statsModeToggle;
     private StatsMode currentStatsMode;
@@ -86,12 +86,12 @@ public class Main extends BaseActivity implements AuthenticationCallback {
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);    	
+    	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         setSupportProgressBarIndeterminateVisibility(false);
-        
-        
+
+
         db = getDbAdapter();
         LayoutInflater layoutInflater = getLayoutInflater();
 
@@ -176,17 +176,17 @@ public class Main extends BaseActivity implements AuthenticationCallback {
 
         getAndlyticsApplication().setSkipMainReload(false);
     }
-    
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		getSupportMenuInflater().inflate(R.menu.main_menu, menu);
 		return true;
 	}
-	
+
 	/**
 	 * Called if item in option menu is selected.
-	 * 
+	 *
 	 * @param item
 	 *            The chosen menu item
 	 * @return boolean true/false
@@ -194,13 +194,13 @@ public class Main extends BaseActivity implements AuthenticationCallback {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.itemMainmenuRefresh:			
+		case R.id.itemMainmenuRefresh:
 			authenticateAccountFromPreferences(false, Main.this);
 			break;
-		case R.id.itemMainmenuImport:			
+		case R.id.itemMainmenuImport:
 			(new LoadImportDialog()).execute();
 			break;
-		case R.id.itemMainmenuExport:			
+		case R.id.itemMainmenuExport:
 			(new LoadExportDialog()).execute();
 			break;
 		case R.id.itemMainmenuFeedback:
@@ -301,9 +301,9 @@ public class Main extends BaseActivity implements AuthenticationCallback {
                     }
 
                     Map<String, List<String>> admobAccountSiteMap = new HashMap<String, List<String>>();
-                    
+
                     List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
-                    
+
                     for (AppInfo appDownloadInfo : appDownloadInfos) {
                         // update in database and check for diffs
                         diffs.add(db.insertOrUpdateStats(appDownloadInfo));
@@ -319,7 +319,7 @@ public class Main extends BaseActivity implements AuthenticationCallback {
                                 admobAccountSiteMap.put(admobAccount, siteList);
                             }
                         }
-                    }                    
+                    }
 
                     // check for notifications
                     NotificationHandler.handleNotificaions(Main.this, diffs, accountname);

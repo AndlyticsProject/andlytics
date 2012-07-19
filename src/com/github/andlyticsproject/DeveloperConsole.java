@@ -68,15 +68,15 @@ import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.Comment;
 
 public class DeveloperConsole {
-
+//  private static String LOG_TAG=DeveloperConsole.class.toString(); 
 	private static final String GWT_PERMUTATION = "6D75CBE66FE85272BB1AD2C64A98B720";
 
 	//"com.github.andlyticsproject", but it seems "Andlytics"
 	private static final String PARAM_APPNAME = "<<appname>>";
 	private static final String PARAM_XSRFTOKEN = "<<xsrftoken>>";
-	private static final String PARAM_LENGTH = "<<length>>";
 	private static final String PARAM_PACKAGELIST = "<<packagelist>>";
 	private static final String PARAM_STARTINDEX = "<<start>>";
+	private static final String PARAM_LENGTH = "<<length>>";
 
 	private static final long PARAM_MAX_APPS_NUMBER = 9;
 	public static final String ACCOUNT_TYPE = "GOOGLE";
@@ -88,38 +88,36 @@ public class DeveloperConsole {
 	private static final String URL_COMMENTS = "https://play.google.com/apps/publish/comments";
 	private static final String URL_FEEDBACK = "https://play.google.com/apps/publish/feedback";
 
-	private static final String GET_FULL_ASSET_INFO_FOR_USER_REQUEST = "7|2|9|https://play.google.com/apps/publish/gwt/|3DF4994263B7BFE1C6E2AB34E241C0F5|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.AppEditorService|getProductInfosForUser|java.lang.String/2004016611|I|"+PARAM_APPNAME+"|1|2|3|4|5|6|4|7|8|8|7|9|0|2|0|";
+	private static final String GET_ASSET_INDEX_FOR_USER = "7|2|7|https://play.google.com/apps/publish/gwt/|3DF4994263B7BFE1C6E2AB34E241C0F5|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.AppEditorService|getAssetIndexForUser|I|1|2|3|4|5|6|1|7|100|";
+    private static final String GET_FULL_ASSET_INFO_FOR_USER_REQUEST = "7|2|9|https://play.google.com/apps/publish/gwt/|3DF4994263B7BFE1C6E2AB34E241C0F5|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.AppEditorService|getProductInfosForUser|java.lang.String/2004016611|I|"+PARAM_APPNAME+"|1|2|3|4|5|6|4|7|8|8|7|9|0|"+PARAM_LENGTH+"|0|";
 	private static final String GET_ASSET_FOR_USER_COUNT_REQUEST = "7|0|4|https://play.google.com/apps/publish/gwt/|11B29A336607683DE538737452FFF924|com.google.wireless.android.vending.developer.shared.AppEditorService|getAssetForUserCount|1|2|3|4|0|";
-	private static final String GET_USER_COMMENTS_REQUEST = "7|2|11|https://play.google.com/apps/publish/gwt/|3B4252B1EA6FFDBEAC02B41B3975C468|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.CommentsService|getUserComments|java.lang.String/2004016611|J|java.lang.Iterable|<<appname>>|java.util.ArrayList/4159755760|1|2|3|4|5|6|7|7|8|8|9|9|9|7|10|<<start>>|<<length>>|11|0|11|0|11|0|0|";
+	private static final String GET_USER_COMMENTS_REQUEST = "7|2|11|https://play.google.com/apps/publish/gwt/|3B4252B1EA6FFDBEAC02B41B3975C468|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.CommentsService|getUserComments|java.lang.String/2004016611|J|java.lang.Iterable|"+PARAM_APPNAME+"|java.util.ArrayList/4159755760|1|2|3|4|5|6|7|7|8|8|9|9|9|7|10|"+PARAM_STARTINDEX+"|"+PARAM_LENGTH+"|11|0|11|0|11|0|0|";
 	private static final String GET_FEEDBACK_OVERVIEW = "7|0|6|https://play.google.com/apps/publish/gwt/|8A88A8C8E8E60107C7E013322C6CE8F2|com.google.wireless.android.vending.developer.shared.FeedbackService|getOverviewsForPackages|com.google.protos.userfeedback.gwt.AndroidFrontend$AndroidPackageListRequest$Json/4146859527|[,[<<packagelist>>] ] |1|2|3|4|1|5|5|6|";
 	//private static final String GET_FEEDBACK_REQUEST = "7|0|6|https://play.google.com/apps/publish/gwt/|8A88A8C8E8E60107C7E013322C6CE8F2|com.google.wireless.android.vending.developer.shared.FeedbackService|getDetailForPackage|com.google.protos.userfeedback.gwt.AndroidFrontend$AndroidPackageRequest$Json/2133352596|[,<<appname>>] |1|2|3|4|1|5|5|6|";
 
 	private String cookie;
-
 	private String devacc;
-
 	private Context context;
-
 	private String cookieAuthtoken;
-
 	private String postData;
 
 	public DeveloperConsole(Context context) {
 		this.context = context;
 	}
 
-	public List<AppInfo> getAppDownloadInfos(String authtoken, String accountName) throws NetworkException, InvalidJSONResponseException, DeveloperConsoleException, SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception {
+  public List<AppInfo> getAppDownloadInfos(String authtoken, String accountName) throws NetworkException, InvalidJSONResponseException, DeveloperConsoleException, SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception {
 
-		return getFullAssetListRequest(accountName, authtoken, false);
-	}
+    return getFullAssetListRequest(accountName, authtoken, false);
+  }
+
 
 
 	private List<AppInfo> getFullAssetListRequest(String accountName, String authtoken, boolean reuseAuthentication) throws NetworkException, DeveloperConsoleException, InvalidJSONResponseException, SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception{
 
 		developerConsoleAuthentication(authtoken, reuseAuthentication);
 
-
-		String json = grapAppStatistics();
+    String json = grapGetAssetIndexForUser();
+    json = grapAppStatistics("",parseGetAssetForUserCount(json));
 		List<AppInfo> result = parseAppStatisticsResponse(json, accountName);
 
 		// user with more than 9 apps
@@ -295,11 +293,8 @@ public class DeveloperConsole {
 
 
 
-	protected String grapAppStatistics() throws DeveloperConsoleException {
-		return grapAppStatistics(0, PARAM_MAX_APPS_NUMBER);
-	}
 
-	private String grapAppStatistics(int startIndex, long lenght) throws DeveloperConsoleException {
+	private String grapAppStatistics(String startApp, long lenght) throws DeveloperConsoleException {
 
 		String developerPostData = Preferences.getRequestFullAssetInfo(context);
 
@@ -307,15 +302,13 @@ public class DeveloperConsole {
 			developerPostData = GET_FULL_ASSET_INFO_FOR_USER_REQUEST;
 		}
 
-		//TODO: replace by packageName as in grapComments()
-		developerPostData = developerPostData.replace(PARAM_APPNAME, "");
-		developerPostData = developerPostData.replace(PARAM_STARTINDEX, "A");
-		developerPostData = developerPostData.replace(PARAM_LENGTH, "P");
-
-
-		// 8p8 fix for xsrfToken
+//    String lengthString = Base64Utils.toBase64(lenght);
+    String lengthString = ""+lenght;
 		String xsrfToken = ((AndlyticsApp) context.getApplicationContext()).getXsrfToken();
-		if (xsrfToken != null) developerPostData = developerPostData.replace(PARAM_XSRFTOKEN, xsrfToken);
+
+		developerPostData = developerPostData.replace(PARAM_APPNAME, startApp!=null ? startApp:"");
+		developerPostData = developerPostData.replace(PARAM_LENGTH, lengthString);
+		developerPostData = developerPostData.replace(PARAM_XSRFTOKEN, xsrfToken!=null ? xsrfToken:"");
 
 		String result = null;
 
@@ -329,26 +322,50 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	private String grepGetAssetForUserCount() throws DeveloperConsoleException {
+  private String grepGetAssetForUserCount() throws DeveloperConsoleException {
 
-		String result = null;
+    String result = null;
 
-		String postData = Preferences.getRequestGetAssetForUserCount(context);
+    String postData = Preferences.getRequestGetAssetForUserCount(context);
 
-		if (postData == null) {
-			postData = GET_ASSET_FOR_USER_COUNT_REQUEST;
-		}
+    if (postData == null) {
+      postData = GET_ASSET_FOR_USER_COUNT_REQUEST;
+    }
 
-		try {
-			URL aURL = new java.net.URL(URL_DEVELOPER_EDIT_APP);
-			result = getGwtRpcResponse(postData, aURL);
+    try {
+      URL aURL = new java.net.URL(URL_DEVELOPER_EDIT_APP);
+      result = getGwtRpcResponse(postData, aURL);
 
-		} catch (Exception f) {
-			throw new DeveloperConsoleException(postData, f);
-		}
+    } catch (Exception f) {
+      throw new DeveloperConsoleException(postData, f);
+    }
 
-		return result;
-	}
+    return result;
+  }
+  private String grapGetAssetIndexForUser() throws DeveloperConsoleException {
+
+    String result = null;
+
+//    String developerPostData = Preferences.getGetAssetIndexForUser(context);
+    String developerPostData = null;
+
+    if (postData == null) {
+      developerPostData = GET_ASSET_INDEX_FOR_USER;
+    }
+    String xsrfToken = ((AndlyticsApp) context.getApplicationContext()).getXsrfToken();
+
+    developerPostData = developerPostData.replace(PARAM_XSRFTOKEN, xsrfToken!=null ? xsrfToken:"");
+
+    try {
+      URL aURL = new java.net.URL(URL_DEVELOPER_EDIT_APP + "?dev_acc=" + devacc);
+      result = getGwtRpcResponse(developerPostData, aURL);
+
+    } catch (Exception f) {
+      throw new DeveloperConsoleException(result, f);
+    }
+
+    return result;
+  }
 
 	private String getGwtPermutation() {
 		String gwtPermutation = Preferences.getGwtPermutation(context);
@@ -370,14 +387,12 @@ public class DeveloperConsole {
 
 		String startIndexString = Base64Utils.toBase64(startIndex);
 		String lengthString = Base64Utils.toBase64(lenght);
+		String xsrfToken = ((AndlyticsApp) context.getApplicationContext()).getXsrfToken();
 
 		postData = postData.replace(PARAM_APPNAME, packageName);
 		postData = postData.replace(PARAM_STARTINDEX, startIndexString);
 		postData = postData.replace(PARAM_LENGTH, lengthString);
-
-		// 8p8 fix for xsrfToken
-		String xsrfToken = ((AndlyticsApp) context.getApplicationContext()).getXsrfToken();
-		if (xsrfToken != null) postData = postData.replace(PARAM_XSRFTOKEN, xsrfToken);
+		postData = postData.replace(PARAM_XSRFTOKEN, xsrfToken!=null ? xsrfToken:"");
 
 		String result = null;
 

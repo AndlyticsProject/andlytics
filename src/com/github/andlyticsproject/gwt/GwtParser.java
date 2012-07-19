@@ -24,7 +24,8 @@ public class GwtParser {
 
 	private String jsonCopy;
 
-	private boolean debug = false;
+  private static boolean DEBUG = false;
+  private static boolean DEBUG_SHOW_IN_STRING = false;
 
 	private static final String TAG = GwtParser.class.getSimpleName();
 
@@ -32,8 +33,21 @@ public class GwtParser {
 
 	    jsonCopy = json;
 
+    if (DEBUG_SHOW_IN_STRING)
+      for(int idx = 0; idx < json.length(); idx += 100 )
+      {
+        System.out.println(json.substring(idx, Math.min(idx + 100, json.length())));
+        try
+        {
+          Thread.sleep(10);
+        } catch (InterruptedException e)
+        {
+        };
+      }
+
 		// remove response prefix (//OK)
 		json = json.substring(json.indexOf("[") + 1);
+
 
 		// for large jsons there is a concat sometimes
 		json = json.replace("].concat([", ",");
@@ -68,17 +82,19 @@ public class GwtParser {
 
 	}
 
-	public long getAppInfoSize() {
+  public long getAppInfoSize() {
 
-		long result = 0;
+    long result = 0;
 
-		String string = indexList.get(1);
-		if(string.startsWith("'")) {
-			result = decodeLong(string);
-		}
+    String string = indexList.get(1);
+    if(string.startsWith("'")) {
+      result = decodeLong(string);
+    }
+    else
+      result=Integer.parseInt(string);
 
-		return result;
-	}
+    return result;
+  }
 
 
 	/*
@@ -776,7 +792,7 @@ public class GwtParser {
     }
 
     private void debugPrint(String string) {
-        if(debug) {
+        if(DEBUG) {
             System.out.println(string);
             //Log.d(TAG, string);
         }
