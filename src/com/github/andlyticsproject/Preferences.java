@@ -15,6 +15,7 @@ public class Preferences {
 	public static final String PREF_NOTIFICATIONS = "prefNotifications";
 	public static final String PREF_HIDDEN_APPS = "prefHiddenApps";
 
+	private static final String HIDDEN_ACCOUNT = "hiddenAccount";
 	private static final String ACCOUNT_NAME = "accountName";
 	private static final String GWTPERMUTATION = "permutation";
 
@@ -286,5 +287,14 @@ public class Preferences {
         editor.putString(ADMOB_TIMEFRAME, value.name());
         editor.commit();
     }
-
+    
+    public static void saveIsHiddenAccount(Context context, String accountName, Boolean hidden){
+    	SharedPreferences.Editor editor = getSettings(context).edit();
+        editor.putBoolean(HIDDEN_ACCOUNT + accountName, hidden);
+        editor.commit();
+    }
+    
+    public static boolean getIsHiddenAccount(Context context, String accountName) {
+        return getSettings(context).getBoolean(HIDDEN_ACCOUNT + accountName, false);
+    }
 }

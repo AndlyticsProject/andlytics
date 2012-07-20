@@ -2,9 +2,6 @@ package com.github.andlyticsproject;
 
 import java.io.IOException;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -16,8 +13,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 public class LoginActivity extends BaseActivity {
 
@@ -31,14 +34,7 @@ public class LoginActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.login);
-//		headline = (TextView) findViewById(R.id.login_headline);
-//		Style.getInstance(getAssets()).styleHeadline(headline);
-//        TextView headlineBeta = (TextView) findViewById(R.id.login_headline_beta);
-//        Style.getInstance(getAssets()).styleHeadline(headlineBeta);
-
 		accountList = (LinearLayout) findViewById(R.id.login_input);
-		
-		//getSupportActionBar().setTitle(R.string.app_name);
 	}
 
 	@Override
@@ -90,18 +86,29 @@ public class LoginActivity extends BaseActivity {
 		accountList.removeAllViews();
 		for (int i = 0; i < size; i++) {
 			names[i] = accounts[i].name;
-
+			Boolean hiddenAccount = Preferences.getIsHiddenAccount(this, names[i]);
 			View inflate = getLayoutInflater().inflate(R.layout.login_list_item, null);
 			TextView accountName = (TextView) inflate.findViewById(R.id.login_list_item_text);
 			accountName.setText(accounts[i].name);
 			inflate.setTag(accounts[i].name);
 			inflate.setOnClickListener(new OnClickListener() {
-
 				@Override
 				public void onClick(View view) {
-
 					String selectedAccount = (String) view.getTag();
 					redirectToMain(selectedAccount);
+				}
+			});
+			inflate.setClickable(!hiddenAccount);
+			CheckBox enabled = (CheckBox) inflate.findViewById(R.id.login_list_item_enabled);
+			enabled.setChecked(!hiddenAccount);
+			enabled.setOnCheckedChangeListener(new OnCheckedChangeListener() {				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					View parent = (View) buttonView.getParent();
+					Preferences.saveIsHiddenAccount(getApplicationContext(), (String) parent.getTag(), !isChecked);
+					parent.setClickable(isChecked);
+					// TODO enable/disable syncing
+					
 				}
 			});
 			accountList.addView(inflate);

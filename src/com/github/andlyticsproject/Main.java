@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,13 +28,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -86,7 +82,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	private MenuItem statsModeMenuItem;
 
-	private String[] accountsList;
+	private List<String> accountsList;
 
 	private static final int FEEDBACK_DIALOG = 0;
 
@@ -94,7 +90,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	/** Called when the activity is first created. */
 	@SuppressWarnings({
-			"unchecked", "deprecation"
+		"unchecked", "deprecation"
 	})
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -113,23 +109,28 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		final AccountManager manager = AccountManager.get(this);
 		final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
 		if (accounts.length > 1){
-			accountsList = new String[accounts.length];
+			accountsList = new ArrayList<String>();
 			int selectedIndex = 0;
-			for (int i = 0; i < accounts.length; i++){
-				accountsList[i] = accounts[i].name;
-				if (accountsList[i].equals(accountname)){
-					selectedIndex = i;
+			int index = 0;
+			for (Account account : accounts){
+				if(!Preferences.getIsHiddenAccount(this, account.name)){
+					accountsList.add(account.name);
+					if (account.name.equals(accountname)){
+						selectedIndex = index;
+					}
+					index++;
 				}
 			}
-			Context context = getSupportActionBar().getThemedContext();
-			AccountSelectorAdaper list = new AccountSelectorAdaper(context, R.layout.account_selector_item, accountsList);
-			list.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
+			if (accountsList.size() > 1){
+				Context context = getSupportActionBar().getThemedContext();
+				AccountSelectorAdaper adapter = new AccountSelectorAdaper(context, R.layout.account_selector_item, accountsList);
+				adapter.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
 
-			getSupportActionBar().setDisplayShowTitleEnabled(false);
-			getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-			getSupportActionBar().setListNavigationCallbacks(list, this);
-			getSupportActionBar().setSelectedNavigationItem(selectedIndex);
-
+				getSupportActionBar().setDisplayShowTitleEnabled(false);
+				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+				getSupportActionBar().setListNavigationCallbacks(adapter, this);
+				getSupportActionBar().setSelectedNavigationItem(selectedIndex);
+			}
 		}
 
 
@@ -170,12 +171,12 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		if (!accountsList[itemPosition].equals(accountname)){
+		if (!accountsList.get(itemPosition).equals(accountname)){
 			// Only switch if it is a new account
 			Preferences.removeAccountName(Main.this);
 			Preferences.saveSkipAutoLogin(Main.this, false);
 			Intent intent = new Intent(Main.this, Main.class);
-			intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountsList[itemPosition]);
+			intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountsList.get(itemPosition));
 			startActivity(intent);
 			overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
 			// Call finish to ensure we don't get multiple activities running
@@ -814,10 +815,10 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	private static class AccountSelectorAdaper extends ArrayAdapter<String>{
 		private Context context;
-		private String[] accounts;
+		private List<String> accounts;
 		private int textViewResourceId;
 
-		public AccountSelectorAdaper(Context context, int textViewResourceId, String[] objects) {
+		public AccountSelectorAdaper(Context context, int textViewResourceId, List<String> objects) {
 			super(context, textViewResourceId, objects);
 			this.context = context;
 			this.accounts = objects;
@@ -834,7 +835,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			}
 
 			// TODO adjust text size to avoid minor clipping under landscape on some devices
-			((TextView)rowView.findViewById(android.R.id.text1)).setText(accounts[position]);
+			((TextView)rowView.findViewById(android.R.id.text1)).setText(accounts.get(position));
 
 			return rowView;
 		}
