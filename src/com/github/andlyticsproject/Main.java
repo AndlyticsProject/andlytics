@@ -103,6 +103,14 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 		db = getDbAdapter();
 		LayoutInflater layoutInflater = getLayoutInflater();
+		
+		// Hack in case the account is hidden and then the app is killed
+		// which means when it starts up next, it goes straight to the account
+		// even though it shouldn't. To work around this, just mark it as not hidden
+		// in the sense that that change they made never got applied
+		// TODO Do something clever in login activity to prevent this while keeping the ability
+		// to block going 'back'
+		Preferences.saveIsHiddenAccount(this, accountname, false);
 
 		updateAccountsList();
 
@@ -267,11 +275,12 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_CODE_MANAGE_ACCOUNTS){
 			if (resultCode == RESULT_OK){
-				// Went to manage accounts, didn't do anything to the current account
+				// Went to manage accounts, didn't do anything to the current account,
+				// but might have added/removed other accounts
 				updateAccountsList();
 			} else if (resultCode == RESULT_CANCELED){
 				// The user removed the current account, remove it from preferences and finish
-				// so that the user has to choose and account when they next start the app
+				// so that the user has to choose an account when they next start the app
 				Preferences.removeAccountName(this);
 				finish();
 			}
