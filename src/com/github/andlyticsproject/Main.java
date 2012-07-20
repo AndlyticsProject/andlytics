@@ -80,12 +80,11 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	private boolean isAuthenticationRetry;
 	public Animation aniPrevIn;
-	private View statsModeToggle;
 	private StatsMode currentStatsMode;
-	private TextView statsModeText;
-	private ImageView statsModeIcon;
 	public ExportDialog exportDialog;
 	public ImportDialog importDialog;
+
+	private MenuItem statsModeMenuItem;
 
 	private String[] accountsList;
 
@@ -94,7 +93,9 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 
 	/** Called when the activity is first created. */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({
+			"unchecked", "deprecation"
+	})
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -145,40 +146,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		// status & progess bar
 		statusText = (TextView) findViewById(R.id.main_app_status_line);
 
-		statsModeToggle = (View) findViewById(R.id.main_button_statsmode);
-		statsModeText = (TextView) findViewById(R.id.main_button_statsmode_text);
-		statsModeIcon = (ImageView) findViewById(R.id.main_button_statsmode_icon);
 
 		aniPrevIn = AnimationUtils.loadAnimation(Main.this, R.anim.activity_fade_in);
-
-		statsModeToggle.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				if (currentStatsMode.equals(StatsMode.PERCENT)) {
-					currentStatsMode = StatsMode.DAY_CHANGES;
-				} else {
-					currentStatsMode = StatsMode.PERCENT;
-				}
-
-				updateStatsMode();
-
-			}
-		});
-
-		View buttonLogout = (View) findViewById(R.id.main_button_logout);
-		buttonLogout.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Preferences.removeAccountName(Main.this);
-				Preferences.saveSkipAutoLogin(Main.this, true);
-				Intent intent = new Intent(Main.this, LoginActivity.class);
-				startActivity(intent);
-				overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
-			}
-		});
 
 		dotracking = true;
 		isAuthenticationRetry = false;
@@ -233,6 +202,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		getSupportMenuInflater().inflate(R.menu.main_menu, menu);
+		statsModeMenuItem = menu.findItem(R.id.itemMainmenuStatsMode);
+		updateStatsMode();
 		return true;
 	}
 
@@ -263,6 +234,14 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
 				startActivity(i);
 				break;
+			case R.id.itemMainmenuStatsMode:
+				if (currentStatsMode.equals(StatsMode.PERCENT)) {
+					currentStatsMode = StatsMode.DAY_CHANGES;
+				} else {
+					currentStatsMode = StatsMode.PERCENT;
+				}
+				updateStatsMode();
+				break;
 			default:
 				return false;
 		}
@@ -282,6 +261,12 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	@Override
 	protected void onPause() {
 		super.onPause();
+	}
+
+	@Override
+	protected void onDestroy() {
+		statsModeMenuItem = null;
+		super.onDestroy();
 	}
 
 	private void updateMainList(List<AppInfo> apps) {
@@ -654,21 +639,22 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	}
 
 	private void updateStatsMode() {
-		switch (currentStatsMode) {
-			case PERCENT:
-				statsModeText.setText(this.getString(R.string.daily));
-				statsModeIcon.setImageDrawable(getResources().getDrawable(R.drawable.icon_plusminus));
-				break;
+		if (statsModeMenuItem != null){
+			switch (currentStatsMode) {
+				case PERCENT:
+					statsModeMenuItem.setTitle(R.string.daily);
+					statsModeMenuItem.setIcon(R.drawable.icon_plusminus);
+					break;
 
-			case DAY_CHANGES:
-				statsModeText.setText(this.getString(R.string.percentage));
-				statsModeIcon.setImageDrawable(getResources().getDrawable(R.drawable.icon_percent));
-				break;
+				case DAY_CHANGES:
+					statsModeMenuItem.setTitle(R.string.percentage);
+					statsModeMenuItem.setIcon(R.drawable.icon_percent);
+					break;
 
-			default:
-				break;
+				default:
+					break;
+			}
 		}
-
 		adapter.setStatsMode(currentStatsMode);
 		adapter.notifyDataSetChanged();
 		Preferences.saveStatsMode(currentStatsMode, Main.this);
