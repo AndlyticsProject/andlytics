@@ -85,6 +85,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private List<String> accountsList;
 
 	private static final int FEEDBACK_DIALOG = 0;
+	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
 
 
 
@@ -103,36 +104,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		db = getDbAdapter();
 		LayoutInflater layoutInflater = getLayoutInflater();
 
-		getSupportActionBar().setSubtitle(accountname);
-
-
-		final AccountManager manager = AccountManager.get(this);
-		final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
-		if (accounts.length > 1){
-			accountsList = new ArrayList<String>();
-			int selectedIndex = 0;
-			int index = 0;
-			for (Account account : accounts){
-				if(!Preferences.getIsHiddenAccount(this, account.name)){
-					accountsList.add(account.name);
-					if (account.name.equals(accountname)){
-						selectedIndex = index;
-					}
-					index++;
-				}
-			}
-			if (accountsList.size() > 1){
-				Context context = getSupportActionBar().getThemedContext();
-				AccountSelectorAdaper adapter = new AccountSelectorAdaper(context, R.layout.account_selector_item, accountsList);
-				adapter.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
-
-				getSupportActionBar().setDisplayShowTitleEnabled(false);
-				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-				getSupportActionBar().setListNavigationCallbacks(adapter, this);
-				getSupportActionBar().setSelectedNavigationItem(selectedIndex);
-			}
-		}
-
+		updateAccountsList();
 
 		// setup main list
 		mainListView = (ListView) findViewById(R.id.main_app_list);
@@ -174,7 +146,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		if (!accountsList.get(itemPosition).equals(accountname)){
 			// Only switch if it is a new account
 			Preferences.removeAccountName(Main.this);
-			Preferences.saveSkipAutoLogin(Main.this, false);
 			Intent intent = new Intent(Main.this, Main.class);
 			intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountsList.get(itemPosition));
 			startActivity(intent);
@@ -183,6 +154,43 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			finish();
 		}
 		return true;
+	}
+
+	private void updateAccountsList(){
+		final AccountManager manager = AccountManager.get(this);
+		final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
+		if (accounts.length > 1){
+			accountsList = new ArrayList<String>();
+			int selectedIndex = 0;
+			int index = 0;
+			for (Account account : accounts){
+				if(!Preferences.getIsHiddenAccount(this, account.name)){
+					accountsList.add(account.name);
+					if (account.name.equals(accountname)){
+						selectedIndex = index;
+					}
+					index++;
+				}
+			}
+			if (accountsList.size() > 1){
+				// Only use the spinner if we have multiple accounts
+				Context context = getSupportActionBar().getThemedContext();
+				AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(context, R.layout.account_selector_item, accountsList);
+				accountsAdapter.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
+
+				// Hide the title to avoid duplicated info on tablets/landscape & setup the spinner
+				getSupportActionBar().setDisplayShowTitleEnabled(false);
+				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+				getSupportActionBar().setListNavigationCallbacks(accountsAdapter, this);
+				getSupportActionBar().setSelectedNavigationItem(selectedIndex);
+			} else {
+				// Just one account so use the standard title/subtitle
+				getSupportActionBar().setDisplayShowTitleEnabled(true);
+				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+				getSupportActionBar().setTitle(R.string.app_name);
+				getSupportActionBar().setSubtitle(accountname);
+			}
+		}
 	}
 
 	@Override
@@ -217,6 +225,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent i = null;
 		switch (item.getItemId()) {
 			case R.id.itemMainmenuRefresh:
 				authenticateAccountFromPreferences(false, Main.this);
@@ -231,7 +240,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/AndlyticsProject/andlytics/issues")));
 				break;
 			case R.id.itemMainmenuPreferences:
-				Intent i = new Intent(this, PreferenceActivity.class);
+				i = new Intent(this, PreferenceActivity.class);
 				i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
 				startActivity(i);
 				break;
@@ -243,11 +252,33 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				}
 				updateStatsMode();
 				break;
+			case R.id.itemMainmenuAccounts:
+				i = new Intent(this, LoginActivity.class);
+				i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
+				startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
+				break;
 			default:
 				return false;
 		}
 		return true;
+	}	
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_CODE_MANAGE_ACCOUNTS){
+			if (resultCode == RESULT_OK){
+				// Went to manage accounts, didn't do anything to the current account
+				updateAccountsList();
+			} else if (resultCode == RESULT_CANCELED){
+				// The user removed the current account, remove it from preferences and finish
+				// so that the user has to choose and account when they next start the app
+				Preferences.removeAccountName(this);
+				finish();
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
+
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
@@ -629,7 +660,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	@Override
 	public void onBackPressed() {
-		Preferences.removeAccountName(Main.this);
 		super.onBackPressed();
 	}
 

@@ -22,9 +22,24 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
+/**
+ * Used for initial login and managing accounts
+ * Because of this original legacy as the launcher activity, navigation is a little odd.
+ * On first startup:
+ * LoginActivity -> Main
+ * When managing accounts:
+ * Main -> LoginActivity <- Main or
+ * Main -> LoginActivity -> Main
+ * @author Will
+ *
+ */
 public class LoginActivity extends BaseActivity {
 
 	private static final String TAG = "Andlytics";
+
+	private boolean manageAccountsMode = false;
+	private boolean blockGoingBack = false;
+	private String selectedAccount = null;
 
 	protected static final int CREATE_ACCOUNT_REQUEST = 1;
 
@@ -32,6 +47,22 @@ public class LoginActivity extends BaseActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		// When called from accounts action item in Main, this flag is passed to indicate
+		// that LoginActivity should not auto login as we are managing the accounts,
+		// rather than performing the initial login
+		try{
+			manageAccountsMode = getIntent().getExtras().getBoolean(Constants.MANAGE_ACCOUNTS_MODE);
+		} catch (NullPointerException ex) {
+			manageAccountsMode = false;
+		}
+
+		if (manageAccountsMode){
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setTitle(R.string.manage_accounts);
+		}
+
+		selectedAccount = Preferences.getAccountName(this);
 
 		setContentView(R.layout.login);
 		accountList = (LinearLayout) findViewById(R.id.login_input);
@@ -41,23 +72,22 @@ public class LoginActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 
-		String selectedAccount = Preferences.getAccountName(this);
 		boolean skipAutologin = Preferences.getSkipAutologin(this);
 
-		if (!skipAutologin & selectedAccount != null) {
+		if (!manageAccountsMode & !skipAutologin & selectedAccount != null) {
 			redirectToMain(selectedAccount);
 		} else {
 			showAccountList();
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		getSupportMenuInflater().inflate(R.menu.login_menu, menu);
 		return true;
 	}
-	
+
 	/**
 	 * Called if item in option menu is selected.
 	 * 
@@ -68,13 +98,25 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.itemLoginmenuAdd:			
-			addNewGoogleAccount();
-			break;
-		default:
-			return false;
+			case R.id.itemLoginmenuAdd:			
+				addNewGoogleAccount();
+				break;
+			case android.R.id.home:
+				if (!blockGoingBack){
+					setResult(RESULT_OK);
+					finish();
+				}
+				break;
+			default:
+				return false;
 		}
 		return true;
+	}
+
+	@Override
+	public void onBackPressed() {
+		setResult(blockGoingBack ? RESULT_CANCELED : RESULT_OK);
+		super.onBackPressed();
 	}
 
 	protected void showAccountList() {
@@ -101,14 +143,21 @@ public class LoginActivity extends BaseActivity {
 			inflate.setClickable(!hiddenAccount);
 			CheckBox enabled = (CheckBox) inflate.findViewById(R.id.login_list_item_enabled);
 			enabled.setChecked(!hiddenAccount);
-			enabled.setOnCheckedChangeListener(new OnCheckedChangeListener() {				
+			enabled.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					View parent = (View) buttonView.getParent();
 					Preferences.saveIsHiddenAccount(getApplicationContext(), (String) parent.getTag(), !isChecked);
 					parent.setClickable(isChecked);
 					// TODO enable/disable syncing
-					
+
+					if (((String)parent.getTag()).equals(selectedAccount)){
+						// If they remove the current account, then stop them going back
+						blockGoingBack = !isChecked;
+						getSupportActionBar().setDisplayHomeAsUpEnabled(isChecked);
+						// TODO Should we show a warning, or do something else at this point?
+
+					}
 				}
 			});
 			accountList.addView(inflate);
@@ -144,8 +193,10 @@ public class LoginActivity extends BaseActivity {
 		Preferences.saveSkipAutoLogin(this, false);
 		Intent intent = new Intent(LoginActivity.this, Main.class);
 		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, selectedAccount);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 		overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
+		finish();
 	}
 
 

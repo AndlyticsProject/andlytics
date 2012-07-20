@@ -7,7 +7,6 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -62,7 +61,9 @@ public class BaseActivity extends SherlockActivity {
 			packageName = b.getString(Constants.PACKAGE_NAME_PARCEL);
 			iconFilePath = b.getString(Constants.ICON_FILE_PARCEL);
 			accountname = b.getString(Constants.AUTH_ACCOUNT_NAME);
-			Preferences.saveAccountName(this,accountname);
+			if (accountname != null){
+				Preferences.saveAccountName(this,accountname);
+			}
 		}
 
 	}
