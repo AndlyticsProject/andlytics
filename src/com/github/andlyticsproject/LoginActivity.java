@@ -151,7 +151,7 @@ public class LoginActivity extends BaseActivity {
 					parent.setClickable(isChecked);
 					// TODO enable/disable syncing
 
-					if (((String)parent.getTag()).equals(selectedAccount)){
+					if (manageAccountsMode && ((String)parent.getTag()).equals(selectedAccount)){
 						// If they remove the current account, then stop them going back
 						blockGoingBack = !isChecked;
 						getSupportActionBar().setDisplayHomeAsUpEnabled(isChecked);

@@ -84,10 +84,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	private List<String> accountsList;
 
-	private static final int FEEDBACK_DIALOG = 0;
 	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
-
-
 
 	/** Called when the activity is first created. */
 	@SuppressWarnings({
@@ -764,46 +761,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
         return false;
     }*/
 
-	//TODO remove...
-	@Override
-	protected Dialog onCreateDialog(int id) {
-
-		Dialog dialog = null;
-
-		switch (id) {
-			case FEEDBACK_DIALOG:
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/AndlyticsProject/andlytics/issues")));
-				/*
-            FeedbackDialog.FeedbackDialogBuilder builder = new FeedbackDialogBuilder(Main.this);
-            builder.setTitle(this.getString(R.string.feedback));
-
-            builder.setMessage(this.getString(R.string.help_us));
-            builder.setPositiveButton(this.getString(R.string.send), new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-
-            });
-            builder.setNegativeButton(this.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-
-            });
-
-            dialog = builder.create(accountname + "\n\n", getApplication());
-				 */
-				break;
-
-			default:
-				break;
-		}
-
-		return dialog;
-	}
-
 	@Override
 	public void authenticationSuccess() {
 		new LoadRemoteEntries().execute();
@@ -877,6 +834,14 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 			// TODO adjust text size to avoid minor clipping under landscape on some devices
 			((TextView)rowView.findViewById(android.R.id.text1)).setText(accounts.get(position));
+			
+			// TODO In the future when accounts linked to multiple developer consoles are supported
+			// we can either merge all the apps together, or extend this adapter to let the user select 
+			// account/console E.g:
+			// account1
+			// account2/console1
+			// account2/console2
+			// ...
 
 			return rowView;
 		}
