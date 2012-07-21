@@ -21,6 +21,8 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.andlyticsproject.sync.AutosyncHandler;
+import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
 
 /**
  * Used for initial login and managing accounts
@@ -51,10 +53,9 @@ public class LoginActivity extends BaseActivity {
 		// When called from accounts action item in Main, this flag is passed to indicate
 		// that LoginActivity should not auto login as we are managing the accounts,
 		// rather than performing the initial login
-		try{
-			manageAccountsMode = getIntent().getExtras().getBoolean(Constants.MANAGE_ACCOUNTS_MODE);
-		} catch (NullPointerException ex) {
-			manageAccountsMode = false;
+		Bundle extras = getIntent().getExtras();
+		if (extras != null){
+			manageAccountsMode = extras.getBoolean(Constants.MANAGE_ACCOUNTS_MODE);
 		}
 
 		if (manageAccountsMode){
@@ -147,11 +148,20 @@ public class LoginActivity extends BaseActivity {
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					View parent = (View) buttonView.getParent();
-					Preferences.saveIsHiddenAccount(getApplicationContext(), (String) parent.getTag(), !isChecked);
+					String accountName = (String) parent.getTag();
+					Preferences.saveIsHiddenAccount(getApplicationContext(), accountName, !isChecked);
 					parent.setClickable(isChecked);
-					// TODO enable/disable syncing
 
-					if (manageAccountsMode && ((String)parent.getTag()).equals(selectedAccount)){
+					// Enable disable sync
+					// TODO Is it worth storing their previous sync period?
+					AutosyncHandler syncHandler = AutosyncHandlerFactory.getInstance(getApplicationContext());
+					if (!isChecked){
+						syncHandler.setAutosyncPeriod(accountName, 0);
+					} else {
+						syncHandler.setAutosyncPeriod(accountName,	AutosyncHandler.DEFAULT_PERIOD);
+					}
+
+					if (manageAccountsMode && (accountName).equals(selectedAccount)){
 						// If they remove the current account, then stop them going back
 						blockGoingBack = !isChecked;
 						getSupportActionBar().setDisplayHomeAsUpEnabled(isChecked);
