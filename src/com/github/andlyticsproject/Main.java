@@ -273,6 +273,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// NOTE startActivityForResult does not work when singleTask is set in the manifiest
+		// Therefore, FLAG_ACTIVITY_CLEAR_TOP is used on any intents instead.
 		if (requestCode == REQUEST_CODE_MANAGE_ACCOUNTS){
 			if (resultCode == RESULT_OK){
 				// Went to manage accounts, didn't do anything to the current account,
