@@ -20,6 +20,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -100,7 +102,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 		db = getDbAdapter();
 		LayoutInflater layoutInflater = getLayoutInflater();
-		
+
 		// Hack in case the account is hidden and then the app is killed
 		// which means when it starts up next, it goes straight to the account
 		// even though it shouldn't. To work around this, just mark it as not hidden
@@ -832,9 +834,19 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				rowView = inflater.inflate(textViewResourceId, parent, false);
 			}
 
-			// TODO adjust text size to avoid minor clipping under landscape on some devices
-			((TextView)rowView.findViewById(android.R.id.text1)).setText(accounts.get(position));
-			
+			TextView subtitle = (TextView) rowView.findViewById(android.R.id.text1);
+			subtitle.setText(accounts.get(position));
+			Resources res = context.getResources();
+			if (res.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+				// Scale the text down slightly to fit on landscape due to the shorter Action Bar
+				// and additional padding due to the drop down
+				// We don't use predefined values as it saves duplicating all of the different display
+				// configuration values from the ABS library
+				float px = subtitle.getTextSize() * 0.9f;
+				subtitle.setTextSize(px / (res.getDisplayMetrics().densityDpi / 160f));
+
+			}
+
 			// TODO In the future when accounts linked to multiple developer consoles are supported
 			// we can either merge all the apps together, or extend this adapter to let the user select 
 			// account/console E.g:
