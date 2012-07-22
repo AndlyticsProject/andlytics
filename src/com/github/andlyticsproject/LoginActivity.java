@@ -32,7 +32,6 @@ import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
  * When managing accounts:
  * Main -> LoginActivity <- Main or
  * Main -> LoginActivity -> Main
- * @author Will
  *
  */
 public class LoginActivity extends BaseActivity {
