@@ -163,43 +163,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		return true;
 	}
 
-	private void updateAccountsList(){
-		final AccountManager manager = AccountManager.get(this);
-		final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
-		if (accounts.length > 1){
-			accountsList = new ArrayList<String>();
-			int selectedIndex = 0;
-			int index = 0;
-			for (Account account : accounts){
-				if(!Preferences.getIsHiddenAccount(this, account.name)){
-					accountsList.add(account.name);
-					if (account.name.equals(accountname)){
-						selectedIndex = index;
-					}
-					index++;
-				}
-			}
-			if (accountsList.size() > 1){
-				// Only use the spinner if we have multiple accounts
-				Context context = getSupportActionBar().getThemedContext();
-				AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(context, R.layout.account_selector_item, accountsList);
-				accountsAdapter.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
-
-				// Hide the title to avoid duplicated info on tablets/landscape & setup the spinner
-				getSupportActionBar().setDisplayShowTitleEnabled(false);
-				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-				getSupportActionBar().setListNavigationCallbacks(accountsAdapter, this);
-				getSupportActionBar().setSelectedNavigationItem(selectedIndex);
-			} else {
-				// Just one account so use the standard title/subtitle
-				getSupportActionBar().setDisplayShowTitleEnabled(true);
-				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-				getSupportActionBar().setTitle(R.string.app_name);
-				getSupportActionBar().setSubtitle(accountname);
-			}
-		}
-	}
-
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -311,6 +274,43 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		super.onDestroy();
 	}
 
+	private void updateAccountsList(){
+		final AccountManager manager = AccountManager.get(this);
+		final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
+		if (accounts.length > 1){
+			accountsList = new ArrayList<String>();
+			int selectedIndex = 0;
+			int index = 0;
+			for (Account account : accounts){
+				if(!Preferences.getIsHiddenAccount(this, account.name)){
+					accountsList.add(account.name);
+					if (account.name.equals(accountname)){
+						selectedIndex = index;
+					}
+					index++;
+				}
+			}
+			if (accountsList.size() > 1){
+				// Only use the spinner if we have multiple accounts
+				Context context = getSupportActionBar().getThemedContext();
+				AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(context, R.layout.account_selector_item, accountsList);
+				accountsAdapter.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
+
+				// Hide the title to avoid duplicated info on tablets/landscape & setup the spinner
+				getSupportActionBar().setDisplayShowTitleEnabled(false);
+				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+				getSupportActionBar().setListNavigationCallbacks(accountsAdapter, this);
+				getSupportActionBar().setSelectedNavigationItem(selectedIndex);
+			} else {
+				// Just one account so use the standard title/subtitle
+				getSupportActionBar().setDisplayShowTitleEnabled(true);
+				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+				getSupportActionBar().setTitle(R.string.app_name);
+				getSupportActionBar().setSubtitle(accountname);
+			}
+		}
+	}
+
 	private void updateMainList(List<AppInfo> apps) {
 
 		if (apps != null) {
@@ -353,6 +353,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	}
 
+	// TODO Make this a static class and use a callback for UI updates, or move to fragments with savedInstanceState
 	private class LoadRemoteEntries extends AsyncTask<String, Integer, Exception> {
 
 		@SuppressWarnings("unchecked")
