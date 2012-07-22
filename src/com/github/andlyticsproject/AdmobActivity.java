@@ -183,8 +183,8 @@ public class AdmobActivity extends BaseChartActivity {
     {
       names[i] = accounts[i].name;
       
-      View inflate = getLayoutInflater().inflate(R.layout.login_list_item, null);
-      TextView accountName = (TextView) inflate.findViewById(R.id.login_list_item_text);
+      View inflate = getLayoutInflater().inflate(R.layout.admob_account_list_item, null);
+      TextView accountName = (TextView) inflate.findViewById(R.id.admob_account_list_item_text);
       accountName.setText(accounts[i].name);
       inflate.setTag(accounts[i].name);
       inflate.setOnClickListener(new OnClickListener() {
