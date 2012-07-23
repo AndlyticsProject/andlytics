@@ -65,6 +65,9 @@ public class AppStats {
 
     private String avgRatingDiffString;
 
+    // XXX should put in wrapper class
+    private String packageName;
+
 	public AppStats(){}
 
 	/**
@@ -98,6 +101,7 @@ public class AppStats {
 	    this.ratingPercentStringMap = appStats.ratingPercentStringMap;
 	    this.setActiveInstallsPercentString(appStats.getActiveInstallsPercentString());
 	    this.versionCode = appStats.versionCode;
+        this.packageName = appStats.packageName;
 	}
 
 	public void init() {
@@ -549,6 +553,14 @@ public class AppStats {
 
     public void setAvgRatingString(String avgRatingString) {
         this.avgRatingString = avgRatingString;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 
 }

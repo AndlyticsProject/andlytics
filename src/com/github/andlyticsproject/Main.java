@@ -89,9 +89,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
 
 	/** Called when the activity is first created. */
-	@SuppressWarnings({
-		"unchecked", "deprecation"
-	})
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -115,7 +113,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 		// setup main list
 		mainListView = (ListView) findViewById(R.id.main_app_list);
-		mainListView.addHeaderView(layoutInflater.inflate(R.layout.main_list_header, null), null, false);
+		mainListView.addHeaderView(layoutInflater.inflate(R.layout.main_list_header, null), null,
+				false);
 		footer = layoutInflater.inflate(R.layout.main_list_footer, null);
 		footer.setVisibility(View.INVISIBLE);
 		mainListView.addFooterView(footer, null, false);
@@ -150,7 +149,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		if (!accountsList.get(itemPosition).equals(accountname)){
+		if (!accountsList.get(itemPosition).equals(accountname)) {
 			// Only switch if it is a new account
 			Preferences.removeAccountName(Main.this);
 			Intent intent = new Intent(Main.this, Main.class);
@@ -201,13 +200,18 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				authenticateAccountFromPreferences(false, Main.this);
 				break;
 			case R.id.itemMainmenuImport:
-				(new LoadImportDialog()).execute();
+				//				(new LoadImportDialog()).execute();
+				Intent importIntent = new Intent(this, ImportActivity.class);
+				importIntent.setAction("android.intent.action.VIEW");
+				importIntent.setData(Uri.fromFile(StatsCsvReaderWriter.getDefaultExportFile()));
+				startActivity(importIntent);
 				break;
 			case R.id.itemMainmenuExport:
 				(new LoadExportDialog()).execute();
 				break;
 			case R.id.itemMainmenuFeedback:
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/AndlyticsProject/andlytics/issues")));
+				startActivity(new Intent(Intent.ACTION_VIEW,
+						Uri.parse("https://github.com/AndlyticsProject/andlytics/issues")));
 				break;
 			case R.id.itemMainmenuPreferences:
 				i = new Intent(this, PreferenceActivity.class);
@@ -231,18 +235,18 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				return false;
 		}
 		return true;
-	}	
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// NOTE startActivityForResult does not work when singleTask is set in the manifiest
 		// Therefore, FLAG_ACTIVITY_CLEAR_TOP is used on any intents instead.
-		if (requestCode == REQUEST_CODE_MANAGE_ACCOUNTS){
-			if (resultCode == RESULT_OK){
+		if (requestCode == REQUEST_CODE_MANAGE_ACCOUNTS) {
+			if (resultCode == RESULT_OK) {
 				// Went to manage accounts, didn't do anything to the current account,
 				// but might have added/removed other accounts
 				updateAccountsList();
-			} else if (resultCode == RESULT_CANCELED){
+			} else if (resultCode == RESULT_CANCELED) {
 				// The user removed the current account, remove it from preferences and finish
 				// so that the user has to choose an account when they next start the app
 				Preferences.removeAccountName(this);
@@ -274,27 +278,29 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		super.onDestroy();
 	}
 
-	private void updateAccountsList(){
+	private void updateAccountsList() {
 		final AccountManager manager = AccountManager.get(this);
 		final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
-		if (accounts.length > 1){
+		if (accounts.length > 1) {
 			accountsList = new ArrayList<String>();
 			int selectedIndex = 0;
 			int index = 0;
-			for (Account account : accounts){
-				if(!Preferences.getIsHiddenAccount(this, account.name)){
+			for (Account account : accounts) {
+				if (!Preferences.getIsHiddenAccount(this, account.name)) {
 					accountsList.add(account.name);
-					if (account.name.equals(accountname)){
+					if (account.name.equals(accountname)) {
 						selectedIndex = index;
 					}
 					index++;
 				}
 			}
-			if (accountsList.size() > 1){
+			if (accountsList.size() > 1) {
 				// Only use the spinner if we have multiple accounts
 				Context context = getSupportActionBar().getThemedContext();
-				AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(context, R.layout.account_selector_item, accountsList);
-				accountsAdapter.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
+				AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(context,
+						R.layout.account_selector_item, accountsList);
+				accountsAdapter
+						.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
 
 				// Hide the title to avoid duplicated info on tablets/landscape & setup the spinner
 				getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -342,7 +348,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			}
 
 			if (lastUpdateDate != null) {
-				statusText.setText(this.getString(R.string.last_update) + ": " + ContentAdapter.formatDate(lastUpdateDate));
+				statusText.setText(this.getString(R.string.last_update) + ": "
+						+ ContentAdapter.formatDate(lastUpdateDate));
 			}
 
 		}
@@ -363,7 +370,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			// authentication failed before, retry with token invalidation
 
 			Exception exception = null;
-
 
 
 			String authtoken = ((AndlyticsApp) getApplication()).getAuthToken();
@@ -387,12 +393,13 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				for (AppInfo appDownloadInfo : appDownloadInfos) {
 					// update in database and check for diffs
 					diffs.add(db.insertOrUpdateStats(appDownloadInfo));
-					String admobSiteId = Preferences.getAdmobSiteId(Main.this, appDownloadInfo.getPackageName());
-					if(admobSiteId != null) {
+					String admobSiteId = Preferences.getAdmobSiteId(Main.this,
+							appDownloadInfo.getPackageName());
+					if (admobSiteId != null) {
 						String admobAccount = Preferences.getAdmobAccount(Main.this, admobSiteId);
-						if(admobAccount != null) {
+						if (admobAccount != null) {
 							List<String> siteList = admobAccountSiteMap.get(admobAccount);
-							if(siteList == null) {
+							if (siteList == null) {
 								siteList = new ArrayList<String>();
 							}
 							siteList.add(admobSiteId);
@@ -408,14 +415,15 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				Set<String> admobAccuntKeySet = admobAccountSiteMap.keySet();
 				for (String admobAccount : admobAccuntKeySet) {
 
-					AdmobRequest.syncSiteStats(admobAccount, Main.this, admobAccountSiteMap.get(admobAccount), null);
+					AdmobRequest.syncSiteStats(admobAccount, Main.this,
+							admobAccountSiteMap.get(admobAccount), null);
 				}
 
 				new LoadIconInCache().execute(appDownloadInfos);
 
 			} catch (Exception e) {
 
-				if(e instanceof IOException) {
+				if (e instanceof IOException) {
 					e = new NetworkException(e);
 				}
 
@@ -437,7 +445,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				}
 				dotracking = false;
 			}
-
 
 
 			return exception;
@@ -500,11 +507,13 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			for (AppInfo appInfo : allStats) {
 
 				if (!appInfo.isGhost()) {
-					String admobSiteId = Preferences.getAdmobSiteId(Main.this, appInfo.getPackageName());
-					if(admobSiteId != null) {
-						List<Admob> admobStats = db.getAdmobStats(admobSiteId, Timeframe.LAST_TWO_DAYS).getAdmobs();
-						if(admobStats.size() > 0) {
-							Admob admob = admobStats.get(admobStats.size() -1);
+					String admobSiteId = Preferences.getAdmobSiteId(Main.this,
+							appInfo.getPackageName());
+					if (admobSiteId != null) {
+						List<Admob> admobStats = db.getAdmobStats(admobSiteId,
+								Timeframe.LAST_TWO_DAYS).getAdmobs();
+						if (admobStats.size() > 0) {
+							Admob admob = admobStats.get(admobStats.size() - 1);
 							appInfo.setAdmobStats(admob);
 						}
 					}
@@ -658,11 +667,13 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 			if (!isFinishing()) {
 
-				if(result) {
-					importDialog = new ImportDialog(Main.this, fileNames, accountname);
+				if (result) {
+					//					importDialog = new ImportDialog(Main.this, fileNames, accountname);
 					importDialog.show();
 				} else {
-					Toast.makeText(Main.this, "SD-Card not mounted or invalid file format, can't import!", Toast.LENGTH_LONG).show();
+					Toast.makeText(Main.this,
+							"SD-Card not mounted or invalid file format, can't import!",
+							Toast.LENGTH_LONG).show();
 				}
 			}
 		}
@@ -681,7 +692,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	}
 
 	private void updateStatsMode() {
-		if (statsModeMenuItem != null){
+		if (statsModeMenuItem != null) {
 			switch (currentStatsMode) {
 				case PERCENT:
 					statsModeMenuItem.setTitle(R.string.daily);
@@ -701,68 +712,69 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		adapter.notifyDataSetChanged();
 		Preferences.saveStatsMode(currentStatsMode, Main.this);
 	}
+
 	/*
-    @SuppressWarnings("unchecked")
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
 
-        if (keyCode == KeyEvent.KEYCODE_I) {
-            Intent intent = new Intent(this, DemoDataActivity.class);
-            intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
-            startActivity(intent);
-            return true;
-        } else if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Preferences.removeAccountName(Main.this);
-            Intent intent = new Intent(Main.this, LoginActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
-            return true;
-        } else if (keyCode == KeyEvent.KEYCODE_D) {
+	    if (keyCode == KeyEvent.KEYCODE_I) {
+	        Intent intent = new Intent(this, DemoDataActivity.class);
+	        intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
+	        startActivity(intent);
+	        return true;
+	    } else if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+	        Preferences.removeAccountName(Main.this);
+	        Intent intent = new Intent(Main.this, LoginActivity.class);
+	        startActivity(intent);
+	        overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
+	        return true;
+	    } else if (keyCode == KeyEvent.KEYCODE_D) {
 
-            try {
-                //List<AppInfo> allAppsLatestStats = db.getAllAppsLatestStats(accountname);
-                //for (AppInfo appInfo : allAppsLatestStats) {
-                    //db.deleteAllForPackageName(appInfo.getPackageName());
-                //}
-            } catch (Exception e) {
-                showCrashDialog(e);
-            }
-            return true;
-        } else {
+	        try {
+	            //List<AppInfo> allAppsLatestStats = db.getAllAppsLatestStats(accountname);
+	            //for (AppInfo appInfo : allAppsLatestStats) {
+	                //db.deleteAllForPackageName(appInfo.getPackageName());
+	            //}
+	        } catch (Exception e) {
+	            showCrashDialog(e);
+	        }
+	        return true;
+	    } else {
 
-            try {
-                Integer.parseInt(event.getNumber() + "");
+	        try {
+	            Integer.parseInt(event.getNumber() + "");
 
-                DeveloperConsole console = new DeveloperConsole(Main.this);
-                List<AppInfo> appDownloadInfos;
-                try {
-                    appDownloadInfos = console.parseAppStatisticsResponse(DemoDataActivity.readTestData(event.getNumber()),
-                            accountname);
+	            DeveloperConsole console = new DeveloperConsole(Main.this);
+	            List<AppInfo> appDownloadInfos;
+	            try {
+	                appDownloadInfos = console.parseAppStatisticsResponse(DemoDataActivity.readTestData(event.getNumber()),
+	                        accountname);
 
-                    for (AppInfo appDownloadInfo : appDownloadInfos) {
-                        // update in database
+	                for (AppInfo appDownloadInfo : appDownloadInfos) {
+	                    // update in database
 
-                        db.insertOrUpdateStats(appDownloadInfo);
+	                    db.insertOrUpdateStats(appDownloadInfo);
 
-                        new LoadIconInCache().execute(appDownloadInfos);
+	                    new LoadIconInCache().execute(appDownloadInfos);
 
-                    }
-                } catch (AuthenticationException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+	                }
+	            } catch (AuthenticationException e) {
+	                // TODO Auto-generated catch block
+	                e.printStackTrace();
+	            }
 
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            } catch (DeveloperConsoleException e) {
-                e.printStackTrace();
-            } catch (InvalidJSONResponseException e) {
-                e.printStackTrace();
-            }
+	        } catch (NumberFormatException e) {
+	            e.printStackTrace();
+	        } catch (DeveloperConsoleException e) {
+	            e.printStackTrace();
+	        } catch (InvalidJSONResponseException e) {
+	            e.printStackTrace();
+	        }
 
-        }
-        return false;
-    }*/
+	    }
+	    return false;
+	}*/
 
 	@Override
 	public void authenticationSuccess() {
@@ -784,13 +796,11 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		// AndroidManifest.xml
 		final int versionCode = Utils.getActualVersionCode(this);
 
-		final SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		final long lastVersionCode = prefs.getLong(LAST_VERSION_CODE_KEY, 0);
 
 		if (versionCode != lastVersionCode) {
-			Log.i(TAG, "versionCode " + versionCode
-					+ " is different from the last known version "
+			Log.i(TAG, "versionCode " + versionCode + " is different from the last known version "
 					+ lastVersionCode);
 			return true;
 		} else {
@@ -801,8 +811,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	private void showChangelog() {
 		final int versionCode = Utils.getActualVersionCode(this);
-		final SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
+		final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 		ChangelogBuilder.create(this, new Dialog.OnClickListener() {
 
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -814,7 +823,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		}).show();
 	}
 
-	private static class AccountSelectorAdaper extends ArrayAdapter<String>{
+	private static class AccountSelectorAdaper extends ArrayAdapter<String> {
 		private Context context;
 		private List<String> accounts;
 		private int textViewResourceId;
@@ -829,7 +838,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View rowView = convertView;
-			if ( rowView == null ) {
+			if (rowView == null) {
 				LayoutInflater inflater = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				rowView = inflater.inflate(textViewResourceId, parent, false);
@@ -838,7 +847,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			TextView subtitle = (TextView) rowView.findViewById(android.R.id.text1);
 			subtitle.setText(accounts.get(position));
 			Resources res = context.getResources();
-			if (res.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+			if (res.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 				// Scale the text down slightly to fit on landscape due to the shorter Action Bar
 				// and additional padding due to the drop down
 				// We don't use predefined values as it saves duplicating all of the different display
@@ -858,7 +867,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 			return rowView;
 		}
-
 
 
 	}

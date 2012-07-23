@@ -16,13 +16,13 @@
     <item
         android:id="@+id/itemMainmenuImport"
         android:icon="@drawable/icon_import"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/import_">
     </item>
     <item
         android:id="@+id/itemMainmenuExport"
         android:icon="@drawable/icon_export"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/export_">
     </item>
     <item

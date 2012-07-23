@@ -1,168 +1,178 @@
 package com.github.andlyticsproject.io;
 
+import java.io.FileInputStream;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.IBinder;
 import android.util.Log;
-
-import java.util.List;
 
 import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.model.AppStats;
 
 
-public class ImportService extends Service {
+public class ImportService extends IntentService {
 
-    private static final String TAG = ImportService.class.getSimpleName();
+	private static final String TAG = ImportService.class.getSimpleName();
 
-    public static final int NOTIFICATION_ID_PROGRESS = 2;
+	public static final int NOTIFICATION_ID_PROGRESS = 2;
 
-    public static final int NOTIFICATION_ID_FINISHED = 2;
+	public static final int NOTIFICATION_ID_FINISHED = 2;
 
-    public static final String FILE_NAMES = "fileNames";
+	public static final String FILE_NAMES = "fileNames";
 
-    public static final String ACCOUNT_NAME = "accountName";
+	public static final String ACCOUNT_NAME = "accountName";
 
-    private Notification notification;
+	public static final String ZIP_FILENAME = "zipFilename";
 
-    private String message;
+	private Notification notification;
 
-    private boolean errors = false;
+	private boolean errors = false;
 
-    private String accountName;
+	private String accountName;
 
-    private String[] fileNames;
+	private String[] fileNames;
 
-    @Override
-    public void onCreate() {
+	private String zipFilename;
 
-        this.notification = new Notification(R.drawable.statusbar_andlytics, getResources().getString(R.string.app_name) + ": " + getApplicationContext().getString(R.string.import_started), System.currentTimeMillis());
-        this.notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT | Notification.FLAG_AUTO_CANCEL;
-        super.onCreate();
-    }
+	private Exception error;
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+	private NotificationManager notificationManager;
 
-        Log.d(TAG, "import service onStartCommand");
+	public ImportService() {
+		super("andlytics ImportService");
+	}
 
-        this.fileNames = intent.getStringArrayExtra(FILE_NAMES);
-        Log.d(TAG, "file names:: " + fileNames);
+	@SuppressWarnings("deprecation")
+	@Override
+	public void onCreate() {
+		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        this.accountName = intent.getStringExtra(ACCOUNT_NAME);
-        Log.d(TAG, "account name:: " + accountName);
+		this.notification = new Notification(R.drawable.statusbar_andlytics, getResources()
+				.getString(R.string.app_name)
+				+ ": "
+				+ getApplicationContext().getString(R.string.import_started),
+				System.currentTimeMillis());
+		this.notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT
+				| Notification.FLAG_AUTO_CANCEL;
+		super.onCreate();
+	}
 
+	@Override
+	protected void onHandleIntent(Intent intent) {
+		Log.d(TAG, "import service onStartCommand");
 
-        (new StandardServiceWorker()).execute();
+		this.zipFilename = intent.getStringExtra(ZIP_FILENAME);
+		Log.d(TAG, "zip file: " + zipFilename);
 
-        return Service.START_NOT_STICKY;
-    }
+		this.fileNames = intent.getStringArrayExtra(FILE_NAMES);
+		Log.d(TAG, "file names:: " + fileNames);
 
-    /**
-     * Asynchronous task.
-     */
-    private class StandardServiceWorker extends AsyncTask<Void, Integer, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-
-
-            message = getApplicationContext().getString(R.string.import_started);
-            sendNotification();
-
-            ContentAdapter db = new ContentAdapter(ImportService.this);
-
-            for (int i = 0; i < fileNames.length; i++) {
-
-                StatsCsvReaderWriter statsWriter = new StatsCsvReaderWriter(ImportService.this);
-
-                String packageName;
-                try {
-                    packageName = statsWriter.readPackageName(fileNames[i]);
-                    message = getApplicationContext().getString(R.string.importing) + " " + packageName;
-                    publishProgress(i);
-
-                    List<AppStats> stats = statsWriter.readStats(fileNames[i]);
-
-                    for (AppStats appStats : stats)
-                        db.insertOrUpdateAppStats(appStats, packageName);
-                } catch (Exception e) {
-                    errors = true;
-                    e.printStackTrace();
-                }
-
-            }
+		this.accountName = intent.getStringExtra(ACCOUNT_NAME);
+		Log.d(TAG, "account name:: " + accountName);
 
 
+		boolean success = importStats();
+		notifyImportFinished(success);
+	}
 
-            message = getResources().getString(R.string.app_name) + ": "+ getApplicationContext().getString(R.string.import_finished);
-            sendNotification();
+	private boolean importStats() {
+		String message = getApplicationContext().getString(R.string.import_started);
+		sendNotification(message);
 
-            return !errors;
-        }
+		ContentAdapter db = new ContentAdapter(ImportService.this);
 
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            sendNotification();
-        }
+		try {
+			StatsCsvReaderWriter statsWriter = new StatsCsvReaderWriter(ImportService.this);
 
-        @Override
-        protected void onPostExecute(Boolean success) {
-
-            // clear progress notification
-            NotificationManager notificationManager = (NotificationManager)
-                    getSystemService(Context.NOTIFICATION_SERVICE);
-
-            notificationManager.cancel(NOTIFICATION_ID_PROGRESS);
-
-
-            notification = new Notification(R.drawable.statusbar_andlytics, message, System.currentTimeMillis());
-
-            Intent startActivityIntent = new Intent(ImportService.this, ImportService.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, startActivityIntent, 0);
-            notification.contentIntent = pendingIntent;
-
-            if(success) {
-                message = getResources().getString(R.string.app_name) + ": "+ getApplicationContext().getString(R.string.import_finished);
-                notification.setLatestEventInfo(getApplicationContext(), getResources().getString(R.string.app_name) + ": "+ getApplicationContext().getString(R.string.import_finished), "", pendingIntent);
-            } else {
-                message = getResources().getString(R.string.app_name) + ": "+ getApplicationContext().getString(R.string.import_error);
-                notification.setLatestEventInfo(getApplicationContext(), getResources().getString(R.string.app_name) + ": "+ getApplicationContext().getString(R.string.import_error), "", pendingIntent);
-            }
-
-            notification.defaults |= Notification.DEFAULT_SOUND;
-            notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
-            notificationManager.notify(NOTIFICATION_ID_FINISHED, notification);
-
-            stopSelf();
-        }
-    }
+			ZipInputStream inzip = new ZipInputStream(new FileInputStream(zipFilename));
+			ZipEntry entry = null;
+			// XXX only extract/import packages selected in import dialog
+			while ((entry = inzip.getNextEntry()) != null) {
+				List<AppStats> stats = statsWriter.readStats(inzip);
+				if (!stats.isEmpty()) {
+					String packageName = stats.get(0).getPackageName();
+					message = getApplicationContext().getString(R.string.importing) + " "
+							+ packageName;
+					sendNotification(message);
+					for (AppStats appStats : stats)
+						db.insertOrUpdateAppStats(appStats, packageName);
+				}
 
 
-    /**
-     * Send a notification to the progress bar.
-     */
-    protected void sendNotification() {
+			}
+		} catch (Exception e) {
+			Log.e(TAG, "Error importing stats: " + e.getMessage());
+			error = e;
+			errors = true;
+		}
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent startActivityIntent = new Intent(ImportService.this, ImportService.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, startActivityIntent, 0);
 
-        notification.setLatestEventInfo(this, getResources().getString(R.string.app_name) + ": "+ getApplicationContext().getString(R.string.import_), message , pendingIntent);
-        notificationManager.notify(NOTIFICATION_ID_PROGRESS, notification);
-    }
+		message = getResources().getString(R.string.app_name) + ": "
+				+ getApplicationContext().getString(R.string.import_finished);
+		sendNotification(message);
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+		return !errors;
+	}
 
+	@SuppressWarnings("deprecation")
+	private void notifyImportFinished(boolean success) {
+		// clear progress notification
+		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+		notificationManager.cancel(NOTIFICATION_ID_PROGRESS);
+
+		Intent startActivityIntent = new Intent(ImportService.this, ImportService.class);
+		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+				startActivityIntent, 0);
+		notification.contentIntent = pendingIntent;
+
+		if (success) {
+			String message = getResources().getString(R.string.app_name) + ": "
+					+ getApplicationContext().getString(R.string.import_finished);
+			notification = new Notification(R.drawable.statusbar_andlytics, message,
+					System.currentTimeMillis());
+			notification.setLatestEventInfo(getApplicationContext(),
+					getResources().getString(R.string.app_name) + ": "
+							+ getApplicationContext().getString(R.string.import_finished), "",
+					pendingIntent);
+		} else {
+			String message = getResources().getString(R.string.app_name) + ": "
+					+ getApplicationContext().getString(R.string.import_error);
+			notification = new Notification(R.drawable.statusbar_andlytics, message,
+					System.currentTimeMillis());
+			notification.setLatestEventInfo(getApplicationContext(),
+					getResources().getString(R.string.app_name) + ": "
+							+ getApplicationContext().getString(R.string.import_error), "",
+					pendingIntent);
+		}
+
+		notification.defaults |= Notification.DEFAULT_SOUND;
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
+		notificationManager.notify(NOTIFICATION_ID_FINISHED, notification);
+	}
+
+
+	/**
+	 * Send a notification to the progress bar.
+	 */
+	@SuppressWarnings("deprecation")
+	protected void sendNotification(String message) {
+		Intent startActivityIntent = new Intent(ImportService.this, ImportService.class);
+		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+				startActivityIntent, 0);
+
+		notification.setLatestEventInfo(this, getResources().getString(R.string.app_name) + ": "
+				+ getApplicationContext().getString(R.string.import_), message, pendingIntent);
+		notificationManager.notify(NOTIFICATION_ID_PROGRESS, notification);
+	}
 
 }

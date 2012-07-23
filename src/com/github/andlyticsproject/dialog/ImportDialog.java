@@ -1,13 +1,16 @@
 package com.github.andlyticsproject.dialog;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -15,9 +18,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.io.ImportService;
@@ -36,22 +36,22 @@ public class ImportDialog extends Dialog implements OnClickListener {
 
 	private List<String> importFileNames = new ArrayList<String>();
 
-    public ImportDialog(final Activity context, List<String> fileName, final String accountName) {
+	public ImportDialog(final Activity context, final String zipFilename, List<String> fileName,
+			final String accountName) {
+		super(context, R.style.Dialog);
 
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        super(context, R.style.Dialog);
+		layoutInflater = context.getLayoutInflater();
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.import_dialog);
 
-        layoutInflater = context.getLayoutInflater();
+		adapter = new ImportListAdapter();
 
-        setContentView(R.layout.import_dialog);
+		this.files = fileName;
 
-        adapter = new ImportListAdapter();
-        this.files = fileName;
-
-        View closeButton = (View) this.findViewById(R.id.import_dialog_close_button);
-        closeButton.setOnClickListener(new View.OnClickListener() {
+		View closeButton = (View) this.findViewById(R.id.import_dialog_close_button);
+		closeButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -60,52 +60,56 @@ public class ImportDialog extends Dialog implements OnClickListener {
 		});
 
 
-        View importButton = (View) this.findViewById(R.id.import_dialog_import_button);
-        importButton.setOnClickListener(new View.OnClickListener() {
+		View importButton = (View) this.findViewById(R.id.import_dialog_import_button);
+		importButton.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-
-
-                if (!android.os.Environment.getExternalStorageState().equals(
-                                android.os.Environment.MEDIA_MOUNTED)) {
-                    Toast.makeText(context, context.getString(R.string.import_no_sdcard), Toast.LENGTH_LONG).show();
-
-                } else {
-
-                    if (importFileNames.size() == 0) {
-                        Toast.makeText(context, context.getString(R.string.import_no_app), Toast.LENGTH_LONG).show();
-                    } else {
-                        Intent intent = new Intent(context, ImportService.class);
-                        intent.putExtra(ImportService.FILE_NAMES, importFileNames.toArray(new String[importFileNames.size()]));
-                        intent.putExtra(ImportService.ACCOUNT_NAME, accountName);
-                        context.startService(intent);
-                        dismiss();
-                    }
-
-                }
+			@Override
+			public void onClick(View v) {
 
 
-            }
-        });
-        ListView lv = (ListView) this.findViewById(R.id.list_view_id);
-        lv.addHeaderView(layoutInflater.inflate(R.layout.import_list_header, null), null, false);
-        lv.setAdapter(adapter);
-    }
+				if (!android.os.Environment.getExternalStorageState().equals(
+						android.os.Environment.MEDIA_MOUNTED)) {
+					Toast.makeText(context, context.getString(R.string.import_no_sdcard),
+							Toast.LENGTH_LONG).show();
 
-    @Override
-    public void show() {
-        super.show();
-    }
+				} else {
 
-    @Override
-    public void onClick(View v) {
-        /** When OK Button is clicked, dismiss the dialog */
-        if (v == okButton)
-            dismiss();
-    }
+					if (importFileNames.size() == 0) {
+						Toast.makeText(context, context.getString(R.string.import_no_app),
+								Toast.LENGTH_LONG).show();
+					} else {
+						Intent intent = new Intent(context, ImportService.class);
+						intent.putExtra(ImportService.ZIP_FILENAME, zipFilename);
+						intent.putExtra(ImportService.FILE_NAMES,
+								importFileNames.toArray(new String[importFileNames.size()]));
+						intent.putExtra(ImportService.ACCOUNT_NAME, accountName);
+						context.startService(intent);
+						dismiss();
+					}
 
-    class ImportListAdapter extends BaseAdapter {
+				}
+
+
+			}
+		});
+		ListView lv = (ListView) this.findViewById(R.id.list_view_id);
+		lv.addHeaderView(layoutInflater.inflate(R.layout.import_list_header, null), null, false);
+		lv.setAdapter(adapter);
+	}
+
+	@Override
+	public void show() {
+		super.show();
+	}
+
+	@Override
+	public void onClick(View v) {
+		/** When OK Button is clicked, dismiss the dialog */
+		if (v == okButton)
+			dismiss();
+	}
+
+	class ImportListAdapter extends BaseAdapter {
 
 		@Override
 		public int getCount() {
@@ -134,7 +138,7 @@ public class ImportDialog extends Dialog implements OnClickListener {
 				holder = new ViewHolder();
 				holder.name = (TextView) convertView.findViewById(R.id.import_file_name);
 				holder.row = (RelativeLayout) convertView.findViewById(R.id.import_app_row);
-				holder.checkbox = (CheckBox)convertView.findViewById(R.id.import_file_checkbox);
+				holder.checkbox = (CheckBox) convertView.findViewById(R.id.import_file_checkbox);
 				convertView.setTag(holder);
 
 			} else {
@@ -151,32 +155,33 @@ public class ImportDialog extends Dialog implements OnClickListener {
 				@Override
 				public void onClick(View v) {
 
-					CheckBox checkbox = ((CheckBox)(((ViewGroup)v).findViewById(R.id.import_file_checkbox)));
+					CheckBox checkbox = ((CheckBox) (((ViewGroup) v)
+							.findViewById(R.id.import_file_checkbox)));
 					checkbox.setChecked(!checkbox.isChecked());
 
-			        if(checkbox.isChecked()) {
-                        importFileNames.add(fileName);
-                    } else {
-                        importFileNames.remove(fileName);
-                    }
+					if (checkbox.isChecked()) {
+						importFileNames.add(fileName);
+					} else {
+						importFileNames.remove(fileName);
+					}
 
 				}
 			});
 
 			holder.checkbox.setTag(fileName);
 
-            holder.checkbox.setOnClickListener(new CheckBox.OnClickListener() {
+			holder.checkbox.setOnClickListener(new CheckBox.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    boolean isChecked = ((CheckBox)v).isChecked();
+				@Override
+				public void onClick(View v) {
+					boolean isChecked = ((CheckBox) v).isChecked();
 
 
-                    if(isChecked) {
-                        importFileNames.add(fileName);
-                    } else {
-                        importFileNames.remove(fileName);
-                    }
+					if (isChecked) {
+						importFileNames.add(fileName);
+					} else {
+						importFileNames.remove(fileName);
+					}
 
 				}
 			});
@@ -189,7 +194,7 @@ public class ImportDialog extends Dialog implements OnClickListener {
 			public TextView name;
 			public CheckBox checkbox;
 		}
-    }
+	}
 
 	public void setFileName(List<String> files) {
 		this.files = files;
