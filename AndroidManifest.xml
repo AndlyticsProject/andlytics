@@ -84,6 +84,27 @@
 			android:name=".NotificationPreferenceActivity"
 			android:label="@string/notifications">
 		</activity>
+        <activity
+            android:name=".ImportActivity"
+            android:label="@string/statistics_import"> 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="*"
+                    android:mimeType="application/zip"
+                    android:pathPattern="andlytics\\.zip"
+                    android:scheme="file" />
+            </intent-filter>
+            <!-- intent-filter android:priority="-100" -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:mimeType="application/zip"
+                    android:scheme="file" />
+            </intent-filter>
+        </activity>
 		<activity
 			android:name=".HiddenAppsPreferenceActivity"
 			android:label="@string/notifications">
