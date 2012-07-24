@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.github.andlyticsproject.ContentAdapter;
+import com.github.andlyticsproject.LoginActivity;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.model.AppStats;
 
@@ -129,9 +130,9 @@ public class ImportService extends IntentService {
 
 		notificationManager.cancel(NOTIFICATION_ID_PROGRESS);
 
-		Intent startActivityIntent = new Intent(ImportService.this, ImportService.class);
+		Intent startActivityIntent = new Intent(ImportService.this, LoginActivity.class);
 		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
-				startActivityIntent, 0);
+				startActivityIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
 		notification.contentIntent = pendingIntent;
 
 		if (success) {
