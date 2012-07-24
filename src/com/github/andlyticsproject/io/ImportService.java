@@ -1,6 +1,7 @@
 package com.github.andlyticsproject.io;
 
 import java.io.FileInputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -30,19 +31,15 @@ public class ImportService extends IntentService {
 
 	public static final String ACCOUNT_NAME = "accountName";
 
-	public static final String ZIP_FILENAME = "zipFilename";
-
 	private Notification notification;
 
 	private boolean errors = false;
 
 	private String accountName;
 
-	private String[] fileNames;
+	private List<String> fileNames;
 
 	private String zipFilename;
-
-	private Exception error;
 
 	private NotificationManager notificationManager;
 
@@ -69,10 +66,10 @@ public class ImportService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		Log.d(TAG, "import service onStartCommand");
 
-		this.zipFilename = intent.getStringExtra(ZIP_FILENAME);
+		this.zipFilename = intent.getData().getPath();
 		Log.d(TAG, "zip file: " + zipFilename);
 
-		this.fileNames = intent.getStringArrayExtra(FILE_NAMES);
+		this.fileNames = Arrays.asList(intent.getStringArrayExtra(FILE_NAMES));
 		Log.d(TAG, "file names:: " + fileNames);
 
 		this.accountName = intent.getStringExtra(ACCOUNT_NAME);
@@ -94,8 +91,12 @@ public class ImportService extends IntentService {
 
 			ZipInputStream inzip = new ZipInputStream(new FileInputStream(zipFilename));
 			ZipEntry entry = null;
-			// XXX only extract/import packages selected in import dialog
 			while ((entry = inzip.getNextEntry()) != null) {
+				String filename = entry.getName();
+				if (!fileNames.contains(filename)) {
+					continue;
+				}
+
 				List<AppStats> stats = statsWriter.readStats(inzip);
 				if (!stats.isEmpty()) {
 					String packageName = stats.get(0).getPackageName();
@@ -110,7 +111,6 @@ public class ImportService extends IntentService {
 			}
 		} catch (Exception e) {
 			Log.e(TAG, "Error importing stats: " + e.getMessage());
-			error = e;
 			errors = true;
 		}
 

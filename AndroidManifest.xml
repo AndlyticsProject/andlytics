@@ -86,8 +86,7 @@
 		</activity>
         <activity
             android:name=".ImportActivity"
-            android:label="@string/statistics_import" 
-            android:launchMode="singleTop">
+            android:label="@string/statistics_import"> 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

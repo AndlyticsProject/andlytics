@@ -47,11 +47,9 @@ import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.dialog.ExportDialog;
-import com.github.andlyticsproject.dialog.ImportDialog;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.InvalidJSONResponseException;
 import com.github.andlyticsproject.exception.NetworkException;
-import com.github.andlyticsproject.io.ServiceExceptoin;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
@@ -80,7 +78,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	public Animation aniPrevIn;
 	private StatsMode currentStatsMode;
 	public ExportDialog exportDialog;
-	public ImportDialog importDialog;
 
 	private MenuItem statsModeMenuItem;
 
@@ -200,9 +197,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				authenticateAccountFromPreferences(false, Main.this);
 				break;
 			case R.id.itemMainmenuImport:
-				//				(new LoadImportDialog()).execute();
 				Intent importIntent = new Intent(this, ImportActivity.class);
-				importIntent.setAction("android.intent.action.VIEW");
+				importIntent.setAction(Intent.ACTION_VIEW);
 				importIntent.setData(Uri.fromFile(StatsCsvReaderWriter.getDefaultExportFile()));
 				startActivity(importIntent);
 				break;
@@ -430,6 +426,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				exception = e;
 
 				Log.e(TAG, "error while requesting developer console", e);
+				e.printStackTrace();
 			}
 
 			if (dotracking == true) {
@@ -631,50 +628,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			if (!isFinishing()) {
 				exportDialog = new ExportDialog(Main.this, allStats, accountname);
 				exportDialog.show();
-			}
-		}
-
-	}
-
-	private class LoadImportDialog extends AsyncTask<Boolean, Void, Boolean> {
-
-		private List<String> fileNames;
-
-		@Override
-		protected Boolean doInBackground(Boolean... params) {
-
-			if (android.os.Environment.getExternalStorageState().equals(
-					android.os.Environment.MEDIA_MOUNTED)) {
-
-				List<AppInfo> allStats = db.getAllAppsLatestStats(accountname);
-				try {
-					fileNames = StatsCsvReaderWriter.getImportFileNames(accountname, allStats);
-				} catch (ServiceExceptoin e) {
-					e.printStackTrace();
-					return false;
-				}
-				return true;
-
-			} else {
-
-				return false;
-			}
-
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-
-			if (!isFinishing()) {
-
-				if (result) {
-					//					importDialog = new ImportDialog(Main.this, fileNames, accountname);
-					importDialog.show();
-				} else {
-					Toast.makeText(Main.this,
-							"SD-Card not mounted or invalid file format, can't import!",
-							Toast.LENGTH_LONG).show();
-				}
 			}
 		}
 

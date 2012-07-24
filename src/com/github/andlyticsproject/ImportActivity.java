@@ -10,10 +10,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -26,8 +24,9 @@ import com.github.andlyticsproject.io.ImportService;
 import com.github.andlyticsproject.io.ServiceExceptoin;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.model.AppInfo;
+import com.github.andlyticsproject.util.Utils;
 
-public class ImportActivity extends SherlockActivity implements OnClickListener {
+public class ImportActivity extends SherlockActivity {
 
 	private static final String TAG = ImportActivity.class.getSimpleName();
 
@@ -44,7 +43,6 @@ public class ImportActivity extends SherlockActivity implements OnClickListener 
 
 	private ContentAdapter db;
 
-	private Button okButton;
 	private ListView listView;
 
 	@Override
@@ -53,7 +51,7 @@ public class ImportActivity extends SherlockActivity implements OnClickListener 
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
-		setContentView(R.layout.import_dialog);
+		setContentView(R.layout.import_stats);
 
 		layoutInflater = getLayoutInflater();
 		db = ((AndlyticsApp) getApplication()).getDbAdapter();
@@ -79,12 +77,11 @@ public class ImportActivity extends SherlockActivity implements OnClickListener 
 							Toast.LENGTH_LONG).show();
 				} else {
 					Intent intent = new Intent(ImportActivity.this, ImportService.class);
-					intent.putExtra(ImportService.ZIP_FILENAME, getIntent().getData().getPath());
+					intent.setData(getIntent().getData());
 					intent.putExtra(ImportService.FILE_NAMES,
 							importFileNames.toArray(new String[importFileNames.size()]));
 					intent.putExtra(ImportService.ACCOUNT_NAME, accountName);
 					startService(intent);
-					//                        dismiss();
 					finish();
 				}
 			}
@@ -96,24 +93,17 @@ public class ImportActivity extends SherlockActivity implements OnClickListener 
 		adapter = new ImportListAdapter(new ArrayList<String>());
 		listView.setAdapter(adapter);
 
-		if ("android.intent.action.VIEW".equals(getIntent().getAction())) {
+		if (Intent.ACTION_VIEW.equals(getIntent().getAction())) {
 			Uri data = getIntent().getData();
-			// XXX check filename?
-			(new LoadImportDialogTask()).execute(data.getPath());
+			if (data == null) {
+				Toast.makeText(this, "Stats file not specified as data.", Toast.LENGTH_LONG).show();
+				finish();
+			}
+
+			Utils.execute(new LoadImportDialogTask(), data.getPath());
 		} else {
-			Toast.makeText(this, "Invalid stats file", Toast.LENGTH_LONG).show();
+			Log.w(TAG, "Don't know how to handle this action: " + getIntent().getAction());
 			finish();
-		}
-	}
-
-	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		setIntent(intent);
-
-		if ("android.intent.action.VIEW".equals(getIntent().getAction())) {
-			Uri data = getIntent().getData();
-			(new LoadImportDialogTask()).execute(data.getPath());
 		}
 	}
 
@@ -159,15 +149,6 @@ public class ImportActivity extends SherlockActivity implements OnClickListener 
 			}
 		}
 
-	}
-
-	@Override
-	public void onClick(View v) {
-		/** When OK Button is clicked, dismiss the dialog */
-		if (v == okButton) {
-			//            dismiss();
-			finish();
-		}
 	}
 
 	class ImportListAdapter extends BaseAdapter {

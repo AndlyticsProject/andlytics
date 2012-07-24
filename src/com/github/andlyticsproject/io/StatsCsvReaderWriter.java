@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -103,45 +102,6 @@ public class StatsCsvReaderWriter {
 
 		writer.close();
 		fileWriter.close();
-
-	}
-
-	public static List<String> getImportFileNames(String accountName, List<AppInfo> appInfos)
-			throws ServiceExceptoin {
-
-		List<String> result = new ArrayList<String>();
-
-		String defaultDirectory = StatsCsvReaderWriter.getDefaultDirectory();
-
-		File file = new File(defaultDirectory);
-
-		if (file.exists()) {
-			File[] listFiles = file.listFiles(new FilenameFilter() {
-
-				@Override
-				public boolean accept(File dir, String filename) {
-					//                    return filename.endsWith(".csv") || filename.endsWith(".CSV");
-					return filename.equalsIgnoreCase(EXPORT_ZIP_FILE);
-				}
-
-			});
-
-			for (File dirFile : listFiles) {
-				result.add(dirFile.getName());
-			}
-		}
-
-		//        Iterator<String> iterator = result.iterator();
-		//        while (iterator.hasNext()) {
-		//            String fileName = (String) iterator.next();
-		//
-		//            if(!isValidFile(accountName, fileName, appInfos)) {
-		//                 iterator.remove();
-		//            }
-		//
-		//        }
-
-		return result;
 
 	}
 
