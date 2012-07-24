@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject;
 
 import java.io.IOException;
@@ -19,22 +20,22 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.sync.AutosyncHandler;
 import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
 
 /**
- * Used for initial login and managing accounts
- * Because of this original legacy as the launcher activity, navigation is a little odd.
- * On first startup:
- * LoginActivity -> Main
- * When managing accounts:
- * Main -> LoginActivity <- Main or
+ * Used for initial login and managing accounts Because of this original legacy as the launcher
+ * activity, navigation is a little odd. 
+ * On first startup: LoginActivity -> Main 
+ * When managing
+ * accounts: Main -> LoginActivity <- Main
+ * or 
  * Main -> LoginActivity -> Main
- *
  */
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends SherlockActivity {
 
 	private static final String TAG = "Andlytics";
 
@@ -53,11 +54,11 @@ public class LoginActivity extends BaseActivity {
 		// that LoginActivity should not auto login as we are managing the accounts,
 		// rather than performing the initial login
 		Bundle extras = getIntent().getExtras();
-		if (extras != null){
+		if (extras != null) {
 			manageAccountsMode = extras.getBoolean(Constants.MANAGE_ACCOUNTS_MODE);
 		}
 
-		if (manageAccountsMode){
+		if (manageAccountsMode) {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setTitle(R.string.manage_accounts);
 		}
@@ -91,18 +92,17 @@ public class LoginActivity extends BaseActivity {
 	/**
 	 * Called if item in option menu is selected.
 	 * 
-	 * @param item
-	 *            The chosen menu item
+	 * @param item The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.itemLoginmenuAdd:			
+			case R.id.itemLoginmenuAdd:
 				addNewGoogleAccount();
 				break;
 			case android.R.id.home:
-				if (!blockGoingBack){
+				if (!blockGoingBack) {
 					setResult(RESULT_OK);
 					finish();
 				}
@@ -148,19 +148,21 @@ public class LoginActivity extends BaseActivity {
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					View parent = (View) buttonView.getParent();
 					String accountName = (String) parent.getTag();
-					Preferences.saveIsHiddenAccount(getApplicationContext(), accountName, !isChecked);
+					Preferences.saveIsHiddenAccount(getApplicationContext(), accountName,
+							!isChecked);
 					parent.setClickable(isChecked);
 
 					// Enable disable sync
 					// TODO Is it worth storing their previous sync period?
-					AutosyncHandler syncHandler = AutosyncHandlerFactory.getInstance(getApplicationContext());
-					if (!isChecked){
+					AutosyncHandler syncHandler = AutosyncHandlerFactory
+							.getInstance(getApplicationContext());
+					if (!isChecked) {
 						syncHandler.setAutosyncPeriod(accountName, 0);
 					} else {
-						syncHandler.setAutosyncPeriod(accountName,	AutosyncHandler.DEFAULT_PERIOD);
+						syncHandler.setAutosyncPeriod(accountName, AutosyncHandler.DEFAULT_PERIOD);
 					}
 
-					if (manageAccountsMode && (accountName).equals(selectedAccount)){
+					if (manageAccountsMode && (accountName).equals(selectedAccount)) {
 						// If they remove the current account, then stop them going back
 						blockGoingBack = !isChecked;
 						getSupportActionBar().setDisplayHomeAsUpEnabled(isChecked);
@@ -194,7 +196,8 @@ public class LoginActivity extends BaseActivity {
 			}
 		};
 
-		AccountManager.get(LoginActivity.this).addAccount(Constants.ACCOUNT_TYPE_GOOGLE, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVLOPER, null,
+		AccountManager.get(LoginActivity.this).addAccount(Constants.ACCOUNT_TYPE_GOOGLE,
+				Constants.AUTH_TOKEN_TYPE_ANDROID_DEVLOPER, null,
 				null /* options */, LoginActivity.this, callback, null /* handler */);
 	}
 
@@ -207,6 +210,5 @@ public class LoginActivity extends BaseActivity {
 		overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
 		finish();
 	}
-
 
 }

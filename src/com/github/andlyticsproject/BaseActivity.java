@@ -15,8 +15,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -24,6 +22,7 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.admob.AdmobAccountRemovedException;
 import com.github.andlyticsproject.admob.AdmobAskForPasswordException;
 import com.github.andlyticsproject.admob.AdmobGenericException;
@@ -45,150 +44,35 @@ public class BaseActivity extends SherlockActivity {
 
 	private static final String TAG = BaseActivity.class.getSimpleName();
 
-	private View downloadsButton;
-	private View admobButton;
-	private View commentsButton;
 	protected String packageName;
 	protected String iconFilePath;
-	protected String accountname;
-	private View ratingsButton;
+	protected String accountName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
+        setSupportProgressBarIndeterminateVisibility(false);
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
+			// TODO move packageName and iconFilePath assignments to BaseDetailsActivity
+			// Will this effect startActivity etc with regard to null behaviour?
+			// Might be best to leave them here
 			packageName = b.getString(Constants.PACKAGE_NAME_PARCEL);
 			iconFilePath = b.getString(Constants.ICON_FILE_PARCEL);
-			accountname = b.getString(Constants.AUTH_ACCOUNT_NAME);
-			if (accountname != null){
-				Preferences.saveAccountName(this,accountname);
+			accountName = b.getString(Constants.AUTH_ACCOUNT_NAME);
+			if (accountName != null){
+				Preferences.saveAccountName(this,accountName);
 			}
 		}
 
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if (findViewById(R.id.tabbar_button_comments) != null) {
-			setupTabbar();
-		}
-
-	}
-
-	public void updateTabbarButtons()
-	{
-		if (this instanceof ChartActivity) {
-			ChartSet currentChartSet = ((ChartActivity) this).getCurrentChartSet();
-			if (currentChartSet.equals(ChartSet.DOWNLOADS)) {
-				downloadsButton.setSelected(true);
-				commentsButton.setSelected(false);
-				admobButton.setSelected(false);
-				ratingsButton.setSelected(false);
-
-			} else if (currentChartSet.equals(ChartSet.RATINGS)) {
-
-				downloadsButton.setSelected(false);
-				commentsButton.setSelected(false);
-				ratingsButton.setSelected(true);
-				admobButton.setSelected(false);
-			}
-		} else if (this instanceof CommentsActivity) {
-			commentsButton.setSelected(true);
-			admobButton.setSelected(false);
-			downloadsButton.setSelected(false);
-			ratingsButton.setSelected(false);
-		} else if (this instanceof AdmobActivity) {
-			commentsButton.setSelected(false);
-			admobButton.setSelected(true);
-			downloadsButton.setSelected(false);
-			ratingsButton.setSelected(false);
-		}
-	}
-	public void setupTabbar() {
-
-		downloadsButton = findViewById(R.id.tabbar_button_downloads);
-		ratingsButton = findViewById(R.id.tabbar_button_ratings);
-		commentsButton = findViewById(R.id.tabbar_button_comments);
-		admobButton = findViewById(R.id.tabbar_button_back);
-
-		updateTabbarButtons();
-
-		downloadsButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				if (!(BaseActivity.this instanceof ChartActivity && ((ChartActivity) BaseActivity.this)
-						.getCurrentChartSet().equals(ChartSet.DOWNLOADS))) {
-
-					commentsButton.setSelected(false);
-					admobButton.setSelected(false);
-					ratingsButton.setSelected(false);
-					downloadsButton.setSelected(true);
-
-					startChartActivity(ChartSet.DOWNLOADS);
-				}
-
-			}
-		});
-
-		ratingsButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				if (!(BaseActivity.this instanceof ChartActivity && ((ChartActivity) BaseActivity.this)
-						.getCurrentChartSet().equals(ChartSet.RATINGS))) {
-
-					commentsButton.setSelected(false);
-					admobButton.setSelected(false);
-					ratingsButton.setSelected(true);
-					downloadsButton.setSelected(false);
-					startChartActivity(ChartSet.RATINGS);
-				}
-
-			}
-		});
-
-		commentsButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (!(BaseActivity.this instanceof CommentsActivity)) {
-
-					downloadsButton.setSelected(false);
-					admobButton.setSelected(false);
-					ratingsButton.setSelected(false);
-					commentsButton.setSelected(true);
-					startActivity(CommentsActivity.class, true, false);
-				}
-
-			}
-		});
-
-		admobButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (!(BaseActivity.this instanceof AdmobActivity)) {
-
-					downloadsButton.setSelected(false);
-					admobButton.setSelected(true);
-					ratingsButton.setSelected(false);
-					commentsButton.setSelected(false);
-					startActivity(AdmobActivity.class, true, false);
-				}
-			}
-		});
 	}
 
 	public void startActivity(Class<?> clazz, boolean disableAnimation, boolean skipDataReload) {
 		Intent intent = new Intent(BaseActivity.this, clazz);
 		intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
 		intent.putExtra(Constants.ICON_FILE_PARCEL, iconFilePath);
-		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
+		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
 		if (clazz.equals(Main.class)){
 			// Main does not have singleTask set in the manifest
 			// in order to facilitate easy switching between accounts using list navigation
@@ -210,7 +94,7 @@ public class BaseActivity extends SherlockActivity {
 		Intent intent = new Intent(BaseActivity.this, ChartActivity.class);
 		intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
 		intent.putExtra(Constants.ICON_FILE_PARCEL, iconFilePath);
-		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
+		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		intent.putExtra(Constants.CHART_SET, set.name());
 
@@ -223,15 +107,15 @@ public class BaseActivity extends SherlockActivity {
 					Toast.LENGTH_LONG).show();
 		}  else if (e instanceof SignupException) {
 			Toast.makeText(BaseActivity.this,
-					accountname + " is not an android developer account, sign up at:\n\n" + e.getMessage(),
+					accountName + " is not an android developer account, sign up at:\n\n" + e.getMessage(),
 					Toast.LENGTH_LONG).show();
 			Toast.makeText(BaseActivity.this,
-					accountname + " is not an android developer account, sign up at:\n\n" + e.getMessage(),
+					accountName + " is not an android developer account, sign up at:\n\n" + e.getMessage(),
 					Toast.LENGTH_LONG).show();
 		} else if (e instanceof AuthenticationException || e instanceof NoCookieSetException) {
 
 			Toast.makeText(BaseActivity.this,
-					"authentication failed for: " + accountname,
+					"authentication failed for: " + accountName,
 					Toast.LENGTH_LONG).show();
 
 		} else if (e instanceof AdmobRateLimitExceededException) {
@@ -619,24 +503,6 @@ public class BaseActivity extends SherlockActivity {
 	}
 
 	protected void onPostAuthentication() {
-	}
-
-	@Override
-	public void onBackPressed() {
-		if(this instanceof ChartActivity ||
-				this instanceof AdmobActivity ||
-				this instanceof CommentsActivity) {
-			commentsButton.setSelected(false);
-			downloadsButton.setSelected(false);
-			ratingsButton.setSelected(false);
-			admobButton.setSelected(false);
-
-			startActivity(Main.class, false, true);
-
-			overridePendingTransition(R.anim.activity_prev_in, R.anim.activity_prev_out);
-		} else {
-			super.onBackPressed();
-		}
 	}
 
 	public static int getAppVersionCode(Context context) {
