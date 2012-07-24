@@ -1,43 +1,36 @@
+
 package com.github.andlyticsproject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.Gallery;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
-import android.widget.ViewSwitcher.ViewFactory;
 
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.chart.Chart;
-import com.github.andlyticsproject.chart.ChartTextSwitcher;
 import com.github.andlyticsproject.view.ChartGallery;
 import com.github.andlyticsproject.view.ChartGalleryAdapter;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
 import com.github.andlyticsproject.view.ViewSwitcher3D.ViewSwitcherListener;
 
-public abstract class BaseChartActivity extends BaseActivity implements ViewSwitcherListener {
-	 private static String LOG_TAG=BaseChartActivity.class.toString();
+public abstract class BaseChartActivity extends BaseDetailsActivity implements ViewSwitcherListener {
+	private static String LOG_TAG = BaseChartActivity.class.toString();
 
 	private ChartGalleryAdapter chartGalleryAdapter;
 	private ChartGallery chartGallery;
@@ -50,8 +43,8 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 	private RadioButton radioMdy;
 	private ViewSwitcher3D listViewSwitcher;
 
-	private RadioButton radioLastThrity,radioUnlimited,radioLastSeven;
-	
+	private RadioButton radioLastThrity, radioUnlimited, radioLastSeven;
+
 	BaseChartListAdapter myAdapter;
 
 	@Override
@@ -77,112 +70,115 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 
 		currentTimeFrame = Preferences.getChartTimeframe(this);
 
-			listViewSwitcher = new ViewSwitcher3D((ViewGroup) findViewById(R.id.base_chart_bottom_frame));
-			listViewSwitcher.setListener(this);
+		listViewSwitcher = new ViewSwitcher3D(
+				(ViewGroup) findViewById(R.id.base_chart_bottom_frame));
+		listViewSwitcher.setListener(this);
 
-			String dateFormatLong = Preferences.getDateFormatLong(this);
-			radioDmy = (RadioButton) findViewById(R.id.base_chart_config_ratio_dmy);
-			if ("dd/MM/yyyy".equals(dateFormatLong)) {
-				radioDmy.setChecked(true);
+		String dateFormatLong = Preferences.getDateFormatLong(this);
+		radioDmy = (RadioButton) findViewById(R.id.base_chart_config_ratio_dmy);
+		if ("dd/MM/yyyy".equals(dateFormatLong)) {
+			radioDmy.setChecked(true);
+		}
+		radioDmy.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					Preferences.saveDateFormatLong(BaseChartActivity.this, "dd/MM/yyyy");
+					Preferences.saveDateFormatShort(BaseChartActivity.this, "dd/MM");
+					notifyChangedDataformat();
+				}
 			}
-			radioDmy.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		});
 
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					if (isChecked) {
-						Preferences.saveDateFormatLong(BaseChartActivity.this, "dd/MM/yyyy");
-						Preferences.saveDateFormatShort(BaseChartActivity.this, "dd/MM");
-						notifyChangedDataformat();
-					}
+		radioYmd = (RadioButton) findViewById(R.id.base_chart_config_ratio_ymd);
+		if ("yyyy/MM/dd".equals(dateFormatLong)) {
+			radioYmd.setChecked(true);
+		}
+		radioYmd.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					Preferences.saveDateFormatLong(BaseChartActivity.this, "yyyy/MM/dd");
+					Preferences.saveDateFormatShort(BaseChartActivity.this, "MM/dd");
+					notifyChangedDataformat();
 				}
-			});
-
-			radioYmd = (RadioButton) findViewById(R.id.base_chart_config_ratio_ymd);
-			if ("yyyy/MM/dd".equals(dateFormatLong)) {
-				radioYmd.setChecked(true);
 			}
-			radioYmd.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		});
+		radioMdy = (RadioButton) findViewById(R.id.base_chart_config_ratio_mdy);
+		if ("MM/dd/yyyy".equals(dateFormatLong)) {
+			radioMdy.setChecked(true);
+		}
+		radioMdy.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					if (isChecked) {
-						Preferences.saveDateFormatLong(BaseChartActivity.this, "yyyy/MM/dd");
-						Preferences.saveDateFormatShort(BaseChartActivity.this, "MM/dd");
-						notifyChangedDataformat();
-					}
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					Preferences.saveDateFormatLong(BaseChartActivity.this, "MM/dd/yyyy");
+					Preferences.saveDateFormatShort(BaseChartActivity.this, "MM/dd");
+					notifyChangedDataformat();
 				}
-			});
-			radioMdy = (RadioButton) findViewById(R.id.base_chart_config_ratio_mdy);
-			if ("MM/dd/yyyy".equals(dateFormatLong)) {
-				radioMdy.setChecked(true);
 			}
-			radioMdy.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		});
+		View configDoneButton = (View) findViewById(R.id.base_chart_config_done_button);
+		configDoneButton.setOnClickListener(new OnClickListener() {
 
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					if (isChecked) {
-						Preferences.saveDateFormatLong(BaseChartActivity.this, "MM/dd/yyyy");
-						Preferences.saveDateFormatShort(BaseChartActivity.this, "MM/dd");
-						notifyChangedDataformat();
-					}
-				}
-			});
-			View configDoneButton = (View) findViewById(R.id.base_chart_config_done_button);
-			configDoneButton.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					listViewSwitcher.swap();
-				}
-			});
-
-			radioLastThrity = (RadioButton) findViewById(R.id.base_chart_config_ratio_last_thrity_days);
-			radioUnlimited = (RadioButton) findViewById(R.id.base_chart_config_ratio_last_unlimited);
-			radioLastSeven = (RadioButton) findViewById(R.id.base_chart_config_ratio_last_seven_days);
-
-			if (Timeframe.LAST_SEVEN_DAYS.equals(currentTimeFrame)) {
-				radioLastSeven.setChecked(true);
+			@Override
+			public void onClick(View v) {
+				listViewSwitcher.swap();
 			}
-			radioLastSeven.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		});
 
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					if (isChecked) {
-						currentTimeFrame = Timeframe.LAST_SEVEN_DAYS;
-						executeLoadData(currentTimeFrame);
-						Preferences.saveChartTimeframe(Timeframe.LAST_SEVEN_DAYS, BaseChartActivity.this);
-					}
+		radioLastThrity = (RadioButton) findViewById(R.id.base_chart_config_ratio_last_thrity_days);
+		radioUnlimited = (RadioButton) findViewById(R.id.base_chart_config_ratio_last_unlimited);
+		radioLastSeven = (RadioButton) findViewById(R.id.base_chart_config_ratio_last_seven_days);
+
+		if (Timeframe.LAST_SEVEN_DAYS.equals(currentTimeFrame)) {
+			radioLastSeven.setChecked(true);
+		}
+		radioLastSeven.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					currentTimeFrame = Timeframe.LAST_SEVEN_DAYS;
+					executeLoadData(currentTimeFrame);
+					Preferences.saveChartTimeframe(Timeframe.LAST_SEVEN_DAYS,
+							BaseChartActivity.this);
 				}
-			});
-
-			if (Timeframe.LAST_THIRTY_DAYS.equals(currentTimeFrame)) {
-				radioLastThrity.setChecked(true);
 			}
-			radioLastThrity.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		});
 
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					if (isChecked) {
-						currentTimeFrame = Timeframe.LAST_THIRTY_DAYS;
-						executeLoadData(currentTimeFrame);
-						Preferences.saveChartTimeframe(Timeframe.LAST_THIRTY_DAYS, BaseChartActivity.this);
-					}
+		if (Timeframe.LAST_THIRTY_DAYS.equals(currentTimeFrame)) {
+			radioLastThrity.setChecked(true);
+		}
+		radioLastThrity.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					currentTimeFrame = Timeframe.LAST_THIRTY_DAYS;
+					executeLoadData(currentTimeFrame);
+					Preferences.saveChartTimeframe(Timeframe.LAST_THIRTY_DAYS,
+							BaseChartActivity.this);
 				}
-			});
-			if (Timeframe.UNLIMITED.equals(currentTimeFrame)) {
-				radioUnlimited.setChecked(true);
 			}
-			radioUnlimited.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		});
+		if (Timeframe.UNLIMITED.equals(currentTimeFrame)) {
+			radioUnlimited.setChecked(true);
+		}
+		radioUnlimited.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					if (isChecked) {
-						currentTimeFrame = Timeframe.UNLIMITED;
-						executeLoadData(currentTimeFrame);
-						Preferences.saveChartTimeframe(Timeframe.UNLIMITED, BaseChartActivity.this);
-					}
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					currentTimeFrame = Timeframe.UNLIMITED;
+					executeLoadData(currentTimeFrame);
+					Preferences.saveChartTimeframe(Timeframe.UNLIMITED, BaseChartActivity.this);
 				}
-			});
+			}
+		});
 
 		chartGallery = (ChartGallery) findViewById(R.id.base_chart_gallery);
 		chartGalleryAdapter = new ChartGalleryAdapter(new ArrayList<View>());
@@ -212,40 +208,33 @@ public abstract class BaseChartActivity extends BaseActivity implements ViewSwit
 
 		dataList = (ListView) findViewById(R.id.base_chart_list);
 		timeframeText = (TextView) findViewById(R.id.base_chart_timeframe);
-
-		String appName = getDbAdapter().getAppName(packageName);
-        if (appName != null){
-        	getSupportActionBar().setSubtitle(appName);
-        }		
-		
-		if (iconFilePath != null) {
-			Bitmap bm = BitmapFactory.decodeFile(iconFilePath);
-			BitmapDrawable icon = new BitmapDrawable(getResources(),bm);
-			getSupportActionBar().setIcon(icon);
-		}
-
 	}
+
 	/**
 	 * Called when chart is selected
+	 * 
 	 * @param page
 	 * @param column
 	 */
-protected void onChartSelected(int page, int column) {}
-protected void setCurrentChart(int page,int column)
-{
-	int pos = 0;
-	for(View view:chartGalleryAdapter.getViews())
-	{
-		int pageColumn[] = (int[]) view.getTag();
-		if(page==pageColumn[0] && column==pageColumn[1])
-		{
-			chartGallery.setSelection(pos, false);
-			return;
-		}
-		pos++;
+	protected void onChartSelected(int page, int column) {
 	}
-	throw new IndexOutOfBoundsException("page="+page+" column="+column);
-}
+
+	protected void setCurrentChart(int page, int column)
+	{
+		int pos = 0;
+		for (View view : chartGalleryAdapter.getViews())
+		{
+			int pageColumn[] = (int[]) view.getTag();
+			if (page == pageColumn[0] && column == pageColumn[1])
+			{
+				chartGallery.setSelection(pos, false);
+				return;
+			}
+			pos++;
+		}
+		throw new IndexOutOfBoundsException("page=" + page + " column=" + column);
+	}
+
 	protected abstract void notifyChangedDataformat();
 
 	protected abstract List<View> getExtraConfig();
@@ -253,7 +242,7 @@ protected void setCurrentChart(int page,int column)
 	protected List<View> getExtraFullViews() {
 		return null;
 	}
-	
+
 	protected final RadioButton getRadioLastSeven() {
 		return radioLastSeven;
 	}
@@ -274,18 +263,7 @@ protected void setCurrentChart(int page,int column)
 	}
 
 	private final void updateTitleTextSwitcher(String string, Drawable image) {
-
-		/*
-		 * This commented code does not work for ranking Object tag =
-		 * titleTextSwitcher.getTag();
-		 * 
-		 * if(tag != null && tag.equals(string)) { return; } else
-		 */
-
-		{
 			getSupportActionBar().setTitle(string);
-		}
-
 	}
 
 	@Override
@@ -324,12 +302,11 @@ protected void setCurrentChart(int page,int column)
 				int pageColumn[] = new int[3];
 				View chartView = myAdapter.buildChart(this, chart, statsForApp, i, j);
 				/*
-				 * if(chartView==null) {
-				 * Log.i(LOG_TAG,"Ignoring chart p="+i+" c="+j+"for class="
+				 * if(chartView==null) { Log.i(LOG_TAG,"Ignoring chart p="+i+" c="+j+"for class="
 				 * +this.getClass().toString()); continue; }
 				 */
 				Gallery.LayoutParams params = new Gallery.LayoutParams(LayoutParams.FILL_PARENT,
-				    LayoutParams.FILL_PARENT);
+						LayoutParams.FILL_PARENT);
 				chartView.setLayoutParams(params);
 				pageColumn[0] = i;
 				pageColumn[1] = j;
@@ -378,9 +355,10 @@ protected void setCurrentChart(int page,int column)
 	}
 
 	protected abstract String getChartHint();
+
 	public void setAllowChangePageSliding(boolean allowChangePageSliding)
 	{
-	  chartGallery.setAllowChangePageSliding(allowChangePageSliding);
+		chartGallery.setAllowChangePageSliding(allowChangePageSliding);
 	}
 
 }

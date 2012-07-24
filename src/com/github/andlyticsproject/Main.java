@@ -104,7 +104,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		// in the sense that that change they made never got applied
 		// TODO Do something clever in login activity to prevent this while keeping the ability
 		// to block going 'back'
-		Preferences.saveIsHiddenAccount(this, accountname, false);
+		Preferences.saveIsHiddenAccount(this, accountName, false);
 
 		updateAccountsList();
 
@@ -115,7 +115,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		footer = layoutInflater.inflate(R.layout.main_list_footer, null);
 		footer.setVisibility(View.INVISIBLE);
 		mainListView.addFooterView(footer, null, false);
-		adapter = new MainListAdapter(this, accountname, db, currentStatsMode);
+		adapter = new MainListAdapter(this, accountName, db, currentStatsMode);
 		mainListView.setAdapter(adapter);
 		mainViewSwitcher = (ViewSwitcher) findViewById(R.id.main_viewswitcher);
 
@@ -146,7 +146,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		if (!accountsList.get(itemPosition).equals(accountname)) {
+		if (!accountsList.get(itemPosition).equals(accountName)) {
 			// Only switch if it is a new account
 			Preferences.removeAccountName(Main.this);
 			Intent intent = new Intent(Main.this, Main.class);
@@ -165,9 +165,9 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		boolean mainSkipDataReload = getAndlyticsApplication().isSkipMainReload();
 
 		if (!mainSkipDataReload) {
-			new LoadDbEntries().execute(true);
+			Utils.execute(new LoadDbEntries(), true);
 		} else {
-			new LoadDbEntries().execute(false);
+			Utils.execute(new LoadDbEntries(), false);
 		}
 
 		getAndlyticsApplication().setSkipMainReload(false);
@@ -211,7 +211,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				break;
 			case R.id.itemMainmenuPreferences:
 				i = new Intent(this, PreferenceActivity.class);
-				i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
+				i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
 				startActivity(i);
 				break;
 			case R.id.itemMainmenuStatsMode:
@@ -284,7 +284,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			for (Account account : accounts) {
 				if (!Preferences.getIsHiddenAccount(this, account.name)) {
 					accountsList.add(account.name);
-					if (account.name.equals(accountname)) {
+					if (account.name.equals(accountName)) {
 						selectedIndex = index;
 					}
 					index++;
@@ -308,7 +308,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				getSupportActionBar().setDisplayShowTitleEnabled(true);
 				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 				getSupportActionBar().setTitle(R.string.app_name);
-				getSupportActionBar().setSubtitle(accountname);
+				getSupportActionBar().setSubtitle(accountName);
 			}
 		}
 	}
@@ -320,14 +320,14 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			if (apps.size() > 0) {
 				footer.setVisibility(View.VISIBLE);
 
-				String autosyncSet = Preferences.getAutosyncSet(Main.this, accountname);
+				String autosyncSet = Preferences.getAutosyncSet(Main.this, accountName);
 				if (autosyncSet == null) {
 
 					// set autosync default value
-					AutosyncHandlerFactory.getInstance(Main.this).setAutosyncPeriod(accountname,
+					AutosyncHandlerFactory.getInstance(Main.this).setAutosyncPeriod(accountName,
 							AutosyncHandler.DEFAULT_PERIOD);
 
-					Preferences.saveAutosyncSet(Main.this, accountname);
+					Preferences.saveAutosyncSet(Main.this, accountName);
 				}
 			}
 
@@ -375,7 +375,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			try {
 
 				DeveloperConsole console = new DeveloperConsole(Main.this);
-				appDownloadInfos = console.getAppDownloadInfos(authtoken, accountname);
+				appDownloadInfos = console.getAppDownloadInfos(authtoken, accountName);
 
 				if (cancelRequested) {
 					cancelRequested = false;
@@ -405,7 +405,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				}
 
 				// check for notifications
-				NotificationHandler.handleNotificaions(Main.this, diffs, accountname);
+				NotificationHandler.handleNotificaions(Main.this, diffs, accountName);
 
 				// sync admob accounts
 				Set<String> admobAccuntKeySet = admobAccountSiteMap.keySet();
@@ -415,7 +415,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 							admobAccountSiteMap.get(admobAccount), null);
 				}
 
-				new LoadIconInCache().execute(appDownloadInfos);
+				Utils.execute(new LoadIconInCache(), appDownloadInfos);
 
 			} catch (Exception e) {
 
@@ -499,7 +499,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		@Override
 		protected Boolean doInBackground(Boolean... params) {
 
-			allStats = db.getAllAppsLatestStats(accountname);
+			allStats = db.getAllAppsLatestStats(accountName);
 
 			for (AppInfo appInfo : allStats) {
 
@@ -617,7 +617,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		@Override
 		protected Boolean doInBackground(Boolean... params) {
 
-			allStats = db.getAllAppsLatestStats(accountname);
+			allStats = db.getAllAppsLatestStats(accountName);
 
 			return null;
 		}
@@ -626,7 +626,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		protected void onPostExecute(Boolean result) {
 
 			if (!isFinishing()) {
-				exportDialog = new ExportDialog(Main.this, allStats, accountname);
+				exportDialog = new ExportDialog(Main.this, allStats, accountName);
 				exportDialog.show();
 			}
 		}
@@ -731,7 +731,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	@Override
 	public void authenticationSuccess() {
-		new LoadRemoteEntries().execute();
+		Utils.execute(new LoadRemoteEntries(), null);
 	}
 
 

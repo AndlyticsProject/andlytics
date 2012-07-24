@@ -1,12 +1,9 @@
+
 package com.github.andlyticsproject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -15,300 +12,266 @@ import android.widget.ExpandableListView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
 
-public class CommentsActivity extends BaseActivity implements AuthenticationCallback {
+public class CommentsActivity extends BaseDetailsActivity implements AuthenticationCallback {
 
-    public static final String TAG = Main.class.getSimpleName();
+	public static final String TAG = Main.class.getSimpleName();
 
-    private CommentsListAdapter commentsListAdapter;
+	private CommentsListAdapter commentsListAdapter;
 
-    private ExpandableListView list;
+	private ExpandableListView list;
 
-    private View footer;
+	private View footer;
 
-    private int maxAvalibleComments;
+	private int maxAvalibleComments;
 
-    private ArrayList<CommentGroup> commentGroups;
+	private ArrayList<CommentGroup> commentGroups;
 
-    private List<Comment> comments;
+	private List<Comment> comments;
 
-    public int nextCommentIndex;
+	public int nextCommentIndex;
 
-    private View nocomments;
+	private View nocomments;
 
-    public boolean hasMoreComments;
+	public boolean hasMoreComments;
 
-    private ContentAdapter db;
+	private ContentAdapter db;
 
-    private static final int MAX_LOAD_COMMENTS = 20;
+	private static final int MAX_LOAD_COMMENTS = 20;
 
-    public void onCreate(Bundle savedInstanceState) {
-    	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);    	
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.comments);
-        setSupportProgressBarIndeterminateVisibility(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        
-        
-        list = (ExpandableListView) findViewById(R.id.comments_list);
-        nocomments = (View) findViewById(R.id.comments_nocomments);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.comments);
 
-        // footer
-        View inflate = getLayoutInflater().inflate(R.layout.comments_list_footer, null);
-        footer = (View) inflate.findViewById(R.id.comments_list_footer);
-        list.addFooterView(inflate, null, false);
+		list = (ExpandableListView) findViewById(R.id.comments_list);
+		nocomments = (View) findViewById(R.id.comments_nocomments);
 
-        View header = getLayoutInflater().inflate(R.layout.comments_list_header, null);
-        list.addHeaderView(header, null, false);
+		// footer
+		View inflate = getLayoutInflater().inflate(R.layout.comments_list_footer, null);
+		footer = (View) inflate.findViewById(R.id.comments_list_footer);
+		list.addFooterView(inflate, null, false);
 
-        list.setGroupIndicator(null);
+		View header = getLayoutInflater().inflate(R.layout.comments_list_header, null);
+		list.addHeaderView(header, null, false);
 
-        commentsListAdapter = new CommentsListAdapter(this);
-        list.setAdapter(commentsListAdapter);
+		list.setGroupIndicator(null);
 
-        maxAvalibleComments = -1;
-        commentGroups = new ArrayList<CommentGroup>();
-        comments = new ArrayList<Comment>();
+		commentsListAdapter = new CommentsListAdapter(this);
+		list.setAdapter(commentsListAdapter);
 
-        footer.setOnClickListener(new OnClickListener() {
+		maxAvalibleComments = -1;
+		commentGroups = new ArrayList<CommentGroup>();
+		comments = new ArrayList<Comment>();
 
-            @Override
-            public void onClick(View v) {
-                authenticateAccountFromPreferences(false, CommentsActivity.this);
-            }
-        });
-        footer.setVisibility(View.GONE);
+		footer.setOnClickListener(new OnClickListener() {
 
-        db = getDbAdapter();
-        
-        String appName = db.getAppName(packageName);
-        if (appName != null){
-        	getSupportActionBar().setSubtitle(appName);
-        }
-        
-        if (iconFilePath != null) {
-			Bitmap bm = BitmapFactory.decodeFile(iconFilePath);
-			BitmapDrawable icon = new BitmapDrawable(getResources(),bm);
-			getSupportActionBar().setIcon(icon);
-		}
+			@Override
+			public void onClick(View v) {
+				authenticateAccountFromPreferences(false, CommentsActivity.this);
+			}
+		});
+		footer.setVisibility(View.GONE);
 
-    }
+		db = getDbAdapter();
+	}
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        new LoadCommentsCache().execute();
+	@Override
+	protected void onResume() {
+		super.onResume();
+		new LoadCommentsCache().execute();
 
-    }
-    
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		getSupportMenuInflater().inflate(R.menu.comments_menu, menu);
 		return true;
 	}
-	
+
 	/**
 	 * Called if item in option menu is selected.
 	 * 
-	 * @param item
-	 *            The chosen menu item
+	 * @param item The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			startActivityAfterCleanup(Main.class);
-			return true;
-		case R.id.itemCommentsmenuRefresh:			
-			maxAvalibleComments = -1;
-            nextCommentIndex = 0;
-            authenticateAccountFromPreferences(false, CommentsActivity.this);
-            return true;
-		default:
-			return (super.onOptionsItemSelected(item));
-		}		
-	}
-	
-	/**
-	 * starts a given activity with a clear flag.
-	 * 
-	 * @param activity
-	 *            Activity to be started
-	 */
-	private void startActivityAfterCleanup(Class<?> activity) {
-		Intent intent = new Intent(getApplicationContext(), activity);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
+			case R.id.itemCommentsmenuRefresh:
+				maxAvalibleComments = -1;
+				nextCommentIndex = 0;
+				authenticateAccountFromPreferences(false, CommentsActivity.this);
+				return true;
+			default:
+				return (super.onOptionsItemSelected(item));
+		}
 	}
 
-    private class LoadCommentsCache extends AsyncTask<Void, Void, Void> {
+	private class LoadCommentsCache extends AsyncTask<Void, Void, Void> {
 
-        @Override
-        protected Void doInBackground(Void... params) {
-            comments = db.getCommentsFromCache(packageName);
-            rebuildCommentGroups();
+		@Override
+		protected Void doInBackground(Void... params) {
+			comments = db.getCommentsFromCache(packageName);
+			rebuildCommentGroups();
 
-            return null;
-        }
+			return null;
+		}
 
-        @Override
-        protected void onPostExecute(Void result) {
-            if(comments.size() > 0) {
-                commentsListAdapter.setCommentGroups(commentGroups);
-                for (int i = 0; i < commentGroups.size(); i++) {
-                    list.expandGroup(i);
-                }
-                commentsListAdapter.notifyDataSetChanged();
-            }
+		@Override
+		protected void onPostExecute(Void result) {
+			if (comments.size() > 0) {
+				commentsListAdapter.setCommentGroups(commentGroups);
+				for (int i = 0; i < commentGroups.size(); i++) {
+					list.expandGroup(i);
+				}
+				commentsListAdapter.notifyDataSetChanged();
+			}
 
-            authenticateAccountFromPreferences(false, CommentsActivity.this);
+			authenticateAccountFromPreferences(false, CommentsActivity.this);
 
-        }
+		}
 
-    }
+	}
 
+	private class LoadCommentsData extends AsyncTask<Void, Void, Exception> {
 
-    private class LoadCommentsData extends AsyncTask<Void, Void, Exception> {
+		@Override
+		protected Exception doInBackground(Void... params) {
 
-        @Override
-        protected Exception doInBackground(Void... params) {
+			Exception exception = null;
 
-            Exception exception = null;
+			if (maxAvalibleComments == -1) {
 
-            if (maxAvalibleComments == -1) {
+				ContentAdapter db = getDbAdapter();
+				AppStats appInfo = db.getLatestForApp(packageName);
+				if (appInfo != null) {
+					maxAvalibleComments = appInfo.getNumberOfComments();
+				} else {
+					maxAvalibleComments = MAX_LOAD_COMMENTS;
+				}
+			}
 
-                ContentAdapter db = getDbAdapter();
-                AppStats appInfo = db.getLatestForApp(packageName);
-                if (appInfo != null) {
-                    maxAvalibleComments = appInfo.getNumberOfComments();
-                } else {
-                    maxAvalibleComments = MAX_LOAD_COMMENTS;
-                }
-            }
+			if (maxAvalibleComments != 0) {
+				DeveloperConsole console = new DeveloperConsole(CommentsActivity.this);
+				try {
 
-            if (maxAvalibleComments != 0) {
-                DeveloperConsole console = new DeveloperConsole(CommentsActivity.this);
-                try {
+					String authtoken = getAndlyticsApplication().getAuthToken();
+					List<Comment> result = console.getAppComments(authtoken, accountName,
+							packageName,
+							nextCommentIndex, MAX_LOAD_COMMENTS);
 
+					// put in cache if index == 0
+					if (nextCommentIndex == 0) {
+						db.updateCommentsCache(result, packageName);
+						comments.clear();
+					}
+					comments.addAll(result);
 
-                    String authtoken = getAndlyticsApplication().getAuthToken();
-                    List<Comment> result = console.getAppComments(authtoken, accountname, packageName,
-                                    nextCommentIndex, MAX_LOAD_COMMENTS);
+					rebuildCommentGroups();
 
-                    // put in cache if index == 0
-                    if(nextCommentIndex == 0) {
-                        db.updateCommentsCache(result, packageName);
-                        comments.clear();
-                    }
-                    comments.addAll(result);
+				} catch (Exception e) {
+					exception = e;
+				}
 
-                    rebuildCommentGroups();
+				nextCommentIndex += MAX_LOAD_COMMENTS;
+				if (nextCommentIndex >= maxAvalibleComments) {
+					hasMoreComments = false;
+				} else {
+					hasMoreComments = true;
+				}
 
-                } catch (Exception e) {
-                    exception = e;
-                }
+			}
 
-                nextCommentIndex += MAX_LOAD_COMMENTS;
-                if (nextCommentIndex >= maxAvalibleComments) {
-                    hasMoreComments = false;
-                } else {
-                    hasMoreComments = true;
-                }
+			return exception;
+		}
 
-            }
+		@Override
+		protected void onPostExecute(Exception result) {
 
-            return exception;
-        }
+			footer.setEnabled(true);
 
-        @Override
-        protected void onPostExecute(Exception result) {
+			if (result != null) {
+				handleUserVisibleException(result);
+				result.printStackTrace();
+				footer.setVisibility(View.GONE);
+			} else {
 
-            footer.setEnabled(true);
+				footer.setVisibility(View.VISIBLE);
 
-            if (result != null) {
-                handleUserVisibleException(result);
-                result.printStackTrace();
-                footer.setVisibility(View.GONE);
-            } else {
+				if (comments != null && comments.size() > 0) {
 
-                footer.setVisibility(View.VISIBLE);
+					commentsListAdapter.setCommentGroups(commentGroups);
+					for (int i = 0; i < commentGroups.size(); i++) {
+						list.expandGroup(i);
+					}
+					commentsListAdapter.notifyDataSetChanged();
+				} else {
+					nocomments.setVisibility(View.VISIBLE);
+				}
 
-                if (comments != null && comments.size() > 0) {
+				if (!hasMoreComments) {
+					footer.setVisibility(View.GONE);
+				}
 
-                    commentsListAdapter.setCommentGroups(commentGroups);
-                    for (int i = 0; i < commentGroups.size(); i++) {
-                        list.expandGroup(i);
-                    }
-                    commentsListAdapter.notifyDataSetChanged();
-                } else {
-                    nocomments.setVisibility(View.VISIBLE);
-                }
+			}
 
-                if (!hasMoreComments) {
-                    footer.setVisibility(View.GONE);
-                }
+			setSupportProgressBarIndeterminateVisibility(false);
+		}
 
-            }
+		@Override
+		protected void onPreExecute() {
+			setSupportProgressBarIndeterminateVisibility(true);
+			footer.setEnabled(false);
+		}
 
-        	setSupportProgressBarIndeterminateVisibility(false);
-        }
+	}
 
-        @Override
-        protected void onPreExecute() {
-        	setSupportProgressBarIndeterminateVisibility(true);
-            footer.setEnabled(false);
-        }
+	public void rebuildCommentGroups() {
 
-    }
+		commentGroups = new ArrayList<CommentGroup>();
+		Comment prevComment = null;
+		for (Comment comment : comments) {
+			if (prevComment != null) {
 
-    public void rebuildCommentGroups() {
+				CommentGroup group = new CommentGroup();
+				group.setDateString(comment.getDate());
 
-        commentGroups = new ArrayList<CommentGroup>();
-        Comment prevComment = null;
-        for (Comment comment : comments) {
-            if (prevComment != null) {
+				if (commentGroups.contains(group)) {
 
-                CommentGroup group = new CommentGroup();
-                group.setDateString(comment.getDate());
+					int index = commentGroups.indexOf(group);
+					group = commentGroups.get(index);
+					group.addComment(comment);
 
-                if (commentGroups.contains(group)) {
+				} else {
+					addNewCommentGroup(comment);
+				}
 
-                    int index = commentGroups.indexOf(group);
-                    group = commentGroups.get(index);
-                    group.addComment(comment);
+			} else {
+				addNewCommentGroup(comment);
+			}
+			prevComment = comment;
+		}
 
-                } else {
-                    addNewCommentGroup(comment);
-                }
+	}
 
-            } else {
-                addNewCommentGroup(comment);
-            }
-            prevComment = comment;
-        }
+	private void addNewCommentGroup(Comment comment) {
+		CommentGroup group = new CommentGroup();
+		group.setDateString(comment.getDate());
+		List<Comment> groupComments = new ArrayList<Comment>();
+		groupComments.add(comment);
+		group.setComments(groupComments);
+		commentGroups.add(group);
+	}
 
-    }
+	@Override
+	public void authenticationSuccess() {
 
-    private void addNewCommentGroup(Comment comment) {
-        CommentGroup group = new CommentGroup();
-        group.setDateString(comment.getDate());
-        List<Comment> groupComments = new ArrayList<Comment>();
-        groupComments.add(comment);
-        group.setComments(groupComments);
-        commentGroups.add(group);
-    }
+		new LoadCommentsData().execute();
 
-    @Override
-    public void authenticationSuccess() {
-
-        new LoadCommentsData().execute();
-
-    }
+	}
 
 }
