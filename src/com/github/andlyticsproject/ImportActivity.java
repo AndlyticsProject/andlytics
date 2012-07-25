@@ -1,5 +1,6 @@
 package com.github.andlyticsproject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class ImportActivity extends SherlockActivity {
 		layoutInflater = getLayoutInflater();
 		db = ((AndlyticsApp) getApplication()).getDbAdapter();
 
-		accountName = Preferences.getAccountName(this);
+		accountName = getAccountName();
 		getSupportActionBar().setSubtitle(accountName);
 
 		View closeButton = (View) this.findViewById(R.id.import_dialog_close_button);
@@ -247,5 +248,16 @@ public class ImportActivity extends SherlockActivity {
 
 	public List<String> getFileNames() {
 		return files;
+	}
+
+	private String getAccountName() {
+		String ownerAccount = StatsCsvReaderWriter.getAccountNameForExport(new File(
+				getIntent().getData().getPath()).getName());
+		if (ownerAccount == null) {
+			// fall back to value from preferences
+			// XXX should we give a choice instead?
+			ownerAccount = accountName;
+		}
+		return ownerAccount;
 	}
 }

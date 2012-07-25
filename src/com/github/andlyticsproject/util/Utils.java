@@ -7,6 +7,8 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.Build;
 
+import com.github.andlyticsproject.io.MediaScannerWrapper;
+
 /**
  * Utility class for simple helper methods.
  */
@@ -60,6 +62,16 @@ public final class Utils {
 			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
 		} else {
 			task.execute(params);
+		}
+	}
+
+	public static boolean isFroyo() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
+	}
+
+	public static void scanFile(Context ctx, String filename) {
+		if (isFroyo()) {
+			MediaScannerWrapper.scanFile(ctx, filename);
 		}
 	}
 }

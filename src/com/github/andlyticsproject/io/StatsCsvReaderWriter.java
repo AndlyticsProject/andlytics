@@ -36,7 +36,8 @@ public class StatsCsvReaderWriter {
 
 	private static final String EXPORT_DIR = "andlytics/";
 
-	private static final String EXPORT_ZIP_FILE = "andlytics.zip";
+	private static final String DEFAULT_EXPORT_ZIP_FILE = "andlytics.zip";
+	private static final String EXPORT_ZIP_FILE_TEMPLATE = "andlytics-%s.zip";
 
 	static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -44,23 +45,38 @@ public class StatsCsvReaderWriter {
 		TIMESTAMP_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
 
-	public static String getDefaultDirectory() {
-		return Environment.getExternalStorageDirectory() + System.getProperty("file.separator")
-				+ EXPORT_DIR;
+	public static String getExportDirPath() {
+		return getExportDir().getAbsolutePath();
+	}
+
+	public static File getExportDir() {
+		return new File(Environment.getExternalStorageDirectory(), EXPORT_DIR);
 	}
 
 	public static File getDefaultExportFile() {
-		return new File(Environment.getExternalStorageDirectory()
-				+ System.getProperty("file.separator") + EXPORT_DIR, EXPORT_ZIP_FILE);
+		return new File(getExportDir(), DEFAULT_EXPORT_ZIP_FILE);
 	}
 
+	public static File getExportFileForAccount(String accountName) {
+		return new File(getExportDir(), String.format(EXPORT_ZIP_FILE_TEMPLATE, accountName));
+	}
+
+	public static String getAccountNameForExport(String filename) {
+		int firstDashIdx = filename.indexOf('-');
+		int suffixIdx = filename.indexOf(".zip");
+		if (firstDashIdx == -1 || suffixIdx == -1) {
+			return null;
+		}
+
+		return filename.substring(firstDashIdx + 1, suffixIdx);
+	}
 
 	public StatsCsvReaderWriter(Context context) {
 	}
 
 	public void writeStats(String packageName, List<AppStats> stats) throws IOException {
 
-		String path = getDefaultDirectory();
+		String path = getExportDirPath();
 
 		File dir = new File(path);
 		if (!dir.exists()) {
@@ -140,7 +156,7 @@ public class StatsCsvReaderWriter {
 			return true;
 		}
 
-		String dir = getDefaultDirectory();
+		String dir = getExportDirPath();
 
 		File file = new File(dir + "/" + fileName);
 
@@ -187,7 +203,7 @@ public class StatsCsvReaderWriter {
 
 	public List<AppStats> readStats(String fileName) throws ServiceExceptoin {
 		try {
-			return readStats(new FileInputStream(new File(getDefaultDirectory(), fileName)));
+			return readStats(new FileInputStream(new File(getExportDirPath(), fileName)));
 		} catch (IOException e) {
 			throw new ServiceExceptoin(e);
 		}
@@ -244,7 +260,7 @@ public class StatsCsvReaderWriter {
 
 	public String readPackageName(String fileName) throws ServiceExceptoin {
 		try {
-			return readPackageName(new FileInputStream(new File(getDefaultDirectory(), fileName)));
+			return readPackageName(new FileInputStream(new File(getExportDirPath(), fileName)));
 		} catch (IOException e) {
 			throw new ServiceExceptoin(e);
 		}

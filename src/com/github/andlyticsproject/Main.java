@@ -197,9 +197,16 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				authenticateAccountFromPreferences(false, Main.this);
 				break;
 			case R.id.itemMainmenuImport:
+				File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
+				if (!fileToImport.exists()) {
+					Toast.makeText(this, "Stats file not found: " + fileToImport.getAbsolutePath(),
+							Toast.LENGTH_LONG).show();
+					return true;
+				}
+
 				Intent importIntent = new Intent(this, ImportActivity.class);
 				importIntent.setAction(Intent.ACTION_VIEW);
-				importIntent.setData(Uri.fromFile(StatsCsvReaderWriter.getDefaultExportFile()));
+				importIntent.setData(Uri.fromFile(fileToImport));
 				startActivity(importIntent);
 				break;
 			case R.id.itemMainmenuExport:

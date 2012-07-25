@@ -1,5 +1,9 @@
 package com.github.andlyticsproject.dialog;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -9,9 +13,9 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
@@ -22,10 +26,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.cache.AppIconInMemoryCache;
@@ -96,9 +96,9 @@ public class ExportDialog extends Dialog implements OnClickListener {
 
                     } else {
 
-                        Intent intent = new Intent(context,ExportService.class);
-                        intent.putExtra(ExportService.PACKAGE_NAMES, exportPackageNames.toArray(new String[exportPackageNames.size()]));
-                        intent.putExtra(ExportService.ACCOUNT_NAME, accountName);
+						Intent intent = new Intent(context, ExportService.class);
+                        intent.putExtra(ExportService.EXTRA_PACKAGE_NAMES, exportPackageNames.toArray(new String[exportPackageNames.size()]));
+                        intent.putExtra(ExportService.EXTRA_ACCOUNT_NAME, accountName);
                         context.startService(intent);
 
                         dismiss();
