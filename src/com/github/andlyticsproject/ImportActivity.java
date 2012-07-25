@@ -256,7 +256,7 @@ public class ImportActivity extends SherlockActivity {
 		if (ownerAccount == null) {
 			// fall back to value from preferences
 			// XXX should we give a choice instead?
-			ownerAccount = accountName;
+			ownerAccount = Preferences.getAccountName(this);
 		}
 		return ownerAccount;
 	}
