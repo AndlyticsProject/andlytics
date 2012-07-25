@@ -11,7 +11,7 @@
 		android:gravity="center"
 		android:layout_width="fill_parent"
 		android:orientation="vertical"
-		android:background="@drawable/modal_dialog">
+		android:background="@drawable/app_background">
 
 		<ListView
 			android:id="@+id/list_view_id"
@@ -23,8 +23,8 @@
 			android:divider="#fff"
 			android:cacheColorHint="#fff"
 			android:layout_above="@+id/import_dialog_buttons"
-			android:layout_below="@+id/import_dialog_title"
-			android:layout_margin="2dp" android:layout_height="fill_parent"/>
+			android:layout_margin="2dp" 
+            android:layout_height="fill_parent"/>
 
 
 		<LinearLayout
@@ -87,7 +87,7 @@
 					    android:layout_height="wrap_content"
 					    android:layout_gravity="center"
 					    android:padding="5dp"
-					    android:text="@string/close"
+					    android:text="@string/cancel"
 					    android:textColor="#fff"
 					    android:textStyle="bold" />
 
