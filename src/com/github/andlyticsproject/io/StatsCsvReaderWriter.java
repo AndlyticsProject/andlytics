@@ -23,8 +23,8 @@ import android.util.Log;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
-import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
+import com.github.andlyticsproject.util.Utils;
 
 public class StatsCsvReaderWriter {
 
@@ -36,7 +36,8 @@ public class StatsCsvReaderWriter {
 
 	private static final String EXPORT_DIR = "andlytics/";
 
-	private static final String EXPORT_ZIP_FILE = "andlytics.zip";
+	private static final String DEFAULT_EXPORT_ZIP_FILE = "andlytics.zip";
+	private static final String EXPORT_ZIP_FILE_TEMPLATE = "andlytics-%s.zip";
 
 	static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -44,23 +45,38 @@ public class StatsCsvReaderWriter {
 		TIMESTAMP_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
 
-	public static String getDefaultDirectory() {
-		return Environment.getExternalStorageDirectory() + System.getProperty("file.separator")
-				+ EXPORT_DIR;
+	public static String getExportDirPath() {
+		return getExportDir().getAbsolutePath();
+	}
+
+	public static File getExportDir() {
+		return new File(Environment.getExternalStorageDirectory(), EXPORT_DIR);
 	}
 
 	public static File getDefaultExportFile() {
-		return new File(Environment.getExternalStorageDirectory()
-				+ System.getProperty("file.separator") + EXPORT_DIR, EXPORT_ZIP_FILE);
+		return new File(getExportDir(), DEFAULT_EXPORT_ZIP_FILE);
 	}
 
+	public static File getExportFileForAccount(String accountName) {
+		return new File(getExportDir(), String.format(EXPORT_ZIP_FILE_TEMPLATE, accountName));
+	}
+
+	public static String getAccountNameForExport(String filename) {
+		int firstDashIdx = filename.indexOf('-');
+		int suffixIdx = filename.indexOf(".zip");
+		if (firstDashIdx == -1 || suffixIdx == -1) {
+			return null;
+		}
+
+		return filename.substring(firstDashIdx + 1, suffixIdx);
+	}
 
 	public StatsCsvReaderWriter(Context context) {
 	}
 
 	public void writeStats(String packageName, List<AppStats> stats) throws IOException {
 
-		String path = getDefaultDirectory();
+		String path = getExportDirPath();
 
 		File dir = new File(path);
 		if (!dir.exists()) {
@@ -106,7 +122,7 @@ public class StatsCsvReaderWriter {
 	}
 
 	public static List<String> getImportFileNamesFromZip(String accountName,
-			List<AppInfo> appInfos, String zipFilename) throws ServiceExceptoin {
+			List<String> packageNames, String zipFilename) throws ServiceExceptoin {
 
 		List<String> result = new ArrayList<String>();
 
@@ -120,7 +136,7 @@ public class StatsCsvReaderWriter {
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = entries.nextElement();
 				String filename = entry.getName();
-				if (isValidFile(accountName, filename, appInfos)) {
+				if (isValidFile(accountName, filename, packageNames)) {
 					result.add(entry.getName());
 				}
 			}
@@ -133,29 +149,23 @@ public class StatsCsvReaderWriter {
 
 	}
 
-	private static boolean isValidFile(String accountName, String fileName, List<AppInfo> apps)
-			throws ServiceExceptoin {
+	private static boolean isValidFile(String accountName, String fileName,
+			List<String> packageNames) throws ServiceExceptoin {
 
-		if (apps.isEmpty()) {
+		if (packageNames.isEmpty()) {
 			return true;
 		}
 
-		String dir = getDefaultDirectory();
+		File file = new File(getExportDirPath(), fileName);
 
-		File file = new File(dir + "/" + fileName);
-
-		CSVReader reader;
+		CSVReader reader = null;
 		try {
 			reader = new CSVReader(new FileReader(file));
 
 			String[] firstLine = reader.readNext();
-
 			if (firstLine != null) {
-
 				if (HEADER_LIST.length >= firstLine.length) {
-
 					for (int i = 0; i < HEADER_LIST.length - 1; i++) {
-
 						if (!HEADER_LIST[i].equals(firstLine[i])) {
 							return false;
 						}
@@ -163,22 +173,18 @@ public class StatsCsvReaderWriter {
 
 					// validate package name
 					String[] secondLine = reader.readNext();
+					String packageName = secondLine[0];
 					if (secondLine != null) {
-
-						for (AppInfo appInfo : apps) {
-							if (appInfo.getPackageName().equals(secondLine[0])) {
-								return true;
-							}
-						}
-
+						return packageNames.contains(packageName);
 					}
 				}
 			}
-
 		} catch (FileNotFoundException e) {
 			throw new ServiceExceptoin(e);
 		} catch (IOException e) {
 			throw new ServiceExceptoin(e);
+		} finally {
+			Utils.closeSilently(reader);
 		}
 
 		return false;
@@ -187,7 +193,7 @@ public class StatsCsvReaderWriter {
 
 	public List<AppStats> readStats(String fileName) throws ServiceExceptoin {
 		try {
-			return readStats(new FileInputStream(new File(getDefaultDirectory(), fileName)));
+			return readStats(new FileInputStream(new File(getExportDirPath(), fileName)));
 		} catch (IOException e) {
 			throw new ServiceExceptoin(e);
 		}
@@ -244,7 +250,7 @@ public class StatsCsvReaderWriter {
 
 	public String readPackageName(String fileName) throws ServiceExceptoin {
 		try {
-			return readPackageName(new FileInputStream(new File(getDefaultDirectory(), fileName)));
+			return readPackageName(new FileInputStream(new File(getExportDirPath(), fileName)));
 		} catch (IOException e) {
 			throw new ServiceExceptoin(e);
 		}

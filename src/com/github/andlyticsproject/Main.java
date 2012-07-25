@@ -46,7 +46,6 @@ import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
-import com.github.andlyticsproject.dialog.ExportDialog;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.InvalidJSONResponseException;
 import com.github.andlyticsproject.exception.NetworkException;
@@ -77,7 +76,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private boolean isAuthenticationRetry;
 	public Animation aniPrevIn;
 	private StatsMode currentStatsMode;
-	public ExportDialog exportDialog;
 
 	private MenuItem statsModeMenuItem;
 
@@ -197,13 +195,22 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				authenticateAccountFromPreferences(false, Main.this);
 				break;
 			case R.id.itemMainmenuImport:
+				File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
+				if (!fileToImport.exists()) {
+					Toast.makeText(this, "Stats file not found: " + fileToImport.getAbsolutePath(),
+							Toast.LENGTH_LONG).show();
+					return true;
+				}
+
 				Intent importIntent = new Intent(this, ImportActivity.class);
 				importIntent.setAction(Intent.ACTION_VIEW);
-				importIntent.setData(Uri.fromFile(StatsCsvReaderWriter.getDefaultExportFile()));
+				importIntent.setData(Uri.fromFile(fileToImport));
 				startActivity(importIntent);
 				break;
 			case R.id.itemMainmenuExport:
-				(new LoadExportDialog()).execute();
+				Intent exportIntent = new Intent(this, ExportActivity.class);
+				exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
+				startActivity(exportIntent);
 				break;
 			case R.id.itemMainmenuFeedback:
 				startActivity(new Intent(Intent.ACTION_VIEW,
@@ -605,29 +612,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		protected void onPostExecute(Boolean success) {
 			if (success) {
 				adapter.notifyDataSetChanged();
-			}
-		}
-
-	}
-
-	private class LoadExportDialog extends AsyncTask<Boolean, Void, Boolean> {
-
-		private List<AppInfo> allStats;
-
-		@Override
-		protected Boolean doInBackground(Boolean... params) {
-
-			allStats = db.getAllAppsLatestStats(accountName);
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-
-			if (!isFinishing()) {
-				exportDialog = new ExportDialog(Main.this, allStats, accountName);
-				exportDialog.show();
 			}
 		}
 

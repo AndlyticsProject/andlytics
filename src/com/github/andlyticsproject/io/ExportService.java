@@ -22,6 +22,7 @@ import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.model.AppStatsList;
+import com.github.andlyticsproject.util.Utils;
 
 
 public class ExportService extends IntentService {
@@ -29,12 +30,10 @@ public class ExportService extends IntentService {
 	private static final String TAG = ExportService.class.getSimpleName();
 
 	public static final int NOTIFICATION_ID_PROGRESS = 1;
-
 	public static final int NOTIFICATION_ID_FINISHED = 1;
 
-	public static final String PACKAGE_NAMES = "packageNames";
-
-	public static final String ACCOUNT_NAME = "accountName";
+	public static final String EXTRA_PACKAGE_NAMES = "packageNames";
+	public static final String EXTRA_ACCOUNT_NAME = "accountName";
 
 	private Notification notification;
 
@@ -70,10 +69,10 @@ public class ExportService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		Log.d(TAG, "export service onStartCommand");
 
-		this.packageNames = intent.getStringArrayExtra(PACKAGE_NAMES);
+		this.packageNames = intent.getStringArrayExtra(EXTRA_PACKAGE_NAMES);
 		Log.d(TAG, "package names:: " + packageNames);
 
-		this.accountName = intent.getStringExtra(ACCOUNT_NAME);
+		this.accountName = intent.getStringExtra(EXTRA_ACCOUNT_NAME);
 		Log.d(TAG, "account name:: " + accountName);
 
 		boolean success = exportStats();
@@ -86,29 +85,28 @@ public class ExportService extends IntentService {
 		sendNotification(message);
 
 		for (int i = 0; i < packageNames.length; i++) {
-
-			StatsCsvReaderWriter statsWriter = new StatsCsvReaderWriter(ExportService.this);
-
-			ContentAdapter db = new ContentAdapter(ExportService.this);
+			StatsCsvReaderWriter statsWriter = new StatsCsvReaderWriter(this);
+			ContentAdapter db = new ContentAdapter(this);
 			AppStatsList statsForApp = db.getStatsForApp(packageNames[i], Timeframe.UNLIMITED,
 					false);
 
 			try {
 				statsWriter.writeStats(packageNames[i], statsForApp.getAppStats());
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			} catch (IOException e) {
+				Log.e(TAG, "Error writing CSV files: " + e.getMessage(), e);
+				return false;
 			}
 		}
 
 		try {
-			File zipFile = StatsCsvReaderWriter.getDefaultExportFile();
+			File zipFile = StatsCsvReaderWriter.getExportFileForAccount(accountName);
 			ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(zipFile));
 
 			List<File> csvFiles = new ArrayList<File>();
 			byte[] buff = new byte[1024];
 			try {
 				for (String packageName : packageNames) {
-					File csvFile = new File(StatsCsvReaderWriter.getDefaultDirectory(), packageName
+					File csvFile = new File(StatsCsvReaderWriter.getExportDirPath(), packageName
 							+ ".csv");
 					InputStream in = new FileInputStream(csvFile);
 					zip.putNextEntry(new ZipEntry(csvFile.getName()));
@@ -132,8 +130,10 @@ public class ExportService extends IntentService {
 			for (File f : csvFiles) {
 				f.delete();
 			}
+
+			Utils.scanFile(this, zipFile.getAbsolutePath());
 		} catch (IOException e) {
-			Log.e(TAG, "Error zipping CSV files: " + e.getMessage());
+			Log.e(TAG, "Error zipping CSV files: " + e.getMessage(), e);
 			error = e;
 
 			// XXX do something with the error
@@ -158,7 +158,7 @@ public class ExportService extends IntentService {
 		notification.contentIntent = pendingIntent;
 
 		String message = getApplicationContext().getString(R.string.export_saved_to) + ": "
-				+ StatsCsvReaderWriter.getDefaultDirectory();
+				+ StatsCsvReaderWriter.getExportDirPath();
 		notification = new Notification(R.drawable.statusbar_andlytics, message,
 				System.currentTimeMillis());
 		notification.setLatestEventInfo(getApplicationContext(),
@@ -174,7 +174,7 @@ public class ExportService extends IntentService {
 	private Intent createShareIntent() {
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("application/zip");
-		File zipFile = StatsCsvReaderWriter.getDefaultExportFile();
+		File zipFile = StatsCsvReaderWriter.getExportFileForAccount(accountName);
 		intent.putExtra(Intent.EXTRA_STREAM, android.net.Uri.parse(zipFile.getAbsolutePath()));
 
 		return Intent.createChooser(intent, (getString(R.string.share)));
@@ -185,12 +185,13 @@ public class ExportService extends IntentService {
 	 */
 	@SuppressWarnings("deprecation")
 	protected void sendNotification(String message) {
-		Intent startActivityIntent = new Intent(ExportService.this, ExportService.class);
+		Intent startActivityIntent = new Intent();
 		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
 				startActivityIntent, 0);
 
 		notification.setLatestEventInfo(this, getResources().getString(R.string.app_name) + ": "
 				+ getApplicationContext().getString(R.string.export_), message, pendingIntent);
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notificationManager.notify(NOTIFICATION_ID_PROGRESS, notification);
 	}
 

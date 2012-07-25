@@ -1,16 +1,19 @@
 package com.github.andlyticsproject.db;
 
-import android.net.Uri;
-
 import java.util.HashMap;
+
+import android.net.Uri;
 
 public class AppInfoTable {
 
 
     public static final String DATABASE_TABLE_NAME = "appinfo";
+	public static final String UNIQUE_PACKAGE_NAMES = "appinfo/unique-packages";
 
     public static final Uri CONTENT_URI = Uri.parse("content://" + AndlyticsContentProvider.AUTHORITY + "/"
                     + DATABASE_TABLE_NAME);
+	public static final Uri UNIQUE_PACAKGES_CONTENT_URI = Uri.parse("content://"
+			+ AndlyticsContentProvider.AUTHORITY + "/" + UNIQUE_PACKAGE_NAMES);
 
     public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.andlytics." + DATABASE_TABLE_NAME;
 
@@ -43,6 +46,7 @@ public class AppInfoTable {
         + KEY_APP_VERSION_NAME + " text)";
 
     public static HashMap<String, String> PROJECTION_MAP;
+	public static HashMap<String, String> PACKAGE_NAMES_MAP;
 
     static {
         PROJECTION_MAP = new HashMap<String, String>();
@@ -60,6 +64,8 @@ public class AppInfoTable {
         PROJECTION_MAP.put(AppInfoTable.KEY_APP_SKIP_NOTIFICATION,AppInfoTable.KEY_APP_SKIP_NOTIFICATION);
         PROJECTION_MAP.put(AppInfoTable.KEY_APP_VERSION_NAME,AppInfoTable.KEY_APP_VERSION_NAME);
 
+		PACKAGE_NAMES_MAP = new HashMap<String, String>();
+		PACKAGE_NAMES_MAP.put(AppInfoTable.KEY_APP_PACKAGENAME, AppInfoTable.KEY_APP_PACKAGENAME);
     }
 
 

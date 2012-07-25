@@ -105,6 +105,10 @@
                     android:scheme="file" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ExportActivity"
+            android:label="@string/statistics_export">
+        </activity> 
 		<activity
 			android:name=".HiddenAppsPreferenceActivity"
 			android:label="@string/notifications">

@@ -1,5 +1,6 @@
 package com.github.andlyticsproject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,6 @@ import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.io.ImportService;
 import com.github.andlyticsproject.io.ServiceExceptoin;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
-import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.util.Utils;
 
 public class ImportActivity extends SherlockActivity {
@@ -36,7 +36,6 @@ public class ImportActivity extends SherlockActivity {
 
 	private LayoutInflater layoutInflater;
 
-	private List<String> files = new ArrayList<String>();
 	private List<String> importFileNames = new ArrayList<String>();
 
 	private String accountName;
@@ -56,7 +55,7 @@ public class ImportActivity extends SherlockActivity {
 		layoutInflater = getLayoutInflater();
 		db = ((AndlyticsApp) getApplication()).getDbAdapter();
 
-		accountName = Preferences.getAccountName(this);
+		accountName = getAccountName();
 		getSupportActionBar().setSubtitle(accountName);
 
 		View closeButton = (View) this.findViewById(R.id.import_dialog_close_button);
@@ -107,6 +106,17 @@ public class ImportActivity extends SherlockActivity {
 		}
 	}
 
+	private String getAccountName() {
+		String ownerAccount = StatsCsvReaderWriter.getAccountNameForExport(new File(getIntent()
+				.getData().getPath()).getName());
+		if (ownerAccount == null) {
+			// fall back to value from preferences
+			// XXX should we give a choice instead?
+			ownerAccount = Preferences.getAccountName(this);
+		}
+		return ownerAccount;
+	}
+
 	private class LoadImportDialogTask extends AsyncTask<String, Void, Boolean> {
 
 		private List<String> fileNames;
@@ -120,9 +130,10 @@ public class ImportActivity extends SherlockActivity {
 		@Override
 		protected Boolean doInBackground(String... params) {
 			zipFilename = params[0];
-			List<AppInfo> allStats = db.getAllAppsLatestStats(accountName);
+			List<String> pacakgeNames = db.getPackagesForAccount(accountName);
 			try {
-				fileNames = StatsCsvReaderWriter.getImportFileNamesFromZip(accountName, allStats,
+				fileNames = StatsCsvReaderWriter.getImportFileNamesFromZip(accountName,
+						pacakgeNames,
 						zipFilename);
 
 				return true;
@@ -241,11 +252,4 @@ public class ImportActivity extends SherlockActivity {
 		}
 	}
 
-	public void setFileName(List<String> files) {
-		this.files = files;
-	}
-
-	public List<String> getFileNames() {
-		return files;
-	}
 }

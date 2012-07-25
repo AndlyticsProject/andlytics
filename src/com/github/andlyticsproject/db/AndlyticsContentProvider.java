@@ -1,5 +1,9 @@
 package com.github.andlyticsproject.db;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -12,10 +16,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class AndlyticsContentProvider extends ContentProvider {
 
@@ -30,6 +30,7 @@ public class AndlyticsContentProvider extends ContentProvider {
     private static final int ID_TABLE_COMMENTS = 2;
     private static final int ID_TABLE_ADMOB = 3;
     private static final int ID_APP_VERSION_CHANGE = 4;
+	private static final int ID_UNIQUE_PACKAGES = 5;
 
     public static final String AUTHORITY = "com.github.andlyticsproject.db.AndlyticsContentProvider";
 
@@ -259,7 +260,11 @@ public class AndlyticsContentProvider extends ContentProvider {
                 qb.setTables(AppStatsTable.DATABASE_TABLE_NAME);
                 qb.setProjectionMap(AppStatsTable.PROJECTION_MAP);
                 break;
-
+			case ID_UNIQUE_PACKAGES:
+				qb.setTables(AppInfoTable.DATABASE_TABLE_NAME);
+            	qb.setProjectionMap(AppInfoTable.PACKAGE_NAMES_MAP);
+            	qb.setDistinct(true);
+            	break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -310,6 +315,7 @@ public class AndlyticsContentProvider extends ContentProvider {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         sUriMatcher.addURI(AUTHORITY, AppStatsTable.DATABASE_TABLE_NAME, ID_TABLE_STATS);
         sUriMatcher.addURI(AUTHORITY, AppInfoTable.DATABASE_TABLE_NAME, ID_TABLE_APPINFO);
+		sUriMatcher.addURI(AUTHORITY, AppInfoTable.UNIQUE_PACKAGE_NAMES, ID_UNIQUE_PACKAGES);
         sUriMatcher.addURI(AUTHORITY, CommentsTable.DATABASE_TABLE_NAME, ID_TABLE_COMMENTS);
         sUriMatcher.addURI(AUTHORITY, AdmobTable.DATABASE_TABLE_NAME, ID_TABLE_ADMOB);
         sUriMatcher.addURI(AUTHORITY, APP_VERSION_CHANGE, ID_APP_VERSION_CHANGE);

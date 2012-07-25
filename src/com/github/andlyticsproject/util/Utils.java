@@ -1,11 +1,15 @@
 package com.github.andlyticsproject.util;
 
+import java.io.Closeable;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.Build;
+
+import com.github.andlyticsproject.io.MediaScannerWrapper;
 
 /**
  * Utility class for simple helper methods.
@@ -54,12 +58,35 @@ public final class Utils {
 		}
 	}
 
+	public static <P, T extends AsyncTask<P, ?, ?>> void execute(T task) {
+		execute(task, (P[]) null);
+	}
+
 	@SuppressLint("NewApi")
 	public static <P, T extends AsyncTask<P, ?, ?>> void execute(T task, P... params) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
 		} else {
 			task.execute(params);
+		}
+	}
+
+	public static boolean isFroyo() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
+	}
+
+	public static void scanFile(Context ctx, String filename) {
+		if (isFroyo()) {
+			MediaScannerWrapper.scanFile(ctx, filename);
+		}
+	}
+
+	public static void closeSilently(Closeable c) {
+		if (c != null) {
+			try {
+				c.close();
+			} catch (Exception e) {
+			}
 		}
 	}
 }
