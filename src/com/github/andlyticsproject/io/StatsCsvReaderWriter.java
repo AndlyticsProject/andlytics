@@ -23,8 +23,8 @@ import android.util.Log;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
-import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
+import com.github.andlyticsproject.util.Utils;
 
 public class StatsCsvReaderWriter {
 
@@ -122,7 +122,7 @@ public class StatsCsvReaderWriter {
 	}
 
 	public static List<String> getImportFileNamesFromZip(String accountName,
-			List<AppInfo> appInfos, String zipFilename) throws ServiceExceptoin {
+			List<String> packageNames, String zipFilename) throws ServiceExceptoin {
 
 		List<String> result = new ArrayList<String>();
 
@@ -136,7 +136,7 @@ public class StatsCsvReaderWriter {
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = entries.nextElement();
 				String filename = entry.getName();
-				if (isValidFile(accountName, filename, appInfos)) {
+				if (isValidFile(accountName, filename, packageNames)) {
 					result.add(entry.getName());
 				}
 			}
@@ -149,29 +149,23 @@ public class StatsCsvReaderWriter {
 
 	}
 
-	private static boolean isValidFile(String accountName, String fileName, List<AppInfo> apps)
-			throws ServiceExceptoin {
+	private static boolean isValidFile(String accountName, String fileName,
+			List<String> packageNames) throws ServiceExceptoin {
 
-		if (apps.isEmpty()) {
+		if (packageNames.isEmpty()) {
 			return true;
 		}
 
-		String dir = getExportDirPath();
+		File file = new File(getExportDirPath(), fileName);
 
-		File file = new File(dir + "/" + fileName);
-
-		CSVReader reader;
+		CSVReader reader = null;
 		try {
 			reader = new CSVReader(new FileReader(file));
 
 			String[] firstLine = reader.readNext();
-
 			if (firstLine != null) {
-
 				if (HEADER_LIST.length >= firstLine.length) {
-
 					for (int i = 0; i < HEADER_LIST.length - 1; i++) {
-
 						if (!HEADER_LIST[i].equals(firstLine[i])) {
 							return false;
 						}
@@ -179,22 +173,18 @@ public class StatsCsvReaderWriter {
 
 					// validate package name
 					String[] secondLine = reader.readNext();
+					String packageName = secondLine[0];
 					if (secondLine != null) {
-
-						for (AppInfo appInfo : apps) {
-							if (appInfo.getPackageName().equals(secondLine[0])) {
-								return true;
-							}
-						}
-
+						return packageNames.contains(packageName);
 					}
 				}
 			}
-
 		} catch (FileNotFoundException e) {
 			throw new ServiceExceptoin(e);
 		} catch (IOException e) {
 			throw new ServiceExceptoin(e);
+		} finally {
+			Utils.closeSilently(reader);
 		}
 
 		return false;
