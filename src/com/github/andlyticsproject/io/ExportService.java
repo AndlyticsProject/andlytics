@@ -1,13 +1,8 @@
 package com.github.andlyticsproject.io;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import android.app.IntentService;
@@ -23,7 +18,6 @@ import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.model.AppStatsList;
 import com.github.andlyticsproject.util.Utils;
-
 
 public class ExportService extends IntentService {
 
@@ -42,8 +36,6 @@ public class ExportService extends IntentService {
 	private String[] packageNames;
 
 	private String accountName;
-
-	private Exception error;
 
 	private NotificationManager notificationManager;
 
@@ -79,45 +71,25 @@ public class ExportService extends IntentService {
 		notifyExportFinished(success);
 	}
 
-
 	private boolean exportStats() {
 		String message = getApplicationContext().getString(R.string.export_started);
 		sendNotification(message);
 
-		for (int i = 0; i < packageNames.length; i++) {
-			StatsCsvReaderWriter statsWriter = new StatsCsvReaderWriter(this);
-			ContentAdapter db = new ContentAdapter(this);
-			AppStatsList statsForApp = db.getStatsForApp(packageNames[i], Timeframe.UNLIMITED,
-					false);
-
-			try {
-				statsWriter.writeStats(packageNames[i], statsForApp.getAppStats());
-			} catch (IOException e) {
-				Log.e(TAG, "Error writing CSV files: " + e.getMessage(), e);
-				return false;
-			}
+		File dir = StatsCsvReaderWriter.getExportDir();
+		if (!dir.exists()) {
+			dir.mkdirs();
 		}
 
 		try {
 			File zipFile = StatsCsvReaderWriter.getExportFileForAccount(accountName);
 			ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(zipFile));
-
-			List<File> csvFiles = new ArrayList<File>();
-			byte[] buff = new byte[1024];
+			StatsCsvReaderWriter statsWriter = new StatsCsvReaderWriter(this);
+			ContentAdapter db = new ContentAdapter(this);
 			try {
-				for (String packageName : packageNames) {
-					File csvFile = new File(StatsCsvReaderWriter.getExportDirPath(), packageName
-							+ ".csv");
-					InputStream in = new FileInputStream(csvFile);
-					zip.putNextEntry(new ZipEntry(csvFile.getName()));
-
-					int len = -1;
-					while ((len = in.read(buff)) > 0) {
-						zip.write(buff, 0, len);
-					}
-
-					zip.closeEntry();
-					in.close();
+				for (int i = 0; i < packageNames.length; i++) {
+					AppStatsList statsForApp = db.getStatsForApp(packageNames[i],
+							Timeframe.UNLIMITED, false);
+					statsWriter.writeStats(packageNames[i], statsForApp.getAppStats(), zip);
 				}
 			} catch (IOException e) {
 				Log.d(TAG, "Zip error, deleting incomplete file.");
@@ -126,17 +98,10 @@ public class ExportService extends IntentService {
 				zip.close();
 			}
 
-			// delete temporary files
-			for (File f : csvFiles) {
-				f.delete();
-			}
-
 			Utils.scanFile(this, zipFile.getAbsolutePath());
 		} catch (IOException e) {
 			Log.e(TAG, "Error zipping CSV files: " + e.getMessage(), e);
-			error = e;
 
-			// XXX do something with the error
 			return false;
 		}
 
