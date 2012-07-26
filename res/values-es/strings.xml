@@ -12,7 +12,7 @@
     <string name="account_required">Cuenta de desarrollador android necesaria</string>
     <string name="account_choose">Elige o añade una cuenta de Google. La cuenta tiene que ser una cuenta de desarrollador android con aplicaciones publicadas en el Android Market (\'Las cuentas Google Apps for Business\' no están soportadas todavía).</string>
     <string name="account_add">Añadir cuenta</string>
-    <string name="logout">Logout</string>
+    <string name="logout">Salir</string>
     <string name="refresh">Actualizar</string>
     <string name="comments">Comentarios</string>
     <string name="total_downloads">Descargas totales</string>
@@ -20,16 +20,16 @@
     <string name="admob_revenue">Ganancias AdMob</string>
     <string name="admob_requests">Peticiones AdMob</string>
     <string name="average_rating">Puntuación media</string>
-    <string name="ratings">Votaciones</string>
+    <string name="ratings">Calificaciones</string>
     <!-- Lower case versions for main screen e.g. X comments -->
-    <string name="num_comments">comentarios</string>
-    <string name="num_total_downloads">descargas totales</string>
-    <string name="num_active_installs">instalaciones activas</string>
-    <string name="num_average_rating">puntuación media</string>
-    <string name="num_ratings">votaciones</string>
+    <string name="num_comments">Comentarios</string>
+    <string name="num_total_downloads">Descargas totales</string>
+    <string name="num_active_installs">Instalaciones activas</string>
+    <string name="num_average_rating">Puntuación media</string>
+    <string name="num_ratings">Votaciones</string>
     
     <string name="auto_sync">Auto sincronización</string>
-    <string name="notifications">Notificaciones</string>
+    <string name="notifications">Notificaciónes</string>
     <string name="statistics_export">Exportar estadísticas</string>
     <string name="statistics_import">Importar estadísticas</string>
     <string name="apps_hide">Aplicaciones a ocultar</string>
@@ -43,7 +43,7 @@
     <string name="notification_trigger">Notificaciones</string>
     <string name="disable_notifications">Desactiva todo para no recibir notificaciones</string>
     <string name="notification_signal">Configuración notificación</string>
-    <string name="notification_sound">Sonido notificación</string>
+    <string name="notification_sound">Sonido de notificacion</string>
     <string name="notification_light">Led notificación</string>
     <string name="apss_notification">Aplicaciones a notificar cambios</string>
     <string name="select_files_import">Selecciona los archivos a importar</string>
@@ -75,16 +75,16 @@
     <string name="info_autosync">Si la sincronización está desactivada pueden perderse datos en las gráficas</string>
     <string name="admob_login">LOGIN CUENTA DE ADMOB</string>
     <string name="password">Contraseña</string>
-    <string name="login">Entrar</string>
+    <string name="login">Loguearse</string>
     <string name="remove_admob">Eliminar asociación con AdMob</string>
     <string name="remove_admob_app">Eliminar valores AdMob de esta aplicación</string>
     <string name="loading_site">Cargando lista de aplicaciones&#8230;</string>
-    <string name="select_admob_site">selecciona un sitio de AdMob para asociar a esta aplicación</string>
+    <string name="select_admob_site">Selecciona un sitio de AdMob para asociar a esta aplicación</string>
     <string name="choose_app">Selecciona tu aplicación</string>
     <string name="admob_required">Cuenta AdMob requerida</string>
     <string name="admob_add">Añadir cuenta AdMob</string>
     <string name="admob_info">Para cuentas AdMob enlazadas a una cuenta Google puedes encontrar la contraseña del API en la página de información de tu cuenta de admob:</string>
-    <string name="percentage">Porcentajes</string>
+    <string name="percentage">Porcentaje</string>
     <string name="daily">Cambios diarios</string>
     <string name="downloads_day">Descargas por día</string>
     <string name="active_installs_percent">Porcentaje de instalaciones activas</string>
@@ -93,13 +93,13 @@
     <string name="admob">AdMob</string>
     <string name="admob__revenue">Ganancias</string>
     <string name="admob__epc">epc</string>
-    <string name="admob__requests">Peticiones</string>
-    <string name="admob__clicks">Clicks</string>
+    <string name="admob__requests">Solicitudes</string>
+    <string name="admob__clicks">Clics</string>
     <string name="admob__fill_rate">Tasa de relleno</string>
     <string name="admob__eCPM">eCPM</string>
     <string name="admob__impressions">Impresiones</string>
     <string name="admob__CTR">CTR</string>
-    <string name="admob__house_ad_clicks">clicks en autopublicidad</string>
+    <string name="admob__house_ad_clicks">Clicks en autopublicidad</string>
     <string name="admob__charts_available">gráficas AdMob disponibles</string>
     <string name="last_update">última actualización</string>
 
@@ -120,9 +120,13 @@
 	<string name="export_no_app">No hay seleccionada ninguna aplicación, imposible exportar!</string>
 	<string name="export_started">Exportación comenzada</string>
     <string name="export_finished">Exportación finalizada</string>
+    <string name="export_failed_to_load_stats">Error al cargar las estadísticas de la aplicación</string>
     <string name="export_saved_to">Guardado en</string>
+    <string name="share">Compartir</string>
     
-    
+    <string name="manage_accounts">Administrador de cuentas</string>
     <string name="preferences">Preferencias</string>
+    <string name="loading_app_list">Cargando lista de aplicaciones&#8230;</string>
+    <string name="no_published_apps">No se han encontrado aplicaciones publicadas</string>
 
 </resources>

@@ -2,16 +2,16 @@
 
     <string-array name="autosync_periods">
         <item>Uitgeschakeld</item>
-        <item>1 minute</item>
+        <item>1 minuut</item>
         <item>15 minuten</item>
         <item>30 minuten</item>
         <item>1 uur</item>
-        <item>2 uren</item>
-        <item>3 uren</item>
-        <item>6 uren</item>
-        <item>8 uren</item>
-        <item>12 uren</item>
-        <item>24 uren</item>
+        <item>2 uur</item>
+        <item>3 uur</item>
+        <item>6 uur</item>
+        <item>8 uur</item>
+        <item>12 uur</item>
+        <item>24 uur</item>
     </string-array>
 
 </resources>

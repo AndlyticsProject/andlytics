@@ -9,35 +9,35 @@
 
     <string name="crash_desc">Произошла неожиданная ошибка.\n\nПожалуйста, помогите нам решить проблему, отослав отчет об ошибке. Информация об ошибке и о вашем устройстве (такая как производитель, модель, версия операционной системы и т.д.) будет отправлена нам и поможет решить проблему.\n\nСпасибо!\n\n</string>
     <string name="newversion_desc"><b>Произошла неожиданная ошибка, возможно из-за изменений в интерфейсе на серверной стороне.</b>\n\nНо у нас есть хорошая новость, новая версия Andlytics доступна в Android Market.\n\nПожалуйста, обновитесь прежде чем сообщать об ошибке.\n\nСпасибо!\n\n\n</string>
-    <string name="account_required">необходим аккаунт Android-разработчика</string>
-    <string name="account_choose">Пожалуйста выберите или добавьте аккаунт Google. Это должен быть зарегистрированный аккаунт разработчика, с приложениями, опубликованными в Android Market (аккаунты \'Google Apps for Business\' пока не поддерживаются).</string>
+    <string name="account_required">Нужен аккаунт Android-разработчика</string>
+    <string name="account_choose">Пожалуйста, выберите или добавьте аккаунт Google. Это должен быть зарегистрированный аккаунт разработчика Google Play (\'Google Apps for Business\' пока не поддерживается).</string>
     <string name="account_add">Добавьте аккаунт Android-разработчика</string>
     <string name="logout">Выйти</string>
     <string name="refresh">Обновить</string>
     <string name="comments">Комментарии</string>
-    <string name="total_downloads">Общее число загрузок</string>
-    <string name="active_installs">Активные установки</string>
+    <string name="total_downloads">Всего загрузок</string>
+    <string name="active_installs">Активных установок</string>
     <string name="admob_revenue">Доход AdMob</string>
     <string name="admob_requests">Запросы AdMob</string>
-    <string name="average_rating">Средний рейтинг</string>
-    <string name="ratings">Рейтинги</string>
+    <string name="average_rating">Средняя оценка</string>
+    <string name="ratings">Оценки</string>
     <!-- Lower case versions for main screen e.g. X comments -->
-    <string name="num_comments">комментарии</string>
-    <string name="num_total_downloads">общее число загрузок</string>
-    <string name="num_active_installs">активные установки</string>
-    <string name="num_average_rating">средний рейтинг</string>
-    <string name="num_ratings">рейтинги</string>
+    <string name="num_comments">комментариев</string>
+    <string name="num_total_downloads">всего загрузок</string>
+    <string name="num_active_installs">активных установок</string>
+    <string name="num_average_rating">средняя оценка</string>
+    <string name="num_ratings">оценки</string>
     
     <string name="auto_sync">Автосинхронизация</string>
     <string name="notifications">Уведомления</string>
     <string name="statistics_export">Экспорт данных статистики</string>
     <string name="statistics_import">Импорт данных статистики</string>
-    <string name="apps_hide">Выберите приложения, которые нужно спрятать</string>
+    <string name="apps_hide">Спрятать приложения</string>
     <string name="feedback">Отправить отзыв</string>
     <string name="settings">Настройки</string>
     <string name="downloads">Загрузки</string>
     <string name="close">Закрыть</string>
-    <string name="rating_changes">Изменения рейтинга</string>
+    <string name="rating_changes">Изменения оценок</string>
     <string name="comment_changes">Изменения в комментариях</string>
     <string name="download_changes">Изменения в загрузках</string>
     <string name="notification_trigger">Триггер для уведомлений</string>
@@ -75,7 +75,7 @@
     <string name="info_autosync">Если автосинхронизация будет выключена, графики не будут обновляться</string>
     <string name="admob_login">ВХОД В ADMOB</string>
     <string name="password">Пароль</string>
-    <string name="login">Логин</string>
+    <string name="login">Вход</string>
     <string name="remove_admob">Убрать связь с сайтом AdMob</string>
     <string name="remove_admob_app">Убрать значения AdMob для этого приложения</string>
     <string name="loading_site">Загрузка списка сайтов&#8230;</string>
@@ -120,9 +120,13 @@
 	<string name="export_no_app">Не выбрано приложение, не получается экспортировать!</string>
 	<string name="export_started">Экспорт начат</string>
     <string name="export_finished">Экспорт завершен</string>
+    <string name="export_failed_to_load_stats">Не удалось загрузить статистику</string>
     <string name="export_saved_to">Сохранить в</string>
+    <string name="share">Поделиться</string>
     
-    
+    <string name="manage_accounts">Управление аккаунтами</string>
     <string name="preferences">Настройки</string>
+    <string name="loading_app_list">Загрузка списка приложений…</string>
+    <string name="no_published_apps">Нет опубликованных приложений</string>
 
 </resources>
