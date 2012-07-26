@@ -2,7 +2,7 @@
 
     <string-array name="autosync_periods">
         <item>Deaktiviert</item>
-        <item>1 Minute</item>
+		<item>1 Minute</item>
         <item>15 Minuten</item>
         <item>30 Minuten</item>
         <item>1 Stunde</item>

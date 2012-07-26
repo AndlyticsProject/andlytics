@@ -12,8 +12,8 @@
     <string name="account_required">Android Developer Account benötigt</string>
     <string name="account_choose">Bitte einen Google Account wählen oder hinzufügen. Der Zugang muss ein Developer Account mit veröffentlichten Apps sein (\'Google Apps for Business\' werden nicht unterstützt).</string>
     <string name="account_add">Android Developer Account hinzufügen</string>
-    <string name="logout">Ausloggen</string>
-    <string name="refresh">Refresh</string>
+    <string name="logout">Abmelden</string>
+    <string name="refresh">Aktualisieren</string>
     <string name="comments">Kommentare</string>
     <string name="total_downloads">Downloads</string>
     <string name="active_installs">Installationen</string>
@@ -36,15 +36,15 @@
     <string name="feedback">Feedback senden</string>
     <string name="settings">Einstellungen</string>
     <string name="downloads">Downloads</string>
-    <string name="close">Schliessen</string>
+    <string name="close">Schließen</string>
     <string name="rating_changes">Durch Bewertungen</string>
     <string name="comment_changes">Durch Kommentare</string>
     <string name="download_changes">Durch Downloads</string>
     <string name="notification_trigger">Auslöser für Benachrichtigungen</string>
     <string name="disable_notifications">Keine auswählen um Benachrichtigungen zu deaktivieren</string>
     <string name="notification_signal">Benachrichtigungen</string>
-    <string name="notification_sound">Akustisch</string>
-    <string name="notification_light">Optisch</string>
+    <string name="notification_sound">Benachrichtigungston</string>
+    <string name="notification_light">Benachrichtigung Optisch</string>
     <string name="apss_notification">Apps für Benachrichtigungen</string>
     <string name="select_files_import">Zu importierende Daten</string>
     <string name="data_replaced">Bestehende Daten werden ersetzt</string>
@@ -57,7 +57,7 @@
     <string name="export_files_replaced">Bestehende Daten werden ersetzt</string>
     <string name="run_export">Exportieren</string>
     <string name="by">von</string>
-    <string name="device">gerät</string>
+    <string name="device">Gerät</string>
     <string name="long_click_translate">Lange auf Kommentaren halten für eine Übersetzung.</string>
     <string name="load_more_comments">Mehr Kommentare laden</string>
     <string name="info_comments">Die Anzahl der auf der Hauptseite angezeigten Kommentare kann wegen zurückgezogener/geänderter Kommentaren abweichen.</string>
@@ -84,7 +84,7 @@
     <string name="admob_required">AdMob Account erforderlich</string>
     <string name="admob_add">AdMob Account hinzufügen</string>
     <string name="admob_info">Bei AdMob Accounts die mit einem Google Account verknüpft sind ist das API Passwort auf der Informationsseite zu finden:</string>
-    <string name="percentage">Prozent</string>
+    <string name="percentage">Prozentwerte</string>
     <string name="daily">Änderung</string>
     <string name="downloads_day">Downloads pro Tag</string>
     <string name="active_installs_percent">Installationen in Prozent</string>
@@ -101,7 +101,7 @@
     <string name="admob__CTR">Klickrate</string>
     <string name="admob__house_ad_clicks">House-Ad Klicks</string>
     <string name="admob__charts_available">AdMob Tabellen verfügbar</string>
-    <string name="last_update">Letztes Update</string>
+    <string name="last_update">Letzte Änderung</string>
 
     <string name="changelog_title">Changelog</string>
     <string name="changelog_thanks">Danke für die Nutzung von Andlytics!</string>
@@ -120,9 +120,13 @@
 	<string name="export_no_app">Keine App zum exportieren ausgewählt!</string>
 	<string name="export_started">Export gestartet</string>
     <string name="export_finished">Export beendet</string>
+    <string name="export_failed_to_load_stats">Fehler beim Laden der App Statistiken.</string>
     <string name="export_saved_to">Gespeichert unter</string>
+    <string name="share">Teilen</string>
     
-    
+    <string name="manage_accounts">Konten verwalten</string>
     <string name="preferences">Einstellungen</string>
+    <string name="loading_app_list">Lade App-Liste&#8230;</string>
+    <string name="no_published_apps">Keine veröffentlichten Apps gefunden</string>
 
 </resources>
