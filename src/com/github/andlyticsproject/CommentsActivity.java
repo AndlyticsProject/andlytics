@@ -40,6 +40,8 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 	private ContentAdapter db;
 
+	private boolean refreshing;
+
 	private static final int MAX_LOAD_COMMENTS = 20;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,8 +89,10 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
+		menu.clear();
 		getSupportMenuInflater().inflate(R.menu.comments_menu, menu);
+		if (refreshing)
+		  menu.findItem(R.id.itemCommentsmenuRefresh).setActionView(R.layout.action_bar_indeterminate_progress);
 		return true;
 	}
 
@@ -219,12 +223,14 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 			}
 
-			setSupportProgressBarIndeterminateVisibility(false);
+			refreshing = false;
+			invalidateOptionsMenu();
 		}
 
 		@Override
 		protected void onPreExecute() {
-			setSupportProgressBarIndeterminateVisibility(true);
+			refreshing = true;
+			invalidateOptionsMenu();
 			footer.setEnabled(false);
 		}
 

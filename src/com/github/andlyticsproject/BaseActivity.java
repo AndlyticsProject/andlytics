@@ -50,9 +50,7 @@ public class BaseActivity extends SherlockActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
-        setSupportProgressBarIndeterminateVisibility(false);
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
 			// TODO move packageName and iconFilePath assignments to BaseDetailsActivity
