@@ -97,8 +97,9 @@ public class PreferenceActivity extends SherlockPreferenceActivity
 			newPeriod = newPeriod * 60; // Convert from minutes to seconds
 			AutosyncHandler autosyncHandler = AutosyncHandlerFactory.getInstance(this);
 			for (Account account : accounts) {
-				if (Preferences.isAutoSyncEnabled(PreferenceActivity.this, account.name)) {
-					// Setup auto sync for every accoun that has it enabled
+				// Setup auto sync for every account that has isn't hidden and has it is enabled
+				if (!Preferences.getIsHiddenAccount(PreferenceActivity.this, account.name) &&
+						Preferences.isAutoSyncEnabled(PreferenceActivity.this, account.name)) {
 					int autosyncPeriod = autosyncHandler.getAutosyncPeriod(account.name);
 					if (autosyncPeriod != newPeriod) {
 						autosyncHandler.setAutosyncPeriod(account.name, newPeriod);
