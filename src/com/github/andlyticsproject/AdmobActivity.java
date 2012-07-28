@@ -55,6 +55,7 @@ public class AdmobActivity extends BaseChartActivity {
 	protected String admobToken;
 
 	private ViewGroup siteList;
+	private boolean refreshing;
 
 	@Override
 	protected void executeLoadData(Timeframe timeFrame) {
@@ -106,8 +107,10 @@ public class AdmobActivity extends BaseChartActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
+		menu.clear();
 		getSupportMenuInflater().inflate(R.menu.admob_menu, menu);
+		if (refreshing)
+		  menu.findItem(R.id.itemAdmobsmenuRefresh).setActionView(R.layout.action_bar_indeterminate_progress);
 		return true;
 	}
 
@@ -247,26 +250,21 @@ public class AdmobActivity extends BaseChartActivity {
 				new LoadRemoteEntiesTask().execute();
 			}
 
-			setSupportProgressBarIndeterminateVisibility(false);
+			refreshing = false;
+			invalidateOptionsMenu();
 
 		}
 	};
 
 	private class LoadRemoteEntiesTask extends AsyncTask<Void, Void, Exception> {
-
-		boolean isRunning;
-
 		@Override
 		protected void onPreExecute() {
-			setSupportProgressBarIndeterminateVisibility(true);
-			isRunning = true;
+			refreshing = true;
+			invalidateOptionsMenu();
 		}
 
 		@Override
 		protected Exception doInBackground(Void... lastValueDate) {
-
-			isRunning = true;
-
 			String currentAdmobAccount = null;
 			String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
 			if (currentSiteId != null) {
@@ -318,9 +316,8 @@ public class AdmobActivity extends BaseChartActivity {
 				executeLoadDataDefault(false);
 			}
 
-			if (isRunning) {
-				setSupportProgressBarIndeterminateVisibility(false);
-			}
+			refreshing = false;
+			invalidateOptionsMenu();
 		}
 	};
 
@@ -335,7 +332,8 @@ public class AdmobActivity extends BaseChartActivity {
 
 		@Override
 		protected void onPreExecute() {
-			setSupportProgressBarIndeterminateVisibility(true);
+			refreshing = true;
+			invalidateOptionsMenu();
 		}
 
 		@Override
@@ -396,7 +394,8 @@ public class AdmobActivity extends BaseChartActivity {
 				}
 			}
 
-			setSupportProgressBarIndeterminateVisibility(false);
+			refreshing = false;
+			invalidateOptionsMenu();
 		}
 	};
 

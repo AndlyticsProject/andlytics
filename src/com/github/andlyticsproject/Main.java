@@ -75,6 +75,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private boolean isAuthenticationRetry;
 	public Animation aniPrevIn;
 	private StatsMode currentStatsMode;
+	private boolean refreshing;
 
 	private MenuItem statsModeMenuItem;
 
@@ -86,10 +87,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		setSupportProgressBarIndeterminateVisibility(false);
 
 
 		db = getDbAdapter();
@@ -178,9 +177,11 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
+		menu.clear();
 		getSupportMenuInflater().inflate(R.menu.main_menu, menu);
 		statsModeMenuItem = menu.findItem(R.id.itemMainmenuStatsMode);
+		if (refreshing)
+		  menu.findItem(R.id.itemMainmenuRefresh).setActionView(R.layout.action_bar_indeterminate_progress);
 		updateStatsMode();
 		return true;
 	}
@@ -461,7 +462,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		@Override
 		protected void onPostExecute(Exception e) {
 
-			setSupportProgressBarIndeterminateVisibility(false);
+			refreshing = false;
+			invalidateOptionsMenu();
 
 			if (e != null) {
 
@@ -490,7 +492,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		 */
 		@Override
 		protected void onPreExecute() {
-			setSupportProgressBarIndeterminateVisibility(true);
+			refreshing = true;
+			invalidateOptionsMenu();
 		}
 
 	}
