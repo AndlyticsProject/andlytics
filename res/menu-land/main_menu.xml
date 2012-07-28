@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     
+    <!-- Landscape menu for phones. Only show refresh and stats mode to ensure lots of space
+    for the account chooser and to avoid having only one of import/export -->
+    
     <item
         android:id="@+id/itemMainmenuRefresh"
         android:icon="@drawable/icon_refresh"
@@ -16,13 +19,13 @@
     <item
         android:id="@+id/itemMainmenuImport"
         android:icon="@drawable/icon_import"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="never"
         android:title="@string/import_">
     </item>
     <item
         android:id="@+id/itemMainmenuExport"
         android:icon="@drawable/icon_export"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="never"
         android:title="@string/export_">
     </item>
     <item
