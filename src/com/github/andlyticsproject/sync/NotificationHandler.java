@@ -31,11 +31,11 @@ public class NotificationHandler {
         String contentTitle = context.getString(R.string.notification_title);
         String contentText = "";
 
-        boolean commentsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_COMMENTS, accountName);
-        boolean ratingsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_RATING, accountName);
-        boolean downloadsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_DOWNLOADS, accountName);
-        boolean soundEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_SOUND, accountName);
-        boolean lightEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_LIGHT, accountName);
+        boolean commentsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_COMMENTS);
+        boolean ratingsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_RATING);
+        boolean downloadsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_DOWNLOADS);
+        boolean soundEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_SOUND);
+        boolean lightEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_LIGHT);
 
         List<String> appNameList = new ArrayList<String>();
         for (int i = 0; i < diffs.size(); i++) {

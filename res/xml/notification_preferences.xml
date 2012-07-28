@@ -2,30 +2,38 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/notifications" >
 
-    <PreferenceCategory android:title="@string/notification_trigger" 
-        android:key="prefCatNotificationTrigger">
-        <!-- Actual preferences are added in java as their key contains the account name -->
-        <!-- CheckBoxPreference
+    <PreferenceCategory
+        android:key="prefCatNotificationTrigger"
+        android:title="@string/notification_trigger" >
+        <CheckBoxPreference
             android:defaultValue="true"
+            android:key="notification.changes.rating"
             android:title="@string/rating_changes" />
         <CheckBoxPreference
             android:defaultValue="true"
+            android:key="notification.changes.comments"
             android:title="@string/comment_changes" />
         <CheckBoxPreference
             android:defaultValue="true"
-            android:title="@string/download_changes" /-->
+            android:key="notification.changes.download"
+            android:title="@string/download_changes" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/notification_signal" 
-        android:key="prefCatNotificationSignal">
-        <!-- CheckBoxPreference
+    <PreferenceCategory
+        android:key="prefCatNotificationSignal"
+        android:title="@string/notification_signal" >
+        <CheckBoxPreference
             android:defaultValue="true"
+            android:key="notification.sound"
             android:title="@string/notification_sound" />
         <CheckBoxPreference
             android:defaultValue="true"
-            android:title="@string/notification_light" /-->
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/apss_notification" 
-        android:key="prefCatNotificationApps">
+            android:key="notification.light"
+            android:title="@string/notification_light" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="notification.when_account_visible"
+            android:summary="@string/notification_when_account_visible_summary"
+            android:title="@string/notification_when_account_visible" />
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -45,7 +45,7 @@
     <string name="notification_signal">Benachrichtigungen</string>
     <string name="notification_sound">Benachrichtigungston</string>
     <string name="notification_light">Benachrichtigung Optisch</string>
-    <string name="apss_notification">Apps für Benachrichtigungen</string>
+    <string name="apps_notification">Apps für Benachrichtigungen</string>
     <string name="select_files_import">Zu importierende Daten</string>
     <string name="data_replaced">Bestehende Daten werden ersetzt</string>
     <string name="run_import">Importieren</string>

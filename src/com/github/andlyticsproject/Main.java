@@ -162,6 +162,10 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		super.onResume();
 		boolean mainSkipDataReload = getAndlyticsApplication().isSkipMainReload();
 
+		// TODO We shouldn't be reloading in every onResume
+		// When we move this, make sure we move to using startActivityForResult for the preferences
+		// to ensure that we do update if hidden apps are changed
+		
 		if (!mainSkipDataReload) {
 			Utils.execute(new LoadDbEntries(), true);
 		} else {

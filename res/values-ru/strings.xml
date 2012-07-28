@@ -45,7 +45,7 @@
     <string name="notification_signal">Тип уведомления</string>
     <string name="notification_sound">Звук уведомления</string>
     <string name="notification_light">Подсветка уведомления</string>
-    <string name="apss_notification">Уведомления об изменениях для приложений</string>
+    <string name="apps_notification">Уведомления об изменениях для приложений</string>
     <string name="select_files_import">Выберите файлы для импорта</string>
     <string name="data_replaced">Существующие данные будут перезаписаны</string>
     <string name="run_import">Запустить импорт</string>

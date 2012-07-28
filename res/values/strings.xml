@@ -45,7 +45,7 @@
     <string name="notification_signal">Notification signal</string>
     <string name="notification_sound">Notification sound</string>
     <string name="notification_light">Notification light</string>
-    <string name="apss_notification">Apps for change notification</string>
+    <string name="apps_notification">Apps for change notification</string>
     <string name="select_files_import">Select files to import</string>
     <string name="data_replaced">Existing data will be replaced</string>
     <string name="run_import">Run import</string>
@@ -128,5 +128,10 @@
     <string name="preferences">Preferences</string>
     <string name="loading_app_list">Loading app list…</string>
     <string name="no_published_apps">No published apps found</string>
+    
+    <string name="general_preferences">General preferences</string>
+    <string name="account_specific_preferences">Account specific preferences</string>
+    <string name="notification_when_account_visible">When app is visible</string>
+    <string name="notification_when_account_visible_summary">Show notifications for the current account even when the app is visible</string>
 
 </resources>

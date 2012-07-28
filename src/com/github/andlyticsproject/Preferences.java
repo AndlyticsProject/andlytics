@@ -39,6 +39,7 @@ public class Preferences {
     public static final String NOTIFICATION_CHANGES_DOWNLOADS = "notification.changes.download";
     public static final String NOTIFICATION_SOUND = "notification.sound";
     public static final String NOTIFICATION_LIGHT = "notification.light";
+    public static final String NOTIFICATION_WHEN_ACCOUNT_VISISBLE = "notification.when_account_visible";
 
     public static final String DATE_FORMAT_SHORT = "dateformat.short1";
     public static final String DATE_FORMAT_LONG = "dateformat.long1";
@@ -190,14 +191,8 @@ public class Preferences {
         return StatsMode.valueOf(getSettings(activity).getString(STATS_MODE, StatsMode.PERCENT.name()));
     }
 
-    public static boolean getNotificationPerf(Context context, String prefName, String accountName) {
-        return getSettings(context).getBoolean(prefName + accountName, true);
-    }
-
-    public static void saveNotificationPref(Context context, String prefName, String accountName, Boolean value) {
-        SharedPreferences.Editor editor = getSettings(context).edit();
-        editor.putBoolean(prefName + accountName, value);
-        editor.commit();
+    public static boolean getNotificationPerf(Context context, String prefName) {
+        return getSettings(context).getBoolean(prefName, true);
     }
 
     public static void saveLevel7AlarmManagerPeriod(Integer periodInSeconds, Context context) {

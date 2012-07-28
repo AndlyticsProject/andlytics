@@ -45,7 +45,7 @@
     <string name="notification_signal">Configuración notificación</string>
     <string name="notification_sound">Sonido de notificacion</string>
     <string name="notification_light">Led notificación</string>
-    <string name="apss_notification">Aplicaciones a notificar cambios</string>
+    <string name="apps_notification">Aplicaciones a notificar cambios</string>
     <string name="select_files_import">Selecciona los archivos a importar</string>
     <string name="data_replaced">Los datos existentes serán reemplazados</string>
     <string name="run_import">Importar</string>
