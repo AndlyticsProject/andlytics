@@ -7,7 +7,8 @@
             android:dialogTitle="@string/auto_sync_period"
             android:entries="@array/autosync_periods"
             android:entryValues="@array/autosync_periods_values"
-            android:key="prefAutoSyncPeriod"
+            android:key="autosync.period"
+            android:defaultValue="180"
             android:title="@string/auto_sync" />
 
         <Preference

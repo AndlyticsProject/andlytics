@@ -52,7 +52,6 @@ import com.github.andlyticsproject.exception.NetworkException;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
-import com.github.andlyticsproject.sync.AutosyncHandler;
 import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
 import com.github.andlyticsproject.sync.NotificationHandler;
 import com.github.andlyticsproject.util.ChangelogBuilder;
@@ -173,8 +172,10 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		}
 
 		getAndlyticsApplication().setSkipMainReload(false);
+		
+		AndlyticsApp.getInstance().setIsAppVisible(true);
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -270,13 +271,9 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	}
 
 	@Override
-	protected void onPostResume() {
-		super.onPostResume();
-	}
-
-	@Override
 	protected void onPause() {
 		super.onPause();
+		AndlyticsApp.getInstance().setIsAppVisible(false);
 	}
 
 	@Override
@@ -331,14 +328,12 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			if (apps.size() > 0) {
 				footer.setVisibility(View.VISIBLE);
 
-				String autosyncSet = Preferences.getAutosyncSet(Main.this, accountName);
+				String autosyncSet = Preferences.getAutoSyncSet(Main.this, accountName);
 				if (autosyncSet == null) {
-
-					// set autosync default value
+					// Setup autosync
 					AutosyncHandlerFactory.getInstance(Main.this).setAutosyncPeriod(accountName,
-							AutosyncHandler.DEFAULT_PERIOD);
-
-					Preferences.saveAutosyncSet(Main.this, accountName);
+							Preferences.getAutoSyncPeriod(Main.this, accountName));
+					Preferences.saveAutoSyncSet(Main.this, accountName);
 				}
 			}
 

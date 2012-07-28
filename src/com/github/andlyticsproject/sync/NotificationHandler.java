@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.AppStatsDiff;
 import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.Main;
@@ -17,105 +18,114 @@ import com.github.andlyticsproject.R;
 
 public class NotificationHandler {
 
-    static final String GROWL_ACTION = "org.damazio.notifier.service.UserReceiver.USER_MESSAGE";
+	static final String GROWL_ACTION = "org.damazio.notifier.service.UserReceiver.USER_MESSAGE";
 
-    static final String EXTRA_TITLE = "title";
+	static final String EXTRA_TITLE = "title";
 
-    static final String EXTRA_DESCRIPTION = "description";
+	static final String EXTRA_DESCRIPTION = "description";
 
-    public static void handleNotificaions(Context context, List<AppStatsDiff> diffs, String accountName) {
+	// TODO Re-do notification creation to avoid using depreciated classes (maybe use NotificationCompact2 by JW)
+	@SuppressWarnings("deprecation")
+	public static void handleNotificaions(Context context, List<AppStatsDiff> diffs, String accountName) {
 
-        String ns = Context.NOTIFICATION_SERVICE;
-        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(ns);
+		String ns = Context.NOTIFICATION_SERVICE;
+		NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(ns);
 
-        String contentTitle = context.getString(R.string.notification_title);
-        String contentText = "";
+		String contentTitle = context.getString(R.string.notification_title);
+		String contentText = "";
 
-        boolean commentsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_COMMENTS);
-        boolean ratingsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_RATING);
-        boolean downloadsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_DOWNLOADS);
-        boolean soundEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_SOUND);
-        boolean lightEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_LIGHT);
+		boolean commentsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_COMMENTS);
+		boolean ratingsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_RATING);
+		boolean downloadsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_DOWNLOADS);
+		boolean soundEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_SOUND);
+		boolean lightEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_LIGHT);
 
-        List<String> appNameList = new ArrayList<String>();
-        for (int i = 0; i < diffs.size(); i++) {
+		List<String> appNameList = new ArrayList<String>();
+		for (int i = 0; i < diffs.size(); i++) {
 
-            AppStatsDiff diff = diffs.get(i);
-            if(!diff.isSkipNotification()) {
+			AppStatsDiff diff = diffs.get(i);
+			if(!diff.isSkipNotification()) {
 
-                if(diff.hasChanges()) {
+				if(diff.hasChanges()) {
 
-                    List<String> changeProperties = new ArrayList<String>();
+					List<String> changeProperties = new ArrayList<String>();
 
-                    if(commentsEnabled && diff.getCommentsChange() != 0) {
-                        changeProperties.add(context.getString(R.string.comments));
-                    }
-                    if(ratingsEnabled && diff.getAvgRatingChange() != 0) {
-                        changeProperties.add(context.getString(R.string.ratings));
-                    }
-                    if(downloadsEnabled && diff.getDownloadsChange() != 0) {
-                        changeProperties.add(context.getString(R.string.downloads));
-                    }
+					if(commentsEnabled && diff.getCommentsChange() != 0) {
+						changeProperties.add(context.getString(R.string.comments));
+					}
+					if(ratingsEnabled && diff.getAvgRatingChange() != 0) {
+						changeProperties.add(context.getString(R.string.ratings));
+					}
+					if(downloadsEnabled && diff.getDownloadsChange() != 0) {
+						changeProperties.add(context.getString(R.string.downloads));
+					}
 
-                    if(changeProperties.size() > 0) {
-                        String name = diff.getAppName();
-                        name += " (";
-                        for (int j = 0; j < changeProperties.size(); j++) {
-                            name += changeProperties.get(j);
-                            if(j < changeProperties.size() -1) {
-                                name += ", ";
-                            }
+					if(changeProperties.size() > 0) {
+						String name = diff.getAppName();
+						name += " (";
+						for (int j = 0; j < changeProperties.size(); j++) {
+							name += changeProperties.get(j);
+							if(j < changeProperties.size() -1) {
+								name += ", ";
+							}
 
-                        }
-                        name += ")";
+						}
+						name += ")";
 
-                        appNameList.add(name);
-                    }
-                }
-            }
-        }
+						appNameList.add(name);
+					}
+				}
+			}
+		}
 
-        if(appNameList.size() > 0) {
+		if(appNameList.size() > 0) {
 
-            for (int i = 0; i < appNameList.size(); i++) {
-                contentText += appNameList.get(i);
-                if(i < appNameList.size() -1) {
-                    contentText += ", ";
-                }
-            }
-
-            Notification notification = new Notification(R.drawable.statusbar_andlytics, contentTitle + ": " + contentText, System.currentTimeMillis());
-
-            Intent notificationIntent = new Intent(context, Main.class);
-            notificationIntent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
-            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			for (int i = 0; i < appNameList.size(); i++) {
+				contentText += appNameList.get(i);
+				if(i < appNameList.size() -1) {
+					contentText += ", ";
+				}
+			}
 
 
-            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+			if (!AndlyticsApp.getInstance().isAppVisible() ||
+					!accountName.equals(Preferences.getAccountName(context)) || 
+					Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_WHEN_ACCOUNT_VISISBLE)) {
+				// The user can choose not to see notifications if the current account is visible
 
-            notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+				Notification notification = new Notification(R.drawable.statusbar_andlytics, contentTitle + ": " + contentText, System.currentTimeMillis());
 
-
-            if(soundEnabled) {
-                notification.defaults |= Notification.DEFAULT_SOUND;
-            }
-            if(lightEnabled) {
-                notification.defaults |= Notification.DEFAULT_LIGHTS;
-            }
-            notification.contentIntent = contentIntent;
-            notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
-            mNotificationManager.notify(1, notification);
+				Intent notificationIntent = new Intent(context, Main.class);
+				notificationIntent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+				notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 
-            Intent i = new Intent(GROWL_ACTION);
-            i.putExtra(EXTRA_TITLE, contentTitle);
-            i.putExtra(EXTRA_DESCRIPTION, contentText);
-            context.sendBroadcast(i);
+				PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        }
+				notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
 
 
-    }
+				if(soundEnabled) {
+					notification.defaults |= Notification.DEFAULT_SOUND;
+				}
+				if(lightEnabled) {
+					notification.defaults |= Notification.DEFAULT_LIGHTS;
+				}
+				notification.contentIntent = contentIntent;
+				notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
+				mNotificationManager.notify(1, notification);
+			}
+
+
+			Intent i = new Intent(GROWL_ACTION);
+			i.putExtra(EXTRA_TITLE, contentTitle);
+			i.putExtra(EXTRA_DESCRIPTION, contentText);
+			context.sendBroadcast(i);
+
+		}
+
+
+	}
 
 }

@@ -39,10 +39,9 @@ public class PreferenceActivity extends SherlockPreferenceActivity
 		prefMgr.setSharedPreferencesName(Preferences.PREF);
 		addPreferencesFromResource(R.xml.preferences);
 
-		// Find and setup the auto sync pref
-		ListPreference autoSync = (ListPreference) getPreferenceScreen().findPreference(
-				Preferences.PREF_AUTO_SYNC_PERIOD);
-		autoSync.setOnPreferenceChangeListener(this);
+		// Find and setup a listener for auto sync
+		getPreferenceScreen().findPreference(
+				Preferences.AUTOSYNC_PERIOD).setOnPreferenceChangeListener(this);
 
 		getPreferenceScreen().findPreference(Preferences.PREF_NOTIFICATIONS)
 				.setOnPreferenceClickListener(this);
@@ -93,16 +92,17 @@ public class PreferenceActivity extends SherlockPreferenceActivity
 
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
-		if (preference.getKey().equals(Preferences.PREF_AUTO_SYNC_PERIOD)) {
+		if (preference.getKey().equals(Preferences.AUTOSYNC_PERIOD)) {
 			Integer newPeriod = Integer.parseInt((String) newValue);
 			newPeriod = newPeriod * 60; // Convert from minutes to seconds
 			AutosyncHandler autosyncHandler = AutosyncHandlerFactory.getInstance(this);
 			for (Account account : accounts) {
-				// TODO Add support for disabling auto sync in the account specific preferences
-				// and check for it her
-				int autosyncPeriod = autosyncHandler.getAutosyncPeriod(account.name);
-				if (autosyncPeriod != newPeriod) {
-					autosyncHandler.setAutosyncPeriod(account.name, newPeriod);
+				if (Preferences.isAutoSyncEnabled(PreferenceActivity.this, account.name)) {
+					// Setup auto sync for every accoun that has it enabled
+					int autosyncPeriod = autosyncHandler.getAutosyncPeriod(account.name);
+					if (autosyncPeriod != newPeriod) {
+						autosyncHandler.setAutosyncPeriod(account.name, newPeriod);
+					}
 				}
 			}
 		}

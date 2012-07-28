@@ -23,6 +23,8 @@ public class AndlyticsApp extends Application {
 	private String feedbackMessage;
 	
 	private static AndlyticsApp sInstance;
+	
+	private boolean isAppVisible = false;
 
 	@Override
 	public void onCreate() {
@@ -36,10 +38,14 @@ public class AndlyticsApp extends Application {
 	public static AndlyticsApp getInstance(){
 		return sInstance;
 	}
-
-	@Override
-	public void onTerminate() {
-		super.onTerminate();
+	
+	public boolean isAppVisible(){
+		// TODO This is a bit of a hack, could it be improved
+		return isAppVisible;
+	}
+	
+	public void setIsAppVisible(boolean isVisible){
+		isAppVisible = isVisible;
 	}
 
 	public void setDbAdapter(ContentAdapter db) {

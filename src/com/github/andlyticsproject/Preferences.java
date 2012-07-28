@@ -1,5 +1,7 @@
 package com.github.andlyticsproject;
 
+import com.github.andlyticsproject.sync.AutosyncHandler;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -11,7 +13,6 @@ public class Preferences {
 	public static final String PREF = "andlytics_pref";
 	
 	// Keys used on the main preference screen
-	public static final String PREF_AUTO_SYNC_PERIOD = "prefAutoSyncPeriod";
 	public static final String PREF_NOTIFICATIONS = "prefNotifications";
 	public static final String PREF_HIDDEN_APPS = "prefHiddenApps";
 
@@ -25,6 +26,8 @@ public class Preferences {
     private static final String POST_REQUEST_FEEDBACK = "post_feedback";
 
 	private static final String AUTOSYNC = "autosync.initial.set";
+	public static final String AUTOSYNC_PERIOD = "autosync.period";
+	public static final String AUTOSYNC_ENABLE = "autosync.enable";
 	private static final String CRASH_REPORT_DISABLE = "acra.enable";
 
 	public static final String CHART_TIMEFRAME = "chart.timeframe";
@@ -96,14 +99,23 @@ public class Preferences {
 	public static void saveGwtPermutation(Context activity, String gwtPermutation) {
 		saveVersionDependingProperty(GWTPERMUTATION, gwtPermutation, activity);
 	}
-
-	public static String getAutosyncSet(Context activity, String accountname) {
-		return getSettings(activity).getString(AUTOSYNC + accountname, null);
+	
+	public static Boolean isAutoSyncEnabled(Context activity, String accountName){
+		return getSettings(activity).getBoolean(AUTOSYNC_ENABLE + accountName, true);
+	}
+	
+	public static int getAutoSyncPeriod(Context activity, String accountName) {
+		return getSettings(activity).getInt(AUTOSYNC_PERIOD + accountName, AutosyncHandler.DEFAULT_PERIOD);
 	}
 
-	public static void saveAutosyncSet(Context activity, String accountname) {
+
+	public static String getAutoSyncSet(Context activity, String accountName) {
+		return getSettings(activity).getString(AUTOSYNC + accountName, null);
+	}
+
+	public static void saveAutoSyncSet(Context activity, String accountName) {
 		SharedPreferences.Editor editor = getSettings(activity).edit();
-		editor.putString(AUTOSYNC + accountname, "true");
+		editor.putString(AUTOSYNC + accountName, "true");
 		editor.commit();
 	}
 

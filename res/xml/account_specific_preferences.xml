@@ -3,6 +3,10 @@
 
     <!-- Except for the categories, theses are built up dynamically as they key contains the account name -->
     <PreferenceCategory
+        android:key="prefCatAutoSync"
+        android:title="@string/auto_sync" >
+    </PreferenceCategory>
+    <PreferenceCategory
         android:key="prefCatNotificationApps"
         android:title="@string/apps_notification" >
     </PreferenceCategory>
