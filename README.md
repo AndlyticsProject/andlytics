@@ -42,6 +42,8 @@ KNOWN ISSUES
 Please fork this repository and contribute back using
 [pull requests](https://github.com/AndlyticsProject/andlytics/pulls).
 
+The 'master' branch should always be in a stable, tested, and ready to go state so that we can implement quick fixes when Google breaks the 'API'. Therefore, all pull requests should be based on, and targeted to, the 'dev' branch.
+
 Any contributions, large or small, major features, bug fixes, additional language translations, 
 unit/integration tests are welcomed and appreciated but will be thoroughly reviewed and discussed.
 
