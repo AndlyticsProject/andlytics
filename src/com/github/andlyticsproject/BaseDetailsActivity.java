@@ -71,6 +71,7 @@ public class BaseDetailsActivity extends BaseActivity {
 	 */
 	private void startActivityAfterCleanup(Class<?> activity) {
 		Intent intent = new Intent(getApplicationContext(), activity);
+		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}

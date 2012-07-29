@@ -22,7 +22,6 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.admob.AdmobAccountRemovedException;
 import com.github.andlyticsproject.admob.AdmobAskForPasswordException;
 import com.github.andlyticsproject.admob.AdmobGenericException;
@@ -59,9 +58,7 @@ public class BaseActivity extends SherlockActivity {
 			packageName = b.getString(Constants.PACKAGE_NAME_PARCEL);
 			iconFilePath = b.getString(Constants.ICON_FILE_PARCEL);
 			accountName = b.getString(Constants.AUTH_ACCOUNT_NAME);
-			if (accountName != null){
-				Preferences.saveAccountName(this,accountName);
-			}
+			Preferences.saveAccountName(this,accountName);
 		}
 
 	}
