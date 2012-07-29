@@ -5,8 +5,8 @@
     <!--
     If we add more preferences, it would probably be best to move general preferences
 	to a new activity
-    -->
-    
+	-->
+
     <PreferenceCategory android:title="@string/general_preferences" >
         <ListPreference
             android:defaultValue="180"
@@ -15,6 +15,12 @@
             android:entryValues="@array/autosync_periods_values"
             android:key="autosync.period"
             android:title="@string/auto_sync" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="admob.hide_for_unconfigured_apps"
+            android:summary="@string/hide_admob_for_unconfigured_apps"
+            android:title="@string/admob" />
 
         <Preference
             android:icon="@drawable/icon_notification"

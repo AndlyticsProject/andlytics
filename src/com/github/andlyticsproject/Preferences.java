@@ -44,6 +44,8 @@ public class Preferences {
     public static final String DATE_FORMAT_LONG = "dateformat.long1";
 
     private static final String LEVEL_7_ALARM_MANAGER_PERIOD = "level7.AlarmManagerPeriod";
+    
+    private static final String ADMOB_HIDE_FOR_UNCONFIGURED_APPS = "admob.hide_for_unconfigured_apps";
 
     private static final String ADMOB_SITE_ID = "admob.siteid";
 
@@ -299,5 +301,9 @@ public class Preferences {
     
     public static boolean getIsHiddenAccount(Context context, String accountName) {
         return getSettings(context).getBoolean(HIDDEN_ACCOUNT + accountName, false);
+    }
+    
+    public static boolean getHideAdmobForUnconfiguredApps(Context context) {
+        return getSettings(context).getBoolean(ADMOB_HIDE_FOR_UNCONFIGURED_APPS, false);
     }
 }

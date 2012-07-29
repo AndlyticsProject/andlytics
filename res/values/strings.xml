@@ -133,5 +133,6 @@
     <string name="account_specific_preferences">Account specific preferences</string>
     <string name="notification_when_account_visible">When app is visible</string>
     <string name="notification_when_account_visible_summary">Show notifications for the current account even when the app is visible</string>
+    <string name="hide_admob_for_unconfigured_apps">Hide the AdMob tab for unconfigured apps</string>
 
 </resources>
