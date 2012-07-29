@@ -279,7 +279,6 @@ public class ContentAdapter {
 		values.put(AppStatsTable.KEY_STATS_1STARS, downloadInfo.getRating1());
 		values.put(AppStatsTable.KEY_STATS_VERSIONCODE, downloadInfo.getVersionCode());
 
-
 		context.getContentResolver().insert(AppStatsTable.CONTENT_URI, values);
 	}
 
