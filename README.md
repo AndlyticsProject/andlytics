@@ -44,7 +44,10 @@ Please fork this repository and contribute back using
 
 The 'master' branch should always be in a stable, tested, and ready to go state so that we can implement quick fixes when Google breaks the 'API'. Therefore, all pull requests should be based on, and targeted to, the 'dev' branch.
 
-Any contributions, large or small, major features, bug fixes, additional language translations, 
-unit/integration tests are welcomed and appreciated but will be thoroughly reviewed and discussed.
+When submitting code, please try to be consistent with the code around you. As a general rule:
+1. Use Tabs, not spaces
+2. Aim for a maximum line length of 100, unless it looks better being on a single line
+
+Any contributions, large or small, major features, bug fixes, unit/integration tests are welcomed and appreciated, but will be thoroughly reviewed and discussed.
 
 Translations should be done via [GetLocalization](http://www.getlocalization.com/andlyticsproject/).
