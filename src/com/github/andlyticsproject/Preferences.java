@@ -100,8 +100,8 @@ public class Preferences {
 		return getSettings(activity).getBoolean(AUTOSYNC_ENABLE + accountName, true);
 	}
 	
-	public static int getAutoSyncPeriod(Context activity, String accountName) {
-		return getSettings(activity).getInt(AUTOSYNC_PERIOD + accountName, AutosyncHandler.DEFAULT_PERIOD);
+	public static int getAutoSyncPeriod(Context activity) {
+		return getSettings(activity).getInt(AUTOSYNC_PERIOD, AutosyncHandler.DEFAULT_PERIOD);
 	}
 
 

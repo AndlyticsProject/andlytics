@@ -56,8 +56,7 @@ public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivit
 						.getInstance(AccountSpecificPreferenceActivity.this);
 				// Toggle auto sync between the sync period and 0
 				autosyncHandler.setAutosyncPeriod(accountName, ((Boolean) newValue) ?
-						Preferences.getAutoSyncPeriod(AccountSpecificPreferenceActivity.this,
-								accountName) : 0);
+						Preferences.getAutoSyncPeriod(AccountSpecificPreferenceActivity.this) : 0);
 				return true;
 			}
 		});

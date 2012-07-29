@@ -331,9 +331,9 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 				String autosyncSet = Preferences.getAutoSyncSet(Main.this, accountName);
 				if (autosyncSet == null) {
-					// Setup autosync
+					// Setup auto sync
 					AutosyncHandlerFactory.getInstance(Main.this).setAutosyncPeriod(accountName,
-							Preferences.getAutoSyncPeriod(Main.this, accountName));
+							Preferences.getAutoSyncPeriod(Main.this));
 					Preferences.saveAutoSyncSet(Main.this, accountName);
 				}
 			}
