@@ -281,7 +281,7 @@ public class ContentAdapter {
 
 
 		//TODO Re-enable this!
-		//context.getContentResolver().insert(AppStatsTable.CONTENT_URI, values);
+		context.getContentResolver().insert(AppStatsTable.CONTENT_URI, values);
 	}
 
 	private AppStatsDiff createAppStatsDiff(AppStats newStats, AppStats previousStats,

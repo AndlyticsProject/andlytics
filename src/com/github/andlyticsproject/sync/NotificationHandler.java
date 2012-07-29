@@ -16,6 +16,7 @@ import com.github.andlyticsproject.Main;
 import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2;
+import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2.BigTextStyle;
 import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2.Builder;
 
 public class NotificationHandler {
@@ -26,8 +27,6 @@ public class NotificationHandler {
 
 	static final String EXTRA_DESCRIPTION = "description";
 
-	// TODO Re-do notification creation to avoid using depreciated classes (maybe use NotificationCompact2 by JW)
-	@SuppressWarnings("deprecation")
 	public static void handleNotificaions(Context context, List<AppStatsDiff> diffs, String accountName) {
 		NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -41,6 +40,7 @@ public class NotificationHandler {
 		boolean lightEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_LIGHT);
 
 		List<String> appNameList = new ArrayList<String>();
+		int number = 0;
 		for (int i = 0; i < diffs.size(); i++) {
 
 			AppStatsDiff diff = diffs.get(i);
@@ -52,12 +52,15 @@ public class NotificationHandler {
 
 					if(commentsEnabled && diff.getCommentsChange() != 0) {
 						changeProperties.add(context.getString(R.string.comments));
+						number++;
 					}
 					if(ratingsEnabled && diff.getAvgRatingChange() != 0) {
 						changeProperties.add(context.getString(R.string.ratings));
+						number++;
 					}
 					if(downloadsEnabled && diff.getDownloadsChange() != 0) {
 						changeProperties.add(context.getString(R.string.downloads));
+						number++;
 					}
 
 					if(changeProperties.size() > 0) {
@@ -97,39 +100,38 @@ public class NotificationHandler {
 			  builder.setSmallIcon(R.drawable.statusbar_andlytics);
 			  builder.setContentTitle(contentTitle);
 			  builder.setContentText(contentText);
+			  BigTextStyle style = new BigTextStyle(builder);
+			  style.bigText(contentText);
+			  style.setBigContentTitle(contentTitle);
+			  style.setSummaryText(accountName);
+			  builder.setStyle(style);
 			  builder.setWhen(System.currentTimeMillis());
+			  builder.setNumber(number);
 
 				Intent notificationIntent = new Intent(context, Main.class);
 				notificationIntent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
 				notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
 
 				PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 				builder.setContentIntent(contentIntent);
 				builder.setTicker(contentTitle);
 
-
+				int defaults = 0;
 				if(soundEnabled) {
-				  builder.setDefaults(Notification.DEFAULT_SOUND);
+				  defaults |= Notification.DEFAULT_SOUND;
 				}
 				if(lightEnabled) {
-					builder.setDefaults(Notification.DEFAULT_LIGHTS);
+				  defaults |= Notification.DEFAULT_LIGHTS;
 				}
+				builder.setDefaults(defaults);
 				builder.setAutoCancel(true);
-
 				mNotificationManager.notify(1, builder.build());
 			}
-
-
 			Intent i = new Intent(GROWL_ACTION);
 			i.putExtra(EXTRA_TITLE, contentTitle);
 			i.putExtra(EXTRA_DESCRIPTION, contentText);
 			context.sendBroadcast(i);
-
 		}
-
-
 	}
-
 }
