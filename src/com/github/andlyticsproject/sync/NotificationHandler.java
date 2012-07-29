@@ -1,5 +1,6 @@
 package com.github.andlyticsproject.sync;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.AppStatsDiff;
@@ -100,6 +104,11 @@ public class NotificationHandler {
 			  builder.setSmallIcon(R.drawable.statusbar_andlytics);
 			  builder.setContentTitle(contentTitle);
 			  builder.setContentText(contentText);
+			  File iconFilePath = new File(context.getCacheDir(), diffs.get(0).getIconName());
+			  if (iconFilePath.exists()) {
+			    Bitmap bm = BitmapFactory.decodeFile(iconFilePath.getAbsolutePath());
+			    builder.setLargeIcon(bm);
+			  }
 			  BigTextStyle style = new BigTextStyle(builder);
 			  style.bigText(contentText);
 			  style.setBigContentTitle(contentTitle);
