@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.model;
 
 import java.text.ParseException;
@@ -40,9 +41,9 @@ public class Comment {
 		this.date = date;
 	}
 
-	public Date getDateObject(){
+	public Date getDateObject() {
 		Date result = null;
-		if(date != null) {
+		if (date != null) {
 			try {
 				result = format.parse(date);
 			} catch (ParseException e) {
@@ -68,21 +69,20 @@ public class Comment {
 		this.user = user;
 	}
 
-    public void setAppVersion(String appVersion) {
-        this.appVersion = appVersion;
-    }
+	public void setAppVersion(String appVersion) {
+		this.appVersion = appVersion;
+	}
 
-    public String getAppVersion() {
-        return appVersion;
-    }
+	public String getAppVersion() {
+		return appVersion;
+	}
 
-    public void setDevice(String device) {
-        this.device = device;
-    }
+	public void setDevice(String device) {
+		this.device = device;
+	}
 
-    public String getDevice() {
-        return device;
-    }
-
+	public String getDevice() {
+		return device;
+	}
 
 }

@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject;
 
 import android.content.Intent;
@@ -38,7 +39,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 	private ArrayList<CommentGroup> commentGroups;
 
-    private CommentsActivity context;
+	private CommentsActivity context;
 
 	public CommentsListAdapter(CommentsActivity activity) {
 		this.setCommentGroups(new ArrayList<CommentGroup>());
@@ -72,82 +73,78 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			holder = (ViewHolderChild) convertView.getTag();
 		}
 
-
 		final Comment comment = getChild(groupPosition, childPosition);
 		holder.text.setText(comment.getText());
 		holder.user.setText(comment.getUser());
 
 		String deviceText = "";
 
-		if(comment.getAppVersion() != null && comment.getAppVersion().length() > 0) {
-		    deviceText += "version " + comment.getAppVersion() + " ";
+		if (comment.getAppVersion() != null && comment.getAppVersion().length() > 0) {
+			deviceText += "version " + comment.getAppVersion() + " ";
 		}
 
-		if(comment.getDevice() != null && comment.getDevice().length() > 0) {
+		if (comment.getDevice() != null && comment.getDevice().length() > 0) {
 
-		    if(deviceText.length() > 0) {
-		        deviceText += "on ";
-		    }
+			if (deviceText.length() > 0) {
+				deviceText += "on ";
+			}
 
-		    deviceText += "device: " + comment.getDevice();
+			deviceText += "device: " + comment.getDevice();
 		}
 
 		holder.device.setText(deviceText);
 
 		int rating = comment.getRating();
 		switch (rating) {
-		case 1:
-			holder.rating.setImageBitmap(ratingImage1);
-			break;
-		case 2:
-			holder.rating.setImageBitmap(ratingImage2);
-			break;
-		case 3:
-			holder.rating.setImageBitmap(ratingImage3);
-			break;
-		case 4:
-			holder.rating.setImageBitmap(ratingImage4);
-			break;
-		case 5:
-			holder.rating.setImageBitmap(ratingImage5);
-			break;
+			case 1:
+				holder.rating.setImageBitmap(ratingImage1);
+				break;
+			case 2:
+				holder.rating.setImageBitmap(ratingImage2);
+				break;
+			case 3:
+				holder.rating.setImageBitmap(ratingImage3);
+				break;
+			case 4:
+				holder.rating.setImageBitmap(ratingImage4);
+				break;
+			case 5:
+				holder.rating.setImageBitmap(ratingImage5);
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 
+		convertView.setOnLongClickListener(new OnLongClickListener() {
 
-        convertView.setOnLongClickListener(new OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
 
-            @Override
-            public boolean onLongClick(View v) {
+				String text = comment.getText();
 
-                String text = comment.getText();
+				String displayLanguage = Locale.getDefault().getLanguage();
 
-                String displayLanguage = Locale.getDefault().getLanguage();
+				String url = "http://translate.google.de/m/translate?hl=<<lang>>&vi=m&text=<<text>>&langpair=auto|<<lang>>";
 
-                String url = "http://translate.google.de/m/translate?hl=<<lang>>&vi=m&text=<<text>>&langpair=auto|<<lang>>";
+				try {
+					url = url.replaceAll("<<lang>>", URLEncoder.encode(displayLanguage, "UTF-8"));
+					url = url.replaceAll("<<text>>", URLEncoder.encode(text, "UTF-8"));
+					Log.d("CommentsTranslate", "lang: " + displayLanguage + " url: " + url);
 
-                try {
-                    url = url.replaceAll("<<lang>>", URLEncoder.encode(displayLanguage,"UTF-8"));
-                    url = url.replaceAll("<<text>>", URLEncoder.encode(text,"UTF-8"));
-                    Log.d("CommentsTranslate", "lang: " + displayLanguage + " url: " + url);
+					Intent i = new Intent(Intent.ACTION_VIEW);
+					i.setData(Uri.parse(url));
+					context.startActivity(i);
 
+					//                    TranslateDialog dialog = new TranslateDialog(context, text);
+					//                    dialog.show();
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
 
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(url));
-                    context.startActivity(i);
-
-//                    TranslateDialog dialog = new TranslateDialog(context, text);
-//                    dialog.show();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-
-                return true;
-            }
-        });
+				return true;
+			}
+		});
 
 		return convertView;
 

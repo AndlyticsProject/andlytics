@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.sync;
 
 import android.accounts.Account;
@@ -122,8 +123,8 @@ public class SyncAdapterService extends Service {
 		} catch (NoCookieSetException e) {
 			Log.e(TAG, "error during sync auth", e);
 		} catch (MultiAccountAcception e) {
-            Log.e(TAG, "error during sync auth", e);
-        }
+			Log.e(TAG, "error during sync auth", e);
+		}
 
 	}
 }

@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.sync;
 
 import java.io.File;
@@ -47,31 +48,31 @@ public class NotificationHandler {
 		for (int i = 0; i < diffs.size(); i++) {
 
 			AppStatsDiff diff = diffs.get(i);
-			if(!diff.isSkipNotification()) {
+			if (!diff.isSkipNotification()) {
 
-				if(diff.hasChanges()) {
+				if (diff.hasChanges()) {
 
 					List<String> changeProperties = new ArrayList<String>();
 
-					if(commentsEnabled && diff.getCommentsChange() != 0) {
+					if (commentsEnabled && diff.getCommentsChange() != 0) {
 						changeProperties.add(context.getString(R.string.comments));
 						number++;
 					}
-					if(ratingsEnabled && diff.getAvgRatingChange() != 0) {
+					if (ratingsEnabled && diff.getAvgRatingChange() != 0) {
 						changeProperties.add(context.getString(R.string.ratings));
 						number++;
 					}
-					if(downloadsEnabled && diff.getDownloadsChange() != 0) {
+					if (downloadsEnabled && diff.getDownloadsChange() != 0) {
 						changeProperties.add(context.getString(R.string.downloads));
 						number++;
 					}
 
-					if(changeProperties.size() > 0) {
+					if (changeProperties.size() > 0) {
 						String name = diff.getAppName();
 						name += " (";
 						for (int j = 0; j < changeProperties.size(); j++) {
 							name += changeProperties.get(j);
-							if(j < changeProperties.size() -1) {
+							if (j < changeProperties.size() - 1) {
 								name += ", ";
 							}
 
@@ -84,37 +85,36 @@ public class NotificationHandler {
 			}
 		}
 
-		if(appNameList.size() > 0) {
+		if (appNameList.size() > 0) {
 
 			for (int i = 0; i < appNameList.size(); i++) {
 				contentText += appNameList.get(i);
-				if(i < appNameList.size() -1) {
+				if (i < appNameList.size() - 1) {
 					contentText += ", ";
 				}
 			}
 
-
 			if (!AndlyticsApp.getInstance().isAppVisible() ||
-					!accountName.equals(Preferences.getAccountName(context)) || 
+					!accountName.equals(Preferences.getAccountName(context)) ||
 					Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_WHEN_ACCOUNT_VISISBLE)) {
 				// The user can choose not to see notifications if the current account is visible
 
-			  Builder builder = new NotificationCompat2.Builder(context);
-			  builder.setSmallIcon(R.drawable.statusbar_andlytics);
-			  builder.setContentTitle(contentTitle);
-			  builder.setContentText(contentText);
-			  File iconFilePath = new File(context.getCacheDir(), diffs.get(0).getIconName());
-			  if (iconFilePath.exists()) {
-			    Bitmap bm = BitmapFactory.decodeFile(iconFilePath.getAbsolutePath());
-			    builder.setLargeIcon(bm);
-			  }
-			  BigTextStyle style = new BigTextStyle(builder);
-			  style.bigText(contentText);
-			  style.setBigContentTitle(contentTitle);
-			  style.setSummaryText(accountName);
-			  builder.setStyle(style);
-			  builder.setWhen(System.currentTimeMillis());
-			  builder.setNumber(number);
+				Builder builder = new NotificationCompat2.Builder(context);
+				builder.setSmallIcon(R.drawable.statusbar_andlytics);
+				builder.setContentTitle(contentTitle);
+				builder.setContentText(contentText);
+				File iconFilePath = new File(context.getCacheDir(), diffs.get(0).getIconName());
+				if (iconFilePath.exists()) {
+					Bitmap bm = BitmapFactory.decodeFile(iconFilePath.getAbsolutePath());
+					builder.setLargeIcon(bm);
+				}
+				BigTextStyle style = new BigTextStyle(builder);
+				style.bigText(contentText);
+				style.setBigContentTitle(contentTitle);
+				style.setSummaryText(accountName);
+				builder.setStyle(style);
+				builder.setWhen(System.currentTimeMillis());
+				builder.setNumber(number);
 
 				Intent notificationIntent = new Intent(context, Main.class);
 				notificationIntent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
@@ -126,11 +126,11 @@ public class NotificationHandler {
 				builder.setTicker(contentTitle);
 
 				int defaults = 0;
-				if(soundEnabled) {
-				  defaults |= Notification.DEFAULT_SOUND;
+				if (soundEnabled) {
+					defaults |= Notification.DEFAULT_SOUND;
 				}
-				if(lightEnabled) {
-				  defaults |= Notification.DEFAULT_LIGHTS;
+				if (lightEnabled) {
+					defaults |= Notification.DEFAULT_LIGHTS;
 				}
 				builder.setDefaults(defaults);
 				builder.setAutoCancel(true);

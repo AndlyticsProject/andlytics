@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject;
 
 import java.io.BufferedReader;
@@ -103,7 +104,6 @@ public class DemoDataActivity extends BaseActivity {
 
 				publishProgress(i);
 			}
-
 
 			return null;
 		}

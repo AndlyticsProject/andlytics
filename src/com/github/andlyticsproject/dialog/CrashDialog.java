@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.dialog;
 
 import com.github.andlyticsproject.R;
@@ -32,7 +33,7 @@ public class CrashDialog extends Dialog {
 		private String negativeViewText;
 
 		private DialogInterface.OnClickListener positiveViewClickListener, negativeViewClickListener;
-        private int messageStringId;
+		private int messageStringId;
 
 		public CrashDialogBuilder(Context context) {
 			this.context = context;
@@ -181,8 +182,8 @@ public class CrashDialog extends Dialog {
 			// set the content message
 			if (message != null) {
 				((TextView) layout.findViewById(R.id.crash_dialog_text)).setText(message);
-			} else if ( messageStringId > 0) {
-			    ((TextView) layout.findViewById(R.id.crash_dialog_text)).setText(messageStringId);
+			} else if (messageStringId > 0) {
+				((TextView) layout.findViewById(R.id.crash_dialog_text)).setText(messageStringId);
 			}
 
 			dialog.setContentView(layout);

@@ -92,7 +92,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 		menu.clear();
 		getSupportMenuInflater().inflate(R.menu.comments_menu, menu);
 		if (refreshing)
-		  menu.findItem(R.id.itemCommentsmenuRefresh).setActionView(R.layout.action_bar_indeterminate_progress);
+			menu.findItem(R.id.itemCommentsmenuRefresh).setActionView(R.layout.action_bar_indeterminate_progress);
 		return true;
 	}
 

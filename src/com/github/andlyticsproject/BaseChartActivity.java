@@ -263,7 +263,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 	}
 
 	private final void updateTitleTextSwitcher(String string, Drawable image) {
-			getSupportActionBar().setTitle(string);
+		getSupportActionBar().setTitle(string);
 	}
 
 	@Override

@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject;
 
 import java.math.BigDecimal;
@@ -37,7 +38,6 @@ public class ContentAdapter {
 		this.context = ctx;
 	}
 
-
 	public AdmobList getAdmobStats(String siteId, Timeframe currentTimeFrame) {
 
 		AdmobList admobList = new AdmobList();
@@ -61,7 +61,7 @@ public class ContentAdapter {
 				AdmobTable.CONTENT_URI,
 				new String[] {
 
-				AdmobTable.KEY_ROWID, AdmobTable.KEY_SITE_ID, AdmobTable.KEY_REQUESTS,
+						AdmobTable.KEY_ROWID, AdmobTable.KEY_SITE_ID, AdmobTable.KEY_REQUESTS,
 						AdmobTable.KEY_HOUSEAD_REQUESTS, AdmobTable.KEY_INTERSTITIAL_REQUESTS,
 						AdmobTable.KEY_IMPRESSIONS, AdmobTable.KEY_FILL_RATE,
 						AdmobTable.KEY_HOUSEAD_FILL_RATE, AdmobTable.KEY_OVERALL_FILL_RATE,
@@ -69,7 +69,6 @@ public class ContentAdapter {
 						AdmobTable.KEY_ECPM, AdmobTable.KEY_REVENUE, AdmobTable.KEY_CPC_REVENUE,
 						AdmobTable.KEY_CPM_REVENUE, AdmobTable.KEY_EXCHANGE_DOWNLOADS,
 						AdmobTable.KEY_DATE
-
 
 				}, AdmobTable.KEY_SITE_ID + "='" + siteId + "'", null,
 				AdmobTable.KEY_DATE + " desc LIMIT " + limit + ""); // sort order -> new to old
@@ -152,7 +151,6 @@ public class ContentAdapter {
 		return admobList;
 	}
 
-
 	public void insertOrUpdateAdmobStats(Admob admob) {
 
 		ContentValues value = createAdmobContentValues(admob);
@@ -167,12 +165,9 @@ public class ContentAdapter {
 			context.getContentResolver().insert(AdmobTable.CONTENT_URI, value);
 		}
 
-
 	}
 
-
 	private long getAdmobStatsIdForDate(Date date, String siteId) {
-
 
 		long result = -1;
 
@@ -196,7 +191,6 @@ public class ContentAdapter {
 		return result;
 	}
 
-
 	public void bulkInsertAdmobStats(List<Admob> stats) {
 
 		List<ContentValues> values = new ArrayList<ContentValues>();
@@ -209,7 +203,6 @@ public class ContentAdapter {
 				values.toArray(new ContentValues[values.size()]));
 
 	}
-
 
 	private ContentValues createAdmobContentValues(Admob admob) {
 
@@ -332,7 +325,6 @@ public class ContentAdapter {
 		initialValues.put(AppInfoTable.KEY_APP_CATEGORY, -1);
 		initialValues.put(AppInfoTable.KEY_APP_VERSION_NAME, appInfo.getVersionName());
 
-
 		context.getContentResolver().insert(AppInfoTable.CONTENT_URI, initialValues);
 
 		return -1;
@@ -344,7 +336,6 @@ public class ContentAdapter {
 		return dateFormat.format(date);
 	}
 
-
 	private Date parseDate(String string) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
@@ -353,7 +344,6 @@ public class ContentAdapter {
 			return null;
 		}
 	}
-
 
 	public String getAppName(String packageName) {
 		if (packageName == null) {
@@ -434,7 +424,6 @@ public class ContentAdapter {
 		}
 		cursor.close();
 
-
 		for (AppInfo appInfo : appInfos) {
 
 			String packageName = appInfo.getPackageName();
@@ -459,7 +448,6 @@ public class ContentAdapter {
 
 		}
 
-
 		return appInfos;
 	}
 
@@ -471,7 +459,6 @@ public class ContentAdapter {
 		long result = -1;
 		long exisitingId = getAppInfoByPackageName(packageName);
 		if (exisitingId > -1) {
-
 
 			context.getContentResolver().update(AppInfoTable.CONTENT_URI, initialValues,
 					AppInfoTable.KEY_ROWID + "=" + exisitingId, null);
@@ -535,7 +522,6 @@ public class ContentAdapter {
 		return result;
 	}
 
-
 	public AppStatsList getStatsForApp(String packageName, Timeframe currentTimeFrame,
 			Boolean smoothEnabled) {
 
@@ -596,7 +582,6 @@ public class ContentAdapter {
 						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_5STARS)));
 				info.init();
 
-
 				result.add(info);
 
 			} while (cursor.moveToNext());
@@ -644,7 +629,6 @@ public class ContentAdapter {
 		for (int i = 0; i < missingAppStatsPositionOffest.size(); i++) {
 			result.add(missingAppStatsPositionOffest.get(i), missingAppStats.get(i));
 		}
-
 
 		// calculate daily downloads
 		int nullStartIndex = -1;
@@ -783,7 +767,6 @@ public class ContentAdapter {
 
 		}
 
-
 		if (result.size() > 0) {
 
 			AppStats first = result.get(0);
@@ -822,7 +805,6 @@ public class ContentAdapter {
 		return list;
 
 	}
-
 
 	public AppStats getLatestForApp(String packageName) {
 
@@ -919,7 +901,6 @@ public class ContentAdapter {
 
 			do {
 
-
 				Map<Integer, Integer> ratings = new TreeMap<Integer, Integer>();
 
 				int value1 = cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_1STARS));
@@ -930,11 +911,9 @@ public class ContentAdapter {
 				ratings.put(2, getDiff(prev2, value2));
 				prev2 = value2;
 
-
 				int value3 = cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_3STARS));
 				ratings.put(3, getDiff(prev3, value3));
 				prev3 = value3;
-
 
 				int value4 = cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_4STARS));
 				ratings.put(4, getDiff(prev4, value4));
@@ -943,7 +922,6 @@ public class ContentAdapter {
 				int value5 = cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_5STARS));
 				ratings.put(5, getDiff(prev5, value5));
 				prev5 = value5;
-
 
 				String dateString = cursor.getString(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE));
@@ -956,9 +934,7 @@ public class ContentAdapter {
 
 		cursor.close();
 
-
 		return result;
-
 
 	}
 
@@ -1097,12 +1073,11 @@ public class ContentAdapter {
 
 		for (String code : versionCodes) {
 
-
 			cursor = context.getContentResolver().query(
 					AppStatsTable.CONTENT_URI,
 					new String[] {
 
-					AppStatsTable.KEY_STATS_REQUESTDATE, AppStatsTable.KEY_STATS_VERSIONCODE },
+							AppStatsTable.KEY_STATS_REQUESTDATE, AppStatsTable.KEY_STATS_VERSIONCODE },
 					AppStatsTable.KEY_STATS_PACKAGENAME + "='" + packageName + "' and "
 							+ AppStatsTable.KEY_STATS_VERSIONCODE + "=" + code, null,
 					AppStatsTable.KEY_STATS_REQUESTDATE + " limit 1"); // sort order -> new to old
@@ -1126,6 +1101,5 @@ public class ContentAdapter {
 
 		return result;
 	}
-
 
 }

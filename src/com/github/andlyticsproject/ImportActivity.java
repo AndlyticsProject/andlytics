@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject;
 
 import java.io.File;
@@ -65,7 +66,6 @@ public class ImportActivity extends SherlockActivity {
 				finish();
 			}
 		});
-
 
 		View importButton = (View) this.findViewById(R.id.import_dialog_import_button);
 		importButton.setOnClickListener(new View.OnClickListener() {

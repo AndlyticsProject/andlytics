@@ -159,9 +159,9 @@ public class LoginActivity extends SherlockActivity {
 						syncHandler.setAutosyncPeriod(accountName, 0);
 					} else {
 						// If auto sync was on for the account, enable it again
-						syncHandler.setAutosyncPeriod(accountName, 
+						syncHandler.setAutosyncPeriod(accountName,
 								Preferences.isAutoSyncEnabled(LoginActivity.this, accountName) ?
-								Preferences.getAutoSyncPeriod(LoginActivity.this) : 0);
+										Preferences.getAutoSyncPeriod(LoginActivity.this) : 0);
 					}
 
 					if (manageAccountsMode && (accountName).equals(selectedAccount)) {
