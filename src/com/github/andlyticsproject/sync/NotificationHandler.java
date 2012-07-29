@@ -134,7 +134,7 @@ public class NotificationHandler {
 				}
 				builder.setDefaults(defaults);
 				builder.setAutoCancel(true);
-				mNotificationManager.notify(1, builder.build());
+				mNotificationManager.notify(accountName.hashCode(), builder.build());
 			}
 			Intent i = new Intent(GROWL_ACTION);
 			i.putExtra(EXTRA_TITLE, contentTitle);
