@@ -112,6 +112,17 @@ public class BaseDetailsActivity extends BaseActivity {
 		ratingsButton = findViewById(R.id.tabbar_button_ratings);
 		commentsButton = findViewById(R.id.tabbar_button_comments);
 		admobButton = findViewById(R.id.tabbar_button_back);
+		
+		// Check if AdMob is configured for this app
+		String currentAdmobAccount = null;
+		String currentSiteId = Preferences.getAdmobSiteId(this,	packageName);
+		if (currentSiteId != null) {
+			currentAdmobAccount = Preferences.getAdmobAccount(this,	currentSiteId);
+		}
+		boolean admobConfigured = currentAdmobAccount == null ? false : true;
+		if (!admobConfigured && Preferences.getHideAdmobForUnconfiguredApps(this)){
+			admobButton.setVisibility(View.GONE);
+		}
 
 		updateTabbarButtons();
 
