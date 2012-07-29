@@ -189,10 +189,12 @@ public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
 			}
 		} else {
 			if (AdmobRequest.ERROR_NETWORK_ERROR.equals(result)) {
-				Toast.makeText(AdmobAuthenticatorActivity.this, "Network error, try agian later..", Toast.LENGTH_SHORT).show();
+				Toast.makeText(AdmobAuthenticatorActivity.this, "Network error, try agian later..",
+						Toast.LENGTH_SHORT).show();
 			}
 			if (AdmobRequest.ERROR_RATE_LIMIT_EXCEEDED.equals(result)) {
-				Toast.makeText(AdmobAuthenticatorActivity.this, "AdMob rate limite excceded, try agian later..", Toast.LENGTH_LONG).show();
+				Toast.makeText(AdmobAuthenticatorActivity.this,
+						"AdMob rate limite excceded, try agian later..", Toast.LENGTH_LONG).show();
 			}
 			if (AdmobRequest.ERROR_REQUESET_INVALID.equals(result)) {
 				Toast.makeText(

@@ -10,12 +10,13 @@ public class AppInfoTable {
 	public static final String DATABASE_TABLE_NAME = "appinfo";
 	public static final String UNIQUE_PACKAGE_NAMES = "appinfo/unique-packages";
 
-	public static final Uri CONTENT_URI = Uri.parse("content://" + AndlyticsContentProvider.AUTHORITY + "/"
-			+ DATABASE_TABLE_NAME);
+	public static final Uri CONTENT_URI = Uri.parse("content://"
+			+ AndlyticsContentProvider.AUTHORITY + "/" + DATABASE_TABLE_NAME);
 	public static final Uri UNIQUE_PACAKGES_CONTENT_URI = Uri.parse("content://"
 			+ AndlyticsContentProvider.AUTHORITY + "/" + UNIQUE_PACKAGE_NAMES);
 
-	public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.andlytics." + DATABASE_TABLE_NAME;
+	public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.andlytics."
+			+ DATABASE_TABLE_NAME;
 
 	public static final String KEY_ROWID = "_id";
 	public static final String KEY_APP_PACKAGENAME = "packagename";
@@ -30,17 +31,12 @@ public class AppInfoTable {
 	public static final String KEY_APP_SKIP_NOTIFICATION = "skipnotification";
 	public static final String KEY_APP_VERSION_NAME = "versionname";
 
-	public static final String TABLE_CREATE_APPINFO = "create table " + DATABASE_TABLE_NAME + " (_id integer primary key autoincrement, "
-			+ KEY_APP_PACKAGENAME + " text not null,"
-			+ KEY_APP_ACCOUNT + " text not null,"
-			+ KEY_APP_LASTUPDATE + " date,"
-			+ KEY_APP_NAME + " text,"
-			+ KEY_APP_ICONURL + " text,"
-			+ KEY_APP_CATEGORY + " text,"
-			+ KEY_APP_PUBLISHSTATE + " integer,"
-			+ KEY_APP_GHOST + " integer,"
-			+ KEY_APP_RATINGS_EXPANDED + " integer,"
-			+ KEY_APP_SKIP_NOTIFICATION + " integer,"
+	public static final String TABLE_CREATE_APPINFO = "create table " + DATABASE_TABLE_NAME
+			+ " (_id integer primary key autoincrement, " + KEY_APP_PACKAGENAME + " text not null,"
+			+ KEY_APP_ACCOUNT + " text not null," + KEY_APP_LASTUPDATE + " date," + KEY_APP_NAME
+			+ " text," + KEY_APP_ICONURL + " text," + KEY_APP_CATEGORY + " text,"
+			+ KEY_APP_PUBLISHSTATE + " integer," + KEY_APP_GHOST + " integer,"
+			+ KEY_APP_RATINGS_EXPANDED + " integer," + KEY_APP_SKIP_NOTIFICATION + " integer,"
 			+ KEY_APP_VERSION_NAME + " text)";
 
 	public static HashMap<String, String> PROJECTION_MAP;
@@ -58,8 +54,10 @@ public class AppInfoTable {
 		PROJECTION_MAP.put(AppInfoTable.KEY_APP_PUBLISHSTATE, AppInfoTable.KEY_APP_PUBLISHSTATE);
 		PROJECTION_MAP.put(AppInfoTable.KEY_APP_ICONURL, AppInfoTable.KEY_APP_ICONURL);
 		PROJECTION_MAP.put(AppInfoTable.KEY_APP_GHOST, AppInfoTable.KEY_APP_GHOST);
-		PROJECTION_MAP.put(AppInfoTable.KEY_APP_RATINGS_EXPANDED, AppInfoTable.KEY_APP_RATINGS_EXPANDED);
-		PROJECTION_MAP.put(AppInfoTable.KEY_APP_SKIP_NOTIFICATION, AppInfoTable.KEY_APP_SKIP_NOTIFICATION);
+		PROJECTION_MAP.put(AppInfoTable.KEY_APP_RATINGS_EXPANDED,
+				AppInfoTable.KEY_APP_RATINGS_EXPANDED);
+		PROJECTION_MAP.put(AppInfoTable.KEY_APP_SKIP_NOTIFICATION,
+				AppInfoTable.KEY_APP_SKIP_NOTIFICATION);
 		PROJECTION_MAP.put(AppInfoTable.KEY_APP_VERSION_NAME, AppInfoTable.KEY_APP_VERSION_NAME);
 
 		PACKAGE_NAMES_MAP = new HashMap<String, String>();

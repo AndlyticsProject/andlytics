@@ -152,7 +152,8 @@ public class Preferences {
 
 	public static int getAppVersionCode(Context context) {
 		try {
-			PackageInfo pinfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			PackageInfo pinfo = context.getPackageManager().getPackageInfo(
+					context.getPackageName(), 0);
 			return pinfo.versionCode;
 		} catch (NameNotFoundException e) {
 			Log.e(AndlyticsApp.class.getSimpleName(), "unable to read version code", e);
@@ -167,7 +168,8 @@ public class Preferences {
 	}
 
 	public static Timeframe getChartTimeframe(Context activity) {
-		return Timeframe.valueOf(getSettings(activity).getString(CHART_TIMEFRAME, Timeframe.LAST_THIRTY_DAYS.name()));
+		return Timeframe.valueOf(getSettings(activity).getString(CHART_TIMEFRAME,
+				Timeframe.LAST_THIRTY_DAYS.name()));
 	}
 
 	public static Boolean getChartSmooth(Context context) {
@@ -197,7 +199,8 @@ public class Preferences {
 	}
 
 	public static StatsMode getStatsMode(Context activity) {
-		return StatsMode.valueOf(getSettings(activity).getString(STATS_MODE, StatsMode.PERCENT.name()));
+		return StatsMode.valueOf(getSettings(activity).getString(STATS_MODE,
+				StatsMode.PERCENT.name()));
 	}
 
 	public static boolean getNotificationPerf(Context context, String prefName) {
@@ -283,7 +286,8 @@ public class Preferences {
 	}
 
 	public static Timeframe getAdmobTimeframe(Context context) {
-		return Timeframe.valueOf(getSettings(context).getString(ADMOB_TIMEFRAME, Timeframe.LAST_THIRTY_DAYS.name()));
+		return Timeframe.valueOf(getSettings(context).getString(ADMOB_TIMEFRAME,
+				Timeframe.LAST_THIRTY_DAYS.name()));
 	}
 
 	public static void saveAdmobTimeframe(Timeframe value, Context context) {

@@ -64,7 +64,8 @@ public class AutosyncHandlerLevel7 implements AutosyncHandler {
 
 		} else {
 			Log.d(TAG, "create alarm for:: " + pendingIntent);
-			alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), periodInSeconds * 1000, pendingIntent);
+			alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+					SystemClock.elapsedRealtime(), periodInSeconds * 1000, pendingIntent);
 			if (previousPeriod == 0) {
 				ContentResolver.setSyncAutomatically(account, Constants.ACCOUNT_AUTHORITY, true);
 			}

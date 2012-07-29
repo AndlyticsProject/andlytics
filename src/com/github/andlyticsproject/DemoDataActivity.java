@@ -85,16 +85,11 @@ public class DemoDataActivity extends BaseActivity {
 				downloadInfo.setTotalDownloads(count);
 
 				downloadInfo.setRating(
-						(int) ((i + 1) * 10
-								* ((float) new Random().nextInt(100)) / 100.0),
-						(int) ((i + 1) * 10
-								* ((float) new Random().nextInt(100)) / 100.0),
-						(int) ((i + 1) * 10
-								* ((float) new Random().nextInt(100)) / 100.0),
-						(int) ((i + 1) * 10
-								* ((float) new Random().nextInt(100)) / 100.0),
-						(int) ((i + 1) * 10
-								* ((float) new Random().nextInt(100)) / 100.0));
+						(int) ((i + 1) * 10 * ((float) new Random().nextInt(100)) / 100.0),
+						(int) ((i + 1) * 10 * ((float) new Random().nextInt(100)) / 100.0),
+						(int) ((i + 1) * 10 * ((float) new Random().nextInt(100)) / 100.0),
+						(int) ((i + 1) * 10 * ((float) new Random().nextInt(100)) / 100.0),
+						(int) ((i + 1) * 10 * ((float) new Random().nextInt(100)) / 100.0));
 
 				info.setLatestStats(downloadInfo);
 

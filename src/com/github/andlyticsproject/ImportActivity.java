@@ -133,8 +133,7 @@ public class ImportActivity extends SherlockActivity {
 			List<String> pacakgeNames = db.getPackagesForAccount(accountName);
 			try {
 				fileNames = StatsCsvReaderWriter.getImportFileNamesFromZip(accountName,
-						pacakgeNames,
-						zipFilename);
+						pacakgeNames, zipFilename);
 
 				return true;
 			} catch (ServiceExceptoin e) {

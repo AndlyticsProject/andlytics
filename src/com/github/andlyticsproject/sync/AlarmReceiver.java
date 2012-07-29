@@ -27,10 +27,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 		final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
 		for (Account account : accounts) {
 
-			boolean syncAutomatically = ContentResolver.getSyncAutomatically(account, Constants.ACCOUNT_AUTHORITY);
+			boolean syncAutomatically = ContentResolver.getSyncAutomatically(account,
+					Constants.ACCOUNT_AUTHORITY);
 			if (syncAutomatically) {
 				Bundle extras = new Bundle();
-				Log.d(TAG, "requesting sync for " + account.name + " now! :: " + new Date(System.currentTimeMillis()).toGMTString());
+				Log.d(TAG,
+						"requesting sync for " + account.name + " now! :: "
+								+ new Date(System.currentTimeMillis()).toGMTString());
 				ContentResolver.requestSync(account, Constants.ACCOUNT_AUTHORITY, extras);
 			} else {
 				Log.d(TAG, "auto sync disabled for account :: " + account.name);

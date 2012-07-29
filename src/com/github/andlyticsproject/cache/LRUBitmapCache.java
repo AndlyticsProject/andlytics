@@ -28,10 +28,8 @@ public class LRUBitmapCache {
 	 */
 	public LRUBitmapCache(int cacheSize) {
 		this.cacheSize = cacheSize;
-		int hashTableCapacity = (int) FloatMath
-				.ceil(cacheSize / hashTableLoadFactor) + 1;
-		map = new LinkedHashMap<String, Bitmap>(hashTableCapacity, hashTableLoadFactor,
-				true) {
+		int hashTableCapacity = (int) FloatMath.ceil(cacheSize / hashTableLoadFactor) + 1;
+		map = new LinkedHashMap<String, Bitmap>(hashTableCapacity, hashTableLoadFactor, true) {
 			// (an anonymous inner class)
 			private static final long serialVersionUID = 1;
 
@@ -40,7 +38,8 @@ public class LRUBitmapCache {
 				boolean result = size() > LRUBitmapCache.this.cacheSize;
 				if (result) {
 					if (eldest.getValue() != null) {
-						Log.d(TAG, "Recycling bitmap: " + eldest.getKey() + " current cache size: " + size());
+						Log.d(TAG, "Recycling bitmap: " + eldest.getKey() + " current cache size: "
+								+ size());
 					}
 				}
 				return result;

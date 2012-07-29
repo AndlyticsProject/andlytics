@@ -53,8 +53,8 @@ public class Rotate3dAnimation extends Animation {
 	 * @param reverse true if the translation should be reversed, false otherwise
 	 * @param viewSwitcherListener
 	 */
-	public Rotate3dAnimation(float fromDegrees, float toDegrees,
-			float centerX, float centerY, float depthZ, boolean reverse, ViewSwitcherListener viewSwitcherListener) {
+	public Rotate3dAnimation(float fromDegrees, float toDegrees, float centerX, float centerY,
+			float depthZ, boolean reverse, ViewSwitcherListener viewSwitcherListener) {
 		mFromDegrees = fromDegrees;
 		mToDegrees = toDegrees;
 		mCenterX = centerX;

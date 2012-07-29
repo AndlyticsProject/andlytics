@@ -33,10 +33,8 @@ public class AppStatsDiff {
 
 	public boolean hasChanges() {
 
-		if (commentsChange == 0 &&
-				downloadsChange == 0 &&
-				activeInstallsChange == 0 &&
-				avgRatingChange == 0.0f) {
+		if (commentsChange == 0 && downloadsChange == 0 && activeInstallsChange == 0
+				&& avgRatingChange == 0.0f) {
 			return false;
 		} else {
 			return true;

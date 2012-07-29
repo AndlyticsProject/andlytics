@@ -52,13 +52,15 @@ public class Chart extends AbstractChart {
 
 	private static final int MAX_BAR_VALUES = Integer.MAX_VALUE;
 
-	public View buildBarChart(Context context, Object[] appstats, ValueCallbackHander handler, double heighestValue, double lowestValue) {
+	public View buildBarChart(Context context, Object[] appstats, ValueCallbackHander handler,
+			double heighestValue, double lowestValue) {
 
 		String[] titles = new String[] { "" };
 
 		List<Object> statsForApp = Arrays.asList(appstats);
 		if (statsForApp.size() > MAX_BAR_VALUES) {
-			statsForApp = statsForApp.subList(statsForApp.size() - MAX_BAR_VALUES, statsForApp.size());
+			statsForApp = statsForApp.subList(statsForApp.size() - MAX_BAR_VALUES,
+					statsForApp.size());
 		}
 
 		// styling
@@ -79,7 +81,8 @@ public class Chart extends AbstractChart {
 			dates.add(getDateString(handler.getDate(appInfo)));
 
 			if (i == nextXLabelPrint) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(Preferences.getDateFormatShort(context));
+				SimpleDateFormat dateFormat = new SimpleDateFormat(
+						Preferences.getDateFormatShort(context));
 				renderer.addTextLabel(i, dateFormat.format(handler.getDate(appInfo)));
 				nextXLabelPrint += xLabelDistance;
 			}
@@ -121,7 +124,8 @@ public class Chart extends AbstractChart {
 		}
 
 		// settings
-		setChartSettings(renderer, "", "", "", 0, statsForApp.size(), valueDistanceBottom, valueDistanceTop, Color.LTGRAY, Color.BLACK);
+		setChartSettings(renderer, "", "", "", 0, statsForApp.size(), valueDistanceBottom,
+				valueDistanceTop, Color.LTGRAY, Color.BLACK);
 
 		renderer.setYLabels(7);
 		renderer.setXLabels(-1);
@@ -131,7 +135,8 @@ public class Chart extends AbstractChart {
 		renderer.setAntialiasing(true);
 		renderer.setLabelsTextSize(12);
 
-		return ChartFactory.getBarChartView(context, buildBarDataset(titles, values), renderer, Type.DEFAULT);
+		return ChartFactory.getBarChartView(context, buildBarDataset(titles, values), renderer,
+				Type.DEFAULT);
 
 	}
 
@@ -219,8 +224,8 @@ public class Chart extends AbstractChart {
 
 		// settings
 		setChartSettings(renderer, "", "", "", datesArray[0].getTime() - dateDistance,
-				datesArray[datesArray.length - 1].getTime() + dateDistance, valueDistanceBottom, valueDistanceTop,
-				Color.LTGRAY, Color.BLACK);
+				datesArray[datesArray.length - 1].getTime() + dateDistance, valueDistanceBottom,
+				valueDistanceTop, Color.LTGRAY, Color.BLACK);
 
 		renderer.setYLabels(5);
 		renderer.setXLabels(10);
@@ -230,7 +235,8 @@ public class Chart extends AbstractChart {
 		renderer.setAntialiasing(true);
 		renderer.setLabelsTextSize(12);
 
-		return ChartFactory.getTimeChartView(context, buildDateDataset(titles, dateArrayList, values), renderer,
+		return ChartFactory.getTimeChartView(context,
+				buildDateDataset(titles, dateArrayList, values), renderer,
 				Preferences.getDateFormatShort(context));
 
 	}

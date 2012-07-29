@@ -27,7 +27,8 @@ public class AutosyncHandlerLevel8 implements AutosyncHandler {
 
 		Account account = new Account(accountname, Constants.ACCOUNT_TYPE_GOOGLE);
 		if (ContentResolver.getSyncAutomatically(account, Constants.ACCOUNT_AUTHORITY)) {
-			List<PeriodicSync> periodicSyncs = ContentResolver.getPeriodicSyncs(account, Constants.ACCOUNT_AUTHORITY);
+			List<PeriodicSync> periodicSyncs = ContentResolver.getPeriodicSyncs(account,
+					Constants.ACCOUNT_AUTHORITY);
 			for (PeriodicSync periodicSync : periodicSyncs) {
 				result = (int) periodicSync.period;
 				break;

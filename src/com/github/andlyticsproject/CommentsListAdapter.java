@@ -44,17 +44,22 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	public CommentsListAdapter(CommentsActivity activity) {
 		this.setCommentGroups(new ArrayList<CommentGroup>());
 		this.layoutInflater = activity.getLayoutInflater();
-		this.ratingImage1 = ((BitmapDrawable) activity.getResources().getDrawable(R.drawable.rating_1)).getBitmap();
-		this.ratingImage2 = ((BitmapDrawable) activity.getResources().getDrawable(R.drawable.rating_2)).getBitmap();
-		this.ratingImage3 = ((BitmapDrawable) activity.getResources().getDrawable(R.drawable.rating_3)).getBitmap();
-		this.ratingImage4 = ((BitmapDrawable) activity.getResources().getDrawable(R.drawable.rating_4)).getBitmap();
-		this.ratingImage5 = ((BitmapDrawable) activity.getResources().getDrawable(R.drawable.rating_5)).getBitmap();
+		this.ratingImage1 = ((BitmapDrawable) activity.getResources().getDrawable(
+				R.drawable.rating_1)).getBitmap();
+		this.ratingImage2 = ((BitmapDrawable) activity.getResources().getDrawable(
+				R.drawable.rating_2)).getBitmap();
+		this.ratingImage3 = ((BitmapDrawable) activity.getResources().getDrawable(
+				R.drawable.rating_3)).getBitmap();
+		this.ratingImage4 = ((BitmapDrawable) activity.getResources().getDrawable(
+				R.drawable.rating_4)).getBitmap();
+		this.ratingImage5 = ((BitmapDrawable) activity.getResources().getDrawable(
+				R.drawable.rating_5)).getBitmap();
 		this.context = activity;
 	}
 
 	@Override
-	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView,
-			ViewGroup parent) {
+	public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
+			View convertView, ViewGroup parent) {
 
 		ViewHolderChild holder;
 
@@ -65,7 +70,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			holder.text = (TextView) convertView.findViewById(R.id.comments_list_item_text);
 			holder.user = (TextView) convertView.findViewById(R.id.comments_list_item_username);
 			holder.device = (TextView) convertView.findViewById(R.id.comments_list_item_device);
-			holder.rating = (ImageView) convertView.findViewById(R.id.comments_list_item_app_ratingbar);
+			holder.rating = (ImageView) convertView
+					.findViewById(R.id.comments_list_item_app_ratingbar);
 
 			convertView.setTag(holder);
 		} else {
@@ -151,7 +157,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	}
 
 	@Override
-	public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+	public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
+			ViewGroup parent) {
 
 		ViewHolderGroup holder;
 

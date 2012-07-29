@@ -30,18 +30,17 @@ public final class DataLoader {
 	 * @throws IOException
 	 *             if errors occur while reading the changelog file
 	 */
-	public static String loadData(final Context context,
-			final String ressourceName) throws IOException {
+	public static String loadData(final Context context, final String ressourceName)
+			throws IOException {
 		int resourceIdentifier = context
 				.getApplicationContext()
 				.getResources()
 				.getIdentifier(ressourceName, "raw",
 						context.getApplicationContext().getPackageName());
 		if (resourceIdentifier != 0) {
-			InputStream inputStream = context.getApplicationContext()
-					.getResources().openRawResource(resourceIdentifier);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					inputStream, "UTF-8"));
+			InputStream inputStream = context.getApplicationContext().getResources()
+					.openRawResource(resourceIdentifier);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 			String line;
 			StringBuffer data = new StringBuffer();
 			while ((line = reader.readLine()) != null) {

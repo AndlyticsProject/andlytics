@@ -103,16 +103,13 @@ public class ChartListAdapter extends BaseChartListAdapter {
 	}
 
 	@Override
-	public int getNumPages()
-	{
+	public int getNumPages() {
 		return 2;
 	}
 
 	@Override
-	public int getNumCharts(int page) throws IndexOutOfBoundsException
-	{
-		switch (ChartSet.values()[page])
-		{
+	public int getNumCharts(int page) throws IndexOutOfBoundsException {
+		switch (ChartSet.values()[page]) {
 			case DOWNLOADS:
 				return 5;
 			case RATINGS:
@@ -126,8 +123,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 	}
 
 	@Override
-	public String getChartTitle(int page, int column)
-			throws IndexOutOfBoundsException {
+	public String getChartTitle(int page, int column) throws IndexOutOfBoundsException {
 		if (column == DATE) {
 			return "";
 		}
@@ -168,8 +164,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 			}
 				break;
 		}
-		throw new IndexOutOfBoundsException("page=" + page + " columnt="
-				+ column);
+		throw new IndexOutOfBoundsException("page=" + page + " columnt=" + column);
 
 	}
 
@@ -186,21 +181,18 @@ public class ChartListAdapter extends BaseChartListAdapter {
 
 	@Override
 	public void updateChartValue(int position, int page, int column, TextView tv)
-			throws IndexOutOfBoundsException
-	{
+			throws IndexOutOfBoundsException {
 		AppStats appInfo = getItem(position);
-		if (column == DATE)
-		{
+		if (column == DATE) {
 			tv.setText(dateFormat.format(appInfo.getRequestDate()));
 			return;
 		}
-		int textColor = versionUpdateDates.contains(appInfo.getRequestDate()) ? RED_TEXT : BLACK_TEXT;
-		switch (ChartSet.values()[page])
-		{
+		int textColor = versionUpdateDates.contains(appInfo.getRequestDate()) ? RED_TEXT
+				: BLACK_TEXT;
+		switch (ChartSet.values()[page]) {
 			case DOWNLOADS: {
 
-				switch (column)
-				{
+				switch (column) {
 					case TOTAL_DOWNLAODS:
 						tv.setText(appInfo.getTotalDownloads() + "");
 						tv.setTextColor(textColor);
@@ -222,8 +214,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 				break;
 			case RATINGS: {
 
-				switch (column)
-				{
+				switch (column) {
 					case AVG_RATING:
 						tv.setText(appInfo.getAvgRatingString());
 						tv.setTextColor(textColor);
@@ -306,15 +297,12 @@ public class ChartListAdapter extends BaseChartListAdapter {
 
 	@Override
 	protected View buildChart(Context context, Chart baseChart, List<?> statsForApp, int page,
-			int column) throws IndexOutOfBoundsException
-	{
+			int column) throws IndexOutOfBoundsException {
 		//    	Log.i(LOG_TAG,"buildChart p="+page+" c="+column);
 		ValueCallbackHander handler = null;
-		switch (ChartSet.values()[page])
-		{
+		switch (ChartSet.values()[page]) {
 			case DOWNLOADS: {
-				switch (column)
-				{
+				switch (column) {
 					case TOTAL_DOWNLAODS:
 
 						handler = new DevConValueCallbackHander() {
@@ -333,7 +321,8 @@ public class ChartListAdapter extends BaseChartListAdapter {
 								return ((AppStats) appInfo).getDailyDownloads();
 							}
 						};
-						return baseChart.buildBarChart(context, statsForApp.toArray(), handler, Integer.MIN_VALUE, 0);
+						return baseChart.buildBarChart(context, statsForApp.toArray(), handler,
+								Integer.MIN_VALUE, 0);
 
 					case ACTIVE_INSTALLS_TOTAL:
 						handler = new DevConValueCallbackHander() {
@@ -359,8 +348,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 				break;
 
 			case RATINGS: {
-				switch (column)
-				{
+				switch (column) {
 					case AVG_RATING:
 
 						handler = new DevConValueCallbackHander() {
@@ -379,7 +367,8 @@ public class ChartListAdapter extends BaseChartListAdapter {
 								return ((AppStats) appInfo).getRating1Diff();
 							}
 						};
-						return baseChart.buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
+						return baseChart.buildBarChart(context, statsForApp.toArray(), handler,
+								heighestRatingChange, lowestRatingChange);
 
 					case RATINGS_2:
 
@@ -389,7 +378,8 @@ public class ChartListAdapter extends BaseChartListAdapter {
 								return ((AppStats) appInfo).getRating2Diff();
 							}
 						};
-						return baseChart.buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
+						return baseChart.buildBarChart(context, statsForApp.toArray(), handler,
+								heighestRatingChange, lowestRatingChange);
 					case RATINGS_3:
 
 						handler = new DevConValueCallbackHander() {
@@ -398,7 +388,8 @@ public class ChartListAdapter extends BaseChartListAdapter {
 								return ((AppStats) appInfo).getRating3Diff();
 							}
 						};
-						return baseChart.buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
+						return baseChart.buildBarChart(context, statsForApp.toArray(), handler,
+								heighestRatingChange, lowestRatingChange);
 					case RATINGS_4:
 
 						handler = new DevConValueCallbackHander() {
@@ -407,7 +398,8 @@ public class ChartListAdapter extends BaseChartListAdapter {
 								return ((AppStats) appInfo).getRating4Diff();
 							}
 						};
-						return baseChart.buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
+						return baseChart.buildBarChart(context, statsForApp.toArray(), handler,
+								heighestRatingChange, lowestRatingChange);
 					case RATINGS_5:
 
 						handler = new DevConValueCallbackHander() {
@@ -416,7 +408,8 @@ public class ChartListAdapter extends BaseChartListAdapter {
 								return ((AppStats) appInfo).getRating5Diff();
 							}
 						};
-						return baseChart.buildBarChart(context, statsForApp.toArray(), handler, heighestRatingChange, lowestRatingChange);
+						return baseChart.buildBarChart(context, statsForApp.toArray(), handler,
+								heighestRatingChange, lowestRatingChange);
 				}
 
 			}
@@ -425,27 +418,22 @@ public class ChartListAdapter extends BaseChartListAdapter {
 		throw new IndexOutOfBoundsException("page=" + page + " columnt=" + column);
 	}
 
-	public void setHeighestRatingChange(Integer heighestRatingChange)
-	{
+	public void setHeighestRatingChange(Integer heighestRatingChange) {
 		this.heighestRatingChange = heighestRatingChange;
 	}
 
-	public void setLowestRatingChange(Integer lowestRatingChange)
-	{
+	public void setLowestRatingChange(Integer lowestRatingChange) {
 		this.lowestRatingChange = lowestRatingChange;
 	}
 
 	@Override
 	protected Drawable getChartTitleDrawable(int page, int column) {
-		if (column == DATE)
-		{
+		if (column == DATE) {
 			return null;
 		}
-		switch (ChartSet.values()[page])
-		{
+		switch (ChartSet.values()[page]) {
 			case DOWNLOADS: {
-				switch (column)
-				{
+				switch (column) {
 					case TOTAL_DOWNLAODS:
 					case ACTIVE_INSTALLS_TOTAL:
 					case TOTAL_DOWNLAODS_BY_DAY:
@@ -455,8 +443,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 			}
 				break;
 			case RATINGS: {
-				switch (column)
-				{
+				switch (column) {
 					case AVG_RATING:
 						return null;
 

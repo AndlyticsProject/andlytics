@@ -34,26 +34,22 @@ public final class ChangelogBuilder {
 	 *            the listener to be set for the clickevent of the 'OK' button
 	 * @return the 'Changelog' dialog
 	 */
-	public static AlertDialog create(final Context context,
-			final Dialog.OnClickListener listener) {
+	public static AlertDialog create(final Context context, final Dialog.OnClickListener listener) {
 
-		View view = LayoutInflater.from(context).inflate(R.layout.changelog,
-				null);
+		View view = LayoutInflater.from(context).inflate(R.layout.changelog, null);
 		WebView webView = (WebView) view.findViewById(R.id.changelogcontent);
 
 		try {
-			webView.loadData(DataLoader.loadData(context, "changelog"),
-					"text/html", "UTF-8");
+			webView.loadData(DataLoader.loadData(context, "changelog"), "text/html", "UTF-8");
 		} catch (IOException ioe) {
 			Log.e(TAG, "Error reading changelog file!", ioe);
 		}
 
 		return new AlertDialog.Builder(context)
 				.setTitle(
-						context.getString(R.string.changelog_title)
-								+ "\n" + context.getString(R.string.app_name)
-								+ " v" + Utils.getActualVersionName(context))
-				.setIcon(R.drawable.icon).setView(view)
-				.setPositiveButton(android.R.string.ok, listener).create();
+						context.getString(R.string.changelog_title) + "\n"
+								+ context.getString(R.string.app_name) + " v"
+								+ Utils.getActualVersionName(context)).setIcon(R.drawable.icon)
+				.setView(view).setPositiveButton(android.R.string.ok, listener).create();
 	}
 }

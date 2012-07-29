@@ -79,7 +79,8 @@ public class AdmobAuthenticationUtilities {
 	 * @return boolean The boolean result indicating whether the user was
 	 *         successfully authenticated.
 	 */
-	public static String authenticate(String username, String password, Handler handler, final Context context) {
+	public static String authenticate(String username, String password, Handler handler,
+			final Context context) {
 
 		try {
 			String token = AdmobRequest.login(username, password);
@@ -141,8 +142,8 @@ public class AdmobAuthenticationUtilities {
 	 *            The caller Activity's context
 	 * @return Thread The thread on which the network mOperations are executed.
 	 */
-	public static Thread attemptAuth(final String username, final String password, final Handler handler,
-			final Context context) {
+	public static Thread attemptAuth(final String username, final String password,
+			final Handler handler, final Context context) {
 		final Runnable runnable = new Runnable() {
 			public void run() {
 				authenticate(username, password, handler, context);
@@ -180,13 +181,16 @@ public class AdmobAuthenticationUtilities {
 		return token;
 	}
 
-	protected static String authenticateAccount(final AccountManager manager, final Account account, Context context) {
+	protected static String authenticateAccount(final AccountManager manager,
+			final Account account, Context context) {
 
 		String token = null;
 
 		Bundle bundle;
 		try {
-			bundle = manager.getAuthToken(account, Constants.AUTHTOKEN_TYPE_ADMOB, true, null, null).getResult();
+			bundle = manager
+					.getAuthToken(account, Constants.AUTHTOKEN_TYPE_ADMOB, true, null, null)
+					.getResult();
 
 			if (bundle.containsKey(AccountManager.KEY_INTENT)) {
 
@@ -199,7 +203,8 @@ public class AdmobAuthenticationUtilities {
 					intent.setFlags(flags);
 					((Activity) context).startActivityForResult(intent, REQUEST_AUTHENTICATE);
 				} else {
-					Log.e(TAG, "Got admob KEY_INTENT to ask user for permission but context is not an activity");
+					Log.e(TAG,
+							"Got admob KEY_INTENT to ask user for permission but context is not an activity");
 				}
 
 				token = AdmobRequest.ERROR_ASK_USER_PASSWORD;

@@ -132,15 +132,13 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 
 			for (i = 0; i < maxColumns; i++) {
 				holder.fields[i] = createTextView("", false, i > 0);
-				if (i > 0)
-				{
+				if (i > 0) {
 					holder.fields[i].setOnClickListener(columnClickListener);
 					holder.fields[i].setTag(i);
 				}
 				((ViewGroup) convertView).addView(holder.fields[i]);
 			}
-			if (usesSmooth)
-			{
+			if (usesSmooth) {
 				holder.fields[i] = createTextView("*", false, false);
 				((ViewGroup) convertView).addView(holder.fields[i], 1);
 			}
@@ -166,8 +164,8 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 			updateChartValue(position, currentPage, i, holder.fields[i]);
 		holder.fields[currentColumn].setTypeface(typeface, Typeface.BOLD);
 		if (usesSmooth) {
-			holder.fields[holder.fields.length - 1].setVisibility(isSmothValue(currentPage, position) ? View.VISIBLE
-					: View.INVISIBLE);
+			holder.fields[holder.fields.length - 1].setVisibility(isSmothValue(currentPage,
+					position) ? View.VISIBLE : View.INVISIBLE);
 		}
 
 		return convertView;

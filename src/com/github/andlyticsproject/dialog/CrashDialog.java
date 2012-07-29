@@ -32,7 +32,8 @@ public class CrashDialog extends Dialog {
 		private String positiveViewText;
 		private String negativeViewText;
 
-		private DialogInterface.OnClickListener positiveViewClickListener, negativeViewClickListener;
+		private DialogInterface.OnClickListener positiveViewClickListener,
+				negativeViewClickListener;
 		private int messageStringId;
 
 		public CrashDialogBuilder(Context context) {
@@ -90,7 +91,8 @@ public class CrashDialog extends Dialog {
 		 * @param listener
 		 * @return
 		 */
-		public CrashDialogBuilder setPositiveButton(int positiveViewText, DialogInterface.OnClickListener listener) {
+		public CrashDialogBuilder setPositiveButton(int positiveViewText,
+				DialogInterface.OnClickListener listener) {
 			this.positiveViewText = (String) context.getText(positiveViewText);
 			this.positiveViewClickListener = listener;
 			return this;
@@ -103,7 +105,8 @@ public class CrashDialog extends Dialog {
 		 * @param listener
 		 * @return
 		 */
-		public CrashDialogBuilder setPositiveButton(String positiveViewText, DialogInterface.OnClickListener listener) {
+		public CrashDialogBuilder setPositiveButton(String positiveViewText,
+				DialogInterface.OnClickListener listener) {
 			this.positiveViewText = positiveViewText;
 			this.positiveViewClickListener = listener;
 			return this;
@@ -116,7 +119,8 @@ public class CrashDialog extends Dialog {
 		 * @param listener
 		 * @return
 		 */
-		public CrashDialogBuilder setNegativeButton(int negativeViewText, DialogInterface.OnClickListener listener) {
+		public CrashDialogBuilder setNegativeButton(int negativeViewText,
+				DialogInterface.OnClickListener listener) {
 			this.negativeViewText = (String) context.getText(negativeViewText);
 			this.negativeViewClickListener = listener;
 			return this;
@@ -129,7 +133,8 @@ public class CrashDialog extends Dialog {
 		 * @param listener
 		 * @return
 		 */
-		public CrashDialogBuilder setNegativeButton(String negativeViewText, DialogInterface.OnClickListener listener) {
+		public CrashDialogBuilder setNegativeButton(String negativeViewText,
+				DialogInterface.OnClickListener listener) {
 			this.negativeViewText = negativeViewText;
 			this.negativeViewClickListener = listener;
 			return this;
@@ -140,23 +145,27 @@ public class CrashDialog extends Dialog {
 		 */
 		public CrashDialog create() {
 
-			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			// instantiate the dialog with the custom Theme
 			final CrashDialog dialog = new CrashDialog(context, R.style.Dialog);
 			View layout = inflater.inflate(R.layout.crash_dialog, null);
 
-			dialog.addContentView(layout, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+			dialog.addContentView(layout, new LayoutParams(LayoutParams.FILL_PARENT,
+					LayoutParams.FILL_PARENT));
 
 			// set the dialog title
 			((TextView) layout.findViewById(R.id.crash_dialog_title)).setText(title);
 			// set the confirm button
 			if (positiveViewText != null) {
-				((TextView) layout.findViewById(R.id.crash_dialog_positive_button_text)).setText(positiveViewText);
+				((TextView) layout.findViewById(R.id.crash_dialog_positive_button_text))
+						.setText(positiveViewText);
 				if (positiveViewClickListener != null) {
 					((View) layout.findViewById(R.id.crash_dialog_positive_button))
 							.setOnClickListener(new View.OnClickListener() {
 								public void onClick(View v) {
-									positiveViewClickListener.onClick(dialog, DialogInterface.BUTTON_POSITIVE);
+									positiveViewClickListener.onClick(dialog,
+											DialogInterface.BUTTON_POSITIVE);
 								}
 							});
 				}
@@ -166,12 +175,14 @@ public class CrashDialog extends Dialog {
 			}
 			// set the cancel button
 			if (negativeViewText != null) {
-				((TextView) layout.findViewById(R.id.crash_dialog_negative_button_text)).setText(negativeViewText);
+				((TextView) layout.findViewById(R.id.crash_dialog_negative_button_text))
+						.setText(negativeViewText);
 				if (negativeViewClickListener != null) {
 					((View) layout.findViewById(R.id.crash_dialog_negative_button))
 							.setOnClickListener(new View.OnClickListener() {
 								public void onClick(View v) {
-									negativeViewClickListener.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
+									negativeViewClickListener.onClick(dialog,
+											DialogInterface.BUTTON_NEGATIVE);
 								}
 							});
 				}

@@ -39,7 +39,9 @@ public class GwtParser {
 				System.out.println(json.substring(idx, Math.min(idx + 100, json.length())));
 				try {
 					Thread.sleep(10);
-				} catch (InterruptedException e) { };
+				} catch (InterruptedException e) {
+				}
+				;
 			}
 
 		// remove response prefix (//OK)
@@ -84,8 +86,7 @@ public class GwtParser {
 		String string = indexList.get(1);
 		if (string.startsWith("'")) {
 			result = decodeLong(string);
-		}
-		else
+		} else
 			result = Integer.parseInt(string);
 
 		return result;
@@ -361,7 +362,8 @@ public class GwtParser {
 					debugPrint("totalDownloads: " + totalDownloads);
 
 					// after download there may be money elements
-					int firstAfterMoney = findFirstAfterMoneyIndex(ratingsStartIndex - 1, longValues);
+					int firstAfterMoney = findFirstAfterMoneyIndex(ratingsStartIndex - 1,
+							longValues);
 
 					// first before money is comments
 					int comments = longValues.get(firstAfterMoney).value.intValue();
@@ -421,7 +423,8 @@ public class GwtParser {
 
 				int fullAssetLong = activeInstallIndexMap.get(j).index;
 
-				debugPrint("full asset long value: " + activeInstallIndexMap.get(j).value + " (should be 0 or 'A')");
+				debugPrint("full asset long value: " + activeInstallIndexMap.get(j).value
+						+ " (should be 0 or 'A')");
 				debugPrint("full asset long index: " + fullAssetLong);
 
 				int apkinfoIndex = fullAssetLong + 2;
@@ -477,8 +480,10 @@ public class GwtParser {
 					*/
 					int intPairStartIndex = apkinfoIndex + 3;
 					debugPrint("in pair start: " + getIndexStringValue(intPairStartIndex));
-					int firstNullIndex = intPairStartIndex + getIntegerPairLenght(intPairStartIndex);
-					debugPrint("first null index (large integer): " + getIndexIntegerValue(firstNullIndex));
+					int firstNullIndex = intPairStartIndex
+							+ getIntegerPairLenght(intPairStartIndex);
+					debugPrint("first null index (large integer): "
+							+ getIndexIntegerValue(firstNullIndex));
 					int dimensionSetStart = firstNullIndex + 4;
 
 					/*
@@ -534,10 +539,12 @@ public class GwtParser {
 					};
 
 					debugPrint("dimension set start: " + getIndexStringValue(dimensionSetStart));
-					int dimensionSetLength = getListOrSetLenght(dimensionSetStart, dimensionPairLengthCallback);
+					int dimensionSetLength = getListOrSetLenght(dimensionSetStart,
+							dimensionPairLengthCallback);
 
-					debugPrint("hash set?: " + getIndexStringValue(dimensionSetStart + dimensionSetLength) + " index: "
-							+ (dimensionSetStart + dimensionSetLength));
+					debugPrint("hash set?: "
+							+ getIndexStringValue(dimensionSetStart + dimensionSetLength)
+							+ " index: " + (dimensionSetStart + dimensionSetLength));
 
 					/*
 					                    10=java.util.HashSet/3273092938
@@ -564,10 +571,13 @@ public class GwtParser {
 
 					// 3 more list
 					int postPermissionList1Start = permissionListStart + permissionListLength;
-					int postPermissionList1Length = getListOrSetLenght(postPermissionList1Start, null);
+					int postPermissionList1Length = getListOrSetLenght(postPermissionList1Start,
+							null);
 
-					int postPermissionList2Start = postPermissionList1Start + postPermissionList1Length;
-					int postPermissionList2Length = getListOrSetLenght(postPermissionList2Start, null);
+					int postPermissionList2Start = postPermissionList1Start
+							+ postPermissionList1Length;
+					int postPermissionList2Length = getListOrSetLenght(postPermissionList2Start,
+							null);
 
 					// next is version code
 					int productInfoIndex = postPermissionList2Start + postPermissionList2Length;
@@ -697,23 +707,28 @@ public class GwtParser {
 	private void validatePackageName(String packageName) throws GwtParserException {
 
 		if (packageName.indexOf('/') > -1) {
-			throw new GwtParserException("error while parsing package name, found / : " + packageName);
+			throw new GwtParserException("error while parsing package name, found / : "
+					+ packageName);
 		}
 
 		if (packageName.indexOf('.') < 0) {
-			throw new GwtParserException("error while parsing package name, no '.' in name : " + packageName);
+			throw new GwtParserException("error while parsing package name, no '.' in name : "
+					+ packageName);
 		}
 
 		if (packageName.indexOf(' ') > -1) {
-			throw new GwtParserException("error while parsing package name, found space in name : " + packageName);
+			throw new GwtParserException("error while parsing package name, found space in name : "
+					+ packageName);
 		}
 
 		if (packageName.startsWith("android.permission.")) {
-			throw new GwtParserException("error while parsing package name, found permission for name : " + packageName);
+			throw new GwtParserException(
+					"error while parsing package name, found permission for name : " + packageName);
 		}
 
 		if (packageName.startsWith("android.hardware.")) {
-			throw new GwtParserException("error while parsing package name, found hardware for name : " + packageName);
+			throw new GwtParserException(
+					"error while parsing package name, found hardware for name : " + packageName);
 		}
 
 	}
@@ -756,10 +771,12 @@ public class GwtParser {
 		return lenght - 1;
 	}
 
-	private void validateString(String actual, String expected, int index) throws GwtParserException {
+	private void validateString(String actual, String expected, int index)
+			throws GwtParserException {
 
 		if (actual.indexOf(expected) < 0) {
-			throw new GwtParserException("expected: " + expected + " at index " + index + " but found: " + actual);
+			throw new GwtParserException("expected: " + expected + " at index " + index
+					+ " but found: " + actual);
 		}
 
 	}
@@ -795,7 +812,8 @@ public class GwtParser {
 			long value4 = longValues.get(i + 3).index;
 			long value5 = longValues.get(i + 4).index;
 
-			if (value5 == (value4 + 1) && value4 == (value3 + 1) && value3 == (value2 + 1) && value2 == (value1 + 1)) {
+			if (value5 == (value4 + 1) && value4 == (value3 + 1) && value3 == (value2 + 1)
+					&& value2 == (value1 + 1)) {
 				// found rating index in index array, return
 				return i;
 			}
@@ -805,7 +823,8 @@ public class GwtParser {
 		return ratingStart;
 	}
 
-	protected int getMapLenght(int mapIndex, List<String> devconStringArray, ArrayList<String> indexList) {
+	protected int getMapLenght(int mapIndex, List<String> devconStringArray,
+			ArrayList<String> indexList) {
 
 		int lenght = 0;
 

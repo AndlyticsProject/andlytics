@@ -53,9 +53,8 @@ public class AdmobAccountAuthenticator extends Service {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Bundle addAccount(AccountAuthenticatorResponse response,
-				String accountType, String authTokenType, String[] requiredFeatures,
-				Bundle options) {
+		public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
+				String authTokenType, String[] requiredFeatures, Bundle options) {
 			final Intent intent = new Intent(mContext, AdmobAuthenticatorActivity.class);
 			intent.putExtra(AdmobAuthenticatorActivity.PARAM_AUTHTOKEN_TYPE, authTokenType);
 			intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
@@ -68,13 +67,11 @@ public class AdmobAccountAuthenticator extends Service {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Bundle confirmCredentials(AccountAuthenticatorResponse response,
-				Account account, Bundle options) {
+		public Bundle confirmCredentials(AccountAuthenticatorResponse response, Account account,
+				Bundle options) {
 			if (options != null && options.containsKey(AccountManager.KEY_PASSWORD)) {
-				final String password =
-						options.getString(AccountManager.KEY_PASSWORD);
-				final String token =
-						onlineConfirmPassword(account.name, password);
+				final String password = options.getString(AccountManager.KEY_PASSWORD);
+				final String token = onlineConfirmPassword(account.name, password);
 				final Bundle result = new Bundle();
 				result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, token == null ? false : true);
 				return result;
@@ -83,8 +80,7 @@ public class AdmobAccountAuthenticator extends Service {
 			final Intent intent = new Intent(mContext, AdmobAuthenticatorActivity.class);
 			intent.putExtra(AdmobAuthenticatorActivity.PARAM_USERNAME, account.name);
 			intent.putExtra(AdmobAuthenticatorActivity.PARAM_CONFIRM_CREDENTIALS, true);
-			intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE,
-					response);
+			intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
 			final Bundle bundle = new Bundle();
 			bundle.putParcelable(AccountManager.KEY_INTENT, intent);
 			return bundle;
@@ -94,8 +90,7 @@ public class AdmobAccountAuthenticator extends Service {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Bundle editProperties(AccountAuthenticatorResponse response,
-				String accountType) {
+		public Bundle editProperties(AccountAuthenticatorResponse response, String accountType) {
 			throw new UnsupportedOperationException();
 		}
 
@@ -103,12 +98,11 @@ public class AdmobAccountAuthenticator extends Service {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Bundle getAuthToken(AccountAuthenticatorResponse response,
-				Account account, String authTokenType, Bundle loginOptions) {
+		public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account,
+				String authTokenType, Bundle loginOptions) {
 			if (!authTokenType.equals(Constants.AUTHTOKEN_TYPE_ADMOB)) {
 				final Bundle result = new Bundle();
-				result.putString(AccountManager.KEY_ERROR_MESSAGE,
-						"invalid authTokenType");
+				result.putString(AccountManager.KEY_ERROR_MESSAGE, "invalid authTokenType");
 				return result;
 			}
 			final AccountManager am = AccountManager.get(mContext);
@@ -118,8 +112,7 @@ public class AdmobAccountAuthenticator extends Service {
 				if (token != null) {
 					final Bundle result = new Bundle();
 					result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-					result.putString(AccountManager.KEY_ACCOUNT_TYPE,
-							Constants.ACCOUNT_TYPE_ADMOB);
+					result.putString(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE_ADMOB);
 					result.putString(AccountManager.KEY_AUTHTOKEN, token);
 					return result;
 				}
@@ -128,10 +121,8 @@ public class AdmobAccountAuthenticator extends Service {
 			// Activity that will prompt the user for the password.
 			final Intent intent = new Intent(mContext, AdmobAuthenticatorActivity.class);
 			intent.putExtra(AdmobAuthenticatorActivity.PARAM_USERNAME, account.name);
-			intent.putExtra(AdmobAuthenticatorActivity.PARAM_AUTHTOKEN_TYPE,
-					authTokenType);
-			intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE,
-					response);
+			intent.putExtra(AdmobAuthenticatorActivity.PARAM_AUTHTOKEN_TYPE, authTokenType);
+			intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
 			final Bundle bundle = new Bundle();
 			bundle.putParcelable(AccountManager.KEY_INTENT, intent);
 			return bundle;
@@ -153,8 +144,8 @@ public class AdmobAccountAuthenticator extends Service {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Bundle hasFeatures(AccountAuthenticatorResponse response,
-				Account account, String[] features) {
+		public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account,
+				String[] features) {
 			final Bundle result = new Bundle();
 			result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, false);
 			return result;
@@ -172,12 +163,11 @@ public class AdmobAccountAuthenticator extends Service {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Bundle updateCredentials(AccountAuthenticatorResponse response,
-				Account account, String authTokenType, Bundle loginOptions) {
+		public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account,
+				String authTokenType, Bundle loginOptions) {
 			final Intent intent = new Intent(mContext, AdmobAuthenticatorActivity.class);
 			intent.putExtra(AdmobAuthenticatorActivity.PARAM_USERNAME, account.name);
-			intent.putExtra(AdmobAuthenticatorActivity.PARAM_AUTHTOKEN_TYPE,
-					authTokenType);
+			intent.putExtra(AdmobAuthenticatorActivity.PARAM_AUTHTOKEN_TYPE, authTokenType);
 			intent.putExtra(AdmobAuthenticatorActivity.PARAM_CONFIRM_CREDENTIALS, false);
 			final Bundle bundle = new Bundle();
 			bundle.putParcelable(AccountManager.KEY_INTENT, intent);

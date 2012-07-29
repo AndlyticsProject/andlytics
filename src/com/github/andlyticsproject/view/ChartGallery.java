@@ -47,8 +47,7 @@ public class ChartGallery extends Gallery {
 		return false;
 	}
 
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-			float velocityY) {
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
 		if (useMultiImageFling) {
 			return super.onFling(e1, e2, velocityX, velocityY);
@@ -61,7 +60,8 @@ public class ChartGallery extends Gallery {
 				if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && velocityX <= 0) {
 
 					// hack - send event to simulate right key press
-					KeyEvent rightKey = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT);
+					KeyEvent rightKey = new KeyEvent(KeyEvent.ACTION_DOWN,
+							KeyEvent.KEYCODE_DPAD_RIGHT);
 					onKeyDown(KeyEvent.KEYCODE_DPAD_RIGHT, rightKey);
 
 					rightKey = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT);
@@ -72,7 +72,8 @@ public class ChartGallery extends Gallery {
 				} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE) {
 
 					// hack - send event to simulate left key press
-					KeyEvent leftKey = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT);
+					KeyEvent leftKey = new KeyEvent(KeyEvent.ACTION_DOWN,
+							KeyEvent.KEYCODE_DPAD_LEFT);
 					onKeyDown(KeyEvent.KEYCODE_DPAD_LEFT, leftKey);
 
 					leftKey = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT);
@@ -89,13 +90,10 @@ public class ChartGallery extends Gallery {
 	}
 
 	@Override
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
-	{
-		if (!allowChangePageSliding)
-		{
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+		if (!allowChangePageSliding) {
 			int[] tag = (int[]) getSelectedView().getTag();
-			if (tag != null)
-			{
+			if (tag != null) {
 				if (distanceX < 0 && tag[1] <= 1)
 					return true;
 				if (distanceX > 0 && tag[1] >= (tag[2] - 1))
@@ -129,8 +127,7 @@ public class ChartGallery extends Gallery {
 		return ignoreLayoutCalls;
 	}
 
-	public void setAllowChangePageSliding(boolean allowChangePageSliding)
-	{
+	public void setAllowChangePageSliding(boolean allowChangePageSliding) {
 		this.allowChangePageSliding = allowChangePageSliding;
 	}
 

@@ -61,7 +61,7 @@ public class ContentAdapter {
 				AdmobTable.CONTENT_URI,
 				new String[] {
 
-						AdmobTable.KEY_ROWID, AdmobTable.KEY_SITE_ID, AdmobTable.KEY_REQUESTS,
+				AdmobTable.KEY_ROWID, AdmobTable.KEY_SITE_ID, AdmobTable.KEY_REQUESTS,
 						AdmobTable.KEY_HOUSEAD_REQUESTS, AdmobTable.KEY_INTERSTITIAL_REQUESTS,
 						AdmobTable.KEY_IMPRESSIONS, AdmobTable.KEY_FILL_RATE,
 						AdmobTable.KEY_HOUSEAD_FILL_RATE, AdmobTable.KEY_OVERALL_FILL_RATE,
@@ -1077,7 +1077,7 @@ public class ContentAdapter {
 					AppStatsTable.CONTENT_URI,
 					new String[] {
 
-							AppStatsTable.KEY_STATS_REQUESTDATE, AppStatsTable.KEY_STATS_VERSIONCODE },
+					AppStatsTable.KEY_STATS_REQUESTDATE, AppStatsTable.KEY_STATS_VERSIONCODE },
 					AppStatsTable.KEY_STATS_PACKAGENAME + "='" + packageName + "' and "
 							+ AppStatsTable.KEY_STATS_VERSIONCODE + "=" + code, null,
 					AppStatsTable.KEY_STATS_REQUESTDATE + " limit 1"); // sort order -> new to old

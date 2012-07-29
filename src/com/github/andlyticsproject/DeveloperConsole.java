@@ -113,14 +113,17 @@ public class DeveloperConsole {
 		this.context = context;
 	}
 
-	public List<AppInfo> getAppDownloadInfos(String authtoken, String accountName) throws NetworkException, InvalidJSONResponseException,
-			DeveloperConsoleException, SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception {
+	public List<AppInfo> getAppDownloadInfos(String authtoken, String accountName)
+			throws NetworkException, InvalidJSONResponseException, DeveloperConsoleException,
+			SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception {
 
 		return getFullAssetListRequest(accountName, authtoken, false);
 	}
 
-	private List<AppInfo> getFullAssetListRequest(String accountName, String authtoken, boolean reuseAuthentication) throws NetworkException,
-			DeveloperConsoleException, InvalidJSONResponseException, SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception {
+	private List<AppInfo> getFullAssetListRequest(String accountName, String authtoken,
+			boolean reuseAuthentication) throws NetworkException, DeveloperConsoleException,
+			InvalidJSONResponseException, SignupException, AuthenticationException,
+			NoCookieSetException, MultiAccountAcception {
 
 		developerConsoleAuthentication(authtoken, reuseAuthentication);
 
@@ -183,8 +186,10 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	public List<Comment> getAppComments(String authtoken, String accountName, String packageName, int startIndex, int lenght) throws NetworkException,
-			DeveloperConsoleException, InvalidJSONResponseException, SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception {
+	public List<Comment> getAppComments(String authtoken, String accountName, String packageName,
+			int startIndex, int lenght) throws NetworkException, DeveloperConsoleException,
+			InvalidJSONResponseException, SignupException, AuthenticationException,
+			NoCookieSetException, MultiAccountAcception {
 
 		List<Comment> result = null;
 
@@ -207,8 +212,8 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	public List<AppInfo> parseAppStatisticsResponse(String json, String accountName) throws DeveloperConsoleException,
-			InvalidJSONResponseException, AuthenticationException {
+	public List<AppInfo> parseAppStatisticsResponse(String json, String accountName)
+			throws DeveloperConsoleException, InvalidJSONResponseException, AuthenticationException {
 
 		List<AppInfo> result = new ArrayList<AppInfo>();
 
@@ -220,8 +225,8 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	public Map<String, Integer> parseFeedbackOverviewResponse(String json) throws DeveloperConsoleException,
-			InvalidJSONResponseException, AuthenticationException {
+	public Map<String, Integer> parseFeedbackOverviewResponse(String json)
+			throws DeveloperConsoleException, InvalidJSONResponseException, AuthenticationException {
 
 		Map<String, Integer> result = new HashMap<String, Integer>();
 
@@ -233,7 +238,8 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	private long parseGetAssetForUserCount(String json) throws InvalidJSONResponseException, AuthenticationException {
+	private long parseGetAssetForUserCount(String json) throws InvalidJSONResponseException,
+			AuthenticationException {
 
 		long result = 0;
 
@@ -245,10 +251,13 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	private void testIfJsonIsValid(String json) throws InvalidJSONResponseException, AuthenticationException {
+	private void testIfJsonIsValid(String json) throws InvalidJSONResponseException,
+			AuthenticationException {
 		if (json == null || !json.startsWith("//OK")) {
 
-			if (json != null && (json.indexOf("NewServiceAccount") > -1 || json.indexOf("WrongUserException") > -1)) {
+			if (json != null
+					&& (json.indexOf("NewServiceAccount") > -1 || json
+							.indexOf("WrongUserException") > -1)) {
 				throw new AuthenticationException();
 			}
 
@@ -256,14 +265,16 @@ public class DeveloperConsole {
 		}
 	}
 
-	public List<Comment> parseCommentsResponse(String json, String accountName) throws DeveloperConsoleException, AuthenticationException {
+	public List<Comment> parseCommentsResponse(String json, String accountName)
+			throws DeveloperConsoleException, AuthenticationException {
 
 		List<Comment> result = new ArrayList<Comment>();
 
 		try {
 			testIfJsonIsValid(json);
 		} catch (InvalidJSONResponseException e) {
-			DeveloperConsoleException de = new DeveloperConsoleException(postData + "response::" + json, e);
+			DeveloperConsoleException de = new DeveloperConsoleException(postData + "response::"
+					+ json, e);
 			throw de;
 		}
 
@@ -353,7 +364,8 @@ public class DeveloperConsole {
 		}
 		String xsrfToken = ((AndlyticsApp) context.getApplicationContext()).getXsrfToken();
 
-		developerPostData = developerPostData.replace(PARAM_XSRFTOKEN, xsrfToken != null ? xsrfToken : "");
+		developerPostData = developerPostData.replace(PARAM_XSRFTOKEN,
+				xsrfToken != null ? xsrfToken : "");
 
 		try {
 			URL aURL = new java.net.URL(URL_DEVELOPER_EDIT_APP + "?dev_acc=" + devacc);
@@ -375,7 +387,8 @@ public class DeveloperConsole {
 		return gwtPermutation;
 	}
 
-	protected String grapComments(String packageName, int startIndex, int lenght) throws DeveloperConsoleException {
+	protected String grapComments(String packageName, int startIndex, int lenght)
+			throws DeveloperConsoleException {
 
 		String postData = Preferences.getRequestUserComments(context);
 
@@ -406,7 +419,8 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	protected String grapFeedbackOverview(List<String> packageNames) throws DeveloperConsoleException {
+	protected String grapFeedbackOverview(List<String> packageNames)
+			throws DeveloperConsoleException {
 
 		String postData = Preferences.getRequestFeedback(context);
 
@@ -464,7 +478,8 @@ public class DeveloperConsole {
 		connection.setRequestProperty("X-GWT-Module-Base", "https://play.google.com/apps/publish/gwt-play/");
 		connection.setRequestProperty("Referer", "https://play.google.com/apps/publish/Home");
 
-		OutputStreamWriter streamToAuthorize = new java.io.OutputStreamWriter(connection.getOutputStream());
+		OutputStreamWriter streamToAuthorize = new java.io.OutputStreamWriter(
+				connection.getOutputStream());
 
 		streamToAuthorize.write(developerPostData);
 		streamToAuthorize.flush();
@@ -472,7 +487,8 @@ public class DeveloperConsole {
 
 		// Get the Response from Autorize.net
 		InputStream resultStream = connection.getInputStream();
-		BufferedReader aReader = new java.io.BufferedReader(new java.io.InputStreamReader(resultStream));
+		BufferedReader aReader = new java.io.BufferedReader(new java.io.InputStreamReader(
+				resultStream));
 		StringBuffer aResponse = new StringBuffer();
 		String aLine = aReader.readLine();
 		while (aLine != null) {
@@ -484,8 +500,9 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	protected void developerConsoleAuthentication(String authtoken, boolean reuseAuthentication) throws NetworkException, SignupException,
-			AuthenticationException, NoCookieSetException, MultiAccountAcception {
+	protected void developerConsoleAuthentication(String authtoken, boolean reuseAuthentication)
+			throws NetworkException, SignupException, AuthenticationException,
+			NoCookieSetException, MultiAccountAcception {
 		// login to Android Market
 		// this results in a 302
 		// and is necessary for a cookie to be set
@@ -536,7 +553,8 @@ public class DeveloperConsole {
 				HttpResponse httpResponse = httpclient.execute(httpget, context);
 
 				// 8p8 fix for xsrfToken
-				Matcher m1 = Pattern.compile("userInfo = (\\{.+\\});").matcher(EntityUtils.toString(httpResponse.getEntity()));
+				Matcher m1 = Pattern.compile("userInfo = (\\{.+\\});").matcher(
+						EntityUtils.toString(httpResponse.getEntity()));
 				if (m1.find()) {
 					String xsrfToken = new JSONObject(m1.group(1)).getString("gwtRpcXsrfToken");
 					((AndlyticsApp) this.context.getApplicationContext()).setXsrfToken(xsrfToken);
@@ -545,8 +563,8 @@ public class DeveloperConsole {
 
 				final int statusCode = httpResponse.getStatusLine().getStatusCode();
 				if (statusCode != HttpStatus.SC_OK) {
-					throw new AuthenticationException("Got HTTP " + statusCode
-							+ " (" + httpResponse.getStatusLine().getReasonPhrase() + ')');
+					throw new AuthenticationException("Got HTTP " + statusCode + " ("
+							+ httpResponse.getStatusLine().getReasonPhrase() + ')');
 				}
 
 				boolean asp = false; //TODO get hasher here?
@@ -676,7 +694,8 @@ public class DeveloperConsole {
 
 		String data = "";
 		for (String key : params.keySet()) {
-			data += "&" + URLEncoder.encode(key, "UTF-8") + "=" + URLEncoder.encode(params.get(key), "UTF-8");
+			data += "&" + URLEncoder.encode(key, "UTF-8") + "="
+					+ URLEncoder.encode(params.get(key), "UTF-8");
 		}
 		data = data.substring(1);
 
@@ -690,14 +709,16 @@ public class DeveloperConsole {
 
 		// aConnection.setAllowUserInteraction(false);
 		// POST the data
-		OutputStreamWriter streamToAuthorize = new java.io.OutputStreamWriter(aConnection.getOutputStream());
+		OutputStreamWriter streamToAuthorize = new java.io.OutputStreamWriter(
+				aConnection.getOutputStream());
 		streamToAuthorize.write(data);
 		streamToAuthorize.flush();
 		streamToAuthorize.close();
 
 		// Get the Response from Autorize.net
 		InputStream resultStream = aConnection.getInputStream();
-		BufferedReader aReader = new java.io.BufferedReader(new java.io.InputStreamReader(resultStream));
+		BufferedReader aReader = new java.io.BufferedReader(new java.io.InputStreamReader(
+				resultStream));
 		StringBuffer aResponse = new StringBuffer();
 		String aLine = aReader.readLine();
 		while (aLine != null) {

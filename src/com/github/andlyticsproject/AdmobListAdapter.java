@@ -104,16 +104,13 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 	    }*/
 
 	@Override
-	public int getNumPages()
-	{
+	public int getNumPages() {
 		return 2;
 	}
 
 	@Override
-	public int getNumCharts(int page) throws IndexOutOfBoundsException
-	{
-		switch (page)
-		{
+	public int getNumCharts(int page) throws IndexOutOfBoundsException {
+		switch (page) {
 			case 0:
 				return 6;
 			case 1:
@@ -124,16 +121,13 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 	}
 
 	@Override
-	public String getChartTitle(int page, int column) throws IndexOutOfBoundsException
-	{
+	public String getChartTitle(int page, int column) throws IndexOutOfBoundsException {
 		if (column == DATE)
 			return "";
 
-		switch (page)
-		{
+		switch (page) {
 			case 0: {
-				switch (column)
-				{
+				switch (column) {
 					case REVENUE:
 						return activity.getString(R.string.admob__revenue);
 					case EPC:
@@ -148,8 +142,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 				}
 			}
 			case 1: {
-				switch (column)
-				{
+				switch (column) {
 					case ECPM:
 						return activity.getString(R.string.admob__eCPM);
 					case IMPRESSIONS:
@@ -167,20 +160,16 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 
 	@Override
 	public void updateChartValue(int position, int page, int column, TextView tv)
-			throws IndexOutOfBoundsException
-	{
+			throws IndexOutOfBoundsException {
 		Admob admob = getItem(position);
-		if (column == DATE)
-		{
+		if (column == DATE) {
 			tv.setText(dateFormat.format(admob.getDate()));
 			return;
 		}
 
-		switch (page)
-		{
+		switch (page) {
 			case 0: {
-				switch (column)
-				{
+				switch (column) {
 					case REVENUE:
 						tv.setText(numberFormat.format(admob.getRevenue()));
 						return;
@@ -202,8 +191,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 				}
 			}
 			case 1: {
-				switch (column)
-				{
+				switch (column) {
 					case ECPM:
 						tv.setText(numberFormat.format(admob.getEcpm()));
 						return;
@@ -226,15 +214,13 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 	}
 
 	@Override
-	protected View buildChart(Context context, Chart baseChart, List<?> statsForApp, int page, int column) throws IndexOutOfBoundsException
-	{
+	protected View buildChart(Context context, Chart baseChart, List<?> statsForApp, int page,
+			int column) throws IndexOutOfBoundsException {
 		ValueCallbackHander handler = null;
 
-		switch (page)
-		{
+		switch (page) {
 			case 0: {
-				switch (column)
-				{
+				switch (column) {
 					case REVENUE:
 
 						handler = new AdmobValueCallbackHander() {
@@ -282,8 +268,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 				}
 			}
 			case 1: {
-				switch (column)
-				{
+				switch (column) {
 					case ECPM:
 						handler = new AdmobValueCallbackHander() {
 							@Override
@@ -352,7 +337,8 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 			case 0: {
 				switch (column) {
 					case REVENUE:
-						return (overallStats != null) ? numberFormat.format(overallStats.getRevenue()) : "";
+						return (overallStats != null) ? numberFormat.format(overallStats
+								.getRevenue()) : "";
 
 					case EPC:
 						return (overallStats != null) ? overallStats.getEpcCents() : "";
@@ -364,8 +350,9 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 						return (overallStats != null) ? overallStats.getClicks() + "" : "";
 
 					case FILL_RATE:
-						return (overallStats != null) ? (new BigDecimal(overallStats.getFillRate() * 100))
-								.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString()
+						return (overallStats != null) ? (new BigDecimal(
+								overallStats.getFillRate() * 100)).setScale(2,
+								BigDecimal.ROUND_HALF_UP).toPlainString()
 								+ "%" : "";
 				}
 			}
@@ -373,15 +360,16 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 			case 1: {
 				switch (column) {
 					case ECPM:
-						return (overallStats != null) ? numberFormat.format(overallStats.getEcpm()) : "";
+						return (overallStats != null) ? numberFormat.format(overallStats.getEcpm())
+								: "";
 
 					case IMPRESSIONS:
 						return (overallStats != null) ? overallStats.getImpressions() + "" : "";
 
 					case CTR:
-						return (overallStats != null) ? (new BigDecimal(overallStats.getCtr() * 100)).setScale(2,
-								BigDecimal.ROUND_HALF_UP).toPlainString()
-								+ "%" : "";
+						return (overallStats != null) ? (new BigDecimal(overallStats.getCtr() * 100))
+								.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "%"
+								: "";
 
 					case HOUSEAD_CLICKS:
 						return (overallStats != null) ? overallStats.getHouseAdClicks() + "" : "";

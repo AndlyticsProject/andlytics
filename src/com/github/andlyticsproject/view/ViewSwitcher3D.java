@@ -56,7 +56,8 @@ public class ViewSwitcher3D {
 		}
 
 		Rotate3dAnimation rotation = new Rotate3dAnimation(start, end,
-				mContainer.getWidth() / 2.0f, mContainer.getHeight() / 2.0f, mDepthOfRotation, true, getListener());
+				mContainer.getWidth() / 2.0f, mContainer.getHeight() / 2.0f, mDepthOfRotation,
+				true, getListener());
 		rotation.setDuration(mDuration / 2);
 		rotation.setFillAfter(true);
 		rotation.setInterpolator(new AccelerateInterpolator());
@@ -106,14 +107,16 @@ public class ViewSwitcher3D {
 				unmirrorTheBackside();
 				mBackside.requestFocus();
 
-				rotation = new Rotate3dAnimation(90, 180, centerX, centerY, mDepthOfRotation, false, getListener());
+				rotation = new Rotate3dAnimation(90, 180, centerX, centerY, mDepthOfRotation,
+						false, getListener());
 			} else {
 				mBackside.setVisibility(View.GONE);
 				mBackside.clearAnimation(); // remove the mirroring
 				mFrondside.setVisibility(View.VISIBLE);
 				mFrondside.requestFocus();
 
-				rotation = new Rotate3dAnimation(90, 0, centerX, centerY, mDepthOfRotation, false, getListener());
+				rotation = new Rotate3dAnimation(90, 0, centerX, centerY, mDepthOfRotation, false,
+						getListener());
 			}
 
 			rotation.setDuration(mDuration / 2);

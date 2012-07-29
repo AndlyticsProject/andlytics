@@ -12,7 +12,6 @@ public class MediaScannerWrapper {
 	}
 
 	public static void scanFile(Context ctx, String filename) {
-		MediaScannerConnection.scanFile(ctx, new String[] { filename }, null,
-				null);
+		MediaScannerConnection.scanFile(ctx, new String[] { filename }, null, null);
 	}
 }

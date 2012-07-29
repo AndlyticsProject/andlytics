@@ -179,7 +179,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		getSupportMenuInflater().inflate(R.menu.main_menu, menu);
 		statsModeMenuItem = menu.findItem(R.id.itemMainmenuStatsMode);
 		if (refreshing)
-			menu.findItem(R.id.itemMainmenuRefresh).setActionView(R.layout.action_bar_indeterminate_progress);
+			menu.findItem(R.id.itemMainmenuRefresh).setActionView(
+					R.layout.action_bar_indeterminate_progress);
 		updateStatsMode();
 		return true;
 	}

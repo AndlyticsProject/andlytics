@@ -77,8 +77,7 @@ public class AppStats {
 	 *
 	 * @param appStats a <code>AppStats</code> object
 	 */
-	public AppStats(AppStats appStats)
-	{
+	public AppStats(AppStats appStats) {
 		this.totalDownloads = appStats.totalDownloads;
 		this.activeInstalls = appStats.activeInstalls;
 		this.numberOfComments = appStats.numberOfComments;
@@ -165,8 +164,8 @@ public class AppStats {
 		this.smoothingApplied = smoothingApplied;
 	}
 
-	public void setRating(Integer rating1, Integer rating2, Integer rating3,
-			Integer rating4, Integer rating5) {
+	public void setRating(Integer rating1, Integer rating2, Integer rating3, Integer rating4,
+			Integer rating5) {
 		this.rating1 = rating1;
 		this.rating2 = rating2;
 		this.rating3 = rating3;

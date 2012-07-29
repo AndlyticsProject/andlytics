@@ -106,7 +106,8 @@ public class MainListAdapter extends BaseAdapter {
 
 	private int expandViewHeightAdmob;
 
-	public MainListAdapter(Activity activity, String accountname, ContentAdapter db, StatsMode statsMode) {
+	public MainListAdapter(Activity activity, String accountname, ContentAdapter db,
+			StatsMode statsMode) {
 		this.setAppInfos(new ArrayList<AppInfo>());
 		this.layoutInflater = activity.getLayoutInflater();
 		this.activity = activity;
@@ -162,23 +163,30 @@ public class MainListAdapter extends BaseAdapter {
 
 			holder = new ViewHolder();
 			holder.avgrating = (TextView) convertView.findViewById(R.id.main_app_avgrating);
-			holder.avgratingPercent = (TextView) convertView.findViewById(R.id.main_app_avgratingPercent);
+			holder.avgratingPercent = (TextView) convertView
+					.findViewById(R.id.main_app_avgratingPercent);
 			holder.name = (TextView) convertView.findViewById(R.id.main_app_name);
 			holder.packageName = (TextView) convertView.findViewById(R.id.main_package_name);
 
-			holder.activeInstalls = (TextView) convertView.findViewById(R.id.main_app_activeinstalls);
-			holder.activeInstallsPercent = (TextView) convertView.findViewById(R.id.main_app_activeinstallsPercent);
+			holder.activeInstalls = (TextView) convertView
+					.findViewById(R.id.main_app_activeinstalls);
+			holder.activeInstallsPercent = (TextView) convertView
+					.findViewById(R.id.main_app_activeinstallsPercent);
 
 			holder.admobFrame = (View) convertView.findViewById(R.id.main_app_admob_frame);
-			holder.admobRequests = (TextView) convertView.findViewById(R.id.main_app_admob_requests);
+			holder.admobRequests = (TextView) convertView
+					.findViewById(R.id.main_app_admob_requests);
 			holder.admobRevenue = (TextView) convertView.findViewById(R.id.main_app_admob_revenue);
 
 			holder.ratingCount = (TextView) convertView.findViewById(R.id.main_app_rating);
-			holder.ratingCountPercent = (TextView) convertView.findViewById(R.id.main_app_ratingPercent);
+			holder.ratingCountPercent = (TextView) convertView
+					.findViewById(R.id.main_app_ratingPercent);
 			holder.downloadsCount = (TextView) convertView.findViewById(R.id.main_app_downloads);
-			holder.downloadsCountPercent = (TextView) convertView.findViewById(R.id.main_app_downloadsPercent);
+			holder.downloadsCountPercent = (TextView) convertView
+					.findViewById(R.id.main_app_downloadsPercent);
 			holder.commentsCount = (TextView) convertView.findViewById(R.id.main_app_commentscount);
-			holder.commentsCountPercent = (TextView) convertView.findViewById(R.id.main_app_commentscountPercent);
+			holder.commentsCountPercent = (TextView) convertView
+					.findViewById(R.id.main_app_commentscountPercent);
 			holder.icon = (ImageView) convertView.findViewById(R.id.main_app_icon);
 			holder.expand = (ImageView) convertView.findViewById(R.id.main_app_expand_image);
 			holder.ratingbar = (RatingBar) convertView.findViewById(R.id.main_app_ratingbar);
@@ -196,11 +204,16 @@ public class MainListAdapter extends BaseAdapter {
 			holder.ratingtext4 = (TextView) convertView.findViewById(R.id.main_app_ratingbar4_text);
 			holder.ratingtext5 = (TextView) convertView.findViewById(R.id.main_app_ratingbar5_text);
 
-			holder.ratingpercent1 = (TextView) convertView.findViewById(R.id.main_app_ratingbar1_percent);
-			holder.ratingpercent2 = (TextView) convertView.findViewById(R.id.main_app_ratingbar2_percent);
-			holder.ratingpercent3 = (TextView) convertView.findViewById(R.id.main_app_ratingbar3_percent);
-			holder.ratingpercent4 = (TextView) convertView.findViewById(R.id.main_app_ratingbar4_percent);
-			holder.ratingpercent5 = (TextView) convertView.findViewById(R.id.main_app_ratingbar5_percent);
+			holder.ratingpercent1 = (TextView) convertView
+					.findViewById(R.id.main_app_ratingbar1_percent);
+			holder.ratingpercent2 = (TextView) convertView
+					.findViewById(R.id.main_app_ratingbar2_percent);
+			holder.ratingpercent3 = (TextView) convertView
+					.findViewById(R.id.main_app_ratingbar3_percent);
+			holder.ratingpercent4 = (TextView) convertView
+					.findViewById(R.id.main_app_ratingbar4_percent);
+			holder.ratingpercent5 = (TextView) convertView
+					.findViewById(R.id.main_app_ratingbar5_percent);
 
 			holder.buttonHistory = (View) convertView.findViewById(R.id.main_app_button_history);
 			holder.ratingFrame = (View) convertView.findViewById(R.id.main_app_ratingdetain_frame);
@@ -255,7 +268,8 @@ public class MainListAdapter extends BaseAdapter {
 			setupValueDiff(holder.ratingpercent4, appStats.getRating4Diff());
 			setupValueDiff(holder.ratingpercent5, appStats.getRating5Diff());
 			setupValueDiff(holder.ratingCountPercent, appStats.getRatingCountDiff());
-			setupFloatValueDiff(holder.avgratingPercent, appStats.getAvgRatingDiff(), appStats.getAvgRatingDiffString());
+			setupFloatValueDiff(holder.avgratingPercent, appStats.getAvgRatingDiff(),
+					appStats.getAvgRatingDiffString());
 			setupValueDiff(holder.commentsCountPercent, appStats.getNumberOfCommentsDiff());
 			setupValueDiff(holder.activeInstallsPercent, appStats.getActiveInstallsDiff());
 			setupValueDiff(holder.downloadsCountPercent, appStats.getDailyDownloads());
@@ -314,11 +328,13 @@ public class MainListAdapter extends BaseAdapter {
 			holder.icon.clearAnimation();
 			if (appDownloadInfo.getPackageName().startsWith("com.github.andlyticsproject.demo")) {
 
-				holder.icon.setImageDrawable(activity.getResources().getDrawable(R.drawable.default_app_icon));
+				holder.icon.setImageDrawable(activity.getResources().getDrawable(
+						R.drawable.default_app_icon));
 
 			} else {
 
-				new GetCachedImageTask(holder.icon, appDownloadInfo.getPackageName()).execute(new File[] { iconFile });
+				new GetCachedImageTask(holder.icon, appDownloadInfo.getPackageName())
+						.execute(new File[] { iconFile });
 
 			}
 		}
@@ -337,7 +353,8 @@ public class MainListAdapter extends BaseAdapter {
 				intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
 
 				activity.startActivity(intent);
-				activity.overridePendingTransition(R.anim.activity_next_in, R.anim.activity_next_out);
+				activity.overridePendingTransition(R.anim.activity_next_in,
+						R.anim.activity_next_out);
 
 			}
 		});
@@ -355,7 +372,8 @@ public class MainListAdapter extends BaseAdapter {
 				intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
 				intent.putExtra(Constants.CHART_SET, ChartSet.DOWNLOADS.name());
 				activity.startActivity(intent);
-				activity.overridePendingTransition(R.anim.activity_next_in, R.anim.activity_next_out);
+				activity.overridePendingTransition(R.anim.activity_next_in,
+						R.anim.activity_next_out);
 			}
 		});
 
@@ -370,7 +388,8 @@ public class MainListAdapter extends BaseAdapter {
 				}
 				intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
 				activity.startActivity(intent);
-				activity.overridePendingTransition(R.anim.activity_next_in, R.anim.activity_next_out);
+				activity.overridePendingTransition(R.anim.activity_next_in,
+						R.anim.activity_next_out);
 			}
 		});
 
@@ -388,7 +407,8 @@ public class MainListAdapter extends BaseAdapter {
 				intent.putExtra(Constants.CHART_SET, ChartSet.RATINGS.name());
 
 				activity.startActivity(intent);
-				activity.overridePendingTransition(R.anim.activity_next_in, R.anim.activity_next_out);
+				activity.overridePendingTransition(R.anim.activity_next_in,
+						R.anim.activity_next_out);
 			}
 		});
 
@@ -401,8 +421,8 @@ public class MainListAdapter extends BaseAdapter {
 			holder.expand.setImageDrawable(iconUp);
 			layout.leftMargin = 0;
 			layout.rightMargin = expandMargin;
-			changeBackgroundDrawable(holder.buttonHistory, activity.getResources().getDrawable(
-					R.drawable.row_background_inner_borderless));
+			changeBackgroundDrawable(holder.buttonHistory,
+					activity.getResources().getDrawable(R.drawable.row_background_inner_borderless));
 			holder.buttonHistory.setSelected(false);
 			holder.buttonHistory.setPressed(false);
 
@@ -414,8 +434,10 @@ public class MainListAdapter extends BaseAdapter {
 			holder.expand.setImageDrawable(iconDown);
 			layout.rightMargin = 0;
 			layout.leftMargin = expandMargin;
-			changeBackgroundDrawable(holder.buttonHistory, activity.getResources().getDrawable(
-					R.drawable.row_background_inner_borderless_bottom));
+			changeBackgroundDrawable(
+					holder.buttonHistory,
+					activity.getResources().getDrawable(
+							R.drawable.row_background_inner_borderless_bottom));
 			holder.buttonHistory.setSelected(false);
 			holder.buttonHistory.setPressed(false);
 			// holder.expand.setVisibility(View.VISIBLE);
@@ -439,20 +461,23 @@ public class MainListAdapter extends BaseAdapter {
 
 					if (isExpanded) {
 						holder.expand.setImageDrawable(iconDown);
-						Animation rotateUp = AnimationUtils.loadAnimation(activity.getApplicationContext(),
-								R.anim.rotate_up);
+						Animation rotateUp = AnimationUtils.loadAnimation(
+								activity.getApplicationContext(), R.anim.rotate_up);
 						rotateUp.setInterpolator(upInterpolator);
 
-						changeBackgroundDrawable(v, activity.getResources().getDrawable(
-								R.drawable.row_background_inner_borderless_bottom));
+						changeBackgroundDrawable(
+								v,
+								activity.getResources().getDrawable(
+										R.drawable.row_background_inner_borderless_bottom));
 						holder.expand.startAnimation(rotateUp);
 
-						(new ExpandAnimation(holder.ratingFrame, true, expandHeight, margin, position)).execute();
+						(new ExpandAnimation(holder.ratingFrame, true, expandHeight, margin,
+								position)).execute();
 
 					} else {
 						holder.expand.setImageDrawable(iconUp);
-						Animation rotateDown = AnimationUtils.loadAnimation(activity.getApplicationContext(),
-								R.anim.rotate_down);
+						Animation rotateDown = AnimationUtils.loadAnimation(
+								activity.getApplicationContext(), R.anim.rotate_down);
 						rotateDown.setFillAfter(true);
 						rotateDown.setAnimationListener(new AnimationListener() {
 
@@ -466,8 +491,9 @@ public class MainListAdapter extends BaseAdapter {
 
 							@Override
 							public void onAnimationEnd(Animation animation) {
-								TransitionDrawable out = (TransitionDrawable) activity.getResources().getDrawable(
-										R.drawable.background_border_transition_out);
+								TransitionDrawable out = (TransitionDrawable) activity
+										.getResources().getDrawable(
+												R.drawable.background_border_transition_out);
 								changeBackgroundDrawable(v, out);
 								out.startTransition(2000);
 
@@ -475,7 +501,8 @@ public class MainListAdapter extends BaseAdapter {
 						});
 						holder.expand.startAnimation(rotateDown);
 
-						(new ExpandAnimation(holder.ratingFrame, false, expandHeight, margin, position)).execute();
+						(new ExpandAnimation(holder.ratingFrame, false, expandHeight, margin,
+								position)).execute();
 
 					}
 
@@ -615,7 +642,8 @@ public class MainListAdapter extends BaseAdapter {
 	public void updateMainImage(ImageView imageView, int animationId, Bitmap result) {
 		imageView.setImageBitmap(result);
 		imageView.clearAnimation();
-		Animation fadeInAnimation = AnimationUtils.loadAnimation(activity.getApplicationContext(), animationId);
+		Animation fadeInAnimation = AnimationUtils.loadAnimation(activity.getApplicationContext(),
+				animationId);
 		imageView.startAnimation(fadeInAnimation);
 	}
 

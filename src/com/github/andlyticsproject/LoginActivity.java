@@ -159,9 +159,10 @@ public class LoginActivity extends SherlockActivity {
 						syncHandler.setAutosyncPeriod(accountName, 0);
 					} else {
 						// If auto sync was on for the account, enable it again
-						syncHandler.setAutosyncPeriod(accountName,
-								Preferences.isAutoSyncEnabled(LoginActivity.this, accountName) ?
-										Preferences.getAutoSyncPeriod(LoginActivity.this) : 0);
+						syncHandler.setAutosyncPeriod(
+								accountName,
+								Preferences.isAutoSyncEnabled(LoginActivity.this, accountName) ? Preferences
+										.getAutoSyncPeriod(LoginActivity.this) : 0);
 					}
 
 					if (manageAccountsMode && (accountName).equals(selectedAccount)) {
@@ -199,8 +200,8 @@ public class LoginActivity extends SherlockActivity {
 		};
 
 		AccountManager.get(LoginActivity.this).addAccount(Constants.ACCOUNT_TYPE_GOOGLE,
-				Constants.AUTH_TOKEN_TYPE_ANDROID_DEVLOPER, null,
-				null /* options */, LoginActivity.this, callback, null /* handler */);
+				Constants.AUTH_TOKEN_TYPE_ANDROID_DEVLOPER, null, null /* options */,
+				LoginActivity.this, callback, null /* handler */);
 	}
 
 	private void redirectToMain(String selectedAccount) {

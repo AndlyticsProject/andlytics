@@ -31,17 +31,24 @@ public class NotificationHandler {
 
 	static final String EXTRA_DESCRIPTION = "description";
 
-	public static void handleNotificaions(Context context, List<AppStatsDiff> diffs, String accountName) {
-		NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+	public static void handleNotificaions(Context context, List<AppStatsDiff> diffs,
+			String accountName) {
+		NotificationManager nm = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		String contentTitle = context.getString(R.string.notification_title);
 		String contentText = "";
 
-		boolean commentsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_COMMENTS);
-		boolean ratingsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_RATING);
-		boolean downloadsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_DOWNLOADS);
-		boolean soundEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_SOUND);
-		boolean lightEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_LIGHT);
+		boolean commentsEnabled = Preferences.getNotificationPerf(context,
+				Preferences.NOTIFICATION_CHANGES_COMMENTS);
+		boolean ratingsEnabled = Preferences.getNotificationPerf(context,
+				Preferences.NOTIFICATION_CHANGES_RATING);
+		boolean downloadsEnabled = Preferences.getNotificationPerf(context,
+				Preferences.NOTIFICATION_CHANGES_DOWNLOADS);
+		boolean soundEnabled = Preferences.getNotificationPerf(context,
+				Preferences.NOTIFICATION_SOUND);
+		boolean lightEnabled = Preferences.getNotificationPerf(context,
+				Preferences.NOTIFICATION_LIGHT);
 
 		List<String> appNameList = new ArrayList<String>();
 		int number = 0;
@@ -94,9 +101,10 @@ public class NotificationHandler {
 				}
 			}
 
-			if (!AndlyticsApp.getInstance().isAppVisible() ||
-					!accountName.equals(Preferences.getAccountName(context)) ||
-					Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_WHEN_ACCOUNT_VISISBLE)) {
+			if (!AndlyticsApp.getInstance().isAppVisible()
+					|| !accountName.equals(Preferences.getAccountName(context))
+					|| Preferences.getNotificationPerf(context,
+							Preferences.NOTIFICATION_WHEN_ACCOUNT_VISISBLE)) {
 				// The user can choose not to see notifications if the current account is visible
 
 				Builder builder = new NotificationCompat2.Builder(context);
@@ -120,7 +128,8 @@ public class NotificationHandler {
 				notificationIntent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
 				notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-				PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+				PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+						notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 				builder.setContentIntent(contentIntent);
 				builder.setTicker(contentTitle);
