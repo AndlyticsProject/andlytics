@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.exception;
 
 public class FeedbackException extends Exception {

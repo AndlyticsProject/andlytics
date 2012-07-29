@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.model;
 
 import java.util.ArrayList;
@@ -76,10 +77,10 @@ public class AppInfo {
 
 	public String getIconName() {
 		String iconName = packageName;
-		if(iconUrl != null) {
+		if (iconUrl != null) {
 			int slash = iconUrl.lastIndexOf('/');
-			if(slash > -1) {
-				iconName = iconUrl.substring(slash+1, iconUrl.length());
+			if (slash > -1) {
+				iconName = iconUrl.substring(slash + 1, iconUrl.length());
 			}
 		}
 
@@ -191,38 +192,36 @@ public class AppInfo {
 		return ratingDetailsExpanded;
 	}
 
-    public void setSkipNotification(boolean skipNotification) {
-        this.skipNotification = skipNotification;
-    }
+	public void setSkipNotification(boolean skipNotification) {
+		this.skipNotification = skipNotification;
+	}
 
-    public boolean isSkipNotification() {
-        return skipNotification;
-    }
+	public boolean isSkipNotification() {
+		return skipNotification;
+	}
 
-    public void setVersionName(String versionName) {
-        this.versionName = versionName;
-    }
+	public void setVersionName(String versionName) {
+		this.versionName = versionName;
+	}
 
-    public String getVersionName() {
-        return versionName;
-    }
+	public String getVersionName() {
+		return versionName;
+	}
 
-    public void setAdmobStats(Admob admobStats) {
-        this.admobStats = admobStats;
-    }
+	public void setAdmobStats(Admob admobStats) {
+		this.admobStats = admobStats;
+	}
 
-    public Admob getAdmobStats() {
-        return admobStats;
-    }
+	public Admob getAdmobStats() {
+		return admobStats;
+	}
 
-    public void setNumberOfErrors(Integer numberOfErrors) {
-        this.numberOfErrors = numberOfErrors;
-    }
+	public void setNumberOfErrors(Integer numberOfErrors) {
+		this.numberOfErrors = numberOfErrors;
+	}
 
-    public Integer getNumberOfErrors() {
-        return numberOfErrors;
-    }
-
-
+	public Integer getNumberOfErrors() {
+		return numberOfErrors;
+	}
 
 }

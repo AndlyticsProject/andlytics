@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.exception;
 
 public class SignupException extends Exception {
@@ -7,7 +8,5 @@ public class SignupException extends Exception {
 	public SignupException(String value) {
 		super(value);
 	}
-
-
 
 }

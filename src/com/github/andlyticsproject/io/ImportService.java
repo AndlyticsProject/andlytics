@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.io;
 
 import java.io.FileInputStream;
@@ -18,7 +19,6 @@ import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.LoginActivity;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.model.AppStats;
-
 
 public class ImportService extends IntentService {
 
@@ -76,7 +76,6 @@ public class ImportService extends IntentService {
 		this.accountName = intent.getStringExtra(ACCOUNT_NAME);
 		Log.d(TAG, "account name:: " + accountName);
 
-
 		boolean success = importStats();
 		notifyImportFinished(success);
 	}
@@ -108,13 +107,11 @@ public class ImportService extends IntentService {
 						db.insertOrUpdateAppStats(appStats, packageName);
 				}
 
-
 			}
 		} catch (Exception e) {
 			Log.e(TAG, "Error importing stats: " + e.getMessage());
 			errors = true;
 		}
-
 
 		message = getResources().getString(R.string.app_name) + ": "
 				+ getApplicationContext().getString(R.string.import_finished);
@@ -160,7 +157,6 @@ public class ImportService extends IntentService {
 
 		notificationManager.notify(NOTIFICATION_ID_FINISHED, notification);
 	}
-
 
 	/**
 	 * Send a notification to the progress bar.

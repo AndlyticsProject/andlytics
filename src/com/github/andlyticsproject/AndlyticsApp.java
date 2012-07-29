@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject;
 
 import org.acra.ACRA;
@@ -8,8 +9,8 @@ import android.content.Context;
 
 @ReportsCrashes(
 		formKey = "dHBKcnZqTHMyMHlfLTB0RjhMejZfbkE6MQ",
-		sharedPreferencesMode=Context.MODE_PRIVATE,
-		sharedPreferencesName=Preferences.PREF)
+		sharedPreferencesMode = Context.MODE_PRIVATE,
+		sharedPreferencesName = Preferences.PREF)
 public class AndlyticsApp extends Application {
 
 	private String authToken;
@@ -21,9 +22,9 @@ public class AndlyticsApp extends Application {
 	private boolean skipMainReload;
 
 	private String feedbackMessage;
-	
+
 	private static AndlyticsApp sInstance;
-	
+
 	private boolean isAppVisible = false;
 
 	@Override
@@ -34,17 +35,17 @@ public class AndlyticsApp extends Application {
 		setDbAdapter(new ContentAdapter(this));
 		sInstance = this;
 	}
-	
-	public static AndlyticsApp getInstance(){
+
+	public static AndlyticsApp getInstance() {
 		return sInstance;
 	}
-	
-	public boolean isAppVisible(){
+
+	public boolean isAppVisible() {
 		// TODO This is a bit of a hack, could it be improved
 		return isAppVisible;
 	}
-	
-	public void setIsAppVisible(boolean isVisible){
+
+	public void setIsAppVisible(boolean isVisible) {
 		isAppVisible = isVisible;
 	}
 
@@ -72,23 +73,20 @@ public class AndlyticsApp extends Application {
 		return xsrfToken;
 	}
 
+	public void setSkipMainReload(boolean skipMainReload) {
+		this.skipMainReload = skipMainReload;
+	}
 
-    public void setSkipMainReload(boolean skipMainReload) {
-        this.skipMainReload = skipMainReload;
-    }
+	public boolean isSkipMainReload() {
+		return skipMainReload;
+	}
 
-    public boolean isSkipMainReload() {
-        return skipMainReload;
-    }
+	public void setFeedbackMessage(String feedbackMessage) {
+		this.feedbackMessage = feedbackMessage;
+	}
 
-    public void setFeedbackMessage(String feedbackMessage) {
-        this.feedbackMessage = feedbackMessage;
-    }
-
-    public String getFeedbackMessage() {
-        return feedbackMessage;
-    }
-
-
+	public String getFeedbackMessage() {
+		return feedbackMessage;
+	}
 
 }

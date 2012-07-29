@@ -40,14 +40,12 @@ public class ChartActivity extends BaseChartActivity {
 	public List<Date> versionUpdateDates;
 
 	@Override
-	protected void executeLoadData(Timeframe timeFrame)
-	{
+	protected void executeLoadData(Timeframe timeFrame) {
 		new LoadChartData().execute(timeFrame);
 
 	}
 
-	private void executeLoadDataDefault()
-	{
+	private void executeLoadDataDefault() {
 		new LoadChartData().execute(getCurrentTimeFrame());
 
 	}
@@ -259,16 +257,14 @@ public class ChartActivity extends BaseChartActivity {
 	}
 
 	@Override
-	protected void notifyChangedDataformat()
-	{
+	protected void notifyChangedDataformat() {
 		dataUpdateRequested = true;
 		executeLoadDataDefault();
 
 	}
 
 	@Override
-	protected List<View> getExtraConfig()
-	{
+	protected List<View> getExtraConfig() {
 		LinearLayout ll = (LinearLayout) getLayoutInflater().inflate(R.layout.chart_extra_config,
 				null);
 
@@ -301,8 +297,7 @@ public class ChartActivity extends BaseChartActivity {
 	@Override
 	protected void onChartSelected(int page, int column) {
 		super.onChartSelected(page, column);
-		if (page != currentChartSet.ordinal())
-		{
+		if (page != currentChartSet.ordinal()) {
 			currentChartSet = ChartSet.values()[page];
 			updateTabbarButtons();
 		}

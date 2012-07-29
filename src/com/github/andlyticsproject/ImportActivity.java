@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject;
 
 import java.io.File;
@@ -66,7 +67,6 @@ public class ImportActivity extends SherlockActivity {
 			}
 		});
 
-
 		View importButton = (View) this.findViewById(R.id.import_dialog_import_button);
 		importButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -133,8 +133,7 @@ public class ImportActivity extends SherlockActivity {
 			List<String> pacakgeNames = db.getPackagesForAccount(accountName);
 			try {
 				fileNames = StatsCsvReaderWriter.getImportFileNamesFromZip(accountName,
-						pacakgeNames,
-						zipFilename);
+						pacakgeNames, zipFilename);
 
 				return true;
 			} catch (ServiceExceptoin e) {

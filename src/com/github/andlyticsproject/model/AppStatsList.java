@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.model;
 
 import java.util.ArrayList;
@@ -37,12 +38,12 @@ public class AppStatsList {
 		return appStats;
 	}
 
-    public void setOverall(AppStats overall) {
-        this.overall = overall;
-    }
+	public void setOverall(AppStats overall) {
+		this.overall = overall;
+	}
 
-    public AppStats getOverall() {
-        return overall;
-    }
+	public AppStats getOverall() {
+		return overall;
+	}
 
 }

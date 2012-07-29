@@ -219,14 +219,11 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 	protected void onChartSelected(int page, int column) {
 	}
 
-	protected void setCurrentChart(int page, int column)
-	{
+	protected void setCurrentChart(int page, int column) {
 		int pos = 0;
-		for (View view : chartGalleryAdapter.getViews())
-		{
+		for (View view : chartGalleryAdapter.getViews()) {
 			int pageColumn[] = (int[]) view.getTag();
-			if (page == pageColumn[0] && column == pageColumn[1])
-			{
+			if (page == pageColumn[0] && column == pageColumn[1]) {
 				chartGallery.setSelection(pos, false);
 				return;
 			}
@@ -263,7 +260,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 	}
 
 	private final void updateTitleTextSwitcher(String string, Drawable image) {
-			getSupportActionBar().setTitle(string);
+		getSupportActionBar().setTitle(string);
 	}
 
 	@Override
@@ -356,8 +353,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 
 	protected abstract String getChartHint();
 
-	public void setAllowChangePageSliding(boolean allowChangePageSliding)
-	{
+	public void setAllowChangePageSliding(boolean allowChangePageSliding) {
 		chartGallery.setAllowChangePageSliding(allowChangePageSliding);
 	}
 

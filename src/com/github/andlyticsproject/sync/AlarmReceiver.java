@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.sync;
 
 import android.accounts.Account;
@@ -15,26 +16,29 @@ import com.github.andlyticsproject.Constants;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    private static final String TAG = AlarmReceiver.class.getSimpleName();
+	private static final String TAG = AlarmReceiver.class.getSimpleName();
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
+	@Override
+	public void onReceive(Context context, Intent intent) {
 
-        Log.d(TAG, "onReceive called at:: " + new Date(System.currentTimeMillis()).toGMTString());
+		Log.d(TAG, "onReceive called at:: " + new Date(System.currentTimeMillis()).toGMTString());
 
-        final AccountManager manager = AccountManager.get(context);
-        final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
-        for (Account account : accounts) {
+		final AccountManager manager = AccountManager.get(context);
+		final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
+		for (Account account : accounts) {
 
-            boolean syncAutomatically = ContentResolver.getSyncAutomatically(account, Constants.ACCOUNT_AUTHORITY);
-            if(syncAutomatically) {
-                Bundle extras = new Bundle();
-                Log.d(TAG, "requesting sync for " + account.name + " now! :: " + new Date(System.currentTimeMillis()).toGMTString());
-                ContentResolver.requestSync(account, Constants.ACCOUNT_AUTHORITY, extras);
-            } else {
-                Log.d(TAG, "auto sync disabled for account :: " + account.name);
-            }
-        }
-    }
+			boolean syncAutomatically = ContentResolver.getSyncAutomatically(account,
+					Constants.ACCOUNT_AUTHORITY);
+			if (syncAutomatically) {
+				Bundle extras = new Bundle();
+				Log.d(TAG,
+						"requesting sync for " + account.name + " now! :: "
+								+ new Date(System.currentTimeMillis()).toGMTString());
+				ContentResolver.requestSync(account, Constants.ACCOUNT_AUTHORITY, extras);
+			} else {
+				Log.d(TAG, "auto sync disabled for account :: " + account.name);
+			}
+		}
+	}
 
 }

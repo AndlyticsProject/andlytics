@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.exception;
 
 public class NetworkException extends Exception {
@@ -9,7 +10,7 @@ public class NetworkException extends Exception {
 	}
 
 	public NetworkException(Exception e, int statusCode) {
-        super("Status-Code: " + statusCode, e);
-    }
+		super("Status-Code: " + statusCode, e);
+	}
 
 }

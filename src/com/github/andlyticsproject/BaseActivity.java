@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject;
 
 import org.acra.ACRA;
@@ -58,7 +59,7 @@ public class BaseActivity extends SherlockActivity {
 			packageName = b.getString(Constants.PACKAGE_NAME_PARCEL);
 			iconFilePath = b.getString(Constants.ICON_FILE_PARCEL);
 			accountName = b.getString(Constants.AUTH_ACCOUNT_NAME);
-			Preferences.saveAccountName(this,accountName);
+			Preferences.saveAccountName(this, accountName);
 		}
 
 	}
@@ -68,7 +69,7 @@ public class BaseActivity extends SherlockActivity {
 		intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
 		intent.putExtra(Constants.ICON_FILE_PARCEL, iconFilePath);
 		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
-		if (clazz.equals(Main.class)){
+		if (clazz.equals(Main.class)) {
 			// Main does not have singleTask set in the manifest
 			// in order to facilitate easy switching between accounts using list navigation
 			// We therefore need to clear activity we came from before had in order
@@ -78,7 +79,7 @@ public class BaseActivity extends SherlockActivity {
 		if (disableAnimation) {
 			intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		}
-		if(skipDataReload) {
+		if (skipDataReload) {
 			getAndlyticsApplication().setSkipMainReload(true);
 		}
 
@@ -98,19 +99,19 @@ public class BaseActivity extends SherlockActivity {
 
 	public void handleUserVisibleException(Exception e) {
 		if (e instanceof NetworkException) {
-			Toast.makeText(BaseActivity.this, "A network error has occurred. Please try again later.",
-					Toast.LENGTH_LONG).show();
-		}  else if (e instanceof SignupException) {
 			Toast.makeText(BaseActivity.this,
-					accountName + " is not an android developer account, sign up at:\n\n" + e.getMessage(),
-					Toast.LENGTH_LONG).show();
-			Toast.makeText(BaseActivity.this,
-					accountName + " is not an android developer account, sign up at:\n\n" + e.getMessage(),
-					Toast.LENGTH_LONG).show();
+					"A network error has occurred. Please try again later.", Toast.LENGTH_LONG)
+					.show();
+		} else if (e instanceof SignupException) {
+			Toast.makeText(BaseActivity.this, accountName
+					+ " is not an android developer account, sign up at:\n\n"
+					+ e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(BaseActivity.this, accountName
+					+ " is not an android developer account, sign up at:\n\n"
+					+ e.getMessage(), Toast.LENGTH_LONG).show();
 		} else if (e instanceof AuthenticationException || e instanceof NoCookieSetException) {
 
-			Toast.makeText(BaseActivity.this,
-					"authentication failed for: " + accountName,
+			Toast.makeText(BaseActivity.this, "authentication failed for: " + accountName,
 					Toast.LENGTH_LONG).show();
 
 		} else if (e instanceof AdmobRateLimitExceededException) {
@@ -126,11 +127,12 @@ public class BaseActivity extends SherlockActivity {
 
 		} else if (e instanceof AdmobAccountRemovedException) {
 
-			Toast.makeText(BaseActivity.this,
-					"AdMob account \"" + ((AdmobAccountRemovedException)e).getAccountName() + "\" is missing. If this happens repeatedly try moving Andlytics from sdcard to internal storage.",
+			Toast.makeText(BaseActivity.this, "AdMob account \""
+					+ "\" is missing. If this happens repeatedly try moving Andlytics from sdcard to internal storage.",
 					Toast.LENGTH_LONG).show();
-			Toast.makeText(BaseActivity.this,
-					"AdMob account \"" + ((AdmobAccountRemovedException)e).getAccountName() + "\" is missing. If this happens repeatedly try moving Andlytics from sdcard to internal storage.",
+			Toast.makeText(BaseActivity.this, "AdMob account \""
+					+ ((AdmobAccountRemovedException) e).getAccountName()
+					+ "\" is missing. If this happens repeatedly try moving Andlytics from sdcard to internal storage.",
 					Toast.LENGTH_LONG).show();
 
 		} else if (e instanceof AdmobInvalidRequestException) {
@@ -138,7 +140,6 @@ public class BaseActivity extends SherlockActivity {
 			Toast.makeText(BaseActivity.this, "Error while requesting AdMob API", Toast.LENGTH_LONG).show();
 
 		} else if (e instanceof AdmobInvalidTokenException) {
-
 
 			Toast.makeText(BaseActivity.this,
 					"Error while authenticating admob account. Please try again later.",
@@ -149,40 +150,34 @@ public class BaseActivity extends SherlockActivity {
 			Log.w(TAG, e.getMessage(), e);
 
 			Toast.makeText(BaseActivity.this,
-					"Unabled to load Admob data, please try again later.",
-					Toast.LENGTH_LONG).show();
+					"Unabled to load Admob data, please try again later.", Toast.LENGTH_LONG)
+					.show();
 
 		} else if (e instanceof DeveloperConsoleException) {
 
 			int appVersionCode = getAppVersionCode(this);
-			if(Preferences.getLatestVersionCode(this) > appVersionCode) {
+			if (Preferences.getLatestVersionCode(this) > appVersionCode) {
 				showNewVersionDialog(e);
 			} else {
-
 				showCrashDialog(e);
 			}
-
 
 		} else if (e instanceof InvalidJSONResponseException) {
 
 			int appVersionCode = getAppVersionCode(this);
-			if(Preferences.getLatestVersionCode(this) > appVersionCode) {
+			if (Preferences.getLatestVersionCode(this) > appVersionCode) {
 				showNewVersionDialog(e);
 			} else {
-
 				showGoogleErrorDialog(e);
 			}
 
 		} else if (e instanceof MultiAccountAcception) {
-
 			showAspErrorDialog(e);
-
-
 		}
 	}
 
 	private void showNewVersionDialog(Exception e) {
-		if(!isFinishing()) {
+		if (!isFinishing()) {
 
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
 			builder.setTitle("Sorry, update required.");
@@ -192,7 +187,8 @@ public class BaseActivity extends SherlockActivity {
 				public void onClick(DialogInterface dialog, int which) {
 
 					Intent goToMarket = null;
-					goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.github.andlyticsproject"));
+					goToMarket = new Intent(Intent.ACTION_VIEW, Uri
+							.parse("market://details?id=com.github.andlyticsproject"));
 					startActivity(goToMarket);
 
 					dialog.dismiss();
@@ -214,7 +210,7 @@ public class BaseActivity extends SherlockActivity {
 
 	protected void showCrashDialog(final Exception e) {
 
-		if(!isFinishing()) {
+		if (!isFinishing()) {
 
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
 			builder.setTitle("Sorry...");
@@ -223,7 +219,7 @@ public class BaseActivity extends SherlockActivity {
 
 				public void onClick(DialogInterface dialog, int which) {
 
-					if(!isFinishing()) {
+					if (!isFinishing()) {
 
 						Thread thread = new Thread(new Runnable() {
 
@@ -251,7 +247,6 @@ public class BaseActivity extends SherlockActivity {
 			builder.create().show();
 		}
 
-
 	}
 
 	private void sendAracReport(Exception e, boolean userTriggered) {
@@ -262,7 +257,7 @@ public class BaseActivity extends SherlockActivity {
 
 	protected void showGoogleErrorDialog(final Exception e) {
 
-		if(!isFinishing()) {
+		if (!isFinishing()) {
 
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
 			builder.setTitle("Sorry... ");
@@ -299,7 +294,7 @@ public class BaseActivity extends SherlockActivity {
 
 	protected void showAspErrorDialog(final Exception e) {
 
-		if(!isFinishing()) {
+		if (!isFinishing()) {
 
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
 			builder.setTitle("Multiple Developer Accounts");
@@ -340,7 +335,8 @@ public class BaseActivity extends SherlockActivity {
 		return getAndlyticsApplication().getDbAdapter();
 	}
 
-	protected void authenticateAccountFromPreferences(boolean invalidateToken, AuthenticationCallback callback) {
+	protected void authenticateAccountFromPreferences(boolean invalidateToken,
+			AuthenticationCallback callback) {
 
 		String accountName = Preferences.getAccountName(this);
 
@@ -352,7 +348,8 @@ public class BaseActivity extends SherlockActivity {
 				Account account = accounts[i];
 				if (accountName.equals(account.name)) {
 					if (invalidateToken) {
-						manager.invalidateAuthToken(Constants.ACCOUNT_TYPE_GOOGLE, getAndlyticsApplication().getAuthToken());
+						manager.invalidateAuthToken(Constants.ACCOUNT_TYPE_GOOGLE,
+								getAndlyticsApplication().getAuthToken());
 					}
 					getAndlyticsApplication().setAuthToken(null);
 					authenticateAccount(manager, account, callback);
@@ -363,7 +360,8 @@ public class BaseActivity extends SherlockActivity {
 		}
 	}
 
-	private void authenticateAccount(final AccountManager manager, final Account account, final AuthenticationCallback callback) {
+	private void authenticateAccount(final AccountManager manager, final Account account,
+			final AuthenticationCallback callback) {
 
 		Preferences.saveAccountName(this, account.name);
 
@@ -374,8 +372,7 @@ public class BaseActivity extends SherlockActivity {
 			public void run(final AccountManagerFuture<Bundle> arg0) {
 				try {
 
-					String authToken = arg0.getResult().getString(
-							AccountManager.KEY_AUTHTOKEN);
+					String authToken = arg0.getResult().getString(AccountManager.KEY_AUTHTOKEN);
 
 					if (authToken != null) {
 						//do something with the auth token
@@ -406,9 +403,8 @@ public class BaseActivity extends SherlockActivity {
 
 		};
 
-
-		accountManager.getAuthToken(account,
-				Constants.AUTH_TOKEN_TYPE_ANDROID_DEVLOPER,null, BaseActivity.this, myCallback, null);
+		accountManager.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVLOPER, null,
+				BaseActivity.this, myCallback, null);
 
 		/*
 
@@ -502,7 +498,8 @@ public class BaseActivity extends SherlockActivity {
 
 	public static int getAppVersionCode(Context context) {
 		try {
-			PackageInfo pinfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			PackageInfo pinfo = context.getPackageManager().getPackageInfo(
+					context.getPackageName(), 0);
 			return pinfo.versionCode;
 		} catch (NameNotFoundException e) {
 			Log.e(AndlyticsApp.class.getSimpleName(), "unable to read version code", e);

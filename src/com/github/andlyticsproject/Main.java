@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject;
 
 import java.io.File;
@@ -90,7 +91,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-
 		db = getDbAdapter();
 		LayoutInflater layoutInflater = getLayoutInflater();
 
@@ -118,7 +118,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		// status & progess bar
 		statusText = (TextView) findViewById(R.id.main_app_status_line);
 
-
 		aniPrevIn = AnimationUtils.loadAnimation(Main.this, R.anim.activity_fade_in);
 
 		dotracking = true;
@@ -138,7 +137,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			showChangelog();
 		}
 	}
-
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
@@ -163,7 +161,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		// TODO We shouldn't be reloading in every onResume
 		// When we move this, make sure we move to using startActivityForResult for the preferences
 		// to ensure that we do update if hidden apps are changed
-		
+
 		if (!mainSkipDataReload) {
 			Utils.execute(new LoadDbEntries(), true);
 		} else {
@@ -171,17 +169,18 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		}
 
 		getAndlyticsApplication().setSkipMainReload(false);
-		
+
 		AndlyticsApp.getInstance().setIsAppVisible(true);
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.clear();
 		getSupportMenuInflater().inflate(R.menu.main_menu, menu);
 		statsModeMenuItem = menu.findItem(R.id.itemMainmenuStatsMode);
 		if (refreshing)
-		  menu.findItem(R.id.itemMainmenuRefresh).setActionView(R.layout.action_bar_indeterminate_progress);
+			menu.findItem(R.id.itemMainmenuRefresh).setActionView(
+					R.layout.action_bar_indeterminate_progress);
 		updateStatsMode();
 		return true;
 	}
@@ -264,7 +263,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
@@ -374,9 +372,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 			Exception exception = null;
 
-
 			String authtoken = ((AndlyticsApp) getApplication()).getAuthToken();
-
 
 			List<AppInfo> appDownloadInfos = null;
 			try {
@@ -450,7 +446,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				dotracking = false;
 			}
 
-
 			return exception;
 		}
 
@@ -472,7 +467,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 					Log.w("Andlytics", "authentication faild, retry with new token");
 					isAuthenticationRetry = true;
 					authenticateAccountFromPreferences(true, Main.this);
-
 
 				} else {
 					handleUserVisibleException(e);
@@ -527,7 +521,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				}
 
 			}
-
 
 			triggerRemoteCall = params[0];
 
@@ -624,7 +617,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		super.onBackPressed();
 	}
 
-
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -720,7 +712,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		Utils.execute(new LoadRemoteEntries(), null);
 	}
 
-
 	//FIXME isUpdate
 
 	/**
@@ -806,7 +797,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 			return rowView;
 		}
-
 
 	}
 

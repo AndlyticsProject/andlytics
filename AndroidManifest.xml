@@ -1,99 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.github.andlyticsproject"
-	android:installLocation="auto"
-	android:versionName="2.1.3" android:versionCode="213">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.github.andlyticsproject"
+    android:installLocation="auto"
+    android:versionCode="213"
+    android:versionName="2.1.3" >
 
-	<uses-permission
-		android:name="android.permission.INTERNET" />
-	<uses-permission
-		android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission
-		android:name="android.permission.GET_ACCOUNTS" />
-	<uses-permission
-		android:name="android.permission.USE_CREDENTIALS" />
-	<uses-permission
-		android:name="android.permission.MANAGE_ACCOUNTS" />
-	<uses-permission
-		android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
-	<uses-permission
-		android:name="android.permission.READ_SYNC_SETTINGS" />
-	<uses-permission
-		android:name="android.permission.WRITE_SYNC_SETTINGS" />
-	<uses-permission
-		android:name="android.permission.READ_SYNC_STATS" />
-	<uses-permission
-		android:name="android.permission.WRITE_SYNC_STATS" />
-	<uses-permission
-		android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_STATS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-	<uses-sdk
-		android:minSdkVersion="7"
-		android:targetSdkVersion="16"
-		 />
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="16" />
 
-	<application
-		android:label="@string/app_name"
-		android:theme="@style/Theme.Andlytics"
-		android:allowBackup="true"
-		android:name="AndlyticsApp"
-		android:icon="@drawable/icon" >
-		<activity
-			android:name=".LoginActivity"
-			android:label="@string/app_name">
-			<intent-filter>
-				<action
-					android:name="android.intent.action.MAIN" />
-				<category
-					android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-		<activity
-			android:name=".Main"
-			android:label="@string/app_name"
+    <application
+        android:name="AndlyticsApp"
+        android:allowBackup="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Andlytics" >
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Main"
+            android:label="@string/app_name"
             android:uiOptions="splitActionBarWhenNarrow" >
-		</activity>
-		<activity
-			android:name=".CommentsActivity"
-			android:label="@string/comments">
-		</activity>
-		<activity
-			android:name=".ChartActivity"
-			android:label="@string/app_name">
-		</activity>
-		<activity
-			android:name=".AdmobActivity"
-			android:label="@string/app_name_admob">
-		</activity>
-		<activity
-			android:name=".DemoDataActivity"
-			android:label="@string/app_name"
-			android:launchMode="singleTask">
-		</activity>
-		<activity
-			android:name=".AdmobAuthenticatorActivity"
-			android:label="@string/app_name_admob"
-			android:theme="@android:style/Theme.Dialog"
-			android:excludeFromRecents="true" />
-		<activity
-			android:name=".PreferenceActivity"
-			android:label="@string/preferences">
-		</activity>
-		<activity
-			android:name=".NotificationPreferenceActivity"
-			android:label="@string/notifications">
-		</activity>
-		<activity
-			android:name=".AccountSpecificPreferenceActivity"
-			android:label="@string/notifications">
-		</activity>
+        </activity>
+        <activity
+            android:name=".CommentsActivity"
+            android:label="@string/comments" >
+        </activity>
+        <activity
+            android:name=".ChartActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".AdmobActivity"
+            android:label="@string/app_name_admob" >
+        </activity>
+        <activity
+            android:name=".AdmobAuthenticatorActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/app_name_admob"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".PreferenceActivity"
+            android:label="@string/preferences" >
+        </activity>
+        <activity
+            android:name=".NotificationPreferenceActivity"
+            android:label="@string/notifications" >
+        </activity>
+        <activity
+            android:name=".AccountSpecificPreferenceActivity"
+            android:label="@string/notifications" >
+        </activity>
         <activity
             android:name=".ImportActivity"
-            android:label="@string/statistics_import"> 
+            android:label="@string/statistics_import" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="*"
                     android:mimeType="application/zip"
@@ -103,7 +87,9 @@
             <!-- intent-filter android:priority="-100" -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:mimeType="application/zip"
                     android:scheme="file" />
@@ -111,57 +97,53 @@
         </activity>
         <activity
             android:name=".ExportActivity"
-            android:label="@string/statistics_export">
-        </activity> 
-		<service
-			android:name=".sync.SyncAdapterService"
-			android:exported="false"
-			android:process=":andlytics">
-			<intent-filter>
-				<action
-					android:name="android.content.SyncAdapter" />
-			</intent-filter>
-			<meta-data
-				android:name="android.content.SyncAdapter"
-				android:resource="@xml/sync" />
-		</service>
+            android:label="@string/statistics_export" >
+        </activity>
 
-		<service
-			android:name=".admob.AdmobAccountAuthenticator"
-			android:exported="false">
-			<intent-filter>
-				<action
-					android:name="android.accounts.AccountAuthenticator" />
-			</intent-filter>
-			<meta-data
-				android:name="android.accounts.AccountAuthenticator"
-				android:resource="@xml/authenticator" />
-		</service>
+        <service
+            android:name=".sync.SyncAdapterService"
+            android:exported="false"
+            android:process=":andlytics" >
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
 
-		<service
-			android:name=".io.ExportService"
-			android:exported="false" />
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync" />
+        </service>
+        <service
+            android:name=".admob.AdmobAccountAuthenticator"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
 
-		<service
-			android:name=".io.ImportService"
-			android:exported="false" />
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+        <service
+            android:name=".io.ExportService"
+            android:exported="false" />
+        <service
+            android:name=".io.ImportService"
+            android:exported="false" />
 
-		<provider
-			android:name="com.github.andlyticsproject.sync.ContentProvider"
-			android:exported="false"
-			android:authorities="com.github.andlyticsproject" />
+        <provider
+            android:name="com.github.andlyticsproject.sync.ContentProvider"
+            android:authorities="com.github.andlyticsproject"
+            android:exported="false" />
+        <provider
+            android:name="com.github.andlyticsproject.db.AndlyticsContentProvider"
+            android:authorities="com.github.andlyticsproject.db.AndlyticsContentProvider"
+            android:exported="false" />
 
-		<provider
-			android:name="com.github.andlyticsproject.db.AndlyticsContentProvider"
-			android:exported="false"
-			android:authorities="com.github.andlyticsproject.db.AndlyticsContentProvider" />
-
-		<receiver
-			android:process=":remote"
-			android:exported="false"
-			android:name="com.github.andlyticsproject.sync.AlarmReceiver"></receiver>
-
-
-	</application>
+        <receiver
+            android:name="com.github.andlyticsproject.sync.AlarmReceiver"
+            android:exported="false"
+            android:process=":remote" >
+        </receiver>
+    </application>
 
 </manifest>

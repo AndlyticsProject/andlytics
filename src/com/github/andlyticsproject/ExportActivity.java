@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject;
 
 import java.io.File;
@@ -153,7 +154,6 @@ public class ExportActivity extends SherlockActivity {
 
 	}
 
-
 	class ExportListAdapter extends BaseAdapter {
 
 		@Override
@@ -223,7 +223,6 @@ public class ExportActivity extends SherlockActivity {
 				}
 			}
 
-
 			holder.row.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -269,7 +268,6 @@ public class ExportActivity extends SherlockActivity {
 		}
 	}
 
-
 	private class GetCachedImageTask extends AsyncTask<File, Void, Bitmap> {
 
 		private ImageView imageView;
@@ -307,7 +305,6 @@ public class ExportActivity extends SherlockActivity {
 			return null;
 		}
 	}
-
 
 	public void updateMainImage(ImageView imageView, int animationId, Bitmap result) {
 		imageView.setImageBitmap(result);

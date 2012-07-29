@@ -59,16 +59,12 @@ public class AdmobActivity extends BaseChartActivity {
 
 	@Override
 	protected void executeLoadData(Timeframe timeFrame) {
-		new LoadDbEntiesTask().execute(new Object[] {
-				false, timeFrame
-		});
+		new LoadDbEntiesTask().execute(new Object[] { false, timeFrame });
 
 	}
 
 	private void executeLoadDataDefault(boolean executeRemoteCall) {
-		new LoadDbEntiesTask().execute(new Object[] {
-				executeRemoteCall, getCurrentTimeFrame()
-		});
+		new LoadDbEntiesTask().execute(new Object[] { executeRemoteCall, getCurrentTimeFrame() });
 
 	}
 
@@ -77,8 +73,7 @@ public class AdmobActivity extends BaseChartActivity {
 
 		db = getDbAdapter();
 
-		mainViewSwitcher = new ViewSwitcher3D(
-				(ViewGroup) findViewById(R.id.base_chart_main_frame));
+		mainViewSwitcher = new ViewSwitcher3D((ViewGroup) findViewById(R.id.base_chart_main_frame));
 		mainViewSwitcher.setListener(this);
 
 		admobListAdapter = new AdmobListAdapter(this);
@@ -86,11 +81,9 @@ public class AdmobActivity extends BaseChartActivity {
 		setAdapter(admobListAdapter);
 
 		String currentAdmobAccount = null;
-		String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this,
-				packageName);
+		String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
 		if (currentSiteId != null) {
-			currentAdmobAccount = Preferences.getAdmobAccount(this,
-					currentSiteId);
+			currentAdmobAccount = Preferences.getAdmobAccount(this, currentSiteId);
 		}
 
 		if (currentAdmobAccount == null) {
@@ -109,11 +102,9 @@ public class AdmobActivity extends BaseChartActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.clear();
 		String currentAdmobAccount = null;
-		String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this,
-				packageName);
+		String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
 		if (currentSiteId != null) {
-			currentAdmobAccount = Preferences.getAdmobAccount(this,
-					currentSiteId);
+			currentAdmobAccount = Preferences.getAdmobAccount(this, currentSiteId);
 		}
 		getSupportMenuInflater().inflate(R.menu.admob_menu, menu);
 		if (refreshing) {
@@ -144,8 +135,7 @@ public class AdmobActivity extends BaseChartActivity {
 			case R.id.itemAdmobsmenuSettings:
 				setChartIgnoreCallLayouts(true);
 
-				String admobSiteId = Preferences.getAdmobSiteId(AdmobActivity.this,
-						packageName);
+				String admobSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
 
 				if (admobSiteId == null) {
 
@@ -176,8 +166,7 @@ public class AdmobActivity extends BaseChartActivity {
 		final int size = accounts.length;
 		String[] names = new String[size];
 		accountList.removeAllViews();
-		for (int i = 0; i < size; i++)
-		{
+		for (int i = 0; i < size; i++) {
 			names[i] = accounts[i].name;
 
 			View inflate = getLayoutInflater().inflate(R.layout.admob_account_list_item, null);
@@ -188,8 +177,7 @@ public class AdmobActivity extends BaseChartActivity {
 			inflate.setOnClickListener(new OnClickListener() {
 
 				@Override
-				public void onClick(View view)
-				{
+				public void onClick(View view) {
 
 					String currentAdmobAccount = (String) view.getTag();
 
@@ -205,24 +193,19 @@ public class AdmobActivity extends BaseChartActivity {
 	private void addNewAdmobAccount() {
 
 		AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
-			public void run(AccountManagerFuture<Bundle> future)
-			{
-				try
-				{
+			public void run(AccountManagerFuture<Bundle> future) {
+				try {
 					Bundle bundle = future.getResult();
 					bundle.keySet();
 					Log.d(TAG, "account added: " + bundle);
 
 					showAccountList();
 
-				} catch (OperationCanceledException e)
-				{
+				} catch (OperationCanceledException e) {
 					Log.d(TAG, "addAccount was canceled");
-				} catch (IOException e)
-				{
+				} catch (IOException e) {
 					Log.d(TAG, "addAccount failed: " + e);
-				} catch (AuthenticatorException e)
-				{
+				} catch (AuthenticatorException e) {
 					Log.d(TAG, "addAccount failed: " + e);
 				}
 				// gotAccount(false);
@@ -230,8 +213,8 @@ public class AdmobActivity extends BaseChartActivity {
 		};
 
 		AccountManager.get(AdmobActivity.this).addAccount(Constants.ACCOUNT_TYPE_ADMOB,
-				Constants.AUTHTOKEN_TYPE_ADMOB,
-				null, null /* options */, AdmobActivity.this, callback, null /* handler */);
+				Constants.AUTHTOKEN_TYPE_ADMOB, null, null /* options */, AdmobActivity.this,
+				callback, null /* handler */);
 	}
 
 	private class LoadDbEntiesTask extends AsyncTask<Object, Void, Exception> {
@@ -295,8 +278,7 @@ public class AdmobActivity extends BaseChartActivity {
 						new SyncCallback() {
 
 							@Override
-							public void initialImportStarted()
-							{
+							public void initialImportStarted() {
 								publishProgress();
 							}
 						});
@@ -325,8 +307,7 @@ public class AdmobActivity extends BaseChartActivity {
 			if (result != null) {
 				Log.e(TAG, "admob exception", result);
 				handleUserVisibleException(result);
-			}
-			else {
+			} else {
 				executeLoadDataDefault(false);
 			}
 
@@ -366,17 +347,14 @@ public class AdmobActivity extends BaseChartActivity {
 
 			if (result != null) {
 				handleUserVisibleException(result);
-			}
-			else {
+			} else {
 
-				if (data.size() > 0)
-				{
+				if (data.size() > 0) {
 
 					siteList.removeAllViews();
 
 					Set<String> keySet = data.keySet();
-					for (String siteId : keySet)
-					{
+					for (String siteId : keySet) {
 
 						String siteName = data.get(siteId);
 
@@ -390,14 +368,12 @@ public class AdmobActivity extends BaseChartActivity {
 						inflate.setOnClickListener(new OnClickListener() {
 
 							@Override
-							public void onClick(View view)
-							{
+							public void onClick(View view) {
 
 								Preferences.saveAdmobSiteId(AdmobActivity.this, packageName,
 										(String) view.getTag());
 								Preferences.saveAdmobAccount(AdmobActivity.this,
-										(String) view.getTag(),
-										currentAdmobAccount);
+										(String) view.getTag(), currentAdmobAccount);
 								mainViewSwitcher.swap();
 								executeLoadDataDefault(true);
 								invalidateOptionsMenu();
@@ -420,14 +396,12 @@ public class AdmobActivity extends BaseChartActivity {
 		 * radioUnlimited.setEnabled(false); checkSmooth.setEnabled(false); }
 		 */
 
-		if (statsForApp != null && statsForApp.size() > 0)
-		{
+		if (statsForApp != null && statsForApp.size() > 0) {
 			updateCharts(statsForApp);
 
 			SimpleDateFormat dateFormat = new SimpleDateFormat(
 					Preferences.getDateFormatLong(AdmobActivity.this));
-			if (statsForApp.size() > 0)
-			{
+			if (statsForApp.size() > 0) {
 
 				timetext = dateFormat.format(statsForApp.get(0).getDate()) + " - "
 						+ dateFormat.format(statsForApp.get(statsForApp.size() - 1).getDate());
@@ -457,12 +431,10 @@ public class AdmobActivity extends BaseChartActivity {
 		removeButton.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View v)
-			{
+			public void onClick(View v) {
 				Preferences.saveAdmobSiteId(AdmobActivity.this, packageName, null);
 				showAccountList();
-				if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config)
-				{
+				if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
 					configSwitcher.showPrevious();
 				}
 				mainViewSwitcher.swap();
@@ -494,8 +466,7 @@ public class AdmobActivity extends BaseChartActivity {
 		addAccountButton.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View v)
-			{
+			public void onClick(View v) {
 				addNewAdmobAccount();
 			}
 		});

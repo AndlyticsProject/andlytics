@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.util;
 
 import java.io.Closeable;
