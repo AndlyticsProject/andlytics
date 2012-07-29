@@ -1,5 +1,7 @@
 package com.github.andlyticsproject;
 
+import com.github.andlyticsproject.sync.AutosyncHandler;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -10,11 +12,6 @@ public class Preferences {
 
 	public static final String PREF = "andlytics_pref";
 	
-	// Keys used on the main preference screen
-	public static final String PREF_AUTO_SYNC_PERIOD = "prefAutoSyncPeriod";
-	public static final String PREF_NOTIFICATIONS = "prefNotifications";
-	public static final String PREF_HIDDEN_APPS = "prefHiddenApps";
-
 	private static final String HIDDEN_ACCOUNT = "hiddenAccount";
 	private static final String ACCOUNT_NAME = "accountName";
 	private static final String GWTPERMUTATION = "permutation";
@@ -25,6 +22,8 @@ public class Preferences {
     private static final String POST_REQUEST_FEEDBACK = "post_feedback";
 
 	private static final String AUTOSYNC = "autosync.initial.set";
+	public static final String AUTOSYNC_PERIOD = "autosync.period";
+	public static final String AUTOSYNC_ENABLE = "autosync.enable";
 	private static final String CRASH_REPORT_DISABLE = "acra.enable";
 
 	public static final String CHART_TIMEFRAME = "chart.timeframe";
@@ -39,6 +38,7 @@ public class Preferences {
     public static final String NOTIFICATION_CHANGES_DOWNLOADS = "notification.changes.download";
     public static final String NOTIFICATION_SOUND = "notification.sound";
     public static final String NOTIFICATION_LIGHT = "notification.light";
+    public static final String NOTIFICATION_WHEN_ACCOUNT_VISISBLE = "notification.when_account_visible";
 
     public static final String DATE_FORMAT_SHORT = "dateformat.short1";
     public static final String DATE_FORMAT_LONG = "dateformat.long1";
@@ -95,14 +95,23 @@ public class Preferences {
 	public static void saveGwtPermutation(Context activity, String gwtPermutation) {
 		saveVersionDependingProperty(GWTPERMUTATION, gwtPermutation, activity);
 	}
-
-	public static String getAutosyncSet(Context activity, String accountname) {
-		return getSettings(activity).getString(AUTOSYNC + accountname, null);
+	
+	public static Boolean isAutoSyncEnabled(Context activity, String accountName){
+		return getSettings(activity).getBoolean(AUTOSYNC_ENABLE + accountName, true);
+	}
+	
+	public static int getAutoSyncPeriod(Context activity) {
+		return getSettings(activity).getInt(AUTOSYNC_PERIOD, AutosyncHandler.DEFAULT_PERIOD);
 	}
 
-	public static void saveAutosyncSet(Context activity, String accountname) {
+
+	public static String getAutoSyncSet(Context activity, String accountName) {
+		return getSettings(activity).getString(AUTOSYNC + accountName, null);
+	}
+
+	public static void saveAutoSyncSet(Context activity, String accountName) {
 		SharedPreferences.Editor editor = getSettings(activity).edit();
-		editor.putString(AUTOSYNC + accountname, "true");
+		editor.putString(AUTOSYNC + accountName, "true");
 		editor.commit();
 	}
 
@@ -190,14 +199,8 @@ public class Preferences {
         return StatsMode.valueOf(getSettings(activity).getString(STATS_MODE, StatsMode.PERCENT.name()));
     }
 
-    public static boolean getNotificationPerf(Context context, String prefName, String accountName) {
-        return getSettings(context).getBoolean(prefName + accountName, true);
-    }
-
-    public static void saveNotificationPref(Context context, String prefName, String accountName, Boolean value) {
-        SharedPreferences.Editor editor = getSettings(context).edit();
-        editor.putBoolean(prefName + accountName, value);
-        editor.commit();
+    public static boolean getNotificationPerf(Context context, String prefName) {
+        return getSettings(context).getBoolean(prefName, true);
     }
 
     public static void saveLevel7AlarmManagerPeriod(Integer periodInSeconds, Context context) {

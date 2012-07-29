@@ -45,7 +45,7 @@
     <string name="notification_signal">Segnale notifiche</string>
     <string name="notification_sound">Suono notifiche</string>
     <string name="notification_light">Luce notifiche</string>
-    <string name="apss_notification">App abilitate alle notifiche</string>
+    <string name="apps_notification">App abilitate alle notifiche</string>
     <string name="select_files_import">Seleziona i file da importare</string>
     <string name="data_replaced">I dati esistenti verranno sostituiti</string>
     <string name="run_import">Importa dati</string>

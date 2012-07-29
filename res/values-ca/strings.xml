@@ -44,7 +44,7 @@
     <string name="notification_signal">Senyals de notificació</string>
     <string name="notification_sound">So de notificació</string>
     <string name="notification_light">Llum de notificació</string>
-    <string name="apss_notification">Aplicacions amb notificacions de canvis</string>
+    <string name="apps_notification">Aplicacions amb notificacions de canvis</string>
     <string name="select_files_import">Selecciona els fitxers a importar</string>
     <string name="data_replaced">Les dades existents es reemplaçaran</string>
     <string name="run_import">Executa la importació</string>

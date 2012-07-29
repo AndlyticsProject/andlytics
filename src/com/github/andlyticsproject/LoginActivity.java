@@ -153,13 +153,15 @@ public class LoginActivity extends SherlockActivity {
 					parent.setClickable(isChecked);
 
 					// Enable disable sync
-					// TODO Is it worth storing their previous sync period?
 					AutosyncHandler syncHandler = AutosyncHandlerFactory
 							.getInstance(getApplicationContext());
 					if (!isChecked) {
 						syncHandler.setAutosyncPeriod(accountName, 0);
 					} else {
-						syncHandler.setAutosyncPeriod(accountName, AutosyncHandler.DEFAULT_PERIOD);
+						// If auto sync was on for the account, enable it again
+						syncHandler.setAutosyncPeriod(accountName, 
+								Preferences.isAutoSyncEnabled(LoginActivity.this, accountName) ?
+								Preferences.getAutoSyncPeriod(LoginActivity.this) : 0);
 					}
 
 					if (manageAccountsMode && (accountName).equals(selectedAccount)) {

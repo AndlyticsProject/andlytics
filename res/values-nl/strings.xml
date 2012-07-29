@@ -44,7 +44,7 @@
     <string name="notification_signal">Notificatiesignaal</string>
     <string name="notification_sound">Geluid voor meldingen</string>
     <string name="notification_light">Licht voor meldingen</string>
-    <string name="apss_notification">Apps voor veranderingnotificatie</string>
+    <string name="apps_notification">Apps voor veranderingnotificatie</string>
     <string name="select_files_import">Selecteer bestanden om te importeren</string>
     <string name="data_replaced">Bestaande data wordt overschreven</string>
     <string name="run_import">Start importeren</string>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- Except for the categories, theses are built up dynamically as they key contains the account name -->
+    <PreferenceCategory
+        android:key="prefCatAutoSync"
+        android:title="@string/auto_sync" >
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="prefCatNotificationApps"
+        android:title="@string/apps_notification" >
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="prefCatHiddenApps"
+        android:title="@string/apps_hide" >
+    </PreferenceCategory>
+
+</PreferenceScreen>
