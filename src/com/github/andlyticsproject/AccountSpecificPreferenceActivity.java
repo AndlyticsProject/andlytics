@@ -17,7 +17,10 @@ import com.github.andlyticsproject.AsyncTasks.LoadAppListTaskCompleteListener;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.sync.AutosyncHandler;
 import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
+import com.github.andlyticsproject.util.Utils;
 
+// See PreferenceActivity for warning suppression justification
+@SuppressWarnings("deprecation")
 public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivity implements
 		LoadAppListTaskCompleteListener {
 
@@ -27,7 +30,6 @@ public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivit
 	private PreferenceCategory hiddenAppList;
 	private LoadAppListTask task;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,6 +42,7 @@ public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivit
 		prefMgr.setSharedPreferencesName(Preferences.PREF);
 		addPreferencesFromResource(R.xml.account_specific_preferences);
 
+		// Setup auto sync option
 		PreferenceCategory autoSyncCat = (PreferenceCategory) getPreferenceScreen().findPreference(
 				"prefCatAutoSync");
 		CheckBoxPreference autoSync = new CheckBoxPreference(this);
@@ -51,15 +54,16 @@ public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivit
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				AutosyncHandler autosyncHandler = AutosyncHandlerFactory
 						.getInstance(AccountSpecificPreferenceActivity.this);
-				// Toogle auto sync between the sync period and 0
-				autosyncHandler.setAutosyncPeriod(accountName, ((Boolean) newValue) ? 
-						Preferences.getAutoSyncPeriod(AccountSpecificPreferenceActivity.this, 
+				// Toggle auto sync between the sync period and 0
+				autosyncHandler.setAutosyncPeriod(accountName, ((Boolean) newValue) ?
+						Preferences.getAutoSyncPeriod(AccountSpecificPreferenceActivity.this,
 								accountName) : 0);
 				return true;
 			}
 		});
 		autoSyncCat.addPreference(autoSync);
 
+		// Dummy app to show when loading the app list
 		dummyApp = new Preference(this);
 		dummyApp.setTitle(R.string.loading_app_list);
 
@@ -86,7 +90,7 @@ public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivit
 		task = (LoadAppListTask) getLastNonConfigurationInstance();
 		if (task == null) {
 			task = new LoadAppListTask(this);
-			task.execute(accountName);
+			Utils.execute(task, accountName);
 		} else {
 			task.attach(this);
 			List<AppInfo> apps = task.getResult();
@@ -109,9 +113,11 @@ public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivit
 		task.detach();
 		task = null;
 		if (apps != null && apps.size() > 0) {
+			// Clear the dummy app
 			notificationAppList.removePreference(dummyApp);
 			hiddenAppList.removePreference(dummyApp);
 			for (AppInfo app : apps) {
+				// Add the notification preference
 				CheckBoxPreference pref = new CheckBoxPreference(this);
 				pref.setTitle(app.getName());
 				pref.setSummary(app.getPackageName());
@@ -119,6 +125,7 @@ public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivit
 				pref.setOnPreferenceChangeListener(notificationAppPrefChangedListener);
 				notificationAppList.addPreference(pref);
 
+				// Add the hidden app preference
 				pref = new CheckBoxPreference(this);
 				pref.setTitle(app.getName());
 				pref.setSummary(app.getPackageName());

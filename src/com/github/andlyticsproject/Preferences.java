@@ -12,10 +12,6 @@ public class Preferences {
 
 	public static final String PREF = "andlytics_pref";
 	
-	// Keys used on the main preference screen
-	public static final String PREF_NOTIFICATIONS = "prefNotifications";
-	public static final String PREF_HIDDEN_APPS = "prefHiddenApps";
-
 	private static final String HIDDEN_ACCOUNT = "hiddenAccount";
 	private static final String ACCOUNT_NAME = "accountName";
 	private static final String GWTPERMUTATION = "permutation";

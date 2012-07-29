@@ -1,6 +1,9 @@
 
 package com.github.andlyticsproject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Intent;
@@ -24,11 +27,10 @@ import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
 // for us to use instead of a PreferencesActivity
 @SuppressWarnings("deprecation")
 public class PreferenceActivity extends SherlockPreferenceActivity
-		implements OnPreferenceChangeListener, OnSharedPreferenceChangeListener,
-		OnPreferenceClickListener {
+		implements OnPreferenceChangeListener, OnSharedPreferenceChangeListener {
 
 	private PreferenceCategory accountListPrefCat;
-	private Account[] accounts;
+	private List<String> accountsList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +41,11 @@ public class PreferenceActivity extends SherlockPreferenceActivity
 		prefMgr.setSharedPreferencesName(Preferences.PREF);
 		addPreferencesFromResource(R.xml.preferences);
 
-		// Find and setup a listener for auto sync
-		getPreferenceScreen().findPreference(
-				Preferences.AUTOSYNC_PERIOD).setOnPreferenceChangeListener(this);
+		// Find and setup a listener for auto sync as we have had to adjust the sync handler
+		getPreferenceScreen().findPreference(Preferences.AUTOSYNC_PERIOD)
+				.setOnPreferenceChangeListener(this);
 
-		getPreferenceScreen().findPreference(Preferences.PREF_NOTIFICATIONS)
-				.setOnPreferenceClickListener(this);
-
+		// Find the preference category used to list all the accounts
 		accountListPrefCat = (PreferenceCategory) getPreferenceScreen().findPreference(
 				"prefCatAccountSpecific");
 
@@ -58,9 +58,13 @@ public class PreferenceActivity extends SherlockPreferenceActivity
 
 	private void buildAccountsList() {
 		final AccountManager manager = AccountManager.get(this);
-		accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
+		Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
+		accountsList = new ArrayList<String>();
 		for (Account account : accounts) {
 			if (!Preferences.getIsHiddenAccount(this, account.name)) {
+				// Add all non hidden accounts to the list for use with the auto sync preference
+				accountsList.add(account.name);
+				// Create a preference representing the account and add it to the screen
 				Preference pref = new Preference(this);
 				pref.setTitle(account.name);
 				pref.setOnPreferenceClickListener(accountPrefrenceClickedListener);
@@ -68,15 +72,6 @@ public class PreferenceActivity extends SherlockPreferenceActivity
 			}
 		}
 
-	}
-
-	@Override
-	public boolean onPreferenceClick(Preference preference) {
-		if (preference.getKey().equals(Preferences.PREF_NOTIFICATIONS)) {
-			Intent i = new Intent(this, NotificationPreferenceActivity.class);
-			startActivity(i);
-		}
-		return true;
 	}
 
 	OnPreferenceClickListener accountPrefrenceClickedListener = new OnPreferenceClickListener() {
@@ -96,13 +91,13 @@ public class PreferenceActivity extends SherlockPreferenceActivity
 			Integer newPeriod = Integer.parseInt((String) newValue);
 			newPeriod = newPeriod * 60; // Convert from minutes to seconds
 			AutosyncHandler autosyncHandler = AutosyncHandlerFactory.getInstance(this);
-			for (Account account : accounts) {
-				// Setup auto sync for every account that has isn't hidden and has it is enabled
-				if (!Preferences.getIsHiddenAccount(PreferenceActivity.this, account.name) &&
-						Preferences.isAutoSyncEnabled(PreferenceActivity.this, account.name)) {
-					int autosyncPeriod = autosyncHandler.getAutosyncPeriod(account.name);
+			for (String account : accountsList) {
+				// Setup auto sync for every account that has it enabled
+				// Note: accountsList does not contain hidden accounts, so we don't need to check
+				if (Preferences.isAutoSyncEnabled(PreferenceActivity.this, account)) {
+					int autosyncPeriod = autosyncHandler.getAutosyncPeriod(account);
 					if (autosyncPeriod != newPeriod) {
-						autosyncHandler.setAutosyncPeriod(account.name, newPeriod);
+						autosyncHandler.setAutosyncPeriod(account, newPeriod);
 					}
 				}
 			}

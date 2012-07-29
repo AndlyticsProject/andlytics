@@ -29,7 +29,9 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity {
 		prefMgr.setSharedPreferencesName(Preferences.PREF);
 		addPreferencesFromResource(R.xml.notification_preferences);
 
-		// Notification trigger
+		// Get a reference to the notification triggers so that we can visually disable the other
+		// notification preferences when all the triggers are disabled
+		// TODO: Can we do this all using one generic listener?
 		ratingsPref = (CheckBoxPreference) getPreferenceScreen().findPreference(
 				Preferences.NOTIFICATION_CHANGES_RATING);
 		ratingsPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
@@ -66,10 +68,11 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity {
 			}
 		});
 
+		
 		// Notification signal
 		notificationSignalPrefCat = (PreferenceCategory) getPreferenceScreen().findPreference(
 				"prefCatNotificationSignal");
-		// Set initial enabled state
+		// Set initial enabled state based on the triggers
 		Boolean notificationsEnabled = commentsPref.isChecked() || ratingsPref.isChecked()
 				|| downloadsPref.isChecked();
 		notificationSignalPrefCat.setEnabled(notificationsEnabled);
