@@ -3,7 +3,7 @@
     <item
         android:id="@+id/itemAdmobsmenuRefresh"        
         android:icon="@drawable/icon_refresh"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="ifRoom"
         android:title="@string/refresh">
     </item>
     <item
