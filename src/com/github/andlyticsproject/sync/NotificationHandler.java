@@ -31,7 +31,7 @@ public class NotificationHandler {
 	static final String EXTRA_DESCRIPTION = "description";
 
 	public static void handleNotificaions(Context context, List<AppStatsDiff> diffs, String accountName) {
-		NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		String contentTitle = context.getString(R.string.notification_title);
 		String contentText = "";
@@ -134,7 +134,7 @@ public class NotificationHandler {
 				}
 				builder.setDefaults(defaults);
 				builder.setAutoCancel(true);
-				mNotificationManager.notify(accountName.hashCode(), builder.build());
+				nm.notify(accountName.hashCode(), builder.build());
 			}
 			Intent i = new Intent(GROWL_ACTION);
 			i.putExtra(EXTRA_TITLE, contentTitle);
