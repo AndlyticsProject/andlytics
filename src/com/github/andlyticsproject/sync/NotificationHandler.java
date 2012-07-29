@@ -15,6 +15,8 @@ import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.Main;
 import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.R;
+import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2;
+import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2.Builder;
 
 public class NotificationHandler {
 
@@ -27,9 +29,7 @@ public class NotificationHandler {
 	// TODO Re-do notification creation to avoid using depreciated classes (maybe use NotificationCompact2 by JW)
 	@SuppressWarnings("deprecation")
 	public static void handleNotificaions(Context context, List<AppStatsDiff> diffs, String accountName) {
-
-		String ns = Context.NOTIFICATION_SERVICE;
-		NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(ns);
+		NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		String contentTitle = context.getString(R.string.notification_title);
 		String contentText = "";
@@ -93,7 +93,11 @@ public class NotificationHandler {
 					Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_WHEN_ACCOUNT_VISISBLE)) {
 				// The user can choose not to see notifications if the current account is visible
 
-				Notification notification = new Notification(R.drawable.statusbar_andlytics, contentTitle + ": " + contentText, System.currentTimeMillis());
+			  Builder builder = new NotificationCompat2.Builder(context);
+			  builder.setSmallIcon(R.drawable.statusbar_andlytics);
+			  builder.setContentTitle(contentTitle);
+			  builder.setContentText(contentText);
+			  builder.setWhen(System.currentTimeMillis());
 
 				Intent notificationIntent = new Intent(context, Main.class);
 				notificationIntent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
@@ -102,19 +106,19 @@ public class NotificationHandler {
 
 				PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-				notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+				builder.setContentIntent(contentIntent);
+				builder.setTicker(contentTitle);
 
 
 				if(soundEnabled) {
-					notification.defaults |= Notification.DEFAULT_SOUND;
+				  builder.setDefaults(Notification.DEFAULT_SOUND);
 				}
 				if(lightEnabled) {
-					notification.defaults |= Notification.DEFAULT_LIGHTS;
+					builder.setDefaults(Notification.DEFAULT_LIGHTS);
 				}
-				notification.contentIntent = contentIntent;
-				notification.flags |= Notification.FLAG_AUTO_CANCEL;
+				builder.setAutoCancel(true);
 
-				mNotificationManager.notify(1, notification);
+				mNotificationManager.notify(1, builder.build());
 			}
 
 

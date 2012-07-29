@@ -280,7 +280,8 @@ public class ContentAdapter {
 		values.put(AppStatsTable.KEY_STATS_VERSIONCODE, downloadInfo.getVersionCode());
 
 
-		context.getContentResolver().insert(AppStatsTable.CONTENT_URI, values);
+		//TODO Re-enable this!
+		//context.getContentResolver().insert(AppStatsTable.CONTENT_URI, values);
 	}
 
 	private AppStatsDiff createAppStatsDiff(AppStats newStats, AppStats previousStats,
