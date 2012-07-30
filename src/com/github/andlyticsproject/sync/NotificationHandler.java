@@ -10,7 +10,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -41,12 +40,11 @@ public class NotificationHandler {
 		String contentTitle = context.getString(R.string.notification_title);
 		String contentText = "";
 
-		SharedPreferences settings = Preferences.getSettings(context);
-		boolean commentsEnabled = settings.getBoolean(Preferences.NOTIFICATION_CHANGES_COMMENTS, true);
-		boolean ratingsEnabled = settings.getBoolean(Preferences.NOTIFICATION_CHANGES_RATING, true);
-		boolean downloadsEnabled = settings.getBoolean(Preferences.NOTIFICATION_CHANGES_DOWNLOADS, true);
-		String ringtone = settings.getString(Preferences.NOTIFICATION_RINGTONE, null);
-		boolean lightEnabled = settings.getBoolean(Preferences.NOTIFICATION_LIGHT, true);
+		boolean downloadsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_DOWNLOADS);
+		boolean commentsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_COMMENTS);
+		boolean ratingsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_RATING);
+		boolean lightEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_LIGHT);
+		String ringtone = Preferences.getNotificationRingtone(context);
 
 		List<String> appNameList = new ArrayList<String>();
 		int number = 0;
