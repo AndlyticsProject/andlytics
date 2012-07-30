@@ -10,6 +10,8 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
 public class Preferences {
+	
+	// TODO Review this class an clean it up a bit
 
 	public static final String PREF = "andlytics_pref";
 
@@ -86,7 +88,7 @@ public class Preferences {
 		return getSettings(activity).getString(ACCOUNT_NAME, null);
 	}
 
-	public static SharedPreferences getSettings(Context activity) {
+	private static SharedPreferences getSettings(Context activity) {
 		return activity.getSharedPreferences(PREF, 0);
 	}
 
@@ -207,6 +209,10 @@ public class Preferences {
 
 	public static boolean getNotificationPerf(Context context, String prefName) {
 		return getSettings(context).getBoolean(prefName, true);
+	}
+	
+	public static String getNotificationRingtone(Context context) {
+		return getSettings(context).getString(NOTIFICATION_RINGTONE, null);
 	}
 
 	public static void saveLevel7AlarmManagerPeriod(Integer periodInSeconds, Context context) {
