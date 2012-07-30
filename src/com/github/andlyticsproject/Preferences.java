@@ -103,7 +103,9 @@ public class Preferences {
 	}
 
 	public static int getAutoSyncPeriod(Context activity) {
-		return getSettings(activity).getInt(AUTOSYNC_PERIOD, AutosyncHandler.DEFAULT_PERIOD);
+		// We use a ListPreference which only supports saving as strings, so need to convert it when reading
+		return Integer.parseInt(getSettings(activity).getString(AUTOSYNC_PERIOD,
+				Integer.toString(AutosyncHandler.DEFAULT_PERIOD)));
 	}
 
 	public static String getAutoSyncSet(Context activity, String accountName) {
