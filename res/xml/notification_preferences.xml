@@ -32,7 +32,7 @@
             android:key="notification.light"
             android:title="@string/notification_light" />
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="notification.when_account_visible"
             android:summary="@string/notification_when_account_visible_summary"
             android:title="@string/notification_when_account_visible" />
