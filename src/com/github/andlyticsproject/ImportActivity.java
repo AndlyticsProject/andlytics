@@ -242,7 +242,7 @@ public class ImportActivity extends SherlockActivity {
 			}
 
 			final String fileName = getItem(position);
-			holder.name.setText(fileName);
+			holder.name.setText(StatsCsvReaderWriter.getPackageName(fileName));
 
 			holder.checkbox.setChecked(importFileNames.contains(fileName));
 
