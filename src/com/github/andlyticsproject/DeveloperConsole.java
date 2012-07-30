@@ -79,7 +79,6 @@ public class DeveloperConsole {
 	private static final String PARAM_STARTINDEX = "<<start>>";
 	private static final String PARAM_LENGTH = "<<length>>";
 
-	private static final long PARAM_MAX_APPS_NUMBER = 9;
 	public static final String ACCOUNT_TYPE = "GOOGLE";
 	public static final String SERVICE = "androiddeveloper";
 
@@ -130,29 +129,6 @@ public class DeveloperConsole {
 		String json = grapGetAssetIndexForUser();
 		json = grapAppStatistics("", parseGetAssetForUserCount(json));
 		List<AppInfo> result = parseAppStatisticsResponse(json, accountName);
-
-		// user with more than 9 apps
-		/*
-		if(PARAM_MAX_APPS_NUMBER == result.size()) {
-
-			// test how many apps there are
-			json = grepGetAssetForUserCount();
-			long numberOfApps = parseGetAssetForUserCount(json);
-
-			// get 9 for number of apps
-			boolean stop = false;
-
-			while(result.size() < numberOfApps && !stop) {
-
-				json = grapAppStatistics(result.size(), PARAM_MAX_APPS_NUMBER);
-				List<AppInfo> subresult = parseAppStatisticsResponse(json, accountName);
-				result.addAll(subresult);
-				if(subresult.size() < PARAM_MAX_APPS_NUMBER) {
-					stop = true;
-				}
-			}
-		}
-		*/
 
 		List<String> packageNames = new ArrayList<String>();
 
