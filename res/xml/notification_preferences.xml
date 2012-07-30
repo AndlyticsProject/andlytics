@@ -21,9 +21,11 @@
     <PreferenceCategory
         android:key="prefCatNotificationSignal"
         android:title="@string/notification_signal" >
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="notification.sound"
+        <RingtonePreference
+            android:ringtoneType="notification"
+            android:showSilent="true"
+            android:showDefault="true"
+            android:key="notification.ringtone"
             android:title="@string/notification_sound" />
         <CheckBoxPreference
             android:defaultValue="true"
