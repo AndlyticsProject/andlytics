@@ -126,7 +126,7 @@ public class ExportService extends IntentService {
 		builder.setWhen(System.currentTimeMillis());
 		builder.setDefaults(Notification.DEFAULT_ALL);
 		builder.setAutoCancel(true);
-		builder.setOngoing(true);
+		builder.setOngoing(false);
 
 		notificationManager.notify(NOTIFICATION_ID_FINISHED, builder.build());
 	}

@@ -129,7 +129,7 @@ public class ImportService extends IntentService {
 		builder.setWhen(System.currentTimeMillis());
 		builder.setDefaults(Notification.DEFAULT_ALL);
 		builder.setAutoCancel(true);
-		builder.setOngoing(true);
+		builder.setOngoing(false);
 
 		if (success) {
 			String title = getResources().getString(R.string.app_name) + ": "
