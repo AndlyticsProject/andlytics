@@ -10,8 +10,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.AppStatsDiff;
@@ -39,16 +41,12 @@ public class NotificationHandler {
 		String contentTitle = context.getString(R.string.notification_title);
 		String contentText = "";
 
-		boolean commentsEnabled = Preferences.getNotificationPerf(context,
-				Preferences.NOTIFICATION_CHANGES_COMMENTS);
-		boolean ratingsEnabled = Preferences.getNotificationPerf(context,
-				Preferences.NOTIFICATION_CHANGES_RATING);
-		boolean downloadsEnabled = Preferences.getNotificationPerf(context,
-				Preferences.NOTIFICATION_CHANGES_DOWNLOADS);
-		boolean soundEnabled = Preferences.getNotificationPerf(context,
-				Preferences.NOTIFICATION_SOUND);
-		boolean lightEnabled = Preferences.getNotificationPerf(context,
-				Preferences.NOTIFICATION_LIGHT);
+		SharedPreferences settings = Preferences.getSettings(context);
+		boolean commentsEnabled = settings.getBoolean(Preferences.NOTIFICATION_CHANGES_COMMENTS, true);
+		boolean ratingsEnabled = settings.getBoolean(Preferences.NOTIFICATION_CHANGES_RATING, true);
+		boolean downloadsEnabled = settings.getBoolean(Preferences.NOTIFICATION_CHANGES_DOWNLOADS, true);
+		String ringtone = settings.getString(Preferences.NOTIFICATION_RINGTONE, null);
+		boolean lightEnabled = settings.getBoolean(Preferences.NOTIFICATION_LIGHT, true);
 
 		List<String> appNameList = new ArrayList<String>();
 		int number = 0;
@@ -134,14 +132,12 @@ public class NotificationHandler {
 				builder.setContentIntent(contentIntent);
 				builder.setTicker(contentTitle);
 
-				int defaults = 0;
-				if (soundEnabled) {
-					defaults |= Notification.DEFAULT_SOUND;
+				if (ringtone != null) {
+					builder.setSound(Uri.parse(ringtone));
 				}
 				if (lightEnabled) {
-					defaults |= Notification.DEFAULT_LIGHTS;
+					builder.setDefaults(Notification.DEFAULT_LIGHTS);
 				}
-				builder.setDefaults(defaults);
 				builder.setAutoCancel(true);
 				nm.notify(accountName.hashCode(), builder.build());
 			}

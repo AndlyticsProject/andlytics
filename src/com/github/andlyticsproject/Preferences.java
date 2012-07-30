@@ -37,7 +37,7 @@ public class Preferences {
 	public static final String NOTIFICATION_CHANGES_RATING = "notification.changes.rating";
 	public static final String NOTIFICATION_CHANGES_COMMENTS = "notification.changes.comments";
 	public static final String NOTIFICATION_CHANGES_DOWNLOADS = "notification.changes.download";
-	public static final String NOTIFICATION_SOUND = "notification.sound";
+	public static final String NOTIFICATION_RINGTONE = "notification.ringtone";
 	public static final String NOTIFICATION_LIGHT = "notification.light";
 	public static final String NOTIFICATION_WHEN_ACCOUNT_VISISBLE = "notification.when_account_visible";
 
@@ -86,7 +86,7 @@ public class Preferences {
 		return getSettings(activity).getString(ACCOUNT_NAME, null);
 	}
 
-	private static SharedPreferences getSettings(Context activity) {
+	public static SharedPreferences getSettings(Context activity) {
 		return activity.getSharedPreferences(PREF, 0);
 	}
 
