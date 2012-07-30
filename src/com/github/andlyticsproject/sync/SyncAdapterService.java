@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.sync;
 
 import android.accounts.Account;
@@ -51,10 +52,11 @@ public class SyncAdapterService extends Service {
 		}
 
 		@Override
-		public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider,
-				SyncResult syncResult) {
+		public void onPerformSync(Account account, Bundle extras, String authority,
+				ContentProviderClient provider, SyncResult syncResult) {
 			try {
-				SyncAdapterService.performSync(mContext, account, extras, authority, provider, syncResult);
+				SyncAdapterService.performSync(mContext, account, extras, authority, provider,
+						syncResult);
 			} catch (OperationCanceledException e) {
 				Log.w(TAG, "operation canceled", e);
 			}
@@ -74,14 +76,16 @@ public class SyncAdapterService extends Service {
 		return sSyncAdapter;
 	}
 
-	private static void performSync(Context context, Account account, Bundle extras, String authority,
-			ContentProviderClient provider, SyncResult syncResult) throws OperationCanceledException {
+	private static void performSync(Context context, Account account, Bundle extras,
+			String authority, ContentProviderClient provider, SyncResult syncResult)
+			throws OperationCanceledException {
 
 		Bundle bundle = null;
 		String token = null;
 
 		try {
-			bundle = AccountManager.get(context).getAuthToken(account, "androiddeveloper", true, null, null).getResult();
+			bundle = AccountManager.get(context)
+					.getAuthToken(account, "androiddeveloper", true, null, null).getResult();
 			if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
 				token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
 
@@ -122,8 +126,8 @@ public class SyncAdapterService extends Service {
 		} catch (NoCookieSetException e) {
 			Log.e(TAG, "error during sync auth", e);
 		} catch (MultiAccountAcception e) {
-            Log.e(TAG, "error during sync auth", e);
-        }
+			Log.e(TAG, "error during sync auth", e);
+		}
 
 	}
 }

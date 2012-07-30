@@ -68,7 +68,6 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity {
 			}
 		});
 
-		
 		// Notification signal
 		notificationSignalPrefCat = (PreferenceCategory) getPreferenceScreen().findPreference(
 				"prefCatNotificationSignal");

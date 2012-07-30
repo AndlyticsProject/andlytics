@@ -26,8 +26,8 @@ import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
 // Suppressing warnings as there is no SherlockPreferenceFragment
 // for us to use instead of a PreferencesActivity
 @SuppressWarnings("deprecation")
-public class PreferenceActivity extends SherlockPreferenceActivity
-		implements OnPreferenceChangeListener, OnSharedPreferenceChangeListener {
+public class PreferenceActivity extends SherlockPreferenceActivity implements
+		OnPreferenceChangeListener, OnSharedPreferenceChangeListener {
 
 	private PreferenceCategory accountListPrefCat;
 	private List<String> accountsList;

@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.view;
 
 import android.view.View;
@@ -14,38 +15,31 @@ public class ChartGalleryAdapter extends BaseAdapter {
 		this.setViews(views);
 	}
 
-
 	public View getView(int position, View convertView, ViewGroup parent) {
 		return getItem(position);
 	}
-
 
 	@Override
 	public int getCount() {
 		return getViews().size();
 	}
 
-
 	@Override
 	public View getItem(int position) {
 		return getViews().get(position);
 	}
-
 
 	@Override
 	public long getItemId(int position) {
 		return position;
 	}
 
-
 	public void setViews(List<View> views) {
 		this.views = views;
 	}
 
-
 	public List<View> getViews() {
 		return views;
 	}
-
 
 }

@@ -30,6 +30,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.github.andlyticsproject.cache.AppIconInMemoryCache;
 import com.github.andlyticsproject.io.ExportService;
 import com.github.andlyticsproject.model.AppInfo;
+import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
 public class ExportActivity extends SherlockActivity {
@@ -55,6 +56,9 @@ public class ExportActivity extends SherlockActivity {
 	private List<String> exportPackageNames = new ArrayList<String>();
 	private String accountName;
 
+	private LoadExportTask loadTask;
+
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
@@ -116,19 +120,54 @@ public class ExportActivity extends SherlockActivity {
 		this.cacheDir = getCacheDir();
 		this.spacerIcon = getResources().getDrawable(R.drawable.app_icon_spacer);
 
-		Utils.execute(new LoadExportTask());
+		if (getLastNonConfigurationInstance() != null) {
+			loadTask = (LoadExportTask) getLastNonConfigurationInstance();
+			loadTask.attach(this);
+			setAppInfos(loadTask.getAppInfos());
+		} else {
+			loadTask = new LoadExportTask(this);
+			Utils.execute(loadTask);
+		}
 	}
 
-	private class LoadExportTask extends AsyncTask<Void, Void, List<AppInfo>> {
+	ContentAdapter getDb() {
+		return db;
+	}
+
+	String getAccountName() {
+		return accountName;
+	}
+
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return loadTask == null ? null : loadTask.detach();
+	}
+
+
+	private static class LoadExportTask extends
+			DetachableAsyncTask<Void, Void, List<AppInfo>, ExportActivity> {
+
+		List<AppInfo> appInfos = new ArrayList<AppInfo>();
+
+		LoadExportTask(ExportActivity parent) {
+			super(parent);
+		}
+
 		@Override
 		protected void onPreExecute() {
-			setProgressBarIndeterminateVisibility(true);
+			activity.setProgressBarIndeterminateVisibility(true);
 		}
 
 		@Override
 		protected List<AppInfo> doInBackground(Void... params) {
+			if (activity == null) {
+				return null;
+			}
+
 			try {
-				return db.getAllAppsLatestStats(accountName);
+				appInfos = activity.getDb().getAllAppsLatestStats(activity.getAccountName());
+
+				return appInfos;
 			} catch (Exception e) {
 				Log.e(TAG, "Failed to get app stats: " + e.getMessage(), e);
 
@@ -138,21 +177,28 @@ public class ExportActivity extends SherlockActivity {
 
 		@Override
 		protected void onPostExecute(List<AppInfo> result) {
-			setProgressBarIndeterminateVisibility(false);
+			if (activity == null) {
+				return;
+			}
 
-			if (!isFinishing()) {
+			activity.setProgressBarIndeterminateVisibility(false);
+
+			if (!activity.isFinishing()) {
 				if (result != null) {
-					setAppInfos(result);
+					activity.setAppInfos(result);
 				} else {
-					Toast.makeText(ExportActivity.this, R.string.export_failed_to_load_stats,
+					Toast.makeText(activity, R.string.export_failed_to_load_stats,
 							Toast.LENGTH_LONG).show();
-					finish();
+					activity.finish();
 				}
 			}
 		}
 
-	}
+		List<AppInfo> getAppInfos() {
+			return appInfos;
+		}
 
+	}
 
 	class ExportListAdapter extends BaseAdapter {
 
@@ -223,7 +269,6 @@ public class ExportActivity extends SherlockActivity {
 				}
 			}
 
-
 			holder.row.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -269,7 +314,6 @@ public class ExportActivity extends SherlockActivity {
 		}
 	}
 
-
 	private class GetCachedImageTask extends AsyncTask<File, Void, Bitmap> {
 
 		private ImageView imageView;
@@ -307,7 +351,6 @@ public class ExportActivity extends SherlockActivity {
 			return null;
 		}
 	}
-
 
 	public void updateMainImage(ImageView imageView, int animationId, Bitmap result) {
 		imageView.setImageBitmap(result);

@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject;
 
 import java.io.BufferedReader;
@@ -68,7 +69,7 @@ import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.Comment;
 
 public class DeveloperConsole {
-//  private static String LOG_TAG=DeveloperConsole.class.toString(); 
+	//  private static String LOG_TAG=DeveloperConsole.class.toString(); 
 	private static final String GWT_PERMUTATION = "6D75CBE66FE85272BB1AD2C64A98B720";
 
 	//"com.github.andlyticsproject", but it seems "Andlytics"
@@ -88,10 +89,17 @@ public class DeveloperConsole {
 	private static final String URL_COMMENTS = "https://play.google.com/apps/publish/comments";
 	private static final String URL_FEEDBACK = "https://play.google.com/apps/publish/feedback";
 
-	private static final String GET_ASSET_INDEX_FOR_USER = "7|2|7|https://play.google.com/apps/publish/gwt/|3DF4994263B7BFE1C6E2AB34E241C0F5|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.AppEditorService|getAssetIndexForUser|I|1|2|3|4|5|6|1|7|100|";
-    private static final String GET_FULL_ASSET_INFO_FOR_USER_REQUEST = "7|2|9|https://play.google.com/apps/publish/gwt/|3DF4994263B7BFE1C6E2AB34E241C0F5|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.AppEditorService|getProductInfosForUser|java.lang.String/2004016611|I|"+PARAM_APPNAME+"|1|2|3|4|5|6|4|7|8|8|7|9|0|"+PARAM_LENGTH+"|0|";
+	private static final String GET_ASSET_INDEX_FOR_USER = "7|2|7|https://play.google.com/apps/publish/gwt/|3DF4994263B7BFE1C6E2AB34E241C0F5|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"
+			+ PARAM_XSRFTOKEN + "|com.google.wireless.android.vending.developer.shared.AppEditorService|getAssetIndexForUser|I|1|2|3|4|5|6|1|7|100|";
+	private static final String GET_FULL_ASSET_INFO_FOR_USER_REQUEST = "7|2|9|https://play.google.com/apps/publish/gwt/|3DF4994263B7BFE1C6E2AB34E241C0F5|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"
+			+ PARAM_XSRFTOKEN
+			+ "|com.google.wireless.android.vending.developer.shared.AppEditorService|getProductInfosForUser|java.lang.String/2004016611|I|"
+			+ PARAM_APPNAME + "|1|2|3|4|5|6|4|7|8|8|7|9|0|" + PARAM_LENGTH + "|0|";
 	private static final String GET_ASSET_FOR_USER_COUNT_REQUEST = "7|0|4|https://play.google.com/apps/publish/gwt/|11B29A336607683DE538737452FFF924|com.google.wireless.android.vending.developer.shared.AppEditorService|getAssetForUserCount|1|2|3|4|0|";
-	private static final String GET_USER_COMMENTS_REQUEST = "7|2|11|https://play.google.com/apps/publish/gwt/|3B4252B1EA6FFDBEAC02B41B3975C468|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"+PARAM_XSRFTOKEN+"|com.google.wireless.android.vending.developer.shared.CommentsService|getUserComments|java.lang.String/2004016611|J|java.lang.Iterable|"+PARAM_APPNAME+"|java.util.ArrayList/4159755760|1|2|3|4|5|6|7|7|8|8|9|9|9|7|10|"+PARAM_STARTINDEX+"|"+PARAM_LENGTH+"|11|0|11|0|11|0|0|";
+	private static final String GET_USER_COMMENTS_REQUEST = "7|2|11|https://play.google.com/apps/publish/gwt/|3B4252B1EA6FFDBEAC02B41B3975C468|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"
+			+ PARAM_XSRFTOKEN
+			+ "|com.google.wireless.android.vending.developer.shared.CommentsService|getUserComments|java.lang.String/2004016611|J|java.lang.Iterable|"
+			+ PARAM_APPNAME + "|java.util.ArrayList/4159755760|1|2|3|4|5|6|7|7|8|8|9|9|9|7|10|" + PARAM_STARTINDEX + "|" + PARAM_LENGTH + "|11|0|11|0|11|0|0|";
 	private static final String GET_FEEDBACK_OVERVIEW = "7|0|6|https://play.google.com/apps/publish/gwt/|8A88A8C8E8E60107C7E013322C6CE8F2|com.google.wireless.android.vending.developer.shared.FeedbackService|getOverviewsForPackages|com.google.protos.userfeedback.gwt.AndroidFrontend$AndroidPackageListRequest$Json/4146859527|[,[<<packagelist>>] ] |1|2|3|4|1|5|5|6|";
 	//private static final String GET_FEEDBACK_REQUEST = "7|0|6|https://play.google.com/apps/publish/gwt/|8A88A8C8E8E60107C7E013322C6CE8F2|com.google.wireless.android.vending.developer.shared.FeedbackService|getDetailForPackage|com.google.protos.userfeedback.gwt.AndroidFrontend$AndroidPackageRequest$Json/2133352596|[,<<appname>>] |1|2|3|4|1|5|5|6|";
 
@@ -105,19 +113,22 @@ public class DeveloperConsole {
 		this.context = context;
 	}
 
-  public List<AppInfo> getAppDownloadInfos(String authtoken, String accountName) throws NetworkException, InvalidJSONResponseException, DeveloperConsoleException, SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception {
+	public List<AppInfo> getAppDownloadInfos(String authtoken, String accountName)
+			throws NetworkException, InvalidJSONResponseException, DeveloperConsoleException,
+			SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception {
 
-    return getFullAssetListRequest(accountName, authtoken, false);
-  }
+		return getFullAssetListRequest(accountName, authtoken, false);
+	}
 
-
-
-	private List<AppInfo> getFullAssetListRequest(String accountName, String authtoken, boolean reuseAuthentication) throws NetworkException, DeveloperConsoleException, InvalidJSONResponseException, SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception{
+	private List<AppInfo> getFullAssetListRequest(String accountName, String authtoken,
+			boolean reuseAuthentication) throws NetworkException, DeveloperConsoleException,
+			InvalidJSONResponseException, SignupException, AuthenticationException,
+			NoCookieSetException, MultiAccountAcception {
 
 		developerConsoleAuthentication(authtoken, reuseAuthentication);
 
-    String json = grapGetAssetIndexForUser();
-    json = grapAppStatistics("",parseGetAssetForUserCount(json));
+		String json = grapGetAssetIndexForUser();
+		json = grapAppStatistics("", parseGetAssetForUserCount(json));
 		List<AppInfo> result = parseAppStatisticsResponse(json, accountName);
 
 		// user with more than 9 apps
@@ -149,10 +160,10 @@ public class DeveloperConsole {
 		Iterator<AppInfo> iterator = result.iterator();
 		while (iterator.hasNext()) {
 			AppInfo appInfo = (AppInfo) iterator.next();
-			if(appInfo.isDraftOnly()) {
+			if (appInfo.isDraftOnly()) {
 				iterator.remove();
 			} else {
-		        packageNames.add(appInfo.getPackageName());
+				packageNames.add(appInfo.getPackageName());
 			}
 		}
 
@@ -170,13 +181,15 @@ public class DeveloperConsole {
 		            appInfo.setNumberOfErrors(errors);
 		        }
 		}
-        }*/
+		}*/
 
 		return result;
 	}
 
-	public List<Comment> getAppComments(String authtoken, String accountName, String packageName, int startIndex, int lenght) throws NetworkException,
-			DeveloperConsoleException, InvalidJSONResponseException, SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception {
+	public List<Comment> getAppComments(String authtoken, String accountName, String packageName,
+			int startIndex, int lenght) throws NetworkException, DeveloperConsoleException,
+			InvalidJSONResponseException, SignupException, AuthenticationException,
+			NoCookieSetException, MultiAccountAcception {
 
 		List<Comment> result = null;
 
@@ -199,11 +212,8 @@ public class DeveloperConsole {
 		return result;
 	}
 
-
-
-
-	public List<AppInfo> parseAppStatisticsResponse(String json, String accountName) throws DeveloperConsoleException,
-			InvalidJSONResponseException, AuthenticationException {
+	public List<AppInfo> parseAppStatisticsResponse(String json, String accountName)
+			throws DeveloperConsoleException, InvalidJSONResponseException, AuthenticationException {
 
 		List<AppInfo> result = new ArrayList<AppInfo>();
 
@@ -215,22 +225,21 @@ public class DeveloperConsole {
 		return result;
 	}
 
+	public Map<String, Integer> parseFeedbackOverviewResponse(String json)
+			throws DeveloperConsoleException, InvalidJSONResponseException, AuthenticationException {
 
-	   public Map<String, Integer> parseFeedbackOverviewResponse(String json) throws DeveloperConsoleException,
-           InvalidJSONResponseException, AuthenticationException {
+		Map<String, Integer> result = new HashMap<String, Integer>();
 
-           Map<String, Integer> result = new HashMap<String, Integer>();
+		testIfJsonIsValid(json);
 
-           testIfJsonIsValid(json);
+		GwtParser parser = new GwtParser(json);
+		result = parser.getFeedbackOverview();
 
-           GwtParser parser = new GwtParser(json);
-           result = parser.getFeedbackOverview();
+		return result;
+	}
 
-           return result;
-        }
-
-
-	private long parseGetAssetForUserCount(String json) throws InvalidJSONResponseException, AuthenticationException {
+	private long parseGetAssetForUserCount(String json) throws InvalidJSONResponseException,
+			AuthenticationException {
 
 		long result = 0;
 
@@ -242,26 +251,30 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	private void testIfJsonIsValid(String json) throws InvalidJSONResponseException, AuthenticationException {
+	private void testIfJsonIsValid(String json) throws InvalidJSONResponseException,
+			AuthenticationException {
 		if (json == null || !json.startsWith("//OK")) {
 
-		    if(json != null && (json.indexOf("NewServiceAccount") > -1 || json.indexOf("WrongUserException") > -1)) {
-		        throw new AuthenticationException();
-		    }
+			if (json != null
+					&& (json.indexOf("NewServiceAccount") > -1 || json
+							.indexOf("WrongUserException") > -1)) {
+				throw new AuthenticationException();
+			}
 
 			throw new InvalidJSONResponseException("Invalid JSON response", json);
 		}
 	}
 
-
-	public List<Comment> parseCommentsResponse(String json, String accountName) throws DeveloperConsoleException, AuthenticationException {
+	public List<Comment> parseCommentsResponse(String json, String accountName)
+			throws DeveloperConsoleException, AuthenticationException {
 
 		List<Comment> result = new ArrayList<Comment>();
 
 		try {
 			testIfJsonIsValid(json);
 		} catch (InvalidJSONResponseException e) {
-			DeveloperConsoleException de = new DeveloperConsoleException(postData + "response::"  + json,e);
+			DeveloperConsoleException de = new DeveloperConsoleException(postData + "response::"
+					+ json, e);
 			throw de;
 		}
 
@@ -271,12 +284,11 @@ public class DeveloperConsole {
 			result = parser.getComments();
 
 		} catch (Exception e) {
-			throw new RuntimeException(postData + "response::"  + json, e);
+			throw new RuntimeException(postData + "response::" + json, e);
 		}
 
 		return result;
 	}
-
 
 	protected boolean isInteger(String string) {
 
@@ -291,9 +303,6 @@ public class DeveloperConsole {
 		return result;
 	}
 
-
-
-
 	private String grapAppStatistics(String startApp, long lenght) throws DeveloperConsoleException {
 
 		String developerPostData = Preferences.getRequestFullAssetInfo(context);
@@ -302,13 +311,13 @@ public class DeveloperConsole {
 			developerPostData = GET_FULL_ASSET_INFO_FOR_USER_REQUEST;
 		}
 
-//    String lengthString = Base64Utils.toBase64(lenght);
-    String lengthString = ""+lenght;
+		//    String lengthString = Base64Utils.toBase64(lenght);
+		String lengthString = "" + lenght;
 		String xsrfToken = ((AndlyticsApp) context.getApplicationContext()).getXsrfToken();
 
-		developerPostData = developerPostData.replace(PARAM_APPNAME, startApp!=null ? startApp:"");
+		developerPostData = developerPostData.replace(PARAM_APPNAME, startApp != null ? startApp : "");
 		developerPostData = developerPostData.replace(PARAM_LENGTH, lengthString);
-		developerPostData = developerPostData.replace(PARAM_XSRFTOKEN, xsrfToken!=null ? xsrfToken:"");
+		developerPostData = developerPostData.replace(PARAM_XSRFTOKEN, xsrfToken != null ? xsrfToken : "");
 
 		String result = null;
 
@@ -322,50 +331,52 @@ public class DeveloperConsole {
 		return result;
 	}
 
-  private String grepGetAssetForUserCount() throws DeveloperConsoleException {
+	private String grepGetAssetForUserCount() throws DeveloperConsoleException {
 
-    String result = null;
+		String result = null;
 
-    String postData = Preferences.getRequestGetAssetForUserCount(context);
+		String postData = Preferences.getRequestGetAssetForUserCount(context);
 
-    if (postData == null) {
-      postData = GET_ASSET_FOR_USER_COUNT_REQUEST;
-    }
+		if (postData == null) {
+			postData = GET_ASSET_FOR_USER_COUNT_REQUEST;
+		}
 
-    try {
-      URL aURL = new java.net.URL(URL_DEVELOPER_EDIT_APP);
-      result = getGwtRpcResponse(postData, aURL);
+		try {
+			URL aURL = new java.net.URL(URL_DEVELOPER_EDIT_APP);
+			result = getGwtRpcResponse(postData, aURL);
 
-    } catch (Exception f) {
-      throw new DeveloperConsoleException(postData, f);
-    }
+		} catch (Exception f) {
+			throw new DeveloperConsoleException(postData, f);
+		}
 
-    return result;
-  }
-  private String grapGetAssetIndexForUser() throws DeveloperConsoleException {
+		return result;
+	}
 
-    String result = null;
+	private String grapGetAssetIndexForUser() throws DeveloperConsoleException {
 
-//    String developerPostData = Preferences.getGetAssetIndexForUser(context);
-    String developerPostData = null;
+		String result = null;
 
-    if (postData == null) {
-      developerPostData = GET_ASSET_INDEX_FOR_USER;
-    }
-    String xsrfToken = ((AndlyticsApp) context.getApplicationContext()).getXsrfToken();
+		//    String developerPostData = Preferences.getGetAssetIndexForUser(context);
+		String developerPostData = null;
 
-    developerPostData = developerPostData.replace(PARAM_XSRFTOKEN, xsrfToken!=null ? xsrfToken:"");
+		if (postData == null) {
+			developerPostData = GET_ASSET_INDEX_FOR_USER;
+		}
+		String xsrfToken = ((AndlyticsApp) context.getApplicationContext()).getXsrfToken();
 
-    try {
-      URL aURL = new java.net.URL(URL_DEVELOPER_EDIT_APP + "?dev_acc=" + devacc);
-      result = getGwtRpcResponse(developerPostData, aURL);
+		developerPostData = developerPostData.replace(PARAM_XSRFTOKEN,
+				xsrfToken != null ? xsrfToken : "");
 
-    } catch (Exception f) {
-      throw new DeveloperConsoleException(result, f);
-    }
+		try {
+			URL aURL = new java.net.URL(URL_DEVELOPER_EDIT_APP + "?dev_acc=" + devacc);
+			result = getGwtRpcResponse(developerPostData, aURL);
 
-    return result;
-  }
+		} catch (Exception f) {
+			throw new DeveloperConsoleException(result, f);
+		}
+
+		return result;
+	}
 
 	private String getGwtPermutation() {
 		String gwtPermutation = Preferences.getGwtPermutation(context);
@@ -376,8 +387,8 @@ public class DeveloperConsole {
 		return gwtPermutation;
 	}
 
-
-	protected String grapComments(String packageName, int startIndex, int lenght) throws DeveloperConsoleException {
+	protected String grapComments(String packageName, int startIndex, int lenght)
+			throws DeveloperConsoleException {
 
 		String postData = Preferences.getRequestUserComments(context);
 
@@ -392,14 +403,14 @@ public class DeveloperConsole {
 		postData = postData.replace(PARAM_APPNAME, packageName);
 		postData = postData.replace(PARAM_STARTINDEX, startIndexString);
 		postData = postData.replace(PARAM_LENGTH, lengthString);
-		postData = postData.replace(PARAM_XSRFTOKEN, xsrfToken!=null ? xsrfToken:"");
+		postData = postData.replace(PARAM_XSRFTOKEN, xsrfToken != null ? xsrfToken : "");
 
 		String result = null;
 
 		this.postData = postData;
 
 		try {
-			URL aURL = new java.net.URL(URL_COMMENTS  + "?dev_acc=" + devacc);
+			URL aURL = new java.net.URL(URL_COMMENTS + "?dev_acc=" + devacc);
 			result = getGwtRpcResponse(postData, aURL);
 
 		} catch (Exception f) {
@@ -408,40 +419,40 @@ public class DeveloperConsole {
 		return result;
 	}
 
+	protected String grapFeedbackOverview(List<String> packageNames)
+			throws DeveloperConsoleException {
 
-    protected String grapFeedbackOverview(List<String> packageNames) throws DeveloperConsoleException {
+		String postData = Preferences.getRequestFeedback(context);
 
-        String postData = Preferences.getRequestFeedback(context);
+		if (postData == null) {
+			postData = GET_FEEDBACK_OVERVIEW;
+		}
 
-        if (postData == null) {
-            postData = GET_FEEDBACK_OVERVIEW;
-        }
+		String jsonList = "";
+		for (int i = 0; i < packageNames.size(); i++) {
+			if (i != 0) {
+				jsonList += ",";
+			}
+			jsonList += "\"" + packageNames.get(i) + "\"";
+		}
 
-        String jsonList = "";
-        for (int i = 0; i < packageNames.size(); i++) {
-            if (i != 0) {
-                jsonList += ",";
-            }
-            jsonList += "\"" + packageNames.get(i) + "\"";
-        }
+		postData = postData.replace(PARAM_PACKAGELIST, jsonList);
 
-        postData = postData.replace(PARAM_PACKAGELIST, jsonList);
+		System.out.println("feedback post request: " + postData);
 
-        System.out.println("feedback post request: " + postData);
+		String result = null;
 
-        String result = null;
+		this.postData = postData;
 
-        this.postData = postData;
+		try {
+			URL aURL = new java.net.URL(URL_FEEDBACK);
+			result = getGwtRpcResponse(postData, aURL);
 
-        try {
-            URL aURL = new java.net.URL(URL_FEEDBACK);
-            result = getGwtRpcResponse(postData, aURL);
-
-        } catch (Exception f) {
-            throw new DeveloperConsoleException(result, f);
-        }
-        return result;
-    }
+		} catch (Exception f) {
+			throw new DeveloperConsoleException(result, f);
+		}
+		return result;
+	}
 
 	private String getGwtRpcResponse(String developerPostData, URL aURL) throws IOException,
 			ProtocolException {
@@ -467,7 +478,8 @@ public class DeveloperConsole {
 		connection.setRequestProperty("X-GWT-Module-Base", "https://play.google.com/apps/publish/gwt-play/");
 		connection.setRequestProperty("Referer", "https://play.google.com/apps/publish/Home");
 
-		OutputStreamWriter streamToAuthorize = new java.io.OutputStreamWriter(connection.getOutputStream());
+		OutputStreamWriter streamToAuthorize = new java.io.OutputStreamWriter(
+				connection.getOutputStream());
 
 		streamToAuthorize.write(developerPostData);
 		streamToAuthorize.flush();
@@ -475,7 +487,8 @@ public class DeveloperConsole {
 
 		// Get the Response from Autorize.net
 		InputStream resultStream = connection.getInputStream();
-		BufferedReader aReader = new java.io.BufferedReader(new java.io.InputStreamReader(resultStream));
+		BufferedReader aReader = new java.io.BufferedReader(new java.io.InputStreamReader(
+				resultStream));
 		StringBuffer aResponse = new StringBuffer();
 		String aLine = aReader.readLine();
 		while (aLine != null) {
@@ -487,126 +500,125 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	protected void developerConsoleAuthentication(String authtoken, boolean reuseAuthentication) throws NetworkException, SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception {
+	protected void developerConsoleAuthentication(String authtoken, boolean reuseAuthentication)
+			throws NetworkException, SignupException, AuthenticationException,
+			NoCookieSetException, MultiAccountAcception {
 		// login to Android Market
 		// this results in a 302
 		// and is necessary for a cookie to be set
 
-	   // authtoken = "DQAAAMsAAAA6XRgg47KgvSY9AaQ32d9hOAglYRoW9oJmwd4HxZvMicVeWFciKp5MgyXVDMCxd-xSfgmEeUl-9YFGuVsbAGJI5t09gBioQBb758jCxJbHmzd8utW7tQcK1VtVS4zkRDF_eUzN7KgyDU7AYt8wDsg9Gm8YYAB7vkhIlCGTWNCcvgYnewszM2giu-mOlcaKKjgUW5yiQj3xdZo77CTaZkj5LNeVaCSYF2s_QRKqNkIgXp2jFPQtzFHaGZ76QG4SNq6vKVaD61LF2lswgnPEnSNS";
+		// authtoken = "DQAAAMsAAAA6XRgg47KgvSY9AaQ32d9hOAglYRoW9oJmwd4HxZvMicVeWFciKp5MgyXVDMCxd-xSfgmEeUl-9YFGuVsbAGJI5t09gBioQBb758jCxJbHmzd8utW7tQcK1VtVS4zkRDF_eUzN7KgyDU7AYt8wDsg9Gm8YYAB7vkhIlCGTWNCcvgYnewszM2giu-mOlcaKKjgUW5yiQj3xdZo77CTaZkj5LNeVaCSYF2s_QRKqNkIgXp2jFPQtzFHaGZ76QG4SNq6vKVaD61LF2lswgnPEnSNS";
 
 		this.cookieAuthtoken = authtoken;
 
-        HttpClient httpclient = null;
+		HttpClient httpclient = null;
 
 		try {
 
-			if(!reuseAuthentication) {
+			if (!reuseAuthentication) {
 				cookie = null;
 			}
 
 			// reuse cookie for performance
-			if(cookie == null || cookieAuthtoken == null || !cookieAuthtoken.equals(authtoken)) {
+			if (cookie == null || cookieAuthtoken == null || !cookieAuthtoken.equals(authtoken)) {
 
-	             String cookie1 = null;
+				String cookie1 = null;
 
-
-			    //https://play.google.com/apps/publish?auth=DQAAAIMAAAAryYwfh6oNf-o3F25Jkd1vMfCOgGIus7u_iNmvYefviT_yfzgVgLDAORWewa0KDN_BMvLoerHQz0gqn5m3_DBRkm0-H0fcyDGCVs8gYZJ-uDpRqTtUyHUtiMnS8FILxii8PHTArr21FY5pcmEDXFMlG0XVtN_nwzRWZUwEdQ2ffHJMN-rG-HdXEV-dI4FrBW8
+				//https://play.google.com/apps/publish?auth=DQAAAIMAAAAryYwfh6oNf-o3F25Jkd1vMfCOgGIus7u_iNmvYefviT_yfzgVgLDAORWewa0KDN_BMvLoerHQz0gqn5m3_DBRkm0-H0fcyDGCVs8gYZJ-uDpRqTtUyHUtiMnS8FILxii8PHTArr21FY5pcmEDXFMlG0XVtN_nwzRWZUwEdQ2ffHJMN-rG-HdXEV-dI4FrBW8
 
 				HttpGet httpget = new HttpGet(URL_DEVELOPER_CONSOLE + "?auth=" + authtoken);
-			    //httpget.setHeader("Authorization", "GoogleLogin auth=" + auth);
+				//httpget.setHeader("Authorization", "GoogleLogin auth=" + auth);
 				HttpParams params = new BasicHttpParams();
 				HttpClientParams.setRedirecting(params, true);
-	            HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-	            HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-	            HttpProtocolParams.setUseExpectContinue(params, true);
+				HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+				HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+				HttpProtocolParams.setUseExpectContinue(params, true);
 
-	            SSLSocketFactory sf = SSLSocketFactory.getSocketFactory();
-	            sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+				SSLSocketFactory sf = SSLSocketFactory.getSocketFactory();
+				sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
-	            SchemeRegistry schReg = new SchemeRegistry();
-	            schReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-	            schReg.register(new Scheme("https", sf, 443));
+				SchemeRegistry schReg = new SchemeRegistry();
+				schReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+				schReg.register(new Scheme("https", sf, 443));
 
+				ClientConnectionManager conMgr = new ThreadSafeClientConnManager(params, schReg);
 
-	            ClientConnectionManager conMgr = new ThreadSafeClientConnManager(params, schReg);
+				int timeoutSocket = 30 * 1000;
+				HttpConnectionParams.setSoTimeout(params, timeoutSocket);
 
-	            int timeoutSocket = 30 * 1000;
-	            HttpConnectionParams.setSoTimeout(params, timeoutSocket);
+				HttpContext context = new BasicHttpContext();
 
-	            HttpContext context = new BasicHttpContext();
+				httpclient = new DefaultHttpClient(conMgr, params);
 
-	            httpclient = new DefaultHttpClient(conMgr, params);
+				HttpResponse httpResponse = httpclient.execute(httpget, context);
 
+				// 8p8 fix for xsrfToken
+				Matcher m1 = Pattern.compile("userInfo = (\\{.+\\});").matcher(
+						EntityUtils.toString(httpResponse.getEntity()));
+				if (m1.find()) {
+					String xsrfToken = new JSONObject(m1.group(1)).getString("gwtRpcXsrfToken");
+					((AndlyticsApp) this.context.getApplicationContext()).setXsrfToken(xsrfToken);
+				}
+				//TODO this is /apps/publish authorization's header payload (multi-acc)
 
-			    HttpResponse httpResponse = httpclient.execute(httpget, context);
+				final int statusCode = httpResponse.getStatusLine().getStatusCode();
+				if (statusCode != HttpStatus.SC_OK) {
+					throw new AuthenticationException("Got HTTP " + statusCode + " ("
+							+ httpResponse.getStatusLine().getReasonPhrase() + ')');
+				}
 
-			    // 8p8 fix for xsrfToken
-			    Matcher m1 = Pattern.compile("userInfo = (\\{.+\\});").matcher(EntityUtils.toString(httpResponse.getEntity()));
-			    if (m1.find()) {
-			    	String xsrfToken = new JSONObject(m1.group(1)).getString("gwtRpcXsrfToken");
-			    	((AndlyticsApp) this.context.getApplicationContext()).setXsrfToken(xsrfToken);
-			    }
-			    //TODO this is /apps/publish authorization's header payload (multi-acc)
+				boolean asp = false; //TODO get hasher here?
 
-                final int statusCode = httpResponse.getStatusLine().getStatusCode();
-                if (statusCode != HttpStatus.SC_OK) {
-                    throw new AuthenticationException("Got HTTP " + statusCode
-                        + " (" + httpResponse.getStatusLine().getReasonPhrase() + ')');
-                }
+				Object obj = context.getAttribute("http.protocol.redirect-locations");
+				if (obj != null) {
+					RedirectLocations locs = (RedirectLocations) obj;
 
-                boolean asp = false;		//TODO get hasher here?
+					try {
+						Field privateStringField = RedirectLocations.class.getDeclaredField("uris");
+						privateStringField.setAccessible(true);
+						HashSet<URI> uris = (HashSet<URI>) privateStringField.get(locs);
 
-			    Object obj = context.getAttribute("http.protocol.redirect-locations");
-                if(obj != null) {
-                    RedirectLocations locs = (RedirectLocations)obj;
+						for (URI uri : uris) {
+							String string = uri.toASCIIString();
 
-                    try {
-                        Field privateStringField = RedirectLocations.class.getDeclaredField("uris");
-                        privateStringField.setAccessible(true);
-                        HashSet<URI> uris = (HashSet<URI>) privateStringField.get(locs);
+							if (string.indexOf("dev_acc=") > -1) {
+								devacc = string.substring(string.indexOf("=") + 1, string.length());
+								break;
+							} else if (string.indexOf("asp=1") > -1) {
+								asp = true;
+							}
 
-                        for (URI uri : uris) {
-                            String string = uri.toASCIIString();
+						}
 
-                            if(string.indexOf("dev_acc=") > -1) {
-                                devacc = string.substring(string.indexOf("=")+1, string.length());
-                                break;
-                            } else if (string.indexOf("asp=1") > -1) {
-                                asp = true;
-                            }
+					} catch (NoSuchFieldException e) {
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					}
 
-                        }
+				}
 
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
+				Header[] allHeaders = httpResponse.getHeaders("Set-Cookie");
+				if (allHeaders != null && allHeaders.length > 0) {
+					if (allHeaders[0].getValue().startsWith("ANDROID_DEV")) {
+						cookie1 = allHeaders[0].getValue();
+					}
+				}
 
-                }
+				if (devacc == null && asp) {
+					throw new MultiAccountAcception();
+				}
 
-			    Header[] allHeaders = httpResponse.getHeaders("Set-Cookie");
-			    if(allHeaders != null && allHeaders.length > 0) {
-			        if(allHeaders[0].getValue().startsWith("ANDROID_DEV")) {
-			            cookie1 = allHeaders[0].getValue();
-			        }
-			    }
-
-			    if(devacc == null && asp) {
-                    throw new MultiAccountAcception();
-			    }
-
-		        if(devacc == null) {
-		            Log.e("andlytics", "missing devacc");
-                    throw new AuthenticationException();
-                }
-
-				if(cookie1 == null) {
+				if (devacc == null) {
+					Log.e("andlytics", "missing devacc");
 					throw new AuthenticationException();
 				}
 
+				if (cookie1 == null) {
+					throw new AuthenticationException();
+				}
 
 				this.cookie = cookie1;
 			}
@@ -616,37 +628,37 @@ public class DeveloperConsole {
 			throw new NetworkException(e);
 		} catch (IOException e) {
 			throw new NetworkException(e);
-        } catch (JSONException e) {
+		} catch (JSONException e) {
 			throw new NetworkException(e);
-        } finally {
-            if (httpclient != null) {
-                httpclient.getConnectionManager().shutdown();
-                httpclient = null;
-            }
-        }
+		} finally {
+			if (httpclient != null) {
+				httpclient.getConnectionManager().shutdown();
+				httpclient = null;
+			}
+		}
 
 	}
 
 	private static String convertStreamToString(InputStream is) {
 
-	    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-	    StringBuilder sb = new StringBuilder();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		StringBuilder sb = new StringBuilder();
 
-	    String line = null;
-	    try {
-	        while ((line = reader.readLine()) != null) {
-	            sb.append((line + "\n"));
-	        }
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    } finally {
-	        try {
-	            is.close();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	    }
-	    return sb.toString();
+		String line = null;
+		try {
+			while ((line = reader.readLine()) != null) {
+				sb.append((line + "\n"));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return sb.toString();
 	}
 
 	public String login(String email, String password) {
@@ -682,7 +694,8 @@ public class DeveloperConsole {
 
 		String data = "";
 		for (String key : params.keySet()) {
-			data += "&" + URLEncoder.encode(key, "UTF-8") + "=" + URLEncoder.encode(params.get(key), "UTF-8");
+			data += "&" + URLEncoder.encode(key, "UTF-8") + "="
+					+ URLEncoder.encode(params.get(key), "UTF-8");
 		}
 		data = data.substring(1);
 
@@ -692,18 +705,20 @@ public class DeveloperConsole {
 		aConnection.setDoOutput(true);
 		aConnection.setDoInput(true);
 		aConnection.setRequestMethod("POST");
-        aConnection.setHostnameVerifier(new AllowAllHostnameVerifier());
+		aConnection.setHostnameVerifier(new AllowAllHostnameVerifier());
 
 		// aConnection.setAllowUserInteraction(false);
 		// POST the data
-		OutputStreamWriter streamToAuthorize = new java.io.OutputStreamWriter(aConnection.getOutputStream());
+		OutputStreamWriter streamToAuthorize = new java.io.OutputStreamWriter(
+				aConnection.getOutputStream());
 		streamToAuthorize.write(data);
 		streamToAuthorize.flush();
 		streamToAuthorize.close();
 
 		// Get the Response from Autorize.net
 		InputStream resultStream = aConnection.getInputStream();
-		BufferedReader aReader = new java.io.BufferedReader(new java.io.InputStreamReader(resultStream));
+		BufferedReader aReader = new java.io.BufferedReader(new java.io.InputStreamReader(
+				resultStream));
 		StringBuffer aResponse = new StringBuffer();
 		String aLine = aReader.readLine();
 		while (aLine != null) {
@@ -714,7 +729,5 @@ public class DeveloperConsole {
 
 		return aResponse.toString();
 	}
-
-
 
 }

@@ -18,7 +18,9 @@ import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.LoginActivity;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.model.AppStats;
-
+import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2;
+import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2.BigTextStyle;
+import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2.Builder;
 
 public class ImportService extends IntentService {
 
@@ -32,8 +34,6 @@ public class ImportService extends IntentService {
 
 	public static final String ACCOUNT_NAME = "accountName";
 
-	private Notification notification;
-
 	private boolean errors = false;
 
 	private String accountName;
@@ -44,23 +44,17 @@ public class ImportService extends IntentService {
 
 	private NotificationManager notificationManager;
 
+	private Exception error;
+
 	public ImportService() {
 		super("andlytics ImportService");
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate() {
-		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-		this.notification = new Notification(R.drawable.statusbar_andlytics, getResources()
-				.getString(R.string.app_name)
-				+ ": "
-				+ getApplicationContext().getString(R.string.import_started),
-				System.currentTimeMillis());
-		this.notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT
-				| Notification.FLAG_AUTO_CANCEL;
 		super.onCreate();
+
+		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 	}
 
 	@Override
@@ -75,7 +69,6 @@ public class ImportService extends IntentService {
 
 		this.accountName = intent.getStringExtra(ACCOUNT_NAME);
 		Log.d(TAG, "account name:: " + accountName);
-
 
 		boolean success = importStats();
 		notifyImportFinished(success);
@@ -108,13 +101,12 @@ public class ImportService extends IntentService {
 						db.insertOrUpdateAppStats(appStats, packageName);
 				}
 
-
 			}
 		} catch (Exception e) {
 			Log.e(TAG, "Error importing stats: " + e.getMessage());
+			error = e;
 			errors = true;
 		}
-
 
 		message = getResources().getString(R.string.app_name) + ": "
 				+ getApplicationContext().getString(R.string.import_finished);
@@ -123,57 +115,68 @@ public class ImportService extends IntentService {
 		return !errors;
 	}
 
-	@SuppressWarnings("deprecation")
 	private void notifyImportFinished(boolean success) {
-		// clear progress notification
-		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
 		notificationManager.cancel(NOTIFICATION_ID_PROGRESS);
 
-		Intent startActivityIntent = new Intent(ImportService.this, LoginActivity.class);
+		Intent startActivityIntent = new Intent(this, LoginActivity.class);
+		startActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
-				startActivityIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
-		notification.contentIntent = pendingIntent;
+				startActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		Builder builder = new NotificationCompat2.Builder(getApplicationContext());
+		builder.setSmallIcon(R.drawable.statusbar_andlytics);
+		builder.setContentIntent(pendingIntent);
+		builder.setWhen(System.currentTimeMillis());
+		builder.setDefaults(Notification.DEFAULT_ALL);
+		builder.setAutoCancel(true);
+		builder.setOngoing(false);
 
 		if (success) {
-			String message = getResources().getString(R.string.app_name) + ": "
+			String title = getResources().getString(R.string.app_name) + ": "
 					+ getApplicationContext().getString(R.string.import_finished);
-			notification = new Notification(R.drawable.statusbar_andlytics, message,
-					System.currentTimeMillis());
-			notification.setLatestEventInfo(getApplicationContext(),
-					getResources().getString(R.string.app_name) + ": "
-							+ getApplicationContext().getString(R.string.import_finished), "",
-					pendingIntent);
+			String message = getResources().getString(R.string.imported_apps, fileNames.size());
+			builder.setContentTitle(title);
+			builder.setContentText(message);
+			BigTextStyle style = new BigTextStyle(builder);
+			style.setBigContentTitle(title);
+			style.bigText(message);
+			style.setSummaryText(accountName);
+			builder.setStyle(style);
 		} else {
-			String message = getResources().getString(R.string.app_name) + ": "
+			String title = getResources().getString(R.string.app_name) + ": "
 					+ getApplicationContext().getString(R.string.import_error);
-			notification = new Notification(R.drawable.statusbar_andlytics, message,
-					System.currentTimeMillis());
-			notification.setLatestEventInfo(getApplicationContext(),
-					getResources().getString(R.string.app_name) + ": "
-							+ getApplicationContext().getString(R.string.import_error), "",
-					pendingIntent);
+			String message = error.getMessage();
+			builder.setContentTitle(title);
+			builder.setContentText(message);
+			BigTextStyle style = new BigTextStyle(builder);
+			style.setBigContentTitle(title);
+			style.bigText(message);
+			style.setSummaryText(accountName);
+			builder.setStyle(style);
 		}
 
-		notification.defaults |= Notification.DEFAULT_SOUND;
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
-		notificationManager.notify(NOTIFICATION_ID_FINISHED, notification);
+		notificationManager.notify(NOTIFICATION_ID_FINISHED, builder.build());
 	}
-
 
 	/**
 	 * Send a notification to the progress bar.
 	 */
-	@SuppressWarnings("deprecation")
 	protected void sendNotification(String message) {
-		Intent startActivityIntent = new Intent(ImportService.this, ImportService.class);
+		Intent startActivityIntent = new Intent();
 		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
 				startActivityIntent, 0);
 
-		notification.setLatestEventInfo(this, getResources().getString(R.string.app_name) + ": "
-				+ getApplicationContext().getString(R.string.import_), message, pendingIntent);
-		notificationManager.notify(NOTIFICATION_ID_PROGRESS, notification);
+		Builder builder = new NotificationCompat2.Builder(getApplicationContext());
+		builder.setSmallIcon(R.drawable.statusbar_andlytics);
+		builder.setContentTitle(getResources().getString(R.string.app_name) + ": "
+				+ getApplicationContext().getString(R.string.import_));
+		builder.setContentText(message);
+		builder.setContentIntent(pendingIntent);
+		builder.setDefaults(0);
+		builder.setAutoCancel(true);
+		builder.setOngoing(true);
+
+		notificationManager.notify(NOTIFICATION_ID_PROGRESS, builder.build());
 	}
 
 }

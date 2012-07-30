@@ -39,13 +39,13 @@ public class BaseDetailsActivity extends BaseActivity {
 		}
 
 	}
-	
+
 	@Override
 	protected void onResume() {
 		setupTabbar();
 		super.onResume();
 	}
-	
+
 	/**
 	 * Called if item in option menu is selected.
 	 * 
@@ -63,7 +63,6 @@ public class BaseDetailsActivity extends BaseActivity {
 		}
 	}
 
-
 	/**
 	 * starts a given activity with a clear flag.
 	 * 
@@ -75,25 +74,25 @@ public class BaseDetailsActivity extends BaseActivity {
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
-	
+
 	// TODO Replace these buttons with a modern tab bar/action bar tabs
 
-	public void updateTabbarButtons() {		
+	public void updateTabbarButtons() {
 		if (this instanceof ChartActivity) {
 			ChartSet currentChartSet = ((ChartActivity) this).getCurrentChartSet();
-				if (currentChartSet.equals(ChartSet.DOWNLOADS)) {
-					downloadsButton.setSelected(true);
-					commentsButton.setSelected(false);
-					admobButton.setSelected(false);
-					ratingsButton.setSelected(false);
+			if (currentChartSet.equals(ChartSet.DOWNLOADS)) {
+				downloadsButton.setSelected(true);
+				commentsButton.setSelected(false);
+				admobButton.setSelected(false);
+				ratingsButton.setSelected(false);
 
-				} else if (currentChartSet.equals(ChartSet.RATINGS)) {
+			} else if (currentChartSet.equals(ChartSet.RATINGS)) {
 
-					downloadsButton.setSelected(false);
-					commentsButton.setSelected(false);
-					ratingsButton.setSelected(true);
-					admobButton.setSelected(false);
-				}
+				downloadsButton.setSelected(false);
+				commentsButton.setSelected(false);
+				ratingsButton.setSelected(true);
+				admobButton.setSelected(false);
+			}
 		} else if (this instanceof CommentsActivity) {
 			commentsButton.setSelected(true);
 			admobButton.setSelected(false);
@@ -113,15 +112,15 @@ public class BaseDetailsActivity extends BaseActivity {
 		ratingsButton = findViewById(R.id.tabbar_button_ratings);
 		commentsButton = findViewById(R.id.tabbar_button_comments);
 		admobButton = findViewById(R.id.tabbar_button_back);
-		
+
 		// Check if AdMob is configured for this app
 		String currentAdmobAccount = null;
-		String currentSiteId = Preferences.getAdmobSiteId(this,	packageName);
+		String currentSiteId = Preferences.getAdmobSiteId(this, packageName);
 		if (currentSiteId != null) {
-			currentAdmobAccount = Preferences.getAdmobAccount(this,	currentSiteId);
+			currentAdmobAccount = Preferences.getAdmobAccount(this, currentSiteId);
 		}
 		boolean admobConfigured = currentAdmobAccount == null ? false : true;
-		if (!admobConfigured && Preferences.getHideAdmobForUnconfiguredApps(this)){
+		if (!admobConfigured && Preferences.getHideAdmobForUnconfiguredApps(this)) {
 			admobButton.setVisibility(View.GONE);
 		}
 

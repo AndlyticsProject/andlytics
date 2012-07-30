@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.cache;
 
 public class AppIconInMemoryCache extends LRUBitmapCache {

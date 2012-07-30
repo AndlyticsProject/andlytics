@@ -92,7 +92,8 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 		menu.clear();
 		getSupportMenuInflater().inflate(R.menu.comments_menu, menu);
 		if (refreshing)
-		  menu.findItem(R.id.itemCommentsmenuRefresh).setActionView(R.layout.action_bar_indeterminate_progress);
+			menu.findItem(R.id.itemCommentsmenuRefresh).setActionView(
+					R.layout.action_bar_indeterminate_progress);
 		return true;
 	}
 
@@ -165,8 +166,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 					String authtoken = getAndlyticsApplication().getAuthToken();
 					List<Comment> result = console.getAppComments(authtoken, accountName,
-							packageName,
-							nextCommentIndex, MAX_LOAD_COMMENTS);
+							packageName, nextCommentIndex, MAX_LOAD_COMMENTS);
 
 					// put in cache if index == 0
 					if (nextCommentIndex == 0) {
