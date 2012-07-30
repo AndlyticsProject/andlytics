@@ -42,7 +42,7 @@ KNOWN ISSUES
 Please fork this repository and contribute back using
 [pull requests](https://github.com/AndlyticsProject/andlytics/pulls).
 
-The 'master' branch should always be in a stable, tested, and ready to go state so that we can implement quick fixes when Google breaks the 'API'. Therefore, all pull requests should be based on, and targeted to, the 'dev' branch.
+The 'master' branch should always be in a stable, tested, and ready to go state so that we can implement quick fixes when Google breaks the 'API'. Therefore, all pull requests should be based on, and targeted to, the ['dev'](https://github.com/AndlyticsProject/andlytics/tree/dev) branch.
 
 When submitting code, please try to be consistent with the code around you. As a general rule:
 1. Use Tabs, not spaces
