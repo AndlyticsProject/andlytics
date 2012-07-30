@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject;
 
 import java.io.File;
@@ -7,7 +6,6 @@ import java.util.List;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +23,7 @@ import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.io.ImportService;
 import com.github.andlyticsproject.io.ServiceExceptoin;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
+import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
 public class ImportActivity extends SherlockActivity {
@@ -45,6 +44,9 @@ public class ImportActivity extends SherlockActivity {
 
 	private ListView listView;
 
+	private LoadImportDialogTask loadTask;
+
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
@@ -89,8 +91,7 @@ public class ImportActivity extends SherlockActivity {
 		listView = (ListView) this.findViewById(R.id.list_view_id);
 		listView.addHeaderView(layoutInflater.inflate(R.layout.import_list_header, null), null,
 				false);
-		adapter = new ImportListAdapter(new ArrayList<String>());
-		listView.setAdapter(adapter);
+		setFilenames(new ArrayList<String>());
 
 		if (Intent.ACTION_VIEW.equals(getIntent().getAction())) {
 			Uri data = getIntent().getData();
@@ -99,11 +100,28 @@ public class ImportActivity extends SherlockActivity {
 				finish();
 			}
 
-			Utils.execute(new LoadImportDialogTask(), data.getPath());
+
+			if (getLastNonConfigurationInstance() != null) {
+				loadTask = (LoadImportDialogTask) getLastNonConfigurationInstance();
+				loadTask.attach(this);
+				setFilenames(loadTask.getFilenames());
+			} else {
+				loadTask = new LoadImportDialogTask(this);
+				Utils.execute(loadTask, data.getPath());
+			}
 		} else {
 			Log.w(TAG, "Don't know how to handle this action: " + getIntent().getAction());
 			finish();
 		}
+	}
+
+	List<String> getPackagesForAccount() {
+		return db.getPackagesForAccount(accountName);
+	}
+
+	void setFilenames(List<String> filenames) {
+		adapter = new ImportListAdapter(filenames);
+		listView.setAdapter(adapter);
 	}
 
 	private String getAccountName() {
@@ -117,23 +135,36 @@ public class ImportActivity extends SherlockActivity {
 		return ownerAccount;
 	}
 
-	private class LoadImportDialogTask extends AsyncTask<String, Void, Boolean> {
+	public Object onRetainNonConfigurationInstance() {
+		return loadTask == null ? null : loadTask.detach();
+	}
 
-		private List<String> fileNames;
+	private static class LoadImportDialogTask extends
+			DetachableAsyncTask<String, Void, Boolean, ImportActivity> {
+
+		LoadImportDialogTask(ImportActivity parent) {
+			super(parent);
+		}
+
+		private List<String> filenames = new ArrayList<String>();
 		private String zipFilename;
 
 		@Override
 		protected void onPreExecute() {
-			setProgressBarIndeterminateVisibility(true);
+			activity.setProgressBarIndeterminateVisibility(true);
 		}
 
 		@Override
 		protected Boolean doInBackground(String... params) {
+			if (activity == null) {
+				return false;
+			}
+
 			zipFilename = params[0];
-			List<String> pacakgeNames = db.getPackagesForAccount(accountName);
+			List<String> pacakgeNames = activity.getPackagesForAccount();
 			try {
-				fileNames = StatsCsvReaderWriter.getImportFileNamesFromZip(accountName,
-						pacakgeNames, zipFilename);
+				filenames = StatsCsvReaderWriter.getImportFileNamesFromZip(
+						activity.getAccountName(), pacakgeNames, zipFilename);
 
 				return true;
 			} catch (ServiceExceptoin e) {
@@ -144,19 +175,26 @@ public class ImportActivity extends SherlockActivity {
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			setProgressBarIndeterminateVisibility(false);
+			if (activity == null) {
+				return;
+			}
 
-			if (!isFinishing()) {
+			activity.setProgressBarIndeterminateVisibility(false);
+
+			if (!activity.isFinishing()) {
 				if (result) {
-					adapter = new ImportListAdapter(fileNames);
-					listView.setAdapter(adapter);
+					activity.setFilenames(filenames);
 				} else {
-					Toast.makeText(ImportActivity.this,
+					Toast.makeText(activity,
 							"SD-Card not mounted or invalid file format, can't import!",
 							Toast.LENGTH_LONG).show();
-					finish();
+					activity.finish();
 				}
 			}
+		}
+
+		List<String> getFilenames() {
+			return filenames;
 		}
 
 	}
