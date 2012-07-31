@@ -66,6 +66,7 @@ public class ExportActivity extends SherlockActivity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		setContentView(R.layout.export_stats);
+		setProgressBarIndeterminateVisibility(false);
 
 		layoutInflater = getLayoutInflater();
 		db = ((AndlyticsApp) getApplication()).getDbAdapter();

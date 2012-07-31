@@ -123,7 +123,7 @@ public class Admob {
 	}
 
 	public Float getEpc() {
-		return clicks > 0 ? (revenue * 100.f / clicks) : -1;
+		return clicks > 0 ? (revenue * 100.f / clicks) : 0;
 	}
 
 	public void setEcpm(Float ecpm) {

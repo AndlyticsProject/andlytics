@@ -113,7 +113,11 @@ public class AdmobActivity extends BaseChartActivity {
 		}
 		if (currentAdmobAccount == null) {
 			// Hide the settings (but keep the spinner) if nothing is setup
-			menu.findItem(R.id.itemAdmobsmenuSettings).setVisible(false);
+			// Settings might not be there on small phones when in landscape
+			MenuItem settings = menu.findItem(R.id.itemAdmobsmenuSettings);
+			if (settings != null){
+				settings.setVisible(false);
+			}
 			menu.findItem(R.id.itemAdmobsmenuRefresh).setVisible(refreshing);
 		}
 		return true;
