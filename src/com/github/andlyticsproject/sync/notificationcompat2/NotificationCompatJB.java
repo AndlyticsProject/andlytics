@@ -1,8 +1,10 @@
 
 package com.github.andlyticsproject.sync.notificationcompat2;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 
+@TargetApi(16)
 class NotificationCompatJB implements NotificationCompat2.NotificationCompatImpl {
 	static Notification.Builder createBuilder(NotificationCompat2.Builder b) {
 		final Notification.Builder builder = NotificationCompatICS.createBuilder(b);

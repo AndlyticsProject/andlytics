@@ -16,12 +16,13 @@
 
 package com.github.andlyticsproject.sync.notificationcompat2;
 
-import android.app.Notification;
-
 import static android.app.Notification.FLAG_AUTO_CANCEL;
 import static android.app.Notification.FLAG_ONGOING_EVENT;
 import static android.app.Notification.FLAG_ONLY_ALERT_ONCE;
+import android.annotation.TargetApi;
+import android.app.Notification;
 
+@TargetApi(11)
 class NotificationCompatHC implements NotificationCompat2.NotificationCompatImpl {
 	@SuppressWarnings("deprecation")
 	static Notification.Builder createBuilder(NotificationCompat2.Builder b) {

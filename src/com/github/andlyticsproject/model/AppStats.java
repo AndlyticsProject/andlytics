@@ -4,7 +4,8 @@ package com.github.andlyticsproject.model;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
+
+import android.util.SparseArray;
 
 public class AppStats {
 
@@ -60,7 +61,7 @@ public class AppStats {
 
 	private String ratingCountPercentString;
 
-	private HashMap<Integer, String> ratingPercentStringMap;
+	private SparseArray<String> ratingPercentStringMap;
 
 	private String activeInstallsPercentString;
 
@@ -278,7 +279,7 @@ public class AppStats {
 
 	public void calsRatingPercentStrings() {
 
-		this.ratingPercentStringMap = new HashMap<Integer, String>();
+		this.ratingPercentStringMap = new SparseArray<String>();
 		int sum = getRatingCount();
 
 		for (int i = 1; i < 6; i++) {
