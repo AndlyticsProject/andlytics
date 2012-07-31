@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.AppStatsDiff;
@@ -39,16 +40,11 @@ public class NotificationHandler {
 		String contentTitle = context.getString(R.string.notification_title);
 		String contentText = "";
 
-		boolean commentsEnabled = Preferences.getNotificationPerf(context,
-				Preferences.NOTIFICATION_CHANGES_COMMENTS);
-		boolean ratingsEnabled = Preferences.getNotificationPerf(context,
-				Preferences.NOTIFICATION_CHANGES_RATING);
-		boolean downloadsEnabled = Preferences.getNotificationPerf(context,
-				Preferences.NOTIFICATION_CHANGES_DOWNLOADS);
-		boolean soundEnabled = Preferences.getNotificationPerf(context,
-				Preferences.NOTIFICATION_SOUND);
-		boolean lightEnabled = Preferences.getNotificationPerf(context,
-				Preferences.NOTIFICATION_LIGHT);
+		boolean downloadsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_DOWNLOADS);
+		boolean commentsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_COMMENTS);
+		boolean ratingsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_RATING);
+		boolean lightEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_LIGHT);
+		String ringtone = Preferences.getNotificationRingtone(context);
 
 		List<String> appNameList = new ArrayList<String>();
 		int number = 0;
@@ -134,14 +130,12 @@ public class NotificationHandler {
 				builder.setContentIntent(contentIntent);
 				builder.setTicker(contentTitle);
 
-				int defaults = 0;
-				if (soundEnabled) {
-					defaults |= Notification.DEFAULT_SOUND;
+				if (ringtone != null) {
+					builder.setSound(Uri.parse(ringtone));
 				}
 				if (lightEnabled) {
-					defaults |= Notification.DEFAULT_LIGHTS;
+					builder.setDefaults(Notification.DEFAULT_LIGHTS);
 				}
-				builder.setDefaults(defaults);
 				builder.setAutoCancel(true);
 				nm.notify(accountName.hashCode(), builder.build());
 			}

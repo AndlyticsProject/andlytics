@@ -10,6 +10,8 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
 public class Preferences {
+	
+	// TODO Review this class an clean it up a bit
 
 	public static final String PREF = "andlytics_pref";
 
@@ -37,7 +39,7 @@ public class Preferences {
 	public static final String NOTIFICATION_CHANGES_RATING = "notification.changes.rating";
 	public static final String NOTIFICATION_CHANGES_COMMENTS = "notification.changes.comments";
 	public static final String NOTIFICATION_CHANGES_DOWNLOADS = "notification.changes.download";
-	public static final String NOTIFICATION_SOUND = "notification.sound";
+	public static final String NOTIFICATION_RINGTONE = "notification.ringtone";
 	public static final String NOTIFICATION_LIGHT = "notification.light";
 	public static final String NOTIFICATION_WHEN_ACCOUNT_VISISBLE = "notification.when_account_visible";
 
@@ -103,7 +105,9 @@ public class Preferences {
 	}
 
 	public static int getAutoSyncPeriod(Context activity) {
-		return getSettings(activity).getInt(AUTOSYNC_PERIOD, AutosyncHandler.DEFAULT_PERIOD);
+		// We use a ListPreference which only supports saving as strings, so need to convert it when reading
+		return Integer.parseInt(getSettings(activity).getString(AUTOSYNC_PERIOD,
+				Integer.toString(AutosyncHandler.DEFAULT_PERIOD)));
 	}
 
 	public static String getAutoSyncSet(Context activity, String accountName) {
@@ -205,6 +209,10 @@ public class Preferences {
 
 	public static boolean getNotificationPerf(Context context, String prefName) {
 		return getSettings(context).getBoolean(prefName, true);
+	}
+	
+	public static String getNotificationRingtone(Context context) {
+		return getSettings(context).getString(NOTIFICATION_RINGTONE, null);
 	}
 
 	public static void saveLevel7AlarmManagerPeriod(Integer periodInSeconds, Context context) {

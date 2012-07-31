@@ -21,16 +21,18 @@
     <PreferenceCategory
         android:key="prefCatNotificationSignal"
         android:title="@string/notification_signal" >
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="notification.sound"
+        <RingtonePreference
+            android:ringtoneType="notification"
+            android:showSilent="true"
+            android:showDefault="true"
+            android:key="notification.ringtone"
             android:title="@string/notification_sound" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="notification.light"
             android:title="@string/notification_light" />
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="notification.when_account_visible"
             android:summary="@string/notification_when_account_visible_summary"
             android:title="@string/notification_when_account_visible" />

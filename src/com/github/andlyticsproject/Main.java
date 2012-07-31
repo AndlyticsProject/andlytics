@@ -43,7 +43,6 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
@@ -709,7 +708,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	@Override
 	public void authenticationSuccess() {
-		Utils.execute(new LoadRemoteEntries(), null);
+		Utils.execute(new LoadRemoteEntries());
 	}
 
 	//FIXME isUpdate
