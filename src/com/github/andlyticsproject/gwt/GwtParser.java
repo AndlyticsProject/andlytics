@@ -1,7 +1,4 @@
-
 package com.github.andlyticsproject.gwt;
-
-import android.text.format.DateFormat;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import android.text.format.DateFormat;
+import android.util.SparseArray;
 
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
 import com.github.andlyticsproject.exception.NegativeIndexValueExecption;
@@ -298,9 +298,9 @@ public class GwtParser {
 		try {
 
 			Date now = new Date();
-			Map<Integer, LongIndexValue> activeInstallIndexMap = new HashMap<Integer, LongIndexValue>();
+			SparseArray<LongIndexValue> activeInstallIndexMap = new SparseArray<LongIndexValue>();
 			//   Map<Integer, LongIndexValue> commentsIndexMap = new HashMap<Integer, LongIndexValue>();
-			Map<Integer, LongIndexValue> fullAssetLongIndexMap = new HashMap<Integer, LongIndexValue>();
+			SparseArray<LongIndexValue> fullAssetLongIndexMap = new SparseArray<LongIndexValue>();
 
 			int tokenCount = 0;
 

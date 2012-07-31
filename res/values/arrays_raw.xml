@@ -1,8 +1,8 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Arrays that are used directly in the app and shouldn't be translated -->
 
-    <string-array name="autosync_periods_values">
+    <string-array name="autosync_periods_values" tools:ignore="MissingTranslation">
         <item>0</item>
         <item>1</item>
         <item>15</item>
