@@ -225,7 +225,7 @@ public class ExportActivity extends SherlockActivity {
 
 			if (convertView == null) {
 
-				convertView = layoutInflater.inflate(R.layout.ghost_list_item, null);
+				convertView = layoutInflater.inflate(R.layout.export_list_item, null);
 
 				holder = new ViewHolder();
 				holder.name = (TextView) convertView.findViewById(R.id.main_app_name);
