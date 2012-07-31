@@ -19,8 +19,6 @@ import org.achartengine.renderer.XYSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer.Orientation;
 
 import com.github.andlyticsproject.Preferences;
-import com.github.andlyticsproject.model.Admob;
-import com.github.andlyticsproject.model.AppStats;
 
 public class Chart extends AbstractChart {
 
