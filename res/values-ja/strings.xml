@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Andlytics</string>
+    <string name="app_name_admob">AdMob</string>
+
+    <string name="one_entry_hint_desc">Andlyticsは、データを収集するアプリです。意味のあるチャートを表示するには、より多くデータが蓄積された時に再試行してください。\n\nダウンロード数は24または48時間毎に更新されます。</string>
+    <string name="one_entry_hint_demo"><u>サンプルデータのチャートを表示</u></string>
+
+    <string name="crash_desc">予期しないエラーが発生しました。\n\nエラーレポートを送信すると、問題の修正に役立ちます。原因を特定するために、エラー情報(スタックとレース)と端末情報 (メーカー、モデル番号、OSバージョンなど)を送信します。\n\nありがとうございました。\n\n</string>
+    <string name="newversion_desc"><b>リモートインターフェースが変更されたため、予期しないエラーが発生しました。</b>\n\nしかし、その問題を修正する新しい Andlyticsバージョンは既に、Google Playにて公開済みです。\n\nこの問題を報告する前に、アプリを更新してください。\n\nありがとうございました。\n\n\n</string>
+    <string name="account_required">Android　開発者アカウントが必要です。</string>
+    <string name="account_choose">Googleアカウントを選択、または追加してください。アカウントは、Google Playにて開発者アカウントとして登録されて、公開済みアプリのあるアカウントである必要があります。(\'Google Apps for Business\' アカウント、または複数の開発者コンソールと紐付かれているアカウントはサポートされていません。)</string>
+    <string name="account_add">Android 開発者アカウントを追加</string>
+    <string name="logout">ログアウト</string>
+    <string name="refresh">更新</string>
+    <string name="comments">コメント</string>
+    <string name="total_downloads">インストール合計数</string>
+    <string name="active_installs">有効な端末インストール数</string>
+    <string name="admob_revenue">AdMob 収益</string>
+    <string name="admob_requests">AdMob　リクエスト数</string>
+    <string name="average_rating">平均評価</string>
+    <string name="ratings">評価数</string>
+    <!-- Lower case versions for main screen e.g. X comments -->
+    <string name="num_comments">コメント</string>
+    <string name="num_total_downloads">インストール合計数</string>
+    <string name="num_active_installs">有効な端末インストール数</string>
+    <string name="num_average_rating">平均評価</string>
+    <string name="num_ratings">評価数</string>
+    
+    <string name="auto_sync">自動同期</string>
+    <string name="notifications">通知</string>
+    <string name="statistics_export">統計データエクスポート</string>
+    <string name="statistics_import">統計データインポート</string>
+    <string name="apps_hide">非表示アプリを選択してください。</string>
+    <string name="feedback">フィードバックする</string>
+    <string name="settings">設定</string>
+    <string name="downloads">ダウンロード数</string>
+    <string name="close">閉じる</string>
+    <string name="rating_changes">評価推移</string>
+    <string name="comment_changes">コメント数推移</string>
+    <string name="download_changes">ダウンロード数推移</string>
+    <string name="notification_trigger">通知トリガー</string>
+    <string name="disable_notifications">チェックをはずすと、すべての通知を無効にします。</string>
+    <string name="notification_signal">通知音</string>
+    <string name="notification_sound">通知音</string>
+    <string name="notification_light">通知ライト</string>
+    <string name="apps_notification">通知するアプリ</string>
+    <string name="select_files_import">インポートするパッケージを選択してください。</string>
+    <string name="data_replaced">既存のデータを上書きします。</string>
+    <string name="run_import">インポート開始</string>
+    <string name="cancel">キャンセル</string>
+    <string name="ok">OK</string>
+    <string name="title">タイトル</string>
+    <string name="text">テキスト</string>
+    <string name="select_files_export">エクスポートするアプリを選択してください。</string>
+    <string name="export_files_replaced">既存のエックスポートファイルを上書きします。</string>
+    <string name="run_export">エクスポート開始</string>
+    <string name="by">by</string>
+    <string name="device">端末</string>
+    <string name="long_click_translate">コメントを長押しすると、翻訳を表示します。</string>
+    <string name="load_more_comments">残りのコメントをロードする</string>
+    <string name="info_comments">取り消し・変更されたコメントのため、メイン画面で表示するコメント数は、ここに表示するコメント数より多い場合があります。</string>
+    <string name="time_frame">時間帯</string>
+    <string name="seven_days">1週間分</string>
+    <string name="thirty_days">１ヵ月分</string>
+    <string name="unlimited">制限なし</string>
+    <string name="date_format">日付フォーマット</string>
+    <string name="ddmmyy">日/月/年</string>
+    <string name="yymmdd">年/月/日</string>
+    <string name="mmddyy">月/日/年</string>
+    <string name="smooth_values">値を補正する</string>
+    <string name="info_smooth">ダウンロード・インストール数は毎日更新されるとは限りません。そのような値を補正できます。評価値は、ほぼ即時に更新されるので、補正はしません。</string>
+    <string name="auto_sync_period">自動同期周期</string>
+    <string name="info_autosync">自動同期を無効にした場合、将来の値はグラフユーに反映されないおそれがあります</string>
+    <string name="admob_login">AdMobアカウント・ログイン</string>
+    <string name="password">パスワード</string>
+    <string name="login">ログイン</string>
+    <string name="remove_admob">AdMobサイト紐付けを削除する</string>
+    <string name="remove_admob_app">このアプリのAdMob値を削除する</string>
+    <string name="loading_site">サイト一覧読み込み中&#8230;</string>
+    <string name="select_admob_site">このアプリに紐付く AdMobサイトを選択してください。</string>
+    <string name="choose_app">アプリを選択してください</string>
+    <string name="admob_required">AdMobアカウントが必要です。</string>
+    <string name="admob_add">AdMobアカウントを追加</string>
+    <string name="admob_info">Googleアカウントに紐付いているAdMobアカウントのAPIパスワードは、以下のアカウント情報ページに記載されています:</string>
+    <string name="percentage">割合</string>
+    <string name="daily">日時推移</string>
+    <string name="downloads_day">ダウンロード数/日</string>
+    <string name="active_installs_percent">有効な端末インストール数の割合</string>
+    <string name="swipe">スワイプで次のチャートを表示します-></string>
+
+    <string name="admob">AdMob</string>
+    <string name="admob__revenue">収益</string>
+    <string name="admob__epc">epc</string>
+    <string name="admob__requests">リクエスト数</string>
+    <string name="admob__clicks">クリック数</string>
+    <string name="admob__fill_rate">広告表示率</string>
+    <string name="admob__eCPM">eCPM</string>
+    <string name="admob__impressions">表示数</string>
+    <string name="admob__CTR">CTR</string>
+    <string name="admob__house_ad_clicks">House ad クリック数</string>
+    <string name="admob__charts_available">表示可能なAdMobチャート</string>
+    <string name="last_update">最後の更新</string>
+
+    <string name="changelog_title">変更履歴</string>
+    <string name="changelog_thanks">Andlyticsをインストールしていただき、ありがとうございました。</string>
+
+    <string name="notification_title">Andlytics変更検知</string>
+
+    <string name="import_">インポート</string>
+    <string name="import_no_sdcard">SDカードがマウントされていないため、インポートできません。</string>
+    <string name="import_no_app">選択されたアプリはないため、インポートできません。</string>
+    <string name="importing">インポート中</string>
+    <string name="import_started">インポートを開始しました。</string>
+    <string name="import_finished">インポートが終了しました。</string>
+    <string name="imported_apps">%d 件をインポートしました。</string>
+    <string name="import_error">インポートエラー。</string>
+	<string name="export_">エクスポート</string>
+	<string name="export_no_sdcard">SDカードがマウントされていないため、エックスポートできません。</string>
+	<string name="export_no_app">選択されたアプリはないため、エックスポートできません。</string>
+	<string name="export_started">エクスポートを開始しました。</string>
+    <string name="export_finished">エクスポートが終了しました。</string>
+    <string name="export_failed_to_load_stats">アプリ情報読み込みに失敗しました。</string>
+    <string name="export_saved_to">に保存。</string>
+    <string name="share">共有</string>
+    
+    <string name="manage_accounts">アカウント管理</string>
+    <string name="preferences">設定</string>
+    <string name="loading_app_list">アプリ一覧読み込み中&#8230;</string>
+    <string name="no_published_apps">公開済みアプリはありません。</string>
+    
+    <string name="general_preferences">共用設定</string>
+    <string name="account_specific_preferences">アカウント別設定</string>
+    <string name="notification_when_account_visible">アプリが表示されている時</string>
+    <string name="notification_when_account_visible_summary">アプリが表示されている時でも、現在選択されているアカウントのアプリ通知を表示します。</string>
+    <string name="hide_admob_for_unconfigured_apps">AdMob アカウントが設定されてないアプリのAdMob タブを表示しない。</string>
+
+</resources>

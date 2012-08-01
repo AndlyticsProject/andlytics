@@ -22,20 +22,20 @@
     <string name="average_rating">Media rating</string>
     <string name="ratings">Rating</string>
     <!-- Lower case versions for main screen e.g. X comments -->
-    <string name="num_comments">commenti</string>
-    <string name="num_total_downloads">download totali</string>
-    <string name="num_active_installs">active installs</string>
-    <string name="num_average_rating">media rating</string>
-    <string name="num_ratings">rating</string>
+    <string name="num_comments">Commenti</string>
+    <string name="num_total_downloads">Download totali</string>
+    <string name="num_active_installs">Active installs</string>
+    <string name="num_average_rating">Media rating</string>
+    <string name="num_ratings">Rating</string>
     
     <string name="auto_sync">Sincronizzazione automatica</string>
-    <string name="notifications">Notifiche</string>
+    <string name="notifications">Notifiche:</string>
     <string name="statistics_export">Esporta statistiche</string>
     <string name="statistics_import">Importa statistiche</string>
     <string name="apps_hide">Nascondi app</string>
     <string name="feedback">Send feedback</string>
     <string name="settings">Impostazioni</string>
-    <string name="downloads">Download</string>
+    <string name="downloads">Downloads</string>
     <string name="close">Chiudi</string>
     <string name="rating_changes">Andamento rating</string>
     <string name="comment_changes">Andamento commenti</string>
@@ -43,17 +43,17 @@
     <string name="notification_trigger">Trigger notifiche</string>
     <string name="disable_notifications">Deseleziona tutte per disabilitare le notifiche</string>
     <string name="notification_signal">Segnale notifiche</string>
-    <string name="notification_sound">Suono notifiche</string>
+    <string name="notification_sound">Seleziona suoneria</string>
     <string name="notification_light">Luce notifiche</string>
     <string name="apps_notification">App abilitate alle notifiche</string>
-    <string name="select_files_import">Seleziona i file da importare</string>
+    <string name="select_files_import">Select packages to import</string>
     <string name="data_replaced">I dati esistenti verranno sostituiti</string>
     <string name="run_import">Importa dati</string>
     <string name="cancel">Annulla</string>
     <string name="ok">OK</string>
     <string name="title">Titolo</string>
     <string name="text">Testo</string>
-    <string name="select_files_export">Seleziona i file da esportare</string>
+    <string name="select_files_export">Select apps to export</string>
     <string name="export_files_replaced">I file esistenti verranno sostituiti</string>
     <string name="run_export">Esporta dati</string>
     <string name="by">di</string>
@@ -112,17 +112,28 @@
     <string name="import_no_sdcard">SD Card non montata, impossibile importare!</string>
     <string name="import_no_app">Nessuna app selezione, non è possibile importare!</string>
     <string name="importing">Importando…</string>
-    <string name="import_started">Importazione iniziata</string>
-    <string name="import_finished">Importazione completata</string>
-    <string name="import_error">Errore durante l\'importazione</string>
+    <string name="import_started">Importazione iniziata.</string>
+    <string name="import_finished">Importazione completata.</string>
+    <string name="imported_apps">Imported %d apps.</string>
+    <string name="import_error">Errore durante l\'importazione.</string>
 	<string name="export_">Esporta</string>
 	<string name="export_no_sdcard">SD Card non montata, non è possibile esportare!</string>
 	<string name="export_no_app">Nessuna app selezionata, non è possibile esportare!</string>
-	<string name="export_started">Salvataggio iniziato</string>
-    <string name="export_finished">Salvataggio completato</string>
+	<string name="export_started">Salvataggio iniziato.</string>
+    <string name="export_finished">Salvataggio completato.</string>
+    <string name="export_failed_to_load_stats">Failed to load app stats.</string>
     <string name="export_saved_to">Salvato in</string>
+    <string name="share">Condividi</string>
     
-    
+    <string name="manage_accounts">Manage accounts</string>
     <string name="preferences">Preferenze</string>
+    <string name="loading_app_list">Caricamento elenco siti&#8230;</string>
+    <string name="no_published_apps">No published apps found</string>
+    
+    <string name="general_preferences">General preferences</string>
+    <string name="account_specific_preferences">Account specific preferences</string>
+    <string name="notification_when_account_visible">When app is visible</string>
+    <string name="notification_when_account_visible_summary">Show notifications for the current account even when the app is visible</string>
+    <string name="hide_admob_for_unconfigured_apps">Hide the AdMob tab for unconfigured apps</string>
 
 </resources>

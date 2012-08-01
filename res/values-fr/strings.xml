@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Andlytics</string>
+    <string name="app_name_admob">AdMob</string>
+
+    <string name="one_entry_hint_desc">Andlytics collecte les données au fil du temps. Pour voir un graphe qui ait du sens, revenez dès que plus de données seront enregistrées.
+\n\nHabituellement, les statistiques de téléchargements sont mises à jour toutes les 24&#8211;48 h</string>
+    <string name="one_entry_hint_demo"><u>Voir les graphiques avec les données de démo</u></string>
+
+    <string name="crash_desc">Une erreur inattendue s\'est produite. \n\nS\'il vous plaîtaidez-nous à résoudre ce problème en nous envoyant un rapport d\'erreur. Les informations sur l\'erreur (stacktrace) et les informations sur votre appareil comme le nom du fabricant, le numéro de modèle du périphérique, le système d\'exploitation, etc seront envoyées pour nous aider à identifier le problème. \n\n Merci ! \n\n</string>
+    <string name="newversion_desc"><b>Une erreur inattendue s\'est produite, probablement parce que l\'interface distante a changé. </b> \n\nMais la bonne nouvelle, c\'est qu\'une nouvelle version de Andlytics est disponible sur l\'Android Market. \n\nS\'il vous plaît mettez-la à jour avant de signaler ce problème. \n\nMerci !</string>
+    <string name="account_required">Authentification avec un compte développeur android requise</string>
+    <string name="account_choose">Veuillez choisir ou ajouter un compte Google. Le compte doit être enregistré en tant que compte développeur, avec des applications publiées sur le Google Play (les comptes \'Google Apps pour Entreprise\' et les comptes liés à des consoles développeur multiples ne sont pas encore supportés).</string>
+    <string name="account_add">Ajouter un compte développeur android</string>
+    <string name="logout">Déconnexion</string>
+    <string name="refresh">Actualiser</string>
+    <string name="comments">Commentaires</string>
+    <string name="total_downloads">Nombre de téléchargements total</string>
+    <string name="active_installs">Installations actives</string>
+    <string name="admob_revenue">Revenus AdMob</string>
+    <string name="admob_requests">Demandes AdMob</string>
+    <string name="average_rating">Note moyenne</string>
+    <string name="ratings">Notes</string>
+    <!-- Lower case versions for main screen e.g. X comments -->
+    <string name="num_comments">commentaires</string>
+    <string name="num_total_downloads">Nombre de téléchargements total</string>
+    <string name="num_active_installs">Installations actives</string>
+    <string name="num_average_rating">Note moyenne</string>
+    <string name="num_ratings">Notes</string>
+    
+    <string name="auto_sync">Auto-synchronisation</string>
+    <string name="notifications">Notifications</string>
+    <string name="statistics_export">Export des données</string>
+    <string name="statistics_import">Import des données</string>
+    <string name="apps_hide">Sélectionner les applications à cacher</string>
+    <string name="feedback">Envoyer feedback</string>
+    <string name="settings">Paramètres</string>
+    <string name="downloads">Téléchargements</string>
+    <string name="close">Fermer</string>
+    <string name="rating_changes">Changement des notes</string>
+    <string name="comment_changes">Changement des commentaires</string>
+    <string name="download_changes">Changement des téléchargements</string>
+    <string name="notification_trigger">Déclenchement des notifications</string>
+    <string name="disable_notifications">Désélectionnez l\'ensemble pour désactiver les notifications</string>
+    <string name="notification_signal">Signal de notification</string>
+    <string name="notification_sound">Son de notification</string>
+    <string name="notification_light">Notification visuelle</string>
+    <string name="apps_notification">Applications pour les notifications de changement</string>
+    <string name="select_files_import">Select packages to import</string>
+    <string name="data_replaced">Les données existantes seront remplacées</string>
+    <string name="run_import">Importer</string>
+    <string name="cancel">Annuler</string>
+    <string name="ok">OK</string>
+    <string name="title">Titre</string>
+    <string name="text">Texte</string>
+    <string name="select_files_export">Select apps to export</string>
+    <string name="export_files_replaced">Les fichiers d\'export existants seront remplacés</string>
+    <string name="run_export">Exporter</string>
+    <string name="by">par</string>
+    <string name="device">appareil</string>
+    <string name="long_click_translate">Long clic sur le commentaire pour le traduire</string>
+    <string name="load_more_comments">Charger plus de commentaires</string>
+    <string name="info_comments">Le nombre de commentaires affiché dans l\'écran principal peut être plus important que le nombre de commentaires montré ici à cause de ceux modifiés ou retirés</string>
+    <string name="time_frame">Délai</string>
+    <string name="seven_days">Les 7 derniers jours</string>
+    <string name="thirty_days">Derniers 30 jours</string>
+    <string name="unlimited">Sans limites</string>
+    <string name="date_format">Format de date</string>
+    <string name="ddmmyy">Jour/Mois/Année</string>
+    <string name="yymmdd">Année/Mois/Jour</string>
+    <string name="mmddyy">Mois/Jour/Année</string>
+    <string name="smooth_values">Valeurs moyennées</string>
+    <string name="info_smooth">Les valeurs pour les téléchargements et les installations actives ne sont pas mis à jour sur une base quotidienne par Google. Vous pouvez choisir de lisser ces valeurs. Les notes ne sont pas touchées, car elles sont mises à jour presque instantanément.</string>
+    <string name="auto_sync_period">Période d’auto-synchronisation</string>
+    <string name="info_autosync">Si la synchronisation automatique est désactivée alors les graphiques manqueront probablement les valeurs futures</string>
+    <string name="admob_login">CONNEXION COMPTE ADMOB</string>
+    <string name="password">Mot de passe</string>
+    <string name="login">Connexion</string>
+    <string name="remove_admob">Enlever le lien avec site AdMob</string>
+    <string name="remove_admob_app">Enlever les valeurs AdMob pour cette application</string>
+    <string name="loading_site">Chargement de la liste des sites&#8230;</string>
+    <string name="select_admob_site">Sélectionner un site AdMob à associer avec cette application</string>
+    <string name="choose_app">Choisissez votre application</string>
+    <string name="admob_required">Authentification AdMob requise</string>
+    <string name="admob_add">Ajouter un compte AdMob</string>
+    <string name="admob_info">Pour les comptes AdMob qui sont liés à un compte Google, vous pouvez trouver le mot de passe API sur la page d\'informations du compte admob :</string>
+    <string name="percentage">Pourcentage</string>
+    <string name="daily">Changements journaliers</string>
+    <string name="downloads_day">Téléchargements par jour</string>
+    <string name="active_installs_percent">Installations actives en pourcent</string>
+    <string name="swipe">Glisser pour voir le graphique suivant -></string>
+
+    <string name="admob">AdMob</string>
+    <string name="admob__revenue">Revenus</string>
+    <string name="admob__epc">epc</string>
+    <string name="admob__requests">Demandes</string>
+    <string name="admob__clicks">Clics</string>
+    <string name="admob__fill_rate">Taux de remplissage</string>
+    <string name="admob__eCPM">eCPM</string>
+    <string name="admob__impressions">Impressions</string>
+    <string name="admob__CTR">CTR</string>
+    <string name="admob__house_ad_clicks">House ad clicks</string>
+    <string name="admob__charts_available">Graphiques AdMob disponibles</string>
+    <string name="last_update">Dernière mise à jour</string>
+
+    <string name="changelog_title">Modifications récentes</string>
+    <string name="changelog_thanks">Merci d\'avoir installé Andlytics !</string>
+
+    <string name="notification_title">Détection de changement Andlytics</string>
+
+    <string name="import_">Importer</string>
+    <string name="import_no_sdcard">La carte SD n\'est pas présente, importation impossible !</string>
+    <string name="import_no_app">Aucune application sectionnée, importation impossible !</string>
+    <string name="importing">Importation</string>
+    <string name="import_started">Import started.</string>
+    <string name="import_finished">Import finished.</string>
+    <string name="imported_apps">Imported %d apps.</string>
+    <string name="import_error">Error during import.</string>
+	<string name="export_">Exporter</string>
+	<string name="export_no_sdcard">La carte SD n\'est pas présente, exportation impossible !</string>
+	<string name="export_no_app">Aucune application sectionnée, exportation impossible !</string>
+	<string name="export_started">Export started.</string>
+    <string name="export_finished">Export finished.</string>
+    <string name="export_failed_to_load_stats">Impossible de charger les statistiques de l\'application.</string>
+    <string name="export_saved_to">Sauver sous</string>
+    <string name="share">Partager</string>
+    
+    <string name="manage_accounts">Gérer les comptes</string>
+    <string name="preferences">Préférences</string>
+    <string name="loading_app_list">Chargement de la liste des apps&#8230;</string>
+    <string name="no_published_apps">Aucune application publiée n\'a été trouvée</string>
+    
+    <string name="general_preferences">General preferences</string>
+    <string name="account_specific_preferences">Account specific preferences</string>
+    <string name="notification_when_account_visible">When app is visible</string>
+    <string name="notification_when_account_visible_summary">Show notifications for the current account even when the app is visible</string>
+    <string name="hide_admob_for_unconfigured_apps">Hide the AdMob tab for unconfigured apps</string>
+
+</resources>

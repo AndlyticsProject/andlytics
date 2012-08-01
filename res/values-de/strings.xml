@@ -46,14 +46,14 @@
     <string name="notification_sound">Benachrichtigungston</string>
     <string name="notification_light">Benachrichtigung Optisch</string>
     <string name="apps_notification">Apps für Benachrichtigungen</string>
-    <string name="select_files_import">Zu importierende Daten</string>
+    <string name="select_files_import">Pakete für den Import auswählen</string>
     <string name="data_replaced">Bestehende Daten werden ersetzt</string>
     <string name="run_import">Importieren</string>
     <string name="cancel">Abbrechen</string>
     <string name="ok">OK</string>
     <string name="title">Titel</string>
     <string name="text">Text</string>
-    <string name="select_files_export">Zu exportierende Daten</string>
+    <string name="select_files_export">Apps für den Export auswählen</string>
     <string name="export_files_replaced">Bestehende Daten werden ersetzt</string>
     <string name="run_export">Exportieren</string>
     <string name="by">von</string>
@@ -112,14 +112,15 @@
     <string name="import_no_sdcard">Kann nicht importieren, keine SD-Karte erkannt!</string>
     <string name="import_no_app">Keine App zum importieren ausgewählt!</string>
     <string name="importing">Importiere</string>
-    <string name="import_started">Import gestartet</string>
-    <string name="import_finished">Import beendet</string>
-    <string name="import_error">fehler beim Importieren</string>
+    <string name="import_started">Import gestartet.</string>
+    <string name="import_finished">Import beendet.</string>
+    <string name="imported_apps">%d Apps importiert.</string>
+    <string name="import_error">Fehler beim Import.</string>
 	<string name="export_">Export</string>
 	<string name="export_no_sdcard">Kann nicht exportieren, keine SD-Karte erkannt!</string>
 	<string name="export_no_app">Keine App zum exportieren ausgewählt!</string>
-	<string name="export_started">Export gestartet</string>
-    <string name="export_finished">Export beendet</string>
+	<string name="export_started">Export gestartet.</string>
+    <string name="export_finished">Export beendet.</string>
     <string name="export_failed_to_load_stats">Fehler beim Laden der App Statistiken.</string>
     <string name="export_saved_to">Gespeichert unter</string>
     <string name="share">Teilen</string>
@@ -128,5 +129,11 @@
     <string name="preferences">Einstellungen</string>
     <string name="loading_app_list">Lade App-Liste&#8230;</string>
     <string name="no_published_apps">Keine veröffentlichten Apps gefunden</string>
+    
+    <string name="general_preferences">Allgemeine Einstellungen</string>
+    <string name="account_specific_preferences">Kontospezifische Einstellungen</string>
+    <string name="notification_when_account_visible">Fall App sichtbar ist</string>
+    <string name="notification_when_account_visible_summary">Benachrichtigungen anzeigen für das aktuelle Konto, auch wenn die Anwendung gerade angezeigt wird</string>
+    <string name="hide_admob_for_unconfigured_apps">AdMob Reiter für nicht konfigurierte Apps verstecken</string>
 
 </resources>
