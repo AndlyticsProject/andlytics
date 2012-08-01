@@ -4,9 +4,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.io.ImportService;
 import com.github.andlyticsproject.io.ServiceExceptoin;
@@ -26,17 +30,19 @@ import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
-public class ImportActivity extends SherlockActivity {
+public class ImportActivity extends SherlockFragmentActivity {
 
 	private static final String TAG = ImportActivity.class.getSimpleName();
 
 	public static final int TAG_IMAGE_REF = R.id.tag_mainlist_image_reference;
 
+	private static final String EXTRA_IMPORT_FILENAMES = "importFilenames";
+
 	private ImportListAdapter adapter;
 
 	private LayoutInflater layoutInflater;
 
-	private List<String> importFileNames = new ArrayList<String>();
+	private ArrayList<String> importFilenames = new ArrayList<String>();
 
 	private String accountName;
 
@@ -46,7 +52,7 @@ public class ImportActivity extends SherlockActivity {
 
 	private LoadImportDialogTask loadTask;
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
@@ -62,6 +68,45 @@ public class ImportActivity extends SherlockActivity {
 		accountName = getAccountName();
 		getSupportActionBar().setSubtitle(accountName);
 
+		if (state != null) {
+			importFilenames = (ArrayList<String>) state.getSerializable(EXTRA_IMPORT_FILENAMES);
+		}
+
+		setupViews();
+
+		if (Intent.ACTION_VIEW.equals(getIntent().getAction())) {
+			Uri data = getIntent().getData();
+			if (data == null) {
+				Toast.makeText(this, "Stats file not specified as data.", Toast.LENGTH_LONG).show();
+				finish();
+			}
+
+			if (getLastCustomNonConfigurationInstance() != null) {
+				loadTask = (LoadImportDialogTask) getLastCustomNonConfigurationInstance();
+				loadTask.attach(this);
+				setFilenames(loadTask.getFilenames());
+			} else {
+				loadTask = new LoadImportDialogTask(this);
+				Utils.execute(loadTask, data.getPath());
+			}
+		} else {
+			Log.w(TAG, "Don't know how to handle this action: " + getIntent().getAction());
+			finish();
+		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle state) {
+		super.onSaveInstanceState(state);
+		state.putSerializable(EXTRA_IMPORT_FILENAMES, importFilenames);
+	}
+
+	@Override
+	public Object onRetainCustomNonConfigurationInstance() {
+		return loadTask == null ? null : loadTask.detach();
+	}
+
+	private void setupViews() {
 		View closeButton = (View) this.findViewById(R.id.import_dialog_close_button);
 		closeButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -74,18 +119,14 @@ public class ImportActivity extends SherlockActivity {
 		importButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (importFileNames.size() == 0) {
+				if (importFilenames.size() == 0) {
 					Toast.makeText(ImportActivity.this, getString(R.string.import_no_app),
 							Toast.LENGTH_LONG).show();
-				} else {
-					Intent intent = new Intent(ImportActivity.this, ImportService.class);
-					intent.setData(getIntent().getData());
-					intent.putExtra(ImportService.FILE_NAMES,
-							importFileNames.toArray(new String[importFileNames.size()]));
-					intent.putExtra(ImportService.ACCOUNT_NAME, accountName);
-					startService(intent);
-					finish();
+					return;
 				}
+
+				ConfirmImportDialogFragment.newInstance(adapter.getCount()).show(
+						getSupportFragmentManager(), "confirmImportDialog");
 			}
 		});
 
@@ -93,27 +134,6 @@ public class ImportActivity extends SherlockActivity {
 		listView.addHeaderView(layoutInflater.inflate(R.layout.import_list_header, null), null,
 				false);
 		setFilenames(new ArrayList<String>());
-
-		if (Intent.ACTION_VIEW.equals(getIntent().getAction())) {
-			Uri data = getIntent().getData();
-			if (data == null) {
-				Toast.makeText(this, "Stats file not specified as data.", Toast.LENGTH_LONG).show();
-				finish();
-			}
-
-
-			if (getLastNonConfigurationInstance() != null) {
-				loadTask = (LoadImportDialogTask) getLastNonConfigurationInstance();
-				loadTask.attach(this);
-				setFilenames(loadTask.getFilenames());
-			} else {
-				loadTask = new LoadImportDialogTask(this);
-				Utils.execute(loadTask, data.getPath());
-			}
-		} else {
-			Log.w(TAG, "Don't know how to handle this action: " + getIntent().getAction());
-			finish();
-		}
 	}
 
 	List<String> getPackagesForAccount() {
@@ -136,9 +156,51 @@ public class ImportActivity extends SherlockActivity {
 		return ownerAccount;
 	}
 
-	public Object onRetainNonConfigurationInstance() {
-		return loadTask == null ? null : loadTask.detach();
+	private void startImport() {
+		Intent intent = new Intent(ImportActivity.this, ImportService.class);
+		intent.setData(getIntent().getData());
+		intent.putExtra(ImportService.FILE_NAMES,
+				importFilenames.toArray(new String[importFilenames.size()]));
+		intent.putExtra(ImportService.ACCOUNT_NAME, accountName);
+		startService(intent);
+		finish();
 	}
+
+	public static class ConfirmImportDialogFragment extends DialogFragment {
+
+		public static final String ARG_NUM_APPS = "numApps";
+
+		public static ConfirmImportDialogFragment newInstance(int numExistingApps) {
+			ConfirmImportDialogFragment frag = new ConfirmImportDialogFragment();
+			Bundle args = new Bundle();
+			args.putInt(ARG_NUM_APPS, numExistingApps);
+			frag.setArguments(args);
+			return frag;
+		}
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			final int numExistingApps = getArguments().getInt(ARG_NUM_APPS);
+
+			return new AlertDialog.Builder(getActivity())
+					.setIcon(android.R.drawable.ic_dialog_alert)
+					.setTitle(R.string.import_confirm_dialog_title)
+					.setMessage(
+							getResources().getString(R.string.import_confirm_dialog_message,
+									numExistingApps))
+					.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							((ImportActivity) getActivity()).startImport();
+						}
+					})
+					.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							dismiss();
+						}
+					}).create();
+		}
+	}
+
 
 	private static class LoadImportDialogTask extends
 			DetachableAsyncTask<String, Void, Boolean, ImportActivity> {
@@ -245,7 +307,7 @@ public class ImportActivity extends SherlockActivity {
 			final String fileName = getItem(position);
 			holder.name.setText(StatsCsvReaderWriter.getPackageName(fileName));
 
-			holder.checkbox.setChecked(importFileNames.contains(fileName));
+			holder.checkbox.setChecked(importFilenames.contains(fileName));
 
 			holder.row.setOnClickListener(new View.OnClickListener() {
 
@@ -257,9 +319,9 @@ public class ImportActivity extends SherlockActivity {
 					checkbox.setChecked(!checkbox.isChecked());
 
 					if (checkbox.isChecked()) {
-						importFileNames.add(fileName);
+						importFilenames.add(fileName);
 					} else {
-						importFileNames.remove(fileName);
+						importFilenames.remove(fileName);
 					}
 				}
 			});
@@ -272,9 +334,9 @@ public class ImportActivity extends SherlockActivity {
 				public void onClick(View v) {
 					boolean isChecked = ((CheckBox) v).isChecked();
 					if (isChecked) {
-						importFileNames.add(fileName);
+						importFilenames.add(fileName);
 					} else {
-						importFileNames.remove(fileName);
+						importFilenames.remove(fileName);
 					}
 
 				}

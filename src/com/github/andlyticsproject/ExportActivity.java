@@ -4,13 +4,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,20 +30,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.github.andlyticsproject.cache.AppIconInMemoryCache;
 import com.github.andlyticsproject.io.ExportService;
+import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
-public class ExportActivity extends SherlockActivity {
+public class ExportActivity extends SherlockFragmentActivity {
 
 	private static final String TAG = ExportActivity.class.getSimpleName();
 
 	public static final int TAG_IMAGE_REF = R.id.tag_mainlist_image_reference;
 
 	public static final String EXTRA_ACCOUNT_NAME = "accountName";
+	private static final String EXTRA_EXPORT_PACKAGE_NAMES = "exportPackageNames";
 
 	private LayoutInflater layoutInflater;
 
@@ -53,12 +59,12 @@ public class ExportActivity extends SherlockActivity {
 
 	private ExportListAdapter adapter;
 	private List<AppInfo> appInfos = new ArrayList<AppInfo>();
-	private List<String> exportPackageNames = new ArrayList<String>();
+	private ArrayList<String> exportPackageNames = new ArrayList<String>();
 	private String accountName;
 
 	private LoadExportTask loadTask;
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
@@ -76,6 +82,29 @@ public class ExportActivity extends SherlockActivity {
 
 		adapter = new ExportListAdapter();
 		setAppInfos(appInfos);
+
+		if (state != null) {
+			exportPackageNames = (ArrayList<String>) state
+					.getSerializable(EXTRA_EXPORT_PACKAGE_NAMES);
+		}
+
+		setupView();
+
+		this.inMemoryCache = AppIconInMemoryCache.getInstance();
+		this.cacheDir = getCacheDir();
+		this.spacerIcon = getResources().getDrawable(R.drawable.app_icon_spacer);
+
+		if (getLastCustomNonConfigurationInstance() != null) {
+			loadTask = (LoadExportTask) getLastCustomNonConfigurationInstance();
+			loadTask.attach(this);
+			setAppInfos(loadTask.getAppInfos());
+		} else {
+			loadTask = new LoadExportTask(this);
+			Utils.execute(loadTask);
+		}
+	}
+
+	private void setupView() {
 		View closeButton = (View) this.findViewById(R.id.export_dialog_close_button);
 		closeButton.setOnClickListener(new View.OnClickListener() {
 
@@ -96,19 +125,23 @@ public class ExportActivity extends SherlockActivity {
 					Toast.makeText(context, context.getString(R.string.export_no_sdcard),
 							Toast.LENGTH_LONG).show();
 
-				} else {
-					if (exportPackageNames.size() == 0) {
-						Toast.makeText(context, context.getString(R.string.export_no_app),
-								Toast.LENGTH_LONG).show();
-					} else {
-						Intent intent = new Intent(context, ExportService.class);
-						intent.putExtra(ExportService.EXTRA_PACKAGE_NAMES,
-								exportPackageNames.toArray(new String[exportPackageNames.size()]));
-						intent.putExtra(ExportService.EXTRA_ACCOUNT_NAME, accountName);
-						context.startService(intent);
+					return;
+				}
 
-						finish();
-					}
+				if (exportPackageNames.size() == 0) {
+					Toast.makeText(context, context.getString(R.string.export_no_app),
+							Toast.LENGTH_LONG).show();
+
+					return;
+				}
+
+				File exportFile = StatsCsvReaderWriter.getExportFileForAccount(Preferences
+						.getAccountName(ExportActivity.this));
+				if (exportFile.exists()) {
+					ConfirmExportDialogFragment.newInstance(exportFile.getName()).show(
+							getSupportFragmentManager(), "confirmExportDialog");
+				} else {
+					startExport();
 				}
 			}
 		});
@@ -116,19 +149,18 @@ public class ExportActivity extends SherlockActivity {
 		ListView lv = (ListView) this.findViewById(R.id.list_view_id);
 		lv.addHeaderView(layoutInflater.inflate(R.layout.export_list_header, null));
 		lv.setAdapter(adapter);
+	}
 
-		this.inMemoryCache = AppIconInMemoryCache.getInstance();
-		this.cacheDir = getCacheDir();
-		this.spacerIcon = getResources().getDrawable(R.drawable.app_icon_spacer);
+	@Override
+	protected void onSaveInstanceState(Bundle state) {
+		super.onSaveInstanceState(state);
+		state.putSerializable(EXTRA_EXPORT_PACKAGE_NAMES, exportPackageNames);
+	}
 
-		if (getLastNonConfigurationInstance() != null) {
-			loadTask = (LoadExportTask) getLastNonConfigurationInstance();
-			loadTask.attach(this);
-			setAppInfos(loadTask.getAppInfos());
-		} else {
-			loadTask = new LoadExportTask(this);
-			Utils.execute(loadTask);
-		}
+
+	@Override
+	public Object onRetainCustomNonConfigurationInstance() {
+		return loadTask == null ? null : loadTask.detach();
 	}
 
 	ContentAdapter getDb() {
@@ -139,9 +171,39 @@ public class ExportActivity extends SherlockActivity {
 		return accountName;
 	}
 
-	@Override
-	public Object onRetainNonConfigurationInstance() {
-		return loadTask == null ? null : loadTask.detach();
+	public static class ConfirmExportDialogFragment extends DialogFragment {
+
+		public static final String ARG_FILENAME = "filename";
+
+		public static ConfirmExportDialogFragment newInstance(String filename) {
+			ConfirmExportDialogFragment frag = new ConfirmExportDialogFragment();
+			Bundle args = new Bundle();
+			args.putString(ARG_FILENAME, filename);
+			frag.setArguments(args);
+			return frag;
+		}
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			final String filename = getArguments().getString(ARG_FILENAME);
+
+			return new AlertDialog.Builder(getActivity())
+					.setIcon(android.R.drawable.ic_dialog_alert)
+					.setTitle(R.string.export_confirm_dialog_title)
+					.setMessage(
+							getResources().getString(R.string.export_confirm_dialog_message,
+									filename))
+					.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							((ExportActivity) getActivity()).startExport();
+						}
+					})
+					.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							dismiss();
+						}
+					}).create();
+		}
 	}
 
 
@@ -370,5 +432,15 @@ public class ExportActivity extends SherlockActivity {
 
 	public List<AppInfo> getAppInfos() {
 		return appInfos;
+	}
+
+	private void startExport() {
+		Intent exportIntent = new Intent(this, ExportService.class);
+		exportIntent.putExtra(ExportService.EXTRA_PACKAGE_NAMES,
+				exportPackageNames.toArray(new String[exportPackageNames.size()]));
+		exportIntent.putExtra(ExportService.EXTRA_ACCOUNT_NAME, accountName);
+		startService(exportIntent);
+
+		finish();
 	}
 }
