@@ -119,7 +119,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 		importButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (importFilenames.size() == 0) {
+				if (importFilenames.isEmpty()) {
 					Toast.makeText(ImportActivity.this, getString(R.string.import_no_app),
 							Toast.LENGTH_LONG).show();
 					return;

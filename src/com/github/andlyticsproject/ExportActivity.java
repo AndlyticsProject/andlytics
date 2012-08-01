@@ -128,7 +128,7 @@ public class ExportActivity extends SherlockFragmentActivity {
 					return;
 				}
 
-				if (exportPackageNames.size() == 0) {
+				if (exportPackageNames.isEmpty()) {
 					Toast.makeText(context, context.getString(R.string.export_no_app),
 							Toast.LENGTH_LONG).show();
 
