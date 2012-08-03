@@ -249,7 +249,6 @@ public class BaseActivity extends SherlockActivity {
 	}
 
 	private void sendAracReport(Exception e, boolean userTriggered) {
-		ACRA.init(getApplication());
 		ACRA.getErrorReporter().handleSilentException(e);
 	}
 
