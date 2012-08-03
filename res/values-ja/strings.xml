@@ -7,6 +7,7 @@
     <string name="one_entry_hint_demo"><u>サンプルデータのチャートを表示</u></string>
 
     <string name="crash_desc">予期しないエラーが発生しました。\n\nエラーレポートを送信すると、問題の修正に役立ちます。原因を特定するために、エラー情報(スタックとレース)と端末情報 (メーカー、モデル番号、OSバージョンなど)を送信します。\n\nありがとうございました。\n\n</string>
+    <string name="crash_toast">予期しないエラーが発生しました。原因を特定するために、エラー情報を送信します。</string>
     <string name="newversion_desc"><b>リモートインターフェースが変更されたため、予期しないエラーが発生しました。</b>\n\nしかし、その問題を修正する新しい Andlyticsバージョンは既に、Google Playにて公開済みです。\n\nこの問題を報告する前に、アプリを更新してください。\n\nありがとうございました。\n\n\n</string>
     <string name="account_required">Android　開発者アカウントが必要です。</string>
     <string name="account_choose">Googleアカウントを選択、または追加してください。アカウントは、Google Playにて開発者アカウントとして登録されて、公開済みアプリのあるアカウントである必要があります。(\'Google Apps for Business\' アカウント、または複数の開発者コンソールと紐付かれているアカウントはサポートされていません。)</string>
@@ -138,5 +139,8 @@
     <string name="notification_when_account_visible">アプリが表示されている時</string>
     <string name="notification_when_account_visible_summary">アプリが表示されている時でも、現在選択されているアカウントのアプリ通知を表示します。</string>
     <string name="hide_admob_for_unconfigured_apps">AdMob アカウントが設定されてないアプリのAdMob タブを表示しない。</string>
+    <string name="pref_disable_acra">自動エラー報告</string>
+    <string name="pref_acra_disabled">エラー報告は無効</string>
+    <string name="pref_acra_enabled">エラー報告は有効</string>
 
 </resources>
