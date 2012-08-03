@@ -2,6 +2,7 @@ package com.github.andlyticsproject;
 
 import org.acra.ACRA;
 import org.acra.ACRAConfiguration;
+import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 import org.acra.sender.HttpPostSender;
 
@@ -10,7 +11,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.util.Log;
 
-@ReportsCrashes(formKey = "dHBKcnZqTHMyMHlfLTB0RjhMejZfbkE6MQ", sharedPreferencesMode = Context.MODE_PRIVATE, sharedPreferencesName = Preferences.PREF)
+@ReportsCrashes(formKey = "dHBKcnZqTHMyMHlfLTB0RjhMejZfbkE6MQ", sharedPreferencesMode = Context.MODE_PRIVATE, sharedPreferencesName = Preferences.PREF, mode = ReportingInteractionMode.TOAST)
 public class AndlyticsApp extends Application {
 
 	private static final String TAG = AndlyticsApp.class.getSimpleName();
@@ -45,8 +46,8 @@ public class AndlyticsApp extends Application {
 		}
 
 		try {
-			ACRA.init(this);
 			ACRAConfiguration.setResToastText(R.string.crash_toast);
+			ACRA.init(this);
 			String bugsenseUrl = getResources().getString(R.string.bugsense_url);
 			ACRA.getErrorReporter().addReportSender(new HttpPostSender(bugsenseUrl, null));
 		} catch (IllegalStateException e) {
