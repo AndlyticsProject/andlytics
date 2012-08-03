@@ -17,13 +17,13 @@
     <string name="total_downloads">インストール合計数</string>
     <string name="active_installs">有効な端末インストール数</string>
     <string name="admob_revenue">AdMob 収益</string>
-    <string name="admob_requests">AdMob　リクエスト数</string>
+    <string name="admob_requests">AdMob リクエスト数</string>
     <string name="average_rating">平均評価</string>
     <string name="ratings">評価数</string>
     <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">コメント</string>
     <string name="num_total_downloads">インストール合計数</string>
-    <string name="num_active_installs">有効な端末インストール数</string>
+    <string name="num_active_installs">有効なインストール数</string>
     <string name="num_average_rating">平均評価</string>
     <string name="num_ratings">評価数</string>
     
@@ -115,6 +115,8 @@
     <string name="import_finished">インポートが終了しました。</string>
     <string name="imported_apps">%d 件をインポートしました。</string>
     <string name="import_error">インポートエラー。</string>
+    <string name="import_confirm_dialog_title">インポート確認</string>
+    <string name="import_confirm_dialog_message">%dアプリの統計情報は既に存在します。インポートすると既存のデータを上書きします。よろしいですか？</string>
 	<string name="export_">エクスポート</string>
 	<string name="export_no_sdcard">SDカードがマウントされていないため、エックスポートできません。</string>
 	<string name="export_no_app">選択されたアプリはないため、エックスポートできません。</string>
@@ -122,6 +124,8 @@
     <string name="export_finished">エクスポートが終了しました。</string>
     <string name="export_failed_to_load_stats">アプリ情報読み込みに失敗しました。</string>
     <string name="export_saved_to">に保存。</string>
+    <string name="export_confirm_dialog_title">エクスポート確認</string>
+    <string name="export_confirm_dialog_message">エクスポートファイル 「%s」は既に存在します。統計情報をエクスポートすると、既存のファイルが上書きされます。よろしいですか？</string>
     <string name="share">共有</string>
     
     <string name="manage_accounts">アカウント管理</string>
