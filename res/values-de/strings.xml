@@ -8,6 +8,7 @@
     <string name="one_entry_hint_demo"><u>Übersicht mit Beispieldaten</u></string>
 
     <string name="crash_desc">Ein unvorhergesehener Fehler trat auf.\n\nBitte helft uns diesen Fehler zu beheben durch Senden eines Fehlerberichtes. Informationen über den Fehler (Stacktrace) und Information über das Gerät wie Hersteller, Gerätename, betriebssystem usw helfen uns den Fehler zu finden.\n\nDanke!\n\n</string>
+    <string name="crash_toast">Ein unvorhergesehener Fehler trat auf.\n\nBitte helft uns diesen Fehler zu beheben durch Senden eines Fehlerberichtes. Informationen über den Fehler (Stacktrace) und Information über das Gerät wie Hersteller, Gerätename, Betriebssystem usw. helfen uns den Fehler zu finden.\n\nDanke!\n\n</string>
     <string name="newversion_desc"><b>Ein unvorhergesehener Fehler trat auf, womöglich weil es Änderungen im Play Store gab.</b>\n\nDie gute Nachrichtt: Es gibt bereits eine neue Version von Andlytics.\n\nBitte updaten befor dieser Fehler gemeldet wird.\n\nDanke!\n\n\n</string>
     <string name="account_required">Android Developer Account benötigt</string>
     <string name="account_choose">Bitte einen Google Account wählen oder hinzufügen. Der Zugang muss ein Developer Account mit veröffentlichten Apps sein (\'Google Apps for Business\' werden nicht unterstützt).</string>
@@ -139,5 +140,8 @@
     <string name="notification_when_account_visible">Fall App sichtbar ist</string>
     <string name="notification_when_account_visible_summary">Benachrichtigungen anzeigen für das aktuelle Konto, auch wenn die Anwendung gerade angezeigt wird</string>
     <string name="hide_admob_for_unconfigured_apps">AdMob Reiter für nicht konfigurierte Apps verstecken</string>
+    <string name="pref_disable_acra">Automatische Fehler-Reports</string>
+    <string name="pref_acra_disabled">Reporting deaktiviert</string>
+    <string name="pref_acra_enabled">Reporting aktiviert</string>
 
 </resources>
