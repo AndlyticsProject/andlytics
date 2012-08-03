@@ -116,6 +116,8 @@
     <string name="import_finished">Import beendet.</string>
     <string name="imported_apps">%d Apps importiert.</string>
     <string name="import_error">Fehler beim Import.</string>
+    <string name="import_confirm_dialog_title">Import bestätigen</string>
+    <string name="import_confirm_dialog_message">Sie haben schon Statistiken für die %d apps. Ein Import wird diese Daten überschreiben. Mit dem Import fortfahren?</string>
 	<string name="export_">Export</string>
 	<string name="export_no_sdcard">Kann nicht exportieren, keine SD-Karte erkannt!</string>
 	<string name="export_no_app">Keine App zum exportieren ausgewählt!</string>
@@ -123,6 +125,8 @@
     <string name="export_finished">Export beendet.</string>
     <string name="export_failed_to_load_stats">Fehler beim Laden der App Statistiken.</string>
     <string name="export_saved_to">Gespeichert unter</string>
+    <string name="export_confirm_dialog_title">Export bestätigen</string>
+    <string name="export_confirm_dialog_message">Eine Export Datei \'%s\' existiert bereits. Der Export der App Statistiken wird diese überschreiben. Mit dem Export fortfahren?</string>
     <string name="share">Teilen</string>
     
     <string name="manage_accounts">Konten verwalten</string>
