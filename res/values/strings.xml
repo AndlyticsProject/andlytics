@@ -8,6 +8,7 @@
     <string name="one_entry_hint_demo"><u>View chart with demo data</u></string>
 
     <string name="crash_desc">An unexpected error occurred.\n\nPlease help us to fix this by sending us error report data. Information about the error (stacktrace) and information about your device such as device manufacturer\'s name, device model number, operating system, etc. will be sent to help us identifying the problem.\n\nThanks!\n\n</string>
+    <string name="crash_toast">An unexpected error occurred. Information about the error will be sent to help us identifying the problem.</string>
     <string name="newversion_desc"><b>An unexpected error occurred, probably because the remote interface changed.</b>\n\nBut the good news is that a new version of Andlytics is available in the Android Market.\n\nPlease update before reporting this issue.\n\nThanks!\n\n\n</string>
     <string name="account_required">Android developer account required</string>
     <string name="account_choose">Please choose or add a Google account. The account must be a registered developer account with apps published on Google Play (\'Google Apps for Business\' and accounts linked to multiple developer consoles are not supported yet).</string>
@@ -139,5 +140,8 @@
     <string name="notification_when_account_visible">When app is visible</string>
     <string name="notification_when_account_visible_summary">Show notifications for the current account even when the app is visible</string>
     <string name="hide_admob_for_unconfigured_apps">Hide the AdMob tab for unconfigured apps</string>
+    <string name="pref_disable_acra">Automatic error reports</string>
+    <string name="pref_acra_disabled">Reporting disabled</string>
+    <string name="pref_acra_enabled">Reporting enabled</string>
 
 </resources>
