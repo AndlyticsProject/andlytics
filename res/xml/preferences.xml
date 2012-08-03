@@ -15,13 +15,7 @@
             android:entryValues="@array/autosync_periods_values"
             android:key="autosync.period"
             android:title="@string/auto_sync" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="admob.hide_for_unconfigured_apps"
-            android:summary="@string/hide_admob_for_unconfigured_apps"
-            android:title="@string/admob" />
-
+        
         <Preference
             android:icon="@drawable/icon_notification"
             android:title="@string/notifications" >
@@ -30,6 +24,18 @@
                 android:targetClass="com.github.andlyticsproject.NotificationPreferenceActivity"
                 android:targetPackage="com.github.andlyticsproject" />
         </Preference>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="admob.hide_for_unconfigured_apps"
+            android:summary="@string/hide_admob_for_unconfigured_apps"
+            android:title="@string/admob" />
+        
+        <CheckBoxPreference android:key="acra.enable"
+            android:title="@string/pref_disable_acra"
+            android:summaryOn="@string/pref_acra_enabled"
+            android:summaryOff="@string/pref_acra_disabled"
+            android:defaultValue="true"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="prefCatAccountSpecific"

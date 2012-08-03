@@ -1,17 +1,19 @@
-
 package com.github.andlyticsproject;
 
 import org.acra.ACRA;
+import org.acra.ACRAConfiguration;
 import org.acra.annotation.ReportsCrashes;
+import org.acra.sender.HttpPostSender;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.util.Log;
 
-@ReportsCrashes(
-		formKey = "dHBKcnZqTHMyMHlfLTB0RjhMejZfbkE6MQ",
-		sharedPreferencesMode = Context.MODE_PRIVATE,
-		sharedPreferencesName = Preferences.PREF)
+@ReportsCrashes(formKey = "dHBKcnZqTHMyMHlfLTB0RjhMejZfbkE6MQ", sharedPreferencesMode = Context.MODE_PRIVATE, sharedPreferencesName = Preferences.PREF)
 public class AndlyticsApp extends Application {
+
+	private static final String TAG = AndlyticsApp.class.getSimpleName();
 
 	private String authToken;
 
@@ -29,11 +31,31 @@ public class AndlyticsApp extends Application {
 
 	@Override
 	public void onCreate() {
-		ACRA.init(this);
 		super.onCreate();
-		Preferences.disableCrashReports(this);
+
+		initAcra();
+
 		setDbAdapter(new ContentAdapter(this));
 		sInstance = this;
+	}
+
+	private void initAcra() {
+		if (isDebug()) {
+			return;
+		}
+
+		try {
+			ACRA.init(this);
+			ACRAConfiguration.setResToastText(R.string.crash_toast);
+			String bugsenseUrl = getResources().getString(R.string.bugsense_url);
+			ACRA.getErrorReporter().addReportSender(new HttpPostSender(bugsenseUrl, null));
+		} catch (IllegalStateException e) {
+			Log.w(TAG, "ACRA.init() called more than once?: " + e.getMessage(), e);
+		}
+	}
+
+	public boolean isDebug() {
+		return (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) > 0;
 	}
 
 	public static AndlyticsApp getInstance() {

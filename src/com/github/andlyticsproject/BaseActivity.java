@@ -2,7 +2,6 @@
 package com.github.andlyticsproject;
 
 import org.acra.ACRA;
-import org.acra.ErrorReporter;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -251,8 +250,7 @@ public class BaseActivity extends SherlockActivity {
 
 	private void sendAracReport(Exception e, boolean userTriggered) {
 		ACRA.init(getApplication());
-		ErrorReporter.getInstance().handleSilentException(e);
-		ErrorReporter.getInstance().disable();
+		ACRA.getErrorReporter().handleSilentException(e);
 	}
 
 	protected void showGoogleErrorDialog(final Exception e) {
