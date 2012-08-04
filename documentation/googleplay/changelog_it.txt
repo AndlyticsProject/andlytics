@@ -1,12 +1,24 @@
+2.2.0
+- Nuova modalità di gestione degli account tramite ActionBar
+- Nuova bottom bar per le azioni principali
+- Nuova modalità import/export con integrazione su Dropbox
+- Notifiche JellyBean incluso suoni personalizzati
+- Impostazioni generali e specifiche per account
+- AdMob può ora essere nascosto nelle impostazioni
+- Miglioramenti UI: responsività, miglioramento icone, indicatore progresso operazioni 
+- Nuova lingua: giapponese
+
+
 2.1.0
-- ActionBar compatibile con ICS
+
+- ActionBar compatibile ICS
 - Icone HD per schermi xlarge
-- Nuova schermata delle impostazioni
-- Nuovi linguaggu: Catalano, Italiano, Russo
+- Nuova schermata impostazioni
+- Nuove lingue: Catalano, Italiano, Russo
 
 2.0.1
-- Corretto problema autenticazione
-- Funzioni "pro" ora disponibili gratuitamente (l'app è ora open source)
-- Nuove grafiche
+- Sistemato problema autenticazione
+- Funzionalità "pro" gratuite (l'app ora è open source)
+- Nuovo design
 - EPC per AdMob
-- Nuove lingue: Italiano, Spagnolo, Tedesco, Olandese
+- Nuove lingue: spagnolo, tedesco, olandese
