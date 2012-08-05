@@ -705,5 +705,13 @@ public class DeveloperConsole {
 
 		return aResponse.toString();
 	}
+	
+	public String getDevacc(){
+		return devacc;
+	}
+	
+	public String getCookie(){
+		return cookie;
+	}
 
 }
