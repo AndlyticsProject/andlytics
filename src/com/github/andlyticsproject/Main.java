@@ -381,9 +381,13 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				appDownloadInfos = console.getAppDownloadInfos(authtoken, accountName);
 
 				DeveloperConsoleV2 v2 = new DeveloperConsoleV2(Main.this);
-				v2.login(authtoken, false); // Doesn't work yet
-				// Login using v1 and fill in the data into v2 (doesn't work either)
-				v2.login(console.getCookie(),console.getDevacc());
+				try{
+					v2.login(authtoken, false); // Doesn't work yet
+					// Login using v1 and fill in the data into v2 (doesn't work either)
+					v2.login(console.getCookie(),console.getDevacc());
+				} catch (Exception ex){
+					// Ignore it while it is broken
+				}
 
 				if (cancelRequested) {
 					cancelRequested = false;
