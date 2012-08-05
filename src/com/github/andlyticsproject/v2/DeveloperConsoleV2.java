@@ -13,6 +13,8 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -39,6 +41,7 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
 import android.util.Log;
@@ -61,7 +64,7 @@ import com.github.andlyticsproject.exception.NetworkException;
  */
 public class DeveloperConsoleV2 {
 
-	private static final String TAG = "Andlytics";
+	private static final String TAG = DeveloperConsoleV2.class.getSimpleName();
 
 	// Parameters used in string substitution
 	private static final String PARAM_PACKAGENAME = "<<packagename>>";
@@ -156,31 +159,23 @@ public class DeveloperConsoleV2 {
 		 */
 
 		HttpClient httpclient = null;
-		boolean asp = false;
+		
 
 		try {
-
 			if (!reuseAuthentication) {
 				cookie = null;
 			}
 
 			// reuse cookie for performance
 			if (cookie == null || authtoken == null) {
-
+				boolean asp = false;
+				
+				// Variables that we need to collect
 				String cookieAndroidDev = null;
 				String cookieAD = null;
-
-				// TODO Need ANDROID_DEV cookie now, how do we get it?
-				//
-				//	allHeaders = httpResponse.getHeaders("Set-Cookie");
-				//	if (allHeaders != null && allHeaders.length > 0) {
-				//		if (allHeaders[0].getValue().startsWith("ANDROID_DEV")) {
-				//			cookieAndroidDev = allHeaders[0].getValue();
-				//		}
-				//	}
-
-				// GET https://play.google.com/apps/publish/v2/?auth=AUTH_TOKEN
-				HttpGet httpget = new HttpGet(URL_DEVELOPER_CONSOLE + "?auth=" + authtoken);
+				String xsrfToken = null;
+				
+				// Setup parameters etc..
 				HttpParams params = new BasicHttpParams();
 				HttpClientParams.setRedirecting(params, true);
 				HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
@@ -195,22 +190,45 @@ public class DeveloperConsoleV2 {
 				schReg.register(new Scheme("https", sf, 443));
 
 				ClientConnectionManager conMgr = new ThreadSafeClientConnManager(params, schReg);
-
+				
 				int timeoutSocket = 30 * 1000;
 				HttpConnectionParams.setSoTimeout(params, timeoutSocket);
-
-				HttpContext context = new BasicHttpContext();
+				HttpContext httpContext = new BasicHttpContext();
 				httpclient = new DefaultHttpClient(conMgr, params);
+				
+				
+				// TODO Need ANDROID_DEV cookie now, how do we get it?
+				//
+				//	allHeaders = httpResponse.getHeaders("Set-Cookie");
+				//	if (allHeaders != null && allHeaders.length > 0) {
+				//		if (allHeaders[0].getValue().startsWith("ANDROID_DEV")) {
+				//			cookieAndroidDev = allHeaders[0].getValue();
+				//		}
+				//	}
+				
+				if (cookieAndroidDev == null) {
+					Log.e(TAG, "Missing cookie ANDROID_DEV");
+					throw new AuthenticationException();
+				}
+				
+				
+				/*
+				 * Get AD cookie
+				 * 				
+				 */
+				// GET https://play.google.com/apps/publish/v2/?auth=AUTH_TOKEN
+				HttpGet httpGet = new HttpGet(URL_DEVELOPER_CONSOLE + "?auth=" + authtoken);
+				httpGet.addHeader("Cookie", cookieAndroidDev);
 
-				HttpResponse httpResponse = httpclient.execute(httpget, context);
+				HttpResponse httpResponse = httpclient.execute(httpGet, httpContext);
 
-				final int statusCode = httpResponse.getStatusLine().getStatusCode();
+				int statusCode = httpResponse.getStatusLine().getStatusCode();
 				if (statusCode != HttpStatus.SC_OK) {
 					throw new AuthenticationException("Got HTTP " + statusCode + " ("
 							+ httpResponse.getStatusLine().getReasonPhrase() + ')');
 				}
 
-				// Get AD from cookie
+				// Get AD cookie from headers
 				Header[] allHeaders = httpResponse.getHeaders("Set-Cookie");
 				if (allHeaders != null && allHeaders.length > 0) {
 					if (allHeaders[0].getValue().startsWith("AD")) {
@@ -218,28 +236,40 @@ public class DeveloperConsoleV2 {
 					}
 				}
 
-				if (cookieAndroidDev == null) {
+				if (cookieAD == null) {
+					Log.e(TAG, "Missing cookie AD");
 					throw new AuthenticationException();
 				}
 
-				this.cookie = cookieAndroidDev + cookieAD;
-
-				// TODO Do second request to get dev_acc
+				/*
+				 * Get DEV_ACC variable
+				 * 
+				 */
 				// GET https://play.google.com/apps/publish/v2/
+				httpGet = new HttpGet(URL_DEVELOPER_CONSOLE);
+				httpGet.addHeader("Cookie", cookieAndroidDev + ";" + cookieAD);
 
-				Object obj = context.getAttribute("http.protocol.redirect-locations");
+				httpResponse = httpclient.execute(httpGet, httpContext);
+
+				statusCode = httpResponse.getStatusLine().getStatusCode();
+				if (statusCode != HttpStatus.SC_OK) {
+					throw new AuthenticationException("Got HTTP " + statusCode + " ("
+							+ httpResponse.getStatusLine().getReasonPhrase() + ')');
+				}
+
+				// Get DEV_ACC from the location
+				Object obj = httpContext.getAttribute("http.protocol.redirect-locations");
 				if (obj != null) {
 					RedirectLocations locs = (RedirectLocations) obj;
 
 					try {
 						Field privateStringField = RedirectLocations.class.getDeclaredField("uris");
 						privateStringField.setAccessible(true);
+						// TODO Cast this properly
 						HashSet<URI> uris = (HashSet<URI>) privateStringField.get(locs);
 
 						for (URI uri : uris) {
 							String string = uri.toASCIIString();
-
-							// TODO get dev_acc
 							if (string.indexOf("dev_acc=") > -1) {
 								devacc = string.substring(string.indexOf("=") + 1, string.length());
 								break;
@@ -260,15 +290,47 @@ public class DeveloperConsoleV2 {
 				}
 
 				if (devacc == null && asp) {
+					Log.e(TAG, "Multi linked account");
 					throw new MultiAccountAcception();
 				}
 
 				if (devacc == null) {
-					Log.e(TAG, "missing devacc");
+					Log.e(TAG, "Missing devacc");
 					throw new AuthenticationException();
 				}
 
-				// TODO Do third request and read the entity for XSRF Token
+				/*
+				 * Get XSRF_TOKEN from entity
+				 * 
+				 */	
+				// GET https://play.google.com/apps/publish/v2/?dev_acc=DEV_ACC	
+				httpGet = new HttpGet(URL_DEVELOPER_CONSOLE + "?dev_acc=" + devacc);
+				httpGet.addHeader("Cookie", cookieAndroidDev + ";" + cookieAD);
+
+				httpResponse = httpclient.execute(httpGet, httpContext);
+
+				statusCode = httpResponse.getStatusLine().getStatusCode();
+				if (statusCode != HttpStatus.SC_OK) {
+					throw new AuthenticationException("Got HTTP " + statusCode + " ("
+							+ httpResponse.getStatusLine().getReasonPhrase() + ')');
+				}
+				
+				String entity = EntityUtils.toString(httpResponse.getEntity()); 
+				Matcher m1 = Pattern.compile("\"XsrfToken\".+\"").matcher(entity);
+				if (m1.find()) {
+					xsrfToken = m1.group(0);
+					xsrfToken = xsrfToken.substring(20, xsrfToken.length() - 1);
+				}
+				
+				if (xsrfToken != null){
+					// Fill in the details for use later on
+					this.xsrfToken = xsrfToken;					
+					this.cookie = cookieAndroidDev + ";" + cookieAD;
+				} else {
+					Log.e(TAG, "Missing xsrfToken");
+					throw new AuthenticationException();
+				}
+				
 
 			}
 		} catch (SocketException e) {
