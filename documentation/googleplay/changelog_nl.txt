@@ -1,11 +1,24 @@
+2.2.0
+- Vernieuwd beheer van accounts, wisselen van account via de action balk
+- Nieuwe balk onder voor de belangrijkste handelingen
+- Vernieuwde Import/Export met uploaden naar Dropbox (klik op de export melding) en importeren vanuit Dropbox (via Dropbox app afhandelen van .zip bestanden)
+- JellyBean meldingen inclusief aanpasbare geluid
+- Algemene en account specifieke voorkeuren
+- AdMob kan worden verborgen in de voorkeuren
+- UI verbeteringen: improvements: reageert sneller, icons aangepast, voortgangsindicatie
+- Nieuwe taal: Japans
+
+
 2.1.0
+
 - ICS compatibele ActionBar
-- HD iconen for xlarge schermen
-- Nieuwe talen: Catalaans, Italiaans, Russisch
+- HD iconen voor extra grote schermen
+- Nieuw scherm voor instellingen
+- Nieuwe talen:  Catalaans, Italiaans, Russisch
 
 2.0.1
-- Authenticatie gefixt
-- Pro extra's zijn nu gratis (omdat het nu open source is)
-- Nieuw ontwerp
+- Authentication aangepast
+- Pro extra's zijn nu gratis (omdat het nu opensource is)
+- Vernieuwd ontwerp
 - EPC voor AdMob
 - Nieuwe talen: Spaans, Duits, Nederlands

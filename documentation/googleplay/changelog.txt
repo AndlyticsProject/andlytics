@@ -6,7 +6,7 @@
 - general/account specific preferences
 - AdMob can be hidden via preferences
 - UI improvements: responsiveness, icon fixes, progress indicator
-- New language: Japanese
+- New language: Japanese, French
 
 
 2.1.0

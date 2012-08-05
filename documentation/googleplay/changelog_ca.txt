@@ -1,6 +1,18 @@
+2.2.0
+- Nova gestió de comptes, canvi de compte amb la barra d'acció
+- Nova barra inferior per a les principals accions
+- Nova importació/exportació amb Càrrega a Dropbox (fes clic a la notificació d'exportació) i Importació via Dropbox (via l'aplicació de Dropbox processant fitxers .zip)
+- Notificacions JellyBean incloent sons personalitzats
+- Preferències generals/específiques del compte
+- L'AdMob es pot amagar a les preferències
+- Millores a la IU: responsivitat, millores d'icones, indicador de progrés
+- Nou idioma: japonès
+
 2.1.0
+
 - ActionBar compatible amb ICS
 - Icones en alta definició per a les pantalles extragrans
+- Nova pantalla de configuració
 - Nous idiomes: català, italià i rus
 
 2.0.1

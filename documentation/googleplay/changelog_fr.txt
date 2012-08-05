@@ -1,4 +1,4 @@
-2.2.0
+﻿2.2.0
 - Nouvelle gestion des comptes, choix du compte par l'action bar
 - Nouvelle barre en bas de l'écran pour les principales actions
 - Nouveau : Import/Export et Upload vers Dropbox (cliquez sur la notification d'export) et  Import via Dropbox (via l'appli Dropbox pour les fichiers .zip)
@@ -6,8 +6,7 @@
 - Préférences générales et spécifiques à un compte
 - AdMob peut être masqué via les préférences
 - améliorations de l'IU : réactivité, correction des icônes, indicateur de progrès
-- Nouvelle langue: Japonais
-
+- Nouvelle langue: Japonais, Français
 
 2.1.0
 
