@@ -8,6 +8,7 @@
     <string name="one_entry_hint_demo"><u>График с демо-данными</u></string>
 
     <string name="crash_desc">Произошла неожиданная ошибка.\n\nПожалуйста, помогите нам решить проблему, отослав отчет об ошибке. Информация об ошибке и о вашем устройстве (такая как производитель, модель, версия операционной системы и т.д.) будет отправлена нам и поможет решить проблему.\n\nСпасибо!\n\n</string>
+    <string name="crash_toast">Произошла неожиданная ошибка. Информация об ошибке будет отправлена нам и поможет решить проблему.</string>
     <string name="newversion_desc"><b>Произошла неожиданная ошибка, возможно из-за изменений в интерфейсе на серверной стороне.</b>\n\nНо у нас есть хорошая новость, новая версия Andlytics доступна в Android Market.\n\nПожалуйста, обновитесь прежде чем сообщать об ошибке.\n\nСпасибо!\n\n\n</string>
     <string name="account_required">Нужен аккаунт Android-разработчика</string>
     <string name="account_choose">Пожалуйста, выберите или добавьте аккаунт Google. Это должен быть зарегистрированный аккаунт разработчика Google Play (\'Google Apps for Business\' пока не поддерживается).</string>
@@ -116,6 +117,8 @@
     <string name="import_finished">Импорт завершен.</string>
     <string name="imported_apps">Импортировано %d приложений.</string>
     <string name="import_error">Ошибка во время импорта.</string>
+    <string name="import_confirm_dialog_title">Подтверждение импорта</string>
+    <string name="import_confirm_dialog_message">Уже есть статистика для %d приложений. Значения перезапишутся при импорте. Все равно продолжить?</string>
 	<string name="export_">Экспорт</string>
 	<string name="export_no_sdcard">SD-карта не примонтирована, не получается экспортировать!</string>
 	<string name="export_no_app">Не выбрано приложение, не получается экспортировать!</string>
@@ -123,6 +126,8 @@
     <string name="export_finished">Экспорт завершен.</string>
     <string name="export_failed_to_load_stats">Не удалось загрузить статистику</string>
     <string name="export_saved_to">Сохранить в</string>
+    <string name="export_confirm_dialog_title">Подтверждение экспорта</string>
+    <string name="export_confirm_dialog_message">Экспортный файл \'%s\' уже существует. Он перезапишется при экспорте. Все равно продолжить?</string>
     <string name="share">Поделиться</string>
     
     <string name="manage_accounts">Управление аккаунтами</string>
@@ -135,5 +140,8 @@
     <string name="notification_when_account_visible">Когда приложение видимо</string>
     <string name="notification_when_account_visible_summary">Показывать уведомления для текущего аккаунта, если приложение видимо</string>
     <string name="hide_admob_for_unconfigured_apps">Спрятать вкладку AdMob для ненастроенных приложений</string>
+    <string name="pref_disable_acra">Автоматические отчеты об ошибках</string>
+    <string name="pref_acra_disabled">Отправка отчетов выключена</string>
+    <string name="pref_acra_enabled">Отправка отчетов включена</string>
 
 </resources>
