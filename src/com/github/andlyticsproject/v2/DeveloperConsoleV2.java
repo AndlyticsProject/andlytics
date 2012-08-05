@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.HashSet;
+import java.util.StringTokenizer;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -42,7 +43,6 @@ import org.apache.http.protocol.HttpContext;
 import android.content.Context;
 import android.util.Log;
 
-import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
 import com.github.andlyticsproject.exception.MultiAccountAcception;
@@ -108,6 +108,7 @@ public class DeveloperConsoleV2 {
 	private String cookie;
 	private String devacc;
 	private Context context;
+	private String xsrfToken;
 
 	public DeveloperConsoleV2(Context context) {
 		this.context = context;
@@ -118,9 +119,10 @@ public class DeveloperConsoleV2 {
 	 * @param cookie
 	 * @param devacc
 	 */
-	public void login(String cookie, String devacc) {
+	public void login(String cookie, String devacc, String xsrfToken) {
 		this.cookie = cookie;
 		this.devacc = devacc;
+		this.xsrfToken = xsrfToken;
 	}
 
 	/**
@@ -288,7 +290,7 @@ public class DeveloperConsoleV2 {
 		// Setup the request
 		String postData = PAYLOAD_RATINGS;
 		postData = postData.replace(PARAM_PACKAGENAME, packageName);
-		postData = postData.replace(PARAM_XSRFTOKEN, AndlyticsApp.getInstance().getXsrfToken());
+		postData = postData.replace(PARAM_XSRFTOKEN, xsrfToken);
 
 		// Perform the request
 		String jsonResult = null;
@@ -298,9 +300,30 @@ public class DeveloperConsoleV2 {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			//throw new DeveloperConsoleException(jsonResult, ex);
+			// Dummy data
+			jsonResult = "{\"result\":[null,[[null,\"" + packageName + "\",\"2\",\"0\",\"3\",\"27\",\"206\"]]]," +
+					"\"xsrf\":\"AMtNNDEXXXXXXXXXXXXXX:1344165266000\"}";
 		}
+		
+		// TODO Can this be automatically done using Gson?
 
-		// Parse the request
+		// Find the start and end
+		int ratingsStartIndex = jsonResult.indexOf(packageName) + packageName.length() + 3;
+		int ratingsEndIndex = jsonResult.indexOf("]]],\"xsrf");
+		String ratingsString = jsonResult.substring(ratingsStartIndex, ratingsEndIndex);
+		// Strip out extra quotes and split based on ,
+		ratingsString = ratingsString.replace("\"", "");
+		StringTokenizer st = new StringTokenizer(ratingsString, ",");
+		int totalRatings = 0;
+		int[] ratings = new int[6]; // Index 5 = Total, 0 = # 1 star, 1 = # 2 star ...
+		int index = 0;
+		while (st.hasMoreElements()) {
+			int rating = Integer.parseInt(st.nextToken());
+			totalRatings += rating;
+			ratings[index] = rating;
+			index++;
+		}
+		ratings[5] = totalRatings;
 
 		// TODO return something e.g. AppData or an int[] with the data
 
@@ -318,7 +341,7 @@ public class DeveloperConsoleV2 {
 	 * 
 	 */
 	private String performHttpPost(String developerPostData, URL url) throws IOException,
-			ProtocolException {
+	ProtocolException {
 
 		String result = null;
 		HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();

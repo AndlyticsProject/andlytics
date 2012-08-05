@@ -384,7 +384,12 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				try{
 					v2.login(authtoken, false); // Doesn't work yet
 					// Login using v1 and fill in the data into v2 (doesn't work either)
-					v2.login(console.getCookie(),console.getDevacc());
+					v2.login(console.getCookie(),console.getDevacc(), AndlyticsApp.getInstance().getXsrfToken());
+				} catch (Exception ex){
+					// Ignore it while it is broken
+				}
+				try{
+					v2.fetchRatings(appDownloadInfos.get(0).getPackageName());
 				} catch (Exception ex){
 					// Ignore it while it is broken
 				}
