@@ -303,7 +303,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(context,
 						R.layout.account_selector_item, accountsList);
 				accountsAdapter
-						.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
+				.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
 
 				// Hide the title to avoid duplicated info on tablets/landscape & setup the spinner
 				getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -372,25 +372,19 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 			Exception exception = null;
 
-			String authtoken = ((AndlyticsApp) getApplication()).getAuthToken();
+			String authToken = ((AndlyticsApp) getApplication()).getAuthToken();
 
 			List<AppInfo> appDownloadInfos = null;
 			try {
 
 				DeveloperConsole console = new DeveloperConsole(Main.this);
-				appDownloadInfos = console.getAppDownloadInfos(authtoken, accountName);
+				appDownloadInfos = console.getAppDownloadInfos(authToken, accountName);
 
-				DeveloperConsoleV2 v2 = new DeveloperConsoleV2(Main.this);
-				try{
-					v2.login(authtoken, false); // Doesn't work yet
-					// Login using v1 and fill in the data into v2 (doesn't work either)
-					v2.login(console.getCookie(),console.getDevacc(), AndlyticsApp.getInstance().getXsrfToken());
-				} catch (Exception ex){
-					// Ignore it while it is broken
-				}
-				try{
-					v2.fetchRatings(appDownloadInfos.get(0).getPackageName());
-				} catch (Exception ex){
+				DeveloperConsoleV2 v2 = new DeveloperConsoleV2();
+				try {
+					//					v2.getAppInfo(authToken, accountName);
+				} catch (Exception ex) {
+					ex.printStackTrace();
 					// Ignore it while it is broken
 				}
 
