@@ -40,7 +40,7 @@
     <string name="rating_changes">Beoordelingen</string>
     <string name="comment_changes">Opmerkingen</string>
     <string name="download_changes">Downloads</string>
-    <string name="notification_trigger">Notificatiesignaal</string>
+    <string name="notification_trigger">Gebeurtenissen</string>
     <string name="disable_notifications">Hef selectie van alle notificaties op</string>
     <string name="notification_signal">Notificatiesignaal</string>
     <string name="notification_sound">Geluid afspelen</string>
