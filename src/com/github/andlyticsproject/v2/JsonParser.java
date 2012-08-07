@@ -21,8 +21,6 @@ import com.github.andlyticsproject.model.Comment;
  *
  */
 public class JsonParser {
-	
-	private static SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, d MMM yyyy");
 
 	/**
 	 * Parses the supplied JSON string and adds the extracted ratings to the supplied {@link AppStats} object
@@ -229,14 +227,12 @@ public class JsonParser {
 	}
 	
 	/**
-	 * Parses date and formats it
+	 * Parses the given date
 	 * @param unixDateCode
 	 * @return
 	 */
-	private static String parseDate(long unixDateCode){
-		// TODO Store an unformatted version of the date in the db
-		Date date = new Date(unixDateCode);
-		return dateFormat.format(date);
+	private static Date parseDate(long unixDateCode){
+		return new Date(unixDateCode);
 	}
 
 }

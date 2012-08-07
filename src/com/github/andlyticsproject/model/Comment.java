@@ -1,29 +1,21 @@
 
 package com.github.andlyticsproject.model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Comment {
 
 	private String text;
 
-	private String date;
+	private Date date;
 
 	private int rating;
 
 	private String user;
 
-	private SimpleDateFormat format;
-
 	private String appVersion;
 
 	private String device;
-
-	public Comment() {
-		format = new SimpleDateFormat("MMMMM dd, yyyy");
-	}
 
 	public String getText() {
 		return text;
@@ -33,24 +25,12 @@ public class Comment {
 		this.text = text;
 	}
 
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	public Date getDateObject() {
-		Date result = null;
-		if (date != null) {
-			try {
-				result = format.parse(date);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
-		return result;
 	}
 
 	public int getRating() {

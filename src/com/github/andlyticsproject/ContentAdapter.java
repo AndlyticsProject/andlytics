@@ -331,7 +331,7 @@ public class ContentAdapter {
 
 	}
 
-	// TODO Store these as proper dates using int, not String
+	// TODO Check if we ever care about the time of day
 	public static String formatDate(Date date) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return dateFormat.format(date);
@@ -958,7 +958,7 @@ public class ContentAdapter {
 		for (Comment comment : comments) {
 			ContentValues initialValues = new ContentValues();
 			initialValues.put(CommentsTable.KEY_COMMENT_PACKAGENAME, packageName);
-			initialValues.put(CommentsTable.KEY_COMMENT_DATE, comment.getDate());
+			initialValues.put(CommentsTable.KEY_COMMENT_DATE, formatDate(comment.getDate()));
 			initialValues.put(CommentsTable.KEY_COMMENT_RATING, comment.getRating());
 			initialValues.put(CommentsTable.KEY_COMMENT_TEXT, comment.getText());
 			initialValues.put(CommentsTable.KEY_COMMENT_USER, comment.getUser());
@@ -986,8 +986,9 @@ public class ContentAdapter {
 
 			do {
 				Comment comment = new Comment();
-				comment.setDate(mCursor.getString(mCursor
-						.getColumnIndex(CommentsTable.KEY_COMMENT_DATE)));
+				String dateString = mCursor.getString(mCursor
+						.getColumnIndex(CommentsTable.KEY_COMMENT_DATE));
+				comment.setDate(parseDate(dateString.substring(0, 10) + " 12:00:00"));
 				comment.setUser(mCursor.getString(mCursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_USER)));
 				comment.setText(mCursor.getString(mCursor

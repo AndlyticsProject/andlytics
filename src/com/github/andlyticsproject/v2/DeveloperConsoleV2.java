@@ -132,7 +132,7 @@ public class DeveloperConsoleV2 {
 			throws DeveloperConsoleException, AuthenticationException, MultiAccountAcception,
 			NetworkException, JSONException {
 
-		// login(authToken, false);
+		authenticate(authToken, false);
 		xsrfToken = "dummy";
 
 		Date now = new Date();
@@ -282,6 +282,7 @@ public class DeveloperConsoleV2 {
 
 		// Setup the request
 		String postData = PAYLOAD_COMMENTS;
+		postData = postData.replace(PARAM_PACKAGENAME, packageName);
 		postData = postData.replace(PARAM_START, "0");
 		postData = postData.replace(PARAM_COUNT, "1"); // TODO Check asking for 0 comments
 		postData = postData.replace(PARAM_XSRFTOKEN, xsrfToken);
@@ -303,6 +304,7 @@ public class DeveloperConsoleV2 {
 
 		// Setup the request
 		String postData = PAYLOAD_COMMENTS;
+		postData = postData.replace(PARAM_PACKAGENAME, packageName);
 		postData = postData.replace(PARAM_START, Integer.toString(startIndex));
 		postData = postData.replace(PARAM_COUNT, Integer.toString(count));
 		postData = postData.replace(PARAM_XSRFTOKEN, xsrfToken);

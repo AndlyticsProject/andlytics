@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import android.text.format.DateFormat;
 import android.util.SparseArray;
 
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
@@ -186,9 +185,7 @@ public class GwtParser {
 						Date date = new Date();
 						date.setTime(decodeLong(indexList.get(commentIndex + 2 + (commentNumber))));
 
-						String dateString = DateFormat.format("EEEEE, d MMM yyyy", date).toString();
-
-						comment.setDate(dateString);
+						comment.setDate(date);
 						break;
 					case 5:
 
