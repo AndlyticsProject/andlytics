@@ -324,9 +324,8 @@ public class DeveloperConsoleV2 {
 	/**
 	 * Logs into the Android Developer Console using the given authToken
 	 * 
-	 * FIXME Not working (Cannot find ANDROID_DEV cookie needed for the initial request. Also have a new AD cookie
-	 * which we need to do something with)
-	 * 
+	 * FIXME Logging into v2 doesn't work
+	 *  
 	 * @param authToken
 	 * @param reuseAuthentication
 	 * @throws AuthenticationException
@@ -335,23 +334,20 @@ public class DeveloperConsoleV2 {
 	 */
 	private void authenticate(String authToken, boolean reuseAuthentication)
 			throws AuthenticationException, MultiAccountAcception, NetworkException {
-
-		// Login to Google play which this results in a 302 and is necessary for a cookie to be set
-
-		// This is now broken down into (i think) 3 steps, although there seems to be a missing first step to get ANDROID_DEV
-
-		// TODO Break this down into smaller methods
-
+		
 		/*
-		 * Need ANDROID_DEV cookie for this one, but don't know how to get it cookies?
+		 * To login, perform the following steps
+		 * 
+		 * 
 		 * GET https://play.google.com/apps/publish/v2/?auth=AUTH_TOKEN
 		 * Returns 302 and has AD value in cookie
 		 * 
-		 * Need AD and ANDROID_DEV cookie for this one
 		 * GET https://play.google.com/apps/publish/v2/
+		 * Need AD cookie for this one
 		 * Returns 302 and gives dev_acc in location
 		 * 
 		 * GET https://play.google.com/apps/publish/v2/?dev_acc=DEV_ACC
+		 * Need AD cookie for this one
 		 * Entity contains XSRF Token
 		 * 
 		 */
@@ -368,11 +364,12 @@ public class DeveloperConsoleV2 {
 				boolean asp = false;
 
 				// Variables that we need to collect
-				String cookieAndroidDev = null;
 				String cookieAD = null;
 				String xsrfToken = null;
+				String devacc = null;
 
 				// Setup parameters etc..
+				// TODO do we need all these parameters/are they needed for all requests
 				HttpParams params = new BasicHttpParams();
 				HttpClientParams.setRedirecting(params, true);
 				HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
@@ -393,32 +390,19 @@ public class DeveloperConsoleV2 {
 				HttpContext httpContext = new BasicHttpContext();
 				httpclient = new DefaultHttpClient(conMgr, params);
 
-				// TODO Need ANDROID_DEV cookie now, how do we get it?
-				//
-				//	allHeaders = httpResponse.getHeaders("Set-Cookie");
-				//	if (allHeaders != null && allHeaders.length > 0) {
-				//		if (allHeaders[0].getValue().startsWith("ANDROID_DEV")) {
-				//			cookieAndroidDev = allHeaders[0].getValue();
-				//		}
-				//	}
-
-				if (cookieAndroidDev == null) {
-					Log.e(TAG, "Missing cookie ANDROID_DEV");
-					throw new AuthenticationException();
-				}
-
 				/*
 				 * Get AD cookie
 				 * 				
 				 */
 				// GET https://play.google.com/apps/publish/v2/?auth=AUTH_TOKEN
 				HttpGet httpGet = new HttpGet(URL_DEVELOPER_CONSOLE + "?auth=" + authToken);
-				httpGet.addHeader("Cookie", cookieAndroidDev);
 
 				HttpResponse httpResponse = httpclient.execute(httpGet, httpContext);
+				
+				// FIXME returns 200 along with what I think is a request to re-authenticate, rather than 302 and the AD cookie
 
 				int statusCode = httpResponse.getStatusLine().getStatusCode();
-				if (statusCode != HttpStatus.SC_OK) {
+				if (statusCode != HttpStatus.SC_MOVED_TEMPORARILY) {
 					throw new AuthenticationException("Got HTTP " + statusCode + " ("
 							+ httpResponse.getStatusLine().getReasonPhrase() + ')');
 				}
@@ -442,12 +426,12 @@ public class DeveloperConsoleV2 {
 				 */
 				// GET https://play.google.com/apps/publish/v2/
 				httpGet = new HttpGet(URL_DEVELOPER_CONSOLE);
-				httpGet.addHeader("Cookie", cookieAndroidDev + ";" + cookieAD);
+				httpGet.addHeader("Cookie", cookieAD);
 
 				httpResponse = httpclient.execute(httpGet, httpContext);
 
 				statusCode = httpResponse.getStatusLine().getStatusCode();
-				if (statusCode != HttpStatus.SC_OK) {
+				if (statusCode != HttpStatus.SC_MOVED_TEMPORARILY) {
 					throw new AuthenticationException("Got HTTP " + statusCode + " ("
 							+ httpResponse.getStatusLine().getReasonPhrase() + ')');
 				}
@@ -501,7 +485,7 @@ public class DeveloperConsoleV2 {
 				 */
 				// GET https://play.google.com/apps/publish/v2/?dev_acc=DEV_ACC	
 				httpGet = new HttpGet(URL_DEVELOPER_CONSOLE + "?dev_acc=" + devacc);
-				httpGet.addHeader("Cookie", cookieAndroidDev + ";" + cookieAD);
+				httpGet.addHeader("Cookie", cookieAD);
 
 				httpResponse = httpclient.execute(httpGet, httpContext);
 
@@ -521,7 +505,8 @@ public class DeveloperConsoleV2 {
 				if (xsrfToken != null) {
 					// Fill in the details for use later on
 					this.xsrfToken = xsrfToken;
-					this.cookie = cookieAndroidDev + ";" + cookieAD;
+					this.cookie = cookieAD;
+					this.devacc = devacc;
 				} else {
 					Log.e(TAG, "Missing xsrfToken");
 					throw new AuthenticationException();
@@ -546,7 +531,7 @@ public class DeveloperConsoleV2 {
 	/**
 	 * Performs a HTTP POST request using the provided data to the given url
 	 * 
-	 * FIXME Doesn't work yet, probably because of authentication due to login not working
+	 * FIXME Doesn't work yet
 	 * 
 	 * @param developerPostData The data to send
 	 * @param url The url to send it to
@@ -591,7 +576,7 @@ public class DeveloperConsoleV2 {
 		streamToAuthorize.flush();
 		streamToAuthorize.close();
 
-		// FIXME Not working due to 404, possibly due to invalid cookie (V2 login doesn't work)
+		// FIXME Not working due to 404, possibly due to invalid cookie even when copying data from browser
 		// Get the response
 		InputStream resultStream = connection.getInputStream();
 		BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(
