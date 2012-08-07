@@ -331,6 +331,7 @@ public class ContentAdapter {
 
 	}
 
+	// TODO Store these as proper dates using int, not String
 	public static String formatDate(Date date) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return dateFormat.format(date);

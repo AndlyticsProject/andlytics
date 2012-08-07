@@ -1,7 +1,9 @@
 
 package com.github.andlyticsproject.v2;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -19,6 +21,8 @@ import com.github.andlyticsproject.model.Comment;
  *
  */
 public class JsonParser {
+	
+	private static SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, d MMM yyyy");
 
 	/**
 	 * Parses the supplied JSON string and adds the extracted ratings to the supplied {@link AppStats} object
@@ -173,6 +177,12 @@ public class JsonParser {
 		return new JSONObject(json).getJSONArray("result").getInt(2);
 	}
 	
+	/**
+	 * Parses the supplied JSON string and returns a list of comments.
+	 * @param json
+	 * @return
+	 * @throws JSONException
+	 */
 	protected static List<Comment> parseComments(String json) throws JSONException {
 		List<Comment> comments  = new ArrayList<Comment>();
 		/*
@@ -188,24 +198,24 @@ public class JsonParser {
 			/*
 			 * null
 			 * "gaia:17919762185957048423:1:vm:11887109942373535891", -- ID?
-             * "REVIEWERS_NAME",
-             * "1343652956570", -- DATE?
-             * RATING,
-             * null
-             * "COMMENT",
-             * null,
-             * "VERSION_NAME",
-             * [ null,
-             *   "DEVICE_CODE_NAME",
-             *   "DEVICE_MANFACTURER",
-             *   "DEVICE_MODEL"
-             * ],
-             * "LOCALE",
-             * null,
-             * 0
+			* "REVIEWERS_NAME",
+			* "1343652956570", -- DATE?
+			* RATING,
+			* null
+			* "COMMENT",
+			* null,
+			* "VERSION_NAME",
+			* [ null,
+			*   "DEVICE_CODE_NAME",
+			*   "DEVICE_MANFACTURER",
+			*   "DEVICE_MODEL"
+			* ],
+			* "LOCALE",
+			* null,
+			* 0
 			 */
 			comment.setUser(jsonComment.getString(2));
-			comment.setDate(parseDate(jsonComment.getString(3)));
+			comment.setDate(parseDate(jsonComment.getLong(3)));
 			comment.setRating(jsonComment.getInt(4));
 			comment.setAppVersion(jsonComment.getString(8));
 			comment.setText(jsonComment.getString(6));
@@ -218,9 +228,15 @@ public class JsonParser {
 		return comments;
 	}
 	
-	private static String parseDate(String codedDate){
-		// FIXME Parse something like 1343652956570 into a date
-		return codedDate;
+	/**
+	 * Parses date and formats it
+	 * @param unixDateCode
+	 * @return
+	 */
+	private static String parseDate(long unixDateCode){
+		// TODO Store an unformatted version of the date in the db
+		Date date = new Date(unixDateCode);
+		return dateFormat.format(date);
 	}
 
 }

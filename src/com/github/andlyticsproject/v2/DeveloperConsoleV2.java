@@ -362,7 +362,7 @@ public class DeveloperConsoleV2 {
 			}
 
 			// reuse cookie for performance
-			if (cookie == null || authToken == null) {
+			if (cookie == null) {
 				boolean asp = false;
 
 				// Variables that we need to collect

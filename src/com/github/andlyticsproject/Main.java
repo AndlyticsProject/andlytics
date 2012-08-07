@@ -349,6 +349,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			}
 
 			if (lastUpdateDate != null) {
+				// TODO Let the user configure this, or at least make it the locale's default
 				statusText.setText(this.getString(R.string.last_update) + ": "
 						+ ContentAdapter.formatDate(lastUpdateDate));
 			}
