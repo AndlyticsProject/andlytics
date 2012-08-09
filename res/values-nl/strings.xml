@@ -7,6 +7,7 @@
     <string name="one_entry_hint_demo"><u>Bekijk een grafiek met demo data</u></string>
 
     <string name="crash_desc">Er is een onverwachte fout opgetreden.\n\nHelp ons dit op te lossen door ons het rapport met de foutgegevens op te sturen. Informatie over de foutmelding (stacktrace) en informatie over uw toestel zoals de naam van de fabrikant, het modelnummer, besturingssysteem etc. zal worden verstuurd om ons te helpen het probleem te identificeren.\n\nBedankt!\n\n</string>
+    <string name="crash_toast">Er is iets fout gegaan. Informatie over de fout wordt opgestuurd naar de ontwikkelaars om het probleem te onderzoeken.</string>
     <string name="newversion_desc"><b>Er is een onverwachte fout opgetreden,waarschijnlijk doordat externe interface is gewijzigd.</b>\n\nMaar het goede nieuws is dat er een nieuwe versie van Andlytics beschikbaar is op Google Play.\n\nWerk deze versie bij voordat u dit probleem rapporteert.\n\nBedankt!\n\n\n</string>
     <string name="account_required">Android ontwikkelaar-account vereist</string>
     <string name="account_choose">Kies een Google account of voeg er een toe. Dat account moet een geregistreerd ontwikkelaar-account zijn, met apps gepubliceerd op Google Play (\'Google Apps for Business\' accounts worden nog niet ondersteund).</string>
@@ -39,20 +40,20 @@
     <string name="rating_changes">Beoordelingen</string>
     <string name="comment_changes">Opmerkingen</string>
     <string name="download_changes">Downloads</string>
-    <string name="notification_trigger">Notificatiesignaal</string>
+    <string name="notification_trigger">Gebeurtenissen</string>
     <string name="disable_notifications">Hef selectie van alle notificaties op</string>
     <string name="notification_signal">Notificatiesignaal</string>
     <string name="notification_sound">Geluid afspelen</string>
     <string name="notification_light">LED knipperen</string>
     <string name="apps_notification">Apps voor veranderingnotificatie</string>
-    <string name="select_files_import">Select packages to import</string>
+    <string name="select_files_import">Selecteer pakketten om te importeren</string>
     <string name="data_replaced">Bestaande data wordt overschreven</string>
     <string name="run_import">Start importeren</string>
     <string name="cancel">Annuleren</string>
     <string name="ok">OK</string>
     <string name="title">Titel</string>
     <string name="text">Tekst</string>
-    <string name="select_files_export">Select apps to export</string>
+    <string name="select_files_export">Selecteer pakketten om te exporteren</string>
     <string name="export_files_replaced">Bestaande exportdata wordt overschreven</string>
     <string name="run_export">Start exporteren</string>
     <string name="by">door</string>
@@ -111,17 +112,21 @@
     <string name="import_no_sdcard">SDkaart is niet gekoppeld, kan niet importeren!</string>
     <string name="import_no_app">Geen app geselecteerd; kan niet importeren!</string>
     <string name="importing">Importeren</string>
-    <string name="import_started">Importeren gestart.</string>
-    <string name="import_finished">Importeren klaar.</string>
-    <string name="imported_apps">Imported %d apps.</string>
+    <string name="import_started">Importeren begonnen.</string>
+    <string name="import_finished">Importeren afgerond.</string>
+    <string name="imported_apps">%d apps geimporteerd.</string>
     <string name="import_error">Fout tijdens importeren.</string>
+    <string name="import_confirm_dialog_title">Bevestig importeren</string>
+    <string name="import_confirm_dialog_message">U heeft al statistieken voor %d apps. Importeren zal deze statistieken overschrijven. Wilt u doorgaan met importeren?</string>
 	<string name="export_">Exporteren</string>
 	<string name="export_no_sdcard">SDkaart niet gekoppeld; kan niet exporteren!</string>
 	<string name="export_no_app">Geen app geselecteerd; kan niet exporteren!</string>
-	<string name="export_started">Exporteren gestart.</string>
-    <string name="export_finished">Exporteren klaar.</string>
+	<string name="export_started">Exporteren begonnen.</string>
+    <string name="export_finished">Exporteren afgerond.</string>
     <string name="export_failed_to_load_stats">Het inladen van de app statistieken is mislukt</string>
     <string name="export_saved_to">Weggeschreven naar</string>
+    <string name="export_confirm_dialog_title">Exporteren bevestigen</string>
+    <string name="export_confirm_dialog_message">Het exportbestand \'%s\' bestaat al. Als u nu statistieken exporteert, wordt dit bestand overschreven. Wilt u doorgaan?</string>
     <string name="share">Delen</string>
     
     <string name="manage_accounts">Accounts beheren</string>
@@ -129,10 +134,13 @@
     <string name="loading_app_list">Ophalen van lijst met apps&#8230;</string>
     <string name="no_published_apps">Geen gepubliceerde apps gevonden.</string>
     
-    <string name="general_preferences">General preferences</string>
-    <string name="account_specific_preferences">Account specific preferences</string>
-    <string name="notification_when_account_visible">When app is visible</string>
-    <string name="notification_when_account_visible_summary">Show notifications for the current account even when the app is visible</string>
-    <string name="hide_admob_for_unconfigured_apps">Hide the AdMob tab for unconfigured apps</string>
+    <string name="general_preferences">Algemene voorkeuren</string>
+    <string name="account_specific_preferences">Account specifieke voorkeuren</string>
+    <string name="notification_when_account_visible">Als app zichtbaar is</string>
+    <string name="notification_when_account_visible_summary">Toon meldingen voor huidige account, zelfs als de app zichtbaar is</string>
+    <string name="hide_admob_for_unconfigured_apps">Verberg het AdMob tabblad voor niet-geconfigureerde apps</string>
+    <string name="pref_disable_acra">Automatische fout rapportage</string>
+    <string name="pref_acra_disabled">Rapportage uitgeschakeld</string>
+    <string name="pref_acra_enabled">Rapportage ingeschakeld</string>
 
 </resources>
