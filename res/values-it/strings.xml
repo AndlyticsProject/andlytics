@@ -8,6 +8,7 @@
     <string name="one_entry_hint_demo"><u>Apri grafico con dati demo</u></string>
 
     <string name="crash_desc">Si è verificato un errore.\n\nSi prega di riportare l\'errore in modo che possa essere corretto. Per meglio identificare il problema verranno inviate informazioni sull\'errore (stacktrace) e sul tuo dispositivo come il nome del produttore, del modello, la versione del sistema operativo ecc.\n\nGrazie!\n\n</string>
+    <string name="crash_toast">Si è verificato un errore inaspettato. Le informazioni riguardanti l\'errore saranno inviate agli sviluppatori per l\'analisi.</string>
     <string name="newversion_desc"><b>Si è verificato un errore, probabilmente perché l\'interfaccia con la Console è cambiata.</b>\n\nLa buona notizia è che una nuova versione di Andlytics è già disponibile sul Market.\n\nSi prega di effettuare un aggiornamento prima di riportare l\'errore.\n\nGrazie!\n\n\n</string>
     <string name="account_required">E necessario un account Android developer</string>
     <string name="account_choose">Scegli o aggiungi un account Google. L\'account deve essere registrato come sviluppatore e devi avere almeno un\'app pubblicata. sull\'Android Market (gli account \'Google Apps for Business\' non sono ancora supportati).</string>
@@ -16,26 +17,26 @@
     <string name="refresh">Aggiorna</string>
     <string name="comments">Commenti</string>
     <string name="total_downloads">Download totali</string>
-    <string name="active_installs">Active installs</string>
+    <string name="active_installs">Installazioni attive</string>
     <string name="admob_revenue">Guadagni AdMob</string>
     <string name="admob_requests">Richieste AdMob</string>
     <string name="average_rating">Media rating</string>
     <string name="ratings">Rating</string>
     <!-- Lower case versions for main screen e.g. X comments -->
-    <string name="num_comments">commenti</string>
-    <string name="num_total_downloads">download totali</string>
-    <string name="num_active_installs">active installs</string>
-    <string name="num_average_rating">media rating</string>
-    <string name="num_ratings">rating</string>
+    <string name="num_comments">Commenti</string>
+    <string name="num_total_downloads">Download totali</string>
+    <string name="num_active_installs">Active installs</string>
+    <string name="num_average_rating">Media rating</string>
+    <string name="num_ratings">Rating</string>
     
     <string name="auto_sync">Sincronizzazione automatica</string>
-    <string name="notifications">Notifiche</string>
+    <string name="notifications">Notifiche:</string>
     <string name="statistics_export">Esporta statistiche</string>
     <string name="statistics_import">Importa statistiche</string>
     <string name="apps_hide">Nascondi app</string>
-    <string name="feedback">Send feedback</string>
+    <string name="feedback">Invia feedback</string>
     <string name="settings">Impostazioni</string>
-    <string name="downloads">Download</string>
+    <string name="downloads">Downloads</string>
     <string name="close">Chiudi</string>
     <string name="rating_changes">Andamento rating</string>
     <string name="comment_changes">Andamento commenti</string>
@@ -43,17 +44,17 @@
     <string name="notification_trigger">Trigger notifiche</string>
     <string name="disable_notifications">Deseleziona tutte per disabilitare le notifiche</string>
     <string name="notification_signal">Segnale notifiche</string>
-    <string name="notification_sound">Suono notifiche</string>
+    <string name="notification_sound">Seleziona suoneria</string>
     <string name="notification_light">Luce notifiche</string>
-    <string name="apss_notification">App abilitate alle notifiche</string>
-    <string name="select_files_import">Seleziona i file da importare</string>
+    <string name="apps_notification">App abilitate alle notifiche</string>
+    <string name="select_files_import">Seleziona i package da importare</string>
     <string name="data_replaced">I dati esistenti verranno sostituiti</string>
     <string name="run_import">Importa dati</string>
     <string name="cancel">Annulla</string>
     <string name="ok">OK</string>
     <string name="title">Titolo</string>
     <string name="text">Testo</string>
-    <string name="select_files_export">Seleziona i file da esportare</string>
+    <string name="select_files_export">Seleziona le app da esportare</string>
     <string name="export_files_replaced">I file esistenti verranno sostituiti</string>
     <string name="run_export">Esporta dati</string>
     <string name="by">di</string>
@@ -112,17 +113,35 @@
     <string name="import_no_sdcard">SD Card non montata, impossibile importare!</string>
     <string name="import_no_app">Nessuna app selezione, non è possibile importare!</string>
     <string name="importing">Importando…</string>
-    <string name="import_started">Importazione iniziata</string>
-    <string name="import_finished">Importazione completata</string>
-    <string name="import_error">Errore durante l\'importazione</string>
+    <string name="import_started">Processo di import iniziato.</string>
+    <string name="import_finished">Processo di import terminato.</string>
+    <string name="imported_apps">%d app sono state importate.</string>
+    <string name="import_error">Si è verificato un errore durante il processo di import.</string>
+    <string name="import_confirm_dialog_title">Conferma import</string>
+    <string name="import_confirm_dialog_message">Il processo di \'import sovrascriverà le statistiche per %d app. Continuare?</string>
 	<string name="export_">Esporta</string>
 	<string name="export_no_sdcard">SD Card non montata, non è possibile esportare!</string>
 	<string name="export_no_app">Nessuna app selezionata, non è possibile esportare!</string>
-	<string name="export_started">Salvataggio iniziato</string>
-    <string name="export_finished">Salvataggio completato</string>
+	<string name="export_started">Processo di export iniziato.</string>
+    <string name="export_finished">Processo di export terminato.</string>
+    <string name="export_failed_to_load_stats">Errore durante l\'aggiornamento delle statistiche.</string>
     <string name="export_saved_to">Salvato in</string>
+    <string name="export_confirm_dialog_title">Conferma export</string>
+    <string name="export_confirm_dialog_message">Il file \'%s\' esiste già, il processo di export lo sovascriverà. Continuare?</string>
+    <string name="share">Condividi</string>
     
-    
+    <string name="manage_accounts">Gestione account</string>
     <string name="preferences">Preferenze</string>
+    <string name="loading_app_list">Caricamento elenco siti&#8230;</string>
+    <string name="no_published_apps">Nessuna applicazione pubblicata</string>
+    
+    <string name="general_preferences">Impostazioni generali</string>
+    <string name="account_specific_preferences">Impostazioni account</string>
+    <string name="notification_when_account_visible">Anche se app visibile</string>
+    <string name="notification_when_account_visible_summary">Mostra notifica per l\'account in uso anche se l\'app è visibile</string>
+    <string name="hide_admob_for_unconfigured_apps">Nascondi sezione AdMob per le app in cui non è configurato</string>
+    <string name="pref_disable_acra">Invio automatico report errori</string>
+    <string name="pref_acra_disabled">Invio automatico disabilitato</string>
+    <string name="pref_acra_enabled">Invio automatico abilitato</string>
 
 </resources>

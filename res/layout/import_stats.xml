@@ -11,11 +11,7 @@
 		android:gravity="center"
 		android:layout_width="fill_parent"
 		android:orientation="vertical"
-		android:layout_marginTop="40dp"
-		android:layout_marginBottom="40dp"
-		android:layout_marginLeft="10dp"
-		android:layout_marginRight="10dp"
-		android:background="@drawable/modal_dialog">
+		android:background="@drawable/app_background">
 
 		<ListView
 			android:id="@+id/list_view_id"
@@ -26,14 +22,13 @@
 			android:layout_centerInParent="true"
 			android:divider="#fff"
 			android:cacheColorHint="#fff"
-			android:layout_height="wrap_content"
-			android:layout_above="@+id/export_dialog_buttons"
-			android:layout_below="@+id/export_dialog_title"
-			android:layout_margin="2dp" />
+			android:layout_above="@+id/import_dialog_buttons"
+			android:layout_margin="2dp" 
+            android:layout_height="fill_parent"/>
 
 
 		<LinearLayout
-			android:id="@+id/export_dialog_buttons"
+			android:id="@+id/import_dialog_buttons"
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
 			android:layout_alignParentBottom="true"
@@ -41,7 +36,7 @@
 
 
 			<RelativeLayout
-				android:id="@+id/export_dialog_export_button"
+				android:id="@+id/import_dialog_import_button"
 				android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
 				android:background="@drawable/image_button"
@@ -62,7 +57,7 @@
 					    android:layout_height="wrap_content"
 					    android:layout_gravity="center"
 					    android:padding="5dp"
-					    android:text="@string/run_export"
+					    android:text="@string/run_import"
 					    android:textColor="#fff"
 					    android:textStyle="bold" />
 
@@ -71,7 +66,7 @@
 			</RelativeLayout>
 
 			<RelativeLayout
-				android:id="@+id/export_dialog_close_button"
+				android:id="@+id/import_dialog_close_button"
 				android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
 				android:background="@drawable/image_button"
@@ -92,7 +87,7 @@
 					    android:layout_height="wrap_content"
 					    android:layout_gravity="center"
 					    android:padding="5dp"
-					    android:text="@string/close"
+					    android:text="@string/cancel"
 					    android:textColor="#fff"
 					    android:textStyle="bold" />
 

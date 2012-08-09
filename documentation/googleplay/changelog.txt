@@ -1,10 +1,19 @@
+2.2.0
+- New account management, switching account via action bar
+- New bottom bar for the main actions
+- New Import/Export with Upload to Dropbox (click the export notification) and Import via Dropbox (via Dropbox app processing .zip files)
+- JellyBean Notifications including custom sounds
+- general/account specific preferences
+- AdMob can be hidden via preferences
+- UI improvements: responsiveness, icon fixes, progress indicator
+- New language: Japanese, French
+
 
 2.1.0
 
 - ICS compatible ActionBar
 - HD icons for xlarge screens
 - New settings screen
-- Admob can be hidden via config
 - New languages: Catalan, Italian, Russian
 
 2.0.1

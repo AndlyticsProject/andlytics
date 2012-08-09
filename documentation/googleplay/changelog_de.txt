@@ -1,3 +1,13 @@
+2.2.0
+- Neue Kontenverwaltung, Kontowechsel über die ActionBar
+- Neue untere ActionBar für die Hauptfunktionen
+- Neuer Import/Export mit Upload zu Dropbox (Klick auf die Export Benachrichtigung) und Import via Dropbox (via Dropbox App mit Verarbeitung von .zip Dateien)
+- JellyBean Benachrichtigungen inklusive konfigurierbarer Benachrichtigungstöne
+- Allgemeine/Konto-spezifische Einstellmöglichkeiten
+- AdMob kann nun über die Einstellungen ausgeblendet werden
+- UI Verbesserungen: Ansprechbarkeit, Icons, etc.
+- Neue Sprache: Japanisch, Französich
+
 2.1.0
 - ICS kompatible ActionBar
 - HD Icons für xlarge Bildschirme

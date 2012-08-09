@@ -1,13 +1,12 @@
+
 package com.github.andlyticsproject;
 
 import org.acra.ACRA;
-import org.acra.ErrorReporter;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,8 +15,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -44,155 +41,45 @@ import com.github.andlyticsproject.exception.SignupException;
 
 public class BaseActivity extends SherlockActivity {
 
-    private static final String TAG = BaseActivity.class.getSimpleName();
+	private static final String TAG = BaseActivity.class.getSimpleName();
 
-	private View downloadsButton;
-	private View admobButton;
-	private View commentsButton;
 	protected String packageName;
 	protected String iconFilePath;
-	protected String accountname;
-	private View ratingsButton;
+	protected String accountName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
+			// TODO move packageName and iconFilePath assignments to BaseDetailsActivity
+			// Will this effect startActivity etc with regard to null behaviour?
+			// Might be best to leave them here
 			packageName = b.getString(Constants.PACKAGE_NAME_PARCEL);
 			iconFilePath = b.getString(Constants.ICON_FILE_PARCEL);
-			accountname = b.getString(Constants.AUTH_ACCOUNT_NAME);
-			Preferences.saveAccountName(this,accountname);
+			accountName = b.getString(Constants.AUTH_ACCOUNT_NAME);
+			Preferences.saveAccountName(this, accountName);
 		}
 
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if (findViewById(R.id.tabbar_button_comments) != null) {
-			setupTabbar();
-		}
-
-	}
-
-	public void updateTabbarButtons()
-	{
-		if (this instanceof ChartActivity) {
-			ChartSet currentChartSet = ((ChartActivity) this).getCurrentChartSet();
-			if (currentChartSet.equals(ChartSet.DOWNLOADS)) {
-				downloadsButton.setSelected(true);
-				commentsButton.setSelected(false);
-				admobButton.setSelected(false);
-				ratingsButton.setSelected(false);
-
-			} else if (currentChartSet.equals(ChartSet.RATINGS)) {
-
-				downloadsButton.setSelected(false);
-				commentsButton.setSelected(false);
-				ratingsButton.setSelected(true);
-				admobButton.setSelected(false);
-			}
-		} else if (this instanceof CommentsActivity) {
-			commentsButton.setSelected(true);
-			admobButton.setSelected(false);
-			downloadsButton.setSelected(false);
-			ratingsButton.setSelected(false);
-		} else if (this instanceof AdmobActivity) {
-            commentsButton.setSelected(false);
-            admobButton.setSelected(true);
-            downloadsButton.setSelected(false);
-            ratingsButton.setSelected(false);
-		}
-	}
-	public void setupTabbar() {
-
-		downloadsButton = findViewById(R.id.tabbar_button_downloads);
-		ratingsButton = findViewById(R.id.tabbar_button_ratings);
-		commentsButton = findViewById(R.id.tabbar_button_comments);
-		admobButton = findViewById(R.id.tabbar_button_back);
-
-		updateTabbarButtons();
-
-		downloadsButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				if (!(BaseActivity.this instanceof ChartActivity && ((ChartActivity) BaseActivity.this)
-						.getCurrentChartSet().equals(ChartSet.DOWNLOADS))) {
-
-					commentsButton.setSelected(false);
-					admobButton.setSelected(false);
-					ratingsButton.setSelected(false);
-					downloadsButton.setSelected(true);
-
-					startChartActivity(ChartSet.DOWNLOADS);
-				}
-
-			}
-		});
-
-		ratingsButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				if (!(BaseActivity.this instanceof ChartActivity && ((ChartActivity) BaseActivity.this)
-						.getCurrentChartSet().equals(ChartSet.RATINGS))) {
-
-					commentsButton.setSelected(false);
-					admobButton.setSelected(false);
-					ratingsButton.setSelected(true);
-					downloadsButton.setSelected(false);
-					startChartActivity(ChartSet.RATINGS);
-				}
-
-			}
-		});
-
-		commentsButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (!(BaseActivity.this instanceof CommentsActivity)) {
-
-					downloadsButton.setSelected(false);
-					admobButton.setSelected(false);
-					ratingsButton.setSelected(false);
-					commentsButton.setSelected(true);
-					startActivity(CommentsActivity.class, true, false);
-				}
-
-			}
-		});
-
-		admobButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-                if (!(BaseActivity.this instanceof AdmobActivity)) {
-
-                    downloadsButton.setSelected(false);
-                    admobButton.setSelected(true);
-                    ratingsButton.setSelected(false);
-                    commentsButton.setSelected(false);
-                    startActivity(AdmobActivity.class, true, false);
-                }
-            }
-		});
 	}
 
 	public void startActivity(Class<?> clazz, boolean disableAnimation, boolean skipDataReload) {
 		Intent intent = new Intent(BaseActivity.this, clazz);
 		intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
 		intent.putExtra(Constants.ICON_FILE_PARCEL, iconFilePath);
-		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
+		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+		if (clazz.equals(Main.class)) {
+			// Main does not have singleTask set in the manifest
+			// in order to facilitate easy switching between accounts using list navigation
+			// We therefore need to clear activity we came from before had in order
+			// to avoid duplicates
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		}
 		if (disableAnimation) {
 			intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		}
-		if(skipDataReload) {
-		    getAndlyticsApplication().setSkipMainReload(true);
+		if (skipDataReload) {
+			getAndlyticsApplication().setSkipMainReload(true);
 		}
 
 		startActivity(intent);
@@ -202,7 +89,7 @@ public class BaseActivity extends SherlockActivity {
 		Intent intent = new Intent(BaseActivity.this, ChartActivity.class);
 		intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
 		intent.putExtra(Constants.ICON_FILE_PARCEL, iconFilePath);
-		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
+		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		intent.putExtra(Constants.CHART_SET, set.name());
 
@@ -211,123 +98,118 @@ public class BaseActivity extends SherlockActivity {
 
 	public void handleUserVisibleException(Exception e) {
 		if (e instanceof NetworkException) {
-			Toast.makeText(BaseActivity.this, "A network error has occurred. Please try again later.",
-					Toast.LENGTH_LONG).show();
-		}  else if (e instanceof SignupException) {
 			Toast.makeText(BaseActivity.this,
-					accountname + " is not an android developer account, sign up at:\n\n" + e.getMessage(),
-					Toast.LENGTH_LONG).show();
-			Toast.makeText(BaseActivity.this,
-					accountname + " is not an android developer account, sign up at:\n\n" + e.getMessage(),
-					Toast.LENGTH_LONG).show();
+					"A network error has occurred. Please try again later.", Toast.LENGTH_LONG)
+					.show();
+		} else if (e instanceof SignupException) {
+			Toast.makeText(BaseActivity.this, accountName
+					+ " is not an android developer account, sign up at:\n\n"
+					+ e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(BaseActivity.this, accountName
+					+ " is not an android developer account, sign up at:\n\n"
+					+ e.getMessage(), Toast.LENGTH_LONG).show();
 		} else if (e instanceof AuthenticationException || e instanceof NoCookieSetException) {
 
-			Toast.makeText(BaseActivity.this,
-					"authentication failed for: " + accountname,
+			Toast.makeText(BaseActivity.this, "authentication failed for: " + accountName,
 					Toast.LENGTH_LONG).show();
 
 		} else if (e instanceof AdmobRateLimitExceededException) {
 
-            Toast.makeText(BaseActivity.this,
-                    "Can't load Admob data because Admob has restricted the number of requests from this app, try again later.",
-                    Toast.LENGTH_LONG).show();
+			Toast.makeText(BaseActivity.this,
+					"Can't load Admob data because Admob has restricted the number of requests from this app, try again later.",
+					Toast.LENGTH_LONG).show();
 
-        } else if (e instanceof AdmobAskForPasswordException) {
+		} else if (e instanceof AdmobAskForPasswordException) {
 
-            Log.w(TAG, "ask for admob credentials");
-            getAndlyticsApplication().setSkipMainReload(true);
+			Log.w(TAG, "ask for admob credentials");
+			getAndlyticsApplication().setSkipMainReload(true);
 
 		} else if (e instanceof AdmobAccountRemovedException) {
 
-            Toast.makeText(BaseActivity.this,
-                    "AdMob account \"" + ((AdmobAccountRemovedException)e).getAccountName() + "\" is missing. If this happens repeatedly try moving Andlytics from sdcard to internal storage.",
-                    Toast.LENGTH_LONG).show();
-            Toast.makeText(BaseActivity.this,
-                            "AdMob account \"" + ((AdmobAccountRemovedException)e).getAccountName() + "\" is missing. If this happens repeatedly try moving Andlytics from sdcard to internal storage.",
-                            Toast.LENGTH_LONG).show();
+			Toast.makeText(BaseActivity.this, "AdMob account \""
+					+ "\" is missing. If this happens repeatedly try moving Andlytics from sdcard to internal storage.",
+					Toast.LENGTH_LONG).show();
+			Toast.makeText(BaseActivity.this, "AdMob account \""
+					+ ((AdmobAccountRemovedException) e).getAccountName()
+					+ "\" is missing. If this happens repeatedly try moving Andlytics from sdcard to internal storage.",
+					Toast.LENGTH_LONG).show();
 
-        } else if (e instanceof AdmobInvalidRequestException) {
+		} else if (e instanceof AdmobInvalidRequestException) {
 
-            Toast.makeText(BaseActivity.this, "Error while requesting AdMob API", Toast.LENGTH_LONG).show();
+			Toast.makeText(BaseActivity.this, "Error while requesting AdMob API", Toast.LENGTH_LONG).show();
 
-        } else if (e instanceof AdmobInvalidTokenException) {
+		} else if (e instanceof AdmobInvalidTokenException) {
 
-
-            Toast.makeText(BaseActivity.this,
-                    "Error while authenticating admob account. Please try again later.",
-                    Toast.LENGTH_LONG).show();
+			Toast.makeText(BaseActivity.this,
+					"Error while authenticating admob account. Please try again later.",
+					Toast.LENGTH_LONG).show();
 
 		} else if (e instanceof AdmobGenericException) {
 
-		    Log.w(TAG, e.getMessage(), e);
+			Log.w(TAG, e.getMessage(), e);
 
-            Toast.makeText(BaseActivity.this,
-                    "Unabled to load Admob data, please try again later.",
-                    Toast.LENGTH_LONG).show();
+			Toast.makeText(BaseActivity.this,
+					"Unabled to load Admob data, please try again later.", Toast.LENGTH_LONG)
+					.show();
 
-        } else if (e instanceof DeveloperConsoleException) {
+		} else if (e instanceof DeveloperConsoleException) {
 
-            int appVersionCode = getAppVersionCode(this);
-            if(Preferences.getLatestVersionCode(this) > appVersionCode) {
-                showNewVersionDialog(e);
-            } else {
-
-                showCrashDialog(e);
-            }
-
+			int appVersionCode = getAppVersionCode(this);
+			if (Preferences.getLatestVersionCode(this) > appVersionCode) {
+				showNewVersionDialog(e);
+			} else {
+				showCrashDialog(e);
+			}
 
 		} else if (e instanceof InvalidJSONResponseException) {
 
-		    int appVersionCode = getAppVersionCode(this);
-            if(Preferences.getLatestVersionCode(this) > appVersionCode) {
-                showNewVersionDialog(e);
-            } else {
+			int appVersionCode = getAppVersionCode(this);
+			if (Preferences.getLatestVersionCode(this) > appVersionCode) {
+				showNewVersionDialog(e);
+			} else {
+				showGoogleErrorDialog(e);
+			}
 
-                showGoogleErrorDialog(e);
-            }
-
-        } else if (e instanceof MultiAccountAcception) {
-
-                showAspErrorDialog(e);
-
-
-        }
+		} else if (e instanceof MultiAccountAcception) {
+			showAspErrorDialog(e);
+		}
 	}
 
 	private void showNewVersionDialog(Exception e) {
-        if(!isFinishing()) {
+		if (!isFinishing()) {
 
-            CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
-            builder.setTitle("Sorry, update required.");
-            builder.setMessage(R.string.newversion_desc);
-            builder.setPositiveButton("update", new DialogInterface.OnClickListener() {
+			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
+			builder.setTitle("Sorry, update required.");
+			builder.setMessage(R.string.newversion_desc);
+			builder.setPositiveButton("update", new DialogInterface.OnClickListener() {
 
-                public void onClick(DialogInterface dialog, int which) {
+				public void onClick(DialogInterface dialog, int which) {
 
-                    Intent goToMarket = null;
-                    goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.github.andlyticsproject"));
-                    startActivity(goToMarket);
+					Intent goToMarket = null;
+					goToMarket = new Intent(Intent.ACTION_VIEW, Uri
+							.parse("market://details?id=com.github.andlyticsproject"));
+					startActivity(goToMarket);
 
-                    dialog.dismiss();
-                }
+					dialog.dismiss();
+				}
 
-            });
-            builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+			});
+			builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
 
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
 
-            });
+			});
 
-            builder.create().show();
-        }
+			builder.create().show();
+		}
 
-    }
+	}
 
-    protected void showCrashDialog(final Exception e) {
+	protected void showCrashDialog(final Exception e) {
 
-		if(!isFinishing()) {
+		if (!isFinishing()) {
 
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
 			builder.setTitle("Sorry...");
@@ -336,19 +218,19 @@ public class BaseActivity extends SherlockActivity {
 
 				public void onClick(DialogInterface dialog, int which) {
 
-				    if(!isFinishing()) {
+					if (!isFinishing()) {
 
-				        Thread thread = new Thread(new Runnable() {
+						Thread thread = new Thread(new Runnable() {
 
-				            @Override
-				            public void run() {
-				                sendAracReport(e, true);
-				            }
+							@Override
+							public void run() {
+								sendAracReport(e, true);
+							}
 
-				        });
-				        thread.run();
-				        dialog.dismiss();
-				    }
+						});
+						thread.run();
+						dialog.dismiss();
+					}
 
 				}
 
@@ -364,18 +246,15 @@ public class BaseActivity extends SherlockActivity {
 			builder.create().show();
 		}
 
-
 	}
 
-    private void sendAracReport(Exception e, boolean userTriggered) {
-        ACRA.init(getApplication());
-        ErrorReporter.getInstance().handleSilentException(e);
-        ErrorReporter.getInstance().disable();
-    }
+	private void sendAracReport(Exception e, boolean userTriggered) {
+		ACRA.getErrorReporter().handleSilentException(e);
+	}
 
 	protected void showGoogleErrorDialog(final Exception e) {
 
-		if(!isFinishing()) {
+		if (!isFinishing()) {
 
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
 			builder.setTitle("Sorry... ");
@@ -388,7 +267,7 @@ public class BaseActivity extends SherlockActivity {
 
 						@Override
 						public void run() {
-						    sendAracReport(e, true);
+							sendAracReport(e, true);
 						}
 					});
 					thread.run();
@@ -410,50 +289,51 @@ public class BaseActivity extends SherlockActivity {
 
 	}
 
-    protected void showAspErrorDialog(final Exception e) {
+	protected void showAspErrorDialog(final Exception e) {
 
-        if(!isFinishing()) {
+		if (!isFinishing()) {
 
-            CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
-            builder.setTitle("Multiple Developer Accounts");
-            builder.setMessage("Your account is linked to multiple developer consoles. This feature is not supported in andlytics.\n\nYou can unlink additional accounts or ask Google for a public app stats API at: \n\nhttp://support.google.com/googleplay\n\nSorry :(");
-            builder.setPositiveButton("logout", new DialogInterface.OnClickListener() {
+			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
+			builder.setTitle("Multiple Developer Accounts");
+			builder.setMessage("Your account is linked to multiple developer consoles. This feature is not supported in andlytics.\n\nYou can unlink additional accounts or ask Google for a public app stats API at: \n\nhttp://support.google.com/googleplay\n\nSorry :(");
+			builder.setPositiveButton("logout", new DialogInterface.OnClickListener() {
 
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    Preferences.removeAccountName(BaseActivity.this);
-                    Preferences.saveSkipAutoLogin(BaseActivity.this, true);
-                    Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+					Preferences.removeAccountName(BaseActivity.this);
+					Preferences.saveSkipAutoLogin(BaseActivity.this, true);
+					Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+					startActivity(intent);
+					overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
 
-                }
+				}
 
-            });
-            builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+			});
+			builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
 
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    Preferences.removeAccountName(BaseActivity.this);
-                    Preferences.saveSkipAutoLogin(BaseActivity.this, true);
-                    Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
-                }
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+					Preferences.removeAccountName(BaseActivity.this);
+					Preferences.saveSkipAutoLogin(BaseActivity.this, true);
+					Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+					startActivity(intent);
+					overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
+				}
 
-            });
+			});
 
-            builder.create().show();
+			builder.create().show();
 
-        }
+		}
 
-    }
+	}
 
 	public ContentAdapter getDbAdapter() {
 		return getAndlyticsApplication().getDbAdapter();
 	}
 
-	protected void authenticateAccountFromPreferences(boolean invalidateToken, AuthenticationCallback callback) {
+	protected void authenticateAccountFromPreferences(boolean invalidateToken,
+			AuthenticationCallback callback) {
 
 		String accountName = Preferences.getAccountName(this);
 
@@ -465,7 +345,8 @@ public class BaseActivity extends SherlockActivity {
 				Account account = accounts[i];
 				if (accountName.equals(account.name)) {
 					if (invalidateToken) {
-						manager.invalidateAuthToken(Constants.ACCOUNT_TYPE_GOOGLE, getAndlyticsApplication().getAuthToken());
+						manager.invalidateAuthToken(Constants.ACCOUNT_TYPE_GOOGLE,
+								getAndlyticsApplication().getAuthToken());
 					}
 					getAndlyticsApplication().setAuthToken(null);
 					authenticateAccount(manager, account, callback);
@@ -476,54 +357,53 @@ public class BaseActivity extends SherlockActivity {
 		}
 	}
 
-	private void authenticateAccount(final AccountManager manager, final Account account, final AuthenticationCallback callback) {
+	private void authenticateAccount(final AccountManager manager, final Account account,
+			final AuthenticationCallback callback) {
 
 		Preferences.saveAccountName(this, account.name);
 
 		AccountManager accountManager = AccountManager.get(this.getApplicationContext());
 
-        final AccountManagerCallback<Bundle> myCallback = new AccountManagerCallback<Bundle>() {
+		final AccountManagerCallback<Bundle> myCallback = new AccountManagerCallback<Bundle>() {
 
-            public void run(final AccountManagerFuture<Bundle> arg0) {
-                try {
+			public void run(final AccountManagerFuture<Bundle> arg0) {
+				try {
 
-                    String authToken = arg0.getResult().getString(
-                            AccountManager.KEY_AUTHTOKEN);
+					String authToken = arg0.getResult().getString(AccountManager.KEY_AUTHTOKEN);
 
-                    if (authToken != null) {
-                                            //do something with the auth token
-                    //  got token form manager - set in application an exit
-                        getAndlyticsApplication().setAuthToken(authToken);
+					if (authToken != null) {
+						//do something with the auth token
+						//  got token form manager - set in application an exit
+						getAndlyticsApplication().setAuthToken(authToken);
 
-                        runOnUiThread(new Runnable() {
+						runOnUiThread(new Runnable() {
 
-                            @Override
-                            public void run() {
-                                callback.authenticationSuccess();
-                            }
-                        });
+							@Override
+							public void run() {
+								callback.authenticationSuccess();
+							}
+						});
 
-                    } else {
+					} else {
 
-                        Log.e(TAG, "auth token is null, authentication failed");
-                                                   //not expected at all
-                    }
+						Log.e(TAG, "auth token is null, authentication failed");
+						//not expected at all
+					}
 
-                } catch (Exception e) {
-                    getAndlyticsApplication().setSkipMainReload(true);
-                    Log.e(TAG, "error during authentication", e);
-                                            //error
-                }
+				} catch (Exception e) {
+					getAndlyticsApplication().setSkipMainReload(true);
+					Log.e(TAG, "error during authentication", e);
+					//error
+				}
 
-            }
+			}
 
-        };
+		};
 
+		accountManager.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVLOPER, null,
+				BaseActivity.this, myCallback, null);
 
-        accountManager.getAuthToken(account,
-                        Constants.AUTH_TOKEN_TYPE_ANDROID_DEVLOPER,null, BaseActivity.this, myCallback, null);
-
-        /*
+		/*
 
 		Bundle bundle;
 		try {
@@ -560,7 +440,7 @@ public class BaseActivity extends SherlockActivity {
 
 	}
 
-/*
+	/*
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -596,15 +476,15 @@ public class BaseActivity extends SherlockActivity {
 	}*/
 
 	protected void showLoadingIndecator(ViewSwitcher switcher) {
-        Animation loadingAnim = AnimationUtils.loadAnimation(this, R.anim.loading);
-        loadingAnim.setInterpolator(new LinearInterpolator());
+		Animation loadingAnim = AnimationUtils.loadAnimation(this, R.anim.loading);
+		loadingAnim.setInterpolator(new LinearInterpolator());
 
-        switcher.showNext();
+		switcher.showNext();
 	}
 
 	protected void hideLoadingIndecator(ViewSwitcher switcher) {
-	    switcher.showPrevious();
-    }
+		switcher.showPrevious();
+	}
 
 	public AndlyticsApp getAndlyticsApplication() {
 		return (AndlyticsApp) getApplication();
@@ -613,31 +493,14 @@ public class BaseActivity extends SherlockActivity {
 	protected void onPostAuthentication() {
 	}
 
-    @Override
-    public void onBackPressed() {
-        if(this instanceof ChartActivity ||
-            this instanceof AdmobActivity ||
-            this instanceof CommentsActivity) {
-            commentsButton.setSelected(false);
-            downloadsButton.setSelected(false);
-            ratingsButton.setSelected(false);
-            admobButton.setSelected(false);
-
-            startActivity(Main.class, false, true);
-
-            overridePendingTransition(R.anim.activity_prev_in, R.anim.activity_prev_out);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    public static int getAppVersionCode(Context context) {
-        try {
-            PackageInfo pinfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            return pinfo.versionCode;
-        } catch (NameNotFoundException e) {
-            Log.e(AndlyticsApp.class.getSimpleName(), "unable to read version code", e);
-        }
-        return 0;
-    }
+	public static int getAppVersionCode(Context context) {
+		try {
+			PackageInfo pinfo = context.getPackageManager().getPackageInfo(
+					context.getPackageName(), 0);
+			return pinfo.versionCode;
+		} catch (NameNotFoundException e) {
+			Log.e(AndlyticsApp.class.getSimpleName(), "unable to read version code", e);
+		}
+		return 0;
+	}
 }

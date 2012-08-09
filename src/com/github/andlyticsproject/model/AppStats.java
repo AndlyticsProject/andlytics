@@ -1,9 +1,11 @@
+
 package com.github.andlyticsproject.model;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
+
+import android.util.SparseArray;
 
 public class AppStats {
 
@@ -47,7 +49,7 @@ public class AppStats {
 
 	private float avgRating;
 
-    private float avgRatingDiff;
+	private float avgRatingDiff;
 
 	private int ratingCount;
 
@@ -59,45 +61,49 @@ public class AppStats {
 
 	private String ratingCountPercentString;
 
-	private HashMap<Integer, String> ratingPercentStringMap;
+	private SparseArray<String> ratingPercentStringMap;
 
 	private String activeInstallsPercentString;
 
-    private String avgRatingDiffString;
+	private String avgRatingDiffString;
 
-	public AppStats(){}
+	// XXX should put in wrapper class
+	private String packageName;
+
+	public AppStats() {
+	}
 
 	/**
 	 * Copy Constructor
 	 *
 	 * @param appStats a <code>AppStats</code> object
 	 */
-	public AppStats(AppStats appStats)
-	{
-	    this.totalDownloads = appStats.totalDownloads;
-	    this.activeInstalls = appStats.activeInstalls;
-	    this.numberOfComments = appStats.numberOfComments;
-	    this.requestDate = appStats.requestDate;
-	    this.dailyDownloads = appStats.dailyDownloads;
-	    this.smoothingApplied = appStats.smoothingApplied;
-	    this.rating1 = appStats.rating1;
-	    this.rating2 = appStats.rating2;
-	    this.rating3 = appStats.rating3;
-	    this.rating4 = appStats.rating4;
-	    this.rating5 = appStats.rating5;
-	    this.rating1Diff = appStats.rating1Diff;
-	    this.rating2Diff = appStats.rating2Diff;
-	    this.rating3Diff = appStats.rating3Diff;
-	    this.rating4Diff = appStats.rating4Diff;
-	    this.rating5Diff = appStats.rating5Diff;
-	    this.avgRating = appStats.avgRating;
-	    this.ratingCount = appStats.ratingCount;
-	    this.setAvgRatingString(appStats.getAvgRatingString());
-	    this.numberOfCommentsPercentString = appStats.numberOfCommentsPercentString;
-	    this.ratingCountPercentString = appStats.ratingCountPercentString;
-	    this.ratingPercentStringMap = appStats.ratingPercentStringMap;
-	    this.setActiveInstallsPercentString(appStats.getActiveInstallsPercentString());
-	    this.versionCode = appStats.versionCode;
+	public AppStats(AppStats appStats) {
+		this.totalDownloads = appStats.totalDownloads;
+		this.activeInstalls = appStats.activeInstalls;
+		this.numberOfComments = appStats.numberOfComments;
+		this.requestDate = appStats.requestDate;
+		this.dailyDownloads = appStats.dailyDownloads;
+		this.smoothingApplied = appStats.smoothingApplied;
+		this.rating1 = appStats.rating1;
+		this.rating2 = appStats.rating2;
+		this.rating3 = appStats.rating3;
+		this.rating4 = appStats.rating4;
+		this.rating5 = appStats.rating5;
+		this.rating1Diff = appStats.rating1Diff;
+		this.rating2Diff = appStats.rating2Diff;
+		this.rating3Diff = appStats.rating3Diff;
+		this.rating4Diff = appStats.rating4Diff;
+		this.rating5Diff = appStats.rating5Diff;
+		this.avgRating = appStats.avgRating;
+		this.ratingCount = appStats.ratingCount;
+		this.setAvgRatingString(appStats.getAvgRatingString());
+		this.numberOfCommentsPercentString = appStats.numberOfCommentsPercentString;
+		this.ratingCountPercentString = appStats.ratingCountPercentString;
+		this.ratingPercentStringMap = appStats.ratingPercentStringMap;
+		this.setActiveInstallsPercentString(appStats.getActiveInstallsPercentString());
+		this.versionCode = appStats.versionCode;
+		this.packageName = appStats.packageName;
 	}
 
 	public void init() {
@@ -159,9 +165,8 @@ public class AppStats {
 		this.smoothingApplied = smoothingApplied;
 	}
 
-
-	public void setRating(Integer rating1, Integer rating2, Integer rating3,
-			Integer rating4, Integer rating5) {
+	public void setRating(Integer rating1, Integer rating2, Integer rating3, Integer rating4,
+			Integer rating5) {
 		this.rating1 = rating1;
 		this.rating2 = rating2;
 		this.rating3 = rating3;
@@ -172,24 +177,24 @@ public class AppStats {
 	public void addRating(int i, int value) {
 
 		switch (i) {
-		case 1:
-			this.rating1 = value;
-			break;
-		case 2:
-			this.rating2 = value;
-			break;
-		case 3:
-			this.rating3 = value;
-			break;
-		case 4:
-			this.rating4 = value;
-			break;
-		case 5:
-			this.rating5 = value;
-			break;
+			case 1:
+				this.rating1 = value;
+				break;
+			case 2:
+				this.rating2 = value;
+				break;
+			case 3:
+				this.rating3 = value;
+				break;
+			case 4:
+				this.rating4 = value;
+				break;
+			case 5:
+				this.rating5 = value;
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 
 	}
@@ -210,32 +215,32 @@ public class AppStats {
 			int value = 0;
 
 			switch (i) {
-			case 1:
-				value = rating1;
-				break;
-			case 2:
-				value = rating2;
-				break;
-			case 3:
-				value = rating3;
-				break;
-			case 4:
-				value = rating4;
-				break;
-			case 5:
-				value = rating5;
-				break;
+				case 1:
+					value = rating1;
+					break;
+				case 2:
+					value = rating2;
+					break;
+				case 3:
+					value = rating3;
+					break;
+				case 4:
+					value = rating4;
+					break;
+				case 5:
+					value = rating5;
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 
 			ratings += i * value;
 			count += value;
 		}
 
-		if(count < 1) {
-			this.avgRating =  0;
+		if (count < 1) {
+			this.avgRating = 0;
 		} else {
 			this.avgRating = ratings / count;
 		}
@@ -246,7 +251,6 @@ public class AppStats {
 		return ratingCount;
 
 	}
-
 
 	public void calcRatingCount() {
 		this.ratingCount = rating1 + rating2 + rating3 + rating4 + rating5;
@@ -260,10 +264,10 @@ public class AppStats {
 	}
 
 	public void calcAvgRatingDiffString() {
-        BigDecimal ratingBigDecimal = new BigDecimal(getAvgRatingDiff());
-        ratingBigDecimal = ratingBigDecimal.setScale(3, BigDecimal.ROUND_HALF_UP);
-        this.setAvgRatingDiffString(ratingBigDecimal.toPlainString());
-    }
+		BigDecimal ratingBigDecimal = new BigDecimal(getAvgRatingDiff());
+		ratingBigDecimal = ratingBigDecimal.setScale(3, BigDecimal.ROUND_HALF_UP);
+		this.setAvgRatingDiffString(ratingBigDecimal.toPlainString());
+	}
 
 	public String getAvgRatingString() {
 		return this.avgRatingString;
@@ -275,47 +279,46 @@ public class AppStats {
 
 	public void calsRatingPercentStrings() {
 
-		this.ratingPercentStringMap = new HashMap<Integer, String>();
+		this.ratingPercentStringMap = new SparseArray<String>();
 		int sum = getRatingCount();
 
 		for (int i = 1; i < 6; i++) {
 
 			BigDecimal ratingBigDecimal = new BigDecimal(20);
-			if(sum != 0) {
+			if (sum != 0) {
 
 				Integer rate = null;
 
 				switch (i) {
-				case 1:
-					rate = rating1;
-					break;
-				case 2:
-					rate = rating2;
-					break;
-				case 3:
-					rate = rating3;
-					break;
-				case 4:
-					rate = rating4;
-					break;
-				case 5:
-					rate = rating5;
-					break;
+					case 1:
+						rate = rating1;
+						break;
+					case 2:
+						rate = rating2;
+						break;
+					case 3:
+						rate = rating3;
+						break;
+					case 4:
+						rate = rating4;
+						break;
+					case 5:
+						rate = rating5;
+						break;
 
-				default:
-					break;
+					default:
+						break;
 				}
 
-				if(rate == null || rate < 1) {
+				if (rate == null || rate < 1) {
 					rate = 0;
 				}
-				ratingBigDecimal = new BigDecimal(100.f/sum*rate);
+				ratingBigDecimal = new BigDecimal(100.f / sum * rate);
 			}
 			ratingBigDecimal = ratingBigDecimal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 			ratingPercentStringMap.put(i, ratingBigDecimal.toPlainString() + "%");
 		}
 	}
-
 
 	public String getActiveInstallsPercentString() {
 		return activeInstallsPercentString;
@@ -332,9 +335,9 @@ public class AppStats {
 		return dateFormat.format(getRequestDate());
 	}
 
-	public double getActiveInstallsPercent(){
+	public double getActiveInstallsPercent() {
 
-		if(totalDownloads < 1) {
+		if (totalDownloads < 1) {
 			return 0;
 		}
 
@@ -386,17 +389,16 @@ public class AppStats {
 		return numberOfCommentsPercentString;
 	}
 
-
 	public void calcNumberOfCommentsPercentString() {
 
 		int numberOfComments = getNumberOfComments();
 		float percent = 0.0f;
-		if(totalDownloads > 0) {
+		if (totalDownloads > 0) {
 			percent = 100.0f / totalDownloads * numberOfComments;
 		}
 		BigDecimal percentBigDecimal = new BigDecimal(percent);
 		percentBigDecimal = percentBigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
-		this.numberOfCommentsPercentString =  percentBigDecimal.toPlainString();
+		this.numberOfCommentsPercentString = percentBigDecimal.toPlainString();
 	}
 
 	public String getRatingCountPercentString() {
@@ -406,14 +408,13 @@ public class AppStats {
 	public void calcRatingCountPercentString() {
 		int numberOfComments = getRatingCount();
 		float percent = 0.0f;
-		if(totalDownloads > 0) {
-			percent = 100.0f / totalDownloads *  numberOfComments;
+		if (totalDownloads > 0) {
+			percent = 100.0f / totalDownloads * numberOfComments;
 		}
 		BigDecimal percentBigDecimal = new BigDecimal(percent);
 		percentBigDecimal = percentBigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
 		this.ratingCountPercentString = percentBigDecimal.toPlainString();
 	}
-
 
 	public Integer getRating1() {
 		return rating1;
@@ -495,60 +496,68 @@ public class AppStats {
 		this.rating5 = rating5;
 	}
 
-    public void setAvgRatingDiff(float avgRatingDiff) {
-        this.avgRatingDiff = avgRatingDiff;
-    }
+	public void setAvgRatingDiff(float avgRatingDiff) {
+		this.avgRatingDiff = avgRatingDiff;
+	}
 
-    public float getAvgRatingDiff() {
-        return avgRatingDiff;
-    }
+	public float getAvgRatingDiff() {
+		return avgRatingDiff;
+	}
 
-    public void setRatingCountDiff(int ratingCountDiff) {
-        this.ratingCountDiff = ratingCountDiff;
-    }
+	public void setRatingCountDiff(int ratingCountDiff) {
+		this.ratingCountDiff = ratingCountDiff;
+	}
 
-    public int getRatingCountDiff() {
-        return ratingCountDiff;
-    }
+	public int getRatingCountDiff() {
+		return ratingCountDiff;
+	}
 
-    public void setAvgRatingDiffString(String avgRatingDiffString) {
-        this.avgRatingDiffString = avgRatingDiffString;
-    }
+	public void setAvgRatingDiffString(String avgRatingDiffString) {
+		this.avgRatingDiffString = avgRatingDiffString;
+	}
 
-    public String getAvgRatingDiffString() {
-        return avgRatingDiffString;
-    }
+	public String getAvgRatingDiffString() {
+		return avgRatingDiffString;
+	}
 
-    public void setNumberOfCommentsDiff(int numberOfCommentsDiff) {
-        this.numberOfCommentsDiff = numberOfCommentsDiff;
-    }
+	public void setNumberOfCommentsDiff(int numberOfCommentsDiff) {
+		this.numberOfCommentsDiff = numberOfCommentsDiff;
+	}
 
-    public int getNumberOfCommentsDiff() {
-        return numberOfCommentsDiff;
-    }
+	public int getNumberOfCommentsDiff() {
+		return numberOfCommentsDiff;
+	}
 
-    public void setActiveInstallsDiff(int activeInstallsDiff) {
-        this.activeInstallsDiff = activeInstallsDiff;
-    }
+	public void setActiveInstallsDiff(int activeInstallsDiff) {
+		this.activeInstallsDiff = activeInstallsDiff;
+	}
 
-    public int getActiveInstallsDiff() {
-        return activeInstallsDiff;
-    }
+	public int getActiveInstallsDiff() {
+		return activeInstallsDiff;
+	}
 
-    public void setVersionCode(Integer versionCode) {
-        this.versionCode = versionCode;
-    }
+	public void setVersionCode(Integer versionCode) {
+		this.versionCode = versionCode;
+	}
 
-    public Integer getVersionCode() {
-        return versionCode;
-    }
+	public Integer getVersionCode() {
+		return versionCode;
+	}
 
-    public void setActiveInstallsPercentString(String activeInstallsPercentString) {
-        this.activeInstallsPercentString = activeInstallsPercentString;
-    }
+	public void setActiveInstallsPercentString(String activeInstallsPercentString) {
+		this.activeInstallsPercentString = activeInstallsPercentString;
+	}
 
-    public void setAvgRatingString(String avgRatingString) {
-        this.avgRatingString = avgRatingString;
-    }
+	public void setAvgRatingString(String avgRatingString) {
+		this.avgRatingString = avgRatingString;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
 
 }

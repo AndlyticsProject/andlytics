@@ -8,9 +8,10 @@
     <string name="one_entry_hint_demo"><u>View chart with demo data</u></string>
 
     <string name="crash_desc">An unexpected error occurred.\n\nPlease help us to fix this by sending us error report data. Information about the error (stacktrace) and information about your device such as device manufacturer\'s name, device model number, operating system, etc. will be sent to help us identifying the problem.\n\nThanks!\n\n</string>
+    <string name="crash_toast">An unexpected error occurred. Information about the error will be sent to help us identifying the problem.</string>
     <string name="newversion_desc"><b>An unexpected error occurred, probably because the remote interface changed.</b>\n\nBut the good news is that a new version of Andlytics is available in the Android Market.\n\nPlease update before reporting this issue.\n\nThanks!\n\n\n</string>
     <string name="account_required">Android developer account required</string>
-    <string name="account_choose">Please choose or add a Google account. The account must be a registered developer account with apps published in the Android Market (\'Google Apps for Business\' accounts are not supported yet).</string>
+    <string name="account_choose">Please choose or add a Google account. The account must be a registered developer account with apps published on Google Play (\'Google Apps for Business\' and accounts linked to multiple developer consoles are not supported yet).</string>
     <string name="account_add">Add android developer account</string>
     <string name="logout">Logout</string>
     <string name="refresh">Refresh</string>
@@ -45,15 +46,15 @@
     <string name="notification_signal">Notification signal</string>
     <string name="notification_sound">Notification sound</string>
     <string name="notification_light">Notification light</string>
-    <string name="apss_notification">Apps for change notification</string>
-    <string name="select_files_import">Select files to import</string>
+    <string name="apps_notification">Apps for change notification</string>
+    <string name="select_files_import">Select packages to import</string>
     <string name="data_replaced">Existing data will be replaced</string>
     <string name="run_import">Run import</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="title">Title</string>
     <string name="text">Text</string>
-    <string name="select_files_export">Select files to export</string>
+    <string name="select_files_export">Select apps to export</string>
     <string name="export_files_replaced">Existing export files will be replaced</string>
     <string name="run_export">Run export</string>
     <string name="by">by</string>
@@ -112,19 +113,35 @@
     <string name="import_no_sdcard">SD-Card not mounted, can\'t import!</string>
     <string name="import_no_app">No app selected, can\'t import!</string>
     <string name="importing">Importing</string>
-    <string name="import_started">Import started</string>
-    <string name="import_finished">Import finished</string>
-    <string name="import_error">Error during import</string>
+    <string name="import_started">Import started.</string>
+    <string name="import_finished">Import finished.</string>
+    <string name="imported_apps">Imported %d apps.</string>
+    <string name="import_error">Error during import.</string>
+    <string name="import_confirm_dialog_title">Confirm import</string>
+    <string name="import_confirm_dialog_message">You already have stats for %d apps. Importing will overwrite them. Continue with import?</string>
 	<string name="export_">Export</string>
 	<string name="export_no_sdcard">SD-Card not mounted, can\'t export!</string>
 	<string name="export_no_app">No app selected, can\'t export!</string>
-	<string name="export_started">Export started</string>
-    <string name="export_finished">Export finished</string>
+	<string name="export_started">Export started.</string>
+    <string name="export_finished">Export finished.</string>
+    <string name="export_failed_to_load_stats">Failed to load app stats.</string>
     <string name="export_saved_to">Saved to</string>
+    <string name="export_confirm_dialog_title">Confirm export</string>
+    <string name="export_confirm_dialog_message">An export file \'%s\' already exits. Exporting app stats will overwrite it. Continue with export?</string>
+    <string name="share">Share</string>
     
-    
+    <string name="manage_accounts">Manage accounts</string>
     <string name="preferences">Preferences</string>
     <string name="loading_app_list">Loading app list…</string>
     <string name="no_published_apps">No published apps found</string>
+    
+    <string name="general_preferences">General preferences</string>
+    <string name="account_specific_preferences">Account specific preferences</string>
+    <string name="notification_when_account_visible">When app is visible</string>
+    <string name="notification_when_account_visible_summary">Show notifications for the current account even when the app is visible</string>
+    <string name="hide_admob_for_unconfigured_apps">Hide the AdMob tab for unconfigured apps</string>
+    <string name="pref_disable_acra">Automatic error reports</string>
+    <string name="pref_acra_disabled">Reporting disabled</string>
+    <string name="pref_acra_enabled">Reporting enabled</string>
 
 </resources>

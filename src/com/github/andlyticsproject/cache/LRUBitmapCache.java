@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.cache;
 
 import java.util.ArrayList;
@@ -27,19 +28,18 @@ public class LRUBitmapCache {
 	 */
 	public LRUBitmapCache(int cacheSize) {
 		this.cacheSize = cacheSize;
-        int hashTableCapacity = (int) FloatMath
-				.ceil(cacheSize / hashTableLoadFactor) + 1;
-		map = new LinkedHashMap<String, Bitmap>(hashTableCapacity, hashTableLoadFactor,
-				true) {
+		int hashTableCapacity = (int) FloatMath.ceil(cacheSize / hashTableLoadFactor) + 1;
+		map = new LinkedHashMap<String, Bitmap>(hashTableCapacity, hashTableLoadFactor, true) {
 			// (an anonymous inner class)
 			private static final long serialVersionUID = 1;
 
 			@Override
 			protected boolean removeEldestEntry(Map.Entry<String, Bitmap> eldest) {
 				boolean result = size() > LRUBitmapCache.this.cacheSize;
-				if(result) {
-					if(eldest.getValue() != null) {
-						Log.d(TAG, "Recycling bitmap: " + eldest.getKey() + " current cache size: " + size());
+				if (result) {
+					if (eldest.getValue() != null) {
+						Log.d(TAG, "Recycling bitmap: " + eldest.getKey() + " current cache size: "
+								+ size());
 					}
 				}
 				return result;
@@ -90,7 +90,6 @@ public class LRUBitmapCache {
 	public synchronized int usedEntries() {
 		return map.size();
 	}
-
 
 	public synchronized boolean contains(String item) {
 		return map.containsKey(item);

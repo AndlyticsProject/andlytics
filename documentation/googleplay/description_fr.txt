@@ -1,0 +1,23 @@
+★★★ Voici la nouvelle version officielle de l'application ★★★
+
+Suivez les statistiques de vos applications Android
+
+Andlytics surveille les statistiques des notes, des téléchargements journaliers, du nombre total de téléchargement et du nombre d'installations actives.
+
+C'est un outils pour les développeurs Android pour le suivi de leurs applications, il est utile seulement si vous avez des applications publiées sur Google Play et que vous avez un accès à la console des développeurs Android.
+
+L'application supporte l'auto synchronisation des données à partir de votre compte développeur Android. Les données peuvent être exportés vers la carte SD. Vous pouvez aussi configurer des notifications pour les changements sur les commentaires, les notes ou les téléchargements. Les comptes AdMob seront gérés par le gestionnaire du compte Android.
+
+Notez, toutes fois, que Google ne fournit pas d'API stable pour récupérer le nombre de téléchargement et les notes. Par conséquence, il se peut que Andlytics ne fonctionne pas correctement si des changements surveillent dans l'Android Market. Dans ce cas, soyez patient pendant que nous essayons de corriger les changements.
+
+En aucun cas cette application n'est relié à Google.
+
+Problèmes connus ★★★★★★★★★★★★★★★★★★★
+
+Les comptes "Google Apps pour les entreprises" ne sont pas encore supportés
+
+La connexion multiple de comptes développeurs n'est pas encore supporté
+
+Sur certains appareils les comptes AdMob continuent à disparaitre, déplacer Andlytics de la carte SD vers le support internet peut résoudre le problème
+
+Pour les comptes AdMob qui sont liés à un compte Google, vous pouvez trouver le mot de passe de l'API sur la page d'information du compte suivante :  http://www.admob.com/my_account/account_info.

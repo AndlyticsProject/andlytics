@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bugsense_url">http://www.bugsense.com/api/acra?api_key=00000000</string>
+</resources>

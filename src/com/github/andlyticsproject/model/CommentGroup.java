@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.model;
 
 import java.util.ArrayList;
@@ -59,6 +60,5 @@ public class CommentGroup {
 		comments.add(comment);
 
 	}
-
 
 }

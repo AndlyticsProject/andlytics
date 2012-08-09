@@ -1,12 +1,12 @@
-package com.github.andlyticsproject;
 
+package com.github.andlyticsproject;
 
 public abstract class DeveloperConsoleRemoteCall<Params, Result> {
 
-    public DeveloperConsoleRemoteCall() {
+	public DeveloperConsoleRemoteCall() {
 
-    }
+	}
 
-    public abstract DeveloperConsoleRemoteCall<Params, Result> execute(Params... params);
+	public abstract DeveloperConsoleRemoteCall<Params, Result> execute(Params... params);
 
 }

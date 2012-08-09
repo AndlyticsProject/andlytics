@@ -1,12 +1,24 @@
+2.2.0
+- Nuevo gestor de cuentas, cambio entre cuentas desde el action bar
+- Nueva barra inferior para las acciones principales
+- Nuevo Importar/Exportar con subida a Dropbox (click en la notificación de exportar) y Importar via Dropbox (mediante la app de Dropbox app procesando ficheros .zip)
+- Notificaciones de JellyBean incluyendo sonidos personalizados
+- Opciones generales y específicas para cada cuenta
+- Se puede ocultar AdMob desde las opciones
+- Mejoras en la interfaz: fluidez, iconos arreglados, indicadores de progreso
+- Nuevos idiomas: Japones, Frances
+
+
 2.1.0
+
 - ActionBar compatible con ICS
-- Iconos HD para pantallas grances
+- Iconos HD para patnallas grandes
 - Nueva pantalla de configuración
 - Nuevos idiomas: Catalan, Italiano, Ruso
 
 2.0.1
 - Corregida la autenticación
-- Las opciones de la versión pro son ahora gratuitas
+- Las características Pro son ahora gratuitas
 - Nuevo diseño
 - EPC para AdMob
-- Nuevos idiomas: Español, Aleman, holandés
+- Nuevos idiomas: Español, Alemán, Holandes

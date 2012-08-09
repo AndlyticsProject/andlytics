@@ -8,36 +8,37 @@
     <string name="one_entry_hint_demo"><u>График с демо-данными</u></string>
 
     <string name="crash_desc">Произошла неожиданная ошибка.\n\nПожалуйста, помогите нам решить проблему, отослав отчет об ошибке. Информация об ошибке и о вашем устройстве (такая как производитель, модель, версия операционной системы и т.д.) будет отправлена нам и поможет решить проблему.\n\nСпасибо!\n\n</string>
+    <string name="crash_toast">Произошла неожиданная ошибка. Информация об ошибке будет отправлена нам и поможет решить проблему.</string>
     <string name="newversion_desc"><b>Произошла неожиданная ошибка, возможно из-за изменений в интерфейсе на серверной стороне.</b>\n\nНо у нас есть хорошая новость, новая версия Andlytics доступна в Android Market.\n\nПожалуйста, обновитесь прежде чем сообщать об ошибке.\n\nСпасибо!\n\n\n</string>
-    <string name="account_required">необходим аккаунт Android-разработчика</string>
-    <string name="account_choose">Пожалуйста выберите или добавьте аккаунт Google. Это должен быть зарегистрированный аккаунт разработчика, с приложениями, опубликованными в Android Market (аккаунты \'Google Apps for Business\' пока не поддерживаются).</string>
+    <string name="account_required">Нужен аккаунт Android-разработчика</string>
+    <string name="account_choose">Пожалуйста, выберите или добавьте аккаунт Google. Это должен быть зарегистрированный аккаунт разработчика Google Play (\'Google Apps for Business\' пока не поддерживается).</string>
     <string name="account_add">Добавьте аккаунт Android-разработчика</string>
     <string name="logout">Выйти</string>
     <string name="refresh">Обновить</string>
     <string name="comments">Комментарии</string>
-    <string name="total_downloads">Общее число загрузок</string>
-    <string name="active_installs">Активные установки</string>
+    <string name="total_downloads">Всего загрузок</string>
+    <string name="active_installs">Активных установок</string>
     <string name="admob_revenue">Доход AdMob</string>
     <string name="admob_requests">Запросы AdMob</string>
-    <string name="average_rating">Средний рейтинг</string>
-    <string name="ratings">Рейтинги</string>
+    <string name="average_rating">Средняя оценка</string>
+    <string name="ratings">Оценки</string>
     <!-- Lower case versions for main screen e.g. X comments -->
-    <string name="num_comments">комментарии</string>
-    <string name="num_total_downloads">общее число загрузок</string>
-    <string name="num_active_installs">активные установки</string>
-    <string name="num_average_rating">средний рейтинг</string>
-    <string name="num_ratings">рейтинги</string>
+    <string name="num_comments">комментариев</string>
+    <string name="num_total_downloads">всего загрузок</string>
+    <string name="num_active_installs">активных установок</string>
+    <string name="num_average_rating">средняя оценка</string>
+    <string name="num_ratings">оценки</string>
     
     <string name="auto_sync">Автосинхронизация</string>
     <string name="notifications">Уведомления</string>
     <string name="statistics_export">Экспорт данных статистики</string>
     <string name="statistics_import">Импорт данных статистики</string>
-    <string name="apps_hide">Выберите приложения, которые нужно спрятать</string>
+    <string name="apps_hide">Спрятать приложения</string>
     <string name="feedback">Отправить отзыв</string>
     <string name="settings">Настройки</string>
     <string name="downloads">Загрузки</string>
     <string name="close">Закрыть</string>
-    <string name="rating_changes">Изменения рейтинга</string>
+    <string name="rating_changes">Изменения оценок</string>
     <string name="comment_changes">Изменения в комментариях</string>
     <string name="download_changes">Изменения в загрузках</string>
     <string name="notification_trigger">Триггер для уведомлений</string>
@@ -45,15 +46,15 @@
     <string name="notification_signal">Тип уведомления</string>
     <string name="notification_sound">Звук уведомления</string>
     <string name="notification_light">Подсветка уведомления</string>
-    <string name="apss_notification">Уведомления об изменениях для приложений</string>
-    <string name="select_files_import">Выберите файлы для импорта</string>
+    <string name="apps_notification">Уведомления об изменениях для приложений</string>
+    <string name="select_files_import">Выберите пакеты для импорта</string>
     <string name="data_replaced">Существующие данные будут перезаписаны</string>
     <string name="run_import">Запустить импорт</string>
     <string name="cancel">Отмена</string>
     <string name="ok">OK</string>
     <string name="title">Название</string>
     <string name="text">Текст</string>
-    <string name="select_files_export">Выберите файлы для экспорта</string>
+    <string name="select_files_export">Выберите приложения для экспорта</string>
     <string name="export_files_replaced">Существующие экспортные файлы будут перезаписаны</string>
     <string name="run_export">Запустить экспорт</string>
     <string name="by">от</string>
@@ -75,7 +76,7 @@
     <string name="info_autosync">Если автосинхронизация будет выключена, графики не будут обновляться</string>
     <string name="admob_login">ВХОД В ADMOB</string>
     <string name="password">Пароль</string>
-    <string name="login">Логин</string>
+    <string name="login">Вход</string>
     <string name="remove_admob">Убрать связь с сайтом AdMob</string>
     <string name="remove_admob_app">Убрать значения AdMob для этого приложения</string>
     <string name="loading_site">Загрузка списка сайтов&#8230;</string>
@@ -112,17 +113,35 @@
     <string name="import_no_sdcard">SD-карта не примонтирована, не получается импортировать!</string>
     <string name="import_no_app">Не выбрано приложение, не получается импортировать!</string>
     <string name="importing">Импортируется</string>
-    <string name="import_started">Импорт начат</string>
-    <string name="import_finished">Импорт завершен</string>
-    <string name="import_error">Ошибка во время импорта</string>
+    <string name="import_started">Импорт начат.</string>
+    <string name="import_finished">Импорт завершен.</string>
+    <string name="imported_apps">Импортировано %d приложений.</string>
+    <string name="import_error">Ошибка во время импорта.</string>
+    <string name="import_confirm_dialog_title">Подтверждение импорта</string>
+    <string name="import_confirm_dialog_message">Уже есть статистика для %d приложений. Значения перезапишутся при импорте. Все равно продолжить?</string>
 	<string name="export_">Экспорт</string>
 	<string name="export_no_sdcard">SD-карта не примонтирована, не получается экспортировать!</string>
 	<string name="export_no_app">Не выбрано приложение, не получается экспортировать!</string>
-	<string name="export_started">Экспорт начат</string>
-    <string name="export_finished">Экспорт завершен</string>
+	<string name="export_started">Экспорт начат.</string>
+    <string name="export_finished">Экспорт завершен.</string>
+    <string name="export_failed_to_load_stats">Не удалось загрузить статистику</string>
     <string name="export_saved_to">Сохранить в</string>
+    <string name="export_confirm_dialog_title">Подтверждение экспорта</string>
+    <string name="export_confirm_dialog_message">Экспортный файл \'%s\' уже существует. Он перезапишется при экспорте. Все равно продолжить?</string>
+    <string name="share">Поделиться</string>
     
-    
+    <string name="manage_accounts">Управление аккаунтами</string>
     <string name="preferences">Настройки</string>
+    <string name="loading_app_list">Загрузка списка приложений…</string>
+    <string name="no_published_apps">Нет опубликованных приложений</string>
+    
+    <string name="general_preferences">Общие настройки</string>
+    <string name="account_specific_preferences">Настройки аккаунтов</string>
+    <string name="notification_when_account_visible">Когда приложение видимо</string>
+    <string name="notification_when_account_visible_summary">Показывать уведомления для текущего аккаунта, если приложение видимо</string>
+    <string name="hide_admob_for_unconfigured_apps">Спрятать вкладку AdMob для ненастроенных приложений</string>
+    <string name="pref_disable_acra">Автоматические отчеты об ошибках</string>
+    <string name="pref_acra_disabled">Отправка отчетов выключена</string>
+    <string name="pref_acra_enabled">Отправка отчетов включена</string>
 
 </resources>

@@ -8,11 +8,12 @@
     <string name="one_entry_hint_demo"><u>Ver gráfica con datos de demostración</u></string>
 
     <string name="crash_desc">Ha ocurrido un error inesperado.\n\nPor favor, ayudanos a solucionarlo enviandonos los datos del error. La información sobre el error (stacktrace) y la información sobre tu dispositivo serán enviadas para identificar el problema.\n\nGracias!\n\n</string>
+    <string name="crash_toast">Ha ocurrido un error inesperado. La información sobre el error se enviará para ayudarnos identificar el problema.</string>
     <string name="newversion_desc"><b>Ha ocurrido un error inesperado, probablemente porque haya cambiado la interfaz web.</b>\n\nPero las buenas noticias son que hay una nueva versión de Andlytics en el Android Market.\n\nPor favor, actualiza antes de avisarnos del error.\n\nGracias!\n\n\n</string>
     <string name="account_required">Cuenta de desarrollador android necesaria</string>
     <string name="account_choose">Elige o añade una cuenta de Google. La cuenta tiene que ser una cuenta de desarrollador android con aplicaciones publicadas en el Android Market (\'Las cuentas Google Apps for Business\' no están soportadas todavía).</string>
     <string name="account_add">Añadir cuenta</string>
-    <string name="logout">Logout</string>
+    <string name="logout">Salir</string>
     <string name="refresh">Actualizar</string>
     <string name="comments">Comentarios</string>
     <string name="total_downloads">Descargas totales</string>
@@ -20,16 +21,16 @@
     <string name="admob_revenue">Ganancias AdMob</string>
     <string name="admob_requests">Peticiones AdMob</string>
     <string name="average_rating">Puntuación media</string>
-    <string name="ratings">Votaciones</string>
+    <string name="ratings">Calificaciones</string>
     <!-- Lower case versions for main screen e.g. X comments -->
-    <string name="num_comments">comentarios</string>
-    <string name="num_total_downloads">descargas totales</string>
-    <string name="num_active_installs">instalaciones activas</string>
-    <string name="num_average_rating">puntuación media</string>
-    <string name="num_ratings">votaciones</string>
+    <string name="num_comments">Comentarios</string>
+    <string name="num_total_downloads">Descargas totales</string>
+    <string name="num_active_installs">Instalaciones activas</string>
+    <string name="num_average_rating">Puntuación media</string>
+    <string name="num_ratings">Votaciones</string>
     
     <string name="auto_sync">Auto sincronización</string>
-    <string name="notifications">Notificaciones</string>
+    <string name="notifications">Notificaciónes</string>
     <string name="statistics_export">Exportar estadísticas</string>
     <string name="statistics_import">Importar estadísticas</string>
     <string name="apps_hide">Aplicaciones a ocultar</string>
@@ -43,17 +44,17 @@
     <string name="notification_trigger">Notificaciones</string>
     <string name="disable_notifications">Desactiva todo para no recibir notificaciones</string>
     <string name="notification_signal">Configuración notificación</string>
-    <string name="notification_sound">Sonido notificación</string>
+    <string name="notification_sound">Sonido de notificacion</string>
     <string name="notification_light">Led notificación</string>
-    <string name="apss_notification">Aplicaciones a notificar cambios</string>
-    <string name="select_files_import">Selecciona los archivos a importar</string>
+    <string name="apps_notification">Aplicaciones a notificar cambios</string>
+    <string name="select_files_import">Selecciona los paquetes a importar</string>
     <string name="data_replaced">Los datos existentes serán reemplazados</string>
     <string name="run_import">Importar</string>
     <string name="cancel">Cancelar</string>
     <string name="ok">OK</string>
     <string name="title">Título</string>
     <string name="text">Texto</string>
-    <string name="select_files_export">Selecciona los archivos a exportar</string>
+    <string name="select_files_export">Selecciona las aplicaciones a exportar</string>
     <string name="export_files_replaced">Los archivos existentes serán reemplazados</string>
     <string name="run_export">Exportar</string>
     <string name="by">por</string>
@@ -75,16 +76,16 @@
     <string name="info_autosync">Si la sincronización está desactivada pueden perderse datos en las gráficas</string>
     <string name="admob_login">LOGIN CUENTA DE ADMOB</string>
     <string name="password">Contraseña</string>
-    <string name="login">Entrar</string>
+    <string name="login">Loguearse</string>
     <string name="remove_admob">Eliminar asociación con AdMob</string>
     <string name="remove_admob_app">Eliminar valores AdMob de esta aplicación</string>
     <string name="loading_site">Cargando lista de aplicaciones&#8230;</string>
-    <string name="select_admob_site">selecciona un sitio de AdMob para asociar a esta aplicación</string>
+    <string name="select_admob_site">Selecciona un sitio de AdMob para asociar a esta aplicación</string>
     <string name="choose_app">Selecciona tu aplicación</string>
     <string name="admob_required">Cuenta AdMob requerida</string>
     <string name="admob_add">Añadir cuenta AdMob</string>
     <string name="admob_info">Para cuentas AdMob enlazadas a una cuenta Google puedes encontrar la contraseña del API en la página de información de tu cuenta de admob:</string>
-    <string name="percentage">Porcentajes</string>
+    <string name="percentage">Porcentaje</string>
     <string name="daily">Cambios diarios</string>
     <string name="downloads_day">Descargas por día</string>
     <string name="active_installs_percent">Porcentaje de instalaciones activas</string>
@@ -93,13 +94,13 @@
     <string name="admob">AdMob</string>
     <string name="admob__revenue">Ganancias</string>
     <string name="admob__epc">epc</string>
-    <string name="admob__requests">Peticiones</string>
-    <string name="admob__clicks">Clicks</string>
+    <string name="admob__requests">Solicitudes</string>
+    <string name="admob__clicks">Clics</string>
     <string name="admob__fill_rate">Tasa de relleno</string>
     <string name="admob__eCPM">eCPM</string>
     <string name="admob__impressions">Impresiones</string>
     <string name="admob__CTR">CTR</string>
-    <string name="admob__house_ad_clicks">clicks en autopublicidad</string>
+    <string name="admob__house_ad_clicks">Clicks en autopublicidad</string>
     <string name="admob__charts_available">gráficas AdMob disponibles</string>
     <string name="last_update">última actualización</string>
 
@@ -112,17 +113,35 @@
     <string name="import_no_sdcard">No se encuentra la tarjeta SD, imposible importar!</string>
     <string name="import_no_app">No se ha seleccioando ninguna aplicación, imposible importar!</string>
     <string name="importing">Importando</string>
-    <string name="import_started">Importación comenzada</string>
-    <string name="import_finished">Importación finalizada</string>
-    <string name="import_error">Error importando</string>
+    <string name="import_started">Importando.</string>
+    <string name="import_finished">Importación finalizada.</string>
+    <string name="imported_apps">Importadas %d aplicaciones.</string>
+    <string name="import_error">Error importando.</string>
+    <string name="import_confirm_dialog_title">Confirmar importación</string>
+    <string name="import_confirm_dialog_message">Actualmente tienes estadísticas de %d apps. El importar las sobreescribirá. ¿Continuar con la importación?</string>
 	<string name="export_">Exportar</string>
 	<string name="export_no_sdcard">No se encuentra la tarjeta SD, imposible exportar!</string>
 	<string name="export_no_app">No hay seleccionada ninguna aplicación, imposible exportar!</string>
-	<string name="export_started">Exportación comenzada</string>
-    <string name="export_finished">Exportación finalizada</string>
+	<string name="export_started">Exportando.</string>
+    <string name="export_finished">Exportación finalizada.</string>
+    <string name="export_failed_to_load_stats">Error al cargar las estadísticas de la aplicación</string>
     <string name="export_saved_to">Guardado en</string>
+    <string name="export_confirm_dialog_title">Confirmar exportación</string>
+    <string name="export_confirm_dialog_message">El fichero de exportación \'%s\' ya existe. Exportar las estadísticas lo sobreescribirá. ¿Continuar con la exportación?</string>
+    <string name="share">Compartir</string>
     
-    
+    <string name="manage_accounts">Administrador de cuentas</string>
     <string name="preferences">Preferencias</string>
+    <string name="loading_app_list">Cargando lista de aplicaciones&#8230;</string>
+    <string name="no_published_apps">No se han encontrado aplicaciones publicadas</string>
+    
+    <string name="general_preferences">Opciones generales</string>
+    <string name="account_specific_preferences">Opciones especificas de la cuenta</string>
+    <string name="notification_when_account_visible">Cuando es visible la app</string>
+    <string name="notification_when_account_visible_summary">Mostrar notificaciones para la cuenta actual incluso cuando la app es visible</string>
+    <string name="hide_admob_for_unconfigured_apps">Ocultar la pestaña AdMob para cuentas no configuradas</string>
+    <string name="pref_disable_acra">Envío automático de errores</string>
+    <string name="pref_acra_disabled">Envío deshabilitado</string>
+    <string name="pref_acra_enabled">Envío habilitado</string>
 
 </resources>

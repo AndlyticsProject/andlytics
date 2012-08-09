@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.exception;
 
 public class InvalidJSONResponseException extends Exception {

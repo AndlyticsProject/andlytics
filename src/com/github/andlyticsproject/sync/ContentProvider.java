@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.sync;
 
 import android.content.ContentValues;
@@ -12,7 +13,8 @@ public class ContentProvider extends android.content.ContentProvider {
 	}
 
 	@Override
-	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+			String sortOrder) {
 		return null;
 	}
 

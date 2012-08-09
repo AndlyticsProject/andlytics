@@ -3,13 +3,15 @@
     <string name="app_name">Andlytics</string>
     <string name="app_name_admob">AdMob</string>
 
-    <string name="one_entry_hint_desc">Andlytics recol·lecta dades al llarg del temps, per veure una gràfica amb sentit, torna quan hi hagi més dades disponibles.  \n\nNormalment, les estadístiques de descàrregues s\'actualitzen cada 24&#8211;48 hores.</string>
+    <string name="one_entry_hint_desc">Andlytics recol·lecta dades al llarg del temps. Per veure una gràfica amb sentit, torna quan hi hagi més dades disponibles.
+\n\nNormalment, les estadístiques de descàrregues s\'actualitzen cada 24&#8211;48 hores.</string>
     <string name="one_entry_hint_demo"><u>Mostra la gràfica amb dades de demostració</u></string>
 
     <string name="crash_desc">S\'ha produït un error inesperat.\n\nAjuda\'ns a arreglar-lo enviant-nos un informe d\'errors. Se\'ns enviarà informació sobre el teu dispositiu com ara el nom del fabricant, el número de model del dispositiu, el sistema operatiu, etc. per ajudar-nos a identificar el problema.\n\nGràcies!\n\n</string>
+    <string name="crash_toast">S\'ha produït un error inesperat. Se\'ns enviarà informació de l\'error per ajudar-nos a identificar el problema.</string>
     <string name="newversion_desc"><b>S\'ha produït un error inesperat, probablement perquè la interfície remota ha canviat.</b>\n\nPerò la bona notícia és que hi ha una nova versió de l\'Andlytics disponible a l\'Android Market.\n\nActualitza abans d\'informat d\'aquest error..\n\nGràcies!\n\n\n</string>
     <string name="account_required">Es necessita un compte de desenvolupador android</string>
-    <string name="account_choose">Escull o afegeix un compte de Google. El compte ha de ser un compte de desenvolupador registrat i amb aplicacions publicades a l\'Android Market (els comptes \'Google Apps for Business\' encara no estan suportats).</string>
+    <string name="account_choose">Escull o afegeix un compte de Google. El compte ha de ser un compte de desenvolupador registrat i amb aplicacions publicades al Google Play (els comptes \'Google Apps for Business\' encara no estan suportats).</string>
     <string name="account_add">Afegeix un compte de desenvolupador android</string>
     <string name="logout">Tanca la sessió</string>
     <string name="refresh">Actualitza</string>
@@ -44,15 +46,15 @@
     <string name="notification_signal">Senyals de notificació</string>
     <string name="notification_sound">So de notificació</string>
     <string name="notification_light">Llum de notificació</string>
-    <string name="apss_notification">Aplicacions amb notificacions de canvis</string>
-    <string name="select_files_import">Selecciona els fitxers a importar</string>
+    <string name="apps_notification">Aplicacions amb notificacions de canvis</string>
+    <string name="select_files_import">Selecciona els paquets a importar</string>
     <string name="data_replaced">Les dades existents es reemplaçaran</string>
     <string name="run_import">Executa la importació</string>
     <string name="cancel">Cancel·la</string>
     <string name="ok">D\'acord</string>
     <string name="title">Títol</string>
     <string name="text">Text</string>
-    <string name="select_files_export">Selecciona els fitxers a exportar</string>
+    <string name="select_files_export">Selecciona les aplicacions a exportar</string>
     <string name="export_files_replaced">Els fitxers exportats existents es reemplaçaran</string>
     <string name="run_export">Executa l\'exportació</string>
     <string name="by">de</string>
@@ -74,7 +76,7 @@
     <string name="info_autosync">Si la sincronització automàtica està desactivada, probablement faltaran valors futurs a les gràfiques</string>
     <string name="admob_login">INICI DE SESSIÓ A ADMOB</string>
     <string name="password">Contrasenya</string>
-    <string name="login">Inicia la sessió</string>
+    <string name="login">Inici de sessió</string>
     <string name="remove_admob">Elimina l\'associació d\'AdMob per a aquest lloc</string>
     <string name="remove_admob_app">Elimina els valors d\'AdMob per a aquesta aplicació</string>
     <string name="loading_site">S\'està carregant la llista de llocs&#8230;</string>
@@ -82,15 +84,15 @@
     <string name="choose_app">Escull la teva aplicació</string>
     <string name="admob_required">Es necessita un compte d\'AdMob</string>
     <string name="admob_add">Afegeix un compte d\'AdMob</string>
-    <string name="admob_info">Per als comptes d\'AdMob que estiguin enllaçats a un compte de Google, pots trobar-ne la contrasenya de l\'API a la pàgina d\'informació del compte d\'AdMob.</string>
-    <string name="percentage">Percentatges</string>
+    <string name="admob_info">Per als comptes d\'AdMob que estiguin enllaçats a un compte de Google, pots trobar-ne la contrasenya de l\'API a la pàgina d\'informació del compte d\'AdMob:</string>
+    <string name="percentage">Percentatge</string>
     <string name="daily">Canvis diaris</string>
     <string name="downloads_day">Descàrregues per dia</string>
     <string name="active_installs_percent">Instal·lacions actives en percentatge</string>
     <string name="swipe">Llisca per veure la següent gràfica -></string>
 
     <string name="admob">AdMob</string>
-    <string name="admob__revenue">guanys</string>
+    <string name="admob__revenue">Guanys</string>
     <string name="admob__epc">epc (guanys per clic)</string>
     <string name="admob__requests">Peticions</string>
     <string name="admob__clicks">Clics</string>
@@ -111,17 +113,35 @@
     <string name="import_no_sdcard">La targeta SD no està muntada, no es pot importar!</string>
     <string name="import_no_app">No has seleccionat cap aplicació, no es pot importar!</string>
     <string name="importing">S\'està important</string>
-    <string name="import_started">S\'ha iniciat la importació</string>
-    <string name="import_finished">S\'ha finalitzat la importació</string>
-    <string name="import_error">S\'ha produït un error durant la importació</string>
+    <string name="import_started">S\'ha iniciat la importació.</string>
+    <string name="import_finished">S\'ha finalitzat la importació.</string>
+    <string name="imported_apps">S\'han importat %d aplicacions.</string>
+    <string name="import_error">S\'ha produït un error en la importació.</string>
+    <string name="import_confirm_dialog_title">Confirma la importació</string>
+    <string name="import_confirm_dialog_message">Ja tens estadístiques de %d aplicacions. La importació les sobreescriurà. Vols continuar amb la importació?</string>
 	<string name="export_">Exporta</string>
 	<string name="export_no_sdcard">La targeta SD no està muntada, no es pot exportar!</string>
 	<string name="export_no_app">No has seleccionat cap aplicació, no es pot exportar!</string>
-	<string name="export_started">S\'ha iniciat l\'exportació</string>
-    <string name="export_finished">S\'ha finalitzat l\'exportació</string>
+	<string name="export_started">S\'ha iniciat l\'exportació.</string>
+    <string name="export_finished">S\'ha finalitzat l\'exportació.</string>
+    <string name="export_failed_to_load_stats">No s\'han pogut carregar les estadístiques de l\'aplicació.</string>
     <string name="export_saved_to">Desat a</string>
+    <string name="export_confirm_dialog_title">Confirma l\'exportació</string>
+    <string name="export_confirm_dialog_message">Ja existeix el fitxer d\'exportació \'%s\'. L\'exportació el sobreescriurà. Vols continuar amb l\'exportació?</string>
+    <string name="share">Comparteix</string>
     
-    
+    <string name="manage_accounts">Gestiona els comptes</string>
     <string name="preferences">Preferències</string>
+    <string name="loading_app_list">S\'està carregant la llista d\'aplicacions…</string>
+    <string name="no_published_apps">No s\'ha trobat cap aplicació publicada</string>
+    
+    <string name="general_preferences">Preferències generals</string>
+    <string name="account_specific_preferences">Preferències específiques del compte</string>
+    <string name="notification_when_account_visible">Quan l\'aplicació sigui visible</string>
+    <string name="notification_when_account_visible_summary">Mostra les notificacions del compte actual encara que l\'aplicació sigui visible</string>
+    <string name="hide_admob_for_unconfigured_apps">Amaga la pestanya d\'AdMob per a les aplicacions no configurades</string>
+    <string name="pref_disable_acra">Informes d\'errors automàtics</string>
+    <string name="pref_acra_disabled">Informes desactivats</string>
+    <string name="pref_acra_enabled">Informes activats</string>
 
 </resources>

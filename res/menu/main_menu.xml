@@ -1,32 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >    
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
     <item
-        android:id="@+id/itemMainmenuRefresh"        
+        android:id="@+id/itemMainmenuRefresh"
         android:icon="@drawable/icon_refresh"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="ifRoom"
         android:title="@string/refresh">
     </item>
     <item
-        android:id="@+id/itemMainmenuImport"        
+        android:id="@+id/itemMainmenuStatsMode"
+        android:icon="@drawable/icon_plusminus"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/daily">
+    </item>
+    <item
+        android:id="@+id/itemMainmenuImport"
         android:icon="@drawable/icon_import"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/import_">
     </item>
     <item
-        android:id="@+id/itemMainmenuExport"        
+        android:id="@+id/itemMainmenuExport"
         android:icon="@drawable/icon_export"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/export_">
     </item>
     <item
-        android:id="@+id/itemMainmenuFeedback"        
+        android:id="@+id/itemMainmenuFeedback"
         android:icon="@drawable/icon_feedback"
         android:showAsAction="never"
         android:title="@string/feedback">
     </item>
-     <item
+    <item
+        android:id="@+id/itemMainmenuAccounts"
+        android:showAsAction="never"
+        android:title="@string/manage_accounts">
+    </item>
+    <item
         android:id="@+id/itemMainmenuPreferences"
         android:showAsAction="never"
         android:title="@string/preferences">
     </item>
+
 </menu>

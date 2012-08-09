@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.chart;
 
 import android.content.Context;
@@ -18,46 +19,46 @@ import org.achartengine.renderer.XYSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer.Orientation;
 
 import com.github.andlyticsproject.Preferences;
-import com.github.andlyticsproject.model.Admob;
-import com.github.andlyticsproject.model.AppStats;
 
 public class Chart extends AbstractChart {
 
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public enum ChartSet {
 		RATINGS, DOWNLOADS, ADMOB
 	}
 
-/*	public enum AdmobChartType {
-        REVENUE, EPC,REQUESTS, CLICKS, FILL_RATE, ECPM, IMPRESSIONS, CTR, HOUSEAD_CLICKS
-    }
+	/*	public enum AdmobChartType {
+	        REVENUE, EPC,REQUESTS, CLICKS, FILL_RATE, ECPM, IMPRESSIONS, CTR, HOUSEAD_CLICKS
+	    }
 
-	public enum DownloadChartType {
-		TOTAL_DOWNLAODS, ACTIVE_INSTALLS_TOTAL, TOTAL_DOWNLAODS_BY_DAY, ACTIVE_INSTALLS_PERCENT
-	}
+		public enum DownloadChartType {
+			TOTAL_DOWNLAODS, ACTIVE_INSTALLS_TOTAL, TOTAL_DOWNLAODS_BY_DAY, ACTIVE_INSTALLS_PERCENT
+		}
 
-	public enum RatingChartType {
-		AVG_RATING, RATINGS_5, RATINGS_4, RATINGS_3, RATINGS_2, RATINGS_1
-	}
-*/
+		public enum RatingChartType {
+			AVG_RATING, RATINGS_5, RATINGS_4, RATINGS_3, RATINGS_2, RATINGS_1
+		}
+	*/
 	public interface ValueCallbackHander {
 		double getValue(Object appInfo);
+
 		Date getDate(Object appInfo);
-        boolean isHeilightValue(Object appInfo, Object object);
+
+		boolean isHeilightValue(Object appInfo, Object object);
 	}
-
-
 
 	private static final int MAX_BAR_VALUES = Integer.MAX_VALUE;
 
-	public View buildBarChart(Context context, Object[] appstats, ValueCallbackHander handler, double heighestValue, double lowestValue) {
+	public View buildBarChart(Context context, Object[] appstats, ValueCallbackHander handler,
+			double heighestValue, double lowestValue) {
 
 		String[] titles = new String[] { "" };
 
 		List<Object> statsForApp = Arrays.asList(appstats);
-		if(statsForApp.size() > MAX_BAR_VALUES) {
-			statsForApp = statsForApp.subList(statsForApp.size() -MAX_BAR_VALUES, statsForApp.size());
+		if (statsForApp.size() > MAX_BAR_VALUES) {
+			statsForApp = statsForApp.subList(statsForApp.size() - MAX_BAR_VALUES,
+					statsForApp.size());
 		}
 
 		// styling
@@ -69,27 +70,28 @@ public class Chart extends AbstractChart {
 		List<String> dates = new ArrayList<String>();
 
 		int xLabelDistance = 0;
-		if(statsForApp.size() > 0) {
-		    xLabelDistance = statsForApp.size() / 6;
+		if (statsForApp.size() > 0) {
+			xLabelDistance = statsForApp.size() / 6;
 		}
-		int nextXLabelPrint  = 1;
+		int nextXLabelPrint = 1;
 		for (int i = 1; i < statsForApp.size(); i++) {
 			Object appInfo = statsForApp.get(i);
 			dates.add(getDateString(handler.getDate(appInfo)));
 
-			if(i == nextXLabelPrint) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(Preferences.getDateFormatShort(context));
+			if (i == nextXLabelPrint) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat(
+						Preferences.getDateFormatShort(context));
 				renderer.addTextLabel(i, dateFormat.format(handler.getDate(appInfo)));
 				nextXLabelPrint += xLabelDistance;
 			}
-	    }
+		}
 
 		double[] valuesArray = new double[dates.size()];
 
 		for (int i = 1; i < statsForApp.size(); i++) {
 			Object appInfoPrev = statsForApp.get(i);
-			double value  = handler.getValue(appInfoPrev);
-			valuesArray[i-1] = value;
+			double value = handler.getValue(appInfoPrev);
+			valuesArray[i - 1] = value;
 
 			if (value > heighestValue) {
 				heighestValue = value;
@@ -98,15 +100,12 @@ public class Chart extends AbstractChart {
 				lowestValue = value;
 			}
 
-
 		}
-
 
 		List<double[]> values = new ArrayList<double[]>();
 
 		values.add(valuesArray);
 		// values.add(activeArray);
-
 
 		// long dateDistance = datesArray[datesArray.length - 1].getTime() -
 		// datesArray[0].getTime();
@@ -123,8 +122,8 @@ public class Chart extends AbstractChart {
 		}
 
 		// settings
-		setChartSettings(renderer, "", "", "", 0, statsForApp.size(), valueDistanceBottom, valueDistanceTop, Color.LTGRAY, Color.BLACK);
-
+		setChartSettings(renderer, "", "", "", 0, statsForApp.size(), valueDistanceBottom,
+				valueDistanceTop, Color.LTGRAY, Color.BLACK);
 
 		renderer.setYLabels(7);
 		renderer.setXLabels(-1);
@@ -134,7 +133,8 @@ public class Chart extends AbstractChart {
 		renderer.setAntialiasing(true);
 		renderer.setLabelsTextSize(12);
 
-		return ChartFactory.getBarChartView(context, buildBarDataset(titles, values), renderer, Type.DEFAULT);
+		return ChartFactory.getBarChartView(context, buildBarDataset(titles, values), renderer,
+				Type.DEFAULT);
 
 	}
 
@@ -152,20 +152,19 @@ public class Chart extends AbstractChart {
 			Object appInfo = statsForApp.get(i);
 			Date date = handler.getDate(appInfo);
 			dates.add(date);
-			if(i > 0) {
-			    boolean highlight = handler.isHeilightValue(appInfo, statsForApp.get(i-1));
-			    if(highlight) {
-			        highlightDates.add(date);
-			    }
+			if (i > 0) {
+				boolean highlight = handler.isHeilightValue(appInfo, statsForApp.get(i - 1));
+				if (highlight) {
+					highlightDates.add(date);
+				}
 			}
 		}
 
 		Date[] datesArray = dates.toArray(new Date[dates.size()]);
 		double[] valuesArray = new double[dates.size()];
 
-	    Date[] highlightDatesArray = highlightDates.toArray(new Date[highlightDates.size()]);
-        double[] highlightValuesArray = new double[highlightDates.size()];
-
+		Date[] highlightDatesArray = highlightDates.toArray(new Date[highlightDates.size()]);
+		double[] highlightValuesArray = new double[highlightDates.size()];
 
 		double heighestValue = Double.MIN_VALUE;
 		double lowestValue = Double.MAX_VALUE;
@@ -183,8 +182,8 @@ public class Chart extends AbstractChart {
 			}
 
 			int indexOf = highlightDates.indexOf(handler.getDate(appInfo));
-			if(indexOf > -1) {
-			    highlightValuesArray[indexOf] = value;
+			if (indexOf > -1) {
+				highlightValuesArray[indexOf] = value;
 			}
 
 		}
@@ -223,8 +222,8 @@ public class Chart extends AbstractChart {
 
 		// settings
 		setChartSettings(renderer, "", "", "", datesArray[0].getTime() - dateDistance,
-				datesArray[datesArray.length - 1].getTime() + dateDistance, valueDistanceBottom, valueDistanceTop,
-				Color.LTGRAY, Color.BLACK);
+				datesArray[datesArray.length - 1].getTime() + dateDistance, valueDistanceBottom,
+				valueDistanceTop, Color.LTGRAY, Color.BLACK);
 
 		renderer.setYLabels(5);
 		renderer.setXLabels(10);
@@ -234,14 +233,13 @@ public class Chart extends AbstractChart {
 		renderer.setAntialiasing(true);
 		renderer.setLabelsTextSize(12);
 
-		return ChartFactory.getTimeChartView(context, buildDateDataset(titles, dateArrayList, values), renderer,
+		return ChartFactory.getTimeChartView(context,
+				buildDateDataset(titles, dateArrayList, values), renderer,
 				Preferences.getDateFormatShort(context));
 
 	}
 
-
-
-    public String getDateString(Date date) {
-        return dateFormat.format(date);
-    }
+	public String getDateString(Date date) {
+		return dateFormat.format(date);
+	}
 }

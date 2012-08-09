@@ -1,8 +1,8 @@
+
 package com.github.andlyticsproject;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -10,12 +10,12 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
 
 import com.github.andlyticsproject.chart.Chart;
 
@@ -79,7 +79,7 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 	 * @throws IndexOutOfBoundsException
 	 */
 	public abstract void updateChartValue(int position, int page, int column, TextView tv)
-	    throws IndexOutOfBoundsException;
+			throws IndexOutOfBoundsException;
 
 	public BaseChartListAdapter(BaseChartActivity activity) {
 		this.activity = activity;
@@ -98,16 +98,15 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		this.scale = activity.getResources().getDisplayMetrics().density;
 		currentPage = 0;
 		currentColumn = 1;
-		
-		
-		columnClickListener=new OnClickListener() {
-			
+
+		columnClickListener = new OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
-				int column=(Integer) v.getTag();
-				Log.i(LOG_TAG,"Pressed "+column);
+				int column = (Integer) v.getTag();
+				Log.i(LOG_TAG, "Pressed " + column);
 				BaseChartListAdapter.this.activity.setCurrentChart(currentPage, column);
-				
+
 			}
 		};
 
@@ -128,19 +127,17 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		ViewHolder holder;
 		if (convertView == null) {
 			convertView = activity.getLayoutInflater().inflate(R.layout.base_chart_list_item, null);
-			holder = new ViewHolder(maxColumns+ (usesSmooth ? 1 : 0));
+			holder = new ViewHolder(maxColumns + (usesSmooth ? 1 : 0));
 
 			for (i = 0; i < maxColumns; i++) {
 				holder.fields[i] = createTextView("", false, i > 0);
-				if(i>0)
-				{
+				if (i > 0) {
 					holder.fields[i].setOnClickListener(columnClickListener);
 					holder.fields[i].setTag(i);
 				}
 				((ViewGroup) convertView).addView(holder.fields[i]);
 			}
-			if(usesSmooth)
-			{
+			if (usesSmooth) {
 				holder.fields[i] = createTextView("*", false, false);
 				((ViewGroup) convertView).addView(holder.fields[i], 1);
 			}
@@ -158,16 +155,16 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		for (i = 0; i < maxColumns; i++)
 			holder.fields[i].setVisibility(View.VISIBLE);
 		if (numColumns[currentPage] < maxColumns) {
-			for (i = maxColumns-diff; i <maxColumns ; i++)
+			for (i = maxColumns - diff; i < maxColumns; i++)
 				holder.fields[i].setVisibility(View.GONE);
 		}
 		updateChartValue(position, currentPage, 0, holder.fields[0]);
 		for (i = 1; i < numColumns[currentPage]; i++)
 			updateChartValue(position, currentPage, i, holder.fields[i]);
-		holder.fields[currentColumn].setTypeface(typeface,Typeface.BOLD);
+		holder.fields[currentColumn].setTypeface(typeface, Typeface.BOLD);
 		if (usesSmooth) {
-			holder.fields[holder.fields.length-1].setVisibility(isSmothValue(currentPage, position) ? View.VISIBLE
-			    : View.INVISIBLE);
+			holder.fields[holder.fields.length - 1].setVisibility(isSmothValue(currentPage,
+					position) ? View.VISIBLE : View.INVISIBLE);
 		}
 
 		return convertView;
@@ -186,10 +183,10 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		view.setTextColor(Color.parseColor("#555555"));
 		if (weight) {
 			view.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
-			    LayoutParams.WRAP_CONTENT, .2f));
+					LayoutParams.WRAP_CONTENT, .2f));
 		} else {
 			view.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-			    LayoutParams.WRAP_CONTENT));
+					LayoutParams.WRAP_CONTENT));
 		}
 		view.setGravity(Gravity.RIGHT);
 		if (bold) {
@@ -200,7 +197,7 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 	}
 
 	protected abstract View buildChart(Context context, Chart baseChart, List<?> statsForApp,
-	    int page, int column) throws IndexOutOfBoundsException;
+			int page, int column) throws IndexOutOfBoundsException;
 
 	public String getCurrentChartTitle() {
 		return getChartTitle(currentPage, currentColumn);
