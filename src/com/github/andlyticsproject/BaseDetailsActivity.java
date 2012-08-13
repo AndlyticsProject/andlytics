@@ -1,7 +1,6 @@
 
 package com.github.andlyticsproject;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -56,27 +55,15 @@ public class BaseDetailsActivity extends BaseActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				startActivityAfterCleanup(Main.class);
+				finish();
+				overridePendingTransition(R.anim.activity_prev_in, R.anim.activity_prev_out);
 				return true;
 			default:
 				return (super.onOptionsItemSelected(item));
 		}
 	}
 
-	/**
-	 * starts a given activity with a clear flag.
-	 * 
-	 * @param activity Activity to be started
-	 */
-	private void startActivityAfterCleanup(Class<?> activity) {
-		Intent intent = new Intent(getApplicationContext(), activity);
-		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
-	}
-
 	// TODO Replace these buttons with a modern tab bar/action bar tabs
-
 	public void updateTabbarButtons() {
 		if (this instanceof ChartActivity) {
 			ChartSet currentChartSet = ((ChartActivity) this).getCurrentChartSet();
@@ -140,6 +127,7 @@ public class BaseDetailsActivity extends BaseActivity {
 					downloadsButton.setSelected(true);
 
 					startChartActivity(ChartSet.DOWNLOADS);
+					finish();
 				}
 
 			}
@@ -158,6 +146,7 @@ public class BaseDetailsActivity extends BaseActivity {
 					ratingsButton.setSelected(true);
 					downloadsButton.setSelected(false);
 					startChartActivity(ChartSet.RATINGS);
+					finish();
 				}
 
 			}
@@ -174,6 +163,7 @@ public class BaseDetailsActivity extends BaseActivity {
 					ratingsButton.setSelected(false);
 					commentsButton.setSelected(true);
 					startActivity(CommentsActivity.class, true, false);
+					finish();
 				}
 
 			}
@@ -190,6 +180,7 @@ public class BaseDetailsActivity extends BaseActivity {
 					ratingsButton.setSelected(false);
 					commentsButton.setSelected(false);
 					startActivity(AdmobActivity.class, true, false);
+					finish();
 				}
 			}
 		});
@@ -197,13 +188,7 @@ public class BaseDetailsActivity extends BaseActivity {
 
 	@Override
 	public void onBackPressed() {
-		commentsButton.setSelected(false);
-		downloadsButton.setSelected(false);
-		ratingsButton.setSelected(false);
-		admobButton.setSelected(false);
-
-		startActivity(Main.class, false, true);
-
+		finish();
 		overridePendingTransition(R.anim.activity_prev_in, R.anim.activity_prev_out);
 	}
 

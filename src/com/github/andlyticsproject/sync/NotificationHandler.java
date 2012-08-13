@@ -39,6 +39,7 @@ public class NotificationHandler {
 
 		String contentTitle = context.getString(R.string.notification_title);
 		String contentText = "";
+		String iconName = null;
 
 		boolean downloadsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_DOWNLOADS);
 		boolean commentsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_COMMENTS);
@@ -81,6 +82,12 @@ public class NotificationHandler {
 
 						}
 						name += ")";
+						
+						if (appNameList.size() == 0) {
+							// Record the icon of the first app with changes that we are
+							// interested in that also has notifications turned on
+							iconName = diff.getIconName();
+						}
 
 						appNameList.add(name);
 					}
@@ -107,7 +114,7 @@ public class NotificationHandler {
 				builder.setSmallIcon(R.drawable.statusbar_andlytics);
 				builder.setContentTitle(contentTitle);
 				builder.setContentText(contentText);
-				File iconFilePath = new File(context.getCacheDir(), diffs.get(0).getIconName());
+				File iconFilePath = new File(context.getCacheDir(), iconName);
 				if (iconFilePath.exists()) {
 					Bitmap bm = BitmapFactory.decodeFile(iconFilePath.getAbsolutePath());
 					builder.setLargeIcon(bm);
