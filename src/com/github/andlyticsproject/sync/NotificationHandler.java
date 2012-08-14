@@ -13,6 +13,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.BigTextStyle;
+import android.support.v4.app.NotificationCompat.Builder;
 
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.AppStatsDiff;
@@ -20,9 +23,6 @@ import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.Main;
 import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.R;
-import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2;
-import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2.BigTextStyle;
-import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2.Builder;
 
 public class NotificationHandler {
 
@@ -39,6 +39,7 @@ public class NotificationHandler {
 
 		String contentTitle = context.getString(R.string.notification_title);
 		String contentText = "";
+		String iconName = null;
 
 		boolean downloadsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_DOWNLOADS);
 		boolean commentsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_COMMENTS);
@@ -81,6 +82,12 @@ public class NotificationHandler {
 
 						}
 						name += ")";
+						
+						if (appNameList.size() == 0) {
+							// Record the icon of the first app with changes that we are
+							// interested in that also has notifications turned on
+							iconName = diff.getIconName();
+						}
 
 						appNameList.add(name);
 					}
@@ -103,11 +110,11 @@ public class NotificationHandler {
 							Preferences.NOTIFICATION_WHEN_ACCOUNT_VISISBLE)) {
 				// The user can choose not to see notifications if the current account is visible
 
-				Builder builder = new NotificationCompat2.Builder(context);
+				Builder builder = new NotificationCompat.Builder(context);
 				builder.setSmallIcon(R.drawable.statusbar_andlytics);
 				builder.setContentTitle(contentTitle);
 				builder.setContentText(contentText);
-				File iconFilePath = new File(context.getCacheDir(), diffs.get(0).getIconName());
+				File iconFilePath = new File(context.getCacheDir(), iconName);
 				if (iconFilePath.exists()) {
 					Bitmap bm = BitmapFactory.decodeFile(iconFilePath.getAbsolutePath());
 					builder.setLargeIcon(bm);
@@ -124,7 +131,7 @@ public class NotificationHandler {
 				notificationIntent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
 				notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-				PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+				PendingIntent contentIntent = PendingIntent.getActivity(context, accountName.hashCode(),
 						notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 				builder.setContentIntent(contentIntent);

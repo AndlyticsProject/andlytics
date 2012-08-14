@@ -92,12 +92,12 @@ public class ChartGallery extends Gallery {
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 		if (!allowChangePageSliding) {
-			int[] tag = (int[]) getSelectedView().getTag();
-			if (tag != null) {
+			if(getSelectedView() != null && getSelectedView().getTag() != null) {
+				int[] tag = (int[]) getSelectedView().getTag();
 				if (distanceX < 0 && tag[1] <= 1)
 					return true;
 				if (distanceX > 0 && tag[1] >= (tag[2] - 1))
-					return true;
+					return true;	
 			}
 		}
 		return super.onScroll(e1, e2, distanceX, distanceY);
