@@ -131,7 +131,7 @@ public class NotificationHandler {
 				notificationIntent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
 				notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-				PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+				PendingIntent contentIntent = PendingIntent.getActivity(context, accountName.hashCode(),
 						notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 				builder.setContentIntent(contentIntent);
