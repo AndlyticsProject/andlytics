@@ -16,7 +16,7 @@
     <string name="logout">Déconnexion</string>
     <string name="refresh">Actualiser</string>
     <string name="comments">Commentaires</string>
-    <string name="total_downloads">Nombre de téléchargements total</string>
+    <string name="total_downloads">Téléchargements total</string>
     <string name="active_installs">Installations actives</string>
     <string name="admob_revenue">Revenus AdMob</string>
     <string name="admob_requests">Demandes AdMob</string>
@@ -24,7 +24,7 @@
     <string name="ratings">Notes</string>
     <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">commentaires</string>
-    <string name="num_total_downloads">Nombre de téléchargements total</string>
+    <string name="num_total_downloads">Téléchargements total</string>
     <string name="num_active_installs">Installations actives</string>
     <string name="num_average_rating">Note moyenne</string>
     <string name="num_ratings">Notes</string>
