@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
+import java.net.ConnectException;
 import java.net.ProtocolException;
 import java.net.SocketException;
 import java.net.URI;
@@ -279,7 +280,7 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	private String grapAppStatistics(String startApp, long lenght) throws DeveloperConsoleException {
+	private String grapAppStatistics(String startApp, long lenght) throws DeveloperConsoleException, NetworkException {
 
 		String developerPostData = Preferences.getRequestFullAssetInfo(context);
 
@@ -301,13 +302,15 @@ public class DeveloperConsole {
 			URL aURL = new java.net.URL(URL_DEVELOPER_EDIT_APP + "?dev_acc=" + devacc);
 			result = getGwtRpcResponse(developerPostData, aURL);
 
+		}  catch (ConnectException ex) {
+			throw new NetworkException(ex);
 		} catch (Exception f) {
 			throw new DeveloperConsoleException(result, f);
 		}
 		return result;
 	}
 
-	private String grepGetAssetForUserCount() throws DeveloperConsoleException {
+	private String grepGetAssetForUserCount() throws DeveloperConsoleException, NetworkException {
 
 		String result = null;
 
@@ -321,6 +324,8 @@ public class DeveloperConsole {
 			URL aURL = new java.net.URL(URL_DEVELOPER_EDIT_APP);
 			result = getGwtRpcResponse(postData, aURL);
 
+		}  catch (ConnectException ex) {
+			throw new NetworkException(ex);
 		} catch (Exception f) {
 			throw new DeveloperConsoleException(postData, f);
 		}
@@ -328,7 +333,7 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	private String grapGetAssetIndexForUser() throws DeveloperConsoleException {
+	private String grapGetAssetIndexForUser() throws DeveloperConsoleException, NetworkException {
 
 		String result = null;
 
@@ -347,6 +352,8 @@ public class DeveloperConsole {
 			URL aURL = new java.net.URL(URL_DEVELOPER_EDIT_APP + "?dev_acc=" + devacc);
 			result = getGwtRpcResponse(developerPostData, aURL);
 
+		}  catch (ConnectException ex) {
+			throw new NetworkException(ex);
 		} catch (Exception f) {
 			throw new DeveloperConsoleException(result, f);
 		}
@@ -364,7 +371,7 @@ public class DeveloperConsole {
 	}
 
 	protected String grapComments(String packageName, int startIndex, int lenght)
-			throws DeveloperConsoleException {
+			throws DeveloperConsoleException, NetworkException {
 
 		String postData = Preferences.getRequestUserComments(context);
 
@@ -389,6 +396,8 @@ public class DeveloperConsole {
 			URL aURL = new java.net.URL(URL_COMMENTS + "?dev_acc=" + devacc);
 			result = getGwtRpcResponse(postData, aURL);
 
+		}  catch (ConnectException ex) {
+			throw new NetworkException(ex);
 		} catch (Exception f) {
 			throw new DeveloperConsoleException(result, f);
 		}
@@ -396,7 +405,7 @@ public class DeveloperConsole {
 	}
 
 	protected String grapFeedbackOverview(List<String> packageNames)
-			throws DeveloperConsoleException {
+			throws DeveloperConsoleException, NetworkException {
 
 		String postData = Preferences.getRequestFeedback(context);
 
@@ -424,6 +433,8 @@ public class DeveloperConsole {
 			URL aURL = new java.net.URL(URL_FEEDBACK);
 			result = getGwtRpcResponse(postData, aURL);
 
+		}  catch (ConnectException ex) {
+			throw new NetworkException(ex);
 		} catch (Exception f) {
 			throw new DeveloperConsoleException(result, f);
 		}
@@ -431,7 +442,7 @@ public class DeveloperConsole {
 	}
 
 	private String getGwtRpcResponse(String developerPostData, URL aURL) throws IOException,
-			ProtocolException {
+			ProtocolException, ConnectException {
 		String result;
 		HttpsURLConnection connection = (HttpsURLConnection) aURL.openConnection();
 		connection.setHostnameVerifier(new AllowAllHostnameVerifier());
