@@ -97,6 +97,7 @@ public class BaseActivity extends SherlockActivity {
 	}
 
 	public void handleUserVisibleException(Exception e) {
+		// TODO Clean these up and put them in strings.xml so that they can be translated
 		if (e instanceof NetworkException) {
 			Toast.makeText(BaseActivity.this,
 					"A network error has occurred. Please try again later.", Toast.LENGTH_LONG)

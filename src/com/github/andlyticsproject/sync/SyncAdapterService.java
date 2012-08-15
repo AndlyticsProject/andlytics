@@ -86,7 +86,7 @@ public class SyncAdapterService extends Service {
 		try {
 			bundle = AccountManager.get(context)
 					.getAuthToken(account, "androiddeveloper", true, null, null).getResult();
-			if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
+			if (bundle != null && bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
 				token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
 
 				DeveloperConsole console = new DeveloperConsole(context);
