@@ -302,7 +302,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(context,
 						R.layout.account_selector_item, accountsList);
 				accountsAdapter
-						.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
+				.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
 
 				// Hide the title to avoid duplicated info on tablets/landscape & setup the spinner
 				getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -316,6 +316,12 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				getSupportActionBar().setTitle(R.string.app_name);
 				getSupportActionBar().setSubtitle(accountName);
 			}
+		} else {
+			// Just one account so use the standard title/subtitle
+			getSupportActionBar().setDisplayShowTitleEnabled(true);
+			getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			getSupportActionBar().setTitle(R.string.app_name);
+			getSupportActionBar().setSubtitle(accountName);
 		}
 	}
 
