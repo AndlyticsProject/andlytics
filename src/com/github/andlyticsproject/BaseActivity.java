@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject;
 
 import org.acra.ACRA;
@@ -103,12 +102,14 @@ public class BaseActivity extends SherlockActivity {
 					"A network error has occurred. Please try again later.", Toast.LENGTH_LONG)
 					.show();
 		} else if (e instanceof SignupException) {
-			Toast.makeText(BaseActivity.this, accountName
-					+ " is not an android developer account, sign up at:\n\n"
-					+ e.getMessage(), Toast.LENGTH_LONG).show();
-			Toast.makeText(BaseActivity.this, accountName
-					+ " is not an android developer account, sign up at:\n\n"
-					+ e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(
+					BaseActivity.this,
+					accountName + " is not an android developer account, sign up at:\n\n"
+							+ e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(
+					BaseActivity.this,
+					accountName + " is not an android developer account, sign up at:\n\n"
+							+ e.getMessage(), Toast.LENGTH_LONG).show();
 		} else if (e instanceof AuthenticationException || e instanceof NoCookieSetException) {
 
 			Toast.makeText(BaseActivity.this, "authentication failed for: " + accountName,
@@ -116,7 +117,8 @@ public class BaseActivity extends SherlockActivity {
 
 		} else if (e instanceof AdmobRateLimitExceededException) {
 
-			Toast.makeText(BaseActivity.this,
+			Toast.makeText(
+					BaseActivity.this,
 					"Can't load Admob data because Admob has restricted the number of requests from this app, try again later.",
 					Toast.LENGTH_LONG).show();
 
@@ -127,17 +129,22 @@ public class BaseActivity extends SherlockActivity {
 
 		} else if (e instanceof AdmobAccountRemovedException) {
 
-			Toast.makeText(BaseActivity.this, "AdMob account \""
-					+ "\" is missing. If this happens repeatedly try moving Andlytics from sdcard to internal storage.",
+			Toast.makeText(
+					BaseActivity.this,
+					"AdMob account \""
+							+ "\" is missing. If this happens repeatedly try moving Andlytics from sdcard to internal storage.",
 					Toast.LENGTH_LONG).show();
-			Toast.makeText(BaseActivity.this, "AdMob account \""
-					+ ((AdmobAccountRemovedException) e).getAccountName()
-					+ "\" is missing. If this happens repeatedly try moving Andlytics from sdcard to internal storage.",
+			Toast.makeText(
+					BaseActivity.this,
+					"AdMob account \""
+							+ ((AdmobAccountRemovedException) e).getAccountName()
+							+ "\" is missing. If this happens repeatedly try moving Andlytics from sdcard to internal storage.",
 					Toast.LENGTH_LONG).show();
 
 		} else if (e instanceof AdmobInvalidRequestException) {
 
-			Toast.makeText(BaseActivity.this, "Error while requesting AdMob API", Toast.LENGTH_LONG).show();
+			Toast.makeText(BaseActivity.this, "Error while requesting AdMob API", Toast.LENGTH_LONG)
+					.show();
 
 		} else if (e instanceof AdmobInvalidTokenException) {
 
