@@ -317,6 +317,12 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				getSupportActionBar().setTitle(R.string.app_name);
 				getSupportActionBar().setSubtitle(accountName);
 			}
+		} else {
+			// Just one account so use the standard title/subtitle
+			getSupportActionBar().setDisplayShowTitleEnabled(true);
+			getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			getSupportActionBar().setTitle(R.string.app_name);
+			getSupportActionBar().setSubtitle(accountName);
 		}
 	}
 
