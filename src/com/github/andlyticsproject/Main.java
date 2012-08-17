@@ -201,7 +201,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			case R.id.itemMainmenuImport:
 				File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
 				if (!fileToImport.exists()) {
-					Toast.makeText(this, "Stats file not found: " + fileToImport.getAbsolutePath(),
+					Toast.makeText(this, getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
 							Toast.LENGTH_LONG).show();
 					return true;
 				}
@@ -218,7 +218,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				break;
 			case R.id.itemMainmenuFeedback:
 				startActivity(new Intent(Intent.ACTION_VIEW,
-						Uri.parse("https://github.com/AndlyticsProject/andlytics/issues")));
+						Uri.parse(getString(R.string.github_issues_url))));
 				break;
 			case R.id.itemMainmenuPreferences:
 				i = new Intent(this, PreferenceActivity.class);
