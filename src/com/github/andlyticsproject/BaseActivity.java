@@ -96,7 +96,6 @@ public class BaseActivity extends SherlockActivity {
 	}
 
 	public void handleUserVisibleException(Exception e) {
-		// TODO Clean these up and put them in strings.xml so that they can be translated
 		if (e instanceof NetworkException) {
 			Toast.makeText(BaseActivity.this,
 					getString(R.string.network_error), Toast.LENGTH_LONG)
@@ -111,57 +110,39 @@ public class BaseActivity extends SherlockActivity {
 					Toast.LENGTH_LONG).show();
 
 		} else if (e instanceof AdmobRateLimitExceededException) {
-
-			Toast.makeText(
-					BaseActivity.this, getString(R.string.admob_ratelimit_error),
+			Toast.makeText(BaseActivity.this, getString(R.string.admob_ratelimit_error),
 					Toast.LENGTH_LONG).show();
-
 		} else if (e instanceof AdmobAskForPasswordException) {
-
 			Log.w(TAG, "ask for admob credentials");
 			getAndlyticsApplication().setSkipMainReload(true);
-
 		} else if (e instanceof AdmobAccountRemovedException) {
-
 			String wrongAccount = ((AdmobAccountRemovedException) e).getAccountName();  
-			Toast.makeText(
-					BaseActivity.this, getString(R.string.admob_missing_error, wrongAccount),
+			Toast.makeText(BaseActivity.this, getString(R.string.admob_missing_error, wrongAccount),
 					Toast.LENGTH_LONG).show();
-
 		} else if (e instanceof AdmobInvalidRequestException) {
-
-			Toast.makeText(BaseActivity.this, getString(R.string.admob_invalid_request_error), Toast.LENGTH_LONG)
-					.show();
-
+			Toast.makeText(BaseActivity.this, getString(R.string.admob_invalid_request_error),
+					Toast.LENGTH_LONG).show();
 		} else if (e instanceof AdmobInvalidTokenException) {
-
 			Toast.makeText(BaseActivity.this, getString(R.string.admob_invalid_token_error),
 					Toast.LENGTH_LONG).show();
-
 		} else if (e instanceof AdmobGenericException) {
-
 			Log.w(TAG, e.getMessage(), e);
 			Toast.makeText(BaseActivity.this, getString(R.string.admob_generic_error),
 					Toast.LENGTH_LONG).show();
-
 		} else if (e instanceof DeveloperConsoleException) {
-
 			int appVersionCode = getAppVersionCode(this);
 			if (Preferences.getLatestVersionCode(this) > appVersionCode) {
 				showNewVersionDialog(e);
 			} else {
 				showCrashDialog(e);
 			}
-
 		} else if (e instanceof InvalidJSONResponseException) {
-
 			int appVersionCode = getAppVersionCode(this);
 			if (Preferences.getLatestVersionCode(this) > appVersionCode) {
 				showNewVersionDialog(e);
 			} else {
 				showGoogleErrorDialog(e);
 			}
-
 		} else if (e instanceof MultiAccountAcception) {
 			showAspErrorDialog(e);
 		}

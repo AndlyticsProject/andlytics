@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Andlytics</string>
-    <string name="app_name_admob">AdMob</string>
 
     <string name="one_entry_hint_desc">Andlytics collects data over time. to see a meaningful chart come back as soon as more data is available.
         \n\nUsually download stats are updated every 24&#8211;48 hours.</string>
-    <string name="one_entry_hint_demo"><u>View chart with demo data</u></string>
 
     <string name="crash_dialog_title">Sorry&#8230;</string>
     <string name="crash_desc">An unexpected error occurred.\n\nPlease help us to fix this by sending us error report data. Information about the error (stacktrace) and information about your device such as device manufacturer\'s name, device model number, operating system, etc. will be sent to help us identifying the problem.\n\nThanks!\n\n</string>
@@ -43,7 +40,6 @@
     <string name="comment_changes">Comment changes</string>
     <string name="download_changes">Download changes</string>
     <string name="notification_trigger">Notification trigger</string>
-    <string name="disable_notifications">Deselect all to disable notifications</string>
     <string name="notification_signal">Notification signal</string>
     <string name="notification_sound">Notification sound</string>
     <string name="notification_light">Notification light</string>
@@ -74,7 +70,6 @@
     <string name="smooth_values">Smooth values</string>
     <string name="info_smooth">Values for downloads and active installs are not updated on a daily basis by Google. You can choose to smooth these values. Ratings are not affected as they update nearly instantly.</string>
     <string name="auto_sync_period">Auto synchronization period</string>
-    <string name="info_autosync">If auto synchronization is disabled graph views will probably miss future values</string>
     <string name="admob_login">ADMOB ACCOUNT LOGIN</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
@@ -111,7 +106,6 @@
     <string name="notification_title">Andlytics change detection</string>
 
     <string name="import_">Import</string>
-    <string name="import_no_sdcard">SD-Card not mounted, can\'t import!</string>
     <string name="import_no_sdcard_or_file">SD-Card not mounted or invalid file format, can\'t import!</string>
     <string name="import_no_stats_file">Stats file not found: %1$s</string>
     <string name="import_no_app">No app selected, can\'t import!</string>
@@ -171,5 +165,4 @@
 	<string name="multiple_dev_accounts_title">Multiple Developer Accounts</string>
 	<string name="update_button">Update</string>
 	<string name="send_report_button">Send report</string>
-	<string name="logout_button">Logout</string>
 </resources>
