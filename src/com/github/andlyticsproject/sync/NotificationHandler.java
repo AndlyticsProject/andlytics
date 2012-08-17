@@ -13,9 +13,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.BigTextStyle;
-import android.support.v4.app.NotificationCompat.Builder;
 
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.AppStatsDiff;
@@ -23,6 +20,9 @@ import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.Main;
 import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.R;
+import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2;
+import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2.BigTextStyle;
+import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2.Builder;
 
 public class NotificationHandler {
 
@@ -82,7 +82,7 @@ public class NotificationHandler {
 
 						}
 						name += ")";
-						
+
 						if (appNameList.size() == 0) {
 							// Record the icon of the first app with changes that we are
 							// interested in that also has notifications turned on
@@ -110,7 +110,7 @@ public class NotificationHandler {
 							Preferences.NOTIFICATION_WHEN_ACCOUNT_VISISBLE)) {
 				// The user can choose not to see notifications if the current account is visible
 
-				Builder builder = new NotificationCompat.Builder(context);
+				Builder builder = new NotificationCompat2.Builder(context);
 				builder.setSmallIcon(R.drawable.statusbar_andlytics);
 				builder.setContentTitle(contentTitle);
 				builder.setContentText(contentText);
