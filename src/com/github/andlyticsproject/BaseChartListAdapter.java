@@ -56,15 +56,6 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 	 * 
 	 * @param page
 	 * @param column
-	 * @return Chart title Drawable at selected page/column or null if none
-	 * @throws IndexOutOfBoundsException
-	 */
-	protected abstract Drawable getChartTitleDrawable(int page, int column);
-
-	/**
-	 * 
-	 * @param page
-	 * @param column
 	 * @return Chart subhead line
 	 * @throws IndexOutOfBoundsException
 	 */
@@ -205,10 +196,6 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 
 	public String getCurrentSubHeadLine() {
 		return getSubHeadLine(currentPage, currentColumn);
-	}
-
-	public Drawable getCurrentChartTitleDrawable() {
-		return getChartTitleDrawable(currentPage, currentColumn);
 	}
 
 	public void setCurrentChart(int page, int column) {
