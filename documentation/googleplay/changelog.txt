@@ -15,9 +15,7 @@
 - UI improvements: responsiveness, icon fixes, progress indicator
 - New language: Japanese, French
 
-
 2.1.0
-
 - ICS compatible ActionBar
 - HD icons for xlarge screens
 - New settings screen
