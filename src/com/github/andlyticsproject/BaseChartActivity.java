@@ -259,7 +259,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 		dataList.setAdapter(adapter);
 	}
 
-	private final void updateTitleTextSwitcher(String string, Drawable image) {
+	private final void updateTitleTextSwitcher(String string) {
 		getSupportActionBar().setTitle(string);
 	}
 
@@ -326,12 +326,11 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 
 		String subHeadlineText = "";
 		String title = myAdapter.getCurrentChartTitle();
-		Drawable image = myAdapter.getCurrentChartTitleDrawable();
 		String ret = myAdapter.getCurrentSubHeadLine();
 		if (ret != null)
 			subHeadlineText = ret;
 
-		updateTitleTextSwitcher(title, image);
+		updateTitleTextSwitcher(title);
 
 		if (Preferences.getShowChartHint(this)) {
 			timeframeText.setText(Html.fromHtml(getChartHint()));

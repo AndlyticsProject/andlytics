@@ -11,15 +11,15 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.BigTextStyle;
-import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 
 import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.model.AppStatsList;
+import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2;
+import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2.BigTextStyle;
+import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2.Builder;
 import com.github.andlyticsproject.util.Utils;
 
 public class ExportService extends IntentService {
@@ -113,7 +113,7 @@ public class ExportService extends IntentService {
 		String title = getResources().getString(R.string.app_name) + ": "
 				+ getApplicationContext().getString(R.string.export_finished);
 
-		Builder builder = new NotificationCompat.Builder(getApplicationContext());
+		Builder builder = new NotificationCompat2.Builder(getApplicationContext());
 		builder.setSmallIcon(R.drawable.statusbar_andlytics);
 		builder.setContentTitle(title);
 		builder.setContentText(message);
@@ -149,7 +149,7 @@ public class ExportService extends IntentService {
 		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
 				startActivityIntent, 0);
 
-		Builder builder = new NotificationCompat.Builder(getApplicationContext());
+		Builder builder = new NotificationCompat2.Builder(getApplicationContext());
 		builder.setSmallIcon(R.drawable.statusbar_andlytics);
 		builder.setContentTitle(getResources().getString(R.string.app_name) + ": "
 				+ getApplicationContext().getString(R.string.export_));
