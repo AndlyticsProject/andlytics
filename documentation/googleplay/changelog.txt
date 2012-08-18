@@ -1,3 +1,10 @@
+2.2.2
+- Honeycomb notification bugfix
+
+2.2.1
+- Minor bugfixes
+- API hotfix
+
 2.2.0
 - New account management, switching account via action bar
 - New bottom bar for the main actions
