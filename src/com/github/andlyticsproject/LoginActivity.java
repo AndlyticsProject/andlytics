@@ -38,15 +38,17 @@ import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
 public class LoginActivity extends SherlockActivity {
 
 	private static final String TAG = "Andlytics";
+	protected static final int CREATE_ACCOUNT_REQUEST = 1;
+	
+	private AccountStatus[] accountStatuses;
 
 	private boolean manageAccountsMode = false;
 	private boolean blockGoingBack = false;
 	private String selectedAccount = null;
-
-	protected static final int CREATE_ACCOUNT_REQUEST = 1;
-
+	private View okButton;
 	private LinearLayout accountList;
 
+	// TODO Clean this code up e.g. using a LinearLayout instead of a ListView
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -59,7 +61,6 @@ public class LoginActivity extends SherlockActivity {
 		}
 
 		if (manageAccountsMode) {
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setTitle(R.string.manage_accounts);
 		}
 
@@ -67,8 +68,29 @@ public class LoginActivity extends SherlockActivity {
 
 		setContentView(R.layout.login);
 		accountList = (LinearLayout) findViewById(R.id.login_input);
+		
+		
+		okButton = findViewById(R.id.login_ok_button);
+		okButton.setClickable(true);
+		okButton.setOnClickListener(new OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				if (selectedAccount != null) {
+					redirectToMain(selectedAccount);
+				} else {
+					// Go to the first non hidden account
+					for (AccountStatus account : accountStatuses) {
+						if (!account.hidden) {
+							redirectToMain(account.name);
+							break;
+						}
+					}
+				}
+				
+			}
+		});
 	}
-
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -120,62 +142,69 @@ public class LoginActivity extends SherlockActivity {
 	}
 
 	protected void showAccountList() {
-
 		final AccountManager manager = AccountManager.get(this);
 		final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
 		final int size = accounts.length;
-		String[] names = new String[size];
+		accountStatuses = new AccountStatus[size];
 		accountList.removeAllViews();
 		for (int i = 0; i < size; i++) {
-			names[i] = accounts[i].name;
-			Boolean hiddenAccount = Preferences.getIsHiddenAccount(this, names[i]);
+			accountStatuses[i] = new AccountStatus();
+			accountStatuses[i].name = accounts[i].name;
+			Boolean hiddenAccount = Preferences.getIsHiddenAccount(this, accountStatuses[i].name);
+			accountStatuses[i].hidden = hiddenAccount;
 			View inflate = getLayoutInflater().inflate(R.layout.login_list_item, null);
 			TextView accountName = (TextView) inflate.findViewById(R.id.login_list_item_text);
 			accountName.setText(accounts[i].name);
-			inflate.setTag(accounts[i].name);
-			inflate.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					String selectedAccount = (String) view.getTag();
-					redirectToMain(selectedAccount);
-				}
-			});
-			inflate.setClickable(!hiddenAccount);
+			inflate.setTag(accountStatuses[i]);
 			CheckBox enabled = (CheckBox) inflate.findViewById(R.id.login_list_item_enabled);
 			enabled.setChecked(!hiddenAccount);
 			enabled.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					View parent = (View) buttonView.getParent();
-					String accountName = (String) parent.getTag();
-					Preferences.saveIsHiddenAccount(getApplicationContext(), accountName,
+					AccountStatus account = (AccountStatus) ((View) buttonView.getParent()).getTag();
+					Preferences.saveIsHiddenAccount(getApplicationContext(), account.name,
 							!isChecked);
-					parent.setClickable(isChecked);
-
 					// Enable disable sync
 					AutosyncHandler syncHandler = AutosyncHandlerFactory
 							.getInstance(getApplicationContext());
+					account.hidden = !isChecked;
 					if (!isChecked) {
-						syncHandler.setAutosyncPeriod(accountName, 0);
+						syncHandler.setAutosyncPeriod(account.name, 0);
 					} else {
 						// If auto sync was on for the account, enable it again
-						syncHandler.setAutosyncPeriod(
-								accountName,
-								Preferences.isAutoSyncEnabled(LoginActivity.this, accountName) ? Preferences
+						syncHandler.setAutosyncPeriod(account.name,
+								Preferences.isAutoSyncEnabled(LoginActivity.this, account.name) ? Preferences
 										.getAutoSyncPeriod(LoginActivity.this) : 0);
 					}
 
-					if (manageAccountsMode && (accountName).equals(selectedAccount)) {
+					if (manageAccountsMode && (account.name).equals(selectedAccount)) {
 						// If they remove the current account, then stop them going back
 						blockGoingBack = !isChecked;
-						getSupportActionBar().setDisplayHomeAsUpEnabled(isChecked);
-						// TODO Should we show a warning, or do something else at this point?
-
 					}
+					
+					// Update ok button
+					boolean atLeastOneAccountEnabled = false;
+					for (AccountStatus acc : accountStatuses) {
+						if (!acc.hidden) {
+							atLeastOneAccountEnabled = true;
+							break;
+						}
+					}
+					okButton.setEnabled(atLeastOneAccountEnabled);
 				}
 			});
 			accountList.addView(inflate);
 		}
+		
+		// Update ok button
+		boolean atLeastOneAccountEnabled = false;
+		for (AccountStatus acc : accountStatuses) {
+			if (!acc.hidden) {
+				atLeastOneAccountEnabled = true;
+				break;
+			}
+		}
+		okButton.setEnabled(atLeastOneAccountEnabled);
 	}
 
 	private void addNewGoogleAccount() {
@@ -212,6 +241,11 @@ public class LoginActivity extends SherlockActivity {
 		startActivity(intent);
 		overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
 		finish();
+	}
+	
+	private static class AccountStatus {
+		public String name;
+		public boolean hidden;
 	}
 
 }
