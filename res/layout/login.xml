@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/andBackground" >
+    android:background="@color/andBackground"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/login_ok_button" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -43,6 +49,8 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp" />
 
+            <!-- TODO Replace this with a list view! -->
+
             <LinearLayout
                 android:id="@+id/login_input"
                 android:layout_width="fill_parent"
@@ -50,4 +58,31 @@
                 android:orientation="vertical" >
             </LinearLayout>
         </LinearLayout>
-</ScrollView>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/login_ok_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/image_button"
+        android:padding="5dp" >
+
+        <TextView
+            style="@style/MainTableText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:text="@string/ok"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+</RelativeLayout>
