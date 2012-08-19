@@ -48,7 +48,7 @@ public class LoginActivity extends SherlockActivity {
 	private View okButton;
 	private LinearLayout accountList;
 
-	// TODO Clean this code up e.g. using a LinearLayout instead of a ListView
+	// TODO Clean this code and res/layout/login.xml up e.g. using a ListView instead of a LinearLayout
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
