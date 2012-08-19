@@ -77,7 +77,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 		if (Intent.ACTION_VIEW.equals(getIntent().getAction())) {
 			Uri data = getIntent().getData();
 			if (data == null) {
-				Toast.makeText(this, "Stats file not specified as data.", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, getString(R.string.stats_file_not_specified_error), Toast.LENGTH_LONG).show();
 				finish();
 			}
 
@@ -248,8 +248,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 				if (result) {
 					activity.setFilenames(filenames);
 				} else {
-					Toast.makeText(activity,
-							"SD-Card not mounted or invalid file format, can't import!",
+					Toast.makeText(activity, activity.getString(R.string.import_no_sdcard_or_file),
 							Toast.LENGTH_LONG).show();
 					activity.finish();
 				}

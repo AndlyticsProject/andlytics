@@ -1,3 +1,10 @@
+2.2.2
+- Fehlerbehebung zu Benachrichtigungen unter Honeycomb
+
+2.2.1
+- Kleinere Fehlerbehebungen
+- API Hotfix
+
 2.2.0
 - Neue Kontenverwaltung, Kontowechsel über die ActionBar
 - Neue untere ActionBar für die Hauptfunktionen
