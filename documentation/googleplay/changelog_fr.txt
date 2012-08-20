@@ -1,23 +1,29 @@
-﻿2.2.0
-- Nouvelle gestion des comptes, choix du compte par l'action bar
-- Nouvelle barre en bas de l'écran pour les principales actions
-- Nouveau : Import/Export et Upload vers Dropbox (cliquez sur la notification d'export) et  Import via Dropbox (via l'appli Dropbox pour les fichiers .zip)
-- Notifications JellyBean y compris des sons personnalisés
-- Préférences générales et spécifiques à un compte
-- AdMob peut être masqué via les préférences
-- améliorations de l'IU : réactivité, correction des icônes, indicateur de progrès
-- Nouvelle langue: Japonais, Français
+2.2.2
+- résolution d'un bug avec les notifications sous Honeycomb
+
+2.2.1
+- Petites corrections de bugs
+- Résolution API 
+
+2.2.0
+- Nouvelle gestion des comptes, changement de compte via l'action bar
+- Nouvelle barre pour les actions principales en bas de l'écran
+- Nouvel Import/export avec Upload vers Dropbox (cliquez sur la notification d'export) et Import via Dropbox (via l'appli Dropbox en cliquant sur les fichiers .zip)
+- Notifications JellyBean avec des sons personnalisés
+- Préférences générales/spécifiques à un compte
+- AdMob peut être caché via les préférences
+- Améliorations de l'interface graphique : réactivité, icônes réparées, indicateur de progrès
+- Nouvelles traductions : Japonais, Français
 
 2.1.0
-
-- ActionBar compatible ICS
-- icônes HD pour les écrans "xlarge"
+- Actionbar compatible ICS
+- Icônes HD pour les écrans xlarge
 - Nouvel écran de paramètres
-- Nouvelles langues : Catalan, Italien, Russe
+- Nouvelles traductions : Catalan, Italien, Russe
 
 2.0.1
-- Corrigé l'authentification
-- Les fonctionnalités Pro sont maintenant gratuites (puisque c'est open source maintenant)
+- Résolu le problème d'authentification
+- Les fonctionnalités Pro sont maintenant gratuites (puisque c'est maintenant open source)
 - Nouveau design
 - EPC pour AdMob
-- Nouvelles langues : Espagnol, Allemand, Néerlandais
+- Nouvelles traductions : Espagnol, Allemand, Néerlandais

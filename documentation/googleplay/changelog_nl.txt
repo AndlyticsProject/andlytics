@@ -1,3 +1,10 @@
+2.2.2
+- Honeycomb meldingen bugfix
+
+2.2.1
+- Kleine bugfixes
+- API hotfix
+
 2.2.0
 - Vernieuwd beheer van accounts, wissel tussen accounts via actiebalk
 - Nieuwe onderbalk voor de belangrijkste handelingen
@@ -8,12 +15,10 @@
 - UI verbeteringen: snellere respons, aangepaste iconen, voortgangsindicator
 - Nieuwe talen: Japans, Frans
 
-
 2.1.0
-
 - ICS compatibele ActionBar
 - HD iconen voor xlarge schermen
-- Vernieuwd instellingenscherm
+- Vernieuwd instellingen scherm
 - Nieuwe talen: Catalaans, Italiaans, Russisch
 
 2.0.1
