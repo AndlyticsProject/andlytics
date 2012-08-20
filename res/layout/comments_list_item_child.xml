@@ -7,15 +7,18 @@
 	android:background="@drawable/button_background"
 	android:padding="15dp">
 
-
-	<ImageView
+	<RatingBar
+		style="@style/andRatingBar"
+		android:isIndicator="true"
+		android:layout_marginLeft="10dp"			
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content"
+		android:stepSize="1"
+		android:rating="5"
+		android:numStars="5"
 		android:id="@+id/comments_list_item_app_ratingbar"
-		android:layout_marginLeft="10dp"
-		android:src="@drawable/rating_1"
 		android:paddingTop="2dp" />
-
+	
 	<TextView
 	    android:id="@+id/comments_list_item_by"
 	    style="@style/MainTableText"
