@@ -36,8 +36,7 @@
 		    android:paddingTop="10dp"
 		    android:text="@string/title"
 		    android:textSize="20dp"
-		    android:textStyle="bold" >
-</TextView>
+		    android:textStyle="bold" />
 
 		<TextView
 		    android:id="@+id/crash_dialog_text"
@@ -49,15 +48,19 @@
 		    android:paddingLeft="10dp"
 		    android:paddingRight="10dp"
 		    android:paddingTop="10dp"
-		    android:text="@string/text" >
-</TextView>
+		    android:text="@string/text" />
 			
 		<CheckBox
-			android:text="don't show this again"
+			android:text="@string/crash_dont_show_again"
 			android:id="@+id/crash_dialog_enable_toggle"
 			android:layout_below="@+id/crash_dialog_text"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:textColor="#555555" android:layout_marginLeft="30dp" android:gravity="center" style="@android:style/TextAppearance.Small" android:visibility="gone"></CheckBox>			
+			android:layout_height="wrap_content" 
+			android:textColor="#555555" 
+			android:layout_marginLeft="30dp" 
+			android:gravity="center" 
+			style="@android:style/TextAppearance.Small" 
+			android:visibility="gone" />			
 
 		<LinearLayout
 			android:id="@+id/crash_dialog_button_frame"
@@ -81,7 +84,7 @@
 					android:src="@drawable/icon_logout"
 					android:layout_width="wrap_content"
 					android:paddingRight="5dp"
-					android:visibility="invisible"></ImageView>
+					android:visibility="invisible" />
 				<LinearLayout
 					android:orientation="horizontal"
 					android:layout_centerVertical="true"
@@ -120,7 +123,7 @@
 					android:src="@drawable/icon_logout"
 					android:layout_width="wrap_content"
 					android:paddingRight="5dp"
-					android:visibility="invisible"></ImageView>
+					android:visibility="invisible" />
 
 				<LinearLayout
 					android:orientation="horizontal"

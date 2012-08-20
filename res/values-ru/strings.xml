@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Andlytics</string>
-    <string name="app_name_admob">AdMob</string>
 
     <string name="one_entry_hint_desc">Andlytics собирает данные в течение времени. Чтобы увидеть наглядный график, загляните сюда позже, как только появится больше данных.
 \n\nОбычно информация о загрузках обновляется каждые 24&#8211;48 часа.</string>
-    <string name="one_entry_hint_demo"><u>График с демо-данными</u></string>
 
+    <string name="crash_dialog_title">Извините&#8230;</string>
     <string name="crash_desc">Произошла неожиданная ошибка.\n\nПожалуйста, помогите нам решить проблему, отослав отчет об ошибке. Информация об ошибке и о вашем устройстве (такая как производитель, модель, версия операционной системы и т.д.) будет отправлена нам и поможет решить проблему.\n\nСпасибо!\n\n</string>
     <string name="crash_toast">Произошла неожиданная ошибка. Информация об ошибке будет отправлена нам и поможет решить проблему.</string>
+    <string name="crash_dont_show_again">Больше не показывать</string>
     <string name="newversion_desc"><b>Произошла неожиданная ошибка, возможно из-за изменений в интерфейсе на серверной стороне.</b>\n\nНо у нас есть хорошая новость, новая версия Andlytics доступна в Android Market.\n\nПожалуйста, обновитесь прежде чем сообщать об ошибке.\n\nСпасибо!\n\n\n</string>
-    <string name="account_required">Нужен аккаунт Android-разработчика</string>
-    <string name="account_choose">Пожалуйста, выберите или добавьте аккаунт Google. Это должен быть зарегистрированный аккаунт разработчика Google Play (\'Google Apps for Business\' пока не поддерживается).</string>
+    <string name="account_required">Пожалуйста, выберите аккаунты, которые вы хотите видеть в Andlytics.</string>
+    <string name="account_choose">Это должны быть зарегистрированные аккаунты разработчика Google Play с опубликованными приложениями (\'Google Apps for Business\' и аккаунты, привязанные к нескольким консолям разработчика, пока не поддерживаются).</string>
     <string name="account_add">Добавьте аккаунт Android-разработчика</string>
     <string name="logout">Выйти</string>
     <string name="refresh">Обновить</string>
@@ -42,7 +41,6 @@
     <string name="comment_changes">Изменения в комментариях</string>
     <string name="download_changes">Изменения в загрузках</string>
     <string name="notification_trigger">Триггер для уведомлений</string>
-    <string name="disable_notifications">Уведомления включены для</string>
     <string name="notification_signal">Тип уведомления</string>
     <string name="notification_sound">Звук уведомления</string>
     <string name="notification_light">Подсветка уведомления</string>
@@ -62,6 +60,7 @@
     <string name="long_click_translate">Длинный клик на комментарий для перевода</string>
     <string name="load_more_comments">Загрузить еще комментарии</string>
     <string name="info_comments">Число комментариев на главном экране может быть больше числа, отображенного здесь, из-за отмененных/изменненых комментариев.</string>
+    <string name="no_comments_found">Комментариев не найдено</string>
     <string name="time_frame">Временной отрезок</string>
     <string name="seven_days">Последние 7 дней</string>
     <string name="thirty_days">Последние 30 дней</string>
@@ -71,11 +70,12 @@
     <string name="yymmdd">Год/Месяц/День</string>
     <string name="mmddyy">Месяц/День/Год</string>
     <string name="smooth_values">Сглаженные значения</string>
+    <string name="smoothed_values">* сглаженные значения</string>
     <string name="info_smooth">Количество скачиваний и активных установок не обновляется Google каждый день. Вы можете выбрать сглаживание для этих значений. Рейтинги не подвержены этому, так как обновляются почти мгновенно.</string>
     <string name="auto_sync_period">Период автосинхронизации</string>
-    <string name="info_autosync">Если автосинхронизация будет выключена, графики не будут обновляться</string>
     <string name="admob_login">ВХОД В ADMOB</string>
     <string name="password">Пароль</string>
+    <string name="email">Электронная почта</string>
     <string name="login">Вход</string>
     <string name="remove_admob">Убрать связь с сайтом AdMob</string>
     <string name="remove_admob_app">Убрать значения AdMob для этого приложения</string>
@@ -102,6 +102,7 @@
     <string name="admob__CTR">CTR</string>
     <string name="admob__house_ad_clicks">Рекламные клики</string>
     <string name="admob__charts_available">Доступные графики AdMob</string>
+    <string name="admob__remove_account">Для удаления аккаунта выберите Android Settings -> Accounts and Sync</string>
     <string name="last_update">Последнее обновление</string>
 
     <string name="changelog_title">Список изменений</string>
@@ -110,7 +111,8 @@
     <string name="notification_title">Проверка изменений Andlytics</string>
 
     <string name="import_">Импорт</string>
-    <string name="import_no_sdcard">SD-карта не примонтирована, не получается импортировать!</string>
+    <string name="import_no_sdcard_or_file">SD-карта не примонтирована или неверный формат файла, не получается импортировать!</string>
+    <string name="import_no_stats_file">Файл статистики не найден: %1$s</string>
     <string name="import_no_app">Не выбрано приложение, не получается импортировать!</string>
     <string name="importing">Импортируется</string>
     <string name="import_started">Импорт начат.</string>
@@ -143,5 +145,29 @@
     <string name="pref_disable_acra">Автоматические отчеты об ошибках</string>
     <string name="pref_acra_disabled">Отправка отчетов выключена</string>
     <string name="pref_acra_enabled">Отправка отчетов включена</string>
-
+    
+    <!-- Errors -->
+    <string name="network_error">Произошла сетевая ошибка. Попробуйте позже</string>
+    <string name="signup_error">%1$s не является аккаунтом Android-разработчика, зарегистрируйтесь на:\n\n %2$s</string>
+    <string name="auth_error">Аутентификация не удалась для : %1$s</string>
+    <string name="admob_ratelimit_error">Не получается загрузить данные Admob, так как разрешено ограниченное число запросов к Admob из одного приложения, попробуйте позже</string>
+    <string name="admob_missing_error">Не найден аккаунт AdMob %1$s. Если это происходит повторно, попробуйте переместить Andlytics с SD-карты на внутреннюю память</string>    
+	<string name="admob_invalid_request_error">Ошибка при запросе к Admob API</string>
+	<string name="admob_invalid_token_error">Ошибка при входе в Admob. Попробуйте позже</string>
+	<string name="admob_generic_error">Невозможно загрузить данные Admob, попробуйте еще раз позже</string>
+	<string name="admob_linked_accounts_error">Admob-аккаунты, присоединенные к Google-аккаунтам, не имеют доступа к API Google. Они работают над новой версией, поддерживающей OAuth</string>
+	<string name="remote_interface_changed_error">Обновления сейчас не возможны, так как скорее всего изменился интерфейс на стороне сервера Google.\n\nПожалуйста, помогите нам решить проблему, отослав отчет об ошибке. Информация об ошибке и о вашем устройстве (такая как производитель, модель, версия операционной системы и т.д.) будет отправлена нам и поможет решить проблему.\n\nСпасибо!\n\n</string>
+	<string name="multiple_dev_accounts_error">Ваш аккаунт связан с несколькими консолями разработчика. Эта возможность пока не поддерживается.\n\nВы можете отсоединить некоторые из них или попросить Google о публичном API статистики на : \n\nhttp://support.google.com/googleplay\n\nИзвините :(</string>
+	<string name="stats_file_not_specified_error">Файл статистики не задан как данные</string>
+	
+	<string name="admob_initial_import">Начальный импорт AdMob, это может занять какое-то время &#8230;</string>
+	<string name="admob_data_prompt">Введите свой email и пароль</string>
+	<string name="admob_password_prompt">Введите пароль</string>
+	<string name="admob_authenticating">Аутентификация&#8230;</string>
+	<string name="admob_auth_failed">Ошибка: аутентификация не удалась</string>
+	<string name="admob_wrong_password">Ошибка: неправильный пароль</string>
+	<string name="update_required_title">Извините, необходимо обновление</string>
+	<string name="multiple_dev_accounts_title">Несколько аккаунтов разработчика</string>
+	<string name="update_button">Обновить</string>
+	<string name="send_report_button">Отправить отчёт</string>
 </resources>

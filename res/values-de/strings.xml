@@ -7,9 +7,10 @@
     <string name="crash_dialog_title">Verzeihung&amp;#8230</string>
     <string name="crash_desc">Ein unvorhergesehener Fehler trat auf.\n\nBitte helft uns diesen Fehler zu beheben durch Senden eines Fehlerberichtes. Informationen über den Fehler (Stacktrace) und Information über das Gerät wie Hersteller, Gerätename, betriebssystem usw helfen uns den Fehler zu finden.\n\nDanke!\n\n</string>
     <string name="crash_toast">Ein unvorhergesehener Fehler trat auf.\n\nBitte helft uns diesen Fehler zu beheben durch Senden eines Fehlerberichtes. Informationen über den Fehler (Stacktrace) und Information über das Gerät wie Hersteller, Gerätename, Betriebssystem usw. helfen uns den Fehler zu finden.\n\nDanke!\n\n</string>
+    <string name="crash_dont_show_again">Nicht mehr anzeigen</string>
     <string name="newversion_desc"><b>Ein unvorhergesehener Fehler ist aufgetreten, wahrscheinlich weil es Änderungen im Play Store gab.</b>\n\nDie gute Nachricht: Es gibt bereits eine neue Version von Andlytics.\n\nBitte updaten Sie bevor Sie diesen Fehler melden.\n\nDanke!\n\n\n</string>
-    <string name="account_required">Android Developer Account benötigt</string>
-    <string name="account_choose">Bitte einen Google Account wählen oder hinzufügen. Der Zugang muss ein Developer Account mit veröffentlichten Apps sein (\'Google Apps for Business\' werden nicht unterstützt).</string>
+    <string name="account_required">Bitte wählen Sie die Konten aus, die von Andlytics verwendet werden sollen.</string>
+    <string name="account_choose">Konten müssen als Android Entwickler Konten registriert sein, mit veröffentlichten Apps auf Google Play (\'Google Apps for Business\' und Konten die für mehrere Entwickler-Konsolen verwendet werden, werden aktuell noch nicht unterstützt).</string>
     <string name="account_add">Android Developer Account hinzufügen</string>
     <string name="logout">Abmelden</string>
     <string name="refresh">Aktualisieren</string>
@@ -59,6 +60,7 @@
     <string name="long_click_translate">Lange auf Kommentaren halten für eine Übersetzung.</string>
     <string name="load_more_comments">Mehr Kommentare laden</string>
     <string name="info_comments">Die Anzahl der auf der Hauptseite angezeigten Kommentare kann wegen zurückgezogener/geänderter Kommentaren abweichen.</string>
+    <string name="no_comments_found">Keine Kommentare gefunden</string>
     <string name="time_frame">Zeitfenster</string>
     <string name="seven_days">Letzte Woche</string>
     <string name="thirty_days">Letzter Monat</string>
@@ -68,10 +70,12 @@
     <string name="yymmdd">Jahr/Monat/Tag</string>
     <string name="mmddyy">Monat/Tag/Jahr</string>
     <string name="smooth_values">Werte glätten</string>
+    <string name="smoothed_values">* geglätteter Wert</string>
     <string name="info_smooth">Werte der Downloads und aktiven Installationen werden nicht täglich von Google geupdatet. Diese Werte können geglättet werden. Bewertungen sind davon nciht betroffen da sie fast zeitgleich geupdatet werden.</string>
     <string name="auto_sync_period">Intervall der Synchronization</string>
     <string name="admob_login">ADMOB ACCOUNT LOGIN</string>
     <string name="password">Passwort</string>
+    <string name="email">E-Mail</string>
     <string name="login">Einloggen</string>
     <string name="remove_admob">AdMob Verknüpfung entfernen</string>
     <string name="remove_admob_app">AdMob Werte von dieser App entfernen</string>
@@ -98,6 +102,7 @@
     <string name="admob__CTR">Klickrate</string>
     <string name="admob__house_ad_clicks">House-Ad Klicks</string>
     <string name="admob__charts_available">AdMob Tabellen verfügbar</string>
+    <string name="admob__remove_account">Konten können entfernt werden über: Android Einstellungen -> Konten und Synchronisation</string>
     <string name="last_update">Letzte Änderung</string>
 
     <string name="changelog_title">Changelog</string>

@@ -52,7 +52,7 @@
 				android:textAppearance="?android:attr/textAppearanceSmall"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				style="@style/MainTableText" android:text="email"/>
+				style="@style/MainTableText" android:text="@string/email"/>
 			<EditText
 				android:singleLine="true"
 				android:layout_width="fill_parent"

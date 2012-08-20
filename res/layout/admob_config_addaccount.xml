@@ -88,7 +88,7 @@
                     style="@style/MainTableText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="If you want to remove an account go to: Android Settings -> Accounts and Sync"
+                    android:text="@string/admob__remove_account"
                     android:visibility="gone" />
             </RelativeLayout>
 
@@ -145,7 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="close" />
+                android:text="@string/close" />
         </LinearLayout>
     </RelativeLayout>
 
