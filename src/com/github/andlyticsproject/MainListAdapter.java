@@ -48,11 +48,11 @@ public class MainListAdapter extends BaseAdapter {
 
 	private NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
 
-	private static final int BLACK_TEXT = Color.parseColor("#555555");
+	private static int BLACK_TEXT;
 
 	private static final int RED_TEXT = Color.RED;
 
-	private static final int GREEN_TEXT = Color.parseColor("#33B5E5");
+	private static int BLUE_TEXT;
 
 	public static final int TAG_IMAGE_REF = R.id.tag_mainlist_image_reference;
 
@@ -108,6 +108,8 @@ public class MainListAdapter extends BaseAdapter {
 
 	public MainListAdapter(Activity activity, String accountname, ContentAdapter db,
 			StatsMode statsMode) {
+		BLACK_TEXT = activity.getResources().getColor(R.color.blackText);
+		BLUE_TEXT = activity.getResources().getColor(R.color.lightBlue);
 		this.setAppInfos(new ArrayList<AppInfo>());
 		this.layoutInflater = activity.getLayoutInflater();
 		this.activity = activity;
@@ -519,7 +521,7 @@ public class MainListAdapter extends BaseAdapter {
 		String value = diff.toString();
 
 		if (diff > 0) {
-			view.setTextColor(GREEN_TEXT);
+			view.setTextColor(BLUE_TEXT);
 			value = "+" + value;
 		} else if (diff < 0) {
 			view.setTextColor(RED_TEXT);
@@ -540,7 +542,7 @@ public class MainListAdapter extends BaseAdapter {
 
 			if (diff > 0) {
 				value = diffvalue;
-				view.setTextColor(GREEN_TEXT);
+				view.setTextColor(BLUE_TEXT);
 				value = "+" + value;
 			} else if (diff < 0) {
 				value = diffvalue;

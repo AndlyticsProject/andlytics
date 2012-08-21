@@ -649,69 +649,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		Preferences.saveStatsMode(currentStatsMode, Main.this);
 	}
 
-	/*
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean onKeyUp(int keyCode, KeyEvent event) {
-
-	    if (keyCode == KeyEvent.KEYCODE_I) {
-	        Intent intent = new Intent(this, DemoDataActivity.class);
-	        intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
-	        startActivity(intent);
-	        return true;
-	    } else if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-	        Preferences.removeAccountName(Main.this);
-	        Intent intent = new Intent(Main.this, LoginActivity.class);
-	        startActivity(intent);
-	        overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
-	        return true;
-	    } else if (keyCode == KeyEvent.KEYCODE_D) {
-
-	        try {
-	            //List<AppInfo> allAppsLatestStats = db.getAllAppsLatestStats(accountname);
-	            //for (AppInfo appInfo : allAppsLatestStats) {
-	                //db.deleteAllForPackageName(appInfo.getPackageName());
-	            //}
-	        } catch (Exception e) {
-	            showCrashDialog(e);
-	        }
-	        return true;
-	    } else {
-
-	        try {
-	            Integer.parseInt(event.getNumber() + "");
-
-	            DeveloperConsole console = new DeveloperConsole(Main.this);
-	            List<AppInfo> appDownloadInfos;
-	            try {
-	                appDownloadInfos = console.parseAppStatisticsResponse(DemoDataActivity.readTestData(event.getNumber()),
-	                        accountname);
-
-	                for (AppInfo appDownloadInfo : appDownloadInfos) {
-	                    // update in database
-
-	                    db.insertOrUpdateStats(appDownloadInfo);
-
-	                    new LoadIconInCache().execute(appDownloadInfos);
-
-	                }
-	            } catch (AuthenticationException e) {
-	                // TODO Auto-generated catch block
-	                e.printStackTrace();
-	            }
-
-	        } catch (NumberFormatException e) {
-	            e.printStackTrace();
-	        } catch (DeveloperConsoleException e) {
-	            e.printStackTrace();
-	        } catch (InvalidJSONResponseException e) {
-	            e.printStackTrace();
-	        }
-
-	    }
-	    return false;
-	}*/
-
 	@Override
 	public void authenticationSuccess() {
 		Utils.execute(new LoadRemoteEntries());

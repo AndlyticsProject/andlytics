@@ -10,13 +10,13 @@
 			android:shape="rectangle">
 			
 			<gradient
-				android:startColor="#555555"
+				android:startColor="@color/blackText"
 				android:centerColor="#484848"
 				android:endColor="#484848"
 				android:angle="270" />			
 			<stroke
 				android:width="2dp"
-				android:color="#33B5E5" />
+				android:color="@color/lightBlue" />
 			<corners
 				android:radius="2dp" />
 		</shape>
@@ -29,13 +29,13 @@
 			xmlns:android="http://schemas.android.com/apk/res/android"
 			android:shape="rectangle">
 			<gradient
-				android:startColor="#555555"
+				android:startColor="@color/blackText"
 				android:centerColor="#484848"
 				android:endColor="#484848"
 				android:angle="270" />
 			<stroke
 				android:width="2dp"
-				android:color="#33B5E5" />
+				android:color="@color/lightBlue" />
 			<corners
 				android:radius="2dp" />
 		</shape>
@@ -48,7 +48,7 @@
 			xmlns:android="http://schemas.android.com/apk/res/android"
 			android:shape="rectangle">
 			<gradient
-				android:startColor="#555555"
+				android:startColor="@color/blackText"
 				android:centerColor="#909090"
 				android:endColor="#909090"
 				android:angle="270" />
@@ -67,7 +67,7 @@
 			android:shape="rectangle">
 
 			<gradient
-				android:startColor="#555555"
+				android:startColor="@color/blackText"
 				android:endColor="#484848"
 				android:angle="270" />
 			<stroke

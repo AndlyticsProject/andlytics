@@ -18,6 +18,7 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer.Orientation;
 
+import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.Preferences;
 
 public class Chart extends AbstractChart {
@@ -62,7 +63,7 @@ public class Chart extends AbstractChart {
 		}
 
 		// styling
-		int[] colors = new int[] { Color.parseColor("#33B5E5") };
+		int[] colors = new int[] { context.getResources().getColor(R.color.lightBlue) };
 		XYMultipleSeriesRenderer renderer = buildBarRenderer(colors);
 		renderer.setOrientation(Orientation.HORIZONTAL);
 
@@ -198,7 +199,7 @@ public class Chart extends AbstractChart {
 		// values.add(activeArray);
 
 		// styling
-		int[] colors = new int[] { Color.parseColor("#33B5E5") };
+		int[] colors = new int[] { context.getResources().getColor(R.color.lightBlue) };
 		PointStyle pointStye = valuesArray.length > 30 ? PointStyle.POINT : PointStyle.CIRCLE;
 		PointStyle[] styles = new PointStyle[] { pointStye };
 		XYMultipleSeriesRenderer renderer = buildRenderer(colors, styles);

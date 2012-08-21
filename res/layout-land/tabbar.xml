@@ -1,4 +1,4 @@
-
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_alignParentBottom="true"
@@ -6,7 +6,7 @@
 	android:layout_height="wrap_content"
 	android:id="@+id/tabbar_buttonbar"
 	android:orientation="horizontal"
-	android:background="#555555">
+	android:background="@color/blackText">
 
 	<RelativeLayout
 		android:id="@+id/tabbar_button_comments"

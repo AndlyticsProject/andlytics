@@ -373,80 +373,9 @@ public class BaseActivity extends SherlockActivity {
 
 		};
 
-		accountManager.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVLOPER, null,
+		accountManager.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, null,
 				BaseActivity.this, myCallback, null);
-
-		/*
-
-		Bundle bundle;
-		try {
-			bundle = manager.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVLOPER, true, null, null).getResult();
-
-			if (bundle.containsKey(AccountManager.KEY_INTENT)) {
-
-				// ask user for permission - launch account manager intent
-				Intent intent = bundle.getParcelable(AccountManager.KEY_INTENT);
-				int flags = intent.getFlags();
-				flags &= ~Intent.FLAG_ACTIVITY_NEW_TASK;
-				intent.setFlags(flags);
-				getAndlyticsApplication().setAuthToken(null);
-				getAndlyticsApplication().setRunningAuthenticationRequestIntent(true);
-				startActivityForResult(intent, REQUEST_AUTHENTICATE);
-
-			} else if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
-
-				//  got token form manager - set in application an exit
-				String authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-				getAndlyticsApplication().setAuthToken(authToken);
-
-				//manager.invalidateAuthToken(Constants.ACCOUNT_TYPE_GOOGLE, authToken);
-
-
-			}
-		} catch (OperationCanceledException e1) {
-			e1.printStackTrace();
-		} catch (AuthenticatorException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}*/
-
 	}
-
-	/*
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		switch (requestCode) {
-		case REQUEST_AUTHENTICATE:
-
-			getAndlyticsApplication().setRunningAuthenticationRequestIntent(false);
-
-			if (resultCode == RESULT_OK) {
-
-				AsyncTask<Void, Void, Void> t = new AsyncTask<Void, Void, Void>() {
-
-					@Override
-					protected Void doInBackground(Void... params) {
-						authenticateAccountFromPreferences(false);
-						return null;
-					}
-
-					@Override
-					protected void onPostExecute(Void result) {
-						onPostAuthentication();
-					}
-
-
-				};
-				t.execute();
-
-			} else {
-			    getAndlyticsApplication().setSkipMainReload(true);
-				Log.e("Andlytics", "REQUEST_AUTHENTICATE, result is NOT ok");
-			}
-		}
-	}*/
 
 	protected void showLoadingIndecator(ViewSwitcher switcher) {
 		Animation loadingAnim = AnimationUtils.loadAnimation(this, R.anim.loading);

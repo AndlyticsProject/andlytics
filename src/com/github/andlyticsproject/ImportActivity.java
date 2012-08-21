@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.io.ImportService;
-import com.github.andlyticsproject.io.ServiceExceptoin;
+import com.github.andlyticsproject.io.ServiceException;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
@@ -230,7 +230,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 						activity.getAccountName(), pacakgeNames, zipFilename);
 
 				return true;
-			} catch (ServiceExceptoin e) {
+			} catch (ServiceException e) {
 				Log.e(TAG, "Error reading import zip file: " + e.getMessage());
 				return false;
 			}
