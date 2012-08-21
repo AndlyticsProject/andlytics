@@ -92,11 +92,11 @@ public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
 
 	private CharSequence getMessage() {
 		if (TextUtils.isEmpty(mUsername)) {
-			CharSequence msg = "Enter your email and password.";
+			CharSequence msg = getString(R.string.admob_data_prompt);
 			return msg;
 		}
 		if (TextUtils.isEmpty(mPassword)) {
-			return "Enter your password.";
+			return getString(R.string.admob_password_prompt);
 		}
 		return null;
 	}
@@ -104,7 +104,7 @@ public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		ProgressDialog dialog = new ProgressDialog(this);
-		dialog.setMessage("Authenticating...");
+		dialog.setMessage(getString(R.string.admob_authenticating));
 		dialog.setIndeterminate(true);
 		dialog.setCancelable(true);
 		dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -189,24 +189,22 @@ public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
 			}
 		} else {
 			if (AdmobRequest.ERROR_NETWORK_ERROR.equals(result)) {
-				Toast.makeText(AdmobAuthenticatorActivity.this, "Network error, try agian later..",
+				Toast.makeText(AdmobAuthenticatorActivity.this, getString(R.string.network_error),
 						Toast.LENGTH_SHORT).show();
 			}
 			if (AdmobRequest.ERROR_RATE_LIMIT_EXCEEDED.equals(result)) {
 				Toast.makeText(AdmobAuthenticatorActivity.this,
-						"AdMob rate limite excceded, try agian later..", Toast.LENGTH_LONG).show();
+						getString(R.string.admob_ratelimit_error), Toast.LENGTH_LONG).show();
 			}
-			if (AdmobRequest.ERROR_REQUESET_INVALID.equals(result)) {
-				Toast.makeText(
-						AdmobAuthenticatorActivity.this,
-						"AdMob accounts that are linked to Google accounts are disable for API access by Google. They are working on a new version of the API that supports OAuth.",
-						Toast.LENGTH_LONG).show();
+			if (AdmobRequest.ERROR_REQUEST_INVALID.equals(result)) {
+				Toast.makeText(AdmobAuthenticatorActivity.this,
+						getString(R.string.admob_linked_accounts_error), Toast.LENGTH_LONG).show();
 			}
 
 			if (mRequestNewAccount) {
-				mMessageView.setText("Error: Authentication failed.");
+				mMessageView.setText(getString(R.string.admob_auth_failed));
 			} else {
-				mMessageView.setText("Error: Wrong password.");
+				mMessageView.setText(getString(R.string.admob_wrong_password));
 			}
 		}
 	}

@@ -301,7 +301,7 @@ public class AdmobActivity extends BaseChartActivity {
 
 		@Override
 		protected void onProgressUpdate(Void... values) {
-			Toast.makeText(AdmobActivity.this, "Initial AdMob import, this may take a while...",
+			Toast.makeText(AdmobActivity.this, getString(R.string.admob_initial_import),
 					Toast.LENGTH_LONG).show();
 		}
 

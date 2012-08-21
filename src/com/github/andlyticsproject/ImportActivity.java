@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.io.ImportService;
-import com.github.andlyticsproject.io.ServiceExceptoin;
+import com.github.andlyticsproject.io.ServiceException;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
@@ -77,7 +77,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 		if (Intent.ACTION_VIEW.equals(getIntent().getAction())) {
 			Uri data = getIntent().getData();
 			if (data == null) {
-				Toast.makeText(this, "Stats file not specified as data.", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, getString(R.string.stats_file_not_specified_error), Toast.LENGTH_LONG).show();
 				finish();
 			}
 
@@ -230,7 +230,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 						activity.getAccountName(), pacakgeNames, zipFilename);
 
 				return true;
-			} catch (ServiceExceptoin e) {
+			} catch (ServiceException e) {
 				Log.e(TAG, "Error reading import zip file: " + e.getMessage());
 				return false;
 			}
@@ -248,8 +248,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 				if (result) {
 					activity.setFilenames(filenames);
 				} else {
-					Toast.makeText(activity,
-							"SD-Card not mounted or invalid file format, can't import!",
+					Toast.makeText(activity, activity.getString(R.string.import_no_sdcard_or_file),
 							Toast.LENGTH_LONG).show();
 					activity.finish();
 				}

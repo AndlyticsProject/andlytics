@@ -9,7 +9,6 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,7 +20,7 @@ import com.github.andlyticsproject.model.AppStats;
 public class ChartListAdapter extends BaseChartListAdapter {
 	//		private static String LOG_TAG=ChartListAdapter.class.toString();
 
-	private static final int BLACK_TEXT = Color.parseColor("#555555");
+	private static int BLACK_TEXT;
 
 	private static final int RED_TEXT = Color.RED;
 
@@ -52,6 +51,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 
 	public ChartListAdapter(BaseChartActivity activity) {
 		super(activity);
+		BLACK_TEXT = activity.getResources().getColor(R.color.blackText);
 		this.setDownloadInfos(new ArrayList<AppStats>());
 		this.activity = activity;
 		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatShort(activity));
@@ -424,45 +424,6 @@ public class ChartListAdapter extends BaseChartListAdapter {
 
 	public void setLowestRatingChange(Integer lowestRatingChange) {
 		this.lowestRatingChange = lowestRatingChange;
-	}
-
-	@Override
-	protected Drawable getChartTitleDrawable(int page, int column) {
-		if (column == DATE) {
-			return null;
-		}
-		switch (ChartSet.values()[page]) {
-			case DOWNLOADS: {
-				switch (column) {
-					case TOTAL_DOWNLAODS:
-					case ACTIVE_INSTALLS_TOTAL:
-					case TOTAL_DOWNLAODS_BY_DAY:
-					case ACTIVE_INSTALLS_PERCENT:
-						return null;
-				}
-			}
-				break;
-			case RATINGS: {
-				switch (column) {
-					case AVG_RATING:
-						return null;
-
-					case RATINGS_1:
-						return activity.getResources().getDrawable(R.drawable.rating_1);
-					case RATINGS_2:
-						return activity.getResources().getDrawable(R.drawable.rating_2);
-					case RATINGS_3:
-						return activity.getResources().getDrawable(R.drawable.rating_3);
-					case RATINGS_4:
-						return activity.getResources().getDrawable(R.drawable.rating_4);
-					case RATINGS_5:
-						return activity.getResources().getDrawable(R.drawable.rating_5);
-				}
-
-			}
-				break;
-		}
-		throw new IndexOutOfBoundsException("page=" + page + " columnt=" + column);
 	}
 
 	@Override

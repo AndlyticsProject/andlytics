@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Andlytics</string>
-    <string name="app_name_admob">AdMob</string>
 
     <string name="one_entry_hint_desc">Andlytics collects data over time. to see a meaningful chart come back as soon as more data is available.
         \n\nUsually download stats are updated every 24&#8211;48 hours.</string>
-    <string name="one_entry_hint_demo"><u>View chart with demo data</u></string>
 
+    <string name="crash_dialog_title">Sorry&#8230;</string>
     <string name="crash_desc">An unexpected error occurred.\n\nPlease help us to fix this by sending us error report data. Information about the error (stacktrace) and information about your device such as device manufacturer\'s name, device model number, operating system, etc. will be sent to help us identifying the problem.\n\nThanks!\n\n</string>
     <string name="crash_toast">An unexpected error occurred. Information about the error will be sent to help us identifying the problem.</string>
+    <string name="crash_dont_show_again">Don\'t show this again</string>
     <string name="newversion_desc"><b>An unexpected error occurred, probably because the remote interface changed.</b>\n\nBut the good news is that a new version of Andlytics is available in the Android Market.\n\nPlease update before reporting this issue.\n\nThanks!\n\n\n</string>
-    <string name="account_required">Android developer account required</string>
-    <string name="account_choose">Please choose or add a Google account. The account must be a registered developer account with apps published on Google Play (\'Google Apps for Business\' and accounts linked to multiple developer consoles are not supported yet).</string>
+    <string name="account_required">Please select the accounts that you wish to use with Andlytics.</string>
+    <string name="account_choose">Accounts must be registered developer accounts with apps published on Google Play (\'Google Apps for Business\' and accounts linked to multiple developer consoles are not supported yet).</string>
     <string name="account_add">Add android developer account</string>
     <string name="logout">Logout</string>
     <string name="refresh">Refresh</string>
@@ -42,7 +41,6 @@
     <string name="comment_changes">Comment changes</string>
     <string name="download_changes">Download changes</string>
     <string name="notification_trigger">Notification trigger</string>
-    <string name="disable_notifications">Deselect all to disable notifications</string>
     <string name="notification_signal">Notification signal</string>
     <string name="notification_sound">Notification sound</string>
     <string name="notification_light">Notification light</string>
@@ -58,10 +56,13 @@
     <string name="export_files_replaced">Existing export files will be replaced</string>
     <string name="run_export">Run export</string>
     <string name="by">by</string>
+    <string name="comments_version">version</string>
+    <string name="comments_on">on</string>
     <string name="device">device</string>
     <string name="long_click_translate">Long click on comment for translation</string>
     <string name="load_more_comments">Load more comments</string>
     <string name="info_comments">The number of comments reported on the main screen may be higher than the number of comments shown here because of withdrawn / changed comments.</string>
+    <string name="no_comments_found">No comments found</string>
     <string name="time_frame">Time frame</string>
     <string name="seven_days">Last 7 days</string>
     <string name="thirty_days">Last 30 days</string>
@@ -71,11 +72,12 @@
     <string name="yymmdd">Year/Month/Day</string>
     <string name="mmddyy">Month/Day/Year</string>
     <string name="smooth_values">Smooth values</string>
+    <string name="smoothed_values">* smoothed values</string>
     <string name="info_smooth">Values for downloads and active installs are not updated on a daily basis by Google. You can choose to smooth these values. Ratings are not affected as they update nearly instantly.</string>
     <string name="auto_sync_period">Auto synchronization period</string>
-    <string name="info_autosync">If auto synchronization is disabled graph views will probably miss future values</string>
     <string name="admob_login">ADMOB ACCOUNT LOGIN</string>
     <string name="password">Password</string>
+    <string name="email">Email</string>
     <string name="login">Login</string>
     <string name="remove_admob">Remove AdMob site association</string>
     <string name="remove_admob_app">Remove AdMob values for this app</string>
@@ -102,6 +104,7 @@
     <string name="admob__CTR">CTR</string>
     <string name="admob__house_ad_clicks">House ad clicks</string>
     <string name="admob__charts_available">AdMob charts available</string>
+    <string name="admob__remove_account">If you want to remove an account go to: Android Settings -> Accounts and Sync</string>
     <string name="last_update">Last update</string>
 
     <string name="changelog_title">Changelog</string>
@@ -110,7 +113,8 @@
     <string name="notification_title">Andlytics change detection</string>
 
     <string name="import_">Import</string>
-    <string name="import_no_sdcard">SD-Card not mounted, can\'t import!</string>
+    <string name="import_no_sdcard_or_file">SD-Card not mounted or invalid file format, can\'t import!</string>
+    <string name="import_no_stats_file">Stats file not found: %1$s</string>
     <string name="import_no_app">No app selected, can\'t import!</string>
     <string name="importing">Importing</string>
     <string name="import_started">Import started.</string>
@@ -143,5 +147,29 @@
     <string name="pref_disable_acra">Automatic error reports</string>
     <string name="pref_acra_disabled">Reporting disabled</string>
     <string name="pref_acra_enabled">Reporting enabled</string>
-
+    
+    <!-- Errors -->
+    <string name="network_error">A network error has occurred. Please try again later</string>
+    <string name="signup_error">%1$s is not an android developer account, sign up at:\n\n %2$s</string>
+    <string name="auth_error">Authentication failed for: %1$s</string>
+    <string name="admob_ratelimit_error">Can\'t load Admob data because Admob has restricted the number of requests from this app, try again later</string>
+    <string name="admob_missing_error">AdMob account %1$s is missing. If this happens repeatedly try moving Andlytics from SD card to internal storage</string>    
+	<string name="admob_invalid_request_error">Error while requesting AdMob API</string>
+	<string name="admob_invalid_token_error">Error while authenticating AdMob account. Please try again later</string>
+	<string name="admob_generic_error">Unabled to load Admob data, please try again later</string>
+	<string name="admob_linked_accounts_error">AdMob accounts that are linked to Google accounts are disable for API access by Google. They are working on a new version of the API that supports OAuth</string>
+	<string name="remote_interface_changed_error">Updates are currently not possible, probably because the remote interface changed.\n\nPlease help us to fix this by sending us error report data. Information about the error (stacktrace) and information about your device such as device manufacturer\'s name, device model number, operating system, etc. will be sent to help us identifying the problem.\n\nThank you!</string>
+	<string name="multiple_dev_accounts_error">Your account is linked to multiple developer consoles. This feature is not supported in andlytics.\n\nYou can unlink additional accounts or ask Google for a public app stats API at: \n\nhttp://support.google.com/googleplay\n\nSorry :(</string>
+	<string name="stats_file_not_specified_error">Stats file not specified as data</string>
+	
+	<string name="admob_initial_import">Initial AdMob import, this may take a while&#8230;</string>
+	<string name="admob_data_prompt">Enter your email and password</string>
+	<string name="admob_password_prompt">Enter your password</string>
+	<string name="admob_authenticating">Authenticating&#8230;</string>
+	<string name="admob_auth_failed">Error: Authentication failed</string>
+	<string name="admob_wrong_password">Error: Wrong password</string>
+	<string name="update_required_title">Sorry, update required</string>
+	<string name="multiple_dev_accounts_title">Multiple Developer Accounts</string>
+	<string name="update_button">Update</string>
+	<string name="send_report_button">Send report</string>
 </resources>

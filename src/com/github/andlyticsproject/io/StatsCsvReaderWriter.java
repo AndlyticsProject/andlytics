@@ -108,7 +108,7 @@ public class StatsCsvReaderWriter {
 	}
 
 	public static List<String> getImportFileNamesFromZip(String accountName,
-			List<String> packageNames, String zipFilename) throws ServiceExceptoin {
+			List<String> packageNames, String zipFilename) throws ServiceException {
 
 		List<String> result = new ArrayList<String>();
 
@@ -136,7 +136,7 @@ public class StatsCsvReaderWriter {
 	}
 
 	private static boolean isValidFile(String accountName, InputStream in, List<String> packageNames)
-			throws ServiceExceptoin {
+			throws ServiceException {
 
 		if (packageNames.isEmpty()) {
 			return true;
@@ -164,9 +164,9 @@ public class StatsCsvReaderWriter {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			throw new ServiceExceptoin(e);
+			throw new ServiceException(e);
 		} catch (IOException e) {
-			throw new ServiceExceptoin(e);
+			throw new ServiceException(e);
 		} finally {
 			Utils.closeSilently(reader);
 		}
@@ -183,7 +183,7 @@ public class StatsCsvReaderWriter {
 		return filename.substring(0, suffixIdx);
 	}
 
-	public List<AppStats> readStats(InputStream in) throws ServiceExceptoin {
+	public List<AppStats> readStats(InputStream in) throws ServiceException {
 
 		List<AppStats> appStats = new ArrayList<AppStats>();
 
@@ -221,25 +221,25 @@ public class StatsCsvReaderWriter {
 			}
 
 		} catch (FileNotFoundException e) {
-			throw new ServiceExceptoin(e);
+			throw new ServiceException(e);
 		} catch (IOException e) {
-			throw new ServiceExceptoin(e);
+			throw new ServiceException(e);
 		} catch (ParseException e) {
-			throw new ServiceExceptoin(e);
+			throw new ServiceException(e);
 		}
 
 		return appStats;
 	}
 
-	public String readPackageName(String fileName) throws ServiceExceptoin {
+	public String readPackageName(String fileName) throws ServiceException {
 		try {
 			return readPackageName(new FileInputStream(new File(getExportDirPath(), fileName)));
 		} catch (IOException e) {
-			throw new ServiceExceptoin(e);
+			throw new ServiceException(e);
 		}
 	}
 
-	public String readPackageName(InputStream in) throws ServiceExceptoin {
+	public String readPackageName(InputStream in) throws ServiceException {
 		String packageName = null;
 
 		CSVReader reader;
@@ -259,9 +259,9 @@ public class StatsCsvReaderWriter {
 			}
 
 		} catch (FileNotFoundException e) {
-			throw new ServiceExceptoin(e);
+			throw new ServiceException(e);
 		} catch (IOException e) {
-			throw new ServiceExceptoin(e);
+			throw new ServiceException(e);
 		}
 
 		return packageName;

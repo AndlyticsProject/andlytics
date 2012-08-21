@@ -1,4 +1,4 @@
-
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/comments_list_item_app_row"
@@ -7,15 +7,18 @@
 	android:background="@drawable/button_background"
 	android:padding="15dp">
 
-
-	<ImageView
+	<RatingBar
+		style="@style/andRatingBar"
+		android:isIndicator="true"
+		android:layout_marginLeft="10dp"			
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content"
+		android:stepSize="1"
+		android:rating="5"
+		android:numStars="5"
 		android:id="@+id/comments_list_item_app_ratingbar"
-		android:layout_marginLeft="10dp"
-		android:src="@drawable/rating_1"
 		android:paddingTop="2dp" />
-
+	
 	<TextView
 	    android:id="@+id/comments_list_item_by"
 	    style="@style/MainTableText"
@@ -28,20 +31,17 @@
 </TextView>
 
 	<TextView
-		android:text="Andy"
 		android:id="@+id/comments_list_item_username"
 		android:layout_height="wrap_content"
 		style="@style/MainTableText"
 		android:layout_width="wrap_content"
 		android:layout_toRightOf="@+id/comments_list_item_by"></TextView>
 
-
 	<TextView
 		style="@style/MainTableText"
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content"
-		android:layout_below="@+id/comments_list_item_username"
-		android:text="I get: «An error occurred. Try again later« when I hit Refresh. Good idea, but useless for now."
+		android:layout_below="@+id/comments_list_item_username"		
 		android:paddingRight="10dp"
 		android:paddingLeft="10dp"
 		android:id="@+id/comments_list_item_text" android:paddingTop="5dp"/>

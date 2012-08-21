@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Andlytics</string>
-    <string name="app_name_admob">AdMob</string>
 
     <string name="one_entry_hint_desc">Andlytics collecte les données au fil du temps. Pour voir un graphe qui ait du sens, revenez dès que plus de données seront enregistrées.
 \n\nHabituellement, les statistiques de téléchargements sont mises à jour toutes les 24&#8211;48 h</string>
-    <string name="one_entry_hint_demo"><u>Voir les graphiques avec les données de démo</u></string>
 
+    <string name="crash_dialog_title">Désolé&#8230;</string>
     <string name="crash_desc">Une erreur inattendue s\'est produite. \n\nS\'il vous plaît, aidez-nous à résoudre ce problème en nous envoyant un rapport d\'erreur. Les informations sur l\'erreur (stacktrace) et les informations sur votre appareil comme le nom du fabricant, le numéro de modèle du périphérique, le système d\'exploitation, etc. seront envoyées pour nous aider à identifier le problème. \n\n Merci ! \n\n</string>
     <string name="crash_toast">Une erreur inattendue s\'est produite. Une information à propos de cette erreur va être envoyé pour nous aider à identifier le problème.</string>
+    <string name="crash_dont_show_again">Ne plus afficher</string>
     <string name="newversion_desc"><b>Une erreur inattendue s\'est produite, probablement parce que l\'interface distante a changé. </b> \n\nMais la bonne nouvelle, c\'est qu\'une nouvelle version de Andlytics est disponible sur l\'Android Market. \n\nS\'il vous plaît mettez-la à jour avant de signaler ce problème. \n\nMerci !</string>
-    <string name="account_required">Authentification avec un compte développeur android requise</string>
-    <string name="account_choose">Veuillez choisir ou ajouter un compte Google. Le compte doit être enregistré en tant que compte développeur, avec des applications publiées sur le Google Play (les comptes \'Google Apps pour Entreprise\' et les comptes liés à des consoles développeur multiples ne sont pas encore supportés).</string>
+    <string name="account_required">Veuillez sélectionner les comptes que vous souhaitez utiliser avec Andlytics</string>
+    <string name="account_choose">Les comptes doivent être des comptes développeur enregistrés avec des applications publiées sur Google Play (\'Google Aps pour Entreprises\' et les comptes liés à plusieurs consoles développeur ne sont pas encore supportés).</string>
     <string name="account_add">Ajouter un compte développeur android</string>
     <string name="logout">Déconnexion</string>
     <string name="refresh">Actualiser</string>
@@ -42,7 +41,6 @@
     <string name="comment_changes">Changement des commentaires</string>
     <string name="download_changes">Changement des téléchargements</string>
     <string name="notification_trigger">Déclenchement des notifications</string>
-    <string name="disable_notifications">Désélectionnez l\'ensemble pour désactiver les notifications</string>
     <string name="notification_signal">Signal de notification</string>
     <string name="notification_sound">Son de notification</string>
     <string name="notification_light">Notification visuelle</string>
@@ -62,6 +60,7 @@
     <string name="long_click_translate">Long clic sur le commentaire pour le traduire</string>
     <string name="load_more_comments">Charger plus de commentaires</string>
     <string name="info_comments">Le nombre de commentaires affiché dans l\'écran principal peut être plus important que le nombre de commentaires montré ici à cause de ceux modifiés ou retirés</string>
+    <string name="no_comments_found">Aucun commentaire trouvé</string>
     <string name="time_frame">Délai</string>
     <string name="seven_days">Les 7 derniers jours</string>
     <string name="thirty_days">Derniers 30 jours</string>
@@ -71,11 +70,12 @@
     <string name="yymmdd">Année/Mois/Jour</string>
     <string name="mmddyy">Mois/Jour/Année</string>
     <string name="smooth_values">Valeurs moyennées</string>
+    <string name="smoothed_values">* valeurs lissées</string>
     <string name="info_smooth">Les valeurs pour les téléchargements et les installations actives ne sont pas mis à jour sur une base quotidienne par Google. Vous pouvez choisir de lisser ces valeurs. Les notes ne sont pas touchées, car elles sont mises à jour presque instantanément.</string>
     <string name="auto_sync_period">Période d’auto-synchronisation</string>
-    <string name="info_autosync">Si la synchronisation automatique est désactivée alors les graphiques manqueront probablement les valeurs futures</string>
     <string name="admob_login">CONNEXION COMPTE ADMOB</string>
     <string name="password">Mot de passe</string>
+    <string name="email">Email</string>
     <string name="login">Connexion</string>
     <string name="remove_admob">Annuler l\'association avec le site AdMob</string>
     <string name="remove_admob_app">Enlever les valeurs AdMob pour cette application</string>
@@ -102,6 +102,7 @@
     <string name="admob__CTR">CTR</string>
     <string name="admob__house_ad_clicks">Clics sur des autopromotions</string>
     <string name="admob__charts_available">Graphiques AdMob disponibles</string>
+    <string name="admob__remove_account">Si vous souhaitez supprimer un compte, allez dans : Paramètres Android -> Comptes et synchronisation</string>
     <string name="last_update">Dernière mise à jour</string>
 
     <string name="changelog_title">Modifications récentes</string>
@@ -110,7 +111,8 @@
     <string name="notification_title">Détection de changement Andlytics</string>
 
     <string name="import_">Importer</string>
-    <string name="import_no_sdcard">La carte SD n\'est pas présente, importation impossible !</string>
+    <string name="import_no_sdcard_or_file">La carte SD n\'est pas montée ou le formatage de fichier est invalide, impossible d\'importer !</string>
+    <string name="import_no_stats_file">Fichier de stats non trouvé : %1$s</string>
     <string name="import_no_app">Aucune application sectionnée, importation impossible !</string>
     <string name="importing">Importation</string>
     <string name="import_started">L\'importation a démarré.</string>
@@ -143,5 +145,29 @@
     <string name="pref_disable_acra">Envoi automatique de rapports d\'erreurs</string>
     <string name="pref_acra_disabled">Rapports désactivés</string>
     <string name="pref_acra_enabled">Rapports activés</string>
-
+    
+    <!-- Errors -->
+    <string name="network_error">Une erreur réseau est survenue. Veuillez réessayer plus tard.</string>
+    <string name="signup_error">%1$s n\'est pas un compte développeur Android, inscrivez-vous à :\n\n %2$s</string>
+    <string name="auth_error">Authentification impossible pour : %1$s</string>
+    <string name="admob_ratelimit_error">Impossible de charger les données AdMob car AdMob a restreint le nombre de requêtes pour cette appli, réessayez plus tard</string>
+    <string name="admob_missing_error">Le compte AdMob %1$s est manquant. Si cela arrive à répétition, essayez de déplacer Andlytics depuis la carte SD vers le stockage interne.</string>    
+	<string name="admob_invalid_request_error">Erreur lors d\'une requête avec l\'API AdMob</string>
+	<string name="admob_invalid_token_error">Erreur lors de l\'authentification au compte AdMob. Veuillez réessayer plus tard</string>
+	<string name="admob_generic_error">Impossible de charger les données AdMob, veuillez réessayer plus tard</string>
+	<string name="admob_linked_accounts_error">Les comptes AdMob liés à des comptes Google ne peuvent utiliser les accès API à cause de Google. Ils fonctionne avec une nouvelle version de l\'API qui supporte OAuth</string>
+	<string name="remote_interface_changed_error">Les mises à jour ne sont pas possibles pour le moment, sans doute car l\'interface distante a changé.\n\nVeuillez nous aider à réparer ceci en nous envoyant un rapport d\'erreur. Les informations à propos de l\'erreur (stacktrace) ainsi que les informations sur votre appareil comme le nom du fabricant, numéro du modèle, système d\'exploitation, etc. nous seront envoyés pour aider à l\'identification du problème.\n\nMerci !</string>
+	<string name="multiple_dev_accounts_error">Votre compte est lié à plusieurs consoles développeur. Cette fonctionnalité n\'est pas supportée dans Andlytics.\n\nVous pouvez délier les comptes supplémentaires ou demander à Google une API d\'accès public aux statistiques des applications à :\n\nhttp://support.google.com/googleplay\n\nDésolé :(</string>
+	<string name="stats_file_not_specified_error">Fichier de statistiques non spécifié comme données</string>
+	
+	<string name="admob_initial_import">Import initial AdMob, ceci peut prendre un moment&#8230;</string>
+	<string name="admob_data_prompt">Entrez votre email et mot de passe</string>
+	<string name="admob_password_prompt">Entrez votre mot de passe</string>
+	<string name="admob_authenticating">Authentification&#8230;</string>
+	<string name="admob_auth_failed">Erreur : authentification échouée</string>
+	<string name="admob_wrong_password">Erreur : mot de passe incorrect</string>
+	<string name="update_required_title">Désolé, mise à jour nécessaire</string>
+	<string name="multiple_dev_accounts_title">Multiples Comptes Développeur</string>
+	<string name="update_button">Mise à jour</string>
+	<string name="send_report_button">Envoyer un rapport</string>
 </resources>

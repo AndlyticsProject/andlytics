@@ -45,7 +45,7 @@ public class AdmobRequest {
 	public static final String ERROR_NETWORK_ERROR = "andlytics_network_error";
 	public static final String ERROR_ACCOUNT_REMOVED = "andlytics_account_removed";
 	public static final String ERROR_ASK_USER_PASSWORD = "andlytics_account_ask_for_password";
-	public static final String ERROR_REQUESET_INVALID = "request_invalid";
+	public static final String ERROR_REQUEST_INVALID = "request_invalid";
 
 	public static final String KEY_SITE_ID = "site_id";
 	public static final String KEY_REQUESTS = "requests";
@@ -281,10 +281,10 @@ public class AdmobRequest {
 						+ errorMap.get(ERROR_RATE_LIMIT_EXCEEDED);
 				throw new AdmobRateLimitExceededException(exMessage);
 
-			} else if (errorMap.containsKey(ERROR_REQUESET_INVALID)) {
+			} else if (errorMap.containsKey(ERROR_REQUEST_INVALID)) {
 
-				String exMessage = ERROR_REQUESET_INVALID + " "
-						+ errorMap.get(ERROR_REQUESET_INVALID);
+				String exMessage = ERROR_REQUEST_INVALID + " "
+						+ errorMap.get(ERROR_REQUEST_INVALID);
 				throw new AdmobInvalidRequestException(exMessage);
 
 			} else if (errorMap.containsKey(ERROR_TOKEN_INVALID)) {
@@ -443,7 +443,7 @@ public class AdmobRequest {
 
 		if (AdmobRequest.ERROR_RATE_LIMIT_EXCEEDED.equals(admobToken)) {
 			throw new AdmobRateLimitExceededException(admobToken);
-		} else if (AdmobRequest.ERROR_REQUESET_INVALID.equals(admobToken)) {
+		} else if (AdmobRequest.ERROR_REQUEST_INVALID.equals(admobToken)) {
 			throw new AdmobInvalidRequestException(admobToken);
 		} else if (AdmobRequest.ERROR_ACCOUNT_REMOVED.equals(admobToken)) {
 			throw new AdmobAccountRemovedException(admobToken, currentAdmobAccount);

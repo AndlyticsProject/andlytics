@@ -35,61 +35,66 @@
 			style="@style/MainTableText"
 			android:id="@+id/main_app_ratingbar5_text"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="53"
+			android:layout_height="wrap_content"			
 			android:paddingRight="5dp"
+			android:paddingTop="3dp"
 			android:gravity="right"
 			android:minWidth="65dp"  />
 
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/main_app_ratingbar5"
+		<RatingBar
+			style="@style/andRatingBar"
+			android:isIndicator="true"
 			android:layout_below="@+id/main_app_name"
-			android:layout_toRightOf="@+id/main_app_ratingbar5_text"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:stepSize="1"
+			android:rating="5"
+			android:numStars="5"
+			android:id="@+id/main_app_ratingbar5"
 			android:minHeight="20dp"
-			android:paddingRight="50dp" />
+			android:paddingTop="3dp"
+			android:layout_toRightOf="@+id/main_app_ratingbar5_text" />
+		
 		<TextView
 			style="@style/MainTableText"
 			android:id="@+id/main_app_ratingbar5_percent"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="50%"
 			android:layout_alignParentRight="true"
+			android:paddingTop="3dp"
 			android:paddingRight="50dp" />
-
 
 		<TextView
 			style="@style/MainTableText"
 			android:id="@+id/main_app_ratingbar4_text"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="23"
 			android:minWidth="65dp" 
 			android:paddingRight="5dp"
 			android:gravity="right"
 			android:layout_below="@+id/main_app_ratingbar5" />
 
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/main_app_ratingbar4"
-			android:layout_toRightOf="@+id/main_app_ratingbar4_text"
+		<RatingBar
+			style="@style/andRatingBar"
+			android:isIndicator="true"
 			android:layout_below="@+id/main_app_ratingbar5"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:stepSize="1"
+			android:rating="4"
+			android:numStars="5"
+			android:id="@+id/main_app_ratingbar4"
 			android:minHeight="20dp"
-			android:scaleType="centerInside"
-			android:paddingRight="50dp" />
+			android:layout_toRightOf="@+id/main_app_ratingbar4_text" />
+		
 		<TextView
 			style="@style/MainTableText"
 			android:id="@+id/main_app_ratingbar4_percent"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="50%"
 			android:layout_below="@+id/main_app_ratingbar5"
 			android:layout_alignParentRight="true"
 			android:paddingRight="50dp" />
-
-
 
 		<TextView
 			style="@style/MainTableText"
@@ -99,25 +104,26 @@
 			android:minWidth="65dp" 
 			android:paddingRight="5dp"
 			android:gravity="right"
-			android:text="12"
 			android:layout_below="@+id/main_app_ratingbar4" />
 
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/main_app_ratingbar3"
-			android:layout_toRightOf="@+id/main_app_ratingbar3_text"
+		<RatingBar
+			style="@style/andRatingBar"
+			android:isIndicator="true"
 			android:layout_below="@+id/main_app_ratingbar4"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:stepSize="1"
+			android:rating="3"
+			android:numStars="5"
+			android:id="@+id/main_app_ratingbar3"
 			android:minHeight="20dp"
-			android:scaleType="centerInside"
-			android:paddingRight="50dp" />
-
+			android:layout_toRightOf="@+id/main_app_ratingbar3_text" />
+				
 		<TextView
 			style="@style/MainTableText"
 			android:id="@+id/main_app_ratingbar3_percent"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="50%"
 			android:layout_below="@+id/main_app_ratingbar4"
 			android:layout_alignParentRight="true"
 			android:paddingRight="50dp" />
@@ -130,25 +136,26 @@
 			android:minWidth="65dp" 
 			android:paddingRight="5dp"
 			android:gravity="right"
-			android:text="2"
 			android:layout_below="@+id/main_app_ratingbar3" />
 
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/main_app_ratingbar2"
-			android:layout_toRightOf="@+id/main_app_ratingbar2_text"
+		<RatingBar
+			style="@style/andRatingBar"
+			android:isIndicator="true"
 			android:layout_below="@+id/main_app_ratingbar3"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:stepSize="1"
+			android:rating="2"
+			android:numStars="5"
+			android:id="@+id/main_app_ratingbar2"
 			android:minHeight="20dp"
-			android:scaleType="centerInside"
-			android:paddingRight="50dp" />
+			android:layout_toRightOf="@+id/main_app_ratingbar2_text" />
 
 		<TextView
 			style="@style/MainTableText"
 			android:id="@+id/main_app_ratingbar2_percent"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="50%"
 			android:layout_below="@+id/main_app_ratingbar3"
 			android:layout_alignParentRight="true"
 			android:paddingRight="50dp" />
@@ -162,26 +169,26 @@
 			android:minWidth="65dp"
 			android:paddingRight="5dp"
 			android:gravity="right"
-			android:text="5"
 			android:layout_below="@+id/main_app_ratingbar2" />
 
-
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/main_app_ratingbar1"
-			android:layout_toRightOf="@+id/main_app_ratingbar1_text"
+		<RatingBar
+			style="@style/andRatingBar"
+			android:isIndicator="true"
 			android:layout_below="@+id/main_app_ratingbar2"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:stepSize="1"
+			android:rating="1"
+			android:numStars="5"
+			android:id="@+id/main_app_ratingbar1"
 			android:minHeight="20dp"
-			android:scaleType="centerInside"
-			android:paddingRight="50dp" />
+			android:layout_toRightOf="@+id/main_app_ratingbar1_text" />
 
 		<TextView
 			style="@style/MainTableText"
 			android:id="@+id/main_app_ratingbar1_percent"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="50%"
 			android:layout_below="@+id/main_app_ratingbar2"
 			android:layout_alignParentRight="true"
 			android:paddingRight="50dp" />
@@ -191,12 +198,10 @@
 			android:layout_below="@+id/main_app_ratingbar1"
 			android:id="@+id/main_package_name"
 			android:layout_height="wrap_content"
-			android:text="com.github.andlyticsproject.bruttonetto"
 			android:paddingTop="2dp"
 			android:layout_centerHorizontal="true"
 			android:textColor="#bababa"
 			android:layout_width="wrap_content" />
-
 
 	</RelativeLayout>
 
@@ -243,11 +248,9 @@
 				android:id="@+id/main_app_name"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="Brutto Netto Gehalt Rechner"
 				android:textStyle="bold"
 				android:maxLines="1"
 				android:layout_toRightOf="@+id/main_app_icon_frame" />
-
 
 			<RatingBar
 				style="@style/andRatingBar"
@@ -261,14 +264,11 @@
 				android:id="@+id/main_app_ratingbar"
 				android:layout_toRightOf="@+id/main_app_icon_frame" />
 
-
-
 			<TextView
 				android:id="@+id/main_app_commentscount"
 				style="@style/MainTableText"
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
-				android:text="23"
 				android:layout_alignRight="@+id/main_app_rating"
 				android:paddingRight="5dp"
 				android:maxLines="1"
@@ -296,7 +296,6 @@
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
 				android:layout_alignBaseline="@+id/main_app_commentscountText"
-				android:text="68%"
 				android:layout_alignParentRight="true"
 				android:paddingRight="50dp" />
 
@@ -335,7 +334,6 @@
 				style="@style/MainTableText"
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
-				android:text="100000"
 				android:gravity="right"
 				android:paddingRight="5dp"
 				android:paddingLeft="10dp"
@@ -365,7 +363,6 @@
 				style="@style/MainTableText"
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
-				android:text="77777"
 				android:layout_alignRight="@+id/main_app_downloads"
 				android:gravity="right"
 				android:paddingRight="5dp" 
@@ -389,7 +386,6 @@
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
 				android:layout_alignBaseline="@+id/main_app_activeinstallsText"
-				android:text="68%"
 				android:layout_alignParentRight="true"
 				android:paddingRight="55dp" />
 
@@ -428,7 +424,6 @@
 				style="@style/MainTableText"
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
-				android:text="100000"
 				android:gravity="right"
 				android:paddingRight="5dp" 
 				android:paddingLeft="10dp"
@@ -458,7 +453,6 @@
 				style="@style/MainTableText"
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
-				android:text="77777"
 				android:layout_alignRight="@+id/main_app_admob_revenue"
 				android:gravity="right"
 				android:paddingRight="5dp" 
@@ -525,7 +519,6 @@
 				style="@style/MainTableText"
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
-				android:text="4.233"
 				android:paddingRight="5dp" 
 				android:maxLines="1"
 				android:layout_alignRight="@+id/main_app_rating"
@@ -547,7 +540,6 @@
 				style="@style/MainTableText"
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
-				android:text="123"
 				android:paddingRight="5dp"
 				android:gravity="right"
 				android:paddingBottom="5dp"
@@ -560,7 +552,6 @@
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
 				android:layout_alignBaseline="@+id/main_app_avgrating"
-				android:text="68%"
 				android:layout_alignParentRight="true"
 				android:paddingRight="55dp" />				
 
@@ -581,7 +572,6 @@
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
 				android:layout_alignBaseline="@+id/main_app_ratingText"
-				android:text="68%"
 				android:layout_alignParentRight="true"
 				android:paddingRight="55dp" />
 
@@ -592,8 +582,6 @@
 				android:layout_width="fill_parent"
 				android:background="@drawable/row_dash"
 				android:layout_height="2dp" />
-
-
 
 		</RelativeLayout>
 

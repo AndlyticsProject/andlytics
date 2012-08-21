@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.TextView;
 
@@ -319,11 +318,6 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 
 			return false;
 		}
-	}
-
-	@Override
-	protected Drawable getChartTitleDrawable(int page, int column) {
-		return null;
 	}
 
 	@Override

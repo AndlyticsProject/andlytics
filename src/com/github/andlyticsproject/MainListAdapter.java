@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
@@ -48,11 +47,11 @@ public class MainListAdapter extends BaseAdapter {
 
 	private NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
 
-	private static final int BLACK_TEXT = Color.parseColor("#555555");
+	private static int BLACK_TEXT;
 
 	private static final int RED_TEXT = Color.RED;
 
-	private static final int GREEN_TEXT = Color.parseColor("#33B5E5");
+	private static int BLUE_TEXT;
 
 	public static final int TAG_IMAGE_REF = R.id.tag_mainlist_image_reference;
 
@@ -88,16 +87,6 @@ public class MainListAdapter extends BaseAdapter {
 
 	private ContentAdapter db;
 
-	static Bitmap ratingImage1;
-
-	static Bitmap ratingImage2;
-
-	static Bitmap ratingImage3;
-
-	static Bitmap ratingImage4;
-
-	static Bitmap ratingImage5;
-
 	private AccelerateInterpolator upInterpolator;
 
 	private BounceInterpolator downInterpolator;
@@ -108,6 +97,8 @@ public class MainListAdapter extends BaseAdapter {
 
 	public MainListAdapter(Activity activity, String accountname, ContentAdapter db,
 			StatsMode statsMode) {
+		BLACK_TEXT = activity.getResources().getColor(R.color.blackText);
+		BLUE_TEXT = activity.getResources().getColor(R.color.lightBlue);
 		this.setAppInfos(new ArrayList<AppInfo>());
 		this.layoutInflater = activity.getLayoutInflater();
 		this.activity = activity;
@@ -126,15 +117,9 @@ public class MainListAdapter extends BaseAdapter {
 		this.expandMargin = Math.round(metrics.scaledDensity * 5);
 		this.iconDown = activity.getResources().getDrawable(R.drawable.icon_down);
 		this.iconUp = activity.getResources().getDrawable(R.drawable.icon_up);
-		ratingImage1 = ((BitmapDrawable) activity.getResources().getDrawable(R.drawable.rating_1)).getBitmap();
-		ratingImage2 = ((BitmapDrawable) activity.getResources().getDrawable(R.drawable.rating_2)).getBitmap();
-		ratingImage3 = ((BitmapDrawable) activity.getResources().getDrawable(R.drawable.rating_3)).getBitmap();
-		ratingImage4 = ((BitmapDrawable) activity.getResources().getDrawable(R.drawable.rating_4)).getBitmap();
-		ratingImage5 = ((BitmapDrawable) activity.getResources().getDrawable(R.drawable.rating_5)).getBitmap();
 		this.db = db;
 
 		this.setStatsMode(statsMode);
-
 	}
 
 	@Override
@@ -192,12 +177,6 @@ public class MainListAdapter extends BaseAdapter {
 			holder.ratingbar = (RatingBar) convertView.findViewById(R.id.main_app_ratingbar);
 			holder.row = (RelativeLayout) convertView.findViewById(R.id.main_app_row);
 
-			holder.ratingbar1 = (ImageView) convertView.findViewById(R.id.main_app_ratingbar1);
-			holder.ratingbar2 = (ImageView) convertView.findViewById(R.id.main_app_ratingbar2);
-			holder.ratingbar3 = (ImageView) convertView.findViewById(R.id.main_app_ratingbar3);
-			holder.ratingbar4 = (ImageView) convertView.findViewById(R.id.main_app_ratingbar4);
-			holder.ratingbar5 = (ImageView) convertView.findViewById(R.id.main_app_ratingbar5);
-
 			holder.ratingtext1 = (TextView) convertView.findViewById(R.id.main_app_ratingbar1_text);
 			holder.ratingtext2 = (TextView) convertView.findViewById(R.id.main_app_ratingbar2_text);
 			holder.ratingtext3 = (TextView) convertView.findViewById(R.id.main_app_ratingbar3_text);
@@ -218,12 +197,6 @@ public class MainListAdapter extends BaseAdapter {
 			holder.buttonHistory = (View) convertView.findViewById(R.id.main_app_button_history);
 			holder.ratingFrame = (View) convertView.findViewById(R.id.main_app_ratingdetain_frame);
 			holder.downloadFrame = (View) convertView.findViewById(R.id.main_app_download_frame);
-
-			holder.ratingbar1.setImageBitmap(ratingImage1);
-			holder.ratingbar2.setImageBitmap(ratingImage2);
-			holder.ratingbar3.setImageBitmap(ratingImage3);
-			holder.ratingbar4.setImageBitmap(ratingImage4);
-			holder.ratingbar5.setImageBitmap(ratingImage5);
 
 			convertView.setTag(holder);
 
@@ -519,7 +492,7 @@ public class MainListAdapter extends BaseAdapter {
 		String value = diff.toString();
 
 		if (diff > 0) {
-			view.setTextColor(GREEN_TEXT);
+			view.setTextColor(BLUE_TEXT);
 			value = "+" + value;
 		} else if (diff < 0) {
 			view.setTextColor(RED_TEXT);
@@ -540,7 +513,7 @@ public class MainListAdapter extends BaseAdapter {
 
 			if (diff > 0) {
 				value = diffvalue;
-				view.setTextColor(GREEN_TEXT);
+				view.setTextColor(BLUE_TEXT);
 				value = "+" + value;
 			} else if (diff < 0) {
 				value = diffvalue;
@@ -558,11 +531,6 @@ public class MainListAdapter extends BaseAdapter {
 		public View admobFrame;
 		public TextView downloadsCountPercent;
 		public View downloadFrame;
-		public ImageView ratingbar2;
-		public ImageView ratingbar3;
-		public ImageView ratingbar4;
-		public ImageView ratingbar5;
-		public ImageView ratingbar1;
 		public ScrollView scrollview;
 		public TextView ratingCountPercent;
 		public TextView commentsCountPercent;

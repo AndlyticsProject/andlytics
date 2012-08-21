@@ -93,7 +93,7 @@ public class AdmobAuthenticationUtilities {
 			return AdmobRequest.ERROR_NETWORK_ERROR;
 		} catch (AdmobInvalidRequestException e) {
 			Log.e(TAG, "Unsuccessful Admob authentication, google accounts are not supported");
-			sendResult(AdmobRequest.ERROR_REQUESET_INVALID, handler, context);
+			sendResult(AdmobRequest.ERROR_REQUEST_INVALID, handler, context);
 			return null;
 		} catch (AdmobRateLimitExceededException e) {
 			Log.e(TAG, "Unsuccessful Admob authentication, rate limit excceded");

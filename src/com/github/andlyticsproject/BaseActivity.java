@@ -96,88 +96,53 @@ public class BaseActivity extends SherlockActivity {
 	}
 
 	public void handleUserVisibleException(Exception e) {
-		// TODO Clean these up and put them in strings.xml so that they can be translated
 		if (e instanceof NetworkException) {
 			Toast.makeText(BaseActivity.this,
-					"A network error has occurred. Please try again later.", Toast.LENGTH_LONG)
+					getString(R.string.network_error), Toast.LENGTH_LONG)
 					.show();
 		} else if (e instanceof SignupException) {
 			Toast.makeText(
-					BaseActivity.this,
-					accountName + " is not an android developer account, sign up at:\n\n"
-							+ e.getMessage(), Toast.LENGTH_LONG).show();
-			Toast.makeText(
-					BaseActivity.this,
-					accountName + " is not an android developer account, sign up at:\n\n"
-							+ e.getMessage(), Toast.LENGTH_LONG).show();
+					BaseActivity.this, getString(R.string.signup_error, accountName, e.getMessage()),
+					Toast.LENGTH_LONG).show();
 		} else if (e instanceof AuthenticationException || e instanceof NoCookieSetException) {
 
-			Toast.makeText(BaseActivity.this, "authentication failed for: " + accountName,
+			Toast.makeText(BaseActivity.this, getString(R.string.auth_error, accountName),
 					Toast.LENGTH_LONG).show();
 
 		} else if (e instanceof AdmobRateLimitExceededException) {
-
-			Toast.makeText(
-					BaseActivity.this,
-					"Can't load Admob data because Admob has restricted the number of requests from this app, try again later.",
+			Toast.makeText(BaseActivity.this, getString(R.string.admob_ratelimit_error),
 					Toast.LENGTH_LONG).show();
-
 		} else if (e instanceof AdmobAskForPasswordException) {
-
 			Log.w(TAG, "ask for admob credentials");
 			getAndlyticsApplication().setSkipMainReload(true);
-
 		} else if (e instanceof AdmobAccountRemovedException) {
-
-			Toast.makeText(
-					BaseActivity.this,
-					"AdMob account \""
-							+ "\" is missing. If this happens repeatedly try moving Andlytics from sdcard to internal storage.",
+			String wrongAccount = ((AdmobAccountRemovedException) e).getAccountName();  
+			Toast.makeText(BaseActivity.this, getString(R.string.admob_missing_error, wrongAccount),
 					Toast.LENGTH_LONG).show();
-			Toast.makeText(
-					BaseActivity.this,
-					"AdMob account \""
-							+ ((AdmobAccountRemovedException) e).getAccountName()
-							+ "\" is missing. If this happens repeatedly try moving Andlytics from sdcard to internal storage.",
-					Toast.LENGTH_LONG).show();
-
 		} else if (e instanceof AdmobInvalidRequestException) {
-
-			Toast.makeText(BaseActivity.this, "Error while requesting AdMob API", Toast.LENGTH_LONG)
-					.show();
-
-		} else if (e instanceof AdmobInvalidTokenException) {
-
-			Toast.makeText(BaseActivity.this,
-					"Error while authenticating admob account. Please try again later.",
+			Toast.makeText(BaseActivity.this, getString(R.string.admob_invalid_request_error),
 					Toast.LENGTH_LONG).show();
-
+		} else if (e instanceof AdmobInvalidTokenException) {
+			Toast.makeText(BaseActivity.this, getString(R.string.admob_invalid_token_error),
+					Toast.LENGTH_LONG).show();
 		} else if (e instanceof AdmobGenericException) {
-
 			Log.w(TAG, e.getMessage(), e);
-
-			Toast.makeText(BaseActivity.this,
-					"Unabled to load Admob data, please try again later.", Toast.LENGTH_LONG)
-					.show();
-
+			Toast.makeText(BaseActivity.this, getString(R.string.admob_generic_error),
+					Toast.LENGTH_LONG).show();
 		} else if (e instanceof DeveloperConsoleException) {
-
 			int appVersionCode = getAppVersionCode(this);
 			if (Preferences.getLatestVersionCode(this) > appVersionCode) {
 				showNewVersionDialog(e);
 			} else {
 				showCrashDialog(e);
 			}
-
 		} else if (e instanceof InvalidJSONResponseException) {
-
 			int appVersionCode = getAppVersionCode(this);
 			if (Preferences.getLatestVersionCode(this) > appVersionCode) {
 				showNewVersionDialog(e);
 			} else {
 				showGoogleErrorDialog(e);
 			}
-
 		} else if (e instanceof MultiAccountAcception) {
 			showAspErrorDialog(e);
 		}
@@ -187,22 +152,22 @@ public class BaseActivity extends SherlockActivity {
 		if (!isFinishing()) {
 
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
-			builder.setTitle("Sorry, update required.");
+			builder.setTitle(getString(R.string.update_required_title));
 			builder.setMessage(R.string.newversion_desc);
-			builder.setPositiveButton("update", new DialogInterface.OnClickListener() {
+			builder.setPositiveButton(getString(R.string.update_button), new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int which) {
 
 					Intent goToMarket = null;
 					goToMarket = new Intent(Intent.ACTION_VIEW, Uri
-							.parse("market://details?id=com.github.andlyticsproject"));
+							.parse(getString(R.string.market_uri)));
 					startActivity(goToMarket);
 
 					dialog.dismiss();
 				}
 
 			});
-			builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+			builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
@@ -220,9 +185,9 @@ public class BaseActivity extends SherlockActivity {
 		if (!isFinishing()) {
 
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
-			builder.setTitle("Sorry...");
+			builder.setTitle(getString(R.string.crash_dialog_title));
 			builder.setMessage(R.string.crash_desc);
-			builder.setPositiveButton("send report", new DialogInterface.OnClickListener() {
+			builder.setPositiveButton(getString(R.string.send_report_button), new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int which) {
 
@@ -243,7 +208,7 @@ public class BaseActivity extends SherlockActivity {
 				}
 
 			});
-			builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+			builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
@@ -265,9 +230,9 @@ public class BaseActivity extends SherlockActivity {
 		if (!isFinishing()) {
 
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
-			builder.setTitle("Sorry... ");
-			builder.setMessage("Updates are currently not possible, probably because the remote interface changed.\n\nPlease help us to fix this by sending us error report data. Information about the error (stacktrace) and information about your device such as device manufacturer's name, device model number, operating system, etc. will be sent to help us identifying the problem.\n\nThank you!");
-			builder.setPositiveButton("send report", new DialogInterface.OnClickListener() {
+			builder.setTitle(getString(R.string.crash_dialog_title));
+			builder.setMessage(getString(R.string.remote_interface_changed_error));
+			builder.setPositiveButton(getString(R.string.send_report_button), new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int which) {
 
@@ -283,7 +248,7 @@ public class BaseActivity extends SherlockActivity {
 				}
 
 			});
-			builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+			builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
@@ -302,9 +267,9 @@ public class BaseActivity extends SherlockActivity {
 		if (!isFinishing()) {
 
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
-			builder.setTitle("Multiple Developer Accounts");
-			builder.setMessage("Your account is linked to multiple developer consoles. This feature is not supported in andlytics.\n\nYou can unlink additional accounts or ask Google for a public app stats API at: \n\nhttp://support.google.com/googleplay\n\nSorry :(");
-			builder.setPositiveButton("logout", new DialogInterface.OnClickListener() {
+			builder.setTitle(getString(R.string.multiple_dev_accounts_title));
+			builder.setMessage(getString(R.string.multiple_dev_accounts_error));
+			builder.setPositiveButton(getString(R.string.logout), new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
@@ -317,7 +282,7 @@ public class BaseActivity extends SherlockActivity {
 				}
 
 			});
-			builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+			builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
@@ -408,80 +373,9 @@ public class BaseActivity extends SherlockActivity {
 
 		};
 
-		accountManager.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVLOPER, null,
+		accountManager.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, null,
 				BaseActivity.this, myCallback, null);
-
-		/*
-
-		Bundle bundle;
-		try {
-			bundle = manager.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVLOPER, true, null, null).getResult();
-
-			if (bundle.containsKey(AccountManager.KEY_INTENT)) {
-
-				// ask user for permission - launch account manager intent
-				Intent intent = bundle.getParcelable(AccountManager.KEY_INTENT);
-				int flags = intent.getFlags();
-				flags &= ~Intent.FLAG_ACTIVITY_NEW_TASK;
-				intent.setFlags(flags);
-				getAndlyticsApplication().setAuthToken(null);
-				getAndlyticsApplication().setRunningAuthenticationRequestIntent(true);
-				startActivityForResult(intent, REQUEST_AUTHENTICATE);
-
-			} else if (bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
-
-				//  got token form manager - set in application an exit
-				String authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-				getAndlyticsApplication().setAuthToken(authToken);
-
-				//manager.invalidateAuthToken(Constants.ACCOUNT_TYPE_GOOGLE, authToken);
-
-
-			}
-		} catch (OperationCanceledException e1) {
-			e1.printStackTrace();
-		} catch (AuthenticatorException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}*/
-
 	}
-
-	/*
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		switch (requestCode) {
-		case REQUEST_AUTHENTICATE:
-
-			getAndlyticsApplication().setRunningAuthenticationRequestIntent(false);
-
-			if (resultCode == RESULT_OK) {
-
-				AsyncTask<Void, Void, Void> t = new AsyncTask<Void, Void, Void>() {
-
-					@Override
-					protected Void doInBackground(Void... params) {
-						authenticateAccountFromPreferences(false);
-						return null;
-					}
-
-					@Override
-					protected void onPostExecute(Void result) {
-						onPostAuthentication();
-					}
-
-
-				};
-				t.execute();
-
-			} else {
-			    getAndlyticsApplication().setSkipMainReload(true);
-				Log.e("Andlytics", "REQUEST_AUTHENTICATE, result is NOT ok");
-			}
-		}
-	}*/
 
 	protected void showLoadingIndecator(ViewSwitcher switcher) {
 		Animation loadingAnim = AnimationUtils.loadAnimation(this, R.anim.loading);
