@@ -37,25 +37,32 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"			
 			android:paddingRight="5dp"
+			android:paddingTop="3dp"
 			android:gravity="right"
 			android:minWidth="65dp"  />
 
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/main_app_ratingbar5"
+		<RatingBar
+			style="@style/andRatingBar"
+			android:isIndicator="true"
 			android:layout_below="@+id/main_app_name"
-			android:layout_toRightOf="@+id/main_app_ratingbar5_text"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:stepSize="1"
+			android:rating="5"
+			android:numStars="5"
+			android:id="@+id/main_app_ratingbar5"
 			android:minHeight="20dp"
-			android:paddingRight="50dp" />
+			android:paddingTop="3dp"
+			android:layout_toRightOf="@+id/main_app_ratingbar5_text" />
+		
 		<TextView
 			style="@style/MainTableText"
 			android:id="@+id/main_app_ratingbar5_percent"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentRight="true"
+			android:paddingTop="3dp"
 			android:paddingRight="50dp" />
-
 
 		<TextView
 			style="@style/MainTableText"
@@ -67,15 +74,19 @@
 			android:gravity="right"
 			android:layout_below="@+id/main_app_ratingbar5" />
 
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/main_app_ratingbar4"
-			android:layout_toRightOf="@+id/main_app_ratingbar4_text"
+		<RatingBar
+			style="@style/andRatingBar"
+			android:isIndicator="true"
 			android:layout_below="@+id/main_app_ratingbar5"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:stepSize="1"
+			android:rating="4"
+			android:numStars="5"
+			android:id="@+id/main_app_ratingbar4"
 			android:minHeight="20dp"
-			android:scaleType="centerInside"
-			android:paddingRight="50dp" />
+			android:layout_toRightOf="@+id/main_app_ratingbar4_text" />
+		
 		<TextView
 			style="@style/MainTableText"
 			android:id="@+id/main_app_ratingbar4_percent"
@@ -84,8 +95,6 @@
 			android:layout_below="@+id/main_app_ratingbar5"
 			android:layout_alignParentRight="true"
 			android:paddingRight="50dp" />
-
-
 
 		<TextView
 			style="@style/MainTableText"
@@ -97,16 +106,19 @@
 			android:gravity="right"
 			android:layout_below="@+id/main_app_ratingbar4" />
 
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/main_app_ratingbar3"
-			android:layout_toRightOf="@+id/main_app_ratingbar3_text"
+		<RatingBar
+			style="@style/andRatingBar"
+			android:isIndicator="true"
 			android:layout_below="@+id/main_app_ratingbar4"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:stepSize="1"
+			android:rating="3"
+			android:numStars="5"
+			android:id="@+id/main_app_ratingbar3"
 			android:minHeight="20dp"
-			android:scaleType="centerInside"
-			android:paddingRight="50dp" />
-
+			android:layout_toRightOf="@+id/main_app_ratingbar3_text" />
+				
 		<TextView
 			style="@style/MainTableText"
 			android:id="@+id/main_app_ratingbar3_percent"
@@ -126,15 +138,18 @@
 			android:gravity="right"
 			android:layout_below="@+id/main_app_ratingbar3" />
 
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/main_app_ratingbar2"
-			android:layout_toRightOf="@+id/main_app_ratingbar2_text"
+		<RatingBar
+			style="@style/andRatingBar"
+			android:isIndicator="true"
 			android:layout_below="@+id/main_app_ratingbar3"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:stepSize="1"
+			android:rating="2"
+			android:numStars="5"
+			android:id="@+id/main_app_ratingbar2"
 			android:minHeight="20dp"
-			android:scaleType="centerInside"
-			android:paddingRight="50dp" />
+			android:layout_toRightOf="@+id/main_app_ratingbar2_text" />
 
 		<TextView
 			style="@style/MainTableText"
@@ -156,16 +171,18 @@
 			android:gravity="right"
 			android:layout_below="@+id/main_app_ratingbar2" />
 
-
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/main_app_ratingbar1"
-			android:layout_toRightOf="@+id/main_app_ratingbar1_text"
+		<RatingBar
+			style="@style/andRatingBar"
+			android:isIndicator="true"
 			android:layout_below="@+id/main_app_ratingbar2"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:stepSize="1"
+			android:rating="1"
+			android:numStars="5"
+			android:id="@+id/main_app_ratingbar1"
 			android:minHeight="20dp"
-			android:scaleType="centerInside"
-			android:paddingRight="50dp" />
+			android:layout_toRightOf="@+id/main_app_ratingbar1_text" />
 
 		<TextView
 			style="@style/MainTableText"
@@ -235,7 +252,6 @@
 				android:maxLines="1"
 				android:layout_toRightOf="@+id/main_app_icon_frame" />
 
-
 			<RatingBar
 				style="@style/andRatingBar"
 				android:isIndicator="true"
@@ -247,8 +263,6 @@
 				android:numStars="5"
 				android:id="@+id/main_app_ratingbar"
 				android:layout_toRightOf="@+id/main_app_icon_frame" />
-
-
 
 			<TextView
 				android:id="@+id/main_app_commentscount"

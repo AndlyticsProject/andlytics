@@ -2,8 +2,6 @@
 package com.github.andlyticsproject;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +10,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.io.UnsupportedEncodingException;
@@ -27,16 +25,6 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 	private LayoutInflater layoutInflater;
 
-	private Bitmap ratingImage1;
-
-	private Bitmap ratingImage2;
-
-	private Bitmap ratingImage3;
-
-	private Bitmap ratingImage4;
-
-	private Bitmap ratingImage5;
-
 	private ArrayList<CommentGroup> commentGroups;
 
 	private CommentsActivity context;
@@ -44,16 +32,6 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	public CommentsListAdapter(CommentsActivity activity) {
 		this.setCommentGroups(new ArrayList<CommentGroup>());
 		this.layoutInflater = activity.getLayoutInflater();
-		this.ratingImage1 = ((BitmapDrawable) activity.getResources().getDrawable(
-				R.drawable.rating_1)).getBitmap();
-		this.ratingImage2 = ((BitmapDrawable) activity.getResources().getDrawable(
-				R.drawable.rating_2)).getBitmap();
-		this.ratingImage3 = ((BitmapDrawable) activity.getResources().getDrawable(
-				R.drawable.rating_3)).getBitmap();
-		this.ratingImage4 = ((BitmapDrawable) activity.getResources().getDrawable(
-				R.drawable.rating_4)).getBitmap();
-		this.ratingImage5 = ((BitmapDrawable) activity.getResources().getDrawable(
-				R.drawable.rating_5)).getBitmap();
 		this.context = activity;
 	}
 
@@ -70,7 +48,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			holder.text = (TextView) convertView.findViewById(R.id.comments_list_item_text);
 			holder.user = (TextView) convertView.findViewById(R.id.comments_list_item_username);
 			holder.device = (TextView) convertView.findViewById(R.id.comments_list_item_device);
-			holder.rating = (ImageView) convertView
+			holder.rating = (RatingBar) convertView
 					.findViewById(R.id.comments_list_item_app_ratingbar);
 
 			convertView.setTag(holder);
@@ -103,19 +81,19 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		int rating = comment.getRating();
 		switch (rating) {
 			case 1:
-				holder.rating.setImageBitmap(ratingImage1);
+				holder.rating.setRating(1f);
 				break;
 			case 2:
-				holder.rating.setImageBitmap(ratingImage2);
+				holder.rating.setRating(2f);
 				break;
 			case 3:
-				holder.rating.setImageBitmap(ratingImage3);
+				holder.rating.setRating(3f);
 				break;
 			case 4:
-				holder.rating.setImageBitmap(ratingImage4);
+				holder.rating.setRating(4f);
 				break;
 			case 5:
-				holder.rating.setImageBitmap(ratingImage5);
+				holder.rating.setRating(5f);
 				break;
 
 			default:
@@ -138,6 +116,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 					Intent i = new Intent(Intent.ACTION_VIEW);
 					i.setData(Uri.parse(url));
 					context.startActivity(i);
+
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
@@ -184,7 +163,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 	static class ViewHolderChild {
 		TextView text;
-		ImageView rating;
+		RatingBar rating;
 		TextView user;
 		TextView device;
 	}
