@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.andlyticsproject.AppStatsDiff;
+import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.DeveloperConsole;
 import com.github.andlyticsproject.exception.AuthenticationException;
@@ -85,7 +86,7 @@ public class SyncAdapterService extends Service {
 
 		try {
 			bundle = AccountManager.get(context)
-					.getAuthToken(account, "androiddeveloper", true, null, null).getResult();
+					.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, true, null, null).getResult();
 			if (bundle != null && bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
 				token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
 

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -12,7 +13,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="5dp"
         android:padding="10dp"
-        android:textColor="#555555" />
+        android:textColor="@color/blackText" />
 
     <CheckBox
         android:id="@+id/login_list_item_enabled"

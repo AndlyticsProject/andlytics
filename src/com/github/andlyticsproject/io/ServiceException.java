@@ -1,11 +1,11 @@
 
 package com.github.andlyticsproject.io;
 
-public class ServiceExceptoin extends Exception {
+public class ServiceException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
-	public ServiceExceptoin(Exception e) {
+	public ServiceException(Exception e) {
 		super(e);
 	}
 

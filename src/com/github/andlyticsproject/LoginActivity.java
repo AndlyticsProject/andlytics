@@ -229,7 +229,7 @@ public class LoginActivity extends SherlockActivity {
 		};
 
 		AccountManager.get(LoginActivity.this).addAccount(Constants.ACCOUNT_TYPE_GOOGLE,
-				Constants.AUTH_TOKEN_TYPE_ANDROID_DEVLOPER, null, null /* options */,
+				Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, null, null /* options */,
 				LoginActivity.this, callback, null /* handler */);
 	}
 

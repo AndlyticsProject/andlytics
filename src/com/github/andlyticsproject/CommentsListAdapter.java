@@ -84,18 +84,18 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		holder.user.setText(comment.getUser());
 
 		String deviceText = "";
-
+		// building string: version X on device: XYZ
 		if (comment.getAppVersion() != null && comment.getAppVersion().length() > 0) {
-			deviceText += "version " + comment.getAppVersion() + " ";
+			deviceText += context.getString(R.string.comments_version) + " " + comment.getAppVersion() + " ";
 		}
 
 		if (comment.getDevice() != null && comment.getDevice().length() > 0) {
 
 			if (deviceText.length() > 0) {
-				deviceText += "on ";
+				deviceText += context.getString(R.string.comments_on) + " ";
 			}
 
-			deviceText += "device: " + comment.getDevice();
+			deviceText += context.getString(R.string.device)+ ": " + comment.getDevice();
 		}
 
 		holder.device.setText(deviceText);
@@ -126,11 +126,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 			@Override
 			public boolean onLongClick(View v) {
-
 				String text = comment.getText();
-
 				String displayLanguage = Locale.getDefault().getLanguage();
-
 				String url = "http://translate.google.de/m/translate?hl=<<lang>>&vi=m&text=<<text>>&langpair=auto|<<lang>>";
 
 				try {
@@ -141,19 +138,13 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 					Intent i = new Intent(Intent.ACTION_VIEW);
 					i.setData(Uri.parse(url));
 					context.startActivity(i);
-
-					//                    TranslateDialog dialog = new TranslateDialog(context, text);
-					//                    dialog.show();
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
-
 				return true;
 			}
 		});
-
 		return convertView;
-
 	}
 
 	@Override

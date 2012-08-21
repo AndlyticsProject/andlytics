@@ -46,7 +46,10 @@
 					android:layout_width="wrap_content"
 					android:textSize="14dp"
 					android:layout_marginTop="5dp"
-					android:visibility="visible" android:layout_centerHorizontal="true" android:text="" ></TextView>
+					android:visibility="visible" 
+					android:layout_centerHorizontal="true" 
+					android:text="" >
+				</TextView>
 
 				<com.github.andlyticsproject.view.ChartGallery
 					android:layout_marginTop="25dp"
@@ -151,7 +154,7 @@
 					android:id="@+id/base_chart_listSpacer"
 					android:layout_width="fill_parent"
 					android:layout_height="2dp"
-					android:background="#33B5E5" />
+					android:background="@color/lightBlue" />
 
 			</RelativeLayout>
 
@@ -196,7 +199,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
 		android:layout_above="@+id/tabbar_buttonbar"
-		android:background="#33B5E5" />
+		android:background="@color/lightBlue" />
 
 	<include
 		android:id="@+id/tabbar_buttonbar"

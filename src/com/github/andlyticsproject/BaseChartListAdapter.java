@@ -171,7 +171,7 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		int top = (int) (2 * scale);
 		int left = (int) (2 * scale);
 		view.setPadding(left, top, left, top);
-		view.setTextColor(Color.parseColor("#555555"));
+		view.setTextColor(activity.getResources().getColor(R.color.blackText));
 		if (weight) {
 			view.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
 					LayoutParams.WRAP_CONTENT, .2f));

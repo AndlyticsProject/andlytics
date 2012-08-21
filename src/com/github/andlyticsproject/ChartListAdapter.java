@@ -20,7 +20,7 @@ import com.github.andlyticsproject.model.AppStats;
 public class ChartListAdapter extends BaseChartListAdapter {
 	//		private static String LOG_TAG=ChartListAdapter.class.toString();
 
-	private static final int BLACK_TEXT = Color.parseColor("#555555");
+	private static int BLACK_TEXT;
 
 	private static final int RED_TEXT = Color.RED;
 
@@ -51,6 +51,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 
 	public ChartListAdapter(BaseChartActivity activity) {
 		super(activity);
+		BLACK_TEXT = activity.getResources().getColor(R.color.blackText);
 		this.setDownloadInfos(new ArrayList<AppStats>());
 		this.activity = activity;
 		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatShort(activity));
