@@ -59,7 +59,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 		final Comment comment = getChild(groupPosition, childPosition);
 		holder.text.setText(comment.getText());
-		holder.user.setText(comment.getUser());
+		holder.user.setText(context.getString(R.string.comments_author, comment.getUser()));
 
 		String version = comment.getAppVersion();
 		String device = comment.getDevice();
