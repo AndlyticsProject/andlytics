@@ -61,45 +61,26 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		holder.text.setText(comment.getText());
 		holder.user.setText(comment.getUser());
 
+		String version = comment.getAppVersion();
+		String device = comment.getDevice();
 		String deviceText = "";
 		// building string: version X on device: XYZ
-		if (comment.getAppVersion() != null && comment.getAppVersion().length() > 0) {
-			deviceText += context.getString(R.string.comments_version) + " " + comment.getAppVersion() + " ";
-		}
-
-		if (comment.getDevice() != null && comment.getDevice().length() > 0) {
-
-			if (deviceText.length() > 0) {
-				deviceText += context.getString(R.string.comments_on) + " ";
+		if (isNotEmptyOrNull(version)) {
+			if (isNotEmptyOrNull(device)) {
+				deviceText = context.getString(R.string.comments_details_full, version, device);
+			} else {
+				deviceText = context.getString(R.string.comments_details_version, version);
 			}
-
-			deviceText += context.getString(R.string.device)+ ": " + comment.getDevice();
+		} else if (isNotEmptyOrNull(device)) {
+			deviceText = context.getString(R.string.comments_details_device, device);
 		}
-
 		holder.device.setText(deviceText);
 
 		int rating = comment.getRating();
-		switch (rating) {
-			case 1:
-				holder.rating.setRating(1f);
-				break;
-			case 2:
-				holder.rating.setRating(2f);
-				break;
-			case 3:
-				holder.rating.setRating(3f);
-				break;
-			case 4:
-				holder.rating.setRating(4f);
-				break;
-			case 5:
-				holder.rating.setRating(5f);
-				break;
-
-			default:
-				break;
+		if (rating > 0 && rating <= 5) {
+			holder.rating.setRating((float) rating);
 		}
-
+		
 		convertView.setOnLongClickListener(new OnLongClickListener() {
 
 			@Override
@@ -155,6 +136,10 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		});
 
 		return convertView;
+	}
+	
+	private boolean isNotEmptyOrNull(String str) {
+		return str != null && str.length() > 0;
 	}
 
 	static class ViewHolderGroup {

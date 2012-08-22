@@ -28,7 +28,7 @@
 	    android:paddingLeft="5dp"
 	    android:paddingRight="5dp"
 	    android:text="@string/by" >
-</TextView>
+	</TextView>
 
 	<TextView
 		android:id="@+id/comments_list_item_username"
@@ -55,6 +55,6 @@
 	    android:paddingLeft="10dp"
 	    android:paddingRight="10dp"
 	    android:paddingTop="5dp"
-	    android:text="@string/device" />
+	    android:text="@string/comments_details_full" />
 
 </RelativeLayout>
