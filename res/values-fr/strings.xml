@@ -23,7 +23,7 @@
     <string name="ratings">Notes</string>
     <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">commentaires</string>
-    <string name="num_total_downloads">Téléchargements total</string>
+    <string name="num_total_downloads">téléchargements total</string>
     <string name="num_active_installs">Installations actives</string>
     <string name="num_average_rating">Note moyenne</string>
     <string name="num_ratings">Notes</string>
@@ -56,6 +56,8 @@
     <string name="export_files_replaced">Les fichiers d\'export existants seront remplacés</string>
     <string name="run_export">Exporter</string>
     <string name="by">par</string>
+    <string name="comments_version">version</string>
+    <string name="comments_on">actifs</string>
     <string name="device">appareil</string>
     <string name="long_click_translate">Long clic sur le commentaire pour le traduire</string>
     <string name="load_more_comments">Charger plus de commentaires</string>

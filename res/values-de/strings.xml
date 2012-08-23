@@ -56,6 +56,8 @@
     <string name="export_files_replaced">Bestehende Daten werden ersetzt</string>
     <string name="run_export">Exportieren</string>
     <string name="by">von</string>
+    <string name="comments_version">Version</string>
+    <string name="comments_on">auf</string>
     <string name="device">Gerät</string>
     <string name="long_click_translate">Lange auf Kommentaren halten für eine Übersetzung.</string>
     <string name="load_more_comments">Mehr Kommentare laden</string>
