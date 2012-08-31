@@ -89,9 +89,9 @@ public class DeveloperConsole {
 	private static final String URL_COMMENTS = "https://play.google.com/apps/publish/comments";
 	private static final String URL_FEEDBACK = "https://play.google.com/apps/publish/feedback";
 
-	private static final String GET_ASSET_INDEX_FOR_USER = "7|2|7|https://play.google.com/apps/publish/gwt/|8496837F86A2F78F877BF0A5C3AD29C4|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"
+	private static final String GET_ASSET_INDEX_FOR_USER = "7|2|7|https://play.google.com/apps/publish/gwt/|2BCF4D167ACB0F4BCB3EBA75DDAA0575|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"
 			+ PARAM_XSRFTOKEN + "|com.google.wireless.android.vending.developer.shared.AppEditorService|getAssetIndexForUser|I|1|2|3|4|5|6|1|7|100|";
-	private static final String GET_FULL_ASSET_INFO_FOR_USER_REQUEST = "7|2|9|https://play.google.com/apps/publish/gwt/|8496837F86A2F78F877BF0A5C3AD29C4|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"
+	private static final String GET_FULL_ASSET_INFO_FOR_USER_REQUEST = "7|2|9|https://play.google.com/apps/publish/gwt/|2BCF4D167ACB0F4BCB3EBA75DDAA0575|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"
 			+ PARAM_XSRFTOKEN
 			+ "|com.google.wireless.android.vending.developer.shared.AppEditorService|getProductInfosForUser|java.lang.String/2004016611|I|"
 			+ PARAM_APPNAME + "|1|2|3|4|5|6|4|7|8|8|7|9|0|" + PARAM_LENGTH + "|0|";
