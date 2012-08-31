@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Andlytics</string>
-    <string name="app_name_admob">AdMob</string>
 
     <string name="one_entry_hint_desc">Andlyticsは、データを収集するアプリです。意味のあるチャートを表示するには、より多くデータが蓄積された時に再試行してください。\n\nダウンロード数は24または48時間毎に更新されます。</string>
-    <string name="one_entry_hint_demo"><u>サンプルデータのチャートを表示</u></string>
 
+    <string name="crash_dialog_title">申し訳ありません#8230;</string>
     <string name="crash_desc">予期しないエラーが発生しました。\n\nエラーレポートを送信すると、問題の修正に役立ちます。原因を特定するために、エラー情報(スタックとレース)と端末情報 (メーカー、モデル番号、OSバージョンなど)を送信します。\n\nありがとうございました。\n\n</string>
     <string name="crash_toast">予期しないエラーが発生しました。原因を特定するために、エラー情報を送信します。</string>
+    <string name="crash_dont_show_again">次回からこの画面を表示しない</string>
     <string name="newversion_desc"><b>リモートインターフェースが変更されたため、予期しないエラーが発生しました。</b>\n\nしかし、その問題を修正する新しい Andlyticsバージョンは既に、Google Playにて公開済みです。\n\nこの問題を報告する前に、アプリを更新してください。\n\nありがとうございました。\n\n\n</string>
-    <string name="account_required">Android　開発者アカウントが必要です。</string>
-    <string name="account_choose">Googleアカウントを選択、または追加してください。アカウントは、Google Playにて開発者アカウントとして登録されて、公開済みアプリのあるアカウントである必要があります。(\'Google Apps for Business\' アカウント、または複数の開発者コンソールと紐付かれているアカウントはサポートされていません。)</string>
+    <string name="account_required">Adlyticsで使うアカウントを選択してください。</string>
+    <string name="account_choose">アカウントは、Google Playに公開アプリのある開発者アカウントとして登録されている必要があります。(\'Google Apps for Business\'とう複数の開発者コンソールにリンクされているアカウントには対応していません。)</string>
     <string name="account_add">Android 開発者アカウントを追加</string>
     <string name="logout">ログアウト</string>
     <string name="refresh">更新</string>
@@ -41,7 +40,6 @@
     <string name="comment_changes">コメント数推移</string>
     <string name="download_changes">ダウンロード数推移</string>
     <string name="notification_trigger">通知トリガー</string>
-    <string name="disable_notifications">チェックをはずすと、すべての通知を無効にします。</string>
     <string name="notification_signal">通知音</string>
     <string name="notification_sound">通知音</string>
     <string name="notification_light">通知ライト</string>
@@ -56,11 +54,14 @@
     <string name="select_files_export">エクスポートするアプリを選択してください。</string>
     <string name="export_files_replaced">既存のエックスポートファイルを上書きします。</string>
     <string name="run_export">エクスポート開始</string>
-    <string name="by">by</string>
-    <string name="device">端末</string>
+    <string name="comments_author">投稿者: %s</string>
+    <string name="comments_details_full">バージョン: %1$s 端末: %2$s</string>
+    <string name="comments_details_version">バージョン: %s</string>
+    <string name="comments_details_device">端末: %s</string>
     <string name="long_click_translate">コメントを長押しすると、翻訳を表示します。</string>
     <string name="load_more_comments">残りのコメントをロードする</string>
     <string name="info_comments">取り消し・変更されたコメントのため、メイン画面で表示するコメント数は、ここに表示するコメント数より多い場合があります。</string>
+    <string name="no_comments_found">コメントはありません。</string>
     <string name="time_frame">時間帯</string>
     <string name="seven_days">1週間分</string>
     <string name="thirty_days">１ヵ月分</string>
@@ -70,11 +71,12 @@
     <string name="yymmdd">年/月/日</string>
     <string name="mmddyy">月/日/年</string>
     <string name="smooth_values">値を補正する</string>
+    <string name="smoothed_values">* 補正した値</string>
     <string name="info_smooth">ダウンロード・インストール数は毎日更新されるとは限りません。そのような値を補正できます。評価値は、ほぼ即時に更新されるので、補正はしません。</string>
     <string name="auto_sync_period">自動同期周期</string>
-    <string name="info_autosync">自動同期を無効にした場合、将来の値はグラフユーに反映されないおそれがあります</string>
     <string name="admob_login">AdMobアカウント・ログイン</string>
     <string name="password">パスワード</string>
+    <string name="email">メールアドレス</string>
     <string name="login">ログイン</string>
     <string name="remove_admob">AdMobサイト紐付けを削除する</string>
     <string name="remove_admob_app">このアプリのAdMob値を削除する</string>
@@ -101,7 +103,8 @@
     <string name="admob__CTR">CTR</string>
     <string name="admob__house_ad_clicks">House ad クリック数</string>
     <string name="admob__charts_available">表示可能なAdMobチャート</string>
-    <string name="last_update">最後の更新</string>
+    <string name="admob__remove_account">アカウントを削除したい場合は、Android　設定->アカウントと同期画面を使ってください。</string>
+    <string name="last_update">最終更新日時</string>
 
     <string name="changelog_title">変更履歴</string>
     <string name="changelog_thanks">Andlyticsをインストールしていただき、ありがとうございました。</string>
@@ -109,7 +112,8 @@
     <string name="notification_title">Andlytics変更検知</string>
 
     <string name="import_">インポート</string>
-    <string name="import_no_sdcard">SDカードがマウントされていないため、インポートできません。</string>
+    <string name="import_no_sdcard_or_file">SDカードがマウントされていないか、フォーマットが不正です。インポートできません。</string>
+    <string name="import_no_stats_file">統計情報ファイルは見つかりません: %1$s。</string>
     <string name="import_no_app">選択されたアプリはないため、インポートできません。</string>
     <string name="importing">インポート中</string>
     <string name="import_started">インポートを開始しました。</string>
@@ -142,5 +146,30 @@
     <string name="pref_disable_acra">自動エラー報告</string>
     <string name="pref_acra_disabled">エラー報告は無効</string>
     <string name="pref_acra_enabled">エラー報告は有効</string>
-
+    
+    <!-- Errors -->
+    <string name="network_error">ネットワークエラーが発生しました。再試行してください。</string>
+    <string name="signup_error">%1$s は Android開発者アカウントではありません。以下のページで開発者アカウントを登録できます。\n\n %2$s</string>
+    <string name="auth_error">%1$s アカウントの認証は失敗しました。</string>
+    <string name="admob_ratelimit_error">このアプリによる最大Admob リクエスト数に達成しましたので、Admob情報を読み込みできません。しばらくしてから、再試行してください。</string>
+    <string name="admob_missing_error">%1$s　アカウントは見つかりません。この問題は頻繁に発生する場合は、アプリをSDカードから内部ストレージに移動してください。</string>    
+	<string name="admob_invalid_request_error">AdMod API接続エラー。</string>
+	<string name="admob_invalid_token_error">AdMob アカウント認証エラー。再試行してください。</string>
+	<string name="admob_generic_error">AdMobデータを読み込みできません。再試行してください。</string>
+	<string name="admob_linked_accounts_error">GoogleアカウントにリンクしているAdMob アカウントによるAPIアクセスは無効になっています。OAuth に対応するこのAPIの新しいバージンを使う必要があります。</string>
+	<string name="remote_interface_changed_error">リモートAPIは変更されたため、データを更新できません。\n\nエラーレポートを送信すると、問題の修正に役立ちます。原因を特定するために、エラー情報(スタックとレース)と端末情報 (メーカー、モデル番号、OSバージョンなど)を送信します。\n\nありがとうございました。\n\n</string>
+	<string name="multiple_dev_accounts_error">このアカウントは複数の開発者コンソールにリンクされています。Andlytics は現在そういうアカウントに対応していません。\n\nアカウントのリンクを外すか、以下のページでGoogleにこの機能に対応したAPIをリクエストしてください。\n\nhttp://support.google.com/googleplay\n\nすみません :(
+</string>
+	<string name="stats_file_not_specified_error">統計情報ファイルは指定されていません。</string>
+	
+	<string name="admob_initial_import">最初のAdMobデータインポート中。しばらくお待ちください&#8230;</string>
+	<string name="admob_data_prompt">メールアドレスとパスワードを入力してください。</string>
+	<string name="admob_password_prompt">パスワードを入力してください。</string>
+	<string name="admob_authenticating">認証中&#8230;</string>
+	<string name="admob_auth_failed">エラー: 認証失敗。</string>
+	<string name="admob_wrong_password">エラー: パスワードは一致していません。</string>
+	<string name="update_required_title">申し訳ありませんが、アプリの更新が必要です。</string>
+	<string name="multiple_dev_accounts_title">複数の開発者アカウント</string>
+	<string name="update_button">更新</string>
+	<string name="send_report_button">レポートを送信する</string>
 </resources>
