@@ -7,7 +7,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import android.text.format.DateFormat;
 import android.util.SparseArray;
@@ -50,36 +52,35 @@ public class GwtParser {
 			}
 
 		// remove response prefix (//OK)
-		json = json.substring(json.indexOf("[") + 1);
+		json = json.replaceAll("//OK", "");
 
 		// for large jsons there is a concat sometimes
 		json = json.replace("].concat([", ",");
+		try {
+			ArrayList<String> idxList = new ArrayList<String>();
+			ArrayList<String> valList = new ArrayList<String>();
+			// XXX is this really needed?
+			valList.add("null");
+			JSONArray jsonArr = new JSONArray(json);
+			for (int i = 0; i < jsonArr.length(); i++) {
+				Object obj = jsonArr.get(i);
+				if (obj instanceof JSONArray) {
+					JSONArray valArr = jsonArr.getJSONArray(i);
+					for (int j = 0; j < valArr.length(); j++) {
+						valList.add(valArr.getString(j));
+					}
+					// XXX skip last two? elements
+					break;
+				} else {
+					idxList.add(jsonArr.getString(i));
+				}
+			}
 
-		int seperatorIndex = json.indexOf(",[\"");
-		int endIndex = json.lastIndexOf("],");
-
-		String indexes = json.substring(0, seperatorIndex);
-		String values = json.substring(seperatorIndex + 3, endIndex - 1);
-
-		setIndexList(new ArrayList<String>());
-		StringTokenizer tokenizer = new StringTokenizer(indexes, ",");
-		while (tokenizer.hasMoreTokens()) {
-			getIndexList().add(tokenizer.nextToken());
-		}
-		Collections.reverse(getIndexList());
-
-		setValueList(new ArrayList<String>());
-		valueList.add("null");
-
-		String[] split = values.split("\",\"");
-
-		for (int i = 0; i < split.length; i++) {
-			valueList.add(split[i]);
-		}
-
-		// tokenizer fails if last value is ""
-		if (values.endsWith("\",\"")) {
-			valueList.add("");
+			Collections.reverse(idxList);
+			setIndexList(idxList);
+			setValueList(valList);
+		} catch (JSONException e) {
+			throw new RuntimeException(e);
 		}
 
 		if (DUMP_LISTS) {
