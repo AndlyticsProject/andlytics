@@ -109,7 +109,7 @@
     <string name="changelog_title">Changelog</string>
     <string name="changelog_thanks">Bedankt voor het installeren van Andlytics!</string>
 
-    <string name="notification_title">Andlystics gedetecteerde veranderingen</string>
+    <string name="notification_title">Andlytics gedetecteerde veranderingen</string>
 
     <string name="import_">Importeren</string>
     <string name="import_no_sdcard_or_file">De SD-kaart is niet beschikbaar. Kan niet importeren.</string>
