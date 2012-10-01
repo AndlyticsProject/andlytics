@@ -7,9 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONException;
+import java.util.StringTokenizer;
 
 import android.text.format.DateFormat;
 import android.util.SparseArray;
@@ -52,35 +50,36 @@ public class GwtParser {
 			}
 
 		// remove response prefix (//OK)
-		json = json.replaceAll("//OK", "");
+		json = json.substring(json.indexOf("[") + 1);
 
 		// for large jsons there is a concat sometimes
 		json = json.replace("].concat([", ",");
-		try {
-			ArrayList<String> idxList = new ArrayList<String>();
-			ArrayList<String> valList = new ArrayList<String>();
-			// XXX is this really needed?
-			valList.add("null");
-			JSONArray jsonArr = new JSONArray(json);
-			for (int i = 0; i < jsonArr.length(); i++) {
-				Object obj = jsonArr.get(i);
-				if (obj instanceof JSONArray) {
-					JSONArray valArr = jsonArr.getJSONArray(i);
-					for (int j = 0; j < valArr.length(); j++) {
-						valList.add(valArr.getString(j));
-					}
-					// XXX skip last two? elements
-					break;
-				} else {
-					idxList.add(jsonArr.getString(i));
-				}
-			}
 
-			Collections.reverse(idxList);
-			setIndexList(idxList);
-			setValueList(valList);
-		} catch (JSONException e) {
-			throw new RuntimeException(e);
+		int seperatorIndex = json.indexOf(",[\"");
+		int endIndex = json.lastIndexOf("],");
+
+		String indexes = json.substring(0, seperatorIndex);
+		String values = json.substring(seperatorIndex + 3, endIndex - 1);
+
+		setIndexList(new ArrayList<String>());
+		StringTokenizer tokenizer = new StringTokenizer(indexes, ",");
+		while (tokenizer.hasMoreTokens()) {
+			getIndexList().add(tokenizer.nextToken());
+		}
+		Collections.reverse(getIndexList());
+
+		setValueList(new ArrayList<String>());
+		valueList.add("null");
+
+		String[] split = values.split("\",\"");
+
+		for (int i = 0; i < split.length; i++) {
+			valueList.add(split[i]);
+		}
+
+		// tokenizer fails if last value is ""
+		if (values.endsWith("\",\"")) {
+			valueList.add("");
 		}
 
 		if (DUMP_LISTS) {
@@ -212,6 +211,23 @@ public class GwtParser {
 	12 29:  0=null
 	13 30: 10=
 	14 31: 16=Sree Hari Reddy
+	
+	0 2=UserComment
+	1 3=<version string>
+	2 12=<comment text>
+	3 'ToTMmzv' <comment timestamp (long)>
+	4 13=<device name>
+	5 14=<device model>
+	6 15=gaia:... <Google account ID>
+	7 8=<language name>
+	8 9=<language code>
+	9 2=<rating> (2=**, etc.)
+	10 16=<comment reply> if any, otherwise "0"
+	11 1=1 (constant?)
+	12 17=java.lang.Long/4227064769 if has reply
+	13 ToTVmTk <reply timestamp (long)> if has reply, otherwise, ""
+	14 10=<reviewer nickname> if no reply, otherwise ""
+	15 18=<reviewer nickname> if has reply
 
 	*/
 	public List<Comment> getComments() {
@@ -223,6 +239,7 @@ public class GwtParser {
 			// remove first two values from index array - is arraylist definition
 			List<String> commentsIndexList = indexList.subList(2, indexList.size());
 			Comment comment = new Comment();
+			Comment reply = null;
 
 			int commentNumber = 0;
 			int commentIndex = -1;
@@ -235,6 +252,7 @@ public class GwtParser {
 				switch (commentIndex) {
 					case 0:
 						comment = new Comment();
+						reply = null;
 						break;
 					case 1:
 
@@ -273,15 +291,38 @@ public class GwtParser {
 					case 9:
 						comment.setRating(getIntForIndex(valueIndex));
 						break;
-
+					case 10:
+						// if we have a reply, this points to the reply text
+						if (!"0".equals(valueIndex)) {
+							reply = new Comment();
+							comment.setReply(reply);
+							reply.setText(getStringForIndex(valueIndex));
+						}
+						break;
+					case 13:
+						if (reply != null) {
+							long time = decodeLong(indexList.get(commentIndex + 2 + commentNumber));
+							reply.setDate(DateFormat.format("EEEEE, d MMM yyyy", new Date(time))
+									.toString());
+						}
+						break;
 					case 14:
+						if (reply == null) {
+							comment.setUser(getStringForIndex(valueIndex));
+							commentIndex = -1;
+							result.add(comment);
 
-						comment.setUser(getStringForIndex(valueIndex));
-						commentIndex = -1;
-						result.add(comment);
+							commentNumber += 15;
+						}
+						break;
+					case 15:
+						if (reply != null) {
+							comment.setUser(getStringForIndex(valueIndex));
+							commentIndex = -1;
+							result.add(comment);
 
-						commentNumber += 15;
-
+							commentNumber += 16;
+						}
 						break;
 
 					default:
