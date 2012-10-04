@@ -46,6 +46,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			holder = new ViewHolderChild();
 			holder.text = (TextView) convertView.findViewById(R.id.comments_list_item_text);
 			holder.user = (TextView) convertView.findViewById(R.id.comments_list_item_username);
+			holder.date = (TextView) convertView.findViewById(R.id.comments_list_item_date);
 			holder.device = (TextView) convertView.findViewById(R.id.comments_list_item_device);
 			holder.rating = (RatingBar) convertView
 					.findViewById(R.id.comments_list_item_app_ratingbar);
@@ -58,7 +59,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 		final Comment comment = getChild(groupPosition, childPosition);
 		holder.text.setText(comment.getText());
-		holder.user.setText(context.getString(R.string.comments_author, comment.getUser()));
+		holder.user.setText(comment.getUser());
 
 		String version = comment.getAppVersion();
 		String device = comment.getDevice();
@@ -79,8 +80,11 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		if (rating > 0 && rating <= 5) {
 			holder.rating.setRating((float) rating);
 			holder.rating.setVisibility(View.VISIBLE);
+			holder.date.setText(null);
 		} else if (rating == -1) {
+			// developer reply
 			holder.rating.setVisibility(View.GONE);
+			holder.date.setText(comment.getDate());
 		}
 
 		convertView.setOnLongClickListener(new OnLongClickListener() {
@@ -152,6 +156,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		TextView text;
 		RatingBar rating;
 		TextView user;
+		TextView date;
 		TextView device;
 	}
 
