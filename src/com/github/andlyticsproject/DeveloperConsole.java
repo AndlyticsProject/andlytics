@@ -170,8 +170,6 @@ public class DeveloperConsole {
 			InvalidJSONResponseException, SignupException, AuthenticationException,
 			NoCookieSetException, MultiAccountAcception {
 
-		List<Comment> result = null;
-
 		try {
 
 			developerConsoleAuthentication(authtoken, true);
@@ -180,18 +178,27 @@ public class DeveloperConsole {
 			//			String json = Utils.readFileAsString(new File(
 			//					Environment.getExternalStorageDirectory(), "comments.json").getAbsolutePath());
 
-			result = parseCommentsResponse(json, accountName);
+			return expandReplies(parseCommentsResponse(json, accountName));
 
 		} catch (DeveloperConsoleException e) {
 
 			developerConsoleAuthentication(authtoken, false);
 			String json = grapComments(packageName, startIndex, lenght);
 
-			result = parseCommentsResponse(json, accountName);
+			return expandReplies(parseCommentsResponse(json, accountName));
+		}
+	}
 
+	private List<Comment> expandReplies(List<Comment> result) {
+		List<Comment> withReplies = new ArrayList<Comment>();
+		for (Comment comment : result) {
+			withReplies.add(comment);
+			if (comment.getReply() != null) {
+				withReplies.add(comment.getReply());
+			}
 		}
 
-		return result;
+		return withReplies;
 	}
 
 	public List<AppInfo> parseAppStatisticsResponse(String json, String accountName)
