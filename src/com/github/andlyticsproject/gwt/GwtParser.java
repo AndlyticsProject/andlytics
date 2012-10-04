@@ -295,6 +295,9 @@ public class GwtParser {
 						// if we have a reply, this points to the reply text
 						if (!"0".equals(valueIndex)) {
 							reply = new Comment();
+							// XXX use resource
+							reply.setUser("Developer reply");
+							reply.setRating(-1);
 							comment.setReply(reply);
 							reply.setText(getStringForIndex(valueIndex));
 						}
