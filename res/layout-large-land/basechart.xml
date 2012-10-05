@@ -131,18 +131,6 @@
                                     android:text="@string/one_entry_hint_desc"
                                     android:visibility="visible" />
 
-                                <TextView
-                                    android:id="@+id/base_chart_one_entry_link"
-                                    style="@style/MainTableText"
-                                    android:layout_width="fill_parent"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:paddingBottom="20dp"
-                                    android:paddingLeft="5dp"
-                                    android:paddingRight="5dp"
-                                    android:paddingTop="5dp"
-                                    android:text="@string/one_entry_hint_demo"
-                                    android:visibility="invisible" />
                             </LinearLayout>
                         </ScrollView>
                     </RelativeLayout>
