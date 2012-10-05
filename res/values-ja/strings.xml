@@ -54,7 +54,6 @@
     <string name="select_files_export">エクスポートするアプリを選択してください。</string>
     <string name="export_files_replaced">既存のエックスポートファイルを上書きします。</string>
     <string name="run_export">エクスポート開始</string>
-    <string name="comments_author">投稿者: %s</string>
     <string name="comments_details_full">バージョン: %1$s 端末: %2$s</string>
     <string name="comments_details_version">バージョン: %s</string>
     <string name="comments_details_device">端末: %s</string>

@@ -55,7 +55,6 @@
     <string name="select_files_export">Selecciona les aplicacions a exportar</string>
     <string name="export_files_replaced">Els fitxers exportats existents es reemplaçaran</string>
     <string name="run_export">Executa l\'exportació</string>
-    <string name="comments_author">de %s</string>
     <string name="comments_details_full">Versió %1$s al dispositiu: %2$s</string>
     <string name="comments_details_version">Versió %s</string>
     <string name="comments_details_device">Al dispositiu: %s</string>

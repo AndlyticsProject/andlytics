@@ -55,7 +55,6 @@
     <string name="select_files_export">Выберите приложения для экспорта</string>
     <string name="export_files_replaced">Существующие экспортные файлы будут перезаписаны</string>
     <string name="run_export">Запустить экспорт</string>
-    <string name="comments_author">от %s</string>
     <string name="comments_details_full">Версия %1$s на устройстве: %2$s</string>
     <string name="comments_details_version">Версия %s</string>
     <string name="comments_details_device">На устройстве: %s</string>
