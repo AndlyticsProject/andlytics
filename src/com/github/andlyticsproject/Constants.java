@@ -9,7 +9,6 @@ public interface Constants {
 	public static final String ICON_FILE_PARCEL = "com.github.andlyticsproject.iconfile";
 	public static final String ACCOUNT_TYPE_GOOGLE = "com.google";
 	public static final String ACCOUNT_AUTHORITY = "com.github.andlyticsproject";
-	public static final String DEMO_TOKEN = "com.github.andlyticsproject.demotoken";
 	public static final String CHART_SET = "com.github.andlyticsproject.chartset";
 	public static final String AUTH_TOKEN_TYPE_ANDROID_DEVELOPER = "androiddeveloper";
 	public static final String ACCOUNT_TYPE_ADMOB = "com.github.andlyticsproject.admob";

@@ -3,7 +3,6 @@
 
     <string name="one_entry_hint_desc">Andlytics collects data over time. to see a meaningful chart come back as soon as more data is available.
         \n\nUsually download stats are updated every 24&#8211;48 hours.</string>
-    <string name="one_entry_hint_demo"><u>View chart with demo data</u></string>    
 
     <string name="crash_dialog_title">Sorry&#8230;</string>
     <string name="crash_desc">An unexpected error occurred.\n\nPlease help us to fix this by sending us error report data. Information about the error (stacktrace) and information about your device such as device manufacturer\'s name, device model number, operating system, etc. will be sent to help us identifying the problem.\n\nThanks!\n\n</string>
@@ -56,7 +55,6 @@
     <string name="select_files_export">Select apps to export</string>
     <string name="export_files_replaced">Existing export files will be replaced</string>
     <string name="run_export">Run export</string>
-    <string name="comments_author">by %s</string>
     <string name="comments_details_full">Version %1$s on device: %2$s</string>
     <string name="comments_details_version">Version %s</string>
     <string name="comments_details_device">On device: %s</string>

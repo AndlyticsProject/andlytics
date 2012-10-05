@@ -46,7 +46,7 @@
 					android:id="@+id/base_chart_timeframe"
 					android:layout_width="wrap_content"
 					android:layout_marginTop="5dp"
-					android:textSize="14dp"
+					android:textSize="14sp"
 					android:visibility="visible" android:layout_centerHorizontal="true" android:text=""></TextView>
 
 				<com.github.andlyticsproject.view.ChartGallery
@@ -125,20 +125,6 @@
 									android:paddingLeft="5dp"
 									android:paddingRight="5dp"
 									android:gravity="center" />
-
-
-								<TextView
-									style="@style/MainTableText"
-									android:text="@string/one_entry_hint_demo"
-									android:id="@+id/base_chart_one_entry_link"
-									android:paddingLeft="5dp"
-									android:paddingRight="5dp"
-									android:layout_height="wrap_content"
-									android:layout_width="fill_parent"
-									android:gravity="center"
-									android:visibility="invisible"
-									android:paddingTop="5dp"
-									android:paddingBottom="20dp" />
 
 							</LinearLayout>
 						</ScrollView>

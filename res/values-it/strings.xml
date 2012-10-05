@@ -55,7 +55,6 @@
     <string name="select_files_export">Seleziona le app da esportare</string>
     <string name="export_files_replaced">I file esistenti verranno sostituiti</string>
     <string name="run_export">Esporta dati</string>
-    <string name="comments_author">da %s</string>
     <string name="comments_details_full">Versione %1$s su dispositivo: %2$s</string>
     <string name="comments_details_version">Versione %s</string>
     <string name="comments_details_device">Su dispositivo: %s</string>
