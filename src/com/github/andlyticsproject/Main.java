@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject;
 
 import java.io.File;
@@ -202,7 +201,9 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			case R.id.itemMainmenuImport:
 				File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
 				if (!fileToImport.exists()) {
-					Toast.makeText(this, getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
+					Toast.makeText(
+							this,
+							getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
 							Toast.LENGTH_LONG).show();
 					return true;
 				}
@@ -303,7 +304,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(context,
 						R.layout.account_selector_item, accountsList);
 				accountsAdapter
-				.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
+						.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
 
 				// Hide the title to avoid duplicated info on tablets/landscape & setup the spinner
 				getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -384,12 +385,12 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			List<AppInfo> appDownloadInfos = null;
 			try {
 
-				DeveloperConsole console = new DeveloperConsole(Main.this);
-				appDownloadInfos = console.getAppDownloadInfos(authToken, accountName);
+				//				DeveloperConsole console = new DeveloperConsole(Main.this);
+				//				appDownloadInfos = console.getAppDownloadInfos(authToken, accountName);
 
 				DeveloperConsoleV2 v2 = new DeveloperConsoleV2();
 				try {
-					//					v2.getAppInfo(authToken, accountName);
+					appDownloadInfos = v2.getAppInfo(authToken, accountName);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					// Ignore it while it is broken
@@ -473,7 +474,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		protected void onPostExecute(Exception e) {
 
 			refreshing = false;
-			invalidateOptionsMenu();
+			supportInvalidateOptionsMenu();
 
 			if (e != null) {
 
@@ -502,7 +503,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		@Override
 		protected void onPreExecute() {
 			refreshing = true;
-			invalidateOptionsMenu();
+			supportInvalidateOptionsMenu();
 		}
 
 	}

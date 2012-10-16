@@ -1,22 +1,22 @@
 
 package com.github.andlyticsproject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Locale;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Locale;
 
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
@@ -59,7 +59,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 		final Comment comment = getChild(groupPosition, childPosition);
 		holder.text.setText(comment.getText());
-		holder.user.setText(context.getString(R.string.comments_author, comment.getUser()));
+		holder.user.setText(comment.getUser());
 
 		String version = comment.getAppVersion();
 		String device = comment.getDevice();

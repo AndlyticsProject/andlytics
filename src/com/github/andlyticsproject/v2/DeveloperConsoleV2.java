@@ -1,7 +1,7 @@
-
 package com.github.andlyticsproject.v2;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -23,7 +23,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.ClientConnectionManager;
@@ -32,9 +32,11 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.RedirectLocations;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.impl.cookie.BasicClientCookie2;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -95,7 +97,11 @@ public class DeveloperConsoleV2 {
 			+ PARAM_PACKAGENAME + "," + PARAM_START + "," + PARAM_COUNT + "],\"xsrf\":"
 			+ PARAM_XSRFTOKEN + "}";
 	private static final String PAYLOAD_STATISTICS = "{\"method\":\"getCombinedStats\",\"params\":[,\""
-			+ PARAM_PACKAGENAME	+ "\",1," + PARAM_STATS_TYPE + ",["	+ PARAM_STATS_BY
+			+ PARAM_PACKAGENAME
+			+ "\",1,"
+			+ PARAM_STATS_TYPE
+			+ ",["
+			+ PARAM_STATS_BY
 			+ "]],\"xsrf\":" + PARAM_XSRFTOKEN + "}";
 
 	//Represents the different ways to break down statistics by e.g. by android version
@@ -171,14 +177,14 @@ public class DeveloperConsoleV2 {
 	 * @throws DeveloperConsoleException 
 	 */
 	public List<Comment> getComments(String authToken, String accountName, String packageName,
-			int startIndex, int count) throws JSONException, AuthenticationException, MultiAccountAcception,
-			NetworkException, DeveloperConsoleException{
+			int startIndex, int count) throws JSONException, AuthenticationException,
+			MultiAccountAcception, NetworkException, DeveloperConsoleException {
 
 		try {
 			// First try using existing cookies and tokens
 			authenticate(authToken, true);
 			return fetchComments(packageName, startIndex, count);
-		} catch (DeveloperConsoleException ex){
+		} catch (DeveloperConsoleException ex) {
 			authenticate(authToken, false);
 			return fetchComments(packageName, startIndex, count);
 		}
@@ -192,7 +198,8 @@ public class DeveloperConsoleV2 {
 	 * @throws DeveloperConsoleException
 	 * @throws JSONException
 	 */
-	private List<AppInfo> fetchAppInfos(String accountName) throws DeveloperConsoleException, JSONException  {
+	private List<AppInfo> fetchAppInfos(String accountName) throws DeveloperConsoleException,
+			JSONException {
 
 		// Setup the request
 		String postData = PAYLOAD_APPS;
@@ -222,7 +229,7 @@ public class DeveloperConsoleV2 {
 	 * @throws JSONException
 	 */
 	private void fetchStatistics(String packageName, AppStats stats, int statsType)
-			throws DeveloperConsoleException, JSONException  {
+			throws DeveloperConsoleException, JSONException {
 
 		// Setup the request
 		String postData = PAYLOAD_STATISTICS;
@@ -252,7 +259,7 @@ public class DeveloperConsoleV2 {
 	 * @throws DeveloperConsoleException
 	 */
 	private void fetchRatings(String packageName, AppStats stats) throws DeveloperConsoleException,
-			JSONException  {
+			JSONException {
 
 		// Setup the request
 		String postData = PAYLOAD_RATINGS;
@@ -278,7 +285,8 @@ public class DeveloperConsoleV2 {
 	 * @throws DeveloperConsoleException
 	 * @throws JSONException
 	 */
-	private int fetchCommentsCount(String packageName) throws DeveloperConsoleException, JSONException {
+	private int fetchCommentsCount(String packageName) throws DeveloperConsoleException,
+			JSONException {
 
 		// Setup the request
 		String postData = PAYLOAD_COMMENTS;
@@ -334,7 +342,7 @@ public class DeveloperConsoleV2 {
 	 */
 	private void authenticate(String authToken, boolean reuseAuthentication)
 			throws AuthenticationException, MultiAccountAcception, NetworkException {
-		
+
 		/*
 		 * To login, perform the following steps
 		 * 
@@ -352,7 +360,7 @@ public class DeveloperConsoleV2 {
 		 * 
 		 */
 
-		HttpClient httpclient = null;
+		DefaultHttpClient httpclient = null;
 
 		try {
 			if (!reuseAuthentication) {
@@ -368,41 +376,64 @@ public class DeveloperConsoleV2 {
 				String xsrfToken = null;
 				String devacc = null;
 
-				// Setup parameters etc..
-				// TODO do we need all these parameters/are they needed for all requests
-				HttpParams params = new BasicHttpParams();
-				HttpClientParams.setRedirecting(params, true);
-				HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-				HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-				HttpProtocolParams.setUseExpectContinue(params, true);
-
-				SSLSocketFactory sf = SSLSocketFactory.getSocketFactory();
-				sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-
-				SchemeRegistry schReg = new SchemeRegistry();
-				schReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-				schReg.register(new Scheme("https", sf, 443));
-
-				ClientConnectionManager conMgr = new ThreadSafeClientConnManager(params, schReg);
-
-				int timeoutSocket = 30 * 1000;
-				HttpConnectionParams.setSoTimeout(params, timeoutSocket);
 				HttpContext httpContext = new BasicHttpContext();
-				httpclient = new DefaultHttpClient(conMgr, params);
+				httpclient = createHttpClient();
+
+				Log.d(TAG, "CL token: " + authToken);
+
+				HttpGet glaxGet = new HttpGet(
+						"https://accounts.google.com/ServiceLogin?service=androiddeveloper&passive=1209600&continue=https://play.google.com/apps/publish/v2/&followup=https://play.google.com/apps/publish/v2/&authuser=0");
+				HttpResponse httpResponse = httpclient.execute(glaxGet, httpContext);
+				int statusCode = httpResponse.getStatusLine().getStatusCode();
+				Log.d(TAG, "GLAX status code:  " + statusCode);
+				String response = EntityUtils.toString(httpResponse.getEntity());
+				FileOutputStream fos = new FileOutputStream("/sdcard/glax-reply.html");
+				fos.write(response.getBytes("UTF-8"));
+				fos.flush();
+				fos.close();
+
+				Header[] headers = httpResponse.getAllHeaders();
+				for (Header h : headers) {
+					Log.d(TAG, h.toString());
+				}
+
+
+				Log.d(TAG, "GLAX response: " + response);
 
 				/*
 				 * Get AD cookie
 				 * 				
 				 */
 				// GET https://play.google.com/apps/publish/v2/?auth=AUTH_TOKEN
-				HttpGet httpGet = new HttpGet(URL_DEVELOPER_CONSOLE + "?auth=" + authToken);
+				HttpGet httpGet = new HttpGet(URL_DEVELOPER_CONSOLE + "?pil=1");
 
-				HttpResponse httpResponse = httpclient.execute(httpGet, httpContext);
-				
+				CookieStore cookieStore = new BasicCookieStore();
+				BasicClientCookie2 cookie = new BasicClientCookie2("Authorization",
+						"GoogleLogin auth=" + authToken);
+				cookie.setDomain("play.google.com");
+				cookie.setPath("/apps/publish/v2/");
+
+				cookieStore.addCookie(cookie);
+				httpclient.setCookieStore(cookieStore);
+				httpResponse = httpclient.execute(httpGet, httpContext);
+
 				// FIXME returns 200 along with what I think is a request to re-authenticate, rather than 302 and the AD cookie
 
-				int statusCode = httpResponse.getStatusLine().getStatusCode();
+				statusCode = httpResponse.getStatusLine().getStatusCode();
 				if (statusCode != HttpStatus.SC_MOVED_TEMPORARILY) {
+					response = EntityUtils.toString(httpResponse.getEntity());
+					fos = new FileOutputStream("/sdcard/console-reply.html");
+					fos.write(response.getBytes("UTF-8"));
+					fos.flush();
+					fos.close();
+
+					headers = httpResponse.getAllHeaders();
+					for (Header h : headers) {
+						Log.d(TAG, h.toString());
+					}
+
+
+					Log.d(TAG, "response: " + response);
 					throw new AuthenticationException("Got HTTP " + statusCode + " ("
 							+ httpResponse.getStatusLine().getReasonPhrase() + ')');
 				}
@@ -528,6 +559,28 @@ public class DeveloperConsoleV2 {
 
 	}
 
+	private DefaultHttpClient createHttpClient() {
+		HttpParams params = new BasicHttpParams();
+		HttpClientParams.setRedirecting(params, true);
+		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+		HttpProtocolParams.setUseExpectContinue(params, false);
+
+		SSLSocketFactory sf = SSLSocketFactory.getSocketFactory();
+		sf.setHostnameVerifier(SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+
+		SchemeRegistry schReg = new SchemeRegistry();
+		schReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+		schReg.register(new Scheme("https", sf, 443));
+
+		ClientConnectionManager conMgr = new ThreadSafeClientConnManager(params, schReg);
+
+		int timeoutSocket = 30 * 1000;
+		HttpConnectionParams.setSoTimeout(params, timeoutSocket);
+
+		return new DefaultHttpClient(conMgr, params);
+	}
+
 	/**
 	 * Performs a HTTP POST request using the provided data to the given url
 	 * 
@@ -540,7 +593,7 @@ public class DeveloperConsoleV2 {
 	 * 
 	 */
 	private String performHttpPost(String developerPostData, URL url) throws IOException,
-	ProtocolException {
+			ProtocolException {
 
 		String result = null;
 		HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
