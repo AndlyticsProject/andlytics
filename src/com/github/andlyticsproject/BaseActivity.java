@@ -51,7 +51,8 @@ public class BaseActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
-			// TODO move packageName and iconFilePath assignments to BaseDetailsActivity
+			// TODO move packageName and iconFilePath assignments to
+			// BaseDetailsActivity
 			// Will this effect startActivity etc with regard to null behaviour?
 			// Might be best to leave them here
 			packageName = b.getString(Constants.PACKAGE_NAME_PARCEL);
@@ -69,8 +70,10 @@ public class BaseActivity extends SherlockActivity {
 		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
 		if (clazz.equals(Main.class)) {
 			// Main does not have singleTask set in the manifest
-			// in order to facilitate easy switching between accounts using list navigation
-			// We therefore need to clear activity we came from before had in order
+			// in order to facilitate easy switching between accounts using list
+			// navigation
+			// We therefore need to clear activity we came from before had in
+			// order
 			// to avoid duplicates
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		}
@@ -97,12 +100,11 @@ public class BaseActivity extends SherlockActivity {
 
 	public void handleUserVisibleException(Exception e) {
 		if (e instanceof NetworkException) {
-			Toast.makeText(BaseActivity.this,
-					getString(R.string.network_error), Toast.LENGTH_LONG)
+			Toast.makeText(BaseActivity.this, getString(R.string.network_error), Toast.LENGTH_LONG)
 					.show();
 		} else if (e instanceof SignupException) {
-			Toast.makeText(
-					BaseActivity.this, getString(R.string.signup_error, accountName, e.getMessage()),
+			Toast.makeText(BaseActivity.this,
+					getString(R.string.signup_error, accountName, e.getMessage()),
 					Toast.LENGTH_LONG).show();
 		} else if (e instanceof AuthenticationException || e instanceof NoCookieSetException) {
 
@@ -116,9 +118,10 @@ public class BaseActivity extends SherlockActivity {
 			Log.w(TAG, "ask for admob credentials");
 			getAndlyticsApplication().setSkipMainReload(true);
 		} else if (e instanceof AdmobAccountRemovedException) {
-			String wrongAccount = ((AdmobAccountRemovedException) e).getAccountName();  
-			Toast.makeText(BaseActivity.this, getString(R.string.admob_missing_error, wrongAccount),
-					Toast.LENGTH_LONG).show();
+			String wrongAccount = ((AdmobAccountRemovedException) e).getAccountName();
+			Toast.makeText(BaseActivity.this,
+					getString(R.string.admob_missing_error, wrongAccount), Toast.LENGTH_LONG)
+					.show();
 		} else if (e instanceof AdmobInvalidRequestException) {
 			Toast.makeText(BaseActivity.this, getString(R.string.admob_invalid_request_error),
 					Toast.LENGTH_LONG).show();
@@ -154,26 +157,28 @@ public class BaseActivity extends SherlockActivity {
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
 			builder.setTitle(getString(R.string.update_required_title));
 			builder.setMessage(R.string.newversion_desc);
-			builder.setPositiveButton(getString(R.string.update_button), new DialogInterface.OnClickListener() {
+			builder.setPositiveButton(getString(R.string.update_button),
+					new DialogInterface.OnClickListener() {
 
-				public void onClick(DialogInterface dialog, int which) {
+						public void onClick(DialogInterface dialog, int which) {
 
-					Intent goToMarket = null;
-					goToMarket = new Intent(Intent.ACTION_VIEW, Uri
-							.parse(getString(R.string.market_uri)));
-					startActivity(goToMarket);
+							Intent goToMarket = null;
+							goToMarket = new Intent(Intent.ACTION_VIEW, Uri
+									.parse(getString(R.string.market_uri)));
+							startActivity(goToMarket);
 
-					dialog.dismiss();
-				}
+							dialog.dismiss();
+						}
 
-			});
-			builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+					});
+			builder.setNegativeButton(getString(R.string.cancel),
+					new DialogInterface.OnClickListener() {
 
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-				}
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
 
-			});
+					});
 
 			builder.create().show();
 		}
@@ -187,34 +192,36 @@ public class BaseActivity extends SherlockActivity {
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
 			builder.setTitle(getString(R.string.crash_dialog_title));
 			builder.setMessage(R.string.crash_desc);
-			builder.setPositiveButton(getString(R.string.send_report_button), new DialogInterface.OnClickListener() {
+			builder.setPositiveButton(getString(R.string.send_report_button),
+					new DialogInterface.OnClickListener() {
 
-				public void onClick(DialogInterface dialog, int which) {
+						public void onClick(DialogInterface dialog, int which) {
 
-					if (!isFinishing()) {
+							if (!isFinishing()) {
 
-						Thread thread = new Thread(new Runnable() {
+								Thread thread = new Thread(new Runnable() {
 
-							@Override
-							public void run() {
-								sendAracReport(e, true);
+									@Override
+									public void run() {
+										sendAracReport(e, true);
+									}
+
+								});
+								thread.run();
+								dialog.dismiss();
 							}
 
-						});
-						thread.run();
-						dialog.dismiss();
-					}
+						}
 
-				}
+					});
+			builder.setNegativeButton(getString(R.string.cancel),
+					new DialogInterface.OnClickListener() {
 
-			});
-			builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
 
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-				}
-
-			});
+					});
 
 			builder.create().show();
 		}
@@ -232,29 +239,31 @@ public class BaseActivity extends SherlockActivity {
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
 			builder.setTitle(getString(R.string.crash_dialog_title));
 			builder.setMessage(getString(R.string.remote_interface_changed_error));
-			builder.setPositiveButton(getString(R.string.send_report_button), new DialogInterface.OnClickListener() {
+			builder.setPositiveButton(getString(R.string.send_report_button),
+					new DialogInterface.OnClickListener() {
 
-				public void onClick(DialogInterface dialog, int which) {
+						public void onClick(DialogInterface dialog, int which) {
 
-					Thread thread = new Thread(new Runnable() {
+							Thread thread = new Thread(new Runnable() {
 
-						@Override
-						public void run() {
-							sendAracReport(e, true);
+								@Override
+								public void run() {
+									sendAracReport(e, true);
+								}
+							});
+							thread.run();
+							dialog.dismiss();
 						}
+
 					});
-					thread.run();
-					dialog.dismiss();
-				}
+			builder.setNegativeButton(getString(R.string.cancel),
+					new DialogInterface.OnClickListener() {
 
-			});
-			builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
 
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-				}
-
-			});
+					});
 
 			builder.create().show();
 
@@ -269,31 +278,35 @@ public class BaseActivity extends SherlockActivity {
 			CrashDialog.CrashDialogBuilder builder = new CrashDialogBuilder(this);
 			builder.setTitle(getString(R.string.multiple_dev_accounts_title));
 			builder.setMessage(getString(R.string.multiple_dev_accounts_error));
-			builder.setPositiveButton(getString(R.string.logout), new DialogInterface.OnClickListener() {
+			builder.setPositiveButton(getString(R.string.logout),
+					new DialogInterface.OnClickListener() {
 
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-					Preferences.removeAccountName(BaseActivity.this);
-					Preferences.saveSkipAutoLogin(BaseActivity.this, true);
-					Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
-					startActivity(intent);
-					overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+							Preferences.removeAccountName(BaseActivity.this);
+							Preferences.saveSkipAutoLogin(BaseActivity.this, true);
+							Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+							startActivity(intent);
+							overridePendingTransition(R.anim.activity_fade_in,
+									R.anim.activity_fade_out);
 
-				}
+						}
 
-			});
-			builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+					});
+			builder.setNegativeButton(getString(R.string.cancel),
+					new DialogInterface.OnClickListener() {
 
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-					Preferences.removeAccountName(BaseActivity.this);
-					Preferences.saveSkipAutoLogin(BaseActivity.this, true);
-					Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
-					startActivity(intent);
-					overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
-				}
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+							Preferences.removeAccountName(BaseActivity.this);
+							Preferences.saveSkipAutoLogin(BaseActivity.this, true);
+							Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+							startActivity(intent);
+							overridePendingTransition(R.anim.activity_fade_in,
+									R.anim.activity_fade_out);
+						}
 
-			});
+					});
 
 			builder.create().show();
 
@@ -341,12 +354,16 @@ public class BaseActivity extends SherlockActivity {
 
 			public void run(final AccountManagerFuture<Bundle> arg0) {
 				try {
+					Bundle bundle = arg0.getResult();
+					for (String key : bundle.keySet()) {
+						Log.d(TAG, String.format("%s=%s", key, bundle.get(key)));
+					}
 
 					String authToken = arg0.getResult().getString(AccountManager.KEY_AUTHTOKEN);
 
 					if (authToken != null) {
-						//do something with the auth token
-						//  got token form manager - set in application an exit
+						// do something with the auth token
+						// got token form manager - set in application an exit
 						getAndlyticsApplication().setAuthToken(authToken);
 
 						runOnUiThread(new Runnable() {
@@ -360,13 +377,13 @@ public class BaseActivity extends SherlockActivity {
 					} else {
 
 						Log.e(TAG, "auth token is null, authentication failed");
-						//not expected at all
+						// not expected at all
 					}
 
 				} catch (Exception e) {
 					getAndlyticsApplication().setSkipMainReload(true);
 					Log.e(TAG, "error during authentication", e);
-					//error
+					// error
 				}
 
 			}
