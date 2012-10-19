@@ -5,7 +5,7 @@
     <!-- These go in values-v14 to avoid exceptions on some devices -->
     <!-- https://github.com/JakeWharton/ActionBarSherlock/issues/446 -->
 
-    <style name="Theme.Andlytics" parent="Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
+    <style name="Theme.Andlytics" parent="Theme.Sherlock.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/Widget.Andlytics.ActionBar</item>
     </style>
 
