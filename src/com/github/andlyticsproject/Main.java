@@ -55,7 +55,9 @@ import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
 import com.github.andlyticsproject.sync.NotificationHandler;
 import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.Utils;
+import com.github.andlyticsproject.v2.DevConsoleAuthenticator;
 import com.github.andlyticsproject.v2.DeveloperConsoleV2;
+import com.github.andlyticsproject.v2.PasswordAuthenticator;
 
 public class Main extends BaseActivity implements AuthenticationCallback, OnNavigationListener {
 
@@ -398,9 +400,13 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				// appDownloadInfos = console.getAppDownloadInfos(authToken,
 				// accountName);
 
-				DeveloperConsoleV2 v2 = new DeveloperConsoleV2();
+				// XXX replace to test
+				String password = "password";
+				DevConsoleAuthenticator authenticator = new PasswordAuthenticator(accountName,
+						password);
+				DeveloperConsoleV2 v2 = new DeveloperConsoleV2(authenticator);
 				try {
-					v2.getAppInfo(authToken, accountName);
+					appDownloadInfos = v2.getAppInfo(accountName);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 

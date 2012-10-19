@@ -1,16 +1,23 @@
-
 package com.github.andlyticsproject.exception;
 
 public class AuthenticationException extends Exception {
 
-	public AuthenticationException(String string) {
-		super(string);
-	}
+	private static final long serialVersionUID = 1L;
 
 	public AuthenticationException() {
 		super();
 	}
 
-	private static final long serialVersionUID = 1L;
+	public AuthenticationException(String message) {
+		super(message);
+	}
+
+	public AuthenticationException(Throwable cause) {
+		super(cause);
+	}
+
+	public AuthenticationException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

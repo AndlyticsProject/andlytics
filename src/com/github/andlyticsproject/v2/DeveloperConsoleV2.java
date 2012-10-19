@@ -4,26 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
 import java.net.ProtocolException;
-import java.net.SocketException;
-import java.net.URI;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
-import org.apache.http.client.RedirectHandler;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -32,23 +20,14 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.RedirectLocations;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 
-import android.accounts.AccountManager;
-import android.util.Log;
-
-import com.github.andlyticsproject.AndlyticsApp;
-import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
 import com.github.andlyticsproject.exception.MultiAccountAcception;
@@ -120,9 +99,12 @@ public class DeveloperConsoleV2 {
 	protected static final int STATS_TYPE_ACTIVE_DEVICE_INSTALLS = 1;
 	protected static final int STATS_TYPE_TOTAL_USER_INSTALLS = 8;
 
-	private String cookie;
-	private String devacc;
-	private String xsrfToken;
+	private AuthInfo authInfo;
+	private DevConsoleAuthenticator authenticator;
+
+	public DeveloperConsoleV2(DevConsoleAuthenticator authenticator) {
+		this.authenticator = authenticator;
+	}
 
 	// TODO Decide on which exceptions should actually be thrown and by which
 	// methods, and what data we should include in them
@@ -130,7 +112,6 @@ public class DeveloperConsoleV2 {
 	/**
 	 * Gets a list of available apps for the given account
 	 * 
-	 * @param authToken
 	 * @param accountName
 	 * @return
 	 * @throws DeveloperConsoleException
@@ -139,13 +120,11 @@ public class DeveloperConsoleV2 {
 	 * @throws NetworkException
 	 * @throws JSONException
 	 */
-	public List<AppInfo> getAppInfo(String authToken, String accountName)
+	public List<AppInfo> getAppInfo(String accountName)
 			throws DeveloperConsoleException, AuthenticationException, MultiAccountAcception,
 			NetworkException, JSONException {
 
-		authenticate(authToken, false);
-		xsrfToken = "dummy";
-
+		authenticate(false);
 		Date now = new Date();
 		// Fetch a list of available apps
 		List<AppInfo> apps = fetchAppInfos(accountName);
@@ -170,7 +149,6 @@ public class DeveloperConsoleV2 {
 	 * Gets a list of comments for the given app based on the startIndex and
 	 * count
 	 * 
-	 * @param authToken
 	 * @param accountName
 	 * @param packageName
 	 * @param startIndex
@@ -182,16 +160,16 @@ public class DeveloperConsoleV2 {
 	 * @throws AuthenticationException
 	 * @throws DeveloperConsoleException
 	 */
-	public List<Comment> getComments(String authToken, String accountName, String packageName,
-			int startIndex, int count) throws JSONException, AuthenticationException,
-			MultiAccountAcception, NetworkException, DeveloperConsoleException {
+	public List<Comment> getComments(String accountName, String packageName, int startIndex,
+			int count) throws JSONException, AuthenticationException, MultiAccountAcception,
+			NetworkException, DeveloperConsoleException {
 
 		try {
 			// First try using existing cookies and tokens
-			authenticate(authToken, true);
+			authenticate(true);
 			return fetchComments(packageName, startIndex, count);
 		} catch (DeveloperConsoleException ex) {
-			authenticate(authToken, false);
+			authenticate(false);
 			return fetchComments(packageName, startIndex, count);
 		}
 	}
@@ -211,12 +189,12 @@ public class DeveloperConsoleV2 {
 		String postData = PAYLOAD_APPS;
 		// TODO Check the remaining possible parameters to see if they are
 		// needed for large numbers of apps
-		postData = postData.replace(PARAM_XSRFTOKEN, xsrfToken);
+		postData = postData.replace(PARAM_XSRFTOKEN, authInfo.getXsrfToken());
 
 		// Perform the request
 		String json = null;
 		try {
-			URL url = new URL(URL_APPS + "?dev_acc=" + devacc);
+			URL url = new URL(URL_APPS + "?dev_acc=" + authInfo.getDeveloperAccountId());
 			json = performHttpPost(postData, url);
 		} catch (Exception ex) {
 			throw new DeveloperConsoleException(json, ex);
@@ -244,12 +222,12 @@ public class DeveloperConsoleV2 {
 		postData = postData.replace(PARAM_STATS_TYPE, Integer.toString(statsType));
 		// Don't care about the breakdown at the moment
 		postData = postData.replace(PARAM_STATS_BY, Integer.toString(STATS_BY_ANDROID_VERSION));
-		postData = postData.replace(PARAM_XSRFTOKEN, xsrfToken);
+		postData = postData.replace(PARAM_XSRFTOKEN, authInfo.getXsrfToken());
 
 		// Perform the request
 		String json = null;
 		try {
-			URL url = new URL(URL_STATISTICS + "?dev_acc=" + devacc);
+			URL url = new URL(URL_STATISTICS + "?dev_acc=" + authInfo.getDeveloperAccountId());
 			json = performHttpPost(postData, url);
 		} catch (Exception ex) {
 			throw new DeveloperConsoleException(json, ex);
@@ -274,12 +252,12 @@ public class DeveloperConsoleV2 {
 		// Setup the request
 		String postData = PAYLOAD_RATINGS;
 		postData = postData.replace(PARAM_PACKAGENAME, packageName);
-		postData = postData.replace(PARAM_XSRFTOKEN, xsrfToken);
+		postData = postData.replace(PARAM_XSRFTOKEN, authInfo.getXsrfToken());
 
 		// Perform the request
 		String json = null;
 		try {
-			URL url = new URL(URL_REVIEWS + "?dev_acc=" + devacc);
+			URL url = new URL(URL_REVIEWS + "?dev_acc=" + authInfo.getDeveloperAccountId());
 			json = performHttpPost(postData, url);
 		} catch (Exception ex) {
 			throw new DeveloperConsoleException(json, ex);
@@ -305,12 +283,12 @@ public class DeveloperConsoleV2 {
 		postData = postData.replace(PARAM_START, "0");
 		postData = postData.replace(PARAM_COUNT, "1"); // TODO Check asking for
 														// 0 comments
-		postData = postData.replace(PARAM_XSRFTOKEN, xsrfToken);
+		postData = postData.replace(PARAM_XSRFTOKEN, authInfo.getXsrfToken());
 
 		// Perform the request
 		String json = null;
 		try {
-			URL url = new URL(URL_REVIEWS + "?dev_acc=" + devacc);
+			URL url = new URL(URL_REVIEWS + "?dev_acc=" + authInfo.getDeveloperAccountId());
 			json = performHttpPost(postData, url);
 		} catch (Exception ex) {
 			throw new DeveloperConsoleException(json, ex);
@@ -327,12 +305,12 @@ public class DeveloperConsoleV2 {
 		postData = postData.replace(PARAM_PACKAGENAME, packageName);
 		postData = postData.replace(PARAM_START, Integer.toString(startIndex));
 		postData = postData.replace(PARAM_COUNT, Integer.toString(count));
-		postData = postData.replace(PARAM_XSRFTOKEN, xsrfToken);
+		postData = postData.replace(PARAM_XSRFTOKEN, authInfo.getXsrfToken());
 
 		// Perform the request
 		String json = null;
 		try {
-			URL url = new URL(URL_REVIEWS + "?dev_acc=" + devacc);
+			URL url = new URL(URL_REVIEWS + "?dev_acc=" + authInfo.getDeveloperAccountId());
 			json = performHttpPost(postData, url);
 		} catch (Exception ex) {
 			throw new DeveloperConsoleException(json, ex);
@@ -342,232 +320,49 @@ public class DeveloperConsoleV2 {
 	}
 
 	/**
-	 * Logs into the Android Developer Console using the given authToken
+	 * Logs into the Android Developer Console
 	 * 
-	 * FIXME Logging into v2 doesn't work
-	 * 
-	 * @param authToken
 	 * @param reuseAuthentication
 	 * @throws AuthenticationException
 	 * @throws MultiAccountAcception
 	 * @throws NetworkException
 	 */
-	private void authenticate(String authToken, boolean reuseAuthentication)
-			throws AuthenticationException, MultiAccountAcception, NetworkException {
-
-		/*
-		 * To login, perform the following steps
-		 * 
-		 * 
-		 * GET https://play.google.com/apps/publish/v2/?auth=AUTH_TOKEN Returns
-		 * 302 and has AD value in cookie
-		 * 
-		 * GET https://play.google.com/apps/publish/v2/ Need AD cookie for this
-		 * one Returns 302 and gives dev_acc in location
-		 * 
-		 * GET https://play.google.com/apps/publish/v2/?dev_acc=DEV_ACC Need AD
-		 * cookie for this one Entity contains XSRF Token
-		 */
-
-		DefaultHttpClient httpclient = null;
-
-		try {
-			if (!reuseAuthentication) {
-				cookie = null;
-			}
-
-			// reuse cookie for performance
-			if (cookie == null) {
-				boolean asp = false;
-
-				// Variables that we need to collect
-				String cookieAD = null;
-				String xsrfToken = null;
-				String devacc = null;
-
-				// Setup parameters etc..
-				// TODO do we need all these parameters/are they needed for all
-				// requests
-				HttpParams params = new BasicHttpParams();
-				HttpClientParams.setRedirecting(params, true);
-				HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-				HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-				HttpProtocolParams.setUseExpectContinue(params, true);
-
-				SSLSocketFactory sf = SSLSocketFactory.getSocketFactory();
-				sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-
-				SchemeRegistry schReg = new SchemeRegistry();
-				schReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-				schReg.register(new Scheme("https", sf, 443));
-
-				ClientConnectionManager conMgr = new ThreadSafeClientConnManager(params, schReg);
-
-				int timeoutSocket = 30 * 1000;
-				HttpConnectionParams.setSoTimeout(params, timeoutSocket);
-				HttpContext httpContext = new BasicHttpContext();
-				httpclient = new DefaultHttpClient(conMgr, params);
-				RedirectHandler rd = httpclient.getRedirectHandler();
-				Log.d(TAG, "redirect handler: " + rd);
-				// httpclient.setRedirectHandler(new RedirectHandler() {
-				//
-				// @Override
-				// public URI getLocationURI(HttpResponse response, HttpContext
-				// ctx)
-				// throws org.apache.http.ProtocolException {
-				// return null;
-				// }
-				//
-				// @Override
-				// public boolean isRedirectRequested(HttpResponse response,
-				// HttpContext ctx) {
-				// return false;
-				// }
-				// });
-
-				/*
-				 * Get AD cookie
-				 */
-				// GET https://play.google.com/apps/publish/v2/?auth=AUTH_TOKEN
-				HttpGet httpGet = new HttpGet(URL_DEVELOPER_CONSOLE + "?auth=" + authToken);
-
-				HttpResponse httpResponse = httpclient.execute(httpGet, httpContext);
-
-				// FIXME returns 200 along with what I think is a request to
-				// re-authenticate, rather than 302 and the AD cookie
-
-				Log.d(TAG, "Headers: ");
-				Header[] headers = httpResponse.getAllHeaders();
-				for (Header h : headers) {
-					Log.d(TAG, h.toString());
-				}
-
-				AccountManager accountManager = AccountManager.get(AndlyticsApp.getInstance());
-				int statusCode = httpResponse.getStatusLine().getStatusCode();
-				// if (statusCode != HttpStatus.SC_MOVED_TEMPORARILY) {
-				if (statusCode != HttpStatus.SC_OK) {
-					accountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE_GOOGLE, authToken);
-					throw new AuthenticationException("Got HTTP " + statusCode + " ("
-							+ httpResponse.getStatusLine().getReasonPhrase() + ')');
-				}
-
-				// Get AD cookie from headers
-				Header[] allHeaders = httpResponse.getHeaders("Set-Cookie");
-				if (allHeaders != null && allHeaders.length > 0) {
-					if (allHeaders[0].getValue().startsWith("AD")) {
-						cookieAD = allHeaders[0].getValue();
-					}
-				}
-
-				if (cookieAD == null) {
-					Log.e(TAG, "Missing cookie AD");
-					throw new AuthenticationException();
-				}
-
-				/*
-				 * Get DEV_ACC variable
-				 */
-				// GET https://play.google.com/apps/publish/v2/
-				httpGet = new HttpGet(URL_DEVELOPER_CONSOLE);
-				httpGet.addHeader("Cookie", cookieAD);
-
-				httpResponse = httpclient.execute(httpGet, httpContext);
-
-				statusCode = httpResponse.getStatusLine().getStatusCode();
-				if (statusCode != HttpStatus.SC_MOVED_TEMPORARILY) {
-					throw new AuthenticationException("Got HTTP " + statusCode + " ("
-							+ httpResponse.getStatusLine().getReasonPhrase() + ')');
-				}
-
-				// Get DEV_ACC from the location
-				Object obj = httpContext.getAttribute("http.protocol.redirect-locations");
-				if (obj != null) {
-					RedirectLocations locs = (RedirectLocations) obj;
-
-					try {
-						Field privateStringField = RedirectLocations.class.getDeclaredField("uris");
-						privateStringField.setAccessible(true);
-						// TODO Cast this properly
-						HashSet<URI> uris = (HashSet<URI>) privateStringField.get(locs);
-
-						for (URI uri : uris) {
-							String string = uri.toASCIIString();
-							if (string.indexOf("dev_acc=") > -1) {
-								devacc = string.substring(string.indexOf("=") + 1, string.length());
-								break;
-							} else if (string.indexOf("asp=1") > -1) {
-								asp = true;
-							}
-
-						}
-
-					} catch (NoSuchFieldException e) {
-						e.printStackTrace();
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					}
-
-				}
-
-				if (devacc == null && asp) {
-					// TODO Support these accounts
-					Log.e(TAG, "Multi linked account");
-					throw new MultiAccountAcception();
-				}
-
-				if (devacc == null) {
-					Log.e(TAG, "Missing devacc");
-					throw new AuthenticationException();
-				}
-
-				/*
-				 * Get XSRF_TOKEN from entity
-				 */
-				// GET https://play.google.com/apps/publish/v2/?dev_acc=DEV_ACC
-				httpGet = new HttpGet(URL_DEVELOPER_CONSOLE + "?dev_acc=" + devacc);
-				httpGet.addHeader("Cookie", cookieAD);
-
-				httpResponse = httpclient.execute(httpGet, httpContext);
-
-				statusCode = httpResponse.getStatusLine().getStatusCode();
-				if (statusCode != HttpStatus.SC_OK) {
-					throw new AuthenticationException("Got HTTP " + statusCode + " ("
-							+ httpResponse.getStatusLine().getReasonPhrase() + ')');
-				}
-
-				String entity = EntityUtils.toString(httpResponse.getEntity());
-				Matcher m1 = Pattern.compile("\"XsrfToken\".+\"").matcher(entity);
-				if (m1.find()) {
-					xsrfToken = m1.group(0);
-					xsrfToken = xsrfToken.substring(20, xsrfToken.length() - 1);
-				}
-
-				if (xsrfToken != null) {
-					// Fill in the details for use later on
-					this.xsrfToken = xsrfToken;
-					this.cookie = cookieAD;
-					this.devacc = devacc;
-				} else {
-					Log.e(TAG, "Missing xsrfToken");
-					throw new AuthenticationException();
-				}
-
-			}
-		} catch (SocketException e) {
-			throw new NetworkException(e);
-		} catch (UnknownHostException e) {
-			throw new NetworkException(e);
-		} catch (IOException e) {
-			throw new NetworkException(e);
-		} finally {
-			if (httpclient != null) {
-				httpclient.getConnectionManager().shutdown();
-				httpclient = null;
-			}
+	// TODO revise exceptions
+	private void authenticate(boolean reuseAuthentication) throws AuthenticationException,
+			MultiAccountAcception, NetworkException {
+		if (!reuseAuthentication) {
+			authInfo = null;
 		}
 
+		if (authInfo != null) {
+			// nothing to do
+			return;
+		}
+
+		authInfo = authenticator.authenticate();
+	}
+
+	private DefaultHttpClient createHttpClient() {
+		DefaultHttpClient httpclient;
+		HttpParams params = new BasicHttpParams();
+		HttpClientParams.setRedirecting(params, true);
+		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+		HttpProtocolParams.setUseExpectContinue(params, true);
+
+		SSLSocketFactory sf = SSLSocketFactory.getSocketFactory();
+		sf.setHostnameVerifier(SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+
+		SchemeRegistry schReg = new SchemeRegistry();
+		schReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+		schReg.register(new Scheme("https", sf, 443));
+
+		ClientConnectionManager conMgr = new ThreadSafeClientConnManager(params, schReg);
+
+		int timeoutSocket = 30 * 1000;
+		HttpConnectionParams.setSoTimeout(params, timeoutSocket);
+		httpclient = new DefaultHttpClient(conMgr, params);
+		return httpclient;
 	}
 
 	/**
@@ -587,6 +382,9 @@ public class DeveloperConsoleV2 {
 			ProtocolException {
 
 		String result = null;
+		// XXX Standardize the whole thing on HttpClient and used a shared
+		// instance. Then we don't have to mess around with HttpsURLConnection
+		// ridiculous interface and set cookies each time
 		HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 		connection.setHostnameVerifier(new AllowAllHostnameVerifier());
 		connection.setDoOutput(true);
@@ -604,17 +402,22 @@ public class DeveloperConsoleV2 {
 		connection.setRequestProperty("Accept-Language", "en-us,en;q=0.5");
 		connection.setRequestProperty("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
 		connection.setRequestProperty("Keep-Alive", "115");
-		connection.setRequestProperty("Cookie", cookie); // TODO Need to double
-															// check what needs
-															// to be in this
-															// cookie
+		connection.setRequestProperty("Cookie", "AD=" + authInfo.getAdCookie()); // TODO
+																					// Need
+																					// to
+																					// double
+		// check what needs
+		// to be in this
+		// cookie
 		connection.setRequestProperty("Connection", "keep-alive");
 		connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
 		connection.setRequestProperty("X-GWT-Permutation", "72A1C129AEDE44C1A7A3EE2CA737B409");
 		connection.setRequestProperty("X-GWT-Module-Base",
 				"https://play.google.com/apps/publish/v2/gwt/");
-		connection.setRequestProperty("Referer",
-				"https://play.google.com/apps/publish/v2/?dev_acc=" + devacc);
+		connection.setRequestProperty(
+				"Referer",
+				"https://play.google.com/apps/publish/v2/?dev_acc="
+						+ authInfo.getDeveloperAccountId());
 
 		OutputStreamWriter streamToAuthorize = new java.io.OutputStreamWriter(
 				connection.getOutputStream());
