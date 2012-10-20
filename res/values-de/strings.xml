@@ -55,10 +55,9 @@
     <string name="select_files_export">Apps für den Export auswählen</string>
     <string name="export_files_replaced">Bestehende Daten werden ersetzt</string>
     <string name="run_export">Exportieren</string>
-    <string name="by">von</string>
-    <string name="comments_version">Version</string>
-    <string name="comments_on">auf</string>
-    <string name="device">Gerät</string>
+    <string name="comments_details_full">Version %1$s auf Gerät: %2$s</string>
+    <string name="comments_details_version">Version %s</string>
+    <string name="comments_details_device">Auf Gerät: %s</string>
     <string name="long_click_translate">Lange auf Kommentaren halten für eine Übersetzung.</string>
     <string name="load_more_comments">Mehr Kommentare laden</string>
     <string name="info_comments">Die Anzahl der auf der Hauptseite angezeigten Kommentare kann wegen zurückgezogener/geänderter Kommentaren abweichen.</string>

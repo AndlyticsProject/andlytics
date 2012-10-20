@@ -320,16 +320,8 @@ public class ExportActivity extends SherlockFragmentActivity {
 			} else {
 				holder.icon.setImageDrawable(null);
 				holder.icon.clearAnimation();
-				if (appDownloadInfo.getPackageName().startsWith("com.github.andlyticsproject.demo")) {
-
-					holder.icon.setImageDrawable(getResources().getDrawable(
-							R.drawable.default_app_icon));
-
-				} else {
-
-					new GetCachedImageTask(holder.icon, appDownloadInfo.getPackageName())
-							.execute(new File[] { iconFile });
-				}
+				new GetCachedImageTask(holder.icon, appDownloadInfo.getPackageName())
+						.execute(new File[] { iconFile });
 			}
 
 			holder.row.setOnClickListener(new View.OnClickListener() {

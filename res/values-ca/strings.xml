@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Andlytics</string>
-    <string name="app_name_admob">AdMob</string>
 
     <string name="one_entry_hint_desc">Andlytics recol·lecta dades al llarg del temps. Per veure una gràfica amb sentit, torna quan hi hagi més dades disponibles.
 \n\nNormalment, les estadístiques de descàrregues s\'actualitzen cada 24&#8211;48 hores.</string>
-    <string name="one_entry_hint_demo"><u>Mostra la gràfica amb dades de demostració</u></string>
 
+    <string name="crash_dialog_title">Ho sentim&#8230;</string>
     <string name="crash_desc">S\'ha produït un error inesperat.\n\nAjuda\'ns a arreglar-lo enviant-nos un informe d\'errors. Se\'ns enviarà informació sobre el teu dispositiu com ara el nom del fabricant, el número de model del dispositiu, el sistema operatiu, etc. per ajudar-nos a identificar el problema.\n\nGràcies!\n\n</string>
     <string name="crash_toast">S\'ha produït un error inesperat. Se\'ns enviarà informació de l\'error per ajudar-nos a identificar el problema.</string>
+    <string name="crash_dont_show_again">No ho tornis a mostrar</string>
     <string name="newversion_desc"><b>S\'ha produït un error inesperat, probablement perquè la interfície remota ha canviat.</b>\n\nPerò la bona notícia és que hi ha una nova versió de l\'Andlytics disponible a l\'Android Market.\n\nActualitza abans d\'informat d\'aquest error..\n\nGràcies!\n\n\n</string>
-    <string name="account_required">Es necessita un compte de desenvolupador android</string>
-    <string name="account_choose">Escull o afegeix un compte de Google. El compte ha de ser un compte de desenvolupador registrat i amb aplicacions publicades al Google Play (els comptes \'Google Apps for Business\' encara no estan suportats).</string>
+    <string name="account_required">Selecciona els comptes que vols usar amb l\'Andlytics.</string>
+    <string name="account_choose">Els comptes han de ser comptes de desenvolupador registrats amb aplicacions publicades a Google Play (els comptes \'Google Apps for Business\' i els enllaçats a múltiples consoles de desenvolupador encara no estan suportats).</string>
     <string name="account_add">Afegeix un compte de desenvolupador android</string>
     <string name="logout">Tanca la sessió</string>
     <string name="refresh">Actualitza</string>
@@ -42,7 +41,6 @@
     <string name="comment_changes">Canvis de comentaris</string>
     <string name="download_changes">Canvis de descàrregues</string>
     <string name="notification_trigger">Mostra notificacions per a</string>
-    <string name="disable_notifications">No en seleccionis cap per desactivar les notificacions</string>
     <string name="notification_signal">Senyals de notificació</string>
     <string name="notification_sound">So de notificació</string>
     <string name="notification_light">Llum de notificació</string>
@@ -57,11 +55,13 @@
     <string name="select_files_export">Selecciona les aplicacions a exportar</string>
     <string name="export_files_replaced">Els fitxers exportats existents es reemplaçaran</string>
     <string name="run_export">Executa l\'exportació</string>
-    <string name="by">de</string>
-    <string name="device">dispositiu</string>
+    <string name="comments_details_full">Versió %1$s al dispositiu: %2$s</string>
+    <string name="comments_details_version">Versió %s</string>
+    <string name="comments_details_device">Al dispositiu: %s</string>
     <string name="long_click_translate">Fes un clic llarg al comentari per veure\'n la traducció</string>
     <string name="load_more_comments">Carrega més comentaris</string>
     <string name="info_comments">El nombre de comentaris informat a la pantalla principal pot ser més elevat que el nombre de comentaris mostrat aquí per culpa dels comentaris eliminats o modificats.</string>
+    <string name="no_comments_found">No s\'han trobat comentaris</string>
     <string name="time_frame">Rang de temps</string>
     <string name="seven_days">Últims 7 dies</string>
     <string name="thirty_days">Últims 30 dies</string>
@@ -71,11 +71,12 @@
     <string name="yymmdd">Any/Mes/Dia</string>
     <string name="mmddyy">Mes/Dia/Any</string>
     <string name="smooth_values">Suavitza els valors</string>
+    <string name="smoothed_values">* valors suavitzats</string>
     <string name="info_smooth">Els valors de descàrregues i instal·lacions actives no són actualitzats per Google diàriament. Pots escollir suavitzar aquests valors. Les valoracions no en seran afectades perquè s\'actualitzen quasi instantàniament.</string>
     <string name="auto_sync_period">Període de sincronització automàtica</string>
-    <string name="info_autosync">Si la sincronització automàtica està desactivada, probablement faltaran valors futurs a les gràfiques</string>
     <string name="admob_login">INICI DE SESSIÓ A ADMOB</string>
     <string name="password">Contrasenya</string>
+    <string name="email">Correu electrònic</string>
     <string name="login">Inici de sessió</string>
     <string name="remove_admob">Elimina l\'associació d\'AdMob per a aquest lloc</string>
     <string name="remove_admob_app">Elimina els valors d\'AdMob per a aquesta aplicació</string>
@@ -102,6 +103,7 @@
     <string name="admob__CTR">CTR (% de clics)</string>
     <string name="admob__house_ad_clicks">Clics a anuncis propis</string>
     <string name="admob__charts_available">Gràfiques d\'AdMob disponibles</string>
+    <string name="admob__remove_account">Si vols esborrar un compte vés a: Configuració d\'Android -> Comptes i sincronització</string>
     <string name="last_update">Última actualització</string>
 
     <string name="changelog_title">Registre de canvis</string>
@@ -110,7 +112,8 @@
     <string name="notification_title">Canvi detectat a l\'Andlytics</string>
 
     <string name="import_">Importa</string>
-    <string name="import_no_sdcard">La targeta SD no està muntada, no es pot importar!</string>
+    <string name="import_no_sdcard_or_file">La targeta SD no està muntada o el format del fitxer és invàlid, no s\'ha pogut importar!</string>
+    <string name="import_no_stats_file">Fitxer d\'estadístiques no trobat: %1$s</string>
     <string name="import_no_app">No has seleccionat cap aplicació, no es pot importar!</string>
     <string name="importing">S\'està important</string>
     <string name="import_started">S\'ha iniciat la importació.</string>
@@ -143,5 +146,29 @@
     <string name="pref_disable_acra">Informes d\'errors automàtics</string>
     <string name="pref_acra_disabled">Informes desactivats</string>
     <string name="pref_acra_enabled">Informes activats</string>
-
+    
+    <!-- Errors -->
+    <string name="network_error">S\'ha produït un error de xarxa. Torna-ho a provar més tard.</string>
+    <string name="signup_error">%1$s no és un compte de desenvolupador android, registra\'t a:\n\n %2$s</string>
+    <string name="auth_error">Ha fallat l\'autenticació per a: %1$s</string>
+    <string name="admob_ratelimit_error">No s\'han pogut carregar les dades d\'Admob perquè Admob ha restringit el nombre de peticions d\'aquesta aplicació, torna-ho a provar més tard.</string>
+    <string name="admob_missing_error">Manca el compte d\'AdMob %1$s. Si això passa repetidament, prova de moure l\'Andlytics des de la targeta SD a l\'emmagatzematge intern.</string>    
+	<string name="admob_invalid_request_error">S\'ha produït un error en demanar l\'API d\'AdMob</string>
+	<string name="admob_invalid_token_error">S\'ha produït un error en autenticar el compte d\'AdMob. Torna-ho a provar més tard.</string>
+	<string name="admob_generic_error">No s\'han pogut carregar les dades d\'Admob, torna-ho a provar més tard.</string>
+	<string name="admob_linked_accounts_error">Els comptes d\'AdMob que estan enllaçats a comptes de Google tenen l\'accés API desactivat per Google. Estan treballant en una nova versió de l\'API que suporti OAuth</string>
+	<string name="remote_interface_changed_error">Actualment no són possibles les actualitzacions, probablement perquè la interfície remota ha canviat.\n\nAjuda\'ns a arreglar-ho enviant-nos un informe d\'errors. Se\'ns enviarà informació sobre l\'error (volcat de pila) i informació sobre el teu dispositiu com ara el nom del fabricant, el número de model del dispositiu, el sistema operatiu, etc. per ajudar-nos a identificar el problema.\n\nGràcies!</string>
+	<string name="multiple_dev_accounts_error">El teu compte està enllaçat a múltiples consoles de desenvolupador. Aquesta característica no està suportada a l\'Andlytics.\n\nPots desenllaçar els comptes addicionals o demanar una API d\'estadístiques publica a Google a: \n\nhttp://support.google.com/googleplay\n\nHo sentim :(</string>
+	<string name="stats_file_not_specified_error">El fitxer d\'estadístiques no està especificat com a dades</string>
+	
+	<string name="admob_initial_import">Importació inicial de l\'AdMob, això pot trigar una estona&#8230;</string>
+	<string name="admob_data_prompt">Introdueix el teu correu electrònic i la contrasenya</string>
+	<string name="admob_password_prompt">Introdueix la teva contrasenya</string>
+	<string name="admob_authenticating">S\'està autenticant&#8230;</string>
+	<string name="admob_auth_failed">Error: Ha fallat l\'autenticació</string>
+	<string name="admob_wrong_password">Error: Contrasenya errònia</string>
+	<string name="update_required_title">Ho sentim, cal actualitzar</string>
+	<string name="multiple_dev_accounts_title">Múltiples comptes de desenvolupador</string>
+	<string name="update_button">Actualitza</string>
+	<string name="send_report_button">Envia un informe</string>
 </resources>

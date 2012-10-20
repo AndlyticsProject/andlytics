@@ -29,6 +29,8 @@ import org.achartengine.renderer.SimpleSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
+import android.graphics.Color;
+
 /**
  * An abstract class for the demo charts to extend.
  */
@@ -104,6 +106,14 @@ public abstract class AbstractChart {
 		renderer.setYAxisMax(yMax);
 		renderer.setAxesColor(axesColor);
 		renderer.setLabelsColor(labelsColor);
+		renderer.setXLabelsColor(labelsColor);
+		renderer.setYLabelsColor(0, labelsColor);
+
+		renderer.setApplyBackgroundColor(true);
+		renderer.setBackgroundColor(Color.parseColor("#eeeeee"));
+		renderer.setMarginsColor(Color.parseColor("#eeeeee"));
+		renderer.setPanEnabled(false, false);
+		renderer.setZoomEnabled(false, false);
 	}
 
 	/**

@@ -2,6 +2,8 @@
 package com.github.andlyticsproject.util;
 
 import java.io.Closeable;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -90,4 +92,22 @@ public final class Utils {
 			}
 		}
 	}
+
+	public static String readFileAsString(String filename) {
+		FileInputStream in = null;
+		try {
+			in = new FileInputStream(filename);
+			byte[] data = new byte[in.available()];
+			in.read(data);
+
+			return new String(data, "UTF-8");
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (in != null) {
+				Utils.closeSilently(in);
+			}
+		}
+	}
+
 }

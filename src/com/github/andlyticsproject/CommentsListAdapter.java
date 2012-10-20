@@ -1,22 +1,23 @@
-
 package com.github.andlyticsproject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Locale;
 
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
@@ -28,6 +29,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	private ArrayList<CommentGroup> commentGroups;
 
 	private CommentsActivity context;
+	
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE, d MMM yyyy");
 
 	public CommentsListAdapter(CommentsActivity activity) {
 		this.setCommentGroups(new ArrayList<CommentGroup>());
@@ -47,6 +50,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			holder = new ViewHolderChild();
 			holder.text = (TextView) convertView.findViewById(R.id.comments_list_item_text);
 			holder.user = (TextView) convertView.findViewById(R.id.comments_list_item_username);
+			holder.date = (TextView) convertView.findViewById(R.id.comments_list_item_date);
 			holder.device = (TextView) convertView.findViewById(R.id.comments_list_item_device);
 			holder.rating = (RatingBar) convertView
 					.findViewById(R.id.comments_list_item_app_ratingbar);
@@ -59,7 +63,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 		final Comment comment = getChild(groupPosition, childPosition);
 		holder.text.setText(comment.getText());
-		holder.user.setText(context.getString(R.string.comments_author, comment.getUser()));
+		holder.user.setText(comment.getUser());
 
 		String version = comment.getAppVersion();
 		String device = comment.getDevice();
@@ -79,8 +83,14 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		int rating = comment.getRating();
 		if (rating > 0 && rating <= 5) {
 			holder.rating.setRating((float) rating);
+			holder.rating.setVisibility(View.VISIBLE);
+			holder.date.setText(null);
+		} else if (rating == -1) {
+			// developer reply
+			holder.rating.setVisibility(View.GONE);
+			holder.date.setText(formatDate(comment.getDate()));
 		}
-		
+
 		convertView.setOnLongClickListener(new OnLongClickListener() {
 
 			@Override
@@ -137,7 +147,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 		return convertView;
 	}
-	
+
 	private boolean isNotEmptyOrNull(String str) {
 		return str != null && str.length() > 0;
 	}
@@ -150,6 +160,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		TextView text;
 		RatingBar rating;
 		TextView user;
+		TextView date;
 		TextView device;
 	}
 
@@ -199,6 +210,10 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 	public ArrayList<CommentGroup> getCommentGroups() {
 		return commentGroups;
+	}
+	
+	private String formatDate(Date date){
+		return dateFormat.format(date);
 	}
 
 }
