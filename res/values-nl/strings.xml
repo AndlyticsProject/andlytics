@@ -54,8 +54,9 @@
     <string name="select_files_export">Selecteer pakketten om te exporteren</string>
     <string name="export_files_replaced">Bestaande exportdata wordt overschreven</string>
     <string name="run_export">Start exporteren</string>
-    <string name="by">door</string>
-    <string name="device">toestel</string>
+    <string name="comments_details_full">Versie %1$s op apparaat: %2$s</string>
+    <string name="comments_details_version">Versie %s</string>
+    <string name="comments_details_device">Op apparaat: %s</string>
     <string name="long_click_translate">Lange klik op opmerking voor de vertaling</string>
     <string name="load_more_comments">Laad meer opmerkingen</string>
     <string name="info_comments">Het gemelde aantal opmerkingen op het hoofdscherm kan hoger uitvallen dan het aantal opmerkingen getoond hier, doordat opmerkingen zijn teruggetrokken of veranderd.</string>

@@ -17,6 +17,8 @@ public class Comment {
 
 	private String device;
 
+	private Comment reply;
+
 	public String getText() {
 		return text;
 	}
@@ -63,6 +65,14 @@ public class Comment {
 
 	public String getDevice() {
 		return device;
+	}
+
+	public Comment getReply() {
+		return reply;
+	}
+
+	public void setReply(Comment reply) {
+		this.reply = reply;
 	}
 
 }

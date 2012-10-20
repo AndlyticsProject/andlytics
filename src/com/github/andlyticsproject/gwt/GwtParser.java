@@ -1,5 +1,6 @@
 package com.github.andlyticsproject.gwt;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -26,8 +27,12 @@ public class GwtParser {
 
 	private static boolean DEBUG = false;
 	private static boolean DEBUG_SHOW_IN_STRING = false;
+	private static boolean DUMP_LISTS = false;
 
 	private static final String TAG = GwtParser.class.getSimpleName();
+
+
+	private static int dumpNumber = 0;
 
 	public GwtParser(String json) {
 
@@ -76,6 +81,70 @@ public class GwtParser {
 			valueList.add("");
 		}
 
+		if (DUMP_LISTS) {
+			try {
+				dumpToFile(jsonCopy, "jsonDump");
+				List<LongIndexValue> longList = buildLongList();
+				dumpToFile(toIndexedList(indexList), "indexList");
+				dumpToFile(toIndexedList(valueList), "valueList");
+				dumpToFile(longList, "longList");
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+
+			dumpNumber++;
+		}
+	}
+
+	private static String toIndexedList(List<String> list) {
+		StringBuilder buff = new StringBuilder();
+		for (int i = 0; i < list.size(); i++) {
+			buff.append(String.format("[%d]=%s", i, list.get(i)));
+			buff.append(",");
+		}
+
+		return buff.toString();
+	}
+
+	private static void dumpToFile(Object obj, String name) throws Exception {
+		FileOutputStream fos = new FileOutputStream("/sdcard/" + name + dumpNumber + ".json");
+		fos.write(obj.toString().getBytes("UTF-8"));
+		fos.flush();
+		fos.close();
+	}
+
+
+	private List<LongIndexValue> buildLongList() {
+		int tokenCount = 0;
+
+		List<LongIndexValue> longValues = new ArrayList<GwtParser.LongIndexValue>();
+
+		int count = 0;
+		// build list von longs
+		for (int i = 0; i < indexList.size(); i++) {
+
+			String string = indexList.get(i);
+
+			boolean isJsonArray = string.startsWith("[") && tokenCount != 0;
+			boolean isJsonLong = string.startsWith("'");
+
+			if (isJsonLong) {
+				Long value = Long.valueOf(decodeLong(string));
+				// debugPrint("json long: index " + count + " value " + value);
+				longValues.add(new LongIndexValue(i, value));
+				count++;
+			} else {
+				/* - not needed if all app are in one json?
+					                if (isJsonArray) {
+					                    break;
+					                }
+					                */
+			}
+
+			tokenCount++;
+		}
+
+		return longValues;
 	}
 
 	public long getAppInfoSize() {
@@ -141,6 +210,23 @@ public class GwtParser {
 	12 29:  0=null
 	13 30: 10=
 	14 31: 16=Sree Hari Reddy
+	
+	0 2=UserComment
+	1 3=<version string>
+	2 12=<comment text>
+	3 'ToTMmzv' <comment timestamp (long)>
+	4 13=<device name>
+	5 14=<device model>
+	6 15=gaia:... <Google account ID>
+	7 8=<language name>
+	8 9=<language code>
+	9 2=<rating> (2=**, etc.)
+	10 16=<comment reply> if any, otherwise "0"
+	11 1=1 (constant?)
+	12 17=java.lang.Long/4227064769 if has reply
+	13 ToTVmTk <reply timestamp (long)> if has reply, otherwise, ""
+	14 10=<reviewer nickname> if no reply, otherwise ""
+	15 18=<reviewer nickname> if has reply
 
 	*/
 	public List<Comment> getComments() {
@@ -152,6 +238,7 @@ public class GwtParser {
 			// remove first two values from index array - is arraylist definition
 			List<String> commentsIndexList = indexList.subList(2, indexList.size());
 			Comment comment = new Comment();
+			Comment reply = null;
 
 			int commentNumber = 0;
 			int commentIndex = -1;
@@ -164,6 +251,7 @@ public class GwtParser {
 				switch (commentIndex) {
 					case 0:
 						comment = new Comment();
+						reply = null;
 						break;
 					case 1:
 
@@ -200,15 +288,40 @@ public class GwtParser {
 					case 9:
 						comment.setRating(getIntForIndex(valueIndex));
 						break;
-
+					case 10:
+						// if we have a reply, this points to the reply text
+						if (!"0".equals(valueIndex)) {
+							reply = new Comment();
+							// XXX use resource
+							reply.setUser("Developer reply");
+							reply.setRating(-1);
+							comment.setReply(reply);
+							reply.setText(getStringForIndex(valueIndex));
+						}
+						break;
+					case 13:
+						if (reply != null) {
+							long time = decodeLong(indexList.get(commentIndex + 2 + commentNumber));
+							reply.setDate(new Date(time));
+						}
+						break;
 					case 14:
+						if (reply == null) {
+							comment.setUser(getStringForIndex(valueIndex));
+							commentIndex = -1;
+							result.add(comment);
 
-						comment.setUser(getStringForIndex(valueIndex));
-						commentIndex = -1;
-						result.add(comment);
+							commentNumber += 15;
+						}
+						break;
+					case 15:
+						if (reply != null) {
+							comment.setUser(getStringForIndex(valueIndex));
+							commentIndex = -1;
+							result.add(comment);
 
-						commentNumber += 15;
-
+							commentNumber += 16;
+						}
 						break;
 
 					default:
@@ -299,34 +412,7 @@ public class GwtParser {
 			//   Map<Integer, LongIndexValue> commentsIndexMap = new HashMap<Integer, LongIndexValue>();
 			SparseArray<LongIndexValue> fullAssetLongIndexMap = new SparseArray<LongIndexValue>();
 
-			int tokenCount = 0;
-
-			List<LongIndexValue> longValues = new ArrayList<GwtParser.LongIndexValue>();
-
-			int count = 0;
-			// build list von longs
-			for (int i = 0; i < indexList.size(); i++) {
-
-				String string = indexList.get(i);
-
-				boolean isJsonArray = string.startsWith("[") && tokenCount != 0;
-				boolean isJsonLong = string.startsWith("'");
-
-				if (isJsonLong) {
-					Long value = Long.valueOf(decodeLong(string));
-					// debugPrint("json long: index " + count + " value " + value);
-					longValues.add(new LongIndexValue(i, value));
-					count++;
-				} else {
-					/* - not needed if all app are in one json?
-						                if (isJsonArray) {
-						                    break;
-						                }
-						                */
-				}
-
-				tokenCount++;
-			}
+			List<LongIndexValue> longValues = buildLongList();
 
 			// number of apps in json
 			int numberOfAppsInJson = 0;
@@ -418,15 +504,15 @@ public class GwtParser {
 				5=com.google.wireless.android.vending.developer.shared.ApkInfo/2489460190
 				*/
 
-				int fullAssetLong = activeInstallIndexMap.get(j).index;
+				int fullAssetLongIndex = activeInstallIndexMap.get(j).index;
 
 				debugPrint("full asset long value: " + activeInstallIndexMap.get(j).value
 						+ " (should be 0 or 'A')");
-				debugPrint("full asset long index: " + fullAssetLong);
+				debugPrint("full asset long index: " + fullAssetLongIndex);
 
-				int apkinfoIndex = fullAssetLong + 2;
+				int apkinfoIndex = fullAssetLongIndex + 2;
 
-				int apkinfoIndexFallback = fullAssetLong + 1;
+				int apkinfoIndexFallback = fullAssetLongIndex + 1;
 
 				// test for apk info element, if this is not a apk-info it's most likely a draft
 				// app, skip it
@@ -481,10 +567,16 @@ public class GwtParser {
 							+ getIntegerPairLenght(intPairStartIndex);
 					debugPrint("first null index (large integer): "
 							+ getIndexIntegerValue(firstNullIndex));
-					int dimensionSetStart = firstNullIndex + 4;
+					// This is new as of 2012/08/31. Not idea what's in the set 
+					// seems to be empty (for now?)
+					int setLength = getListOrSetLenght(firstNullIndex + 2, null);
+					// 3 nulls + set length + next index (see below)
+					int dimensionSetStart = firstNullIndex + 3 + setLength + 1;
 
 					/*
 					10000=10000
+					0=null
+					9=HashSet
 					0=null
 					0=null
 					0=null
@@ -552,7 +644,6 @@ public class GwtParser {
 					*/
 
 					int iconIndex = dimensionSetStart + dimensionSetLength + 3;
-
 					if (getIndexStringValue(iconIndex) == null) {
 						iconIndex++;
 					}
@@ -578,14 +669,15 @@ public class GwtParser {
 
 					// next is version code
 					int productInfoIndex = postPermissionList2Start + postPermissionList2Length;
-					// System.out.println("product info index" + productInfoIndex);
-					//Integer versionCode =  Integer.parseInt(indexList.get(versionCodeIndex));
+					// System.out.println("product info index " + productInfoIndex);
+					//Integer versionCode = Integer.parseInt(indexList.get(versionCodeIndex));
 					//debugPrint("product info element: " + getIndexStringValue(productInfoIndex));
 
 					int nameIndex = productInfoIndex + 2;
 
 					appInfo.setName(getIndexStringValue(nameIndex));
-					debugPrint("app name: " + getIndexStringValue(nameIndex));
+					debugPrint("app name: " + getIndexStringValue(nameIndex) + " index: "
+							+ nameIndex);
 
 					/*
 					6889:174=1.3.30
@@ -620,26 +712,17 @@ public class GwtParser {
 					/*
 					1. appname
 					2. null
-					3. list
+					3. null
 					4. null
 					5. null
 					6. list
 					7. packegename
 					*/
 
-					int listIndex = nameIndex + 2;
-
-					//debugPrint("list set / negative " + getIndexStringValue(listIndex) + " " + listIndex);
-					int setIndex = listIndex + getListOrSetLenght(listIndex, null);
-
-					// add number 1
-					setIndex++;
-
-					// add number 2
-					setIndex++;
-
-					// add set
-					int packageIndex = setIndex + getListOrSetLenght(setIndex, null);
+					// it seems the first list has been removed as of 2012/08/31
+					int listIndex = nameIndex + 4;
+					// add list length
+					int packageIndex = listIndex + getListOrSetLenght(listIndex, null);
 
 					String packageName = getIndexStringValue(packageIndex);
 
@@ -952,6 +1035,11 @@ public class GwtParser {
 
 		public Long value;
 		public int index;
+
+		@Override
+		public String toString() {
+			return String.format("[%d -> %s]", index, value == null ? "null" : value.toString());
+		}
 	}
 
 	interface SizeCallback {

@@ -138,6 +138,8 @@ public class DeveloperConsoleV2 {
 			AppStats stats = new AppStats();
 			stats.setRequestDate(now);
 			fetchStatistics(app.getPackageName(), stats, STATS_TYPE_TOTAL_USER_INSTALLS);
+			// TODO Get active device installs from fetchAppInfos
+			// (until we want to collect historical data)
 			fetchStatistics(app.getPackageName(), stats, STATS_TYPE_ACTIVE_DEVICE_INSTALLS);
 			fetchRatings(app.getPackageName(), stats);
 			stats.setNumberOfComments(fetchCommentsCount(app.getPackageName()));
