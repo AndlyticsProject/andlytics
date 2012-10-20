@@ -128,8 +128,6 @@ public class JsonParser {
 			 ** Average rating
 			 ** Errors
 			 * ]
-			 * ,[[null,69]],
-			 * [null,"num active","num ratings",avg rating,0]
 			 */
 			JSONArray jsonAppInfo = jsonApps.getJSONArray(i).getJSONArray(1);
 			String packageName = jsonAppInfo.getString(1);
