@@ -17,8 +17,9 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.BrowserCompatHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
@@ -71,20 +72,24 @@ public class DeveloperConsoleV2 {
 	private static final String URL_REVIEWS = "https://play.google.com/apps/publish/v2/reviews";
 
 	// Payloads used in POST requests
-	private static final String PAYLOAD_APPS = "{\"method\":\"fetch\",\"params\":[,,1,1],\"xsrf\":"
-			+ PARAM_XSRFTOKEN + "}";
-	private static final String PAYLOAD_RATINGS = "{\"method\":\"getRatings\",\"params\":[,[\""
-			+ PARAM_PACKAGENAME + "\"]],\"xsrf\":" + PARAM_XSRFTOKEN + "}";
-	private static final String PAYLOAD_COMMENTS = "{\"method\":\"getReviews\",\"params\":[,\""
-			+ PARAM_PACKAGENAME + "," + PARAM_START + "," + PARAM_COUNT + "],\"xsrf\":"
-			+ PARAM_XSRFTOKEN + "}";
-	private static final String PAYLOAD_STATISTICS = "{\"method\":\"getCombinedStats\",\"params\":[,\""
+	// TODO using String.format will be a lot more readable
+	private static final String PAYLOAD_APPS = "{\"method\":\"fetch\",\"params\":{\"2\":1,\"3\":7},\"xsrf\":\""
+			+ PARAM_XSRFTOKEN + "\"}";
+	private static final String PAYLOAD_RATINGS = "{\"method\":\"getRatings\",\"params\":{\"1\":[\""
+			+ PARAM_PACKAGENAME + "\"]},\"xsrf\":\"" + PARAM_XSRFTOKEN + "\"}";
+	private static final String PAYLOAD_COMMENTS = "{\"method\":\"getReviews\",\"params\":{\"1\":\""
 			+ PARAM_PACKAGENAME
-			+ "\",1,"
-			+ PARAM_STATS_TYPE
-			+ ",["
-			+ PARAM_STATS_BY
-			+ "]],\"xsrf\":" + PARAM_XSRFTOKEN + "}";
+			+ "\",\"2\":"
+			+ PARAM_START
+			+ ",\"3\":"
+			+ PARAM_COUNT
+			+ "},\"xsrf\":\"" + PARAM_XSRFTOKEN + "\"}";
+	private static final String PAYLOAD_STATISTICS = "{\"method\":\"getCombinedStats\",\"params\":"
+			+ "{\"1\":\"" + PARAM_PACKAGENAME + "\"," + 
+			"\"2\":1," + // STATS?
+			"\"3\":" + PARAM_STATS_TYPE + "," + 
+			"\"4\":[" + PARAM_STATS_BY + "]}," + 
+			"\"xsrf\":\"" + PARAM_XSRFTOKEN + "\"}";
 
 	// Represents the different ways to break down statistics by e.g. by android
 	// version
@@ -120,9 +125,8 @@ public class DeveloperConsoleV2 {
 	 * @throws NetworkException
 	 * @throws JSONException
 	 */
-	public List<AppInfo> getAppInfo(String accountName)
-			throws DeveloperConsoleException, AuthenticationException, MultiAccountAcception,
-			NetworkException, JSONException {
+	public List<AppInfo> getAppInfo(String accountName) throws DeveloperConsoleException,
+			AuthenticationException, MultiAccountAcception, NetworkException, JSONException {
 
 		authenticate(false);
 		Date now = new Date();
@@ -141,6 +145,8 @@ public class DeveloperConsoleV2 {
 			stats.setNumberOfComments(fetchCommentsCount(app.getPackageName()));
 
 			app.addToHistory(stats);
+			// XXX ??
+			app.setLatestStats(stats);
 
 		}
 
@@ -388,38 +394,13 @@ public class DeveloperConsoleV2 {
 		// instance. Then we don't have to mess around with HttpsURLConnection
 		// ridiculous interface and set cookies each time
 		HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-		connection.setHostnameVerifier(new AllowAllHostnameVerifier());
+		connection.setHostnameVerifier(new BrowserCompatHostnameVerifier());
 		connection.setDoOutput(true);
 		connection.setDoInput(true);
 		connection.setRequestMethod("POST");
 		connection.setConnectTimeout(4000);
 
-		// Setup the connection properties
-		connection.setRequestProperty("Host", "play.google.com");
-		connection.setRequestProperty("User-Agent",
-				"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:15.0) Gecko/20100101 Firefox/15.0");
-		connection.setRequestProperty("Accept",
-				"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-		connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
-		connection.setRequestProperty("Accept-Language", "en-us,en;q=0.5");
-		connection.setRequestProperty("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-		connection.setRequestProperty("Keep-Alive", "115");
-		connection.setRequestProperty("Cookie", "AD=" + authInfo.getAdCookie()); // TODO
-																					// Need
-																					// to
-																					// double
-		// check what needs
-		// to be in this
-		// cookie
-		connection.setRequestProperty("Connection", "keep-alive");
-		connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-		connection.setRequestProperty("X-GWT-Permutation", "72A1C129AEDE44C1A7A3EE2CA737B409");
-		connection.setRequestProperty("X-GWT-Module-Base",
-				"https://play.google.com/apps/publish/v2/gwt/");
-		connection.setRequestProperty(
-				"Referer",
-				"https://play.google.com/apps/publish/v2/?dev_acc="
-						+ authInfo.getDeveloperAccountId());
+		setupConnection(connection);
 
 		OutputStreamWriter streamToAuthorize = new java.io.OutputStreamWriter(
 				connection.getOutputStream());
@@ -435,13 +416,52 @@ public class DeveloperConsoleV2 {
 		BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(
 				resultStream));
 		StringBuffer response = new StringBuffer();
-		String line = reader.readLine();
-		while (line != null) {
+		String line = null;
+		while ((line = reader.readLine()) != null) {
 			response.append(line + "\n");
-			line = reader.readLine();
 		}
+
 		resultStream.close();
 		result = response.toString();
 		return result;
+	}
+
+	private void setupConnection(HttpsURLConnection connection) {
+		// Setup the connection properties
+		connection.setRequestProperty("Host", "play.google.com");
+		connection.setRequestProperty("User-Agent",
+				"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:15.0) Gecko/20100101 Firefox/15.0");
+		connection.setRequestProperty("Accept",
+				"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+		// this is automatically added on GB and later
+		// adding it manually disables automatic decompression
+		// TODO handle pre-GB => use HttpClient with a gzip handler?
+		// connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
+		connection.setRequestProperty("Accept-Language", "en-us,en;q=0.5");
+		connection.setRequestProperty("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+		connection.setRequestProperty("Keep-Alive", "115");
+
+		StringBuilder cookieStr = new StringBuilder();
+		List<Cookie> cookies = authInfo.getCookies();
+		for (int i = 0; i < cookies.size(); i++) {
+			Cookie c = cookies.get(i);
+			cookieStr.append(String.format("%s=%s", c.getName(), c.getValue()));
+			if (i != cookies.size() - 1) {
+				cookieStr.append(";");
+			}
+		}
+		// TODO Need to double check what needs to be in this cookie
+		// => for now just add everything
+		connection.setRequestProperty("Cookie", cookieStr.toString());
+
+		connection.setRequestProperty("Connection", "keep-alive");
+		connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+		connection.setRequestProperty("X-GWT-Permutation", "04C42FD45B1FCD2E3034C8A4DC5145C1");
+		connection.setRequestProperty("X-GWT-Module-Base",
+				"https://play.google.com/apps/publish/v2/gwt/");
+		connection.setRequestProperty(
+				"Referer",
+				"https://play.google.com/apps/publish/v2/?dev_acc="
+						+ authInfo.getDeveloperAccountId());
 	}
 }
