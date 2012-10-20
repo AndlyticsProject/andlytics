@@ -173,7 +173,7 @@ public class JsonParser {
 		 */
 		return new JSONObject(json).getJSONArray("result").getInt(2);
 	}
-	
+
 	/**
 	 * Parses the supplied JSON string and returns a list of comments.
 	 * @param json
@@ -211,6 +211,34 @@ public class JsonParser {
 			* null,
 			* 0
 			 */
+			// Example with developer reply
+			/*
+			[
+			   null,
+			   "gaia:12824185113034449316:1:vm:18363775304595766012",
+			   "Mickaël",
+			   "1350333837326",
+			   1,
+			   "",
+			   "Nul\tNul!! N'arrive pas a scanner le moindre code barre!",
+			   73,
+			   "3.2.5",
+			   [
+			      null,
+			      "X10i",
+			      "SEMC",
+			      "Xperia X10"
+			   ],
+			   "fr_FR",
+			   [
+			      null,
+			      "Prixing fonctionne pourtant bien sur Xperia X10. Essayez de prendre un minimum de recul, au moins 20 à 30cm, évitez les ombres et les reflets. N'hésitez pas à nous écrire sur contact@prixing.fr pour une assistance personnalisée.",
+			      null,
+			      "1350393460968"
+			   ],
+			   1
+			]
+			 */
 			comment.setUser(jsonComment.getString(2));
 			comment.setDate(parseDate(jsonComment.getLong(3)));
 			comment.setRating(jsonComment.getInt(4));
@@ -218,13 +246,21 @@ public class JsonParser {
 			comment.setText(jsonComment.getString(6));
 			JSONArray jsonDevice = jsonComment.getJSONArray(9);
 			comment.setDevice(jsonDevice.getString(2) + " " + jsonDevice.getString(3));
-			
+
+			JSONArray jsonReply = jsonComment.optJSONArray(11);
+			if (jsonReply != null) {
+				Comment reply = new Comment();
+				reply.setText(jsonReply.getString(1));
+				reply.setDate(parseDate(jsonReply.getLong(3)));
+				comment.setReply(reply);
+			}
+
 			comments.add(comment);			
 		}		
-		
+
 		return comments;
 	}
-	
+
 	/**
 	 * Parses the given date
 	 * @param unixDateCode
