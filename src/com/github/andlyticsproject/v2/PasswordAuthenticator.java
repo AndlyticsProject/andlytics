@@ -132,7 +132,10 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException("Couldn't get XSRF token.");
 			}
 
-			return new AuthInfo(adCookie, xsrfToken, developerAccountId);
+			AuthInfo result = new AuthInfo(adCookie, xsrfToken, developerAccountId);
+			result.addCookies(cookies);
+
+			return result;
 		} catch (ClientProtocolException e) {
 			throw new AuthenticationException(e);
 		} catch (IOException e) {

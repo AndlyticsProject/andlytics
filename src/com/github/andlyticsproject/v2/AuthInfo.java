@@ -1,5 +1,11 @@
 package com.github.andlyticsproject.v2;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.http.cookie.Cookie;
+
 public class AuthInfo {
 
 	// AD session cookie
@@ -7,6 +13,8 @@ public class AuthInfo {
 	private String xsrfToken;
 	// 20 digit developer account ID
 	private String developerAccountId;
+
+	List<Cookie> cookies = new ArrayList<Cookie>();
 
 	public AuthInfo(String adCookie, String xsrfToken, String developerAccountId) {
 		this.adCookie = adCookie;
@@ -24,6 +32,18 @@ public class AuthInfo {
 
 	public String getDeveloperAccountId() {
 		return developerAccountId;
+	}
+
+	public void addCookie(Cookie c) {
+		cookies.add(c);
+	}
+
+	public void addCookies(List<Cookie> c) {
+		cookies.addAll(c);
+	}
+
+	public List<Cookie> getCookies() {
+		return Collections.unmodifiableList(cookies);
 	}
 
 }

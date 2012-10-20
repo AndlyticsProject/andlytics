@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject;
 
 import java.math.BigDecimal;
@@ -71,7 +70,10 @@ public class ContentAdapter {
 						AdmobTable.KEY_DATE
 
 				}, AdmobTable.KEY_SITE_ID + "='" + siteId + "'", null,
-				AdmobTable.KEY_DATE + " desc LIMIT " + limit + ""); // sort order -> new to old
+				AdmobTable.KEY_DATE + " desc LIMIT " + limit + ""); // sort
+																	// order ->
+																	// new to
+																	// old
 
 		int count = 0;
 
@@ -554,7 +556,12 @@ public class ContentAdapter {
 						AppStatsTable.KEY_STATS_2STARS, AppStatsTable.KEY_STATS_1STARS,
 						AppStatsTable.KEY_STATS_REQUESTDATE, AppStatsTable.KEY_STATS_VERSIONCODE },
 				AppStatsTable.KEY_STATS_PACKAGENAME + "='" + packageName + "'", null,
-				AppStatsTable.KEY_STATS_REQUESTDATE + " desc LIMIT " + limit + ""); // sort order -> new to old
+				AppStatsTable.KEY_STATS_REQUESTDATE + " desc LIMIT " + limit + ""); // sort
+																					// order
+																					// ->
+																					// new
+																					// to
+																					// old
 
 		if (cursor.moveToFirst()) {
 
@@ -1047,7 +1054,8 @@ public class ContentAdapter {
 						AppStatsTable.KEY_STATS_2STARS, AppStatsTable.KEY_STATS_1STARS,
 						AppStatsTable.KEY_STATS_REQUESTDATE, AppStatsTable.KEY_STATS_VERSIONCODE },
 				AppStatsTable.KEY_STATS_PACKAGENAME + "='" + packageName + "'", null,
-				AppStatsTable.KEY_STATS_REQUESTDATE); // sort order -> new to old
+				AppStatsTable.KEY_STATS_REQUESTDATE); // sort order -> new to
+														// old
 
 		if (cursor.moveToFirst()) {
 
@@ -1082,7 +1090,12 @@ public class ContentAdapter {
 					AppStatsTable.KEY_STATS_REQUESTDATE, AppStatsTable.KEY_STATS_VERSIONCODE },
 					AppStatsTable.KEY_STATS_PACKAGENAME + "='" + packageName + "' and "
 							+ AppStatsTable.KEY_STATS_VERSIONCODE + "=" + code, null,
-					AppStatsTable.KEY_STATS_REQUESTDATE + " limit 1"); // sort order -> new to old
+					AppStatsTable.KEY_STATS_REQUESTDATE + " limit 1"); // sort
+																		// order
+																		// ->
+																		// new
+																		// to
+																		// old
 
 			if (cursor.moveToFirst()) {
 

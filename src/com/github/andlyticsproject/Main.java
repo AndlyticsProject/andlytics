@@ -400,8 +400,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				// appDownloadInfos = console.getAppDownloadInfos(authToken,
 				// accountName);
 
-				// XXX replace to test
-				String password = "password";
+				// XXX put password in a private resources
+				String password = getResources().getString(R.string.dev_console_password);
 				DevConsoleAuthenticator authenticator = new PasswordAuthenticator(accountName,
 						password);
 				DeveloperConsoleV2 v2 = new DeveloperConsoleV2(authenticator);

@@ -68,9 +68,9 @@ public class JsonParser {
 		/*
 		 * null
 		 * Date?
-		 * value
+		 * [null, value]
 		 */
-		int latestValue = latestData.getInt(2);
+		int latestValue = latestData.getJSONArray(2).getInt(1);
 
 		switch (statsType) {
 			case DeveloperConsoleV2.STATS_TYPE_TOTAL_USER_INSTALLS:
@@ -103,6 +103,7 @@ public class JsonParser {
 		for (int i = 0; i < numberOfApps; i++) {
 			AppInfo app = new AppInfo();
 			app.setAccount(accountName);
+			app.setLastUpdate(new Date());
 			/* 
 			 * Per app:
 			 * null
@@ -113,6 +114,8 @@ public class JsonParser {
 			 * Nested array with price details
 			 * Date?
 			 * Number? Always is 1, but might change for multi-consoles or people with loads of apps
+			 * ,[[null,69]],
+			 * [null,"num active","num ratings",avg rating,0]
 			 */
 			JSONArray jsonApp = jsonApps.getJSONArray(i).getJSONArray(1);
 			String packageName = jsonApp.getString(1);
