@@ -106,7 +106,7 @@ public class JsonParser {
 		for (int i = 0; i < numberOfApps; i++) {
 			AppInfo app = new AppInfo();
 			app.setAccount(accountName);
-			app.setLastUpdate(new Date());
+			app.setLastUpdate(now);
 			/* 
 			 * Per app:
 			 * null
