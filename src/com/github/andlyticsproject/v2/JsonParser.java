@@ -67,7 +67,7 @@ public class JsonParser {
 		JSONArray latestData = historicalData.getJSONArray(historicalData.length() - 1);
 		/*
 		 * null
-		 * Date?
+		 * Date
 		 * [null, value]
 		 */
 		int latestValue = latestData.getJSONArray(2).getInt(1);
@@ -77,6 +77,8 @@ public class JsonParser {
 				stats.setTotalDownloads(latestValue);
 				break;
 			case DeveloperConsoleV2.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
+				// This is not used now that active installs are in the main request (parseAppInfos)
+				// Can be used if we get historical/dimensioned data
 				stats.setActiveInstalls(latestValue);
 				break;
 			default:
@@ -95,6 +97,7 @@ public class JsonParser {
 	protected static List<AppInfo> parseAppInfos(String json, String accountName)
 			throws JSONException {
 
+		Date now = new Date();
 		List<AppInfo> apps = new ArrayList<AppInfo>();
 		// Extract the base array containing apps
 		JSONArray jsonApps = new JSONObject(json).getJSONArray("result").getJSONArray(1);
@@ -107,23 +110,34 @@ public class JsonParser {
 			/* 
 			 * Per app:
 			 * null
-			 * packageName
-			 * Nested array with details
+			 * [ APP_INFO_ARRAY
+			 ** null
+			 ** packageName
+			 ** Nested array with details
+			 ** null
+			 ** Nested array with version details
+			 ** Nested array with price details
+			 ** Date
+			 ** Number? Always is 1, but might change for multi-consoles or people with loads of apps
+			 * ]
 			 * null
-			 * Nested array with version details
-			 * Nested array with price details
-			 * Date?
-			 * Number? Always is 1, but might change for multi-consoles or people with loads of apps
+			 * [ APP_STATS_ARRAY
+			 ** null,
+			 ** Active installs
+			 ** Total ratings
+			 ** Average rating
+			 ** Errors
+			 * ]
 			 * ,[[null,69]],
 			 * [null,"num active","num ratings",avg rating,0]
 			 */
-			JSONArray jsonApp = jsonApps.getJSONArray(i).getJSONArray(1);
-			String packageName = jsonApp.getString(1);
+			JSONArray jsonAppInfo = jsonApps.getJSONArray(i).getJSONArray(1);
+			String packageName = jsonAppInfo.getString(1);
 			if (packageName == null) {
 				break; // Draft app
 				// FIXME Check for half finished apps in the later sections as Google lets you setup apps bit by bit now
 			}
-			app.setPackageName(jsonApp.getString(1));
+			app.setPackageName(packageName);
 
 			/* 
 			 * Per app details:
@@ -135,7 +149,7 @@ public class JsonParser {
 			 * Last what's new
 			 * 
 			 */
-			JSONArray appDetails = jsonApp.getJSONArray(2).getJSONArray(1).getJSONArray(0);
+			JSONArray appDetails = jsonAppInfo.getJSONArray(2).getJSONArray(1).getJSONArray(0);
 			app.setName(appDetails.getString(2));
 
 			/*
@@ -148,11 +162,18 @@ public class JsonParser {
 			 * null
 			 * Array with app icon [null,null,null,icon]
 			 */
-			JSONArray appVersions = jsonApp.getJSONArray(4);
+			JSONArray appVersions = jsonAppInfo.getJSONArray(4);
 			JSONArray lastAppVersionDetails = appVersions.getJSONArray(appVersions.length() - 1)
 					.getJSONArray(2);
 			app.setVersionName(lastAppVersionDetails.getString(4));
 			app.setIconUrl(lastAppVersionDetails.getJSONArray(6).getString(3));
+			
+			// App stats
+			JSONArray jsonAppStats = jsonApps.getJSONArray(i).getJSONArray(3);
+			AppStats stats = new AppStats();
+			stats.setRequestDate(now);
+			stats.setActiveInstalls(jsonAppStats.getInt(1));
+			app.setLatestStats(stats);
 
 			apps.add(app);
 

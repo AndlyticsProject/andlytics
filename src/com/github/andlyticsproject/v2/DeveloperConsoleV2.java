@@ -129,25 +129,16 @@ public class DeveloperConsoleV2 {
 			AuthenticationException, MultiAccountAcception, NetworkException, JSONException {
 
 		authenticate(false);
-		Date now = new Date();
 		// Fetch a list of available apps
 		List<AppInfo> apps = fetchAppInfos(accountName);
 
 		for (AppInfo app : apps) {
-			// Fetch app statistics
-			AppStats stats = new AppStats();
-			stats.setRequestDate(now);
+			// Fetch remaining app statistics
+			// Latest stats object, and active device installs is already setup
+			AppStats stats = app.getLatestStats();
 			fetchStatistics(app.getPackageName(), stats, STATS_TYPE_TOTAL_USER_INSTALLS);
-			// TODO Get active device installs from fetchAppInfos
-			// (until we want to collect historical data)
-			fetchStatistics(app.getPackageName(), stats, STATS_TYPE_ACTIVE_DEVICE_INSTALLS);
 			fetchRatings(app.getPackageName(), stats);
 			stats.setNumberOfComments(fetchCommentsCount(app.getPackageName()));
-
-			app.addToHistory(stats);
-			// XXX ??
-			app.setLatestStats(stats);
-
 		}
 
 		return apps;
