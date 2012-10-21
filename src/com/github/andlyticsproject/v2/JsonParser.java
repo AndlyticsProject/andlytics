@@ -275,7 +275,8 @@ public class JsonParser {
 			comment.setAppVersion(jsonComment.getString(8));
 			comment.setText(jsonComment.getString(6));
 			JSONArray jsonDevice = jsonComment.getJSONArray(9);
-			comment.setDevice(jsonDevice.getString(2) + " " + jsonDevice.getString(3));
+			String device = jsonDevice.optString(2) + " " + jsonDevice.optString(3);
+			comment.setDevice(device.trim());
 
 			JSONArray jsonReply = jsonComment.optJSONArray(11);
 			if (jsonReply != null) {
