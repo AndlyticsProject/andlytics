@@ -4,7 +4,6 @@ package com.github.andlyticsproject;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -320,6 +319,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 				 * if(chartView==null) { Log.i(LOG_TAG,"Ignoring chart p="+i+" c="+j+"for class="
 				 * +this.getClass().toString()); continue; }
 				 */
+				@SuppressWarnings("deprecation")
 				Gallery.LayoutParams params = new Gallery.LayoutParams(LayoutParams.FILL_PARENT,
 						LayoutParams.FILL_PARENT);
 				chartView.setLayoutParams(params);

@@ -85,6 +85,7 @@ public class AdmobRequest {
 		String token = null;
 
 		//create the parameters
+		@SuppressWarnings("deprecation")
 		String params = "client_key=" + clientKey + "&email=" + URLEncoder.encode(email)
 				+ "&password=" + URLEncoder.encode(password);
 

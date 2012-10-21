@@ -82,7 +82,7 @@ public class Chart extends AbstractChart {
 			if (i == nextXLabelPrint) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat(
 						Preferences.getDateFormatShort(context));
-				renderer.addTextLabel(i, dateFormat.format(handler.getDate(appInfo)));
+				renderer.addXTextLabel(i, dateFormat.format(handler.getDate(appInfo)));
 				nextXLabelPrint += xLabelDistance;
 			}
 		}
@@ -164,7 +164,6 @@ public class Chart extends AbstractChart {
 		Date[] datesArray = dates.toArray(new Date[dates.size()]);
 		double[] valuesArray = new double[dates.size()];
 
-		Date[] highlightDatesArray = highlightDates.toArray(new Date[highlightDates.size()]);
 		double[] highlightValuesArray = new double[highlightDates.size()];
 
 		double heighestValue = Double.MIN_VALUE;
