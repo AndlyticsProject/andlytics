@@ -117,8 +117,8 @@ public class JsonParser {
 			 ** null
 			 ** Nested array with version details
 			 ** Nested array with price details
-			 ** Date
-			 ** Number? Always is 1, but might change for multi-consoles or people with loads of apps
+			 ** Last update Date
+			 ** Number [1=published, 5 = draft?]
 			 * ]
 			 * null
 			 * [ APP_STATS_ARRAY
@@ -129,11 +129,19 @@ public class JsonParser {
 			 ** Errors
 			 * ]
 			 */
-			JSONArray jsonAppInfo = jsonApps.getJSONArray(i).getJSONArray(1);
+			JSONArray jsonApp = jsonApps.getJSONArray(i);
+			JSONArray jsonAppInfo = jsonApp.getJSONArray(1);
 			String packageName = jsonAppInfo.getString(1);
-			if (packageName == null) {
-				break; // Draft app
-				// FIXME Check for half finished apps in the later sections as Google lets you setup apps bit by bit now
+			// Look for "tmp.7238057230750432756094760456.235728507238057230542"
+			if (packageName == null || (packageName.startsWith("tmp.")
+					&& Character.isDigit(packageName.charAt(4)))) {
+				break;
+				// Draft app
+			}
+			// Check number code and last updated date
+			if (jsonAppInfo.getInt(7) == 5 || jsonAppInfo.optInt(6) == 0) {
+				break;
+				// Probably a draft app
 			}
 			app.setPackageName(packageName);
 
@@ -167,7 +175,7 @@ public class JsonParser {
 			app.setIconUrl(lastAppVersionDetails.getJSONArray(6).getString(3));
 			
 			// App stats
-			JSONArray jsonAppStats = jsonApps.getJSONArray(i).getJSONArray(3);
+			JSONArray jsonAppStats = jsonApp.getJSONArray(3);
 			AppStats stats = new AppStats();
 			stats.setRequestDate(now);
 			stats.setActiveInstalls(jsonAppStats.getInt(1));
