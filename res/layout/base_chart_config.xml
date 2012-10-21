@@ -45,6 +45,14 @@
                 </RadioButton>
 
                 <RadioButton
+                    android:id="@+id/base_chart_config_ratio_last_ninety_days"
+                    style="@style/MainTableText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/ninety_days" >
+                </RadioButton>
+
+                <RadioButton
                     android:id="@+id/base_chart_config_ratio_last_unlimited"
                     style="@style/MainTableText"
                     android:layout_width="wrap_content"

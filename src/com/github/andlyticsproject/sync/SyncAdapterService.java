@@ -77,6 +77,7 @@ public class SyncAdapterService extends Service {
 		return sSyncAdapter;
 	}
 
+	@SuppressWarnings("deprecation")
 	private static void performSync(Context context, Account account, Bundle extras,
 			String authority, ContentProviderClient provider, SyncResult syncResult)
 			throws OperationCanceledException {

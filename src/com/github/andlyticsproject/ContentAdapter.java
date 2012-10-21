@@ -46,7 +46,9 @@ public class ContentAdapter {
 		List<Admob> result = new ArrayList<Admob>();
 
 		int limit = Integer.MAX_VALUE;
-		if (currentTimeFrame.equals(Timeframe.LAST_THIRTY_DAYS)) {
+		if (currentTimeFrame.equals(Timeframe.LAST_NINETY_DAYS)) {
+			limit = 90;
+		} else if (currentTimeFrame.equals(Timeframe.LAST_THIRTY_DAYS)) {
 			limit = 30;
 		} else if (currentTimeFrame.equals(Timeframe.LAST_SEVEN_DAYS)) {
 			limit = 7;
@@ -536,12 +538,14 @@ public class ContentAdapter {
 		AppStats overall = new AppStats();
 
 		int limit = Integer.MAX_VALUE;
-		if (currentTimeFrame.equals(Timeframe.LAST_THIRTY_DAYS)) {
+		if (currentTimeFrame.equals(Timeframe.LAST_NINETY_DAYS)) {
+			limit = 90;
+		} else if (currentTimeFrame.equals(Timeframe.LAST_THIRTY_DAYS)) {
 			limit = 30;
-		} else if (currentTimeFrame.equals(Timeframe.LAST_TWO_DAYS)) {
-			limit = 2;
 		} else if (currentTimeFrame.equals(Timeframe.LAST_SEVEN_DAYS)) {
 			limit = 7;
+		} else if (currentTimeFrame.equals(Timeframe.LAST_TWO_DAYS)) {
+			limit = 2;
 		} else if (currentTimeFrame.equals(Timeframe.LATEST_VALUE)) {
 			limit = 1;
 		}

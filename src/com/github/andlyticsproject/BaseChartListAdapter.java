@@ -4,9 +4,7 @@ package com.github.andlyticsproject;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -165,6 +163,7 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 
 	protected abstract boolean isSmothValue(int page, int position);
 
+	@SuppressWarnings("deprecation")
 	private TextView createTextView(String string, boolean bold, boolean weight) {
 		TextView view = new TextView(activity);
 		view.setText(string);

@@ -605,6 +605,7 @@ public class MainListAdapter extends BaseAdapter {
 		imageView.startAnimation(fadeInAnimation);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void changeBackgroundDrawable(final View v, Drawable drawable) {
 		LayoutParams l = v.getLayoutParams();
 		int paddingBottom = v.getPaddingBottom();

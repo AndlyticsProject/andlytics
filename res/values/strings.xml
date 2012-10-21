@@ -66,6 +66,7 @@
     <string name="time_frame">Time frame</string>
     <string name="seven_days">Last 7 days</string>
     <string name="thirty_days">Last 30 days</string>
+    <string name="ninety_days">Last 90 days</string>
     <string name="unlimited">Unlimited</string>
     <string name="date_format">Date format</string>
     <string name="ddmmyy">Day/Month/Year</string>
