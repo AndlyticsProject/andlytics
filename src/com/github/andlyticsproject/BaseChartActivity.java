@@ -43,7 +43,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 	private RadioButton radioMdy;
 	private ViewSwitcher3D listViewSwitcher;
 
-	private RadioButton radioLastThrity, radioUnlimited, radioLastSeven;
+	private RadioButton radioLastThrity, radioUnlimited, radioLastSeven, radioLastNinety;
 
 	BaseChartListAdapter myAdapter;
 
@@ -130,6 +130,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 			}
 		});
 
+		radioLastNinety = (RadioButton) findViewById(R.id.base_chart_config_ratio_last_ninety_days);
 		radioLastThrity = (RadioButton) findViewById(R.id.base_chart_config_ratio_last_thrity_days);
 		radioUnlimited = (RadioButton) findViewById(R.id.base_chart_config_ratio_last_unlimited);
 		radioLastSeven = (RadioButton) findViewById(R.id.base_chart_config_ratio_last_seven_days);
@@ -165,6 +166,23 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 				}
 			}
 		});
+		
+		if (Timeframe.LAST_NINETY_DAYS.equals(currentTimeFrame)) {
+			radioLastNinety.setChecked(true);
+		}
+		radioLastNinety.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					currentTimeFrame = Timeframe.LAST_NINETY_DAYS;
+					executeLoadData(currentTimeFrame);
+					Preferences.saveChartTimeframe(Timeframe.LAST_NINETY_DAYS,
+							BaseChartActivity.this);
+				}
+			}
+		});
+		
 		if (Timeframe.UNLIMITED.equals(currentTimeFrame)) {
 			radioUnlimited.setChecked(true);
 		}
