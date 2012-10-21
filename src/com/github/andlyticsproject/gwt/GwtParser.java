@@ -291,18 +291,16 @@ public class GwtParser {
 					case 10:
 						// if we have a reply, this points to the reply text
 						if (!"0".equals(valueIndex)) {
-							reply = new Comment();
-							// XXX use resource
-							reply.setUser("Developer reply");
-							reply.setRating(-1);
+							reply = new Comment(true);
 							comment.setReply(reply);
+							reply.setDate(comment.getDate());
 							reply.setText(getStringForIndex(valueIndex));
 						}
 						break;
 					case 13:
 						if (reply != null) {
 							long time = decodeLong(indexList.get(commentIndex + 2 + commentNumber));
-							reply.setDate(new Date(time));
+							reply.setReplyDate(new Date(time));
 						}
 						break;
 					case 14:

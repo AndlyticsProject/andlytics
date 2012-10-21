@@ -1,9 +1,7 @@
 
 package com.github.andlyticsproject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.os.AsyncTask;
@@ -21,8 +19,6 @@ import com.github.andlyticsproject.model.CommentGroup;
 public class CommentsActivity extends BaseDetailsActivity implements AuthenticationCallback {
 
 	public static final String TAG = Main.class.getSimpleName();
-	
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE, d MMM yyyy");
 
 	private CommentsListAdapter commentsListAdapter;
 
@@ -124,7 +120,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			comments = db.getCommentsFromCache(packageName);
+			comments = DeveloperConsole.expandReplies(db.getCommentsFromCache(packageName));
 			rebuildCommentGroups();
 
 			return null;
@@ -248,7 +244,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 			if (prevComment != null) {
 
 				CommentGroup group = new CommentGroup();
-				group.setDateString(formatDate(comment.getDate()));
+				group.setDate(comment.getDate());
 
 				if (commentGroups.contains(group)) {
 
@@ -270,15 +266,11 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 	private void addNewCommentGroup(Comment comment) {
 		CommentGroup group = new CommentGroup();
-		group.setDateString(formatDate(comment.getDate()));
+		group.setDate(comment.getDate());
 		List<Comment> groupComments = new ArrayList<Comment>();
 		groupComments.add(comment);
 		group.setComments(groupComments);
 		commentGroups.add(group);
-	}
-	
-	private String formatDate(Date date){
-		return dateFormat.format(date);
 	}
 
 	@Override

@@ -273,7 +273,8 @@ public class JsonParser {
 			if (jsonReply != null) {
 				Comment reply = new Comment();
 				reply.setText(jsonReply.getString(1));
-				reply.setDate(parseDate(jsonReply.getLong(3)));
+				reply.setReplyDate(parseDate(jsonReply.getLong(3)));
+				reply.setDate(comment.getDate());
 				comment.setReply(reply);
 			}
 

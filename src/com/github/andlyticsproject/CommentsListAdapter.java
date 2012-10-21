@@ -2,9 +2,7 @@ package com.github.andlyticsproject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Locale;
 
 import android.content.Intent;
@@ -21,16 +19,19 @@ import android.widget.TextView;
 
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
+import com.github.andlyticsproject.util.Utils;
 
 public class CommentsListAdapter extends BaseExpandableListAdapter {
+
+	private static final int TYPE_COMMENT = 0;
+	private static final int TYPE_REPLY = 1;
 
 	private LayoutInflater layoutInflater;
 
 	private ArrayList<CommentGroup> commentGroups;
 
 	private CommentsActivity context;
-	
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE, d MMM yyyy");
+
 
 	public CommentsListAdapter(CommentsActivity activity) {
 		this.setCommentGroups(new ArrayList<CommentGroup>());
@@ -38,57 +39,55 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		this.context = activity;
 	}
 
+
 	@Override
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
 			View convertView, ViewGroup parent) {
 
+		final Comment comment = getChild(groupPosition, childPosition);
 		ViewHolderChild holder;
 
 		if (convertView == null) {
-			convertView = layoutInflater.inflate(R.layout.comments_list_item_child, null);
+			convertView = layoutInflater.inflate(comment.isReply() ? R.layout.comments_list_item_reply
+					: R.layout.comments_list_item_comment, null);
 
 			holder = new ViewHolderChild();
 			holder.text = (TextView) convertView.findViewById(R.id.comments_list_item_text);
 			holder.user = (TextView) convertView.findViewById(R.id.comments_list_item_username);
 			holder.date = (TextView) convertView.findViewById(R.id.comments_list_item_date);
 			holder.device = (TextView) convertView.findViewById(R.id.comments_list_item_device);
-			holder.rating = (RatingBar) convertView
-					.findViewById(R.id.comments_list_item_app_ratingbar);
+			holder.rating = (RatingBar) convertView.findViewById(R.id.comments_list_item_app_ratingbar);
 
 			convertView.setTag(holder);
 		} else {
-
 			holder = (ViewHolderChild) convertView.getTag();
 		}
 
-		final Comment comment = getChild(groupPosition, childPosition);
 		holder.text.setText(comment.getText());
-		holder.user.setText(comment.getUser());
 
-		String version = comment.getAppVersion();
-		String device = comment.getDevice();
-		String deviceText = "";
-		// building string: version X on device: XYZ
-		if (isNotEmptyOrNull(version)) {
-			if (isNotEmptyOrNull(device)) {
-				deviceText = context.getString(R.string.comments_details_full, version, device);
-			} else {
-				deviceText = context.getString(R.string.comments_details_version, version);
+		if (comment.isReply()) {
+			holder.date.setText(Utils.formatDate(comment.getReplyDate()));
+		} else {
+			holder.user.setText(comment.getUser());
+			String version = comment.getAppVersion();
+			String device = comment.getDevice();
+			String deviceText = "";
+			// building string: version X on device: XYZ
+			if (isNotEmptyOrNull(version)) {
+				if (isNotEmptyOrNull(device)) {
+					deviceText = context.getString(R.string.comments_details_full, version, device);
+				} else {
+					deviceText = context.getString(R.string.comments_details_version, version);
+				}
+			} else if (isNotEmptyOrNull(device)) {
+				deviceText = context.getString(R.string.comments_details_device, device);
 			}
-		} else if (isNotEmptyOrNull(device)) {
-			deviceText = context.getString(R.string.comments_details_device, device);
-		}
-		holder.device.setText(deviceText);
+			holder.device.setText(deviceText);
 
-		int rating = comment.getRating();
-		if (rating > 0 && rating <= 5) {
-			holder.rating.setRating((float) rating);
-			holder.rating.setVisibility(View.VISIBLE);
-			holder.date.setText(null);
-		} else if (rating == -1) {
-			// developer reply
-			holder.rating.setVisibility(View.GONE);
-			holder.date.setText(formatDate(comment.getDate()));
+			int rating = comment.getRating();
+			if (rating > 0 && rating <= 5) {
+				holder.rating.setRating((float) rating);
+			}
 		}
 
 		convertView.setOnLongClickListener(new OnLongClickListener() {
@@ -118,24 +117,34 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	}
 
 	@Override
+	public int getChildType(int groupPosition, int childPosition) {
+		return getChild(groupPosition, childPosition).isReply() ? TYPE_REPLY : TYPE_COMMENT;
+	}
+
+
+
+	@Override
+	public int getChildTypeCount() {
+		return 2;
+	}
+
+	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
 			ViewGroup parent) {
 
 		ViewHolderGroup holder;
 
 		if (convertView == null) {
-			convertView = layoutInflater.inflate(R.layout.comments_list_item, null);
-
+			convertView = layoutInflater.inflate(R.layout.comments_list_item_group_header, null);
 			holder = new ViewHolderGroup();
 			holder.date = (TextView) convertView.findViewById(R.id.comments_list_item_date);
 			convertView.setTag(holder);
 		} else {
-
 			holder = (ViewHolderGroup) convertView.getTag();
 		}
 
 		CommentGroup commentGroup = getGroup(groupPosition);
-		holder.date.setText(commentGroup.getDateString());
+		holder.date.setText(Utils.formatDate(commentGroup.getDate()));
 
 		convertView.setOnClickListener(new OnClickListener() {
 
@@ -210,10 +219,6 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 	public ArrayList<CommentGroup> getCommentGroups() {
 		return commentGroups;
-	}
-	
-	private String formatDate(Date date){
-		return dateFormat.format(date);
 	}
 
 }

@@ -4,6 +4,8 @@ package com.github.andlyticsproject.util;
 import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,9 +20,16 @@ import com.github.andlyticsproject.io.MediaScannerWrapper;
  * Utility class for simple helper methods.
  */
 public final class Utils {
+	// TODO Replace this with a user configurable date formatter
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE, d MMM yyyy");
 
 	/** Private constructor. */
 	private Utils() {
+	}
+	
+
+	public static String formatDate(Date date){
+		return dateFormat.format(date);
 	}
 
 	/**

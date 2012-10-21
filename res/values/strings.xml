@@ -55,6 +55,7 @@
     <string name="select_files_export">Select apps to export</string>
     <string name="export_files_replaced">Existing export files will be replaced</string>
     <string name="run_export">Run export</string>
+    <string name="comment_reply">Developer reply</string>
     <string name="comments_details_full">Version %1$s on device: %2$s</string>
     <string name="comments_details_version">Version %s</string>
     <string name="comments_details_device">On device: %s</string>

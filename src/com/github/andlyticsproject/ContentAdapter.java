@@ -957,6 +957,8 @@ public class ContentAdapter {
 
 	public void updateCommentsCache(List<Comment> comments, String packageName) {
 
+		// TODO Do not drop the table each time
+		
 		// clear table
 		context.getContentResolver().delete(CommentsTable.CONTENT_URI,
 				CommentsTable.KEY_COMMENT_PACKAGENAME + "='" + packageName + "'", null);
@@ -971,6 +973,15 @@ public class ContentAdapter {
 			initialValues.put(CommentsTable.KEY_COMMENT_USER, comment.getUser());
 			initialValues.put(CommentsTable.KEY_COMMENT_APP_VERSION, comment.getAppVersion());
 			initialValues.put(CommentsTable.KEY_COMMENT_DEVICE, comment.getDevice());
+			Comment reply = comment.getReply();
+			String replyText = null;
+			String replyDate = null;
+			if (reply != null) {
+				replyText =  reply.getText();
+				replyDate = formatDate(reply.getDate());
+			}
+			initialValues.put(CommentsTable.KEY_COMMENT_REPLY_TEXT, replyText);
+			initialValues.put(CommentsTable.KEY_COMMENT_REPLY_DATE, replyDate);
 
 			context.getContentResolver().insert(CommentsTable.CONTENT_URI, initialValues);
 
@@ -986,7 +997,8 @@ public class ContentAdapter {
 				new String[] { CommentsTable.KEY_COMMENT_DATE,
 						CommentsTable.KEY_COMMENT_PACKAGENAME, CommentsTable.KEY_COMMENT_RATING,
 						CommentsTable.KEY_COMMENT_TEXT, CommentsTable.KEY_COMMENT_USER,
-						CommentsTable.KEY_COMMENT_DEVICE, CommentsTable.KEY_COMMENT_APP_VERSION },
+						CommentsTable.KEY_COMMENT_DEVICE, CommentsTable.KEY_COMMENT_APP_VERSION,
+						CommentsTable.KEY_COMMENT_REPLY_TEXT, CommentsTable.KEY_COMMENT_REPLY_DATE},
 				AppInfoTable.KEY_APP_PACKAGENAME + "='" + packageName + "'", null,
 				CommentsTable.KEY_ROWID);
 		if (mCursor != null && mCursor.moveToFirst()) {
@@ -995,7 +1007,7 @@ public class ContentAdapter {
 				Comment comment = new Comment();
 				String dateString = mCursor.getString(mCursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_DATE));
-				comment.setDate(parseDate(dateString.substring(0, 10) + " 12:00:00"));
+				comment.setDate(parseDate(dateString));
 				comment.setUser(mCursor.getString(mCursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_USER)));
 				comment.setText(mCursor.getString(mCursor
@@ -1006,6 +1018,16 @@ public class ContentAdapter {
 						.getColumnIndex(CommentsTable.KEY_COMMENT_APP_VERSION)));
 				comment.setRating(mCursor.getInt(mCursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_RATING)));
+				String replyText = mCursor.getString(mCursor
+						.getColumnIndex(CommentsTable.KEY_COMMENT_REPLY_TEXT));
+				if (replyText != null) {
+					Comment reply = new Comment(true);
+					reply.setText(replyText);
+					reply.setReplyDate(parseDate(mCursor.getString(mCursor
+						.getColumnIndex(CommentsTable.KEY_COMMENT_REPLY_DATE))));
+					reply.setDate(comment.getDate());
+					comment.setReply(reply);
+				}
 				result.add(comment);
 			} while (mCursor.moveToNext());
 		}

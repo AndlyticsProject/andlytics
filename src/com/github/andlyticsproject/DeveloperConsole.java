@@ -189,7 +189,7 @@ public class DeveloperConsole {
 		}
 	}
 
-	private List<Comment> expandReplies(List<Comment> result) {
+	public static List<Comment> expandReplies(List<Comment> result) {
 		List<Comment> withReplies = new ArrayList<Comment>();
 		for (Comment comment : result) {
 			withReplies.add(comment);
