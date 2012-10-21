@@ -82,7 +82,12 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			} else if (isNotEmptyOrNull(device)) {
 				deviceText = context.getString(R.string.comments_details_device, device);
 			}
-			holder.device.setText(deviceText);
+			if (isNotEmptyOrNull(deviceText)) {
+				holder.device.setVisibility(View.VISIBLE);
+				holder.device.setText(deviceText);
+			} else {
+				holder.device.setVisibility(View.GONE);
+			}
 
 			int rating = comment.getRating();
 			if (rating > 0 && rating <= 5) {

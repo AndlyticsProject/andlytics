@@ -173,7 +173,7 @@ public class JsonParser {
 					.getJSONArray(2);
 			app.setVersionName(lastAppVersionDetails.getString(4));
 			app.setIconUrl(lastAppVersionDetails.getJSONArray(6).getString(3));
-			
+
 			// App stats
 			JSONArray jsonAppStats = jsonApp.getJSONArray(3);
 			AppStats stats = new AppStats();
@@ -225,21 +225,21 @@ public class JsonParser {
 			/*
 			 * null
 			 * "gaia:17919762185957048423:1:vm:11887109942373535891", -- ID?
-			* "REVIEWERS_NAME",
-			* "1343652956570", -- DATE?
-			* RATING,
-			* null
-			* "COMMENT",
-			* null,
-			* "VERSION_NAME",
-			* [ null,
-			*   "DEVICE_CODE_NAME",
-			*   "DEVICE_MANFACTURER",
-			*   "DEVICE_MODEL"
-			* ],
-			* "LOCALE",
-			* null,
-			* 0
+			 * "REVIEWERS_NAME",
+			 * "1343652956570", -- DATE?
+			 * RATING,
+			 * null
+			 * "COMMENT",
+			 * null,
+			 * "VERSION_NAME",
+			 * [ null,
+			 *   "DEVICE_CODE_NAME",
+			 *   "DEVICE_MANFACTURER",
+			 *   "DEVICE_MODEL"
+			 * ],
+			 * "LOCALE",
+			 * null,
+			 * 0
 			 */
 			// Example with developer reply
 			/*
@@ -272,11 +272,16 @@ public class JsonParser {
 			comment.setUser(jsonComment.getString(2));
 			comment.setDate(parseDate(jsonComment.getLong(3)));
 			comment.setRating(jsonComment.getInt(4));
-			comment.setAppVersion(jsonComment.getString(8));
+			String version = jsonComment.getString(8);
+			if (version != null && !version.equals("null")) {
+				comment.setAppVersion(version);
+			}
 			comment.setText(jsonComment.getString(6));
-			JSONArray jsonDevice = jsonComment.getJSONArray(9);
-			String device = jsonDevice.optString(2) + " " + jsonDevice.optString(3);
-			comment.setDevice(device.trim());
+			JSONArray jsonDevice = jsonComment.optJSONArray(9);
+			if (jsonDevice != null) {
+				String device = jsonDevice.optString(2) + " " + jsonDevice.optString(3);
+				comment.setDevice(device.trim());
+			}
 
 			JSONArray jsonReply = jsonComment.optJSONArray(11);
 			if (jsonReply != null) {
