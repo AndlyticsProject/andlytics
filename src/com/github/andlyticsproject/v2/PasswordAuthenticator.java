@@ -25,6 +25,8 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 
 	private static final String TAG = PasswordAuthenticator.class.getSimpleName();
 
+	private static final boolean DEBUG = false;
+
 	private static final String LOGIN_PAGE_URL = "https://accounts.google.com/ServiceLogin?service=androiddeveloper";
 	private static final String AUTHENTICATE_URL = "https://accounts.google.com/ServiceLoginAuth?service=androiddeveloper";
 	private static final String DEV_CONSOLE_URL = "https://play.google.com/apps/publish/v2/";
@@ -39,10 +41,11 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 		this.password = password;
 	}
 
-	// 1. Get GALX from https://accounts.google.com/ServiceLogin?
-	// 2. Post along with auth info to https://accounts.google.com/ServiceLoginAuth
+	// 1. Get GALX from https://accounts.google.com/ServiceLogin
+	// 2. Post along with auth info to
+	// https://accounts.google.com/ServiceLoginAuth
 	// 3. Get redirected to https://play.google.com/apps/publish/v2/ on success
-	// (all needed cookies are in HttpClient's jar at this point)
+	// (all needed cookies are in HttpClient's cookie jar at this point)
 
 	@Override
 	public AuthInfo authenticate() throws AuthenticationException {
@@ -61,7 +64,9 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 					galxValue = c.getValue();
 				}
 			}
-			Log.d(TAG, "GALX: " + galxValue);
+			if (DEBUG) {
+				Log.d(TAG, "GALX: " + galxValue);
+			}
 
 			HttpPost post = new HttpPost(AUTHENTICATE_URL);
 			List<NameValuePair> parameters = createAuthParameters(galxValue);
@@ -75,13 +80,17 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 
 			cookies = cookieStore.getCookies();
 			String adCookie = findAdCookie(cookies);
-			Log.d(TAG, "AD cookie " + adCookie);
+			if (DEBUG) {
+				Log.d(TAG, "AD cookie " + adCookie);
+			}
 			if (adCookie == null) {
 				throw new AuthenticationException("Couldn't get AD cookie.");
 			}
 
 			String responseStr = EntityUtils.toString(response.getEntity());
-			Log.d(TAG, "Response: " + responseStr);
+			if (DEBUG) {
+				Log.d(TAG, "Response: " + responseStr);
+			}
 			String developerAccountId = findDeveloperAccountId(responseStr);
 			if (developerAccountId == null) {
 				throw new AuthenticationException("Couldn't get developer account ID.");

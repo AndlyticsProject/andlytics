@@ -352,14 +352,9 @@ public class BaseActivity extends SherlockActivity {
 
 		final AccountManagerCallback<Bundle> myCallback = new AccountManagerCallback<Bundle>() {
 
-			public void run(final AccountManagerFuture<Bundle> arg0) {
+			public void run(final AccountManagerFuture<Bundle> future) {
 				try {
-					Bundle bundle = arg0.getResult();
-					for (String key : bundle.keySet()) {
-						Log.d(TAG, String.format("%s=%s", key, bundle.get(key)));
-					}
-
-					String authToken = arg0.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+					String authToken = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
 
 					if (authToken != null) {
 						// do something with the auth token
