@@ -2,6 +2,10 @@
 package com.github.andlyticsproject.util;
 
 import java.io.Closeable;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,9 +20,16 @@ import com.github.andlyticsproject.io.MediaScannerWrapper;
  * Utility class for simple helper methods.
  */
 public final class Utils {
+	// TODO Replace this with a user configurable date formatter
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE, d MMM yyyy");
 
 	/** Private constructor. */
 	private Utils() {
+	}
+	
+
+	public static String formatDate(Date date){
+		return dateFormat.format(date);
 	}
 
 	/**
@@ -90,4 +101,22 @@ public final class Utils {
 			}
 		}
 	}
+
+	public static String readFileAsString(String filename) {
+		FileInputStream in = null;
+		try {
+			in = new FileInputStream(filename);
+			byte[] data = new byte[in.available()];
+			in.read(data);
+
+			return new String(data, "UTF-8");
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (in != null) {
+				Utils.closeSilently(in);
+			}
+		}
+	}
+
 }

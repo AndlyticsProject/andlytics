@@ -24,7 +24,6 @@
 		android:layout_height="wrap_content"
 		style="@style/MainTableText"
 		android:layout_width="wrap_content"
-		android:text="@string/comments_author"
 		android:paddingLeft="5dp"
 		android:paddingRight="5dp"
 		android:layout_toRightOf="@+id/comments_list_item_app_ratingbar">

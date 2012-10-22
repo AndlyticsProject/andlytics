@@ -55,7 +55,7 @@
     <string name="select_files_export">Select apps to export</string>
     <string name="export_files_replaced">Existing export files will be replaced</string>
     <string name="run_export">Run export</string>
-    <string name="comments_author">by %s</string>
+    <string name="comment_reply">Developer reply</string>
     <string name="comments_details_full">Version %1$s on device: %2$s</string>
     <string name="comments_details_version">Version %s</string>
     <string name="comments_details_device">On device: %s</string>
@@ -66,6 +66,7 @@
     <string name="time_frame">Time frame</string>
     <string name="seven_days">Last 7 days</string>
     <string name="thirty_days">Last 30 days</string>
+    <string name="ninety_days">Last 90 days</string>
     <string name="unlimited">Unlimited</string>
     <string name="date_format">Date format</string>
     <string name="ddmmyy">Day/Month/Year</string>

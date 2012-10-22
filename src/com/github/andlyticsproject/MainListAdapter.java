@@ -1,5 +1,12 @@
-
 package com.github.andlyticsproject;
+
+import java.io.File;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,29 +19,21 @@ import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
-import android.view.animation.Animation.AnimationListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
-import java.io.File;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
 
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.cache.AppIconInMemoryCache;
@@ -299,17 +298,8 @@ public class MainListAdapter extends BaseAdapter {
 			holder.icon.setTag(TAG_IMAGE_REF, packageName);
 			holder.icon.setImageDrawable(null);
 			holder.icon.clearAnimation();
-			if (appDownloadInfo.getPackageName().startsWith("com.github.andlyticsproject.demo")) {
-
-				holder.icon.setImageDrawable(activity.getResources().getDrawable(
-						R.drawable.default_app_icon));
-
-			} else {
-
-				new GetCachedImageTask(holder.icon, appDownloadInfo.getPackageName())
-						.execute(new File[] { iconFile });
-
-			}
+			new GetCachedImageTask(holder.icon, appDownloadInfo.getPackageName())
+					.execute(new File[] { iconFile });
 		}
 
 		holder.icon.setTag(TAG_IMAGE_REF, packageName);
@@ -615,6 +605,7 @@ public class MainListAdapter extends BaseAdapter {
 		imageView.startAnimation(fadeInAnimation);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void changeBackgroundDrawable(final View v, Drawable drawable) {
 		LayoutParams l = v.getLayoutParams();
 		int paddingBottom = v.getPaddingBottom();
@@ -670,14 +661,18 @@ public class MainListAdapter extends BaseAdapter {
 
 				int diffHeight = 0;
 				if (up) {
-					diffHeight = height - ((int) (height * inter.getInterpolation(animationtime / ANIMATION_DURATION)));
+					diffHeight = height
+							- ((int) (height * inter.getInterpolation(animationtime
+									/ ANIMATION_DURATION)));
 				} else {
-					diffHeight = (int) (height * inter.getInterpolation(animationtime / ANIMATION_DURATION));
+					diffHeight = (int) (height * inter.getInterpolation(animationtime
+							/ ANIMATION_DURATION));
 				}
 
 				int diffLeft = 0;
 				int diffRight = 0;
-				int diffMargin = (int) (margin * inter.getInterpolation(animationtime / ANIMATION_DURATION));
+				int diffMargin = (int) (margin * inter.getInterpolation(animationtime
+						/ ANIMATION_DURATION));
 				if (up) {
 					diffLeft = diffMargin;
 					diffRight = margin - diffMargin;

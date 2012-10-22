@@ -22,7 +22,7 @@ public class AndlyticsContentProvider extends ContentProvider {
 
 	private static final String TAG = "AndlyticsContentProvider";
 
-	private static final int DATABASE_VERSION = 17;
+	private static final int DATABASE_VERSION = 18;
 
 	private static final String DATABASE_NAME = "andlytics";
 
@@ -105,6 +105,12 @@ public class AndlyticsContentProvider extends ContentProvider {
 			
 			if (oldVersion < 17){
 				Log.w(TAG, "Old version < 17 - changing comments date format");
+				db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.DATABASE_TABLE_NAME);
+				db.execSQL(CommentsTable.TABLE_CREATE_COMMENTS);
+			}			
+
+			if (oldVersion < 18){
+				Log.w(TAG, "Old version < 18 - adding replies to comments");
 				db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.DATABASE_TABLE_NAME);
 				db.execSQL(CommentsTable.TABLE_CREATE_COMMENTS);
 			}

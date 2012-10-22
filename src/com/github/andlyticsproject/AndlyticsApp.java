@@ -1,6 +1,7 @@
 package com.github.andlyticsproject;
 
 import org.acra.ACRA;
+import org.acra.ACRAConfiguration;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 import org.acra.sender.HttpPostSender;
@@ -10,14 +11,19 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.util.Log;
 
+import com.github.andlyticsproject.v2.AuthInfo;
+
 @ReportsCrashes(formKey = "dHBKcnZqTHMyMHlfLTB0RjhMejZfbkE6MQ", sharedPreferencesMode = Context.MODE_PRIVATE, sharedPreferencesName = Preferences.PREF, mode = ReportingInteractionMode.TOAST)
 public class AndlyticsApp extends Application {
 
 	private static final String TAG = AndlyticsApp.class.getSimpleName();
 
+	// TODO these two should go away
 	private String authToken;
 
 	private String xsrfToken;
+
+	private AuthInfo authInfo;
 
 	private ContentAdapter db;
 
@@ -41,8 +47,10 @@ public class AndlyticsApp extends Application {
 
 	private void initAcra() {
 		try {
-			ACRA.getConfig().setResToastText(R.string.crash_toast);
-			ACRA.getConfig().setSendReportsInDevMode(false);
+			ACRAConfiguration config = ACRA.getNewDefaultConfig(this);
+			config.setResToastText(R.string.crash_toast);
+			config.setSendReportsInDevMode(false);
+			ACRA.setConfig(config);
 			ACRA.init(this);
 			String bugsenseUrl = getResources().getString(R.string.bugsense_url);
 			ACRA.getErrorReporter().addReportSender(new HttpPostSender(bugsenseUrl, null));
@@ -106,6 +114,14 @@ public class AndlyticsApp extends Application {
 
 	public String getFeedbackMessage() {
 		return feedbackMessage;
+	}
+
+	public AuthInfo getAuthInfo() {
+		return authInfo;
+	}
+
+	public void setAuthInfo(AuthInfo authInfo) {
+		this.authInfo = authInfo;
 	}
 
 }

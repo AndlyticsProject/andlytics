@@ -59,7 +59,7 @@ public class Preferences {
 	private static final String LATEST_VERSION_CODE = "latest.version.code";
 
 	public enum Timeframe {
-		LAST_THIRTY_DAYS, UNLIMITED, LAST_TWO_DAYS, LATEST_VALUE, LAST_SEVEN_DAYS
+		LAST_NINETY_DAYS, LAST_THIRTY_DAYS, UNLIMITED, LAST_TWO_DAYS, LATEST_VALUE, LAST_SEVEN_DAYS
 	}
 
 	public enum StatsMode {

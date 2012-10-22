@@ -67,16 +67,18 @@ public class JsonParser {
 		JSONArray latestData = historicalData.getJSONArray(historicalData.length() - 1);
 		/*
 		 * null
-		 * Date?
-		 * value
+		 * Date
+		 * [null, value]
 		 */
-		int latestValue = latestData.getInt(2);
+		int latestValue = latestData.getJSONArray(2).getInt(1);
 
 		switch (statsType) {
 			case DeveloperConsoleV2.STATS_TYPE_TOTAL_USER_INSTALLS:
 				stats.setTotalDownloads(latestValue);
 				break;
 			case DeveloperConsoleV2.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
+				// This is not used now that active installs are in the main request (parseAppInfos)
+				// Can be used if we get historical/dimensioned data
 				stats.setActiveInstalls(latestValue);
 				break;
 			default:
@@ -95,6 +97,7 @@ public class JsonParser {
 	protected static List<AppInfo> parseAppInfos(String json, String accountName)
 			throws JSONException {
 
+		Date now = new Date();
 		List<AppInfo> apps = new ArrayList<AppInfo>();
 		// Extract the base array containing apps
 		JSONArray jsonApps = new JSONObject(json).getJSONArray("result").getJSONArray(1);
@@ -103,24 +106,44 @@ public class JsonParser {
 		for (int i = 0; i < numberOfApps; i++) {
 			AppInfo app = new AppInfo();
 			app.setAccount(accountName);
+			app.setLastUpdate(now);
 			/* 
 			 * Per app:
 			 * null
-			 * packageName
-			 * Nested array with details
+			 * [ APP_INFO_ARRAY
+			 ** null
+			 ** packageName
+			 ** Nested array with details
+			 ** null
+			 ** Nested array with version details
+			 ** Nested array with price details
+			 ** Last update Date
+			 ** Number [1=published, 5 = draft?]
+			 * ]
 			 * null
-			 * Nested array with version details
-			 * Nested array with price details
-			 * Date?
-			 * Number? Always is 1, but might change for multi-consoles or people with loads of apps
+			 * [ APP_STATS_ARRAY
+			 ** null,
+			 ** Active installs
+			 ** Total ratings
+			 ** Average rating
+			 ** Errors
+			 * ]
 			 */
-			JSONArray jsonApp = jsonApps.getJSONArray(i).getJSONArray(1);
-			String packageName = jsonApp.getString(1);
-			if (packageName == null) {
-				break; // Draft app
-				// FIXME Check for half finished apps in the later sections as Google lets you setup apps bit by bit now
+			JSONArray jsonApp = jsonApps.getJSONArray(i);
+			JSONArray jsonAppInfo = jsonApp.getJSONArray(1);
+			String packageName = jsonAppInfo.getString(1);
+			// Look for "tmp.7238057230750432756094760456.235728507238057230542"
+			if (packageName == null || (packageName.startsWith("tmp.")
+					&& Character.isDigit(packageName.charAt(4)))) {
+				break;
+				// Draft app
 			}
-			app.setPackageName(jsonApp.getString(1));
+			// Check number code and last updated date
+			if (jsonAppInfo.getInt(7) == 5 || jsonAppInfo.optInt(6) == 0) {
+				break;
+				// Probably a draft app
+			}
+			app.setPackageName(packageName);
 
 			/* 
 			 * Per app details:
@@ -132,7 +155,7 @@ public class JsonParser {
 			 * Last what's new
 			 * 
 			 */
-			JSONArray appDetails = jsonApp.getJSONArray(2).getJSONArray(1).getJSONArray(0);
+			JSONArray appDetails = jsonAppInfo.getJSONArray(2).getJSONArray(1).getJSONArray(0);
 			app.setName(appDetails.getString(2));
 
 			/*
@@ -145,11 +168,18 @@ public class JsonParser {
 			 * null
 			 * Array with app icon [null,null,null,icon]
 			 */
-			JSONArray appVersions = jsonApp.getJSONArray(4);
+			JSONArray appVersions = jsonAppInfo.getJSONArray(4);
 			JSONArray lastAppVersionDetails = appVersions.getJSONArray(appVersions.length() - 1)
 					.getJSONArray(2);
 			app.setVersionName(lastAppVersionDetails.getString(4));
 			app.setIconUrl(lastAppVersionDetails.getJSONArray(6).getString(3));
+
+			// App stats
+			JSONArray jsonAppStats = jsonApp.getJSONArray(3);
+			AppStats stats = new AppStats();
+			stats.setRequestDate(now);
+			stats.setActiveInstalls(jsonAppStats.getInt(1));
+			app.setLatestStats(stats);
 
 			apps.add(app);
 
@@ -173,7 +203,7 @@ public class JsonParser {
 		 */
 		return new JSONObject(json).getJSONArray("result").getInt(2);
 	}
-	
+
 	/**
 	 * Parses the supplied JSON string and returns a list of comments.
 	 * @param json
@@ -195,36 +225,79 @@ public class JsonParser {
 			/*
 			 * null
 			 * "gaia:17919762185957048423:1:vm:11887109942373535891", -- ID?
-			* "REVIEWERS_NAME",
-			* "1343652956570", -- DATE?
-			* RATING,
-			* null
-			* "COMMENT",
-			* null,
-			* "VERSION_NAME",
-			* [ null,
-			*   "DEVICE_CODE_NAME",
-			*   "DEVICE_MANFACTURER",
-			*   "DEVICE_MODEL"
-			* ],
-			* "LOCALE",
-			* null,
-			* 0
+			 * "REVIEWERS_NAME",
+			 * "1343652956570", -- DATE?
+			 * RATING,
+			 * null
+			 * "COMMENT",
+			 * null,
+			 * "VERSION_NAME",
+			 * [ null,
+			 *   "DEVICE_CODE_NAME",
+			 *   "DEVICE_MANFACTURER",
+			 *   "DEVICE_MODEL"
+			 * ],
+			 * "LOCALE",
+			 * null,
+			 * 0
+			 */
+			// Example with developer reply
+			/*
+			[
+			   null,
+			   "gaia:12824185113034449316:1:vm:18363775304595766012",
+			   "Mickaël",
+			   "1350333837326",
+			   1,
+			   "",
+			   "Nul\tNul!! N'arrive pas a scanner le moindre code barre!",
+			   73,
+			   "3.2.5",
+			   [
+			      null,
+			      "X10i",
+			      "SEMC",
+			      "Xperia X10"
+			   ],
+			   "fr_FR",
+			   [
+			      null,
+			      "Prixing fonctionne pourtant bien sur Xperia X10. Essayez de prendre un minimum de recul, au moins 20 à 30cm, évitez les ombres et les reflets. N'hésitez pas à nous écrire sur contact@prixing.fr pour une assistance personnalisée.",
+			      null,
+			      "1350393460968"
+			   ],
+			   1
+			]
 			 */
 			comment.setUser(jsonComment.getString(2));
 			comment.setDate(parseDate(jsonComment.getLong(3)));
 			comment.setRating(jsonComment.getInt(4));
-			comment.setAppVersion(jsonComment.getString(8));
+			String version = jsonComment.getString(8);
+			if (version != null && !version.equals("null")) {
+				comment.setAppVersion(version);
+			}
 			comment.setText(jsonComment.getString(6));
-			JSONArray jsonDevice = jsonComment.getJSONArray(9);
-			comment.setDevice(jsonDevice.getString(2) + " " + jsonDevice.getString(3));
-			
+			JSONArray jsonDevice = jsonComment.optJSONArray(9);
+			if (jsonDevice != null) {
+				String device = jsonDevice.optString(2) + " " + jsonDevice.optString(3);
+				comment.setDevice(device.trim());
+			}
+
+			JSONArray jsonReply = jsonComment.optJSONArray(11);
+			if (jsonReply != null) {
+				Comment reply = new Comment();
+				reply.setText(jsonReply.getString(1));
+				reply.setReplyDate(parseDate(jsonReply.getLong(3)));
+				reply.setDate(comment.getDate());
+				comment.setReply(reply);
+			}
+
 			comments.add(comment);			
 		}		
-		
+
 		return comments;
 	}
-	
+
 	/**
 	 * Parses the given date
 	 * @param unixDateCode
