@@ -1,5 +1,8 @@
-
 package com.github.andlyticsproject.sync;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -15,22 +18,16 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.andlyticsproject.AppStatsDiff;
 import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.ContentAdapter;
-import com.github.andlyticsproject.DeveloperConsole;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
-import com.github.andlyticsproject.exception.InvalidJSONResponseException;
 import com.github.andlyticsproject.exception.MultiAccountAcception;
 import com.github.andlyticsproject.exception.NetworkException;
-import com.github.andlyticsproject.exception.NoCookieSetException;
-import com.github.andlyticsproject.exception.SignupException;
 import com.github.andlyticsproject.model.AppInfo;
+import com.github.andlyticsproject.v2.DevConsoleRegistry;
+import com.github.andlyticsproject.v2.DeveloperConsoleV2;
 
 public class SyncAdapterService extends Service {
 
@@ -86,13 +83,24 @@ public class SyncAdapterService extends Service {
 		String token = null;
 
 		try {
-			bundle = AccountManager.get(context)
-					.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, true, null, null).getResult();
+			bundle = AccountManager
+					.get(context)
+					.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, true, null,
+							null).getResult();
 			if (bundle != null && bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
 				token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
 
-				DeveloperConsole console = new DeveloperConsole(context);
-				List<AppInfo> appDownloadInfos = console.getAppDownloadInfos(token, account.name);
+				// DeveloperConsole console = new DeveloperConsole(context);
+				// List<AppInfo> appDownloadInfos =
+				// console.getAppDownloadInfos(token, account.name);
+
+				DeveloperConsoleV2 console = DevConsoleRegistry.getInstance().get(account.name);
+				if (console == null) {
+					console = DeveloperConsoleV2.createForAccount(context, account.name);
+					DevConsoleRegistry.getInstance().put(account.name, console);
+				}
+
+				List<AppInfo> appDownloadInfos = console.getAppInfo();
 
 				Log.d(TAG, "andlytics from sync adapter, size: " + appDownloadInfos.size());
 
@@ -119,13 +127,7 @@ public class SyncAdapterService extends Service {
 			Log.e(TAG, "error during sync auth", e);
 		} catch (DeveloperConsoleException e) {
 			Log.e(TAG, "error during sync auth", e);
-		} catch (InvalidJSONResponseException e) {
-			Log.e(TAG, "error during sync auth", e);
-		} catch (SignupException e) {
-			Log.e(TAG, "error during sync auth", e);
 		} catch (AuthenticationException e) {
-			Log.e(TAG, "error during sync auth", e);
-		} catch (NoCookieSetException e) {
 			Log.e(TAG, "error during sync auth", e);
 		} catch (MultiAccountAcception e) {
 			Log.e(TAG, "error during sync auth", e);

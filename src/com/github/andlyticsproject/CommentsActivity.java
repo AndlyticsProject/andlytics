@@ -14,6 +14,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
+import com.github.andlyticsproject.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.v2.DeveloperConsoleV2;
 
 public class CommentsActivity extends BaseDetailsActivity implements AuthenticationCallback {
@@ -162,11 +163,16 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 			}
 
 			if (maxAvalibleComments != 0) {
-				DeveloperConsoleV2 console = DeveloperConsoleV2.getInstance();
+				DeveloperConsoleV2 console = DevConsoleRegistry.getInstance().get(accountName);
+				if (console == null) {
+					console = DeveloperConsoleV2.createForAccount(CommentsActivity.this,
+							accountName);
+					DevConsoleRegistry.getInstance().put(accountName, console);
+				}
 				try {
 
-					List<Comment> result = console.getComments(accountName, packageName,
-							nextCommentIndex, MAX_LOAD_COMMENTS);
+					List<Comment> result = console.getComments(packageName, nextCommentIndex,
+							MAX_LOAD_COMMENTS);
 
 					// put in cache if index == 0
 					if (nextCommentIndex == 0) {

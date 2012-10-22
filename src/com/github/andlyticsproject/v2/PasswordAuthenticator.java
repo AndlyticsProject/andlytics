@@ -32,12 +32,11 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 	private static final String DEV_CONSOLE_URL = "https://play.google.com/apps/publish/v2/";
 
 	private DefaultHttpClient httpClient;
-	private String emailAddress;
 	private String password;
 
-	public PasswordAuthenticator(DefaultHttpClient httpClient, String emailAddress, String password) {
+	public PasswordAuthenticator(String accountName, String password, DefaultHttpClient httpClient) {
+		super(accountName);
 		this.httpClient = httpClient;
-		this.emailAddress = emailAddress;
 		this.password = password;
 	}
 
@@ -114,7 +113,7 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 
 	private List<NameValuePair> createAuthParameters(String galxValue) {
 		List<NameValuePair> result = new ArrayList<NameValuePair>();
-		NameValuePair email = new BasicNameValuePair("Email", emailAddress);
+		NameValuePair email = new BasicNameValuePair("Email", accountName);
 		result.add(email);
 		NameValuePair passwd = new BasicNameValuePair("Passwd", password);
 		result.add(passwd);

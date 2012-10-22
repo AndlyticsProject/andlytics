@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Dialog;
@@ -57,10 +55,8 @@ import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
 import com.github.andlyticsproject.sync.NotificationHandler;
 import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.Utils;
-import com.github.andlyticsproject.v2.DevConsoleAuthenticator;
+import com.github.andlyticsproject.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.v2.DeveloperConsoleV2;
-import com.github.andlyticsproject.v2.HttpClientFactory;
-import com.github.andlyticsproject.v2.PasswordAuthenticator;
 
 public class Main extends BaseActivity implements AuthenticationCallback, OnNavigationListener {
 
@@ -68,9 +64,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private static final String LAST_VERSION_CODE_KEY = "last_version_code";
 
 	public static final String TAG = Main.class.getSimpleName();
-
-	// 30 seconds -- for both socket and connection
-	private static final int DEV_CONSOLE_TIMEOUT = 30 * 1000;
 
 	private boolean cancelRequested;
 	private ListView mainListView;
@@ -402,22 +395,14 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 			List<AppInfo> appDownloadInfos = null;
 			try {
+				DeveloperConsoleV2 v2 = DevConsoleRegistry.getInstance().get(accountName);
+				if (v2 == null) {
+					v2 = DeveloperConsoleV2.createForAccount(Main.this, accountName);
+					DevConsoleRegistry.getInstance().put(accountName, v2);
+				}
 
-				// this is pre-configured with needed headers and keeps track
-				// of cookies, etc.
-				DefaultHttpClient httpClient = HttpClientFactory
-						.createDevConsoleHttpClient(DEV_CONSOLE_TIMEOUT);
-				// XXX put password in a private resources
-				String password = getResources().getString(R.string.dev_console_password);
-				DevConsoleAuthenticator authenticator = new PasswordAuthenticator(httpClient,
-						accountName, password);
-				// once configured this can be used in any activity
-				// TODO ensure it is properly reconfigured when the account
-				// changes
-				DeveloperConsoleV2.configure(httpClient, authenticator);
-				DeveloperConsoleV2 v2 = DeveloperConsoleV2.getInstance();
 				try {
-					appDownloadInfos = v2.getAppInfo(accountName);
+					appDownloadInfos = v2.getAppInfo();
 				} catch (Exception ex) {
 					ex.printStackTrace();
 
