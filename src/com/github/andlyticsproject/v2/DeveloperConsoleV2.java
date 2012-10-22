@@ -80,7 +80,23 @@ public class DeveloperConsoleV2 {
 	private AuthInfo authInfo;
 	private DevConsoleAuthenticator authenticator;
 
-	public DeveloperConsoleV2(DefaultHttpClient httpClient, DevConsoleAuthenticator authenticator) {
+	private static DeveloperConsoleV2 instance;
+
+	// poor man's DI
+	public static synchronized void configure(DefaultHttpClient httpClient,
+			DevConsoleAuthenticator authenticator) {
+		instance = new DeveloperConsoleV2(httpClient, authenticator);
+	}
+
+	public static DeveloperConsoleV2 getInstance() {
+		if (instance == null) {
+			throw new IllegalStateException("Call configure first");
+		}
+
+		return instance;
+	}
+
+	private DeveloperConsoleV2(DefaultHttpClient httpClient, DevConsoleAuthenticator authenticator) {
 		this.httpClient = httpClient;
 		this.authenticator = authenticator;
 	}

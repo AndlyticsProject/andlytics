@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject;
 
 import java.util.ArrayList;
@@ -15,6 +14,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
+import com.github.andlyticsproject.v2.DeveloperConsoleV2;
 
 public class CommentsActivity extends BaseDetailsActivity implements AuthenticationCallback {
 
@@ -100,19 +100,20 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 	/**
 	 * Called if item in option menu is selected.
 	 * 
-	 * @param item The chosen menu item
+	 * @param item
+	 *            The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.itemCommentsmenuRefresh:
-				maxAvalibleComments = -1;
-				nextCommentIndex = 0;
-				authenticateAccountFromPreferences(false, CommentsActivity.this);
-				return true;
-			default:
-				return (super.onOptionsItemSelected(item));
+		case R.id.itemCommentsmenuRefresh:
+			maxAvalibleComments = -1;
+			nextCommentIndex = 0;
+			authenticateAccountFromPreferences(false, CommentsActivity.this);
+			return true;
+		default:
+			return (super.onOptionsItemSelected(item));
 		}
 	}
 
@@ -161,12 +162,11 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 			}
 
 			if (maxAvalibleComments != 0) {
-				DeveloperConsole console = new DeveloperConsole(CommentsActivity.this);
+				DeveloperConsoleV2 console = DeveloperConsoleV2.getInstance();
 				try {
 
-					String authtoken = getAndlyticsApplication().getAuthToken();
-					List<Comment> result = console.getAppComments(authtoken, accountName,
-							packageName, nextCommentIndex, MAX_LOAD_COMMENTS);
+					List<Comment> result = console.getComments(accountName, packageName,
+							nextCommentIndex, MAX_LOAD_COMMENTS);
 
 					// put in cache if index == 0
 					if (nextCommentIndex == 0) {
@@ -224,13 +224,13 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 			}
 
 			refreshing = false;
-			invalidateOptionsMenu();
+			supportInvalidateOptionsMenu();
 		}
 
 		@Override
 		protected void onPreExecute() {
 			refreshing = true;
-			invalidateOptionsMenu();
+			supportInvalidateOptionsMenu();
 			footer.setEnabled(false);
 		}
 
