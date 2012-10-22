@@ -10,23 +10,15 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.apache.http.HttpVersion;
-import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.BrowserCompatHostnameVerifier;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
+
+import android.util.Log;
 
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
@@ -102,10 +94,12 @@ public class DeveloperConsoleV2 {
 	protected static final int STATS_TYPE_ACTIVE_DEVICE_INSTALLS = 1;
 	protected static final int STATS_TYPE_TOTAL_USER_INSTALLS = 8;
 
+	private DefaultHttpClient httpClient;
 	private AuthInfo authInfo;
 	private DevConsoleAuthenticator authenticator;
 
-	public DeveloperConsoleV2(DevConsoleAuthenticator authenticator) {
+	public DeveloperConsoleV2(DefaultHttpClient httpClient, DevConsoleAuthenticator authenticator) {
+		this.httpClient = httpClient;
 		this.authenticator = authenticator;
 	}
 
@@ -192,7 +186,8 @@ public class DeveloperConsoleV2 {
 		String json = null;
 		try {
 			URL url = new URL(URL_APPS + "?dev_acc=" + authInfo.getDeveloperAccountId());
-			json = performHttpPost(postData, url);
+			//			json = performHttpPost(postData, url);
+			json = post(postData, url.toString());
 		} catch (Exception ex) {
 			throw new DeveloperConsoleException(json, ex);
 		}
@@ -308,7 +303,8 @@ public class DeveloperConsoleV2 {
 		String json = null;
 		try {
 			URL url = new URL(URL_REVIEWS + "?dev_acc=" + authInfo.getDeveloperAccountId());
-			json = performHttpPost(postData, url);
+			//			json = performHttpPost(postData, url);
+			json = post(postData, url.toString());
 		} catch (Exception ex) {
 			throw new DeveloperConsoleException(json, ex);
 		}
@@ -337,28 +333,6 @@ public class DeveloperConsoleV2 {
 		}
 
 		authInfo = authenticator.authenticate();
-	}
-
-	private DefaultHttpClient createHttpClient() {
-		HttpParams params = new BasicHttpParams();
-		HttpClientParams.setRedirecting(params, true);
-		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-		HttpProtocolParams.setUseExpectContinue(params, false);
-
-		SSLSocketFactory sf = SSLSocketFactory.getSocketFactory();
-		sf.setHostnameVerifier(SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
-
-		SchemeRegistry schReg = new SchemeRegistry();
-		schReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-		schReg.register(new Scheme("https", sf, 443));
-
-		ClientConnectionManager conMgr = new ThreadSafeClientConnManager(params, schReg);
-
-		int timeoutSocket = 30 * 1000;
-		HttpConnectionParams.setSoTimeout(params, timeoutSocket);
-
-		return new DefaultHttpClient(conMgr, params);
 	}
 
 	/**
@@ -412,6 +386,35 @@ public class DeveloperConsoleV2 {
 		resultStream.close();
 		result = response.toString();
 		return result;
+	}
+
+	private String post(String postData, String url) throws IOException, ProtocolException {
+		HttpPost post = new HttpPost(url);
+		addHeaders(post);
+
+		CookieStore cookieStore = httpClient.getCookieStore();
+		List<Cookie> cookies = cookieStore.getCookies();
+		for (Cookie c : cookies) {
+			Log.d(TAG, String.format("****Cookie**** %s=%s", c.getName(), c.getValue()));
+		}
+
+		// TODO maybe translate exceptions better?
+		ResponseHandler<String> handler = HttpClientFactory
+				.createResponseHandler(RuntimeException.class);
+
+		return httpClient.execute(post, handler);
+	}
+
+	private void addHeaders(HttpPost post) {
+		post.addHeader("Host", "play.google.com");
+		post.addHeader("Connection", "keep-alive");
+		post.addHeader("Content-Type", "application/json; charset=utf-8");
+		post.addHeader("X-GWT-Permutation", "04C42FD45B1FCD2E3034C8A4DC5145C1");
+		post.addHeader("X-GWT-Module-Base", "https://play.google.com/apps/publish/v2/gwt/");
+		post.addHeader(
+				"Referer",
+				"https://play.google.com/apps/publish/v2/?dev_acc="
+						+ authInfo.getDeveloperAccountId());
 	}
 
 	private void setupConnection(HttpsURLConnection connection) {

@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Dialog;
@@ -57,6 +59,7 @@ import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.Utils;
 import com.github.andlyticsproject.v2.DevConsoleAuthenticator;
 import com.github.andlyticsproject.v2.DeveloperConsoleV2;
+import com.github.andlyticsproject.v2.HttpClientFactory;
 import com.github.andlyticsproject.v2.PasswordAuthenticator;
 
 public class Main extends BaseActivity implements AuthenticationCallback, OnNavigationListener {
@@ -65,6 +68,10 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private static final String LAST_VERSION_CODE_KEY = "last_version_code";
 
 	public static final String TAG = Main.class.getSimpleName();
+
+	// 30 seconds -- for both socket and connection
+	private static final int DEV_CONSOLE_TIMEOUT = 30 * 1000;
+
 	private boolean cancelRequested;
 	private ListView mainListView;
 	private ContentAdapter db;
@@ -200,52 +207,53 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent i = null;
 		switch (item.getItemId()) {
-		case R.id.itemMainmenuRefresh:
-			authenticateAccountFromPreferences(false, Main.this);
-			break;
-		case R.id.itemMainmenuImport:
-			File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
-			if (!fileToImport.exists()) {
-				Toast.makeText(this,
-						getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
-						Toast.LENGTH_LONG).show();
-				return true;
-			}
+			case R.id.itemMainmenuRefresh:
+				authenticateAccountFromPreferences(false, Main.this);
+				break;
+			case R.id.itemMainmenuImport:
+				File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
+				if (!fileToImport.exists()) {
+					Toast.makeText(
+							this,
+							getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
+							Toast.LENGTH_LONG).show();
+					return true;
+				}
 
-			Intent importIntent = new Intent(this, ImportActivity.class);
-			importIntent.setAction(Intent.ACTION_VIEW);
-			importIntent.setData(Uri.fromFile(fileToImport));
-			startActivity(importIntent);
-			break;
-		case R.id.itemMainmenuExport:
-			Intent exportIntent = new Intent(this, ExportActivity.class);
-			exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
-			startActivity(exportIntent);
-			break;
-		case R.id.itemMainmenuFeedback:
-			startActivity(new Intent(Intent.ACTION_VIEW,
-					Uri.parse(getString(R.string.github_issues_url))));
-			break;
-		case R.id.itemMainmenuPreferences:
-			i = new Intent(this, PreferenceActivity.class);
-			i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
-			startActivity(i);
-			break;
-		case R.id.itemMainmenuStatsMode:
-			if (currentStatsMode.equals(StatsMode.PERCENT)) {
-				currentStatsMode = StatsMode.DAY_CHANGES;
-			} else {
-				currentStatsMode = StatsMode.PERCENT;
-			}
-			updateStatsMode();
-			break;
-		case R.id.itemMainmenuAccounts:
-			i = new Intent(this, LoginActivity.class);
-			i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
-			startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
-			break;
-		default:
-			return false;
+				Intent importIntent = new Intent(this, ImportActivity.class);
+				importIntent.setAction(Intent.ACTION_VIEW);
+				importIntent.setData(Uri.fromFile(fileToImport));
+				startActivity(importIntent);
+				break;
+			case R.id.itemMainmenuExport:
+				Intent exportIntent = new Intent(this, ExportActivity.class);
+				exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
+				startActivity(exportIntent);
+				break;
+			case R.id.itemMainmenuFeedback:
+				startActivity(new Intent(Intent.ACTION_VIEW,
+						Uri.parse(getString(R.string.github_issues_url))));
+				break;
+			case R.id.itemMainmenuPreferences:
+				i = new Intent(this, PreferenceActivity.class);
+				i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+				startActivity(i);
+				break;
+			case R.id.itemMainmenuStatsMode:
+				if (currentStatsMode.equals(StatsMode.PERCENT)) {
+					currentStatsMode = StatsMode.DAY_CHANGES;
+				} else {
+					currentStatsMode = StatsMode.PERCENT;
+				}
+				updateStatsMode();
+				break;
+			case R.id.itemMainmenuAccounts:
+				i = new Intent(this, LoginActivity.class);
+				i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
+				startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
+				break;
+			default:
+				return false;
 		}
 		return true;
 	}
@@ -400,11 +408,15 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				// appDownloadInfos = console.getAppDownloadInfos(authToken,
 				// accountName);
 
+				// this is pre-configured with needed headers and keeps track 
+				// of cookies, etc.
+				DefaultHttpClient httpClient = HttpClientFactory
+						.createDevConsoleHttpClient(DEV_CONSOLE_TIMEOUT);
 				// XXX put password in a private resources
 				String password = getResources().getString(R.string.dev_console_password);
-				DevConsoleAuthenticator authenticator = new PasswordAuthenticator(accountName,
-						password);
-				DeveloperConsoleV2 v2 = new DeveloperConsoleV2(authenticator);
+				DevConsoleAuthenticator authenticator = new PasswordAuthenticator(httpClient,
+						accountName, password);
+				DeveloperConsoleV2 v2 = new DeveloperConsoleV2(httpClient, authenticator);
 				try {
 					appDownloadInfos = v2.getAppInfo(accountName);
 				} catch (Exception ex) {
@@ -658,18 +670,18 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private void updateStatsMode() {
 		if (statsModeMenuItem != null) {
 			switch (currentStatsMode) {
-			case PERCENT:
-				statsModeMenuItem.setTitle(R.string.daily);
-				statsModeMenuItem.setIcon(R.drawable.icon_plusminus);
-				break;
+				case PERCENT:
+					statsModeMenuItem.setTitle(R.string.daily);
+					statsModeMenuItem.setIcon(R.drawable.icon_plusminus);
+					break;
 
-			case DAY_CHANGES:
-				statsModeMenuItem.setTitle(R.string.percentage);
-				statsModeMenuItem.setIcon(R.drawable.icon_percent);
-				break;
+				case DAY_CHANGES:
+					statsModeMenuItem.setTitle(R.string.percentage);
+					statsModeMenuItem.setIcon(R.drawable.icon_percent);
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 		adapter.setStatsMode(currentStatsMode);

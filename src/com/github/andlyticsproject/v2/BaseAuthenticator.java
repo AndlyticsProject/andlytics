@@ -1,45 +1,48 @@
 package com.github.andlyticsproject.v2;
 
-import org.apache.http.HttpVersion;
-import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
 
 public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 
-	// 30 seconds
-	private static final int SOCKET_TIMEOUT = 30 * 1000;
-	// 30 seconds
-	private static final int CONNECTION_TIMEOUT = 30 * 1000;
+	// 30 seconds -- for both socket and connection 
+	private static final int TIMEOUT = 30 * 1000;
+	protected static final Pattern DEV_ACC_PATTERN = Pattern
+				.compile("\"DeveloperConsoleAccounts\":\"\\[null,\\[\\[null,\\\\\\\"(\\d{20})\\\\\\\",\\\\\\\"(.+?)\\\\\\\",\\d]");
+	protected static final Pattern XSRF_TOKEN_PATTERN = Pattern
+				.compile("\"XsrfToken\":\"\\[null,\\\\\"(\\S+)\\\\\"\\]");
 
 	protected DefaultHttpClient createHttpClient() {
-		HttpParams params = new BasicHttpParams();
-		HttpClientParams.setRedirecting(params, true);
-		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-		HttpProtocolParams.setUseExpectContinue(params, false);
+		return HttpClientFactory.createDevConsoleHttpClient(TIMEOUT);
+	}
 
-		HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT);
-		HttpConnectionParams.setConnectionTimeout(params, CONNECTION_TIMEOUT);
+	protected String findAdCookie(List<Cookie> cookies) {
+		for (Cookie c : cookies) {
+			if ("AD".equals(c.getName())) {
+				return c.getValue();
+			}
+		}
+		return null;
+	}
 
-		SSLSocketFactory sf = SSLSocketFactory.getSocketFactory();
-		sf.setHostnameVerifier(SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+	protected String findXsrfToken(String responseStr) {
+		Matcher m = XSRF_TOKEN_PATTERN.matcher(responseStr);
+		if (m.find()) {
+			return m.group(1);
+		}
+		return null;
+	}
 
-		SchemeRegistry schReg = new SchemeRegistry();
-		schReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-		schReg.register(new Scheme("https", sf, 443));
-		ClientConnectionManager conMgr = new ThreadSafeClientConnManager(params, schReg);
-
-		return new DefaultHttpClient(conMgr, params);
+	protected String findDeveloperAccountId(String responseStr) {
+		Matcher m = DEV_ACC_PATTERN.matcher(responseStr);
+		if (m.find()) {
+			return m.group(1);
+		}
+	
+		return null;
 	}
 }

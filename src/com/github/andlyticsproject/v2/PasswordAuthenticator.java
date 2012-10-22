@@ -3,8 +3,6 @@ package com.github.andlyticsproject.v2;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -31,39 +29,23 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 	private static final String AUTHENTICATE_URL = "https://accounts.google.com/ServiceLoginAuth?service=androiddeveloper";
 	private static final String DEV_CONSOLE_URL = "https://play.google.com/apps/publish/v2/";
 
-	// this may not work for all accounts
-	// "DeveloperConsoleAccounts":"[null,[[null,\"XXXXXXXXXXXXXXXXXXXX\",\"Developer Name\",1]\n]\n]"
-	private static final Pattern DEV_ACC_PATTERN = Pattern
-			.compile("\"DeveloperConsoleAccounts\":\"\\[null,\\[\\[null,\\\\\\\"(\\d{20})\\\\\\\",\\\\\\\"(.+?)\\\\\\\",\\d]");
-	// "XsrfToken":"[null,\"AM...:1350659413000\"]\n"
-	private static final Pattern XSRF_TOKEN_PATTERN = Pattern
-			.compile("\"XsrfToken\":\"\\[null,\\\\\"(\\S+)\\\\\"\\]");
-
+	private DefaultHttpClient httpClient;
 	private String emailAddress;
 	private String password;
 
-	public PasswordAuthenticator(String emailAddress, String password) {
+	public PasswordAuthenticator(DefaultHttpClient httpClient, String emailAddress, String password) {
+		this.httpClient = httpClient;
 		this.emailAddress = emailAddress;
 		this.password = password;
 	}
 
-	/*
-	 * To login, perform the following steps
-	 * 
-	 * 
-	 * GET https://play.google.com/apps/publish/v2/?auth=AUTH_TOKEN Returns 302
-	 * and has AD value in cookie
-	 * 
-	 * GET https://play.google.com/apps/publish/v2/ Need AD cookie for this one
-	 * Returns 302 and gives dev_acc in location
-	 * 
-	 * GET https://play.google.com/apps/publish/v2/?dev_acc=DEV_ACC Need AD
-	 * cookie for this one Entity contains XSRF Token
-	 */
+	// 1. Get GALX from https://accounts.google.com/ServiceLogin?
+	// 2. Post along with auth info to https://accounts.google.com/ServiceLoginAuth
+	// 3. Get redirected to https://play.google.com/apps/publish/v2/ on success
+	// (all needed cookies are in HttpClient's jar at this point)
 
 	@Override
 	public AuthInfo authenticate() throws AuthenticationException {
-		DefaultHttpClient httpClient = createHttpClient();
 		try {
 			HttpGet get = new HttpGet(LOGIN_PAGE_URL);
 			HttpResponse response = httpClient.execute(get);
@@ -82,16 +64,8 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 			Log.d(TAG, "GALX: " + galxValue);
 
 			HttpPost post = new HttpPost(AUTHENTICATE_URL);
-			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-			NameValuePair email = new BasicNameValuePair("Email", emailAddress);
-			pairs.add(email);
-			NameValuePair passwd = new BasicNameValuePair("Passwd", password);
-			pairs.add(passwd);
-			NameValuePair galx = new BasicNameValuePair("GALX", galxValue);
-			pairs.add(galx);
-			NameValuePair cont = new BasicNameValuePair("continue", DEV_CONSOLE_URL);
-			pairs.add(cont);
-			UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(pairs, "UTF-8");
+			List<NameValuePair> parameters = createAuthParameters(galxValue);
+			UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(parameters, "UTF-8");
 			post.setEntity(formEntity);
 
 			response = httpClient.execute(post);
@@ -99,35 +73,21 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException("Auth error: " + response.getStatusLine());
 			}
 
-			String adCookie = null;
-			String xsrfToken = null;
-			String developerAccountId = null;
 			cookies = cookieStore.getCookies();
-			for (Cookie c : cookies) {
-				if ("AD".equals(c.getName())) {
-					adCookie = c.getValue();
-				}
-			}
+			String adCookie = findAdCookie(cookies);
 			Log.d(TAG, "AD cookie " + adCookie);
-
 			if (adCookie == null) {
 				throw new AuthenticationException("Couldn't get AD cookie.");
 			}
 
 			String responseStr = EntityUtils.toString(response.getEntity());
 			Log.d(TAG, "Response: " + responseStr);
-			Matcher m = DEV_ACC_PATTERN.matcher(responseStr);
-			if (m.find()) {
-				developerAccountId = m.group(1);
-			}
+			String developerAccountId = findDeveloperAccountId(responseStr);
 			if (developerAccountId == null) {
 				throw new AuthenticationException("Couldn't get developer account ID.");
 			}
 
-			m = XSRF_TOKEN_PATTERN.matcher(responseStr);
-			if (m.find()) {
-				xsrfToken = m.group(1);
-			}
+			String xsrfToken = findXsrfToken(responseStr);
 			if (xsrfToken == null) {
 				throw new AuthenticationException("Couldn't get XSRF token.");
 			}
@@ -141,5 +101,19 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 		} catch (IOException e) {
 			throw new AuthenticationException(e);
 		}
+	}
+
+	private List<NameValuePair> createAuthParameters(String galxValue) {
+		List<NameValuePair> result = new ArrayList<NameValuePair>();
+		NameValuePair email = new BasicNameValuePair("Email", emailAddress);
+		result.add(email);
+		NameValuePair passwd = new BasicNameValuePair("Passwd", password);
+		result.add(passwd);
+		NameValuePair galx = new BasicNameValuePair("GALX", galxValue);
+		result.add(galx);
+		NameValuePair cont = new BasicNameValuePair("continue", DEV_CONSOLE_URL);
+		result.add(cont);
+
+		return result;
 	}
 }
