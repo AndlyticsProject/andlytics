@@ -42,7 +42,9 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 	private String devacc;
 	private String xsrfToken;
 
-	public AccountManagerAuthenticator(AccountManager accountManager, boolean reuseAuthentication) {
+	public AccountManagerAuthenticator(String accountName, AccountManager accountManager,
+			boolean reuseAuthentication) {
+		super(accountName);
 		this.accountManager = accountManager;
 		this.reuseAuthentication = reuseAuthentication;
 	}
@@ -87,7 +89,7 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 			// Setup parameters etc..
 			// TODO do we need all these parameters/are they needed for all
 			// requests
-			httpclient = createHttpClient();
+			httpclient = HttpClientFactory.createDevConsoleHttpClient(DeveloperConsoleV2.TIMEOUT);
 
 			HttpContext httpContext = new BasicHttpContext();
 			RedirectHandler rd = httpclient.getRedirectHandler();

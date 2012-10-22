@@ -12,8 +12,10 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
 import com.github.andlyticsproject.exception.MultiAccountAcception;
@@ -39,6 +41,9 @@ import com.github.andlyticsproject.model.Comment;
  * 
  */
 public class DeveloperConsoleV2 {
+
+	// 30 seconds -- for both socket and connection
+	public static final int TIMEOUT = 30 * 1000;
 
 	private static final String TAG = DeveloperConsoleV2.class.getSimpleName();
 
@@ -79,30 +84,32 @@ public class DeveloperConsoleV2 {
 	private DefaultHttpClient httpClient;
 	private AuthInfo authInfo;
 	private DevConsoleAuthenticator authenticator;
+	private String accountName;
 
-	private static DeveloperConsoleV2 instance;
+	// TODO add factory method for token authenticator when available
+	public static DeveloperConsoleV2 createForAccount(Context ctx, String accountName) {
+		// this is pre-configured with needed headers and keeps track
+		// of cookies, etc.
+		DefaultHttpClient httpClient = HttpClientFactory.createDevConsoleHttpClient(TIMEOUT);
+		// XXX put password in a private resources
+		String password = ctx.getResources().getString(R.string.dev_console_password);
+		DevConsoleAuthenticator authenticator = new PasswordAuthenticator(accountName, password,
+				httpClient);
 
-	// poor man's DI
-	public static synchronized void configure(DefaultHttpClient httpClient,
-			DevConsoleAuthenticator authenticator) {
-		instance = new DeveloperConsoleV2(httpClient, authenticator);
-	}
-
-	public static DeveloperConsoleV2 getInstance() {
-		if (instance == null) {
-			throw new IllegalStateException("Call configure first");
-		}
-
-		return instance;
+		return new DeveloperConsoleV2(httpClient, authenticator);
 	}
 
 	private DeveloperConsoleV2(DefaultHttpClient httpClient, DevConsoleAuthenticator authenticator) {
 		this.httpClient = httpClient;
 		this.authenticator = authenticator;
+		this.accountName = authenticator.getAccountName();
 	}
 
 	// TODO Decide on which exceptions should actually be thrown and by which
 	// methods, and what data we should include in them
+	// => JSONException is too low level for this, wrap with
+	// DeveloperConsoleException
+	// or RE
 
 	/**
 	 * Gets a list of available apps for the given account
@@ -115,23 +122,28 @@ public class DeveloperConsoleV2 {
 	 * @throws NetworkException
 	 * @throws JSONException
 	 */
-	public List<AppInfo> getAppInfo(String accountName) throws DeveloperConsoleException,
-			AuthenticationException, MultiAccountAcception, NetworkException, JSONException {
+	public synchronized List<AppInfo> getAppInfo() throws DeveloperConsoleException,
+			AuthenticationException, MultiAccountAcception, NetworkException {
 
-		authenticate(false);
-		// Fetch a list of available apps
-		List<AppInfo> apps = fetchAppInfos(accountName);
+		try {
+			authenticate(false);
+			// Fetch a list of available apps
+			List<AppInfo> apps = fetchAppInfos();
 
-		for (AppInfo app : apps) {
-			// Fetch remaining app statistics
-			// Latest stats object, and active device installs is already setup
-			AppStats stats = app.getLatestStats();
-			fetchStatistics(app.getPackageName(), stats, STATS_TYPE_TOTAL_USER_INSTALLS);
-			fetchRatings(app.getPackageName(), stats);
-			stats.setNumberOfComments(fetchCommentsCount(app.getPackageName()));
+			for (AppInfo app : apps) {
+				// Fetch remaining app statistics
+				// Latest stats object, and active device installs is already
+				// setup
+				AppStats stats = app.getLatestStats();
+				fetchStatistics(app.getPackageName(), stats, STATS_TYPE_TOTAL_USER_INSTALLS);
+				fetchRatings(app.getPackageName(), stats);
+				stats.setNumberOfComments(fetchCommentsCount(app.getPackageName()));
+			}
+
+			return apps;
+		} catch (JSONException e) {
+			throw new DeveloperConsoleException(e);
 		}
-
-		return apps;
 	}
 
 	/**
@@ -149,9 +161,9 @@ public class DeveloperConsoleV2 {
 	 * @throws AuthenticationException
 	 * @throws DeveloperConsoleException
 	 */
-	public List<Comment> getComments(String accountName, String packageName, int startIndex,
-			int count) throws JSONException, AuthenticationException, MultiAccountAcception,
-			NetworkException, DeveloperConsoleException {
+	public synchronized List<Comment> getComments(String packageName, int startIndex, int count)
+			throws JSONException, AuthenticationException, MultiAccountAcception, NetworkException,
+			DeveloperConsoleException {
 
 		try {
 			// First try using existing cookies and tokens
@@ -171,8 +183,7 @@ public class DeveloperConsoleV2 {
 	 * @throws DeveloperConsoleException
 	 * @throws JSONException
 	 */
-	private List<AppInfo> fetchAppInfos(String accountName) throws DeveloperConsoleException,
-			JSONException {
+	private List<AppInfo> fetchAppInfos() throws DeveloperConsoleException, JSONException {
 
 		// Setup the request
 		// TODO Check the remaining possible parameters to see if they are
