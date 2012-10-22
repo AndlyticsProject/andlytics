@@ -396,14 +396,9 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			List<AppInfo> appDownloadInfos = null;
 			try {
 
-<<<<<<< HEAD
-				//				DeveloperConsole console = new DeveloperConsole(Main.this);
-				//				appDownloadInfos = console.getAppDownloadInfos(authToken, accountName);
-=======
 				// DeveloperConsole console = new DeveloperConsole(Main.this);
 				// appDownloadInfos = console.getAppDownloadInfos(authToken,
 				// accountName);
->>>>>>> 9935a59278d9531907b04e705c76e8892d3e48dc
 
 				// XXX put password in a private resources
 				String password = getResources().getString(R.string.dev_console_password);
@@ -411,11 +406,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 						password);
 				DeveloperConsoleV2 v2 = new DeveloperConsoleV2(authenticator);
 				try {
-<<<<<<< HEAD
-					appDownloadInfos = v2.getAppInfo(authToken, accountName);
-=======
 					appDownloadInfos = v2.getAppInfo(accountName);
->>>>>>> 9935a59278d9531907b04e705c76e8892d3e48dc
 				} catch (Exception ex) {
 					ex.printStackTrace();
 
