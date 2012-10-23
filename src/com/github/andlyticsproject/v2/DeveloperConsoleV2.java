@@ -120,30 +120,24 @@ public class DeveloperConsoleV2 {
 	 * @throws AuthenticationException
 	 * @throws MultiAccountAcception
 	 * @throws NetworkException
-	 * @throws JSONException
 	 */
 	public synchronized List<AppInfo> getAppInfo() throws DeveloperConsoleException,
 			AuthenticationException, MultiAccountAcception, NetworkException {
 
-		try {
-			authenticate(false);
-			// Fetch a list of available apps
-			List<AppInfo> apps = fetchAppInfos();
+		authenticate(false);
+		// Fetch a list of available apps
+		List<AppInfo> apps = fetchAppInfos();
 
-			for (AppInfo app : apps) {
-				// Fetch remaining app statistics
-				// Latest stats object, and active device installs is already
-				// setup
-				AppStats stats = app.getLatestStats();
-				fetchStatistics(app.getPackageName(), stats, STATS_TYPE_TOTAL_USER_INSTALLS);
-				fetchRatings(app.getPackageName(), stats);
-				stats.setNumberOfComments(fetchCommentsCount(app.getPackageName()));
-			}
-
-			return apps;
-		} catch (JSONException e) {
-			throw new DeveloperConsoleException(e);
+		for (AppInfo app : apps) {
+			// Fetch remaining app statistics
+			// Latest stats object, and active device installs is already setup
+			AppStats stats = app.getLatestStats();
+			fetchStatistics(app.getPackageName(), stats, STATS_TYPE_TOTAL_USER_INSTALLS);
+			fetchRatings(app.getPackageName(), stats);
+			stats.setNumberOfComments(fetchCommentsCount(app.getPackageName()));
 		}
+
+		return apps;
 	}
 
 	/**
@@ -155,14 +149,13 @@ public class DeveloperConsoleV2 {
 	 * @param startIndex
 	 * @param count
 	 * @return
-	 * @throws JSONException
 	 * @throws NetworkException
 	 * @throws MultiAccountAcception
 	 * @throws AuthenticationException
 	 * @throws DeveloperConsoleException
 	 */
 	public synchronized List<Comment> getComments(String packageName, int startIndex, int count)
-			throws JSONException, AuthenticationException, MultiAccountAcception, NetworkException,
+			throws AuthenticationException, MultiAccountAcception, NetworkException,
 			DeveloperConsoleException {
 
 		try {
@@ -170,6 +163,7 @@ public class DeveloperConsoleV2 {
 			authenticate(true);
 			return fetchComments(packageName, startIndex, count);
 		} catch (DeveloperConsoleException ex) {
+			// TODO What to catch here, can we specifically detect an auth problem when doing a POST?
 			authenticate(false);
 			return fetchComments(packageName, startIndex, count);
 		}
@@ -181,9 +175,9 @@ public class DeveloperConsoleV2 {
 	 * @param accountName
 	 * @return
 	 * @throws DeveloperConsoleException
-	 * @throws JSONException
+	 * @throws NetworkException
 	 */
-	private List<AppInfo> fetchAppInfos() throws DeveloperConsoleException, JSONException {
+	private List<AppInfo> fetchAppInfos() throws DeveloperConsoleException, NetworkException {
 
 		// Setup the request
 		// TODO Check the remaining possible parameters to see if they are
@@ -194,9 +188,10 @@ public class DeveloperConsoleV2 {
 		String json = null;
 		try {
 			json = post(createDeveloperUrl(URL_APPS), postData);
-
 			return JsonParser.parseAppInfos(json, accountName);
-		} catch (Exception ex) {
+		} catch (IOException ex) {
+			throw new NetworkException(ex);
+		} catch (JSONException ex) {
 			throw new DeveloperConsoleException(json, ex);
 		}
 	}
@@ -213,10 +208,10 @@ public class DeveloperConsoleV2 {
 	 * @param stats
 	 * @param statsType
 	 * @throws DeveloperConsoleException
-	 * @throws JSONException
+	 * @throws NetworkException
 	 */
 	private void fetchStatistics(String packageName, AppStats stats, int statsType)
-			throws DeveloperConsoleException, JSONException {
+			throws DeveloperConsoleException, NetworkException {
 
 		// Setup the request
 		// Don't care about the breakdown at the moment:
@@ -228,9 +223,10 @@ public class DeveloperConsoleV2 {
 		String json = null;
 		try {
 			json = post(createDeveloperUrl(URL_STATISTICS), postData);
-
 			JsonParser.parseStatistics(json, stats, statsType);
-		} catch (Exception ex) {
+		} catch (IOException ex) {
+			throw new NetworkException(ex);
+		} catch (JSONException ex) {
 			throw new DeveloperConsoleException(json, ex);
 		}
 	}
@@ -244,9 +240,10 @@ public class DeveloperConsoleV2 {
 	 * @param stats
 	 *            The AppStats object to add them to
 	 * @throws DeveloperConsoleException
+	 * @throws NetworkException
 	 */
 	private void fetchRatings(String packageName, AppStats stats) throws DeveloperConsoleException,
-			JSONException {
+			NetworkException {
 
 		// Setup the request
 		String postData = String.format(PAYLOAD_RATINGS, packageName, authInfo.getXsrfToken());
@@ -255,9 +252,10 @@ public class DeveloperConsoleV2 {
 		String json = null;
 		try {
 			json = post(createDeveloperUrl(URL_REVIEWS), postData);
-
 			JsonParser.parseRatings(json, stats);
-		} catch (Exception ex) {
+		} catch (IOException ex) {
+			throw new NetworkException(ex);
+		} catch (JSONException ex) {
 			throw new DeveloperConsoleException(json, ex);
 		}
 	}
@@ -268,13 +266,14 @@ public class DeveloperConsoleV2 {
 	 * @param packageName
 	 * @return
 	 * @throws DeveloperConsoleException
-	 * @throws JSONException
+	 * @throws NetworkException
 	 */
 	private int fetchCommentsCount(String packageName) throws DeveloperConsoleException,
-			JSONException {
+			NetworkException {
 
 		// Setup the request
-		// TODO Check asking for 0 comments
+		// TODO Asking for a small number of comments does not give us the number of comments
+		// Need to think of something else.
 		String postData = String.format(PAYLOAD_COMMENTS, packageName, 0, 1,
 				authInfo.getXsrfToken());
 
@@ -282,15 +281,16 @@ public class DeveloperConsoleV2 {
 		String json = null;
 		try {
 			json = post(createDeveloperUrl(URL_REVIEWS), postData);
-
 			return JsonParser.parseCommentsCount(json);
-		} catch (Exception ex) {
+		} catch (IOException ex) {
+			throw new NetworkException(ex);
+		} catch (JSONException ex) {
 			throw new DeveloperConsoleException(json, ex);
 		}
 	}
 
 	private List<Comment> fetchComments(String packageName, int startIndex, int count)
-			throws DeveloperConsoleException, JSONException {
+			throws DeveloperConsoleException, NetworkException {
 
 		// Setup the request
 		String postData = String.format(PAYLOAD_COMMENTS, packageName, startIndex, count,
@@ -300,9 +300,10 @@ public class DeveloperConsoleV2 {
 		String json = null;
 		try {
 			json = post(createDeveloperUrl(URL_REVIEWS), postData);
-
 			return JsonParser.parseComments(json);
-		} catch (Exception ex) {
+		} catch (IOException ex) {
+			throw new NetworkException(ex);
+		} catch (JSONException ex) {
 			throw new DeveloperConsoleException(json, ex);
 		}
 	}
@@ -330,7 +331,7 @@ public class DeveloperConsoleV2 {
 		authInfo = authenticator.authenticate();
 	}
 
-	private String post(String url, String postData) throws IOException, ProtocolException {
+	private String post(String url, String postData) throws IOException {
 		HttpPost post = new HttpPost(url);
 		addHeaders(post);
 		post.setEntity(new StringEntity(postData, "UTF-8"));

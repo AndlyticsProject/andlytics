@@ -1,12 +1,9 @@
 package com.github.andlyticsproject.sync;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Service;
 import android.content.AbstractThreadedSyncAdapter;
@@ -19,7 +16,6 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.github.andlyticsproject.AppStatsDiff;
-import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
@@ -74,21 +70,20 @@ public class SyncAdapterService extends Service {
 		return sSyncAdapter;
 	}
 
-	@SuppressWarnings("deprecation")
 	private static void performSync(Context context, Account account, Bundle extras,
 			String authority, ContentProviderClient provider, SyncResult syncResult)
 			throws OperationCanceledException {
-
-		Bundle bundle = null;
-		String token = null;
+//
+//		Bundle bundle = null;
+//		String token = null;
 
 		try {
-			bundle = AccountManager
-					.get(context)
-					.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, true, null,
-							null).getResult();
-			if (bundle != null && bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
-				token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+//			bundle = AccountManager
+//					.get(context)
+//					.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, true, null,
+//							null).getResult();
+//			if (bundle != null && bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
+//				token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
 
 				// DeveloperConsole console = new DeveloperConsole(context);
 				// List<AppInfo> appDownloadInfos =
@@ -116,13 +111,13 @@ public class SyncAdapterService extends Service {
 				// check for notifications
 				NotificationHandler.handleNotificaions(context, diffs, account.name);
 
-			} else {
-				Log.e(TAG, "error during sync auth, no token found");
-			}
-		} catch (AuthenticatorException e) {
-			Log.e(TAG, "error during sync auth", e);
-		} catch (IOException e) {
-			Log.e(TAG, "error during sync auth", e);
+//			} else {
+//				Log.e(TAG, "error during sync auth, no token found");
+//			}
+//		} catch (AuthenticatorException e) {
+//			Log.e(TAG, "error during sync auth", e);
+//		} catch (IOException e) {
+//			Log.e(TAG, "error during sync auth", e);
 		} catch (NetworkException e) {
 			Log.e(TAG, "error during sync auth", e);
 		} catch (DeveloperConsoleException e) {
