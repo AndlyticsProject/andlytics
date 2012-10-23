@@ -20,6 +20,10 @@ import com.github.andlyticsproject.model.Comment;
  *
  */
 public class JsonParser {
+	
+	private JsonParser() {
+		
+	}
 
 	/**
 	 * Parses the supplied JSON string and adds the extracted ratings to the supplied {@link AppStats} object
@@ -27,7 +31,7 @@ public class JsonParser {
 	 * @param stats
 	 * @throws JSONException
 	 */
-	protected static void parseRatings(String json, AppStats stats) throws JSONException {
+	static void parseRatings(String json, AppStats stats) throws JSONException {
 		// Extract just the array with the values
 		JSONArray values = new JSONObject(json).getJSONArray("result").getJSONArray(1)
 				.getJSONArray(0);
@@ -46,7 +50,7 @@ public class JsonParser {
 	 * @param statsType
 	 * @throws JSONException
 	 */
-	protected static void parseStatistics(String json, AppStats stats, int statsType)
+	static void parseStatistics(String json, AppStats stats, int statsType)
 			throws JSONException {
 		// Extract the top level values array
 		JSONArray values = new JSONObject(json).getJSONArray("result").getJSONArray(1);
@@ -94,7 +98,7 @@ public class JsonParser {
 	 * @return List of apps
 	 * @throws JSONException
 	 */
-	protected static List<AppInfo> parseAppInfos(String json, String accountName)
+	static List<AppInfo> parseAppInfos(String json, String accountName)
 			throws JSONException {
 
 		Date now = new Date();
@@ -194,7 +198,7 @@ public class JsonParser {
 	 * @return
 	 * @throws JSONException
 	 */
-	protected static int parseCommentsCount(String json) throws JSONException {
+	static int parseCommentsCount(String json) throws JSONException {
 		// Just extract the number of comments
 		/*
 		 * null
@@ -210,7 +214,7 @@ public class JsonParser {
 	 * @return
 	 * @throws JSONException
 	 */
-	protected static List<Comment> parseComments(String json) throws JSONException {
+	static List<Comment> parseComments(String json) throws JSONException {
 		List<Comment> comments  = new ArrayList<Comment>();
 		/*
 		 * null
