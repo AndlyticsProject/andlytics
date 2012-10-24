@@ -1,4 +1,4 @@
-package com.github.andlyticsproject;
+package com.github.andlyticsproject.console.v1;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,12 +56,12 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.util.Log;
 
-import com.github.andlyticsproject.exception.AuthenticationException;
-import com.github.andlyticsproject.exception.DeveloperConsoleException;
-import com.github.andlyticsproject.exception.MultiAccountException;
-import com.github.andlyticsproject.exception.NetworkException;
-import com.github.andlyticsproject.gwt.Base64Utils;
-import com.github.andlyticsproject.gwt.GwtParser;
+import com.github.andlyticsproject.AndlyticsApp;
+import com.github.andlyticsproject.Preferences;
+import com.github.andlyticsproject.console.AuthenticationException;
+import com.github.andlyticsproject.console.DeveloperConsoleException;
+import com.github.andlyticsproject.console.MultiAccountException;
+import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.Comment;
 

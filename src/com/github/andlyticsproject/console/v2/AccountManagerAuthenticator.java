@@ -1,4 +1,4 @@
-package com.github.andlyticsproject.v2;
+package com.github.andlyticsproject.console.v2;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -25,7 +25,7 @@ import android.util.Log;
 
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.Constants;
-import com.github.andlyticsproject.exception.AuthenticationException;
+import com.github.andlyticsproject.console.AuthenticationException;
 
 public class AccountManagerAuthenticator extends BaseAuthenticator {
 

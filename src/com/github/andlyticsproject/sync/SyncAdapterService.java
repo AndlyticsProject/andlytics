@@ -17,10 +17,10 @@ import android.util.Log;
 
 import com.github.andlyticsproject.AppStatsDiff;
 import com.github.andlyticsproject.ContentAdapter;
-import com.github.andlyticsproject.exception.AndlyticsException;
+import com.github.andlyticsproject.console.AndlyticsException;
+import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
+import com.github.andlyticsproject.console.v2.DeveloperConsoleV2;
 import com.github.andlyticsproject.model.AppInfo;
-import com.github.andlyticsproject.v2.DevConsoleRegistry;
-import com.github.andlyticsproject.v2.DeveloperConsoleV2;
 
 public class SyncAdapterService extends Service {
 

@@ -1,6 +1,6 @@
-package com.github.andlyticsproject.v2;
+package com.github.andlyticsproject.console.v2;
 
-import com.github.andlyticsproject.exception.AuthenticationException;
+import com.github.andlyticsproject.console.AuthenticationException;
 
 public interface DevConsoleAuthenticator {
 

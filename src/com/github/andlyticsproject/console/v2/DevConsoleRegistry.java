@@ -1,4 +1,4 @@
-package com.github.andlyticsproject.v2;
+package com.github.andlyticsproject.console.v2;
 
 import java.util.HashMap;
 import java.util.Map;

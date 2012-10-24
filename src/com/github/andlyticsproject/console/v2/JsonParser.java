@@ -1,5 +1,5 @@
 
-package com.github.andlyticsproject.v2;
+package com.github.andlyticsproject.console.v2;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -250,7 +250,7 @@ public class JsonParser {
 			[
 			   null,
 			   "gaia:12824185113034449316:1:vm:18363775304595766012",
-			   "Mickaël",
+			   "Mickaï¿½l",
 			   "1350333837326",
 			   1,
 			   "",
@@ -266,7 +266,7 @@ public class JsonParser {
 			   "fr_FR",
 			   [
 			      null,
-			      "Prixing fonctionne pourtant bien sur Xperia X10. Essayez de prendre un minimum de recul, au moins 20 à 30cm, évitez les ombres et les reflets. N'hésitez pas à nous écrire sur contact@prixing.fr pour une assistance personnalisée.",
+			      "Prixing fonctionne pourtant bien sur Xperia X10. Essayez de prendre un minimum de recul, au moins 20 ï¿½ 30cm, ï¿½vitez les ombres et les reflets. N'hï¿½sitez pas ï¿½ nous ï¿½crire sur contact@prixing.fr pour une assistance personnalisï¿½e.",
 			      null,
 			      "1350393460968"
 			   ],

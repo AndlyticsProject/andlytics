@@ -1,4 +1,4 @@
-package com.github.andlyticsproject.v2;
+package com.github.andlyticsproject.console.v2;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,9 +15,9 @@ import android.content.Context;
 import android.util.Log;
 
 import com.github.andlyticsproject.R;
-import com.github.andlyticsproject.exception.AndlyticsException;
-import com.github.andlyticsproject.exception.DeveloperConsoleException;
-import com.github.andlyticsproject.exception.NetworkException;
+import com.github.andlyticsproject.console.AndlyticsException;
+import com.github.andlyticsproject.console.DeveloperConsoleException;
+import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;

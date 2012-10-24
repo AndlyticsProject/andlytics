@@ -1,4 +1,4 @@
-package com.github.andlyticsproject.v2;
+package com.github.andlyticsproject.console.v2;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import org.apache.http.util.EntityUtils;
 
 import android.util.Log;
 
-import com.github.andlyticsproject.exception.AuthenticationException;
+import com.github.andlyticsproject.console.AuthenticationException;
 
 public class PasswordAuthenticator extends BaseAuthenticator {
 

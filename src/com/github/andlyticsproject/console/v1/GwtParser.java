@@ -1,4 +1,4 @@
-package com.github.andlyticsproject.gwt;
+package com.github.andlyticsproject.console.v1;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
 
 import android.util.SparseArray;
 
-import com.github.andlyticsproject.exception.DeveloperConsoleException;
+import com.github.andlyticsproject.console.DeveloperConsoleException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;

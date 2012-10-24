@@ -45,9 +45,11 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
-import com.github.andlyticsproject.exception.AuthenticationException;
-import com.github.andlyticsproject.exception.DeveloperConsoleException;
-import com.github.andlyticsproject.exception.NetworkException;
+import com.github.andlyticsproject.console.AuthenticationException;
+import com.github.andlyticsproject.console.DeveloperConsoleException;
+import com.github.andlyticsproject.console.NetworkException;
+import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
+import com.github.andlyticsproject.console.v2.DeveloperConsoleV2;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
@@ -55,8 +57,6 @@ import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
 import com.github.andlyticsproject.sync.NotificationHandler;
 import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.Utils;
-import com.github.andlyticsproject.v2.DevConsoleRegistry;
-import com.github.andlyticsproject.v2.DeveloperConsoleV2;
 
 public class Main extends BaseActivity implements AuthenticationCallback, OnNavigationListener {
 

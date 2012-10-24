@@ -1,5 +1,5 @@
 
-package com.github.andlyticsproject.exception;
+package com.github.andlyticsproject.console;
 
 public class MultiAccountException extends AndlyticsException {
 

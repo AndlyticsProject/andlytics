@@ -1,4 +1,4 @@
-package com.github.andlyticsproject.exception;
+package com.github.andlyticsproject.console;
 
 public class AuthenticationException extends AndlyticsException {
 

@@ -11,11 +11,12 @@ import android.widget.ExpandableListView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.andlyticsproject.console.v1.DeveloperConsole;
+import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
+import com.github.andlyticsproject.console.v2.DeveloperConsoleV2;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
-import com.github.andlyticsproject.v2.DevConsoleRegistry;
-import com.github.andlyticsproject.v2.DeveloperConsoleV2;
 
 public class CommentsActivity extends BaseDetailsActivity implements AuthenticationCallback {
 

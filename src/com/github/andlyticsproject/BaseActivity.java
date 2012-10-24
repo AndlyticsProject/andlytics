@@ -28,12 +28,12 @@ import com.github.andlyticsproject.admob.AdmobInvalidRequestException;
 import com.github.andlyticsproject.admob.AdmobInvalidTokenException;
 import com.github.andlyticsproject.admob.AdmobRateLimitExceededException;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
+import com.github.andlyticsproject.console.AuthenticationException;
+import com.github.andlyticsproject.console.DeveloperConsoleException;
+import com.github.andlyticsproject.console.MultiAccountException;
+import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.dialog.CrashDialog;
 import com.github.andlyticsproject.dialog.CrashDialog.CrashDialogBuilder;
-import com.github.andlyticsproject.exception.AuthenticationException;
-import com.github.andlyticsproject.exception.DeveloperConsoleException;
-import com.github.andlyticsproject.exception.MultiAccountException;
-import com.github.andlyticsproject.exception.NetworkException;
 
 public class BaseActivity extends SherlockActivity {
 

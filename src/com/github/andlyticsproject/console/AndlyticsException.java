@@ -1,4 +1,4 @@
-package com.github.andlyticsproject.exception;
+package com.github.andlyticsproject.console;
 
 // TODO -- make this a RE
 // maybe come up with a better name

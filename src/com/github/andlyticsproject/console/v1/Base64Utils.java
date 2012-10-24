@@ -1,5 +1,5 @@
 
-package com.github.andlyticsproject.gwt;
+package com.github.andlyticsproject.console.v1;
 
 /**
  * A utility to decode and encode byte arrays as Strings, using only "safe"
