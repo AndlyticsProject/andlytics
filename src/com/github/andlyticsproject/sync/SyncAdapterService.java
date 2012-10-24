@@ -17,7 +17,7 @@ import android.util.Log;
 
 import com.github.andlyticsproject.AppStatsDiff;
 import com.github.andlyticsproject.ContentAdapter;
-import com.github.andlyticsproject.console.AndlyticsException;
+import com.github.andlyticsproject.console.DevConsoleException;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DeveloperConsoleV2;
 import com.github.andlyticsproject.model.AppInfo;
@@ -113,7 +113,7 @@ public class SyncAdapterService extends Service {
 			// } else {
 			// Log.e(TAG, "error during sync auth, no token found");
 			// }
-		} catch (AndlyticsException e) {
+		} catch (DevConsoleException e) {
 			Log.e(TAG, "error during sync", e);
 		}
 

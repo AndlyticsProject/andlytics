@@ -46,7 +46,7 @@ import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.console.AuthenticationException;
-import com.github.andlyticsproject.console.DeveloperConsoleException;
+import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DeveloperConsoleV2;
@@ -491,7 +491,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 			if (e != null) {
 
-				if ((e instanceof DeveloperConsoleException || e instanceof AuthenticationException)
+				if ((e instanceof DevConsoleProtocolException || e instanceof AuthenticationException)
 						&& !isAuthenticationRetry) {
 					Log.w("Andlytics", "authentication faild, retry with new token");
 					isAuthenticationRetry = true;

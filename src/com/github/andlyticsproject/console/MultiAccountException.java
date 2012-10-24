@@ -1,7 +1,7 @@
 
 package com.github.andlyticsproject.console;
 
-public class MultiAccountException extends AndlyticsException {
+public class MultiAccountException extends DevConsoleException {
 
 	/**
 	 *

@@ -15,8 +15,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.github.andlyticsproject.R;
-import com.github.andlyticsproject.console.AndlyticsException;
-import com.github.andlyticsproject.console.DeveloperConsoleException;
+import com.github.andlyticsproject.console.DevConsoleException;
+import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
@@ -114,9 +114,9 @@ public class DeveloperConsoleV2 {
 	 * 
 	 * @param accountName
 	 * @return
-	 * @throws AndlyticsException
+	 * @throws DevConsoleException
 	 */
-	public synchronized List<AppInfo> getAppInfo() throws AndlyticsException {
+	public synchronized List<AppInfo> getAppInfo() throws DevConsoleException {
 
 		authenticate(false);
 		// Fetch a list of available apps
@@ -143,15 +143,15 @@ public class DeveloperConsoleV2 {
 	 * @param startIndex
 	 * @param count
 	 * @return
-	 * @throws AndlyticsException
+	 * @throws DevConsoleException
 	 */
 	public synchronized List<Comment> getComments(String packageName, int startIndex, int count)
-			throws AndlyticsException {
+			throws DevConsoleException {
 		try {
 			// First try using existing cookies and tokens
 			authenticate(true);
 			return fetchComments(packageName, startIndex, count);
-		} catch (DeveloperConsoleException ex) {
+		} catch (DevConsoleProtocolException ex) {
 			// TODO What to catch here, can we specifically detect an auth
 			// problem when doing a POST?
 			authenticate(false);
@@ -164,9 +164,9 @@ public class DeveloperConsoleV2 {
 	 * 
 	 * @param accountName
 	 * @return
-	 * @throws AndlyticsException
+	 * @throws DevConsoleException
 	 */
-	private List<AppInfo> fetchAppInfos() throws AndlyticsException {
+	private List<AppInfo> fetchAppInfos() throws DevConsoleException {
 
 		// Setup the request
 		// TODO Check the remaining possible parameters to see if they are
@@ -181,7 +181,7 @@ public class DeveloperConsoleV2 {
 		} catch (IOException ex) {
 			throw new NetworkException(ex);
 		} catch (JSONException ex) {
-			throw new DeveloperConsoleException(json, ex);
+			throw new DevConsoleProtocolException(json, ex);
 		}
 	}
 
@@ -196,10 +196,10 @@ public class DeveloperConsoleV2 {
 	 * @param packageName
 	 * @param stats
 	 * @param statsType
-	 * @throws AndlyticsException
+	 * @throws DevConsoleException
 	 */
 	private void fetchStatistics(String packageName, AppStats stats, int statsType)
-			throws AndlyticsException {
+			throws DevConsoleException {
 		// Setup the request
 		// Don't care about the breakdown at the moment:
 		// STATS_BY_ANDROID_VERSION
@@ -214,7 +214,7 @@ public class DeveloperConsoleV2 {
 		} catch (IOException ex) {
 			throw new NetworkException(ex);
 		} catch (JSONException ex) {
-			throw new DeveloperConsoleException(json, ex);
+			throw new DevConsoleProtocolException(json, ex);
 		}
 	}
 
@@ -226,9 +226,9 @@ public class DeveloperConsoleV2 {
 	 *            The app to fetch ratings for
 	 * @param stats
 	 *            The AppStats object to add them to
-	 * @throws AndlyticsException
+	 * @throws DevConsoleException
 	 */
-	private void fetchRatings(String packageName, AppStats stats) throws AndlyticsException {
+	private void fetchRatings(String packageName, AppStats stats) throws DevConsoleException {
 		// Setup the request
 		String postData = String.format(PAYLOAD_RATINGS, packageName, authInfo.getXsrfToken());
 
@@ -240,7 +240,7 @@ public class DeveloperConsoleV2 {
 		} catch (IOException ex) {
 			throw new NetworkException(ex);
 		} catch (JSONException ex) {
-			throw new DeveloperConsoleException(json, ex);
+			throw new DevConsoleProtocolException(json, ex);
 		}
 	}
 
@@ -249,9 +249,9 @@ public class DeveloperConsoleV2 {
 	 * 
 	 * @param packageName
 	 * @return
-	 * @throws AndlyticsException
+	 * @throws DevConsoleException
 	 */
-	private int fetchCommentsCount(String packageName) throws AndlyticsException {
+	private int fetchCommentsCount(String packageName) throws DevConsoleException {
 		// Setup the request
 		// TODO Asking for a small number of comments does not give us the
 		// number of comments
@@ -267,12 +267,12 @@ public class DeveloperConsoleV2 {
 		} catch (IOException ex) {
 			throw new NetworkException(ex);
 		} catch (JSONException ex) {
-			throw new DeveloperConsoleException(json, ex);
+			throw new DevConsoleProtocolException(json, ex);
 		}
 	}
 
 	private List<Comment> fetchComments(String packageName, int startIndex, int count)
-			throws AndlyticsException {
+			throws DevConsoleException {
 
 		// Setup the request
 		String postData = String.format(PAYLOAD_COMMENTS, packageName, startIndex, count,
@@ -286,7 +286,7 @@ public class DeveloperConsoleV2 {
 		} catch (IOException ex) {
 			throw new NetworkException(ex);
 		} catch (JSONException ex) {
-			throw new DeveloperConsoleException(json, ex);
+			throw new DevConsoleProtocolException(json, ex);
 		}
 	}
 
@@ -294,10 +294,10 @@ public class DeveloperConsoleV2 {
 	 * Logs into the Android Developer Console
 	 * 
 	 * @param reuseAuthentication
-	 * @throws AndlyticsException
+	 * @throws DevConsoleException
 	 */
 	// TODO revise exceptions
-	private void authenticate(boolean reuseAuthentication) throws AndlyticsException {
+	private void authenticate(boolean reuseAuthentication) throws DevConsoleException {
 		if (!reuseAuthentication) {
 			authInfo = null;
 		}
