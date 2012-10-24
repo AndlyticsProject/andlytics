@@ -1,7 +1,7 @@
 
 package com.github.andlyticsproject.exception;
 
-public class MultiAccountAcception extends Exception {
+public class MultiAccountAcception extends AndlyticsException {
 
 	/**
 	 *
