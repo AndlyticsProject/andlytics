@@ -1,27 +1,27 @@
-package com.github.andlyticsproject.exception;
+package com.github.andlyticsproject.console;
 
-public class DeveloperConsoleException extends AndlyticsException {
+public class DevConsoleProtocolException extends DevConsoleException {
 
 	private static final long serialVersionUID = 1L;
 
 	private String postData;
 	private String consoleResponse;
 
-	public DeveloperConsoleException(String message) {
+	public DevConsoleProtocolException(String message) {
 		super(message);
 	}
 
-	public DeveloperConsoleException(String message, String postData, String consoleResponse) {
+	public DevConsoleProtocolException(String message, String postData, String consoleResponse) {
 		super(message);
 		this.postData = postData;
 		this.consoleResponse = consoleResponse;
 	}
 
-	public DeveloperConsoleException(Throwable cause) {
+	public DevConsoleProtocolException(Throwable cause) {
 		super(cause);
 	}
 
-	public DeveloperConsoleException(String message, Throwable cause) {
+	public DevConsoleProtocolException(String message, Throwable cause) {
 		super(message, cause);
 	}
 

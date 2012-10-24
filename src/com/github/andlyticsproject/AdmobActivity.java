@@ -33,7 +33,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.admob.AdmobRequest.SyncCallback;
-import com.github.andlyticsproject.exception.NetworkException;
+import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AdmobList;
 import com.github.andlyticsproject.view.ViewSwitcher3D;

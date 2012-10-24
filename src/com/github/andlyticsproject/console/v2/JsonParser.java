@@ -1,5 +1,5 @@
 
-package com.github.andlyticsproject.v2;
+package com.github.andlyticsproject.console.v2;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,7 +14,7 @@ import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 
 /**
- * This class contains static methods used to parse JSON from {@link DeveloperConsoleV2}
+ * This class contains static methods used to parse JSON from {@link DevConsoleV2}
  * 
  * See {@link https://github.com/AndlyticsProject/andlytics/wiki/Developer-Console-v2} for some more documentation
  *
@@ -77,10 +77,10 @@ public class JsonParser {
 		int latestValue = latestData.getJSONArray(2).getInt(1);
 
 		switch (statsType) {
-			case DeveloperConsoleV2.STATS_TYPE_TOTAL_USER_INSTALLS:
+			case DevConsoleV2.STATS_TYPE_TOTAL_USER_INSTALLS:
 				stats.setTotalDownloads(latestValue);
 				break;
-			case DeveloperConsoleV2.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
+			case DevConsoleV2.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
 				// This is not used now that active installs are in the main request (parseAppInfos)
 				// Can be used if we get historical/dimensioned data
 				stats.setActiveInstalls(latestValue);
@@ -250,7 +250,7 @@ public class JsonParser {
 			[
 			   null,
 			   "gaia:12824185113034449316:1:vm:18363775304595766012",
-			   "Mickaël",
+			   "Mickaï¿½l",
 			   "1350333837326",
 			   1,
 			   "",
@@ -266,7 +266,7 @@ public class JsonParser {
 			   "fr_FR",
 			   [
 			      null,
-			      "Prixing fonctionne pourtant bien sur Xperia X10. Essayez de prendre un minimum de recul, au moins 20 à 30cm, évitez les ombres et les reflets. N'hésitez pas à nous écrire sur contact@prixing.fr pour une assistance personnalisée.",
+			      "Prixing fonctionne pourtant bien sur Xperia X10. Essayez de prendre un minimum de recul, au moins 20 ï¿½ 30cm, ï¿½vitez les ombres et les reflets. N'hï¿½sitez pas ï¿½ nous ï¿½crire sur contact@prixing.fr pour une assistance personnalisï¿½e.",
 			      null,
 			      "1350393460968"
 			   ],

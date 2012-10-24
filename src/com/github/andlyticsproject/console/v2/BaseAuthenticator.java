@@ -1,4 +1,4 @@
-package com.github.andlyticsproject.v2;
+package com.github.andlyticsproject.console.v2;
 
 import java.util.List;
 import java.util.regex.Matcher;

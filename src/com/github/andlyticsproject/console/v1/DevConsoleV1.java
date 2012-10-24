@@ -1,4 +1,4 @@
-package com.github.andlyticsproject;
+package com.github.andlyticsproject.console.v1;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,16 +56,16 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.util.Log;
 
-import com.github.andlyticsproject.exception.AuthenticationException;
-import com.github.andlyticsproject.exception.DeveloperConsoleException;
-import com.github.andlyticsproject.exception.MultiAccountException;
-import com.github.andlyticsproject.exception.NetworkException;
-import com.github.andlyticsproject.gwt.Base64Utils;
-import com.github.andlyticsproject.gwt.GwtParser;
+import com.github.andlyticsproject.AndlyticsApp;
+import com.github.andlyticsproject.Preferences;
+import com.github.andlyticsproject.console.AuthenticationException;
+import com.github.andlyticsproject.console.DevConsoleProtocolException;
+import com.github.andlyticsproject.console.MultiAccountException;
+import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.Comment;
 
-public class DeveloperConsole {
+public class DevConsoleV1 {
 	// private static String LOG_TAG=DeveloperConsole.class.toString();
 	private static final String GWT_PERMUTATION = "6D75CBE66FE85272BB1AD2C64A98B720";
 
@@ -109,19 +109,19 @@ public class DeveloperConsole {
 	private String cookieAuthtoken;
 	private String postData;
 
-	public DeveloperConsole(Context context) {
+	public DevConsoleV1(Context context) {
 		this.context = context;
 	}
 
 	public List<AppInfo> getAppDownloadInfos(String authtoken, String accountName)
-			throws NetworkException, DeveloperConsoleException, AuthenticationException,
+			throws NetworkException, DevConsoleProtocolException, AuthenticationException,
 			MultiAccountException {
 
 		return getFullAssetListRequest(accountName, authtoken, false);
 	}
 
 	private List<AppInfo> getFullAssetListRequest(String accountName, String authtoken,
-			boolean reuseAuthentication) throws NetworkException, DeveloperConsoleException,
+			boolean reuseAuthentication) throws NetworkException, DevConsoleProtocolException,
 			AuthenticationException, MultiAccountException {
 
 		developerConsoleAuthentication(authtoken, reuseAuthentication);
@@ -161,7 +161,7 @@ public class DeveloperConsole {
 	}
 
 	public List<Comment> getAppComments(String authtoken, String accountName, String packageName,
-			int startIndex, int lenght) throws NetworkException, DeveloperConsoleException,
+			int startIndex, int lenght) throws NetworkException, DevConsoleProtocolException,
 			AuthenticationException, MultiAccountException {
 
 		try {
@@ -173,31 +173,18 @@ public class DeveloperConsole {
 			// Environment.getExternalStorageDirectory(),
 			// "comments.json").getAbsolutePath());
 
-			return expandReplies(parseCommentsResponse(json, accountName));
+			return Comment.expandReplies(parseCommentsResponse(json, accountName));
 
-		} catch (DeveloperConsoleException e) {
-
+		} catch (DevConsoleProtocolException e) {
 			developerConsoleAuthentication(authtoken, false);
 			String json = grapComments(packageName, startIndex, lenght);
 
-			return expandReplies(parseCommentsResponse(json, accountName));
+			return Comment.expandReplies(parseCommentsResponse(json, accountName));
 		}
-	}
-
-	public static List<Comment> expandReplies(List<Comment> result) {
-		List<Comment> withReplies = new ArrayList<Comment>();
-		for (Comment comment : result) {
-			withReplies.add(comment);
-			if (comment.getReply() != null) {
-				withReplies.add(comment.getReply());
-			}
-		}
-
-		return withReplies;
 	}
 
 	public List<AppInfo> parseAppStatisticsResponse(String json, String accountName)
-			throws DeveloperConsoleException, AuthenticationException {
+			throws DevConsoleProtocolException, AuthenticationException {
 
 		List<AppInfo> result = new ArrayList<AppInfo>();
 
@@ -210,7 +197,7 @@ public class DeveloperConsole {
 	}
 
 	public Map<String, Integer> parseFeedbackOverviewResponse(String json)
-			throws DeveloperConsoleException, AuthenticationException {
+			throws DevConsoleProtocolException, AuthenticationException {
 
 		Map<String, Integer> result = new HashMap<String, Integer>();
 
@@ -222,7 +209,7 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	private long parseGetAssetForUserCount(String json) throws DeveloperConsoleException,
+	private long parseGetAssetForUserCount(String json) throws DevConsoleProtocolException,
 			AuthenticationException {
 
 		long result = 0;
@@ -235,7 +222,7 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	private void testIfJsonIsValid(String json) throws DeveloperConsoleException,
+	private void testIfJsonIsValid(String json) throws DevConsoleProtocolException,
 			AuthenticationException {
 		if (json == null || !json.startsWith("//OK")) {
 
@@ -245,12 +232,12 @@ public class DeveloperConsole {
 				throw new AuthenticationException("Authentication error. Console response: " + json);
 			}
 
-			throw new DeveloperConsoleException("Invalid JSON response", postData, json);
+			throw new DevConsoleProtocolException("Invalid JSON response", postData, json);
 		}
 	}
 
 	public List<Comment> parseCommentsResponse(String json, String accountName)
-			throws DeveloperConsoleException, AuthenticationException {
+			throws DevConsoleProtocolException, AuthenticationException {
 		testIfJsonIsValid(json);
 
 		List<Comment> result = new ArrayList<Comment>();
@@ -280,7 +267,7 @@ public class DeveloperConsole {
 	}
 
 	private String grapAppStatistics(String startApp, long lenght)
-			throws DeveloperConsoleException, NetworkException {
+			throws DevConsoleProtocolException, NetworkException {
 
 		String developerPostData = Preferences.getRequestFullAssetInfo(context);
 
@@ -307,12 +294,12 @@ public class DeveloperConsole {
 		} catch (ConnectException ex) {
 			throw new NetworkException(ex);
 		} catch (Exception f) {
-			throw new DeveloperConsoleException(result, f);
+			throw new DevConsoleProtocolException(result, f);
 		}
 		return result;
 	}
 
-	private String grepGetAssetForUserCount() throws DeveloperConsoleException, NetworkException {
+	private String grepGetAssetForUserCount() throws DevConsoleProtocolException, NetworkException {
 
 		String result = null;
 
@@ -329,13 +316,13 @@ public class DeveloperConsole {
 		} catch (ConnectException ex) {
 			throw new NetworkException(ex);
 		} catch (Exception f) {
-			throw new DeveloperConsoleException(postData, f);
+			throw new DevConsoleProtocolException(postData, f);
 		}
 
 		return result;
 	}
 
-	private String grapGetAssetIndexForUser() throws DeveloperConsoleException, NetworkException {
+	private String grapGetAssetIndexForUser() throws DevConsoleProtocolException, NetworkException {
 
 		String result = null;
 
@@ -357,8 +344,8 @@ public class DeveloperConsole {
 
 		} catch (ConnectException ex) {
 			throw new NetworkException(ex);
-		} catch (Exception f) {
-			throw new DeveloperConsoleException(result, f);
+		} catch (Exception ex) {
+			throw new DevConsoleProtocolException(ex);
 		}
 
 		return result;
@@ -374,7 +361,7 @@ public class DeveloperConsole {
 	}
 
 	protected String grapComments(String packageName, int startIndex, int lenght)
-			throws DeveloperConsoleException, NetworkException {
+			throws DevConsoleProtocolException, NetworkException {
 
 		String postData = Preferences.getRequestUserComments(context);
 
@@ -402,13 +389,13 @@ public class DeveloperConsole {
 		} catch (ConnectException ex) {
 			throw new NetworkException(ex);
 		} catch (Exception f) {
-			throw new DeveloperConsoleException(result, f);
+			throw new DevConsoleProtocolException(result, f);
 		}
 		return result;
 	}
 
 	protected String grapFeedbackOverview(List<String> packageNames)
-			throws DeveloperConsoleException, NetworkException {
+			throws DevConsoleProtocolException, NetworkException {
 
 		String postData = Preferences.getRequestFeedback(context);
 
@@ -439,7 +426,7 @@ public class DeveloperConsole {
 		} catch (ConnectException ex) {
 			throw new NetworkException(ex);
 		} catch (Exception f) {
-			throw new DeveloperConsoleException(result, f);
+			throw new DevConsoleProtocolException(result, f);
 		}
 		return result;
 	}

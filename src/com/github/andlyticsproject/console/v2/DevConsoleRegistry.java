@@ -1,11 +1,11 @@
-package com.github.andlyticsproject.v2;
+package com.github.andlyticsproject.console.v2;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class DevConsoleRegistry {
 
-	private Map<String, DeveloperConsoleV2> registry = new HashMap<String, DeveloperConsoleV2>();
+	private Map<String, DevConsoleV2> registry = new HashMap<String, DevConsoleV2>();
 
 	private static DevConsoleRegistry instance = new DevConsoleRegistry();
 
@@ -16,11 +16,11 @@ public class DevConsoleRegistry {
 		return instance;
 	}
 
-	public synchronized void put(String accountName, DeveloperConsoleV2 devConsole) {
+	public synchronized void put(String accountName, DevConsoleV2 devConsole) {
 		registry.put(accountName, devConsole);
 	}
 
-	public synchronized DeveloperConsoleV2 get(String accountName) {
+	public synchronized DevConsoleV2 get(String accountName) {
 		return registry.get(accountName);
 	}
 }

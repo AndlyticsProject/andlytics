@@ -32,7 +32,7 @@ import org.json.JSONObject;
 
 import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.Preferences.Timeframe;
-import com.github.andlyticsproject.exception.NetworkException;
+import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.model.Admob;
 
 public class AdmobRequest {

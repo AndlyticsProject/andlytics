@@ -1,7 +1,7 @@
 
-package com.github.andlyticsproject.exception;
+package com.github.andlyticsproject.console;
 
-public class NetworkException extends AndlyticsException {
+public class NetworkException extends DevConsoleException {
 
 	private static final long serialVersionUID = 1L;
 

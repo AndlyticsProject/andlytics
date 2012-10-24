@@ -1,4 +1,4 @@
-package com.github.andlyticsproject.gwt;
+package com.github.andlyticsproject.console.v1;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
 
 import android.util.SparseArray;
 
-import com.github.andlyticsproject.exception.DeveloperConsoleException;
+import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
@@ -398,7 +398,7 @@ public class GwtParser {
 		return json == null || !json.startsWith("//OK");
 	}
 
-	public List<AppInfo> getAppInfos(String accountName) throws DeveloperConsoleException {
+	public List<AppInfo> getAppInfos(String accountName) throws DevConsoleProtocolException {
 
 		List<AppInfo> result = new ArrayList<AppInfo>();
 
@@ -751,7 +751,7 @@ public class GwtParser {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new DeveloperConsoleException(jsonCopy, e);
+			throw new DevConsoleProtocolException(jsonCopy, e);
 		}
 
 		return result;
