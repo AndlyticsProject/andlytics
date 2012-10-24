@@ -32,7 +32,6 @@ import com.github.andlyticsproject.dialog.CrashDialog;
 import com.github.andlyticsproject.dialog.CrashDialog.CrashDialogBuilder;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
-import com.github.andlyticsproject.exception.InvalidJSONResponseException;
 import com.github.andlyticsproject.exception.MultiAccountException;
 import com.github.andlyticsproject.exception.NetworkException;
 
@@ -131,13 +130,6 @@ public class BaseActivity extends SherlockActivity {
 				showNewVersionDialog(e);
 			} else {
 				showCrashDialog(e);
-			}
-		} else if (e instanceof InvalidJSONResponseException) {
-			int appVersionCode = getAppVersionCode(this);
-			if (Preferences.getLatestVersionCode(this) > appVersionCode) {
-				showNewVersionDialog(e);
-			} else {
-				showGoogleErrorDialog(e);
 			}
 		} else if (e instanceof MultiAccountException) {
 			showAspErrorDialog(e);

@@ -58,7 +58,6 @@ import android.util.Log;
 
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
-import com.github.andlyticsproject.exception.InvalidJSONResponseException;
 import com.github.andlyticsproject.exception.MultiAccountException;
 import com.github.andlyticsproject.exception.NetworkException;
 import com.github.andlyticsproject.gwt.Base64Utils;
@@ -115,15 +114,15 @@ public class DeveloperConsole {
 	}
 
 	public List<AppInfo> getAppDownloadInfos(String authtoken, String accountName)
-			throws NetworkException, InvalidJSONResponseException, DeveloperConsoleException,
-			AuthenticationException, MultiAccountException {
+			throws NetworkException, DeveloperConsoleException, AuthenticationException,
+			MultiAccountException {
 
 		return getFullAssetListRequest(accountName, authtoken, false);
 	}
 
 	private List<AppInfo> getFullAssetListRequest(String accountName, String authtoken,
 			boolean reuseAuthentication) throws NetworkException, DeveloperConsoleException,
-			InvalidJSONResponseException, AuthenticationException, MultiAccountException {
+			AuthenticationException, MultiAccountException {
 
 		developerConsoleAuthentication(authtoken, reuseAuthentication);
 
@@ -163,7 +162,7 @@ public class DeveloperConsole {
 
 	public List<Comment> getAppComments(String authtoken, String accountName, String packageName,
 			int startIndex, int lenght) throws NetworkException, DeveloperConsoleException,
-			InvalidJSONResponseException, AuthenticationException, MultiAccountException {
+			AuthenticationException, MultiAccountException {
 
 		try {
 
@@ -198,7 +197,7 @@ public class DeveloperConsole {
 	}
 
 	public List<AppInfo> parseAppStatisticsResponse(String json, String accountName)
-			throws DeveloperConsoleException, InvalidJSONResponseException, AuthenticationException {
+			throws DeveloperConsoleException, AuthenticationException {
 
 		List<AppInfo> result = new ArrayList<AppInfo>();
 
@@ -211,7 +210,7 @@ public class DeveloperConsole {
 	}
 
 	public Map<String, Integer> parseFeedbackOverviewResponse(String json)
-			throws DeveloperConsoleException, InvalidJSONResponseException, AuthenticationException {
+			throws DeveloperConsoleException, AuthenticationException {
 
 		Map<String, Integer> result = new HashMap<String, Integer>();
 
@@ -223,7 +222,7 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	private long parseGetAssetForUserCount(String json) throws InvalidJSONResponseException,
+	private long parseGetAssetForUserCount(String json) throws DeveloperConsoleException,
 			AuthenticationException {
 
 		long result = 0;
@@ -236,33 +235,25 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	private void testIfJsonIsValid(String json) throws InvalidJSONResponseException,
+	private void testIfJsonIsValid(String json) throws DeveloperConsoleException,
 			AuthenticationException {
 		if (json == null || !json.startsWith("//OK")) {
 
 			if (json != null
 					&& (json.indexOf("NewServiceAccount") > -1 || json
 							.indexOf("WrongUserException") > -1)) {
-				throw new AuthenticationException();
+				throw new AuthenticationException("Authentication error. Console response: " + json);
 			}
 
-			throw new InvalidJSONResponseException("Invalid JSON response", json);
+			throw new DeveloperConsoleException("Invalid JSON response", postData, json);
 		}
 	}
 
 	public List<Comment> parseCommentsResponse(String json, String accountName)
 			throws DeveloperConsoleException, AuthenticationException {
+		testIfJsonIsValid(json);
 
 		List<Comment> result = new ArrayList<Comment>();
-
-		try {
-			testIfJsonIsValid(json);
-		} catch (InvalidJSONResponseException e) {
-			DeveloperConsoleException de = new DeveloperConsoleException(postData + "response::"
-					+ json, e);
-			throw de;
-		}
-
 		try {
 
 			GwtParser parser = new GwtParser(json);
