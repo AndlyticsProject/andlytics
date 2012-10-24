@@ -89,7 +89,7 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 			// Setup parameters etc..
 			// TODO do we need all these parameters/are they needed for all
 			// requests
-			httpclient = HttpClientFactory.createDevConsoleHttpClient(DeveloperConsoleV2.TIMEOUT);
+			httpclient = HttpClientFactory.createDevConsoleHttpClient(DevConsoleV2.TIMEOUT);
 
 			HttpContext httpContext = new BasicHttpContext();
 			RedirectHandler rd = httpclient.getRedirectHandler();

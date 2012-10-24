@@ -19,7 +19,7 @@ import com.github.andlyticsproject.AppStatsDiff;
 import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.console.DevConsoleException;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
-import com.github.andlyticsproject.console.v2.DeveloperConsoleV2;
+import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.model.AppInfo;
 
 public class SyncAdapterService extends Service {
@@ -88,9 +88,9 @@ public class SyncAdapterService extends Service {
 			// List<AppInfo> appDownloadInfos =
 			// console.getAppDownloadInfos(token, account.name);
 
-			DeveloperConsoleV2 console = DevConsoleRegistry.getInstance().get(account.name);
+			DevConsoleV2 console = DevConsoleRegistry.getInstance().get(account.name);
 			if (console == null) {
-				console = DeveloperConsoleV2.createForAccount(context, account.name);
+				console = DevConsoleV2.createForAccount(context, account.name);
 				DevConsoleRegistry.getInstance().put(account.name, console);
 			}
 

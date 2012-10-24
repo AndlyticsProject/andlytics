@@ -65,7 +65,7 @@ import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.Comment;
 
-public class DeveloperConsole {
+public class DevConsole {
 	// private static String LOG_TAG=DeveloperConsole.class.toString();
 	private static final String GWT_PERMUTATION = "6D75CBE66FE85272BB1AD2C64A98B720";
 
@@ -109,7 +109,7 @@ public class DeveloperConsole {
 	private String cookieAuthtoken;
 	private String postData;
 
-	public DeveloperConsole(Context context) {
+	public DevConsole(Context context) {
 		this.context = context;
 	}
 

@@ -11,9 +11,9 @@ import android.widget.ExpandableListView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.github.andlyticsproject.console.v1.DeveloperConsole;
+import com.github.andlyticsproject.console.v1.DevConsole;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
-import com.github.andlyticsproject.console.v2.DeveloperConsoleV2;
+import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
@@ -123,7 +123,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			comments = DeveloperConsole.expandReplies(db.getCommentsFromCache(packageName));
+			comments = DevConsole.expandReplies(db.getCommentsFromCache(packageName));
 			rebuildCommentGroups();
 
 			return null;
@@ -164,9 +164,9 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 			}
 
 			if (maxAvalibleComments != 0) {
-				DeveloperConsoleV2 console = DevConsoleRegistry.getInstance().get(accountName);
+				DevConsoleV2 console = DevConsoleRegistry.getInstance().get(accountName);
 				if (console == null) {
-					console = DeveloperConsoleV2.createForAccount(CommentsActivity.this,
+					console = DevConsoleV2.createForAccount(CommentsActivity.this,
 							accountName);
 					DevConsoleRegistry.getInstance().put(accountName, console);
 				}

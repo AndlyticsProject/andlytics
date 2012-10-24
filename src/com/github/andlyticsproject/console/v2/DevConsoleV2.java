@@ -38,12 +38,12 @@ import com.github.andlyticsproject.model.Comment;
  * This class fetches the data, which is then passed using {@link JsonParser}
  * 
  */
-public class DeveloperConsoleV2 {
+public class DevConsoleV2 {
 
 	// 30 seconds -- for both socket and connection
 	public static final int TIMEOUT = 30 * 1000;
 
-	private static final String TAG = DeveloperConsoleV2.class.getSimpleName();
+	private static final String TAG = DevConsoleV2.class.getSimpleName();
 
 	private static final boolean DEBUG = false;
 
@@ -85,7 +85,7 @@ public class DeveloperConsoleV2 {
 	private String accountName;
 
 	// TODO add factory method for token authenticator when available
-	public static DeveloperConsoleV2 createForAccount(Context ctx, String accountName) {
+	public static DevConsoleV2 createForAccount(Context ctx, String accountName) {
 		// this is pre-configured with needed headers and keeps track
 		// of cookies, etc.
 		DefaultHttpClient httpClient = HttpClientFactory.createDevConsoleHttpClient(TIMEOUT);
@@ -94,10 +94,10 @@ public class DeveloperConsoleV2 {
 		DevConsoleAuthenticator authenticator = new PasswordAuthenticator(accountName, password,
 				httpClient);
 
-		return new DeveloperConsoleV2(httpClient, authenticator);
+		return new DevConsoleV2(httpClient, authenticator);
 	}
 
-	private DeveloperConsoleV2(DefaultHttpClient httpClient, DevConsoleAuthenticator authenticator) {
+	private DevConsoleV2(DefaultHttpClient httpClient, DevConsoleAuthenticator authenticator) {
 		this.httpClient = httpClient;
 		this.authenticator = authenticator;
 		this.accountName = authenticator.getAccountName();

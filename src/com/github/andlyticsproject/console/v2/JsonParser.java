@@ -14,7 +14,7 @@ import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 
 /**
- * This class contains static methods used to parse JSON from {@link DeveloperConsoleV2}
+ * This class contains static methods used to parse JSON from {@link DevConsoleV2}
  * 
  * See {@link https://github.com/AndlyticsProject/andlytics/wiki/Developer-Console-v2} for some more documentation
  *
@@ -77,10 +77,10 @@ public class JsonParser {
 		int latestValue = latestData.getJSONArray(2).getInt(1);
 
 		switch (statsType) {
-			case DeveloperConsoleV2.STATS_TYPE_TOTAL_USER_INSTALLS:
+			case DevConsoleV2.STATS_TYPE_TOTAL_USER_INSTALLS:
 				stats.setTotalDownloads(latestValue);
 				break;
-			case DeveloperConsoleV2.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
+			case DevConsoleV2.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
 				// This is not used now that active installs are in the main request (parseAppInfos)
 				// Can be used if we get historical/dimensioned data
 				stats.setActiveInstalls(latestValue);

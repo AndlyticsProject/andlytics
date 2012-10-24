@@ -49,7 +49,7 @@ import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
-import com.github.andlyticsproject.console.v2.DeveloperConsoleV2;
+import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
@@ -395,9 +395,9 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 			List<AppInfo> appDownloadInfos = null;
 			try {
-				DeveloperConsoleV2 v2 = DevConsoleRegistry.getInstance().get(accountName);
+				DevConsoleV2 v2 = DevConsoleRegistry.getInstance().get(accountName);
 				if (v2 == null) {
-					v2 = DeveloperConsoleV2.createForAccount(Main.this, accountName);
+					v2 = DevConsoleV2.createForAccount(Main.this, accountName);
 					DevConsoleRegistry.getInstance().put(accountName, v2);
 				}
 
