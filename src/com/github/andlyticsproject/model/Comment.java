@@ -1,7 +1,9 @@
 
 package com.github.andlyticsproject.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Comment {
 	
@@ -107,6 +109,18 @@ public class Comment {
 	
 	public boolean isReply() {
 		return isReply;
+	}
+
+	public static List<Comment> expandReplies(List<Comment> result) {
+		List<Comment> withReplies = new ArrayList<Comment>();
+		for (Comment comment : result) {
+			withReplies.add(comment);
+			if (comment.getReply() != null) {
+				withReplies.add(comment.getReply());
+			}
+		}
+	
+		return withReplies;
 	}
 
 }

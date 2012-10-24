@@ -65,7 +65,7 @@ import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.Comment;
 
-public class DevConsole {
+public class DevConsoleV1 {
 	// private static String LOG_TAG=DeveloperConsole.class.toString();
 	private static final String GWT_PERMUTATION = "6D75CBE66FE85272BB1AD2C64A98B720";
 
@@ -109,7 +109,7 @@ public class DevConsole {
 	private String cookieAuthtoken;
 	private String postData;
 
-	public DevConsole(Context context) {
+	public DevConsoleV1(Context context) {
 		this.context = context;
 	}
 
@@ -173,26 +173,14 @@ public class DevConsole {
 			// Environment.getExternalStorageDirectory(),
 			// "comments.json").getAbsolutePath());
 
-			return expandReplies(parseCommentsResponse(json, accountName));
+			return Comment.expandReplies(parseCommentsResponse(json, accountName));
 
 		} catch (DevConsoleProtocolException e) {
 			developerConsoleAuthentication(authtoken, false);
 			String json = grapComments(packageName, startIndex, lenght);
 
-			return expandReplies(parseCommentsResponse(json, accountName));
+			return Comment.expandReplies(parseCommentsResponse(json, accountName));
 		}
-	}
-
-	public static List<Comment> expandReplies(List<Comment> result) {
-		List<Comment> withReplies = new ArrayList<Comment>();
-		for (Comment comment : result) {
-			withReplies.add(comment);
-			if (comment.getReply() != null) {
-				withReplies.add(comment.getReply());
-			}
-		}
-
-		return withReplies;
 	}
 
 	public List<AppInfo> parseAppStatisticsResponse(String json, String accountName)

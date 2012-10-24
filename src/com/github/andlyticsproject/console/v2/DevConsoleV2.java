@@ -15,6 +15,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.github.andlyticsproject.R;
+import com.github.andlyticsproject.console.DevConsole;
 import com.github.andlyticsproject.console.DevConsoleException;
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.console.NetworkException;
@@ -38,7 +39,7 @@ import com.github.andlyticsproject.model.Comment;
  * This class fetches the data, which is then passed using {@link JsonParser}
  * 
  */
-public class DevConsoleV2 {
+public class DevConsoleV2 implements DevConsole {
 
 	// 30 seconds -- for both socket and connection
 	public static final int TIMEOUT = 30 * 1000;

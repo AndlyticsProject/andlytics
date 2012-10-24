@@ -11,7 +11,6 @@ import android.widget.ExpandableListView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.github.andlyticsproject.console.v1.DevConsole;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.model.AppStats;
@@ -123,7 +122,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			comments = DevConsole.expandReplies(db.getCommentsFromCache(packageName));
+			comments = Comment.expandReplies(db.getCommentsFromCache(packageName));
 			rebuildCommentGroups();
 
 			return null;
