@@ -17,10 +17,7 @@ import android.util.Log;
 
 import com.github.andlyticsproject.AppStatsDiff;
 import com.github.andlyticsproject.ContentAdapter;
-import com.github.andlyticsproject.exception.AuthenticationException;
-import com.github.andlyticsproject.exception.DeveloperConsoleException;
-import com.github.andlyticsproject.exception.MultiAccountAcception;
-import com.github.andlyticsproject.exception.NetworkException;
+import com.github.andlyticsproject.exception.AndlyticsException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.v2.DeveloperConsoleV2;
@@ -73,59 +70,51 @@ public class SyncAdapterService extends Service {
 	private static void performSync(Context context, Account account, Bundle extras,
 			String authority, ContentProviderClient provider, SyncResult syncResult)
 			throws OperationCanceledException {
-//
-//		Bundle bundle = null;
-//		String token = null;
+		//
+		// Bundle bundle = null;
+		// String token = null;
 
 		try {
-//			bundle = AccountManager
-//					.get(context)
-//					.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, true, null,
-//							null).getResult();
-//			if (bundle != null && bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
-//				token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+			// bundle = AccountManager
+			// .get(context)
+			// .getAuthToken(account,
+			// Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, true, null,
+			// null).getResult();
+			// if (bundle != null &&
+			// bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
+			// token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
 
-				// DeveloperConsole console = new DeveloperConsole(context);
-				// List<AppInfo> appDownloadInfos =
-				// console.getAppDownloadInfos(token, account.name);
+			// DeveloperConsole console = new DeveloperConsole(context);
+			// List<AppInfo> appDownloadInfos =
+			// console.getAppDownloadInfos(token, account.name);
 
-				DeveloperConsoleV2 console = DevConsoleRegistry.getInstance().get(account.name);
-				if (console == null) {
-					console = DeveloperConsoleV2.createForAccount(context, account.name);
-					DevConsoleRegistry.getInstance().put(account.name, console);
-				}
+			DeveloperConsoleV2 console = DevConsoleRegistry.getInstance().get(account.name);
+			if (console == null) {
+				console = DeveloperConsoleV2.createForAccount(context, account.name);
+				DevConsoleRegistry.getInstance().put(account.name, console);
+			}
 
-				List<AppInfo> appDownloadInfos = console.getAppInfo();
+			List<AppInfo> appDownloadInfos = console.getAppInfo();
 
-				Log.d(TAG, "andlytics from sync adapter, size: " + appDownloadInfos.size());
+			Log.d(TAG, "andlytics from sync adapter, size: " + appDownloadInfos.size());
 
-				List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
+			List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
 
-				db = new ContentAdapter(context);
-				for (AppInfo appDownloadInfo : appDownloadInfos) {
-					// update in database
-					diffs.add(db.insertOrUpdateStats(appDownloadInfo));
-				}
-				Log.d(TAG, "sucessfully synced andlytics");
+			db = new ContentAdapter(context);
+			for (AppInfo appDownloadInfo : appDownloadInfos) {
+				// update in database
+				diffs.add(db.insertOrUpdateStats(appDownloadInfo));
+			}
+			Log.d(TAG, "sucessfully synced andlytics");
 
-				// check for notifications
-				NotificationHandler.handleNotificaions(context, diffs, account.name);
+			// check for notifications
+			NotificationHandler.handleNotificaions(context, diffs, account.name);
 
-//			} else {
-//				Log.e(TAG, "error during sync auth, no token found");
-//			}
-//		} catch (AuthenticatorException e) {
-//			Log.e(TAG, "error during sync auth", e);
-//		} catch (IOException e) {
-//			Log.e(TAG, "error during sync auth", e);
-		} catch (NetworkException e) {
-			Log.e(TAG, "error during sync auth", e);
-		} catch (DeveloperConsoleException e) {
-			Log.e(TAG, "error during sync auth", e);
-		} catch (AuthenticationException e) {
-			Log.e(TAG, "error during sync auth", e);
-		} catch (MultiAccountAcception e) {
-			Log.e(TAG, "error during sync auth", e);
+			// } else {
+			// Log.e(TAG, "error during sync auth, no token found");
+			// }
+		} catch (AndlyticsException e) {
+			Log.e(TAG, "error during sync", e);
 		}
 
 	}

@@ -12,7 +12,6 @@ import java.util.StringTokenizer;
 import android.util.SparseArray;
 
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
-import com.github.andlyticsproject.exception.NegativeIndexValueExecption;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;

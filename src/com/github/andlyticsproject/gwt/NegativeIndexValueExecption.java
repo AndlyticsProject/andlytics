@@ -1,5 +1,5 @@
 
-package com.github.andlyticsproject.exception;
+package com.github.andlyticsproject.gwt;
 
 public class NegativeIndexValueExecption extends Exception {
 

@@ -58,21 +58,18 @@ import android.util.Log;
 
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
-import com.github.andlyticsproject.exception.InvalidJSONResponseException;
-import com.github.andlyticsproject.exception.MultiAccountAcception;
+import com.github.andlyticsproject.exception.MultiAccountException;
 import com.github.andlyticsproject.exception.NetworkException;
-import com.github.andlyticsproject.exception.NoCookieSetException;
-import com.github.andlyticsproject.exception.SignupException;
 import com.github.andlyticsproject.gwt.Base64Utils;
 import com.github.andlyticsproject.gwt.GwtParser;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.Comment;
 
 public class DeveloperConsole {
-	//  private static String LOG_TAG=DeveloperConsole.class.toString(); 
+	// private static String LOG_TAG=DeveloperConsole.class.toString();
 	private static final String GWT_PERMUTATION = "6D75CBE66FE85272BB1AD2C64A98B720";
 
-	//"com.github.andlyticsproject", but it seems "Andlytics"
+	// "com.github.andlyticsproject", but it seems "Andlytics"
 	private static final String PARAM_APPNAME = "<<appname>>";
 	private static final String PARAM_XSRFTOKEN = "<<xsrftoken>>";
 	private static final String PARAM_PACKAGELIST = "<<packagelist>>";
@@ -103,7 +100,8 @@ public class DeveloperConsole {
 			+ "|java.util.ArrayList/4159755760|1|2|3|4|5|6|7|7|8|8|9|9|9|7|10|"
 			+ PARAM_STARTINDEX + "|" + PARAM_LENGTH + "|11|0|11|0|11|0|0|";
 	private static final String GET_FEEDBACK_OVERVIEW = "7|0|6|https://play.google.com/apps/publish/gwt/|8A88A8C8E8E60107C7E013322C6CE8F2|com.google.wireless.android.vending.developer.shared.FeedbackService|getOverviewsForPackages|com.google.protos.userfeedback.gwt.AndroidFrontend$AndroidPackageListRequest$Json/4146859527|[,[<<packagelist>>] ] |1|2|3|4|1|5|5|6|";
-	//private static final String GET_FEEDBACK_REQUEST = "7|0|6|https://play.google.com/apps/publish/gwt/|8A88A8C8E8E60107C7E013322C6CE8F2|com.google.wireless.android.vending.developer.shared.FeedbackService|getDetailForPackage|com.google.protos.userfeedback.gwt.AndroidFrontend$AndroidPackageRequest$Json/2133352596|[,<<appname>>] |1|2|3|4|1|5|5|6|";
+	// private static final String GET_FEEDBACK_REQUEST =
+	// "7|0|6|https://play.google.com/apps/publish/gwt/|8A88A8C8E8E60107C7E013322C6CE8F2|com.google.wireless.android.vending.developer.shared.FeedbackService|getDetailForPackage|com.google.protos.userfeedback.gwt.AndroidFrontend$AndroidPackageRequest$Json/2133352596|[,<<appname>>] |1|2|3|4|1|5|5|6|";
 
 	private String cookie;
 	private String devacc;
@@ -116,16 +114,15 @@ public class DeveloperConsole {
 	}
 
 	public List<AppInfo> getAppDownloadInfos(String authtoken, String accountName)
-			throws NetworkException, InvalidJSONResponseException, DeveloperConsoleException,
-			SignupException, AuthenticationException, NoCookieSetException, MultiAccountAcception {
+			throws NetworkException, DeveloperConsoleException, AuthenticationException,
+			MultiAccountException {
 
 		return getFullAssetListRequest(accountName, authtoken, false);
 	}
 
 	private List<AppInfo> getFullAssetListRequest(String accountName, String authtoken,
 			boolean reuseAuthentication) throws NetworkException, DeveloperConsoleException,
-			InvalidJSONResponseException, SignupException, AuthenticationException,
-			NoCookieSetException, MultiAccountAcception {
+			AuthenticationException, MultiAccountException {
 
 		developerConsoleAuthentication(authtoken, reuseAuthentication);
 
@@ -148,35 +145,33 @@ public class DeveloperConsole {
 
 		// get feedback
 		/*
-		if(packageNames.size() > 0) {
-		    String feedbackJson = grapFeedbackOverview(packageNames);
-
-		    Map<String, Integer> errorMap = parseFeedbackOverviewResponse(feedbackJson);
-
-		    for (AppInfo appInfo: result) {
-
-		        Integer errors = errorMap.get(appInfo.getPackageName());
-		        if(errors != null) {
-		            appInfo.setNumberOfErrors(errors);
-		        }
-		}
-		}*/
+		 * if(packageNames.size() > 0) { String feedbackJson =
+		 * grapFeedbackOverview(packageNames);
+		 * 
+		 * Map<String, Integer> errorMap =
+		 * parseFeedbackOverviewResponse(feedbackJson);
+		 * 
+		 * for (AppInfo appInfo: result) {
+		 * 
+		 * Integer errors = errorMap.get(appInfo.getPackageName()); if(errors !=
+		 * null) { appInfo.setNumberOfErrors(errors); } } }
+		 */
 
 		return result;
 	}
 
 	public List<Comment> getAppComments(String authtoken, String accountName, String packageName,
 			int startIndex, int lenght) throws NetworkException, DeveloperConsoleException,
-			InvalidJSONResponseException, SignupException, AuthenticationException,
-			NoCookieSetException, MultiAccountAcception {
+			AuthenticationException, MultiAccountException {
 
 		try {
 
 			developerConsoleAuthentication(authtoken, true);
 			String json = grapComments(packageName, startIndex, lenght);
 			// for testing
-			//			String json = Utils.readFileAsString(new File(
-			//					Environment.getExternalStorageDirectory(), "comments.json").getAbsolutePath());
+			// String json = Utils.readFileAsString(new File(
+			// Environment.getExternalStorageDirectory(),
+			// "comments.json").getAbsolutePath());
 
 			return expandReplies(parseCommentsResponse(json, accountName));
 
@@ -202,7 +197,7 @@ public class DeveloperConsole {
 	}
 
 	public List<AppInfo> parseAppStatisticsResponse(String json, String accountName)
-			throws DeveloperConsoleException, InvalidJSONResponseException, AuthenticationException {
+			throws DeveloperConsoleException, AuthenticationException {
 
 		List<AppInfo> result = new ArrayList<AppInfo>();
 
@@ -215,7 +210,7 @@ public class DeveloperConsole {
 	}
 
 	public Map<String, Integer> parseFeedbackOverviewResponse(String json)
-			throws DeveloperConsoleException, InvalidJSONResponseException, AuthenticationException {
+			throws DeveloperConsoleException, AuthenticationException {
 
 		Map<String, Integer> result = new HashMap<String, Integer>();
 
@@ -227,7 +222,7 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	private long parseGetAssetForUserCount(String json) throws InvalidJSONResponseException,
+	private long parseGetAssetForUserCount(String json) throws DeveloperConsoleException,
 			AuthenticationException {
 
 		long result = 0;
@@ -240,33 +235,25 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	private void testIfJsonIsValid(String json) throws InvalidJSONResponseException,
+	private void testIfJsonIsValid(String json) throws DeveloperConsoleException,
 			AuthenticationException {
 		if (json == null || !json.startsWith("//OK")) {
 
 			if (json != null
 					&& (json.indexOf("NewServiceAccount") > -1 || json
 							.indexOf("WrongUserException") > -1)) {
-				throw new AuthenticationException();
+				throw new AuthenticationException("Authentication error. Console response: " + json);
 			}
 
-			throw new InvalidJSONResponseException("Invalid JSON response", json);
+			throw new DeveloperConsoleException("Invalid JSON response", postData, json);
 		}
 	}
 
 	public List<Comment> parseCommentsResponse(String json, String accountName)
 			throws DeveloperConsoleException, AuthenticationException {
+		testIfJsonIsValid(json);
 
 		List<Comment> result = new ArrayList<Comment>();
-
-		try {
-			testIfJsonIsValid(json);
-		} catch (InvalidJSONResponseException e) {
-			DeveloperConsoleException de = new DeveloperConsoleException(postData + "response::"
-					+ json, e);
-			throw de;
-		}
-
 		try {
 
 			GwtParser parser = new GwtParser(json);
@@ -301,7 +288,7 @@ public class DeveloperConsole {
 			developerPostData = GET_FULL_ASSET_INFO_FOR_USER_REQUEST;
 		}
 
-		//    String lengthString = Base64Utils.toBase64(lenght);
+		// String lengthString = Base64Utils.toBase64(lenght);
 		String lengthString = "" + lenght;
 		String xsrfToken = ((AndlyticsApp) context.getApplicationContext()).getXsrfToken();
 
@@ -352,7 +339,8 @@ public class DeveloperConsole {
 
 		String result = null;
 
-		//    String developerPostData = Preferences.getGetAssetIndexForUser(context);
+		// String developerPostData =
+		// Preferences.getGetAssetIndexForUser(context);
 		String developerPostData = null;
 
 		if (postData == null) {
@@ -506,13 +494,13 @@ public class DeveloperConsole {
 	}
 
 	protected void developerConsoleAuthentication(String authtoken, boolean reuseAuthentication)
-			throws NetworkException, SignupException, AuthenticationException,
-			NoCookieSetException, MultiAccountAcception {
+			throws NetworkException, AuthenticationException, MultiAccountException {
 		// login to Android Market
 		// this results in a 302
 		// and is necessary for a cookie to be set
 
-		// authtoken = "DQAAAMsAAAA6XRgg47KgvSY9AaQ32d9hOAglYRoW9oJmwd4HxZvMicVeWFciKp5MgyXVDMCxd-xSfgmEeUl-9YFGuVsbAGJI5t09gBioQBb758jCxJbHmzd8utW7tQcK1VtVS4zkRDF_eUzN7KgyDU7AYt8wDsg9Gm8YYAB7vkhIlCGTWNCcvgYnewszM2giu-mOlcaKKjgUW5yiQj3xdZo77CTaZkj5LNeVaCSYF2s_QRKqNkIgXp2jFPQtzFHaGZ76QG4SNq6vKVaD61LF2lswgnPEnSNS";
+		// authtoken =
+		// "DQAAAMsAAAA6XRgg47KgvSY9AaQ32d9hOAglYRoW9oJmwd4HxZvMicVeWFciKp5MgyXVDMCxd-xSfgmEeUl-9YFGuVsbAGJI5t09gBioQBb758jCxJbHmzd8utW7tQcK1VtVS4zkRDF_eUzN7KgyDU7AYt8wDsg9Gm8YYAB7vkhIlCGTWNCcvgYnewszM2giu-mOlcaKKjgUW5yiQj3xdZo77CTaZkj5LNeVaCSYF2s_QRKqNkIgXp2jFPQtzFHaGZ76QG4SNq6vKVaD61LF2lswgnPEnSNS";
 
 		this.cookieAuthtoken = authtoken;
 
@@ -529,10 +517,11 @@ public class DeveloperConsole {
 
 				String cookie1 = null;
 
-				//https://play.google.com/apps/publish?auth=DQAAAIMAAAAryYwfh6oNf-o3F25Jkd1vMfCOgGIus7u_iNmvYefviT_yfzgVgLDAORWewa0KDN_BMvLoerHQz0gqn5m3_DBRkm0-H0fcyDGCVs8gYZJ-uDpRqTtUyHUtiMnS8FILxii8PHTArr21FY5pcmEDXFMlG0XVtN_nwzRWZUwEdQ2ffHJMN-rG-HdXEV-dI4FrBW8
+				// https://play.google.com/apps/publish?auth=DQAAAIMAAAAryYwfh6oNf-o3F25Jkd1vMfCOgGIus7u_iNmvYefviT_yfzgVgLDAORWewa0KDN_BMvLoerHQz0gqn5m3_DBRkm0-H0fcyDGCVs8gYZJ-uDpRqTtUyHUtiMnS8FILxii8PHTArr21FY5pcmEDXFMlG0XVtN_nwzRWZUwEdQ2ffHJMN-rG-HdXEV-dI4FrBW8
 
 				HttpGet httpget = new HttpGet(URL_DEVELOPER_CONSOLE + "?auth=" + authtoken);
-				//httpget.setHeader("Authorization", "GoogleLogin auth=" + auth);
+				// httpget.setHeader("Authorization", "GoogleLogin auth=" +
+				// auth);
 				HttpParams params = new BasicHttpParams();
 				HttpClientParams.setRedirecting(params, true);
 				HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
@@ -564,7 +553,8 @@ public class DeveloperConsole {
 					String xsrfToken = new JSONObject(m1.group(1)).getString("gwtRpcXsrfToken");
 					((AndlyticsApp) this.context.getApplicationContext()).setXsrfToken(xsrfToken);
 				}
-				//TODO this is /apps/publish authorization's header payload (multi-acc)
+				// TODO this is /apps/publish authorization's header payload
+				// (multi-acc)
 
 				final int statusCode = httpResponse.getStatusLine().getStatusCode();
 				if (statusCode != HttpStatus.SC_OK) {
@@ -572,7 +562,7 @@ public class DeveloperConsole {
 							+ httpResponse.getStatusLine().getReasonPhrase() + ')');
 				}
 
-				boolean asp = false; //TODO get hasher here?
+				boolean asp = false; // TODO get hasher here?
 
 				Object obj = context.getAttribute("http.protocol.redirect-locations");
 				if (obj != null) {
@@ -613,7 +603,7 @@ public class DeveloperConsole {
 				}
 
 				if (devacc == null && asp) {
-					throw new MultiAccountAcception();
+					throw new MultiAccountException();
 				}
 
 				if (devacc == null) {

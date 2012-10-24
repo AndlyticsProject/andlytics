@@ -46,7 +46,7 @@ import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.exception.AuthenticationException;
-import com.github.andlyticsproject.exception.InvalidJSONResponseException;
+import com.github.andlyticsproject.exception.DeveloperConsoleException;
 import com.github.andlyticsproject.exception.NetworkException;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.model.Admob;
@@ -491,7 +491,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 			if (e != null) {
 
-				if ((e instanceof InvalidJSONResponseException || e instanceof AuthenticationException)
+				if ((e instanceof DeveloperConsoleException || e instanceof AuthenticationException)
 						&& !isAuthenticationRetry) {
 					Log.w("Andlytics", "authentication faild, retry with new token");
 					isAuthenticationRetry = true;
