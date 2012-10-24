@@ -35,8 +35,6 @@ import com.github.andlyticsproject.exception.DeveloperConsoleException;
 import com.github.andlyticsproject.exception.InvalidJSONResponseException;
 import com.github.andlyticsproject.exception.MultiAccountAcception;
 import com.github.andlyticsproject.exception.NetworkException;
-import com.github.andlyticsproject.exception.NoCookieSetException;
-import com.github.andlyticsproject.exception.SignupException;
 
 public class BaseActivity extends SherlockActivity {
 
@@ -102,12 +100,7 @@ public class BaseActivity extends SherlockActivity {
 		if (e instanceof NetworkException) {
 			Toast.makeText(BaseActivity.this, getString(R.string.network_error), Toast.LENGTH_LONG)
 					.show();
-		} else if (e instanceof SignupException) {
-			Toast.makeText(BaseActivity.this,
-					getString(R.string.signup_error, accountName, e.getMessage()),
-					Toast.LENGTH_LONG).show();
-		} else if (e instanceof AuthenticationException || e instanceof NoCookieSetException) {
-
+		} else if (e instanceof AuthenticationException) {
 			Toast.makeText(BaseActivity.this, getString(R.string.auth_error, accountName),
 					Toast.LENGTH_LONG).show();
 
@@ -149,6 +142,7 @@ public class BaseActivity extends SherlockActivity {
 		} else if (e instanceof MultiAccountAcception) {
 			showAspErrorDialog(e);
 		}
+
 	}
 
 	private void showNewVersionDialog(Exception e) {
