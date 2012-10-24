@@ -33,7 +33,7 @@ import com.github.andlyticsproject.dialog.CrashDialog.CrashDialogBuilder;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
 import com.github.andlyticsproject.exception.InvalidJSONResponseException;
-import com.github.andlyticsproject.exception.MultiAccountAcception;
+import com.github.andlyticsproject.exception.MultiAccountException;
 import com.github.andlyticsproject.exception.NetworkException;
 
 public class BaseActivity extends SherlockActivity {
@@ -139,7 +139,7 @@ public class BaseActivity extends SherlockActivity {
 			} else {
 				showGoogleErrorDialog(e);
 			}
-		} else if (e instanceof MultiAccountAcception) {
+		} else if (e instanceof MultiAccountException) {
 			showAspErrorDialog(e);
 		}
 

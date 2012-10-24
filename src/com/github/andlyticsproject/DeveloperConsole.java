@@ -59,7 +59,7 @@ import android.util.Log;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
 import com.github.andlyticsproject.exception.InvalidJSONResponseException;
-import com.github.andlyticsproject.exception.MultiAccountAcception;
+import com.github.andlyticsproject.exception.MultiAccountException;
 import com.github.andlyticsproject.exception.NetworkException;
 import com.github.andlyticsproject.gwt.Base64Utils;
 import com.github.andlyticsproject.gwt.GwtParser;
@@ -116,14 +116,14 @@ public class DeveloperConsole {
 
 	public List<AppInfo> getAppDownloadInfos(String authtoken, String accountName)
 			throws NetworkException, InvalidJSONResponseException, DeveloperConsoleException,
-			AuthenticationException, MultiAccountAcception {
+			AuthenticationException, MultiAccountException {
 
 		return getFullAssetListRequest(accountName, authtoken, false);
 	}
 
 	private List<AppInfo> getFullAssetListRequest(String accountName, String authtoken,
 			boolean reuseAuthentication) throws NetworkException, DeveloperConsoleException,
-			InvalidJSONResponseException, AuthenticationException, MultiAccountAcception {
+			InvalidJSONResponseException, AuthenticationException, MultiAccountException {
 
 		developerConsoleAuthentication(authtoken, reuseAuthentication);
 
@@ -163,7 +163,7 @@ public class DeveloperConsole {
 
 	public List<Comment> getAppComments(String authtoken, String accountName, String packageName,
 			int startIndex, int lenght) throws NetworkException, DeveloperConsoleException,
-			InvalidJSONResponseException, AuthenticationException, MultiAccountAcception {
+			InvalidJSONResponseException, AuthenticationException, MultiAccountException {
 
 		try {
 
@@ -503,7 +503,7 @@ public class DeveloperConsole {
 	}
 
 	protected void developerConsoleAuthentication(String authtoken, boolean reuseAuthentication)
-			throws NetworkException, AuthenticationException, MultiAccountAcception {
+			throws NetworkException, AuthenticationException, MultiAccountException {
 		// login to Android Market
 		// this results in a 302
 		// and is necessary for a cookie to be set
@@ -612,7 +612,7 @@ public class DeveloperConsole {
 				}
 
 				if (devacc == null && asp) {
-					throw new MultiAccountAcception();
+					throw new MultiAccountException();
 				}
 
 				if (devacc == null) {

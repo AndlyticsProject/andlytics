@@ -19,7 +19,7 @@ import com.github.andlyticsproject.AppStatsDiff;
 import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
-import com.github.andlyticsproject.exception.MultiAccountAcception;
+import com.github.andlyticsproject.exception.MultiAccountException;
 import com.github.andlyticsproject.exception.NetworkException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.v2.DevConsoleRegistry;
@@ -124,7 +124,7 @@ public class SyncAdapterService extends Service {
 			Log.e(TAG, "error during sync auth", e);
 		} catch (AuthenticationException e) {
 			Log.e(TAG, "error during sync auth", e);
-		} catch (MultiAccountAcception e) {
+		} catch (MultiAccountException e) {
 			Log.e(TAG, "error during sync auth", e);
 		}
 

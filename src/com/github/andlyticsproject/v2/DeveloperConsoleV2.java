@@ -18,7 +18,7 @@ import android.util.Log;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.exception.AuthenticationException;
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
-import com.github.andlyticsproject.exception.MultiAccountAcception;
+import com.github.andlyticsproject.exception.MultiAccountException;
 import com.github.andlyticsproject.exception.NetworkException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
@@ -118,11 +118,11 @@ public class DeveloperConsoleV2 {
 	 * @return
 	 * @throws DeveloperConsoleException
 	 * @throws AuthenticationException
-	 * @throws MultiAccountAcception
+	 * @throws MultiAccountException
 	 * @throws NetworkException
 	 */
 	public synchronized List<AppInfo> getAppInfo() throws DeveloperConsoleException,
-			AuthenticationException, MultiAccountAcception, NetworkException {
+			AuthenticationException, MultiAccountException, NetworkException {
 
 		authenticate(false);
 		// Fetch a list of available apps
@@ -150,12 +150,12 @@ public class DeveloperConsoleV2 {
 	 * @param count
 	 * @return
 	 * @throws NetworkException
-	 * @throws MultiAccountAcception
+	 * @throws MultiAccountException
 	 * @throws AuthenticationException
 	 * @throws DeveloperConsoleException
 	 */
 	public synchronized List<Comment> getComments(String packageName, int startIndex, int count)
-			throws AuthenticationException, MultiAccountAcception, NetworkException,
+			throws AuthenticationException, MultiAccountException, NetworkException,
 			DeveloperConsoleException {
 
 		try {
@@ -313,12 +313,12 @@ public class DeveloperConsoleV2 {
 	 * 
 	 * @param reuseAuthentication
 	 * @throws AuthenticationException
-	 * @throws MultiAccountAcception
+	 * @throws MultiAccountException
 	 * @throws NetworkException
 	 */
 	// TODO revise exceptions
 	private void authenticate(boolean reuseAuthentication) throws AuthenticationException,
-			MultiAccountAcception, NetworkException {
+			MultiAccountException, NetworkException {
 		if (!reuseAuthentication) {
 			authInfo = null;
 		}
