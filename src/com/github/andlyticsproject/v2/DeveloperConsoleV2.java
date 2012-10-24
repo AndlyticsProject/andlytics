@@ -1,7 +1,6 @@
 package com.github.andlyticsproject.v2;
 
 import java.io.IOException;
-import java.net.ProtocolException;
 import java.util.List;
 
 import org.apache.http.client.CookieStore;
@@ -16,9 +15,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.github.andlyticsproject.R;
-import com.github.andlyticsproject.exception.AuthenticationException;
+import com.github.andlyticsproject.exception.AndlyticsException;
 import com.github.andlyticsproject.exception.DeveloperConsoleException;
-import com.github.andlyticsproject.exception.MultiAccountException;
 import com.github.andlyticsproject.exception.NetworkException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
@@ -107,22 +105,18 @@ public class DeveloperConsoleV2 {
 
 	// TODO Decide on which exceptions should actually be thrown and by which
 	// methods, and what data we should include in them
-	// => JSONException is too low level for this, wrap with
-	// DeveloperConsoleException
-	// or RE
+	// => for now just specifying the super class, AndlyticsException
+	// All pretty much fatal, so consider making them REs and let the
+	// outermost client (UI, etc.) handle
 
 	/**
 	 * Gets a list of available apps for the given account
 	 * 
 	 * @param accountName
 	 * @return
-	 * @throws DeveloperConsoleException
-	 * @throws AuthenticationException
-	 * @throws MultiAccountException
-	 * @throws NetworkException
+	 * @throws AndlyticsException
 	 */
-	public synchronized List<AppInfo> getAppInfo() throws DeveloperConsoleException,
-			AuthenticationException, MultiAccountException, NetworkException {
+	public synchronized List<AppInfo> getAppInfo() throws AndlyticsException {
 
 		authenticate(false);
 		// Fetch a list of available apps
@@ -149,21 +143,17 @@ public class DeveloperConsoleV2 {
 	 * @param startIndex
 	 * @param count
 	 * @return
-	 * @throws NetworkException
-	 * @throws MultiAccountException
-	 * @throws AuthenticationException
-	 * @throws DeveloperConsoleException
+	 * @throws AndlyticsException
 	 */
 	public synchronized List<Comment> getComments(String packageName, int startIndex, int count)
-			throws AuthenticationException, MultiAccountException, NetworkException,
-			DeveloperConsoleException {
-
+			throws AndlyticsException {
 		try {
 			// First try using existing cookies and tokens
 			authenticate(true);
 			return fetchComments(packageName, startIndex, count);
 		} catch (DeveloperConsoleException ex) {
-			// TODO What to catch here, can we specifically detect an auth problem when doing a POST?
+			// TODO What to catch here, can we specifically detect an auth
+			// problem when doing a POST?
 			authenticate(false);
 			return fetchComments(packageName, startIndex, count);
 		}
@@ -174,10 +164,9 @@ public class DeveloperConsoleV2 {
 	 * 
 	 * @param accountName
 	 * @return
-	 * @throws DeveloperConsoleException
-	 * @throws NetworkException
+	 * @throws AndlyticsException
 	 */
-	private List<AppInfo> fetchAppInfos() throws DeveloperConsoleException, NetworkException {
+	private List<AppInfo> fetchAppInfos() throws AndlyticsException {
 
 		// Setup the request
 		// TODO Check the remaining possible parameters to see if they are
@@ -207,12 +196,10 @@ public class DeveloperConsoleV2 {
 	 * @param packageName
 	 * @param stats
 	 * @param statsType
-	 * @throws DeveloperConsoleException
-	 * @throws NetworkException
+	 * @throws AndlyticsException
 	 */
 	private void fetchStatistics(String packageName, AppStats stats, int statsType)
-			throws DeveloperConsoleException, NetworkException {
-
+			throws AndlyticsException {
 		// Setup the request
 		// Don't care about the breakdown at the moment:
 		// STATS_BY_ANDROID_VERSION
@@ -239,12 +226,9 @@ public class DeveloperConsoleV2 {
 	 *            The app to fetch ratings for
 	 * @param stats
 	 *            The AppStats object to add them to
-	 * @throws DeveloperConsoleException
-	 * @throws NetworkException
+	 * @throws AndlyticsException
 	 */
-	private void fetchRatings(String packageName, AppStats stats) throws DeveloperConsoleException,
-			NetworkException {
-
+	private void fetchRatings(String packageName, AppStats stats) throws AndlyticsException {
 		// Setup the request
 		String postData = String.format(PAYLOAD_RATINGS, packageName, authInfo.getXsrfToken());
 
@@ -265,14 +249,12 @@ public class DeveloperConsoleV2 {
 	 * 
 	 * @param packageName
 	 * @return
-	 * @throws DeveloperConsoleException
-	 * @throws NetworkException
+	 * @throws AndlyticsException
 	 */
-	private int fetchCommentsCount(String packageName) throws DeveloperConsoleException,
-			NetworkException {
-
+	private int fetchCommentsCount(String packageName) throws AndlyticsException {
 		// Setup the request
-		// TODO Asking for a small number of comments does not give us the number of comments
+		// TODO Asking for a small number of comments does not give us the
+		// number of comments
 		// Need to think of something else.
 		String postData = String.format(PAYLOAD_COMMENTS, packageName, 0, 1,
 				authInfo.getXsrfToken());
@@ -290,7 +272,7 @@ public class DeveloperConsoleV2 {
 	}
 
 	private List<Comment> fetchComments(String packageName, int startIndex, int count)
-			throws DeveloperConsoleException, NetworkException {
+			throws AndlyticsException {
 
 		// Setup the request
 		String postData = String.format(PAYLOAD_COMMENTS, packageName, startIndex, count,
@@ -312,13 +294,10 @@ public class DeveloperConsoleV2 {
 	 * Logs into the Android Developer Console
 	 * 
 	 * @param reuseAuthentication
-	 * @throws AuthenticationException
-	 * @throws MultiAccountException
-	 * @throws NetworkException
+	 * @throws AndlyticsException
 	 */
 	// TODO revise exceptions
-	private void authenticate(boolean reuseAuthentication) throws AuthenticationException,
-			MultiAccountException, NetworkException {
+	private void authenticate(boolean reuseAuthentication) throws AndlyticsException {
 		if (!reuseAuthentication) {
 			authInfo = null;
 		}
