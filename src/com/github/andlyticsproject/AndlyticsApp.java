@@ -11,8 +11,6 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.util.Log;
 
-import com.github.andlyticsproject.console.v2.AuthInfo;
-
 @ReportsCrashes(formKey = "dHBKcnZqTHMyMHlfLTB0RjhMejZfbkE6MQ", sharedPreferencesMode = Context.MODE_PRIVATE, sharedPreferencesName = Preferences.PREF, mode = ReportingInteractionMode.TOAST)
 public class AndlyticsApp extends Application {
 
@@ -22,8 +20,6 @@ public class AndlyticsApp extends Application {
 	private String authToken;
 
 	private String xsrfToken;
-
-	private AuthInfo authInfo;
 
 	private ContentAdapter db;
 
@@ -114,14 +110,6 @@ public class AndlyticsApp extends Application {
 
 	public String getFeedbackMessage() {
 		return feedbackMessage;
-	}
-
-	public AuthInfo getAuthInfo() {
-		return authInfo;
-	}
-
-	public void setAuthInfo(AuthInfo authInfo) {
-		this.authInfo = authInfo;
 	}
 
 }

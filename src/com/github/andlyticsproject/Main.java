@@ -204,53 +204,52 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent i = null;
 		switch (item.getItemId()) {
-			case R.id.itemMainmenuRefresh:
-				authenticateAccountFromPreferences(false, Main.this);
-				break;
-			case R.id.itemMainmenuImport:
-				File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
-				if (!fileToImport.exists()) {
-					Toast.makeText(
-							this,
-							getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
-							Toast.LENGTH_LONG).show();
-					return true;
-				}
+		case R.id.itemMainmenuRefresh:
+			authenticateAccountFromPreferences(false, Main.this);
+			break;
+		case R.id.itemMainmenuImport:
+			File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
+			if (!fileToImport.exists()) {
+				Toast.makeText(this,
+						getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
+						Toast.LENGTH_LONG).show();
+				return true;
+			}
 
-				Intent importIntent = new Intent(this, ImportActivity.class);
-				importIntent.setAction(Intent.ACTION_VIEW);
-				importIntent.setData(Uri.fromFile(fileToImport));
-				startActivity(importIntent);
-				break;
-			case R.id.itemMainmenuExport:
-				Intent exportIntent = new Intent(this, ExportActivity.class);
-				exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
-				startActivity(exportIntent);
-				break;
-			case R.id.itemMainmenuFeedback:
-				startActivity(new Intent(Intent.ACTION_VIEW,
-						Uri.parse(getString(R.string.github_issues_url))));
-				break;
-			case R.id.itemMainmenuPreferences:
-				i = new Intent(this, PreferenceActivity.class);
-				i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
-				startActivity(i);
-				break;
-			case R.id.itemMainmenuStatsMode:
-				if (currentStatsMode.equals(StatsMode.PERCENT)) {
-					currentStatsMode = StatsMode.DAY_CHANGES;
-				} else {
-					currentStatsMode = StatsMode.PERCENT;
-				}
-				updateStatsMode();
-				break;
-			case R.id.itemMainmenuAccounts:
-				i = new Intent(this, LoginActivity.class);
-				i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
-				startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
-				break;
-			default:
-				return false;
+			Intent importIntent = new Intent(this, ImportActivity.class);
+			importIntent.setAction(Intent.ACTION_VIEW);
+			importIntent.setData(Uri.fromFile(fileToImport));
+			startActivity(importIntent);
+			break;
+		case R.id.itemMainmenuExport:
+			Intent exportIntent = new Intent(this, ExportActivity.class);
+			exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
+			startActivity(exportIntent);
+			break;
+		case R.id.itemMainmenuFeedback:
+			startActivity(new Intent(Intent.ACTION_VIEW,
+					Uri.parse(getString(R.string.github_issues_url))));
+			break;
+		case R.id.itemMainmenuPreferences:
+			i = new Intent(this, PreferenceActivity.class);
+			i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+			startActivity(i);
+			break;
+		case R.id.itemMainmenuStatsMode:
+			if (currentStatsMode.equals(StatsMode.PERCENT)) {
+				currentStatsMode = StatsMode.DAY_CHANGES;
+			} else {
+				currentStatsMode = StatsMode.PERCENT;
+			}
+			updateStatsMode();
+			break;
+		case R.id.itemMainmenuAccounts:
+			i = new Intent(this, LoginActivity.class);
+			i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
+			startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
+			break;
+		default:
+			return false;
 		}
 		return true;
 	}
@@ -273,6 +272,14 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				// start the app
 				Preferences.removeAccountName(this);
 				finish();
+			}
+		} else if (requestCode == REQUEST_AUTHENTICATE) {
+			if (resultCode == RESULT_OK) {
+				// user entered credentials, etc, try to get data again
+				Utils.execute(new LoadRemoteEntries());
+			} else if (resultCode == RESULT_CANCELED) {
+				Toast.makeText(this, getString(R.string.auth_error, accountName), Toast.LENGTH_LONG)
+						.show();
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
@@ -403,21 +410,16 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			try {
 				DevConsoleV2 v2 = DevConsoleRegistry.getInstance().get(accountName);
 				if (v2 == null) {
-					// this is pre-configured with needed headers and keeps track
+					// this is pre-configured with needed headers and keeps
+					// track
 					// of cookies, etc.
 					DefaultHttpClient httpClient = HttpClientFactory
 							.createDevConsoleHttpClient(DevConsoleV2.TIMEOUT);
-					v2 = DevConsoleV2.createForAccount(Main.this, accountName, httpClient);
+					v2 = DevConsoleV2.createForAccount(accountName, httpClient);
 					DevConsoleRegistry.getInstance().put(accountName, v2);
 				}
 
-				try {
-					appDownloadInfos = v2.getAppInfo();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-
-					return ex;
-				}
+				appDownloadInfos = v2.getAppInfo(Main.this);
 
 				if (cancelRequested) {
 					cancelRequested = false;
@@ -664,18 +666,18 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private void updateStatsMode() {
 		if (statsModeMenuItem != null) {
 			switch (currentStatsMode) {
-				case PERCENT:
-					statsModeMenuItem.setTitle(R.string.daily);
-					statsModeMenuItem.setIcon(R.drawable.icon_plusminus);
-					break;
+			case PERCENT:
+				statsModeMenuItem.setTitle(R.string.daily);
+				statsModeMenuItem.setIcon(R.drawable.icon_plusminus);
+				break;
 
-				case DAY_CHANGES:
-					statsModeMenuItem.setTitle(R.string.percentage);
-					statsModeMenuItem.setIcon(R.drawable.icon_percent);
-					break;
+			case DAY_CHANGES:
+				statsModeMenuItem.setTitle(R.string.percentage);
+				statsModeMenuItem.setIcon(R.drawable.icon_percent);
+				break;
 
-				default:
-					break;
+			default:
+				break;
 			}
 		}
 		adapter.setStatsMode(currentStatsMode);

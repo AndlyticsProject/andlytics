@@ -8,7 +8,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -18,9 +17,11 @@ import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
-import android.net.Uri;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
+import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.console.AuthenticationException;
 
 public class AccountManagerAuthenticator extends BaseAuthenticator {
@@ -28,40 +29,45 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 	private static final String TAG = AccountManagerAuthenticator.class.getSimpleName();
 
 	private static final String DEVELOPER_CONSOLE_URL = "https://play.google.com/apps/publish/v2/";
-	private static final Uri ISSUE_AUTH_TOKEN_URL = Uri
-			.parse("https://www.google.com/accounts/IssueAuthToken?service=gaia&Session=false");
-	private static final Uri TOKEN_AUTH_URL = Uri
-			.parse("https://www.google.com/accounts/TokenAuth");
+
+	private static final int REQUEST_AUTHENTICATE = 42;
 
 	private static final boolean DEBUG = true;
 
 	private AccountManager accountManager;
 
-	private String authToken;
+	// includes one-time token
+	private String webloginUrl;
 	private boolean reuseAuthentication;
-	// XXX use callback so this work in the sync adapter
-	private Activity activity;
 	private DefaultHttpClient httpClient;
 
-	private String cookie;
-	private String devacc;
-	private String xsrfToken;
-
-	public AccountManagerAuthenticator(String accountName, AccountManager accountManager,
-			boolean reuseAuthentication, Activity activity, DefaultHttpClient httpClient) {
+	public AccountManagerAuthenticator(String accountName, boolean reuseAuthentication,
+			DefaultHttpClient httpClient) {
 		super(accountName);
-		this.accountManager = accountManager;
+		this.accountManager = AccountManager.get(AndlyticsApp.getInstance());
 		this.reuseAuthentication = reuseAuthentication;
-		this.activity = activity;
 		this.httpClient = httpClient;
 	}
 
 	// as described here: http://www.slideshare.net/pickerweng/chromium-os-login
 	// http://www.chromium.org/chromium-os/chromiumos-design-docs/login
-	// and implemented by the Android Browser: 
+	// and implemented by the Android Browser:
 	// packages/apps/Browser/src/com/android/browser/GoogleAccountLogin.java
+	// packages/apps/Browser/src/com/android/browser/DeviceAccountLogin.java
 	@Override
-	public AuthInfo authenticate() throws AuthenticationException {
+	public AuthInfo authenticate(Activity activity, boolean invalidate)
+			throws AuthenticationException {
+		return authenticateInternal(activity, invalidate);
+	}
+
+	@Override
+	public AuthInfo authenticateSilently(boolean invalidate) throws AuthenticationException {
+		return authenticateInternal(null, invalidate);
+	}
+
+	@SuppressWarnings("deprecation")
+	private AuthInfo authenticateInternal(Activity activity, boolean invalidate)
+			throws AuthenticationException {
 		try {
 			Account[] accounts = accountManager.getAccountsByType("com.google");
 			Account account = null;
@@ -75,47 +81,48 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException(String.format("Account %s not found on device?"));
 			}
 
-			// XXX use callbacks
-			String sid = accountManager.getAuthToken(account, "SID", null, activity, null, null)
-					.getResult().getString(AccountManager.KEY_AUTHTOKEN);
-			if (DEBUG) {
-				Log.d(TAG, "**** SID token: " + sid);
-			}
-			String lsid = accountManager.getAuthToken(account, "LSID", null, activity, null, null)
-					.getResult().getString(AccountManager.KEY_AUTHTOKEN);
-			if (DEBUG) {
-				Log.d(TAG, "***** LSID token: " + lsid);
+			if (invalidate && webloginUrl != null) {
+				// probably not needed, since what we are getting is a very
+				// short-lived token
+				accountManager.invalidateAuthToken(account.type, webloginUrl);
 			}
 
-			String url = ISSUE_AUTH_TOKEN_URL.buildUpon().appendQueryParameter("SID", sid)
-					.appendQueryParameter("LSID", lsid).build().toString();
-			HttpPost getGaiaToken = new HttpPost(url);
+			Bundle authResult = accountManager.getAuthToken(account,
+					"weblogin:service=androiddeveloper&continue=" + DEVELOPER_CONSOLE_URL, false,
+					null, null).getResult();
+			if (authResult.containsKey(AccountManager.KEY_INTENT)) {
+				Intent authIntent = authResult.getParcelable(AccountManager.KEY_INTENT);
+				Log.w(TAG, "Got a reauthenticate intent: " + authIntent);
 
-			HttpResponse response = httpClient.execute(getGaiaToken);
+				// silent mode
+				if (activity == null) {
+					// TODO the right way is to create a notification and
+					// handle the LOGIN_ACCOUNTS_CHANGED_ACTION if it ever
+					// gets clicked. Just fail for now
+					throw new AuthenticationException(
+							"Silent authentication failed. User input required");
+				}
+
+				authIntent.setFlags(authIntent.getFlags() & ~Intent.FLAG_ACTIVITY_NEW_TASK);
+				activity.startActivityForResult(authIntent, REQUEST_AUTHENTICATE);
+				return null;
+			}
+			webloginUrl = authResult.getString(AccountManager.KEY_AUTHTOKEN);
+			if (webloginUrl == null) {
+				throw new AuthenticationException(
+						"Unexpected authentication error: weblogin URL = null");
+			}
+			Log.d(TAG, "Weblogin URL: " + webloginUrl);
+
+			HttpGet getConsole = new HttpGet(webloginUrl);
+			HttpResponse response = httpClient.execute(getConsole);
 			int status = response.getStatusLine().getStatusCode();
 			if (status != HttpStatus.SC_OK) {
-				throw new IllegalStateException("Invalid token?");
+				throw new IllegalStateException("Authentication error: " + response.getStatusLine());
 			}
 			HttpEntity entity = response.getEntity();
 			if (entity == null) {
-				throw new IllegalStateException("null result?");
-			}
-
-			authToken = EntityUtils.toString(entity, "UTF-8");
-
-			final String getCookiesUrl = TOKEN_AUTH_URL.buildUpon()
-					.appendQueryParameter("source", "android-browser")
-					.appendQueryParameter("auth", authToken)
-					.appendQueryParameter("continue", DEVELOPER_CONSOLE_URL).build().toString();
-			HttpGet getConsole = new HttpGet(getCookiesUrl);
-			response = httpClient.execute(getConsole);
-			status = response.getStatusLine().getStatusCode();
-			if (status != HttpStatus.SC_OK) {
-				throw new IllegalStateException("Invalid token?");
-			}
-			entity = response.getEntity();
-			if (entity == null) {
-				throw new IllegalStateException("null result?");
+				throw new AuthenticationException("Authentication error: null result?");
 			}
 
 			CookieStore cookieStore = httpClient.getCookieStore();
@@ -143,7 +150,7 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException("Couldn't get XSRF token.");
 			}
 
-			AuthInfo result = new AuthInfo(adCookie, xsrfToken, developerAccountId);
+			AuthInfo result = new AuthInfo(xsrfToken, developerAccountId);
 			result.addCookies(cookies);
 
 			return result;

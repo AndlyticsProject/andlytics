@@ -17,6 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import android.app.Activity;
 import android.util.Log;
 
 import com.github.andlyticsproject.console.AuthenticationException;
@@ -47,7 +48,17 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 	// (all needed cookies are in HttpClient's cookie jar at this point)
 
 	@Override
-	public AuthInfo authenticate() throws AuthenticationException {
+	public AuthInfo authenticate(Activity activity, boolean invalidate)
+			throws AuthenticationException {
+		return authenticate();
+	}
+
+	@Override
+	public AuthInfo authenticateSilently(boolean invalidate) throws AuthenticationException {
+		return authenticate();
+	}
+
+	private AuthInfo authenticate() throws AuthenticationException {
 		try {
 			HttpGet get = new HttpGet(LOGIN_PAGE_URL);
 			HttpResponse response = httpClient.execute(get);
@@ -100,7 +111,7 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException("Couldn't get XSRF token.");
 			}
 
-			AuthInfo result = new AuthInfo(adCookie, xsrfToken, developerAccountId);
+			AuthInfo result = new AuthInfo(xsrfToken, developerAccountId);
 			result.addCookies(cookies);
 
 			return result;

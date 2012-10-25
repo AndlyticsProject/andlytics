@@ -1,6 +1,7 @@
 package com.github.andlyticsproject.console.v2;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.client.CookieStore;
@@ -11,11 +12,10 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 
-import android.accounts.AccountManager;
 import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
 
+import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.DevConsole;
 import com.github.andlyticsproject.console.DevConsoleException;
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
@@ -86,18 +86,15 @@ public class DevConsoleV2 implements DevConsole {
 	private DevConsoleAuthenticator authenticator;
 	private String accountName;
 
-	// XXX
-	public static DevConsoleV2 createForAccount(Activity activity, String accountName,
-			DefaultHttpClient httpClient) {
-		AccountManager accountManager = AccountManager.get(activity);
-		DevConsoleAuthenticator authenticator = new AccountManagerAuthenticator(accountName,
-				accountManager, false, activity, httpClient);
+	public static DevConsoleV2 createForAccount(String accountName, DefaultHttpClient httpClient) {
+		DevConsoleAuthenticator authenticator = new AccountManagerAuthenticator(accountName, false,
+				httpClient);
 
 		return new DevConsoleV2(httpClient, authenticator);
 	}
 
-	public static DevConsoleV2 createForAccountAndPassword(Context ctx, String accountName,
-			String password, DefaultHttpClient httpClient) {
+	public static DevConsoleV2 createForAccountAndPassword(String accountName, String password,
+			DefaultHttpClient httpClient) {
 		DevConsoleAuthenticator authenticator = new PasswordAuthenticator(accountName, password,
 				httpClient);
 
@@ -123,9 +120,14 @@ public class DevConsoleV2 implements DevConsole {
 	 * @return
 	 * @throws DevConsoleException
 	 */
-	public synchronized List<AppInfo> getAppInfo() throws DevConsoleException {
+	public synchronized List<AppInfo> getAppInfo(Activity activity) throws DevConsoleException {
 
-		authenticate(false);
+		authenticate(activity, false);
+		// the authenticator launched a sub-activity, bail out for now
+		if (authInfo == null) {
+			return new ArrayList<AppInfo>();
+		}
+
 		// Fetch a list of available apps
 		List<AppInfo> apps = fetchAppInfos();
 
@@ -152,16 +154,26 @@ public class DevConsoleV2 implements DevConsole {
 	 * @return
 	 * @throws DevConsoleException
 	 */
-	public synchronized List<Comment> getComments(String packageName, int startIndex, int count)
-			throws DevConsoleException {
+	public synchronized List<Comment> getComments(Activity activity, String packageName,
+			int startIndex, int count) throws DevConsoleException {
 		try {
 			// First try using existing cookies and tokens
-			authenticate(true);
+			authenticate(activity, true);
+			// the authenticator launched a sub-activity, bail out for now
+			if (authInfo == null) {
+				return new ArrayList<Comment>();
+			}
+
 			return fetchComments(packageName, startIndex, count);
 		} catch (DevConsoleProtocolException ex) {
 			// TODO What to catch here, can we specifically detect an auth
 			// problem when doing a POST?
-			authenticate(false);
+			authenticate(activity, false);
+			// the authenticator launched a sub-activity, bail out for now
+			if (authInfo == null) {
+				return new ArrayList<Comment>();
+			}
+
 			return fetchComments(packageName, startIndex, count);
 		}
 	}
@@ -304,7 +316,8 @@ public class DevConsoleV2 implements DevConsole {
 	 * @throws DevConsoleException
 	 */
 	// TODO revise exceptions
-	private void authenticate(boolean reuseAuthentication) throws DevConsoleException {
+	private void authenticate(Activity activity, boolean reuseAuthentication)
+			throws AuthenticationException {
 		if (!reuseAuthentication) {
 			authInfo = null;
 		}
@@ -314,7 +327,9 @@ public class DevConsoleV2 implements DevConsole {
 			return;
 		}
 
-		authInfo = authenticator.authenticate();
+		boolean invalidate = !reuseAuthentication;
+		authInfo = activity == null ? authenticator.authenticateSilently(invalidate)
+				: authenticator.authenticate(activity, invalidate);
 	}
 
 	private String post(String url, String postData) throws IOException {

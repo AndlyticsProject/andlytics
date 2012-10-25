@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -111,13 +113,13 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.itemCommentsmenuRefresh:
-				maxAvalibleComments = -1;
-				nextCommentIndex = 0;
-				authenticateAccountFromPreferences(false, CommentsActivity.this);
-				return true;
-			default:
-				return (super.onOptionsItemSelected(item));
+		case R.id.itemCommentsmenuRefresh:
+			maxAvalibleComments = -1;
+			nextCommentIndex = 0;
+			authenticateAccountFromPreferences(false, CommentsActivity.this);
+			return true;
+		default:
+			return (super.onOptionsItemSelected(item));
 		}
 	}
 
@@ -170,14 +172,13 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 				if (console == null) {
 					DefaultHttpClient httpClient = HttpClientFactory
 							.createDevConsoleHttpClient(DevConsoleV2.TIMEOUT);
-					console = DevConsoleV2.createForAccount(CommentsActivity.this, accountName,
-							httpClient);
+					console = DevConsoleV2.createForAccount(accountName, httpClient);
 					DevConsoleRegistry.getInstance().put(accountName, console);
 				}
 				try {
 
-					List<Comment> result = console.getComments(packageName, nextCommentIndex,
-							MAX_LOAD_COMMENTS);
+					List<Comment> result = console.getComments(CommentsActivity.this, packageName,
+							nextCommentIndex, MAX_LOAD_COMMENTS);
 
 					// put in cache if index == 0
 					if (nextCommentIndex == 0) {
@@ -289,6 +290,20 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 		new LoadCommentsData().execute();
 
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_AUTHENTICATE) {
+			if (resultCode == RESULT_OK) {
+				// user entered credentials, etc, try to get data again
+				new LoadCommentsData().execute();
+			} else if (resultCode == RESULT_CANCELED) {
+				Toast.makeText(this, getString(R.string.auth_error, accountName), Toast.LENGTH_LONG)
+						.show();
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 }

@@ -93,16 +93,18 @@ public class SyncAdapterService extends Service {
 
 			DevConsoleV2 console = DevConsoleRegistry.getInstance().get(account.name);
 			if (console == null) {
-				// XXX
 				DefaultHttpClient httpClient = HttpClientFactory
 						.createDevConsoleHttpClient(DevConsoleV2.TIMEOUT);
-				console = null;//DevConsoleV2.createForAccount(context, account.name, httpClient);
+				console = DevConsoleV2.createForAccount(account.name, httpClient);
 				DevConsoleRegistry.getInstance().put(account.name, console);
 			}
 
-			// XXX
 			if (console != null) {
-				List<AppInfo> appDownloadInfos = console.getAppInfo();
+				// if the account has never authenticated again, this will
+				// throw an AuthenticationException
+				// shouldn't really happen, since accounts are authenticated
+				// when you add them on the main screen
+				List<AppInfo> appDownloadInfos = console.getAppInfo(null);
 
 				Log.d(TAG, "andlytics from sync adapter, size: " + appDownloadInfos.size());
 
