@@ -11,10 +11,11 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 
+import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
-import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.console.DevConsole;
 import com.github.andlyticsproject.console.DevConsoleException;
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
@@ -85,13 +86,18 @@ public class DevConsoleV2 implements DevConsole {
 	private DevConsoleAuthenticator authenticator;
 	private String accountName;
 
-	// TODO add factory method for token authenticator when available
-	public static DevConsoleV2 createForAccount(Context ctx, String accountName) {
-		// this is pre-configured with needed headers and keeps track
-		// of cookies, etc.
-		DefaultHttpClient httpClient = HttpClientFactory.createDevConsoleHttpClient(TIMEOUT);
-		// XXX put password in a private resources
-		String password = ctx.getResources().getString(R.string.dev_console_password);
+	// XXX
+	public static DevConsoleV2 createForAccount(Activity activity, String accountName,
+			DefaultHttpClient httpClient) {
+		AccountManager accountManager = AccountManager.get(activity);
+		DevConsoleAuthenticator authenticator = new AccountManagerAuthenticator(accountName,
+				accountManager, false, activity, httpClient);
+
+		return new DevConsoleV2(httpClient, authenticator);
+	}
+
+	public static DevConsoleV2 createForAccountAndPassword(Context ctx, String accountName,
+			String password, DefaultHttpClient httpClient) {
 		DevConsoleAuthenticator authenticator = new PasswordAuthenticator(accountName, password,
 				httpClient);
 

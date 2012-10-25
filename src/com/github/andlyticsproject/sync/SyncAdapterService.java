@@ -3,6 +3,8 @@ package com.github.andlyticsproject.sync;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.accounts.Account;
 import android.accounts.OperationCanceledException;
 import android.app.Service;
@@ -20,6 +22,7 @@ import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.console.DevConsoleException;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
+import com.github.andlyticsproject.console.v2.HttpClientFactory;
 import com.github.andlyticsproject.model.AppInfo;
 
 public class SyncAdapterService extends Service {
@@ -90,29 +93,35 @@ public class SyncAdapterService extends Service {
 
 			DevConsoleV2 console = DevConsoleRegistry.getInstance().get(account.name);
 			if (console == null) {
-				console = DevConsoleV2.createForAccount(context, account.name);
+				// XXX
+				DefaultHttpClient httpClient = HttpClientFactory
+						.createDevConsoleHttpClient(DevConsoleV2.TIMEOUT);
+				console = null;//DevConsoleV2.createForAccount(context, account.name, httpClient);
 				DevConsoleRegistry.getInstance().put(account.name, console);
 			}
 
-			List<AppInfo> appDownloadInfos = console.getAppInfo();
+			// XXX
+			if (console != null) {
+				List<AppInfo> appDownloadInfos = console.getAppInfo();
 
-			Log.d(TAG, "andlytics from sync adapter, size: " + appDownloadInfos.size());
+				Log.d(TAG, "andlytics from sync adapter, size: " + appDownloadInfos.size());
 
-			List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
+				List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
 
-			db = new ContentAdapter(context);
-			for (AppInfo appDownloadInfo : appDownloadInfos) {
-				// update in database
-				diffs.add(db.insertOrUpdateStats(appDownloadInfo));
+				db = new ContentAdapter(context);
+				for (AppInfo appDownloadInfo : appDownloadInfos) {
+					// update in database
+					diffs.add(db.insertOrUpdateStats(appDownloadInfo));
+				}
+				Log.d(TAG, "sucessfully synced andlytics");
+
+				// check for notifications
+				NotificationHandler.handleNotificaions(context, diffs, account.name);
+
+				// } else {
+				// Log.e(TAG, "error during sync auth, no token found");
+				// }
 			}
-			Log.d(TAG, "sucessfully synced andlytics");
-
-			// check for notifications
-			NotificationHandler.handleNotificaions(context, diffs, account.name);
-
-			// } else {
-			// Log.e(TAG, "error during sync auth, no token found");
-			// }
 		} catch (DevConsoleException e) {
 			Log.e(TAG, "error during sync", e);
 		}

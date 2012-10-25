@@ -3,6 +3,8 @@ package com.github.andlyticsproject;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +15,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
+import com.github.andlyticsproject.console.v2.HttpClientFactory;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
@@ -108,13 +111,13 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.itemCommentsmenuRefresh:
-			maxAvalibleComments = -1;
-			nextCommentIndex = 0;
-			authenticateAccountFromPreferences(false, CommentsActivity.this);
-			return true;
-		default:
-			return (super.onOptionsItemSelected(item));
+			case R.id.itemCommentsmenuRefresh:
+				maxAvalibleComments = -1;
+				nextCommentIndex = 0;
+				authenticateAccountFromPreferences(false, CommentsActivity.this);
+				return true;
+			default:
+				return (super.onOptionsItemSelected(item));
 		}
 	}
 
@@ -165,8 +168,10 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 			if (maxAvalibleComments != 0) {
 				DevConsoleV2 console = DevConsoleRegistry.getInstance().get(accountName);
 				if (console == null) {
-					console = DevConsoleV2.createForAccount(CommentsActivity.this,
-							accountName);
+					DefaultHttpClient httpClient = HttpClientFactory
+							.createDevConsoleHttpClient(DevConsoleV2.TIMEOUT);
+					console = DevConsoleV2.createForAccount(CommentsActivity.this, accountName,
+							httpClient);
 					DevConsoleRegistry.getInstance().put(accountName, console);
 				}
 				try {

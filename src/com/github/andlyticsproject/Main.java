@@ -13,8 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -50,6 +53,7 @@ import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
+import com.github.andlyticsproject.console.v2.HttpClientFactory;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
@@ -200,52 +204,53 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent i = null;
 		switch (item.getItemId()) {
-		case R.id.itemMainmenuRefresh:
-			authenticateAccountFromPreferences(false, Main.this);
-			break;
-		case R.id.itemMainmenuImport:
-			File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
-			if (!fileToImport.exists()) {
-				Toast.makeText(this,
-						getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
-						Toast.LENGTH_LONG).show();
-				return true;
-			}
+			case R.id.itemMainmenuRefresh:
+				authenticateAccountFromPreferences(false, Main.this);
+				break;
+			case R.id.itemMainmenuImport:
+				File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
+				if (!fileToImport.exists()) {
+					Toast.makeText(
+							this,
+							getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
+							Toast.LENGTH_LONG).show();
+					return true;
+				}
 
-			Intent importIntent = new Intent(this, ImportActivity.class);
-			importIntent.setAction(Intent.ACTION_VIEW);
-			importIntent.setData(Uri.fromFile(fileToImport));
-			startActivity(importIntent);
-			break;
-		case R.id.itemMainmenuExport:
-			Intent exportIntent = new Intent(this, ExportActivity.class);
-			exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
-			startActivity(exportIntent);
-			break;
-		case R.id.itemMainmenuFeedback:
-			startActivity(new Intent(Intent.ACTION_VIEW,
-					Uri.parse(getString(R.string.github_issues_url))));
-			break;
-		case R.id.itemMainmenuPreferences:
-			i = new Intent(this, PreferenceActivity.class);
-			i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
-			startActivity(i);
-			break;
-		case R.id.itemMainmenuStatsMode:
-			if (currentStatsMode.equals(StatsMode.PERCENT)) {
-				currentStatsMode = StatsMode.DAY_CHANGES;
-			} else {
-				currentStatsMode = StatsMode.PERCENT;
-			}
-			updateStatsMode();
-			break;
-		case R.id.itemMainmenuAccounts:
-			i = new Intent(this, LoginActivity.class);
-			i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
-			startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
-			break;
-		default:
-			return false;
+				Intent importIntent = new Intent(this, ImportActivity.class);
+				importIntent.setAction(Intent.ACTION_VIEW);
+				importIntent.setData(Uri.fromFile(fileToImport));
+				startActivity(importIntent);
+				break;
+			case R.id.itemMainmenuExport:
+				Intent exportIntent = new Intent(this, ExportActivity.class);
+				exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
+				startActivity(exportIntent);
+				break;
+			case R.id.itemMainmenuFeedback:
+				startActivity(new Intent(Intent.ACTION_VIEW,
+						Uri.parse(getString(R.string.github_issues_url))));
+				break;
+			case R.id.itemMainmenuPreferences:
+				i = new Intent(this, PreferenceActivity.class);
+				i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+				startActivity(i);
+				break;
+			case R.id.itemMainmenuStatsMode:
+				if (currentStatsMode.equals(StatsMode.PERCENT)) {
+					currentStatsMode = StatsMode.DAY_CHANGES;
+				} else {
+					currentStatsMode = StatsMode.PERCENT;
+				}
+				updateStatsMode();
+				break;
+			case R.id.itemMainmenuAccounts:
+				i = new Intent(this, LoginActivity.class);
+				i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
+				startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
+				break;
+			default:
+				return false;
 		}
 		return true;
 	}
@@ -383,6 +388,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	// to fragments with savedInstanceState
 	private class LoadRemoteEntries extends AsyncTask<String, Integer, Exception> {
 
+		@SuppressLint("NewApi")
 		@SuppressWarnings("unchecked")
 		@Override
 		protected Exception doInBackground(String... params) {
@@ -397,7 +403,11 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			try {
 				DevConsoleV2 v2 = DevConsoleRegistry.getInstance().get(accountName);
 				if (v2 == null) {
-					v2 = DevConsoleV2.createForAccount(Main.this, accountName);
+					// this is pre-configured with needed headers and keeps track
+					// of cookies, etc.
+					DefaultHttpClient httpClient = HttpClientFactory
+							.createDevConsoleHttpClient(DevConsoleV2.TIMEOUT);
+					v2 = DevConsoleV2.createForAccount(Main.this, accountName, httpClient);
 					DevConsoleRegistry.getInstance().put(accountName, v2);
 				}
 
@@ -654,18 +664,18 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private void updateStatsMode() {
 		if (statsModeMenuItem != null) {
 			switch (currentStatsMode) {
-			case PERCENT:
-				statsModeMenuItem.setTitle(R.string.daily);
-				statsModeMenuItem.setIcon(R.drawable.icon_plusminus);
-				break;
+				case PERCENT:
+					statsModeMenuItem.setTitle(R.string.daily);
+					statsModeMenuItem.setIcon(R.drawable.icon_plusminus);
+					break;
 
-			case DAY_CHANGES:
-				statsModeMenuItem.setTitle(R.string.percentage);
-				statsModeMenuItem.setIcon(R.drawable.icon_percent);
-				break;
+				case DAY_CHANGES:
+					statsModeMenuItem.setTitle(R.string.percentage);
+					statsModeMenuItem.setIcon(R.drawable.icon_percent);
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 		adapter.setStatsMode(currentStatsMode);
