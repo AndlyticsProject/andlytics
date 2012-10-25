@@ -42,6 +42,7 @@ public class HttpClientFactory {
 	private static final String NO_CACHE = "no-cache";
 
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:15.0) Gecko/20100101 Firefox/15.0";
+	private static final String ANDROID_BROWSER_USER_AGENT = "Mozilla/5.0 (Linux; U; Android 2.2; en-gb; Nexus One Build/FRF50) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
 	private static final String ACCEPT_VALUE = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
 	private static final String ACCEPT_LANG_VALUE = "en-us,en;q=0.5";
 	private static final String ACCEPT_CHARSET_VALUE = "ISO-8859-1,utf-8;q=0.7,*;q=0.7";
@@ -67,7 +68,7 @@ public class HttpClientFactory {
 		HttpParams params = new BasicHttpParams();
 		HttpConnectionParams.setConnectionTimeout(params, timeoutMillis);
 		HttpConnectionParams.setSoTimeout(params, timeoutMillis);
-		HttpProtocolParams.setUserAgent(params, USER_AGENT);
+		HttpProtocolParams.setUserAgent(params, ANDROID_BROWSER_USER_AGENT);
 		HttpClientParams.setRedirecting(params, true);
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);

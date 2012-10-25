@@ -13,8 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -50,6 +53,7 @@ import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
+import com.github.andlyticsproject.console.v2.HttpClientFactory;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
@@ -269,6 +273,14 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				Preferences.removeAccountName(this);
 				finish();
 			}
+		} else if (requestCode == REQUEST_AUTHENTICATE) {
+			if (resultCode == RESULT_OK) {
+				// user entered credentials, etc, try to get data again
+				Utils.execute(new LoadRemoteEntries());
+			} else if (resultCode == RESULT_CANCELED) {
+				Toast.makeText(this, getString(R.string.auth_error, accountName), Toast.LENGTH_LONG)
+						.show();
+			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -383,6 +395,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	// to fragments with savedInstanceState
 	private class LoadRemoteEntries extends AsyncTask<String, Integer, Exception> {
 
+		@SuppressLint("NewApi")
 		@SuppressWarnings("unchecked")
 		@Override
 		protected Exception doInBackground(String... params) {
@@ -397,17 +410,16 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			try {
 				DevConsoleV2 v2 = DevConsoleRegistry.getInstance().get(accountName);
 				if (v2 == null) {
-					v2 = DevConsoleV2.createForAccount(Main.this, accountName);
+					// this is pre-configured with needed headers and keeps
+					// track
+					// of cookies, etc.
+					DefaultHttpClient httpClient = HttpClientFactory
+							.createDevConsoleHttpClient(DevConsoleV2.TIMEOUT);
+					v2 = DevConsoleV2.createForAccount(accountName, httpClient);
 					DevConsoleRegistry.getInstance().put(accountName, v2);
 				}
 
-				try {
-					appDownloadInfos = v2.getAppInfo();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-
-					return ex;
-				}
+				appDownloadInfos = v2.getAppInfo(Main.this);
 
 				if (cancelRequested) {
 					cancelRequested = false;

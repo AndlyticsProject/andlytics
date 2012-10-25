@@ -39,6 +39,8 @@ public class BaseActivity extends SherlockActivity {
 
 	private static final String TAG = BaseActivity.class.getSimpleName();
 
+	protected static final int REQUEST_AUTHENTICATE = 42;
+
 	protected String packageName;
 	protected String iconFilePath;
 	protected String accountName;
