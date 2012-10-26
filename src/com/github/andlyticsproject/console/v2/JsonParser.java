@@ -45,6 +45,7 @@ public class JsonParser {
 	/**
 	 * Parses the supplied JSON string and adds the extracted statistics to the supplied {@link AppStats} object
 	 * based on the supplied statsType
+	 * Not used at the moment
 	 * @param json
 	 * @param stats
 	 * @param statsType
@@ -81,8 +82,6 @@ public class JsonParser {
 				stats.setTotalDownloads(latestValue);
 				break;
 			case DevConsoleV2.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
-				// This is not used now that active installs are in the main request (parseAppInfos)
-				// Can be used if we get historical/dimensioned data
 				stats.setActiveInstalls(latestValue);
 				break;
 			default:
@@ -131,6 +130,7 @@ public class JsonParser {
 			 ** Total ratings
 			 ** Average rating
 			 ** Errors
+			 ** Total installs
 			 * ]
 			 */
 			JSONArray jsonApp = jsonApps.getJSONArray(i);
@@ -179,10 +179,19 @@ public class JsonParser {
 			app.setIconUrl(lastAppVersionDetails.getJSONArray(6).getString(3));
 
 			// App stats
+			/*
+			 * null,
+			 * Active installs
+			 * Total ratings
+			 * Average rating
+			 * Errors
+			 * Total installs
+			 */
 			JSONArray jsonAppStats = jsonApp.getJSONArray(3);
 			AppStats stats = new AppStats();
 			stats.setRequestDate(now);
 			stats.setActiveInstalls(jsonAppStats.getInt(1));
+			stats.setTotalDownloads(jsonAppStats.getInt(5));
 			app.setLatestStats(stats);
 
 			apps.add(app);
