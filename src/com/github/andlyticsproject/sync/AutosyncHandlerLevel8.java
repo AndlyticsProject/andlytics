@@ -39,16 +39,18 @@ public class AutosyncHandlerLevel8 implements AutosyncHandler {
 	}
 
 	@Override
-	public void setAutosyncPeriod(String accountName, Integer period) {
+	public void setAutosyncPeriod(String accountName, Integer periodMinutes) {
 
 		Bundle extras = new Bundle();
 		Account account = new Account(accountName, Constants.ACCOUNT_TYPE_GOOGLE);
 
-		if (period == 0) {
+		if (periodMinutes == 0) {
 			ContentResolver.setSyncAutomatically(account, Constants.ACCOUNT_AUTHORITY, false);
 		} else {
 			ContentResolver.setSyncAutomatically(account, Constants.ACCOUNT_AUTHORITY, true);
-			ContentResolver.addPeriodicSync(account, Constants.ACCOUNT_AUTHORITY, extras, period);
+			// sync period in seconds, comes in as minutes
+			ContentResolver.addPeriodicSync(account, Constants.ACCOUNT_AUTHORITY, extras,
+					periodMinutes * 60);
 		}
 
 	}
