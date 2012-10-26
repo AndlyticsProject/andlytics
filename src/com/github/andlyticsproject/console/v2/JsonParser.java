@@ -111,27 +111,12 @@ public class JsonParser {
 			AppInfo app = new AppInfo();
 			app.setAccount(accountName);
 			app.setLastUpdate(now);
-			/* 
-			 * Per app:
-			 * null
-			 * [ APP_INFO_ARRAY
-			 ** null
-			 ** packageName
-			 ** Nested array with details
-			 ** null
-			 ** Nested array with version details
-			 ** Nested array with price details
-			 ** Last update Date
-			 ** Number [1=published, 5 = draft?]
-			 * ]
-			 * null
-			 * [ APP_STATS_ARRAY
-			 ** null,
-			 ** Active installs
-			 ** Total ratings
-			 ** Average rating
-			 ** Errors
-			 * ]
+			/*
+			 * Per app: null [ APP_INFO_ARRAY* null* packageName* Nested array
+			 * with details* null* Nested array with version details* Nested
+			 * array with price details* Last update Date* Number [1=published,
+			 * 5 = draft?] ] null [ APP_STATS_ARRAY* null,* Active installs*
+			 * Total ratings* Average rating* Errors* Total installs ]
 			 */
 			JSONArray jsonApp = jsonApps.getJSONArray(i);
 			JSONArray jsonAppInfo = jsonApp.getJSONArray(1);
@@ -183,6 +168,7 @@ public class JsonParser {
 			AppStats stats = new AppStats();
 			stats.setRequestDate(now);
 			stats.setActiveInstalls(jsonAppStats.getInt(1));
+			stats.setTotalDownloads(jsonAppStats.getInt(5));
 			app.setLatestStats(stats);
 
 			apps.add(app);
