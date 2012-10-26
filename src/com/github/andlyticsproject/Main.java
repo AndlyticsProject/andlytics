@@ -170,6 +170,9 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		// for the preferences
 		// to ensure that we do update if hidden apps are changed
 
+		// more TODO Should always show data from DB first, and then
+		// trigger remote call if necessary
+		// Revise the whole application global flag thing
 		if (!mainSkipDataReload) {
 			Utils.execute(new LoadDbEntries(), true);
 		} else {
@@ -277,7 +280,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			if (resultCode == RESULT_OK) {
 				// user entered credentials, etc, try to get data again
 				Utils.execute(new LoadRemoteEntries());
-			} else if (resultCode == RESULT_CANCELED) {
+			} else {
 				Toast.makeText(this, getString(R.string.auth_error, accountName), Toast.LENGTH_LONG)
 						.show();
 			}
