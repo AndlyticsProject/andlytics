@@ -17,12 +17,18 @@ import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.github.andlyticsproject.AndlyticsApp;
+import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.console.AuthenticationException;
+import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2;
+import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2.Builder;
 
 public class AccountManagerAuthenticator extends BaseAuthenticator {
 
@@ -94,17 +100,31 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				Intent authIntent = authResult.getParcelable(AccountManager.KEY_INTENT);
 				if (DEBUG) Log.w(TAG, "Got a reauthenticate intent: " + authIntent);
 
-				// silent mode
+				// silent mode, show notification
 				if (activity == null) {
-					// TODO the right way is to create a notification and
-					// handle the LOGIN_ACCOUNTS_CHANGED_ACTION if it ever
-					// gets clicked. Just fail for now
-					throw new AuthenticationException(
-							"Silent authentication failed. User input required");
+					Context ctx = AndlyticsApp.getInstance();
+					Builder builder = new NotificationCompat2.Builder(ctx);
+					builder.setSmallIcon(R.drawable.statusbar_andlytics);
+					builder.setContentTitle(ctx.getResources().getString(R.string.auth_error,
+							accountName));
+					builder.setContentText(ctx.getResources().getString(R.string.auth_error,
+							accountName));
+					builder.setAutoCancel(true);
+					PendingIntent contentIntent = PendingIntent.getActivity(ctx,
+							accountName.hashCode(), authIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+					builder.setContentIntent(contentIntent);
+
+					NotificationManager nm = (NotificationManager) ctx
+							.getSystemService(Context.NOTIFICATION_SERVICE);
+					nm.notify(accountName.hashCode(), builder.build());
+
+					return null;
 				}
 
+				// activity mode, start activity
 				authIntent.setFlags(authIntent.getFlags() & ~Intent.FLAG_ACTIVITY_NEW_TASK);
 				activity.startActivityForResult(authIntent, REQUEST_AUTHENTICATE);
+
 				return null;
 			}
 			webloginUrl = authResult.getString(AccountManager.KEY_AUTHTOKEN);

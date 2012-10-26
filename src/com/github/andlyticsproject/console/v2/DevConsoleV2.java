@@ -61,7 +61,7 @@ public class DevConsoleV2 implements DevConsole {
 	// 1$: package name, 2$: XSRF
 	private static final String PAYLOAD_RATINGS = "{\"method\":\"getRatings\","
 			+ "\"params\":{\"1\":[\"%1$s\"]},\"xsrf\":\"%2$s\"}";
-	// 1$: package name, 2$: start, 3$: end, 4$ XSRF
+	// 1$: package name, 2$: start, 3$: num comments to fetch, 4$ XSRF
 	private static final String PAYLOAD_COMMENTS = "{\"method\":\"getReviews\","
 			+ "\"params\":{\"1\":\"%1$s\",\"2\":%2$d,\"3\":%3$d},\"xsrf\":\"%4$s\"}";
 	// 1$: package name, 2$: stats type, 3$: stats by, 4$: XSRF
@@ -275,18 +275,28 @@ public class DevConsoleV2 implements DevConsole {
 	 * @throws DevConsoleException
 	 */
 	private int fetchCommentsCount(String packageName) throws DevConsoleException {
-		// Setup the request
-		// TODO Asking for a small number of comments does not give us the
-		// number of comments
-		// Need to think of something else.
-		String postData = String.format(PAYLOAD_COMMENTS, packageName, 0, 1,
+		// emulate the console: fetch first 50, get approx num. comments,
+		// fetch last 50 (or so) to get exact number.
+		int pageSize = 50;
+		String postData = String.format(PAYLOAD_COMMENTS, packageName, 0, pageSize,
 				authInfo.getXsrfToken());
 
 		// Perform the request
 		String json = null;
 		try {
 			json = post(createDeveloperUrl(URL_REVIEWS), postData);
-			return JsonParser.parseCommentsCount(json);
+			int approxNumComments = JsonParser.parseCommentsCount(json);
+			if (approxNumComments <= pageSize) {
+				// this has a good chance of being exact
+				return approxNumComments;
+			}
+
+			postData = String.format(PAYLOAD_COMMENTS, packageName, approxNumComments - pageSize,
+					pageSize, authInfo.getXsrfToken());
+			json = post(createDeveloperUrl(URL_REVIEWS), postData);
+			int finalNumComments = JsonParser.parseCommentsCount(json);
+
+			return finalNumComments;
 		} catch (IOException ex) {
 			throw new NetworkException(ex);
 		} catch (JSONException ex) {
