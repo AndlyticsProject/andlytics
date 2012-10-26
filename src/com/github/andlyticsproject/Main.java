@@ -170,6 +170,9 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		// for the preferences
 		// to ensure that we do update if hidden apps are changed
 
+		// more TODO Should always show data from DB first, and then
+		// trigger remote call if necessary
+		// Revise the whole application global flag thing
 		if (!mainSkipDataReload) {
 			Utils.execute(new LoadDbEntries(), true);
 		} else {
