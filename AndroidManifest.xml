@@ -103,8 +103,7 @@
 
         <service
             android:name=".sync.SyncAdapterService"
-            android:exported="false"
-            android:process=":andlytics" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
@@ -142,8 +141,7 @@
 
         <receiver
             android:name="com.github.andlyticsproject.sync.AlarmReceiver"
-            android:exported="false"
-            android:process=":remote" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.accounts.LOGIN_ACCOUNTS_CHANGED"/>
             </intent-filter>
