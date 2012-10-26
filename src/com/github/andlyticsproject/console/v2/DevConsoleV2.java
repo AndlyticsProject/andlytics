@@ -133,7 +133,8 @@ public class DevConsoleV2 implements DevConsole {
 
 		for (AppInfo app : apps) {
 			// Fetch remaining app statistics
-			// Latest stats object, and active device installs is already setup
+			// Latest stats object, and active/total installs is fetched
+			// in fetchAppInfos
 			AppStats stats = app.getLatestStats();
 			fetchRatings(app.getPackageName(), stats);
 			stats.setNumberOfComments(fetchCommentsCount(app.getPackageName()));
@@ -211,11 +212,15 @@ public class DevConsoleV2 implements DevConsole {
 	 * Fetches statistics for the given packageName of the given statsType and
 	 * adds them to the given {@link AppStats} object
 	 * 
+	 * This is not used as statistics can be fetched via fetchAppInfos
+	 * Can use it later to get historical etc data
+	 * 
 	 * @param packageName
 	 * @param stats
 	 * @param statsType
 	 * @throws DevConsoleException
 	 */
+	@SuppressWarnings("unused")
 	private void fetchStatistics(String packageName, AppStats stats, int statsType)
 			throws DevConsoleException {
 		// Setup the request
@@ -324,7 +329,6 @@ public class DevConsoleV2 implements DevConsole {
 	 * @param reuseAuthentication
 	 * @throws DevConsoleException
 	 */
-	// TODO revise exceptions
 	private void authenticate(Activity activity, boolean reuseAuthentication)
 			throws AuthenticationException {
 		if (!reuseAuthentication) {

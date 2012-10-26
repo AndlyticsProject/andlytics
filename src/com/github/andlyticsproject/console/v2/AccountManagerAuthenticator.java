@@ -38,7 +38,7 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 
 	private static final int REQUEST_AUTHENTICATE = 42;
 
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 
 	private AccountManager accountManager;
 
@@ -98,7 +98,7 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 					null, null).getResult();
 			if (authResult.containsKey(AccountManager.KEY_INTENT)) {
 				Intent authIntent = authResult.getParcelable(AccountManager.KEY_INTENT);
-				Log.w(TAG, "Got a reauthenticate intent: " + authIntent);
+				if (DEBUG) Log.w(TAG, "Got a reauthenticate intent: " + authIntent);
 
 				// silent mode, show notification
 				if (activity == null) {
@@ -132,7 +132,7 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException(
 						"Unexpected authentication error: weblogin URL = null");
 			}
-			Log.d(TAG, "Weblogin URL: " + webloginUrl);
+			if (DEBUG) Log.d(TAG, "Weblogin URL: " + webloginUrl);
 
 			HttpGet getConsole = new HttpGet(webloginUrl);
 			HttpResponse response = httpClient.execute(getConsole);

@@ -131,10 +131,12 @@ public class BaseActivity extends SherlockActivity {
 			if (Preferences.getLatestVersionCode(this) > appVersionCode) {
 				showNewVersionDialog(e);
 			} else {
-				showCrashDialog(e);
+				showGoogleErrorDialog(e);
 			}
 		} else if (e instanceof MultiAccountException) {
 			showAspErrorDialog(e);
+		} else {
+			showCrashDialog(e);
 		}
 
 	}
