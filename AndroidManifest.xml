@@ -144,6 +144,9 @@
             android:name="com.github.andlyticsproject.sync.AlarmReceiver"
             android:exported="false"
             android:process=":remote" >
+            <intent-filter>
+                <action android:name="android.accounts.LOGIN_ACCOUNTS_CHANGED"/>
+            </intent-filter>
         </receiver>
     </application>
 

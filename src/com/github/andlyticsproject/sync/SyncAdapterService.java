@@ -73,24 +73,7 @@ public class SyncAdapterService extends Service {
 	private static void performSync(Context context, Account account, Bundle extras,
 			String authority, ContentProviderClient provider, SyncResult syncResult)
 			throws OperationCanceledException {
-		//
-		// Bundle bundle = null;
-		// String token = null;
-
 		try {
-			// bundle = AccountManager
-			// .get(context)
-			// .getAuthToken(account,
-			// Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, true, null,
-			// null).getResult();
-			// if (bundle != null &&
-			// bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
-			// token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-
-			// DeveloperConsole console = new DeveloperConsole(context);
-			// List<AppInfo> appDownloadInfos =
-			// console.getAppDownloadInfos(token, account.name);
-
 			DevConsoleV2 console = DevConsoleRegistry.getInstance().get(account.name);
 			if (console == null) {
 				DefaultHttpClient httpClient = HttpClientFactory
@@ -100,11 +83,13 @@ public class SyncAdapterService extends Service {
 			}
 
 			if (console != null) {
-				// if the account has never authenticated again, this will
-				// throw an AuthenticationException
-				// shouldn't really happen, since accounts are authenticated
-				// when you add them on the main screen
 				List<AppInfo> appDownloadInfos = console.getAppInfo(null);
+				// this can also happen if authentication fails and the user 
+				// need to click on a notification to confir or re-enter 
+				// password
+				if (appDownloadInfos.isEmpty()) {
+					return;
+				}
 
 				Log.d(TAG, "andlytics from sync adapter, size: " + appDownloadInfos.size());
 
