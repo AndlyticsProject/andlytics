@@ -66,6 +66,8 @@ public class AdmobRequest {
 	public static final String KEY_DATE = "date";
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	private static final boolean DEBUG = false;
 
 	//base access url to admob api
 	private static final String BASE_URL = "https://api.admob.com/v2/";
@@ -91,7 +93,7 @@ public class AdmobRequest {
 
 		try {
 			//try to login
-			Log.d(TAG, email + " admob login request");
+			if (DEBUG) Log.d(TAG, email + " admob login request");
 			JSONArray data = getResponse("auth", "login", params, true, true);
 
 			//decode the json response and assign token for future use in this session
@@ -185,7 +187,7 @@ public class AdmobRequest {
 				out.close();
 
 			} else {
-				Log.d(TAG, subUrl);
+				if (DEBUG) Log.d(TAG, subUrl);
 				con = (HttpsURLConnection) new URL(subUrl + "?" + urlParameters).openConnection();
 				con.setHostnameVerifier(new AllowAllHostnameVerifier());
 				//System.out.println("admob request: " + subUrl + "?" + urlParameters);
@@ -315,7 +317,7 @@ public class AdmobRequest {
 			AdmobAccountRemovedException, NetworkException, AdmobInvalidTokenException,
 			AdmobGenericException, AdmobAskForPasswordException, AdmobInvalidRequestException {
 
-		Log.w(TAG, "admob site sync request for " + siteList.size() + " sites");
+		if (DEBUG) Log.d(TAG, "admob site sync request for " + siteList.size() + " sites");
 
 		String token = authenticateAdmobAccount(account, context);
 
@@ -456,7 +458,7 @@ public class AdmobRequest {
 	}
 
 	private static void invalidateAdmobToken(String accountName, String token, Context context) {
-		Log.d(TAG, "invalidate admob token for " + accountName);
+		if (DEBUG) Log.d(TAG, "invalidate admob token for " + accountName);
 		AdmobAuthenticationUtilities.invalidateToken(token, context);
 	}
 
