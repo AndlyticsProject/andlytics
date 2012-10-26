@@ -298,7 +298,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 			if (resultCode == RESULT_OK) {
 				// user entered credentials, etc, try to get data again
 				new LoadCommentsData().execute();
-			} else if (resultCode == RESULT_CANCELED) {
+			} else {
 				Toast.makeText(this, getString(R.string.auth_error, accountName), Toast.LENGTH_LONG)
 						.show();
 			}

@@ -277,7 +277,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			if (resultCode == RESULT_OK) {
 				// user entered credentials, etc, try to get data again
 				Utils.execute(new LoadRemoteEntries());
-			} else if (resultCode == RESULT_CANCELED) {
+			} else {
 				Toast.makeText(this, getString(R.string.auth_error, accountName), Toast.LENGTH_LONG)
 						.show();
 			}
