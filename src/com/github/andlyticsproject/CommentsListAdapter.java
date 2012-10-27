@@ -2,7 +2,9 @@ package com.github.andlyticsproject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 import android.content.Intent;
@@ -19,7 +21,6 @@ import android.widget.TextView;
 
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
-import com.github.andlyticsproject.util.Utils;
 
 public class CommentsListAdapter extends BaseExpandableListAdapter {
 
@@ -31,6 +32,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	private ArrayList<CommentGroup> commentGroups;
 
 	private CommentsActivity context;
+	
+	private DateFormat commentDateFormat = DateFormat.getDateInstance(DateFormat.FULL);
 
 
 	public CommentsListAdapter(CommentsActivity activity) {
@@ -65,7 +68,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 		holder.text.setText(comment.getText());
 		if (comment.isReply()) {
-			holder.date.setText(Utils.formatDate(comment.getReplyDate()));
+			holder.date.setText(formatCommentDate(comment.getReplyDate()));
 		} else {
 			holder.user.setText(comment.getUser());
 			String version = comment.getAppVersion();
@@ -148,7 +151,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		}
 
 		CommentGroup commentGroup = getGroup(groupPosition);
-		holder.date.setText(Utils.formatDate(commentGroup.getDate()));
+		holder.date.setText(formatCommentDate(commentGroup.getDate()));
 
 		convertView.setOnClickListener(new OnClickListener() {
 
@@ -223,6 +226,10 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 	public ArrayList<CommentGroup> getCommentGroups() {
 		return commentGroups;
+	}
+	
+	private String formatCommentDate(Date date) {
+		return commentDateFormat.format(date);
 	}
 
 }
