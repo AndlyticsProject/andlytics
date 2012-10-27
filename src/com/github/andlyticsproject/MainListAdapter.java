@@ -30,6 +30,7 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -176,22 +177,28 @@ public class MainListAdapter extends BaseAdapter {
 			holder.ratingbar = (RatingBar) convertView.findViewById(R.id.main_app_ratingbar);
 			holder.row = (RelativeLayout) convertView.findViewById(R.id.main_app_row);
 
-			holder.ratingtext1 = (TextView) convertView.findViewById(R.id.main_app_ratingbar1_text);
-			holder.ratingtext2 = (TextView) convertView.findViewById(R.id.main_app_ratingbar2_text);
-			holder.ratingtext3 = (TextView) convertView.findViewById(R.id.main_app_ratingbar3_text);
-			holder.ratingtext4 = (TextView) convertView.findViewById(R.id.main_app_ratingbar4_text);
-			holder.ratingtext5 = (TextView) convertView.findViewById(R.id.main_app_ratingbar5_text);
+			holder.ratingtext1 = (TextView) convertView.findViewById(R.id.main_app_rating_1_text);
+			holder.ratingtext2 = (TextView) convertView.findViewById(R.id.main_app_rating_2_text);
+			holder.ratingtext3 = (TextView) convertView.findViewById(R.id.main_app_rating_3_text);
+			holder.ratingtext4 = (TextView) convertView.findViewById(R.id.main_app_rating_4_text);
+			holder.ratingtext5 = (TextView) convertView.findViewById(R.id.main_app_rating_5_text);
+			
+			holder.ratings1 = (ProgressBar) convertView.findViewById(R.id.main_app_rating_1_rating_progressbar);
+			holder.ratings2 = (ProgressBar) convertView.findViewById(R.id.main_app_rating_2_rating_progressbar);
+			holder.ratings3 = (ProgressBar) convertView.findViewById(R.id.main_app_rating_3_rating_progressbar);
+			holder.ratings4 = (ProgressBar) convertView.findViewById(R.id.main_app_rating_4_rating_progressbar);
+			holder.ratings5 = (ProgressBar) convertView.findViewById(R.id.main_app_rating_5_rating_progressbar);
 
 			holder.ratingpercent1 = (TextView) convertView
-					.findViewById(R.id.main_app_ratingbar1_percent);
+					.findViewById(R.id.main_app_rating_1_percent);
 			holder.ratingpercent2 = (TextView) convertView
-					.findViewById(R.id.main_app_ratingbar2_percent);
+					.findViewById(R.id.main_app_rating_2_percent);
 			holder.ratingpercent3 = (TextView) convertView
-					.findViewById(R.id.main_app_ratingbar3_percent);
+					.findViewById(R.id.main_app_rating_3_percent);
 			holder.ratingpercent4 = (TextView) convertView
-					.findViewById(R.id.main_app_ratingbar4_percent);
+					.findViewById(R.id.main_app_rating_4_percent);
 			holder.ratingpercent5 = (TextView) convertView
-					.findViewById(R.id.main_app_ratingbar5_percent);
+					.findViewById(R.id.main_app_rating_5_percent);
 
 			holder.buttonHistory = (View) convertView.findViewById(R.id.main_app_button_history);
 			holder.ratingFrame = (View) convertView.findViewById(R.id.main_app_ratingdetain_frame);
@@ -232,6 +239,18 @@ public class MainListAdapter extends BaseAdapter {
 		holder.ratingtext3.setText(appStats.getRating3().toString());
 		holder.ratingtext4.setText(appStats.getRating4().toString());
 		holder.ratingtext5.setText(appStats.getRating5().toString());
+		
+		int numRatings = appStats.getRatingCount();
+		holder.ratings1.setMax(numRatings);
+		holder.ratings1.setProgress(appStats.getRating1());
+		holder.ratings2.setMax(numRatings);
+		holder.ratings2.setProgress(appStats.getRating2());
+		holder.ratings3.setMax(numRatings);
+		holder.ratings3.setProgress(appStats.getRating3());
+		holder.ratings4.setMax(numRatings);
+		holder.ratings4.setProgress(appStats.getRating4());
+		holder.ratings5.setMax(numRatings);
+		holder.ratings5.setProgress(appStats.getRating5());
 
 		if (statsMode.equals(StatsMode.DAY_CHANGES)) {
 			setupValueDiff(holder.ratingpercent1, appStats.getRating1Diff());
@@ -539,6 +558,11 @@ public class MainListAdapter extends BaseAdapter {
 		public TextView ratingpercent3;
 		public TextView ratingpercent4;
 		public TextView ratingpercent5;
+		public ProgressBar ratings1;
+		public ProgressBar ratings2;
+		public ProgressBar ratings3;
+		public ProgressBar ratings4;
+		public ProgressBar ratings5;
 		public TextView name;
 		public TextView packageName;
 		public TextView downloadsCount;

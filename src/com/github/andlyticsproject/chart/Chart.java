@@ -123,7 +123,7 @@ public class Chart extends AbstractChart {
 		}
 
 		// settings
-		setChartSettings(renderer, "", "", "", 0, statsForApp.size(), valueDistanceBottom,
+		setChartSettings(context.getResources(), renderer, "", "", "", 0, statsForApp.size(), valueDistanceBottom,
 				valueDistanceTop, Color.LTGRAY, Color.BLACK);
 
 		renderer.setYLabels(7);
@@ -132,7 +132,6 @@ public class Chart extends AbstractChart {
 		renderer.setShowAxes(false);
 		renderer.setShowGrid(true);
 		renderer.setAntialiasing(true);
-		renderer.setLabelsTextSize(12);
 
 		return ChartFactory.getBarChartView(context, buildBarDataset(titles, values), renderer,
 				Type.DEFAULT);
@@ -221,7 +220,7 @@ public class Chart extends AbstractChart {
 		}
 
 		// settings
-		setChartSettings(renderer, "", "", "", datesArray[0].getTime() - dateDistance,
+		setChartSettings(context.getResources(), renderer, "", "", "", datesArray[0].getTime() - dateDistance,
 				datesArray[datesArray.length - 1].getTime() + dateDistance, valueDistanceBottom,
 				valueDistanceTop, Color.LTGRAY, Color.BLACK);
 
@@ -231,7 +230,6 @@ public class Chart extends AbstractChart {
 		renderer.setShowAxes(false);
 		renderer.setShowGrid(true);
 		renderer.setAntialiasing(true);
-		renderer.setLabelsTextSize(12);
 
 		return ChartFactory.getTimeChartView(context,
 				buildDateDataset(titles, dateArrayList, values), renderer,

@@ -4,6 +4,7 @@
     android:layout_height="fill_parent" >
 
     <LinearLayout
+        android:background="#eeeeee"
         android:id="@+id/base_chart_main_frame"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -42,7 +43,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="5dp"
                     android:text=""
-                    android:textSize="14dp"
+                    android:textSize="@dimen/chart_title_text_size"
                     android:visibility="visible" >
                 </TextView>
 

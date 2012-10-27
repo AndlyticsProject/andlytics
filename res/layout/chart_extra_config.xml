@@ -5,7 +5,7 @@
 
     <CheckBox
         android:id="@+id/chart_config_checkbox_smooth"
-        style="@style/MainTableText"
+        style="@style/ChartConfigText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="5dp"
