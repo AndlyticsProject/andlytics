@@ -14,7 +14,7 @@
 
             <TextView
                 android:id="@+id/base_chart_config_headline_text"
-                style="@style/MainTableText"
+                style="@style/ChartConfigText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
@@ -30,7 +30,7 @@
 
                 <RadioButton
                     android:id="@+id/base_chart_config_ratio_last_seven_days"
-                    style="@style/MainTableText"
+                    style="@style/ChartConfigText"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/seven_days" >
@@ -38,7 +38,7 @@
 
                 <RadioButton
                     android:id="@+id/base_chart_config_ratio_last_thrity_days"
-                    style="@style/MainTableText"
+                    style="@style/ChartConfigText"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/thirty_days" >
@@ -46,7 +46,7 @@
 
                 <RadioButton
                     android:id="@+id/base_chart_config_ratio_last_ninety_days"
-                    style="@style/MainTableText"
+                    style="@style/ChartConfigText"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/ninety_days" >
@@ -54,7 +54,7 @@
 
                 <RadioButton
                     android:id="@+id/base_chart_config_ratio_last_unlimited"
-                    style="@style/MainTableText"
+                    style="@style/ChartConfigText"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/unlimited" >
@@ -63,7 +63,7 @@
 
             <TextView
                 android:id="@+id/base_chart_config_headline_date"
-                style="@style/MainTableText"
+                style="@style/ChartConfigText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/base_chart_config_timeframe_radios"
@@ -80,7 +80,7 @@
 
                 <RadioButton
                     android:id="@+id/base_chart_config_ratio_dmy"
-                    style="@style/MainTableText"
+                    style="@style/ChartConfigText"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/ddmmyy" >
@@ -88,7 +88,7 @@
 
                 <RadioButton
                     android:id="@+id/base_chart_config_ratio_mdy"
-                    style="@style/MainTableText"
+                    style="@style/ChartConfigText"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/mmddyy" >
@@ -96,7 +96,7 @@
 
                 <RadioButton
                     android:id="@+id/base_chart_config_ratio_ymd"
-                    style="@style/MainTableText"
+                    style="@style/ChartConfigText"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/yymmdd" >
@@ -134,7 +134,7 @@
 
             <TextView
                 android:id="@+id/main_autosync_text"
-                style="@style/MainTableText"
+                style="@style/ChartConfigText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

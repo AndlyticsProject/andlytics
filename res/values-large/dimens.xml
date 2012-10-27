@@ -2,4 +2,6 @@
 <resources>
     <dimen name="chart_label_text_size">15sp</dimen>
     <dimen name="chart_title_text_size">18sp</dimen>
+    <dimen name="chart_list_item_text_size">18sp</dimen>
+    <dimen name="tab_text_size">15sp</dimen>
 </resources>
