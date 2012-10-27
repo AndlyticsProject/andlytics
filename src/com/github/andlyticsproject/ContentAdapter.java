@@ -33,6 +33,7 @@ import com.github.andlyticsproject.model.Comment;
 public class ContentAdapter {
 
 	private final Context context;
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public ContentAdapter(Context ctx) {
 		this.context = ctx;
@@ -333,13 +334,11 @@ public class ContentAdapter {
 
 	}
 
-	public static String formatDate(Date date) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	public String formatDate(Date date) {
 		return dateFormat.format(date);
 	}
 
 	private Date parseDate(String string) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			return dateFormat.parse(string);
 		} catch (ParseException e) {
