@@ -4,6 +4,7 @@
     android:layout_height="fill_parent" >
 
     <LinearLayout
+        android:background="#eeeeee"
         android:id="@+id/base_chart_main_frame"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
