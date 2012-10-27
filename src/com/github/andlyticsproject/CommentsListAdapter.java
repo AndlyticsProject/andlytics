@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -121,25 +120,16 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 		if (convertView == null) {
 			convertView = layoutInflater.inflate(R.layout.comments_list_item, null);
-
+			convertView.setOnClickListener(null);
 			holder = new ViewHolderGroup();
 			holder.date = (TextView) convertView.findViewById(R.id.comments_list_item_date);
 			convertView.setTag(holder);
 		} else {
-
 			holder = (ViewHolderGroup) convertView.getTag();
 		}
 
 		CommentGroup commentGroup = getGroup(groupPosition);
 		holder.date.setText(commentGroup.getDateString());
-
-		convertView.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-			}
-		});
 
 		return convertView;
 	}
