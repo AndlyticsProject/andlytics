@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -80,6 +81,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private MenuItem statsModeMenuItem;
 
 	private List<String> accountsList;
+	
+	private DateFormat dateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
 
 	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
 
@@ -355,7 +358,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 			if (lastUpdateDate != null) {
 				statusText.setText(this.getString(R.string.last_update) + ": "
-						+ ContentAdapter.formatDate(lastUpdateDate));
+						+ dateTimeFormat.format(lastUpdateDate));
 			}
 
 		}
