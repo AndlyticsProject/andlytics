@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpStatus;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
@@ -12,6 +14,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.util.Log;
 
@@ -40,6 +43,7 @@ import com.github.andlyticsproject.model.Comment;
  * This class fetches the data, which is then passed using {@link JsonParser}
  * 
  */
+@SuppressLint("DefaultLocale")
 public class DevConsoleV2 implements DevConsole {
 
 	// 30 seconds -- for both socket and connection
@@ -50,22 +54,22 @@ public class DevConsoleV2 implements DevConsole {
 	private static final boolean DEBUG = false;
 
 	// Base urls
-	private static final String URL_DEVELOPER_CONSOLE = "https://play.google.com/apps/publish/v2/";
-	private static final String URL_APPS = "https://play.google.com/apps/publish/v2/androidapps";
-	private static final String URL_STATISTICS = "https://play.google.com/apps/publish/v2/statistics";
-	private static final String URL_REVIEWS = "https://play.google.com/apps/publish/v2/reviews";
+	private static final String URL_DEVELOPER_CONSOLE = "https://play.google.com/apps/publish/v2";
+	private static final String URL_APPS = URL_DEVELOPER_CONSOLE + "/androidapps";
+	private static final String URL_STATISTICS = URL_DEVELOPER_CONSOLE + "/statistics";
+	private static final String URL_REVIEWS = URL_DEVELOPER_CONSOLE + "/reviews";
 
-	// Payloads used in POST requests
-	private static final String PAYLOAD_APPS = "{\"method\":\"fetch\","
+	// Templates for payloads used in POST requests
+	private static final String FETCH_APPS_TEMPLATE = "{\"method\":\"fetch\","
 			+ "\"params\":{\"2\":1,\"3\":7},\"xsrf\":\"%s\"}";
 	// 1$: package name, 2$: XSRF
-	private static final String PAYLOAD_RATINGS = "{\"method\":\"getRatings\","
+	private static final String GET_RATINGS_TEMPLATE = "{\"method\":\"getRatings\","
 			+ "\"params\":{\"1\":[\"%1$s\"]},\"xsrf\":\"%2$s\"}";
 	// 1$: package name, 2$: start, 3$: num comments to fetch, 4$ XSRF
-	private static final String PAYLOAD_COMMENTS = "{\"method\":\"getReviews\","
+	private static final String GET_REVIEWS_TEMPLATE = "{\"method\":\"getReviews\","
 			+ "\"params\":{\"1\":\"%1$s\",\"2\":%2$d,\"3\":%3$d},\"xsrf\":\"%4$s\"}";
 	// 1$: package name, 2$: stats type, 3$: stats by, 4$: XSRF
-	private static final String PAYLOAD_STATISTICS = "{\"method\":\"getCombinedStats\","
+	private static final String GET_COMBINED_STATS_TEMPLATE = "{\"method\":\"getCombinedStats\","
 			+ "\"params\":{\"1\":\"%1$s\",\"2\":1,\"3\":%2$d,\"4\":[%3$d]},\"xsrf\":\"%4$s\"}";
 
 	// Represents the different ways to break down statistics by e.g. by android
@@ -82,12 +86,12 @@ public class DevConsoleV2 implements DevConsole {
 	protected static final int STATS_TYPE_TOTAL_USER_INSTALLS = 8;
 
 	private DefaultHttpClient httpClient;
-	private AuthInfo authInfo;
+	private SessionCredentials sessionCredentials;
 	private DevConsoleAuthenticator authenticator;
 	private String accountName;
 
 	public static DevConsoleV2 createForAccount(String accountName, DefaultHttpClient httpClient) {
-		DevConsoleAuthenticator authenticator = new AccountManagerAuthenticator(accountName, false,
+		DevConsoleAuthenticator authenticator = new AccountManagerAuthenticator(accountName,
 				httpClient);
 
 		return new DevConsoleV2(httpClient, authenticator);
@@ -107,27 +111,31 @@ public class DevConsoleV2 implements DevConsole {
 		this.accountName = authenticator.getAccountName();
 	}
 
-	// TODO Decide on which exceptions should actually be thrown and by which
-	// methods, and what data we should include in them
-	// => for now just specifying the super class, AndlyticsException
-	// All pretty much fatal, so consider making them REs and let the
-	// outermost client (UI, etc.) handle
-
 	/**
 	 * Gets a list of available apps for the given account
 	 * 
-	 * @param accountName
+	 * @param activity
 	 * @return
 	 * @throws DevConsoleException
 	 */
 	public synchronized List<AppInfo> getAppInfo(Activity activity) throws DevConsoleException {
+		try {
+			// the authenticator launched a sub-activity, bail out for now
+			if (!authenticateWithCachedCredentialas(activity)) {
+				return new ArrayList<AppInfo>();
+			}
 
-		authenticate(activity, false);
-		// the authenticator launched a sub-activity, bail out for now
-		if (authInfo == null) {
-			return new ArrayList<AppInfo>();
+			return fetchAppInfosAndStatistics();
+		} catch (AuthenticationException ex) {
+			if (!authenticateFromScratch(activity)) {
+				return new ArrayList<AppInfo>();
+			}
+
+			return fetchAppInfosAndStatistics();
 		}
+	}
 
+	private List<AppInfo> fetchAppInfosAndStatistics() {
 		// Fetch a list of available apps
 		List<AppInfo> apps = fetchAppInfos();
 
@@ -157,20 +165,13 @@ public class DevConsoleV2 implements DevConsole {
 	public synchronized List<Comment> getComments(Activity activity, String packageName,
 			int startIndex, int count) throws DevConsoleException {
 		try {
-			// First try using existing cookies and tokens
-			authenticate(activity, true);
-			// the authenticator launched a sub-activity, bail out for now
-			if (authInfo == null) {
+			if (!authenticateWithCachedCredentialas(activity)) {
 				return new ArrayList<Comment>();
 			}
 
 			return fetchComments(packageName, startIndex, count);
-		} catch (DevConsoleProtocolException ex) {
-			// TODO What to catch here, can we specifically detect an auth
-			// problem when doing a POST?
-			authenticate(activity, false);
-			// the authenticator launched a sub-activity, bail out for now
-			if (authInfo == null) {
+		} catch (AuthenticationException ex) {
+			if (!authenticateFromScratch(activity)) {
 				return new ArrayList<Comment>();
 			}
 
@@ -186,34 +187,31 @@ public class DevConsoleV2 implements DevConsole {
 	 * @throws DevConsoleException
 	 */
 	private List<AppInfo> fetchAppInfos() throws DevConsoleException {
-
-		// Setup the request
-		// TODO Check the remaining possible parameters to see if they are
-		// needed for large numbers of apps
-		String postData = String.format(PAYLOAD_APPS, authInfo.getXsrfToken());
-
-		// Perform the request
 		String json = null;
 		try {
-			json = post(createDeveloperUrl(URL_APPS), postData);
+			json = post(createDeveloperUrl(URL_APPS), createFetchAppInfosRequest());
 			return JsonParser.parseAppInfos(json, accountName);
-		} catch (IOException ex) {
-			throw new NetworkException(ex);
 		} catch (JSONException ex) {
 			throw new DevConsoleProtocolException(json, ex);
 		}
 	}
 
+	private String createFetchAppInfosRequest() {
+		// TODO Check the remaining possible parameters to see if they are
+		// needed for large numbers of apps
+		return String.format(FETCH_APPS_TEMPLATE, sessionCredentials.getXsrfToken());
+	}
+
 	private String createDeveloperUrl(String baseUrl) {
-		return String.format("%s?dev_acc=%s", baseUrl, authInfo.getDeveloperAccountId());
+		return String.format("%s?dev_acc=%s", baseUrl, sessionCredentials.getDeveloperAccountId());
 	}
 
 	/**
 	 * Fetches statistics for the given packageName of the given statsType and
 	 * adds them to the given {@link AppStats} object
 	 * 
-	 * This is not used as statistics can be fetched via fetchAppInfos
-	 * Can use it later to get historical etc data
+	 * This is not used as statistics can be fetched via fetchAppInfos Can use
+	 * it later to get historical etc data
 	 * 
 	 * @param packageName
 	 * @param stats
@@ -223,22 +221,21 @@ public class DevConsoleV2 implements DevConsole {
 	@SuppressWarnings("unused")
 	private void fetchStatistics(String packageName, AppStats stats, int statsType)
 			throws DevConsoleException {
-		// Setup the request
-		// Don't care about the breakdown at the moment:
-		// STATS_BY_ANDROID_VERSION
-		String postData = String.format(PAYLOAD_STATISTICS, packageName, statsType,
-				STATS_BY_ANDROID_VERSION, authInfo.getXsrfToken());
-
-		// Perform the request
 		String json = null;
 		try {
-			json = post(createDeveloperUrl(URL_STATISTICS), postData);
+			json = post(createDeveloperUrl(URL_STATISTICS),
+					createFetchStatisticsRequest(packageName, statsType));
 			JsonParser.parseStatistics(json, stats, statsType);
-		} catch (IOException ex) {
-			throw new NetworkException(ex);
 		} catch (JSONException ex) {
 			throw new DevConsoleProtocolException(json, ex);
 		}
+	}
+
+	private String createFetchStatisticsRequest(String packageName, int statsType) {
+		// Don't care about the breakdown at the moment:
+		// STATS_BY_ANDROID_VERSION
+		return String.format(GET_COMBINED_STATS_TEMPLATE, packageName, statsType,
+				STATS_BY_ANDROID_VERSION, sessionCredentials.getXsrfToken());
 	}
 
 	/**
@@ -252,19 +249,17 @@ public class DevConsoleV2 implements DevConsole {
 	 * @throws DevConsoleException
 	 */
 	private void fetchRatings(String packageName, AppStats stats) throws DevConsoleException {
-		// Setup the request
-		String postData = String.format(PAYLOAD_RATINGS, packageName, authInfo.getXsrfToken());
-
-		// Perform the request
 		String json = null;
 		try {
-			json = post(createDeveloperUrl(URL_REVIEWS), postData);
+			json = post(createDeveloperUrl(URL_REVIEWS), createFetchRatingsRequest(packageName));
 			JsonParser.parseRatings(json, stats);
-		} catch (IOException ex) {
-			throw new NetworkException(ex);
 		} catch (JSONException ex) {
 			throw new DevConsoleProtocolException(json, ex);
 		}
+	}
+
+	private String createFetchRatingsRequest(String packageName) {
+		return String.format(GET_RATINGS_TEMPLATE, packageName, sessionCredentials.getXsrfToken());
 	}
 
 	/**
@@ -275,52 +270,54 @@ public class DevConsoleV2 implements DevConsole {
 	 * @throws DevConsoleException
 	 */
 	private int fetchCommentsCount(String packageName) throws DevConsoleException {
+		// TODO -- this doesn't always produce correct results
 		// emulate the console: fetch first 50, get approx num. comments,
 		// fetch last 50 (or so) to get exact number.
 		int pageSize = 50;
-		String postData = String.format(PAYLOAD_COMMENTS, packageName, 0, pageSize,
-				authInfo.getXsrfToken());
-
-		// Perform the request
 		String json = null;
 		try {
-			json = post(createDeveloperUrl(URL_REVIEWS), postData);
+			json = post(createDeveloperUrl(URL_REVIEWS),
+					createFetchCommentsRequest(packageName, 0, pageSize));
 			int approxNumComments = JsonParser.parseCommentsCount(json);
 			if (approxNumComments <= pageSize) {
 				// this has a good chance of being exact
 				return approxNumComments;
 			}
 
-			postData = String.format(PAYLOAD_COMMENTS, packageName, approxNumComments - pageSize,
-					pageSize, authInfo.getXsrfToken());
-			json = post(createDeveloperUrl(URL_REVIEWS), postData);
+			json = post(createDeveloperUrl(URL_REVIEWS),
+					createFetchCommentsRequest(packageName, approxNumComments - pageSize, pageSize));
 			int finalNumComments = JsonParser.parseCommentsCount(json);
 
 			return finalNumComments;
-		} catch (IOException ex) {
-			throw new NetworkException(ex);
 		} catch (JSONException ex) {
 			throw new DevConsoleProtocolException(json, ex);
 		}
 	}
 
+	private String createFetchCommentsRequest(String packageName, int start, int pageSize) {
+		return String.format(GET_REVIEWS_TEMPLATE, packageName, start, pageSize,
+				sessionCredentials.getXsrfToken());
+	}
+
 	private List<Comment> fetchComments(String packageName, int startIndex, int count)
 			throws DevConsoleException {
-
-		// Setup the request
-		String postData = String.format(PAYLOAD_COMMENTS, packageName, startIndex, count,
-				authInfo.getXsrfToken());
-
-		// Perform the request
 		String json = null;
 		try {
-			json = post(createDeveloperUrl(URL_REVIEWS), postData);
+			json = post(createDeveloperUrl(URL_REVIEWS),
+					createFetchCommentsRequest(packageName, startIndex, count));
+
 			return JsonParser.parseComments(json);
-		} catch (IOException ex) {
-			throw new NetworkException(ex);
 		} catch (JSONException ex) {
 			throw new DevConsoleProtocolException(json, ex);
 		}
+	}
+
+	private boolean authenticateWithCachedCredentialas(Activity activity) {
+		return authenticate(activity, false);
+	}
+
+	private boolean authenticateFromScratch(Activity activity) {
+		return authenticate(activity, true);
 	}
 
 	/**
@@ -329,40 +326,51 @@ public class DevConsoleV2 implements DevConsole {
 	 * @param reuseAuthentication
 	 * @throws DevConsoleException
 	 */
-	private void authenticate(Activity activity, boolean reuseAuthentication)
-			throws AuthenticationException {
-		if (!reuseAuthentication) {
-			authInfo = null;
+	private boolean authenticate(Activity activity, boolean invalidateCredentials)
+			throws DevConsoleException {
+		if (invalidateCredentials) {
+			sessionCredentials = null;
 		}
 
-		if (authInfo != null) {
+		if (sessionCredentials != null) {
 			// nothing to do
-			return;
+			return true;
 		}
 
-		boolean invalidate = !reuseAuthentication;
-		authInfo = activity == null ? authenticator.authenticateSilently(invalidate)
-				: authenticator.authenticate(activity, invalidate);
+		sessionCredentials = activity == null ? authenticator
+				.authenticateSilently(invalidateCredentials) : authenticator.authenticate(activity,
+				invalidateCredentials);
+
+		return sessionCredentials != null;
 	}
 
-	private String post(String url, String postData) throws IOException {
-		HttpPost post = new HttpPost(url);
-		addHeaders(post);
-		post.setEntity(new StringEntity(postData, "UTF-8"));
+	private String post(String url, String postData) {
+		try {
+			HttpPost post = new HttpPost(url);
+			addHeaders(post);
+			post.setEntity(new StringEntity(postData, "UTF-8"));
 
-		if (DEBUG) {
-			CookieStore cookieStore = httpClient.getCookieStore();
-			List<Cookie> cookies = cookieStore.getCookies();
-			for (Cookie c : cookies) {
-				Log.d(TAG, String.format("****Cookie**** %s=%s", c.getName(), c.getValue()));
+			if (DEBUG) {
+				CookieStore cookieStore = httpClient.getCookieStore();
+				List<Cookie> cookies = cookieStore.getCookies();
+				for (Cookie c : cookies) {
+					Log.d(TAG, String.format("****Cookie**** %s=%s", c.getName(), c.getValue()));
+				}
 			}
+
+			ResponseHandler<String> handler = HttpClientFactory.createResponseHandler();
+
+			return httpClient.execute(post, handler);
+		} catch (HttpResponseException e) {
+			if (e.getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
+				throw new AuthenticationException(e);
+			}
+
+			throw new NetworkException(e);
+		} catch (IOException e) {
+			throw new NetworkException(e);
 		}
 
-		// TODO maybe translate exceptions better?
-		ResponseHandler<String> handler = HttpClientFactory
-				.createResponseHandler(RuntimeException.class);
-
-		return httpClient.execute(post, handler);
 	}
 
 	private void addHeaders(HttpPost post) {
@@ -371,10 +379,8 @@ public class DevConsoleV2 implements DevConsole {
 		post.addHeader("Content-Type", "application/json; charset=utf-8");
 		post.addHeader("X-GWT-Permutation", "04C42FD45B1FCD2E3034C8A4DC5145C1");
 		post.addHeader("X-GWT-Module-Base", "https://play.google.com/apps/publish/v2/gwt/");
-		post.addHeader(
-				"Referer",
-				"https://play.google.com/apps/publish/v2/?dev_acc="
-						+ authInfo.getDeveloperAccountId());
+		post.addHeader("Referer", "https://play.google.com/apps/publish/v2/?dev_acc="
+				+ sessionCredentials.getDeveloperAccountId());
 	}
 
 }

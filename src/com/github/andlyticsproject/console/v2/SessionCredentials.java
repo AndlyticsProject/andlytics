@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.http.cookie.Cookie;
 
-public class AuthInfo {
+public class SessionCredentials {
 
 	private String xsrfToken;
 	// 20 digit developer account ID
@@ -14,7 +14,7 @@ public class AuthInfo {
 	// authentication session cookies, including AD
 	private List<Cookie> cookies = new ArrayList<Cookie>();
 
-	public AuthInfo(String xsrfToken, String developerAccountId) {
+	public SessionCredentials(String xsrfToken, String developerAccountId) {
 		this.xsrfToken = xsrfToken;
 		this.developerAccountId = developerAccountId;
 	}

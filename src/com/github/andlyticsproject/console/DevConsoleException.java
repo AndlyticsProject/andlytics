@@ -1,7 +1,6 @@
 package com.github.andlyticsproject.console;
 
-// TODO -- make this a RE
-public class DevConsoleException extends Exception {
+public class DevConsoleException extends RuntimeException {
 
 	/**
 	 * 

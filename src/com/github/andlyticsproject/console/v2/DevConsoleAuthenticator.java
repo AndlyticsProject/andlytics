@@ -11,8 +11,8 @@ public interface DevConsoleAuthenticator {
 	// Activity may be needed to start authentication sub activity (password or
 	// approval prompt, etc). It needs to override onActivityResult() and
 	// retry if RESULT_OK
-	AuthInfo authenticate(Activity activity, boolean invalidate) throws AuthenticationException;
+	SessionCredentials authenticate(Activity activity, boolean invalidate) throws AuthenticationException;
 
 	// Use this when calling from a service. Won't launch any UIs
-	AuthInfo authenticateSilently(boolean invalidate) throws AuthenticationException;
+	SessionCredentials authenticateSilently(boolean invalidate) throws AuthenticationException;
 }
