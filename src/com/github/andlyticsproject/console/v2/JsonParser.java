@@ -78,10 +78,10 @@ public class JsonParser {
 		int latestValue = latestData.getJSONArray(2).getInt(1);
 
 		switch (statsType) {
-			case DevConsoleV2.STATS_TYPE_TOTAL_USER_INSTALLS:
+		case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
 				stats.setTotalDownloads(latestValue);
 				break;
-			case DevConsoleV2.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
+		case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
 				stats.setActiveInstalls(latestValue);
 				break;
 			default:
