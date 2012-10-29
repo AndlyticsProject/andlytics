@@ -51,7 +51,6 @@ import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
-import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.console.v2.HttpClientFactory;
@@ -87,8 +86,9 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private MenuItem statsModeMenuItem;
 
 	private List<String> accountsList;
-	
-	private DateFormat dateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
+
+	private DateFormat dateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,
+			DateFormat.MEDIUM);
 
 	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
 
@@ -405,12 +405,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		@SuppressWarnings("unchecked")
 		@Override
 		protected Exception doInBackground(String... params) {
-
-			// authentication failed before, retry with token invalidation
-
 			Exception exception = null;
-
-			String authToken = ((AndlyticsApp) getApplication()).getAuthToken();
 
 			List<AppInfo> appDownloadInfos = null;
 			try {
@@ -468,15 +463,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				Utils.execute(new LoadIconInCache(), appDownloadInfos);
 
 			} catch (Exception e) {
-
-				if (e instanceof IOException) {
-					e = new NetworkException(e);
-				}
-
+				Log.e(TAG, "Error while requesting developer console : " + e.getMessage(), e);
 				exception = e;
-
-				Log.e(TAG, "error while requesting developer console", e);
-				e.printStackTrace();
 			}
 
 			if (dotracking == true) {
@@ -502,28 +490,28 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
 		 */
 		@Override
-		protected void onPostExecute(Exception e) {
+		protected void onPostExecute(Exception exception) {
 
 			refreshing = false;
 			supportInvalidateOptionsMenu();
 
-			if (e != null) {
-
-				if ((e instanceof DevConsoleProtocolException || e instanceof AuthenticationException)
-						&& !isAuthenticationRetry) {
-					Log.w("Andlytics", "authentication faild, retry with new token");
-					isAuthenticationRetry = true;
-					authenticateAccountFromPreferences(true, Main.this);
-
-				} else {
-					handleUserVisibleException(e);
-					new LoadDbEntries().execute(false);
-				}
-
-			} else {
+			if (exception == null) {
 				new LoadDbEntries().execute(false);
+				return;
 			}
 
+			// TODO -- is this needed? DevConsoleV2 already retries
+			// in the case of AuthenticationException
+			if ((exception instanceof DevConsoleProtocolException || exception instanceof AuthenticationException)
+					&& !isAuthenticationRetry) {
+				Log.w("Andlytics", "authentication faild, retry with new token");
+				isAuthenticationRetry = true;
+				authenticateAccountFromPreferences(true, Main.this);
+
+			} else {
+				handleUserVisibleException(exception);
+				new LoadDbEntries().execute(false);
+			}
 		}
 
 		/*

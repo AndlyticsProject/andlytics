@@ -104,7 +104,6 @@ public class BaseActivity extends SherlockActivity {
 		} else if (e instanceof AuthenticationException) {
 			Toast.makeText(BaseActivity.this, getString(R.string.auth_error, accountName),
 					Toast.LENGTH_LONG).show();
-
 		} else if (e instanceof AdmobRateLimitExceededException) {
 			Toast.makeText(BaseActivity.this, getString(R.string.admob_ratelimit_error),
 					Toast.LENGTH_LONG).show();
