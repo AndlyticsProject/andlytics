@@ -590,7 +590,7 @@ public class DevConsoleV1 {
 				}
 
 				if (devacc == null && asp) {
-					throw new MultiAccountException();
+					throw new MultiAccountException("Multiple account consoles not supported.");
 				}
 
 				if (devacc == null) {
