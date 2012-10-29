@@ -85,8 +85,8 @@ public class SyncAdapterService extends Service {
 			if (console != null) {
 				List<AppInfo> appDownloadInfos = console.getAppInfo(null);
 				// this can also happen if authentication fails and the user 
-				// need to click on a notification to confir or re-enter 
-				// password
+				// need to click on a notification to confirm or re-enter
+				// password (e.g., if password changed or 2FA enabled)
 				if (appDownloadInfos.isEmpty()) {
 					return;
 				}
@@ -104,10 +104,6 @@ public class SyncAdapterService extends Service {
 
 				// check for notifications
 				NotificationHandler.handleNotificaions(context, diffs, account.name);
-
-				// } else {
-				// Log.e(TAG, "error during sync auth, no token found");
-				// }
 			}
 		} catch (DevConsoleException e) {
 			Log.e(TAG, "error during sync", e);

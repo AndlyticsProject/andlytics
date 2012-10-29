@@ -8,6 +8,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
@@ -206,13 +207,13 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 		}
 
 		@Override
-		protected void onPostExecute(Exception result) {
+		protected void onPostExecute(Exception exception) {
 
 			footer.setEnabled(true);
 
-			if (result != null) {
-				handleUserVisibleException(result);
-				result.printStackTrace();
+			if (exception != null) {
+				Log.e(TAG, "Error fetching comments: " + exception.getMessage(), exception);
+				handleUserVisibleException(exception);
 				footer.setVisibility(View.GONE);
 			} else {
 
