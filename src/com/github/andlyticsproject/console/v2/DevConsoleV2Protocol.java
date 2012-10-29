@@ -5,11 +5,14 @@ import java.util.List;
 import org.apache.http.client.methods.HttpPost;
 import org.json.JSONException;
 
+import android.annotation.SuppressLint;
+
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 
+@SuppressLint("DefaultLocale")
 public class DevConsoleV2Protocol {
 
 	// Base urls
