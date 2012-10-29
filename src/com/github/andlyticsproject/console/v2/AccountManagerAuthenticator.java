@@ -27,6 +27,7 @@ import android.util.Log;
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.console.AuthenticationException;
+import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2;
 import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2.Builder;
 
@@ -44,14 +45,12 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 
 	// includes one-time token
 	private String webloginUrl;
-	private boolean reuseAuthentication;
+
 	private DefaultHttpClient httpClient;
 
-	public AccountManagerAuthenticator(String accountName, boolean reuseAuthentication,
-			DefaultHttpClient httpClient) {
+	public AccountManagerAuthenticator(String accountName, DefaultHttpClient httpClient) {
 		super(accountName);
 		this.accountManager = AccountManager.get(AndlyticsApp.getInstance());
-		this.reuseAuthentication = reuseAuthentication;
 		this.httpClient = httpClient;
 	}
 
@@ -61,18 +60,19 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 	// packages/apps/Browser/src/com/android/browser/GoogleAccountLogin.java
 	// packages/apps/Browser/src/com/android/browser/DeviceAccountLogin.java
 	@Override
-	public AuthInfo authenticate(Activity activity, boolean invalidate)
+	public SessionCredentials authenticate(Activity activity, boolean invalidate)
 			throws AuthenticationException {
 		return authenticateInternal(activity, invalidate);
 	}
 
 	@Override
-	public AuthInfo authenticateSilently(boolean invalidate) throws AuthenticationException {
+	public SessionCredentials authenticateSilently(boolean invalidate)
+			throws AuthenticationException {
 		return authenticateInternal(null, invalidate);
 	}
 
 	@SuppressWarnings("deprecation")
-	private AuthInfo authenticateInternal(Activity activity, boolean invalidate)
+	private SessionCredentials authenticateInternal(Activity activity, boolean invalidate)
 			throws AuthenticationException {
 		try {
 			Account[] accounts = accountManager.getAccountsByType("com.google");
@@ -84,7 +84,8 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				}
 			}
 			if (account == null) {
-				throw new AuthenticationException(String.format("Account %s not found on device?"));
+				throw new AuthenticationException(String.format("Account %s not found on device?",
+						accountName));
 			}
 
 			if (invalidate && webloginUrl != null) {
@@ -98,7 +99,9 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 					null, null).getResult();
 			if (authResult.containsKey(AccountManager.KEY_INTENT)) {
 				Intent authIntent = authResult.getParcelable(AccountManager.KEY_INTENT);
-				if (DEBUG) Log.w(TAG, "Got a reauthenticate intent: " + authIntent);
+				if (DEBUG) {
+					Log.w(TAG, "Got a reauthenticate intent: " + authIntent);
+				}
 
 				// silent mode, show notification
 				if (activity == null) {
@@ -132,13 +135,20 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException(
 						"Unexpected authentication error: weblogin URL = null");
 			}
-			if (DEBUG) Log.d(TAG, "Weblogin URL: " + webloginUrl);
+			if (DEBUG) {
+				Log.d(TAG, "Weblogin URL: " + webloginUrl);
+			}
 
 			HttpGet getConsole = new HttpGet(webloginUrl);
 			HttpResponse response = httpClient.execute(getConsole);
 			int status = response.getStatusLine().getStatusCode();
+			if (status == HttpStatus.SC_UNAUTHORIZED) {
+				throw new AuthenticationException("Authentication token expired: "
+						+ response.getStatusLine());
+			}
 			if (status != HttpStatus.SC_OK) {
-				throw new IllegalStateException("Authentication error: " + response.getStatusLine());
+				throw new AuthenticationException("Authentication error: "
+						+ response.getStatusLine());
 			}
 			HttpEntity entity = response.getEntity();
 			if (entity == null) {
@@ -170,13 +180,12 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException("Couldn't get XSRF token.");
 			}
 
-			AuthInfo result = new AuthInfo(xsrfToken, developerAccountId);
+			SessionCredentials result = new SessionCredentials(xsrfToken, developerAccountId);
 			result.addCookies(cookies);
 
 			return result;
 		} catch (IOException e) {
-			// throw new NetworkException(e);
-			throw new RuntimeException(e);
+			throw new NetworkException(e);
 		} catch (OperationCanceledException e) {
 			throw new AuthenticationException(e);
 		} catch (AuthenticatorException e) {

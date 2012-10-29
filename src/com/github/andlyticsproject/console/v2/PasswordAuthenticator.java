@@ -48,17 +48,17 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 	// (all needed cookies are in HttpClient's cookie jar at this point)
 
 	@Override
-	public AuthInfo authenticate(Activity activity, boolean invalidate)
+	public SessionCredentials authenticate(Activity activity, boolean invalidate)
 			throws AuthenticationException {
 		return authenticate();
 	}
 
 	@Override
-	public AuthInfo authenticateSilently(boolean invalidate) throws AuthenticationException {
+	public SessionCredentials authenticateSilently(boolean invalidate) throws AuthenticationException {
 		return authenticate();
 	}
 
-	private AuthInfo authenticate() throws AuthenticationException {
+	private SessionCredentials authenticate() throws AuthenticationException {
 		try {
 			HttpGet get = new HttpGet(LOGIN_PAGE_URL);
 			HttpResponse response = httpClient.execute(get);
@@ -111,7 +111,7 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException("Couldn't get XSRF token.");
 			}
 
-			AuthInfo result = new AuthInfo(xsrfToken, developerAccountId);
+			SessionCredentials result = new SessionCredentials(xsrfToken, developerAccountId);
 			result.addCookies(cookies);
 
 			return result;

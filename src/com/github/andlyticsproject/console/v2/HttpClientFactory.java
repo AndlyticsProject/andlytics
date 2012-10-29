@@ -2,8 +2,6 @@ package com.github.andlyticsproject.console.v2;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
@@ -13,9 +11,7 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
-import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -23,6 +19,7 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.HttpEntityWrapper;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
@@ -31,7 +28,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
 
 public class HttpClientFactory {
 
@@ -104,9 +100,8 @@ public class HttpClientFactory {
 		});
 	}
 
-	public static ResponseHandler<String> createResponseHandler(
-			Class<? extends RuntimeException> httpErrorExceptionClass) {
-		return new StringResponseHandler(httpErrorExceptionClass);
+	public static ResponseHandler<String> createResponseHandler() {
+		return new BasicResponseHandler();
 	}
 
 	private static void addCommonHeaders(HttpRequest request) {
@@ -140,48 +135,6 @@ public class HttpClientFactory {
 		@Override
 		public long getContentLength() {
 			return -1;
-		}
-	}
-
-	static class StringResponseHandler implements ResponseHandler<String> {
-
-		private Class<? extends RuntimeException> httpErrorExceptionClass;
-
-		public StringResponseHandler(Class<? extends RuntimeException> exceptionClass) {
-			this.httpErrorExceptionClass = exceptionClass;
-		}
-
-		public String handleResponse(HttpResponse response) throws ClientProtocolException,
-				IOException {
-			HttpEntity entity = response.getEntity();
-			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-				if (entity != null) {
-					entity.consumeContent();
-				}
-
-				try {
-					Constructor<? extends RuntimeException> ctor = httpErrorExceptionClass
-							.getConstructor(String.class);
-					throw ctor.newInstance("Server error: " + response.getStatusLine());
-				} catch (InstantiationException e) {
-					throw new RuntimeException(e);
-				} catch (IllegalAccessException e) {
-					throw new RuntimeException(e);
-				} catch (NoSuchMethodException e) {
-					throw new RuntimeException(e);
-				} catch (IllegalArgumentException e) {
-					throw new RuntimeException(e);
-				} catch (InvocationTargetException e) {
-					throw new RuntimeException(e);
-				}
-			}
-
-			String responseStr = null;
-			if (entity != null) {
-				responseStr = EntityUtils.toString(entity);
-			}
-
-			return responseStr;
 		}
 	}
 
