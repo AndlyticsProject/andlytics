@@ -31,7 +31,13 @@
             android:entries="@array/date_formats"
             android:entryValues="@array/date_format_values"
             android:key="dateformat.long"
-            android:title="@string/date_format"/>
+            android:title="@string/date_format"/>        
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="chart.smooth"
+            android:summary="@string/info_smooth"
+            android:title="@string/smooth_values" />
 
         <CheckBoxPreference
             android:defaultValue="false"

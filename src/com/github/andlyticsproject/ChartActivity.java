@@ -2,7 +2,6 @@
 package com.github.andlyticsproject;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -11,10 +10,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,7 +30,6 @@ public class ChartActivity extends BaseChartActivity {
 	private boolean dataUpdateRequested;
 
 	private ChartSet currentChartSet;
-	private CheckBox checkSmooth;
 	private Boolean smoothEnabled;
 	public List<Date> versionUpdateDates;
 
@@ -171,7 +165,6 @@ public class ChartActivity extends BaseChartActivity {
 			if (getRadioLastThrity() != null) {
 				getRadioLastThrity().setEnabled(false);
 				getRadioUnlimited().setEnabled(false);
-				checkSmooth.setEnabled(false);
 			}
 		}
 
@@ -247,7 +240,6 @@ public class ChartActivity extends BaseChartActivity {
 			if (getRadioLastThrity() != null) {
 				getRadioLastThrity().setEnabled(true);
 				getRadioUnlimited().setEnabled(true);
-				checkSmooth.setEnabled(true);
 
 			}
 
@@ -264,33 +256,7 @@ public class ChartActivity extends BaseChartActivity {
 
 	@Override
 	protected List<View> getExtraConfig() {
-		LinearLayout ll = (LinearLayout) getLayoutInflater().inflate(R.layout.chart_extra_config,
-				null);
-
-		// smoth
-		checkSmooth = (CheckBox) ll.findViewById(R.id.chart_config_checkbox_smooth);
-		if (smoothEnabled) {
-			checkSmooth.setChecked(true);
-		}
-		checkSmooth.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
-					smoothEnabled = true;
-					executeLoadDataDefault();
-					Preferences.saveSmooth(true, ChartActivity.this);
-				} else {
-					smoothEnabled = false;
-					executeLoadDataDefault();
-					Preferences.saveSmooth(false, ChartActivity.this);
-				}
-			}
-		});
-
-		List<View> ret = new ArrayList<View>();
-		ret.add(ll);
-		return ret;
+		return null;
 	}
 
 	@Override
