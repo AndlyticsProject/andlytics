@@ -4,7 +4,8 @@
     <item
         android:id="@+id/itemChartsmenuTimeframe"
         android:showAsAction="ifRoom|withText"
-        android:title="@string/time_frame">
+        android:title="@string/time_frame"
+        android:icon="@drawable/icon_calendar">
         <menu>
             <group android:checkableBehavior="single" >
                 <item
