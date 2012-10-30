@@ -100,13 +100,13 @@ public class AdmobActivity extends BaseChartActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.clear();
+		getSupportMenuInflater().inflate(R.menu.admob_menu, menu);
 		super.onCreateOptionsMenu(menu);
 		String currentAdmobAccount = null;
 		String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
 		if (currentSiteId != null) {
 			currentAdmobAccount = Preferences.getAdmobAccount(this, currentSiteId);
 		}
-		getSupportMenuInflater().inflate(R.menu.admob_menu, menu);
 		if (refreshing) {
 			menu.findItem(R.id.itemAdmobsmenuRefresh).setActionView(
 					R.layout.action_bar_indeterminate_progress);
