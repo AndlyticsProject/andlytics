@@ -275,8 +275,8 @@ public class Preferences {
 		String format = getSettings(context).getString(DATE_FORMAT_LONG, "DEFAULT");
 		if ("DEFAULT".equals(format)) {
 			format = ((SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT)).toPattern();
-			// Make it consistent with our pre-defined formats
-			format = format.replace("yy", "yyyy");
+			// Make it consistent with our pre-defined formats (always show yyyy)
+			format = format.replace("yyyy", "yy").replace("yy", "yyyy");
 		}
 		cachedDateFormatLong = format;
 		return format;
