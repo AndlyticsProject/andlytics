@@ -61,54 +61,12 @@
                 </RadioButton>
             </RadioGroup>
 
-            <TextView
-                android:id="@+id/base_chart_config_headline_date"
-                style="@style/ChartConfigText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/base_chart_config_timeframe_radios"
-                android:paddingBottom="5dp"
-                android:text="@string/date_format"
-                android:textStyle="bold" />
-
-            <RadioGroup
-                android:id="@+id/base_chart_config_dateformat_radios"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/base_chart_config_headline_date"
-                android:orientation="vertical" >
-
-                <RadioButton
-                    android:id="@+id/base_chart_config_ratio_dmy"
-                    style="@style/ChartConfigText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/ddmmyy" >
-                </RadioButton>
-
-                <RadioButton
-                    android:id="@+id/base_chart_config_ratio_mdy"
-                    style="@style/ChartConfigText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mmddyy" >
-                </RadioButton>
-
-                <RadioButton
-                    android:id="@+id/base_chart_config_ratio_ymd"
-                    style="@style/ChartConfigText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/yymmdd" >
-                </RadioButton>
-            </RadioGroup>
-
             <LinearLayout
                 android:id="@+id/base_extra_config"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" 
                 android:orientation="vertical"
-			    android:layout_below="@+id/base_chart_config_dateformat_radios"
+			    android:layout_below="@+id/base_chart_config_timeframe_radios"
                 />
         </RelativeLayout>
     </ScrollView>

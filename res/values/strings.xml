@@ -68,6 +68,7 @@
     <string name="ninety_days">Last 90 days</string>
     <string name="unlimited">Unlimited</string>
     <string name="date_format">Date format</string>
+    <string name="locale_default">Locale default</string>
     <string name="ddmmyy">Day/Month/Year</string>
     <string name="yymmdd">Year/Month/Day</string>
     <string name="mmddyy">Month/Day/Year</string>

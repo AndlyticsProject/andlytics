@@ -24,6 +24,14 @@
                 android:targetClass="com.github.andlyticsproject.NotificationPreferenceActivity"
                 android:targetPackage="com.github.andlyticsproject" />
         </Preference>
+        
+        <ListPreference 
+            android:defaultValue="DEFAULT"
+            android:dialogTitle="@string/date_format"
+            android:entries="@array/date_formats"
+            android:entryValues="@array/date_format_values"
+            android:key="dateformat.long"
+            android:title="@string/date_format"/>
 
         <CheckBoxPreference
             android:defaultValue="false"

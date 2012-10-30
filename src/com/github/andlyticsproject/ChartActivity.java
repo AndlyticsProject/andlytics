@@ -1,7 +1,7 @@
 
 package com.github.andlyticsproject;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -209,8 +209,7 @@ public class ChartActivity extends BaseChartActivity {
 			if (statsForApp != null && statsForApp.size() > 0) {
 				updateCharts(statsForApp);
 
-				SimpleDateFormat dateFormat = new SimpleDateFormat(
-						Preferences.getDateFormatLong(ChartActivity.this));
+				DateFormat dateFormat = Preferences.getDateFormatLong(ChartActivity.this);
 				timetext = dateFormat.format(statsForApp.get(0).getRequestDate())
 						+ " - "
 						+ dateFormat.format(statsForApp.get(statsForApp.size() - 1)

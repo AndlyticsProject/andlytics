@@ -44,6 +44,10 @@ public class PreferenceActivity extends SherlockPreferenceActivity implements
 		// Find and setup a listener for auto sync as we have had to adjust the sync handler
 		getPreferenceScreen().findPreference(Preferences.AUTOSYNC_PERIOD)
 				.setOnPreferenceChangeListener(this);
+		
+		// We have to clear cached date formats when they change
+		getPreferenceScreen().findPreference(Preferences.DATE_FORMAT_LONG)
+				.setOnPreferenceChangeListener(this);
 
 		// Find the preference category used to list all the accounts
 		accountListPrefCat = (PreferenceCategory) getPreferenceScreen().findPreference(
@@ -101,6 +105,8 @@ public class PreferenceActivity extends SherlockPreferenceActivity implements
 					}
 				}
 			}
+		} else if (preference.getKey().equals(Preferences.DATE_FORMAT_LONG)) {
+			Preferences.clearCachedDateFormats();
 		}
 		return true;
 	}

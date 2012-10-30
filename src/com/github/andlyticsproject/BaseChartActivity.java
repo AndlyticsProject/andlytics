@@ -37,9 +37,6 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 	private TextView timeframeText;
 	protected String timetext;
 	private Timeframe currentTimeFrame;
-	private RadioButton radioDmy;
-	private RadioButton radioYmd;
-	private RadioButton radioMdy;
 	private ViewSwitcher3D listViewSwitcher;
 
 	private RadioButton radioLastThrity, radioUnlimited, radioLastSeven, radioLastNinety;
@@ -73,53 +70,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 				(ViewGroup) findViewById(R.id.base_chart_bottom_frame));
 		listViewSwitcher.setListener(this);
 
-		String dateFormatLong = Preferences.getDateFormatLong(this);
-		radioDmy = (RadioButton) findViewById(R.id.base_chart_config_ratio_dmy);
-		if ("dd/MM/yyyy".equals(dateFormatLong)) {
-			radioDmy.setChecked(true);
-		}
-		radioDmy.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
-					Preferences.saveDateFormatLong(BaseChartActivity.this, "dd/MM/yyyy");
-					Preferences.saveDateFormatShort(BaseChartActivity.this, "dd/MM");
-					notifyChangedDataformat();
-				}
-			}
-		});
-
-		radioYmd = (RadioButton) findViewById(R.id.base_chart_config_ratio_ymd);
-		if ("yyyy/MM/dd".equals(dateFormatLong)) {
-			radioYmd.setChecked(true);
-		}
-		radioYmd.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
-					Preferences.saveDateFormatLong(BaseChartActivity.this, "yyyy/MM/dd");
-					Preferences.saveDateFormatShort(BaseChartActivity.this, "MM/dd");
-					notifyChangedDataformat();
-				}
-			}
-		});
-		radioMdy = (RadioButton) findViewById(R.id.base_chart_config_ratio_mdy);
-		if ("MM/dd/yyyy".equals(dateFormatLong)) {
-			radioMdy.setChecked(true);
-		}
-		radioMdy.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
-					Preferences.saveDateFormatLong(BaseChartActivity.this, "MM/dd/yyyy");
-					Preferences.saveDateFormatShort(BaseChartActivity.this, "MM/dd");
-					notifyChangedDataformat();
-				}
-			}
-		});
+		
 		View configDoneButton = (View) findViewById(R.id.base_chart_config_done_button);
 		configDoneButton.setOnClickListener(new OnClickListener() {
 

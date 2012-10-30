@@ -2,7 +2,7 @@
 package com.github.andlyticsproject;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -403,8 +403,7 @@ public class AdmobActivity extends BaseChartActivity {
 		if (statsForApp != null && statsForApp.size() > 0) {
 			updateCharts(statsForApp);
 
-			SimpleDateFormat dateFormat = new SimpleDateFormat(
-					Preferences.getDateFormatLong(AdmobActivity.this));
+			DateFormat dateFormat = Preferences.getDateFormatLong(AdmobActivity.this);
 			if (statsForApp.size() > 0) {
 
 				timetext = dateFormat.format(statsForApp.get(0).getDate()) + " - "
