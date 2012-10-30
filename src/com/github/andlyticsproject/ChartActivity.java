@@ -13,8 +13,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.model.AppStats;
@@ -107,31 +105,6 @@ public class ChartActivity extends BaseChartActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getSupportMenuInflater().inflate(R.menu.charts_menu, menu);
-		return true;
-	}
-
-	/**
-	 * Called if item in option menu is selected.
-	 * 
-	 * @param item The chosen menu item
-	 * @return boolean true/false
-	 */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.itemChartsmenuSettings:
-				setChartIgnoreCallLayouts(true);
-				getListViewSwitcher().swap();
-				return true;
-			default:
-				return (super.onOptionsItemSelected(item));
-		}
-	}
-
-	@Override
 	protected String getChartHint() {
 		return this.getString(R.string.swipe);
 	}
@@ -159,14 +132,6 @@ public class ChartActivity extends BaseChartActivity {
 		private List<AppStats> statsForApp;
 
 		private boolean smoothedValues = false;
-
-		@Override
-		protected void onPreExecute() {
-			if (getRadioLastThrity() != null) {
-				getRadioLastThrity().setEnabled(false);
-				getRadioUnlimited().setEnabled(false);
-			}
-		}
 
 		@Override
 		protected Boolean doInBackground(Timeframe... params) {
@@ -237,11 +202,6 @@ public class ChartActivity extends BaseChartActivity {
 				// chartFrame.showNext();
 
 			}
-			if (getRadioLastThrity() != null) {
-				getRadioLastThrity().setEnabled(true);
-				getRadioUnlimited().setEnabled(true);
-
-			}
 
 		}
 
@@ -252,11 +212,6 @@ public class ChartActivity extends BaseChartActivity {
 		dataUpdateRequested = true;
 		executeLoadDataDefault();
 
-	}
-
-	@Override
-	protected List<View> getExtraConfig() {
-		return null;
 	}
 
 	@Override

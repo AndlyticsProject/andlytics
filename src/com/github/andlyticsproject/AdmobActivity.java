@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -101,6 +100,7 @@ public class AdmobActivity extends BaseChartActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.clear();
+		super.onCreateOptionsMenu(menu);
 		String currentAdmobAccount = null;
 		String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
 		if (currentSiteId != null) {
@@ -112,12 +112,8 @@ public class AdmobActivity extends BaseChartActivity {
 					R.layout.action_bar_indeterminate_progress);
 		}
 		if (currentAdmobAccount == null) {
-			// Hide the settings (but keep the spinner) if nothing is setup
-			// Settings might not be there on small phones when in landscape
-			MenuItem settings = menu.findItem(R.id.itemAdmobsmenuSettings);
-			if (settings != null){
-				settings.setVisible(false);
-			}
+			menu.findItem(R.id.itemAdmobsmenuRemove).setVisible(false);
+			menu.findItem(R.id.itemChartsmenuTimeframe).setVisible(false);
 			menu.findItem(R.id.itemAdmobsmenuRefresh).setVisible(refreshing);
 		}
 		return true;
@@ -136,22 +132,11 @@ public class AdmobActivity extends BaseChartActivity {
 				setChartIgnoreCallLayouts(true);
 				new LoadRemoteEntiesTask().execute();
 				return true;
-			case R.id.itemAdmobsmenuSettings:
-				setChartIgnoreCallLayouts(true);
-
-				String admobSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
-
-				if (admobSiteId == null) {
-
-					View currentView = configSwitcher.getCurrentView();
-					if (currentView.getId() != R.id.base_chart_config) {
-						configSwitcher.showPrevious();
-					}
-					mainViewSwitcher.swap();
-					showAccountList();
-				} else {
-					getListViewSwitcher().swap();
-				}
+			case R.id.itemAdmobsmenuRemove:
+				Preferences.saveAdmobSiteId(AdmobActivity.this, packageName, null);
+				showAccountList();
+				mainViewSwitcher.swap();
+				invalidateOptionsMenu();
 				return true;
 			default:
 				return (super.onOptionsItemSelected(item));
@@ -424,29 +409,6 @@ public class AdmobActivity extends BaseChartActivity {
 	@Override
 	protected void notifyChangedDataformat() {
 		executeLoadDataDefault(false);
-	}
-
-	@Override
-	protected List<View> getExtraConfig() {
-		LinearLayout ll = (LinearLayout) getLayoutInflater().inflate(R.layout.admob_extra_config,
-				null);
-		View removeButton = (View) ll.findViewById(R.id.admob_config3_remove_button);
-		removeButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Preferences.saveAdmobSiteId(AdmobActivity.this, packageName, null);
-				showAccountList();
-				if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
-					configSwitcher.showPrevious();
-				}
-				mainViewSwitcher.swap();
-				invalidateOptionsMenu();
-			}
-		});
-		List<View> ret = new ArrayList<View>();
-		ret.add(ll);
-		return ret;
 	}
 
 	@Override

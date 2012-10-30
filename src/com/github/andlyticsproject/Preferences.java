@@ -186,12 +186,6 @@ public class Preferences {
 		return getSettings(context).getBoolean(CHART_SMOOTH, true);
 	}
 
-	public static void saveSmooth(boolean value, Context context) {
-		SharedPreferences.Editor editor = getSettings(context).edit();
-		editor.putBoolean(CHART_SMOOTH, value);
-		editor.commit();
-	}
-
 	public static boolean getSkipAutologin(Context context) {
 		return getSettings(context).getBoolean(SKIP_AUTO_LOGIN, false);
 	}

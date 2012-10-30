@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >    
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <item
-        android:id="@+id/itemChartsmenuSettings"        
-        android:icon="@drawable/icon_settings"
+        android:id="@+id/itemChartsmenuTimeframe"
         android:showAsAction="ifRoom|withText"
-        android:title="@string/settings">
+        android:title="@string/time_frame">
+        <menu>
+            <group android:checkableBehavior="single" >
+                <item
+                    android:id="@+id/itemChartsmenuTimeframe7"
+                    android:title="@string/seven_days"/>
+                <item
+                    android:id="@+id/itemChartsmenuTimeframe30"
+                    android:title="@string/thirty_days"/>
+                <item
+                    android:id="@+id/itemChartsmenuTimeframe90"
+                    android:title="@string/ninety_days"/>
+                <item
+                    android:id="@+id/itemChartsmenuTimeframeUnlimited"
+                    android:title="@string/unlimited"/>
+            </group>
+        </menu>
     </item>
+
 </menu>
