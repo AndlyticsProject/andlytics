@@ -451,7 +451,7 @@ public class AdmobRequest {
 		} else if (AdmobRequest.ERROR_ACCOUNT_REMOVED.equals(admobToken)) {
 			throw new AdmobAccountRemovedException(admobToken, currentAdmobAccount);
 		} else if (AdmobRequest.ERROR_ASK_USER_PASSWORD.equals(admobToken)) {
-			throw new AdmobAskForPasswordException();
+			throw new AdmobAskForPasswordException("Missing password");
 		}
 
 		return admobToken;

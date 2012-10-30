@@ -1,7 +1,7 @@
 
 package com.github.andlyticsproject.admob;
 
-public class AdmobAccountRemovedException extends Exception {
+public class AdmobAccountRemovedException extends AdmobException {
 
 	private static final long serialVersionUID = 1L;
 

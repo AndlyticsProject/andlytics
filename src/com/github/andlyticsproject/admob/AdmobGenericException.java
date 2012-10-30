@@ -1,7 +1,7 @@
 
 package com.github.andlyticsproject.admob;
 
-public class AdmobGenericException extends Exception {
+public class AdmobGenericException extends AdmobException {
 
 	private static final long serialVersionUID = 1L;
 
