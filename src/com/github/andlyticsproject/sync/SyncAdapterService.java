@@ -1,7 +1,10 @@
 package com.github.andlyticsproject.sync;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -19,6 +22,9 @@ import android.util.Log;
 
 import com.github.andlyticsproject.AppStatsDiff;
 import com.github.andlyticsproject.ContentAdapter;
+import com.github.andlyticsproject.Preferences;
+import com.github.andlyticsproject.admob.AdmobException;
+import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.console.DevConsoleException;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
@@ -94,20 +100,50 @@ public class SyncAdapterService extends Service {
 				Log.d(TAG, "andlytics from sync adapter, size: " + appDownloadInfos.size());
 
 				List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
+				Map<String, List<String>> admobAccountSiteMap = new HashMap<String, List<String>>();
 
 				db = new ContentAdapter(context);
 				for (AppInfo appDownloadInfo : appDownloadInfos) {
 					// update in database
 					diffs.add(db.insertOrUpdateStats(appDownloadInfo));
+					String admobSiteId = Preferences.getAdmobSiteId(context,
+							appDownloadInfo.getPackageName());
+					if (admobSiteId != null) {
+						String admobAccount = Preferences.getAdmobAccount(context, admobSiteId);
+						if (admobAccount != null) {
+							List<String> siteList = admobAccountSiteMap.get(admobAccount);
+							if (siteList == null) {
+								siteList = new ArrayList<String>();
+							}
+							siteList.add(admobSiteId);
+							admobAccountSiteMap.put(admobAccount, siteList);
+						}
+					}
 				}
 				Log.d(TAG, "sucessfully synced andlytics");
 
 				// check for notifications
 				NotificationHandler.handleNotificaions(context, diffs, account.name);
+
+				if (!admobAccountSiteMap.isEmpty()) {
+					Log.d(TAG, "Syncing AdMob stats");
+					// sync admob accounts
+					Set<String> admobAccuntKeySet = admobAccountSiteMap.keySet();
+					for (String admobAccount : admobAccuntKeySet) {
+
+						AdmobRequest.syncSiteStats(admobAccount, context,
+								admobAccountSiteMap.get(admobAccount), null);
+					}
+					Log.d(TAG, "Sucessfully synced AdMob stats");
+				}
+
+
 			}
 		} catch (DevConsoleException e) {
 			Log.e(TAG, "error during sync", e);
-		}
+		} catch (AdmobException e) {
+			Log.e(TAG, "error during Admob sync", e);
+		} 
 
 	}
 }
