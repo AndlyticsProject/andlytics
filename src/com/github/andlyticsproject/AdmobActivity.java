@@ -135,6 +135,9 @@ public class AdmobActivity extends BaseChartActivity {
 			case R.id.itemAdmobsmenuRemove:
 				Preferences.saveAdmobSiteId(AdmobActivity.this, packageName, null);
 				showAccountList();
+				if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
+					configSwitcher.showPrevious();
+				}
 				mainViewSwitcher.swap();
 				invalidateOptionsMenu();
 				return true;
