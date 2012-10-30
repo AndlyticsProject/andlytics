@@ -1,6 +1,9 @@
 
 package com.github.andlyticsproject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import com.github.andlyticsproject.sync.AutosyncHandler;
 
 import android.content.Context;
@@ -43,8 +46,7 @@ public class Preferences {
 	public static final String NOTIFICATION_LIGHT = "notification.light";
 	public static final String NOTIFICATION_WHEN_ACCOUNT_VISISBLE = "notification.when_account_visible";
 
-	public static final String DATE_FORMAT_SHORT = "dateformat.short1";
-	public static final String DATE_FORMAT_LONG = "dateformat.long1";
+	public static final String DATE_FORMAT_LONG = "dateformat.long";
 
 	private static final String LEVEL_7_ALARM_MANAGER_PERIOD = "level7.AlarmManagerPeriod";
 
@@ -65,6 +67,10 @@ public class Preferences {
 	public enum StatsMode {
 		PERCENT, DAY_CHANGES
 	}
+
+	private static String cachedDateFormatShort;
+
+	private static String cachedDateFormatLong;
 
 	public static void disableCrashReports(Context context) {
 		SharedPreferences.Editor editor = getSettings(context).edit();
@@ -180,12 +186,6 @@ public class Preferences {
 		return getSettings(context).getBoolean(CHART_SMOOTH, true);
 	}
 
-	public static void saveSmooth(boolean value, Context context) {
-		SharedPreferences.Editor editor = getSettings(context).edit();
-		editor.putBoolean(CHART_SMOOTH, value);
-		editor.commit();
-	}
-
 	public static boolean getSkipAutologin(Context context) {
 		return getSettings(context).getBoolean(SKIP_AUTO_LOGIN, false);
 	}
@@ -235,24 +235,55 @@ public class Preferences {
 		editor.commit();
 	}
 
-	public static String getDateFormatShort(Context context) {
-		return getSettings(context).getString(DATE_FORMAT_SHORT, "dd/MM");
+	public static String getDateFormatStringShort(Context context) {
+		if (cachedDateFormatShort != null) {
+			return cachedDateFormatShort;
+		}
+		String dateFormatStringLong = getDateFormatStringLong(context);
+		// Build the short version by taking the long one and removing the year
+		// We do this rather than using pre-defined short versions so that the user
+		// can use a default based on their locale
+		String format = dateFormatStringLong.replace("yyyy", "").replace("yy", "");
+		// Get rid of any duplicate separators
+		format = format.replace("//", "/").replace("..", ".");
+		// Now clear up the start and end
+		Character startChar = format.charAt(0);
+		if (startChar.equals('/') || startChar.equals(".")) {
+			format = format.substring(1);
+		}
+		Character endChar = format.charAt(format.length() - 1);
+		if (endChar.equals('/') || endChar.equals(".")) {
+			format = format.substring(0, format.length() - 1);
+		}
+		cachedDateFormatShort = format;
+		return format;
+	}
+	
+	/**
+	 * Clears the cached string representations used for date formatting
+	 * Should be called whenever the user preference changes
+	 */
+	public static void clearCachedDateFormats() {
+		cachedDateFormatShort = null;
+		cachedDateFormatLong = null;
 	}
 
-	public static void saveDateFormatShort(Context context, String value) {
-		SharedPreferences.Editor editor = getSettings(context).edit();
-		editor.putString(DATE_FORMAT_SHORT, value);
-		editor.commit();
+	private static String getDateFormatStringLong(Context context) {
+		if (cachedDateFormatLong != null) {
+			return cachedDateFormatLong;
+		}
+		String format = getSettings(context).getString(DATE_FORMAT_LONG, "DEFAULT");
+		if ("DEFAULT".equals(format)) {
+			format = ((SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT)).toPattern();
+			// Make it consistent with our pre-defined formats
+			format = format.replace("yy", "yyyy");
+		}
+		cachedDateFormatLong = format;
+		return format;
 	}
-
-	public static String getDateFormatLong(Context context) {
-		return getSettings(context).getString(DATE_FORMAT_LONG, "dd/MM/yyyy");
-	}
-
-	public static void saveDateFormatLong(Context context, String value) {
-		SharedPreferences.Editor editor = getSettings(context).edit();
-		editor.putString(DATE_FORMAT_LONG, value);
-		editor.commit();
+	
+	public static DateFormat getDateFormatLong(Context context) {
+		return new SimpleDateFormat(getDateFormatStringLong(context));
 	}
 
 	public static void saveAdmobSiteId(Context context, String packageName, String value) {

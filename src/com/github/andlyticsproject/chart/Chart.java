@@ -74,14 +74,14 @@ public class Chart extends AbstractChart {
 		if (statsForApp.size() > 0) {
 			xLabelDistance = statsForApp.size() / 6;
 		}
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				Preferences.getDateFormatStringShort(context));
 		int nextXLabelPrint = 1;
 		for (int i = 1; i < statsForApp.size(); i++) {
 			Object appInfo = statsForApp.get(i);
 			dates.add(getDateString(handler.getDate(appInfo)));
 
 			if (i == nextXLabelPrint) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(
-						Preferences.getDateFormatShort(context));
 				renderer.addXTextLabel(i, dateFormat.format(handler.getDate(appInfo)));
 				nextXLabelPrint += xLabelDistance;
 			}
@@ -233,7 +233,7 @@ public class Chart extends AbstractChart {
 
 		return ChartFactory.getTimeChartView(context,
 				buildDateDataset(titles, dateArrayList, values), renderer,
-				Preferences.getDateFormatShort(context));
+				Preferences.getDateFormatStringShort(context));
 
 	}
 

@@ -49,7 +49,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 		this.stats = new ArrayList<Admob>();
 		//		this.layoutInflater = activity.getLayoutInflater();
 		this.activity = activity;
-		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatShort(activity));
+		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatStringShort(activity));
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 
 	@Override
 	public void notifyDataSetChanged() {
-		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatShort(activity));
+		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatStringShort(activity));
 		super.notifyDataSetChanged();
 	}
 

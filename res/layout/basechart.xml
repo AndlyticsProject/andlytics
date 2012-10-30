@@ -80,9 +80,10 @@
                         android:layout_height="fill_parent"
                         android:visibility="gone" >
 
-                        <include
+                        <View
                             android:id="@+id/base_chart_config"
-                            layout="@layout/base_chart_config" />
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent" />
                     </RelativeLayout>
 
                     <RelativeLayout

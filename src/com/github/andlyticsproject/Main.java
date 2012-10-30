@@ -86,9 +86,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private MenuItem statsModeMenuItem;
 
 	private List<String> accountsList;
-
-	private DateFormat dateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,
-			DateFormat.MEDIUM);
+	
+	private DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);
 
 	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
 
@@ -98,10 +97,10 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+		
 		db = getDbAdapter();
 		LayoutInflater layoutInflater = getLayoutInflater();
-
+		
 		// Hack in case the account is hidden and then the app is killed
 		// which means when it starts up next, it goes straight to the account
 		// even though it shouldn't. To work around this, just mark it as not
@@ -386,7 +385,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				// TODO Let the user configure this, or at least make it the
 				// locale's default
 				statusText.setText(this.getString(R.string.last_update) + ": "
-						+ dateTimeFormat.format(lastUpdateDate));
+						+ Preferences.getDateFormatLong(this).format(lastUpdateDate) + " "
+						+ timeFormat.format(lastUpdateDate));
 			}
 
 		}

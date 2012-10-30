@@ -1,8 +1,7 @@
 
 package com.github.andlyticsproject;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.text.DateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -11,15 +10,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.model.AppStats;
@@ -35,7 +28,6 @@ public class ChartActivity extends BaseChartActivity {
 	private boolean dataUpdateRequested;
 
 	private ChartSet currentChartSet;
-	private CheckBox checkSmooth;
 	private Boolean smoothEnabled;
 	public List<Date> versionUpdateDates;
 
@@ -113,31 +105,6 @@ public class ChartActivity extends BaseChartActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getSupportMenuInflater().inflate(R.menu.charts_menu, menu);
-		return true;
-	}
-
-	/**
-	 * Called if item in option menu is selected.
-	 * 
-	 * @param item The chosen menu item
-	 * @return boolean true/false
-	 */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.itemChartsmenuSettings:
-				setChartIgnoreCallLayouts(true);
-				getListViewSwitcher().swap();
-				return true;
-			default:
-				return (super.onOptionsItemSelected(item));
-		}
-	}
-
-	@Override
 	protected String getChartHint() {
 		return this.getString(R.string.swipe);
 	}
@@ -165,15 +132,6 @@ public class ChartActivity extends BaseChartActivity {
 		private List<AppStats> statsForApp;
 
 		private boolean smoothedValues = false;
-
-		@Override
-		protected void onPreExecute() {
-			if (getRadioLastThrity() != null) {
-				getRadioLastThrity().setEnabled(false);
-				getRadioUnlimited().setEnabled(false);
-				checkSmooth.setEnabled(false);
-			}
-		}
 
 		@Override
 		protected Boolean doInBackground(Timeframe... params) {
@@ -209,8 +167,7 @@ public class ChartActivity extends BaseChartActivity {
 			if (statsForApp != null && statsForApp.size() > 0) {
 				updateCharts(statsForApp);
 
-				SimpleDateFormat dateFormat = new SimpleDateFormat(
-						Preferences.getDateFormatLong(ChartActivity.this));
+				DateFormat dateFormat = Preferences.getDateFormatLong(ChartActivity.this);
 				timetext = dateFormat.format(statsForApp.get(0).getRequestDate())
 						+ " - "
 						+ dateFormat.format(statsForApp.get(statsForApp.size() - 1)
@@ -245,12 +202,6 @@ public class ChartActivity extends BaseChartActivity {
 				// chartFrame.showNext();
 
 			}
-			if (getRadioLastThrity() != null) {
-				getRadioLastThrity().setEnabled(true);
-				getRadioUnlimited().setEnabled(true);
-				checkSmooth.setEnabled(true);
-
-			}
 
 		}
 
@@ -261,37 +212,6 @@ public class ChartActivity extends BaseChartActivity {
 		dataUpdateRequested = true;
 		executeLoadDataDefault();
 
-	}
-
-	@Override
-	protected List<View> getExtraConfig() {
-		LinearLayout ll = (LinearLayout) getLayoutInflater().inflate(R.layout.chart_extra_config,
-				null);
-
-		// smoth
-		checkSmooth = (CheckBox) ll.findViewById(R.id.chart_config_checkbox_smooth);
-		if (smoothEnabled) {
-			checkSmooth.setChecked(true);
-		}
-		checkSmooth.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
-					smoothEnabled = true;
-					executeLoadDataDefault();
-					Preferences.saveSmooth(true, ChartActivity.this);
-				} else {
-					smoothEnabled = false;
-					executeLoadDataDefault();
-					Preferences.saveSmooth(false, ChartActivity.this);
-				}
-			}
-		});
-
-		List<View> ret = new ArrayList<View>();
-		ret.add(ll);
-		return ret;
 	}
 
 	@Override

@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -152,14 +151,6 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 		CommentGroup commentGroup = getGroup(groupPosition);
 		holder.date.setText(formatCommentDate(commentGroup.getDate()));
-
-		convertView.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-			}
-		});
 
 		return convertView;
 	}

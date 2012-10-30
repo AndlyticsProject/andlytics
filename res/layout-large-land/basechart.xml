@@ -4,11 +4,11 @@
     android:layout_height="fill_parent" >
 
     <LinearLayout
-        android:background="#eeeeee"
         android:id="@+id/base_chart_main_frame"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/base_chart_buttonbarSpacer"
+        android:background="#eeeeee"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -88,9 +88,10 @@
                         android:layout_height="fill_parent"
                         android:visibility="gone" >
 
-                        <include
+                        <View
                             android:id="@+id/base_chart_config"
-                            layout="@layout/base_chart_config" />
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -131,7 +132,6 @@
                                     android:paddingRight="5dp"
                                     android:text="@string/one_entry_hint_desc"
                                     android:visibility="visible" />
-
                             </LinearLayout>
                         </ScrollView>
                     </RelativeLayout>
