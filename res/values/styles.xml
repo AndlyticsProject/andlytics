@@ -20,12 +20,6 @@
         <item name="android:textColor">@color/blackText</item>
     </style>
     
-     <style name="ChartConfigText" parent="@android:style/TextAppearance.Small">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/blackText</item>
-    </style>
-    
     <style name="MainTableRatingsChangeText" parent="@android:style/TextAppearance.Small">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
