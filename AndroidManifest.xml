@@ -62,6 +62,12 @@
         <activity
             android:name=".PreferenceActivity"
             android:label="@string/preferences" >
+            <intent-filter>
+                <action
+                    android:name="com.github.andlyticsproject.PREFERENCES" />
+                <category
+                    android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".NotificationPreferenceActivity"
