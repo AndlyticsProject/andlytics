@@ -244,17 +244,23 @@ public class Preferences {
 		// We do this rather than using pre-defined short versions so that the user
 		// can use a default based on their locale
 		String format = dateFormatStringLong.replace("yyyy", "").replace("yy", "");
-		// Get rid of any duplicate separators
-		format = format.replace("//", "/").replace("..", ".");
-		// Now clear up the start and end
-		Character startChar = format.charAt(0);
-		if (startChar.equals('/') || startChar.equals(".")) {
-			format = format.substring(1);
+		// Now go through the string removing any duplicate separators
+		// and trimming leading/ending separators
+		StringBuilder builder = new StringBuilder();
+		char[] chars = format.toCharArray();
+		int length = chars.length;
+		for (int i = 0; i < length; i++) {
+			char c = chars[i];
+			if (Character.isLetter(c)) {
+				// Always accept letters
+				builder.append(c);
+			} else if ((i > 0) && (i + 1 < length) && (c != chars[i + 1])) {
+				// Only accept separators is they aren't duplicated
+				// and aren't at the start or end
+				builder.append(c);
+			}
 		}
-		Character endChar = format.charAt(format.length() - 1);
-		if (endChar.equals('/') || endChar.equals(".")) {
-			format = format.substring(0, format.length() - 1);
-		}
+		format = builder.toString();
 		cachedDateFormatShort = format;
 		return format;
 	}
