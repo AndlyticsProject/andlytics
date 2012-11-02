@@ -29,7 +29,7 @@ public class Preferences {
 
 	private static final String AUTOSYNC = "autosync.initial.set";
 	public static final String AUTOSYNC_PERIOD = "autosync.period";
-	public static final String AUTOSYNC_ENABLE = "autosync.enable";
+	public static final String AUTOSYNC_PERIOD_LAST_NON_ZERO = "autosync.period.last";
 	private static final String CRASH_REPORT_DISABLE = "acra.enable";
 
 	public static final String CHART_TIMEFRAME = "chart.timeframe";
@@ -105,18 +105,25 @@ public class Preferences {
 	public static void saveGwtPermutation(Context activity, String gwtPermutation) {
 		saveVersionDependingProperty(GWTPERMUTATION, gwtPermutation, activity);
 	}
-
-	public static Boolean isAutoSyncEnabled(Context activity, String accountName) {
-		return getSettings(activity).getBoolean(AUTOSYNC_ENABLE + accountName, true);
+	
+	public static int getLastNonZeroAutosyncPeriod(Context activity) {
+		return getSettings(activity).getInt(AUTOSYNC_PERIOD_LAST_NON_ZERO,
+				AutosyncHandler.DEFAULT_PERIOD);
 	}
 
-	public static int getAutoSyncPeriod(Context activity) {
+	public static void saveLastNonZeroAutosyncPeriod(Context activity, int syncPeriod) {
+		SharedPreferences.Editor editor = getSettings(activity).edit();
+		editor.putInt(AUTOSYNC_PERIOD_LAST_NON_ZERO, syncPeriod);
+		editor.commit();
+	}
+
+	public static int getAutosyncPeriod(Context activity) {
 		// We use a ListPreference which only supports saving as strings, so need to convert it when reading
 		return Integer.parseInt(getSettings(activity).getString(AUTOSYNC_PERIOD,
 				Integer.toString(AutosyncHandler.DEFAULT_PERIOD)));
 	}
 
-	public static String getAutoSyncSet(Context activity, String accountName) {
+	public static String getAutosyncSet(Context activity, String accountName) {
 		return getSettings(activity).getString(AUTOSYNC + accountName, null);
 	}
 
