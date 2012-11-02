@@ -21,7 +21,6 @@ import android.preference.PreferenceManager;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.sync.AutosyncHandler;
-import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
 
 // Suppressing warnings as there is no SherlockPreferenceFragment
 // for us to use instead of a PreferencesActivity
@@ -30,7 +29,9 @@ public class PreferenceActivity extends SherlockPreferenceActivity implements
 		OnPreferenceChangeListener, OnSharedPreferenceChangeListener {
 
 	private PreferenceCategory accountListPrefCat;
+	private ListPreference autosyncPref;
 	private List<String> accountsList;
+	private AutosyncHandler autosyncHandler = new AutosyncHandler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,20 +41,22 @@ public class PreferenceActivity extends SherlockPreferenceActivity implements
 		PreferenceManager prefMgr = getPreferenceManager();
 		prefMgr.setSharedPreferencesName(Preferences.PREF);
 		addPreferencesFromResource(R.xml.preferences);
-
-		// Find and setup a listener for auto sync as we have had to adjust the sync handler
-		getPreferenceScreen().findPreference(Preferences.AUTOSYNC_PERIOD)
-				.setOnPreferenceChangeListener(this);
 		
-		// We have to clear cached date formats when they change
-		getPreferenceScreen().findPreference(Preferences.DATE_FORMAT_LONG)
-				.setOnPreferenceChangeListener(this);
-
 		// Find the preference category used to list all the accounts
 		accountListPrefCat = (PreferenceCategory) getPreferenceScreen().findPreference(
 				"prefCatAccountSpecific");
 
+		// Now build the list of accounts
 		buildAccountsList();
+
+		// Find and setup a listener for auto sync as we have had to adjust the sync handler
+		autosyncPref = (ListPreference) getPreferenceScreen().findPreference(Preferences.AUTOSYNC_PERIOD);
+		autosyncPref.setOnPreferenceChangeListener(this);
+				
+		// We have to clear cached date formats when they change
+		getPreferenceScreen().findPreference(Preferences.DATE_FORMAT_LONG)
+				.setOnPreferenceChangeListener(this);
+		
 
 		for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
 			initSummary(getPreferenceScreen().getPreference(i));
@@ -91,24 +94,52 @@ public class PreferenceActivity extends SherlockPreferenceActivity implements
 
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
-		if (preference.getKey().equals(Preferences.AUTOSYNC_PERIOD)) {
+		String key = preference.getKey();
+		if (key.equals(Preferences.AUTOSYNC_PERIOD)) {
 			Integer newPeriod = Integer.parseInt((String) newValue);
-			newPeriod = newPeriod * 60; // Convert from minutes to seconds
-			AutosyncHandler autosyncHandler = AutosyncHandlerFactory.getInstance(this);
+			if (!newPeriod.equals(0)) {
+				// Keep track of the last valid sync period for re-enabling the pref
+				Preferences.saveLastNonZeroAutosyncPeriod(PreferenceActivity.this, newPeriod);
+			}
+			int oldPeriod = Preferences.getAutosyncPeriod(PreferenceActivity.this);
 			for (String account : accountsList) {
-				// Setup auto sync for every account that has it enabled
-				// Note: accountsList does not contain hidden accounts, so we don't need to check
-				if (Preferences.isAutoSyncEnabled(PreferenceActivity.this, account)) {
-					int autosyncPeriod = autosyncHandler.getAutosyncPeriod(account);
-					if (autosyncPeriod != newPeriod) {
-						autosyncHandler.setAutosyncPeriod(account, newPeriod);
-					}
+				// If syncing is currently on, or it used to be app wide off
+				// set the new period (and enable it)
+				if (autosyncHandler.isAutosyncEnabled(account) || oldPeriod == 0) {
+					autosyncHandler.setAutosyncPeriod(account, newPeriod);
 				}
 			}
-		} else if (preference.getKey().equals(Preferences.DATE_FORMAT_LONG)) {
+		} else if (key.equals(Preferences.DATE_FORMAT_LONG)) {
 			Preferences.clearCachedDateFormats();
 		}
 		return true;
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		// Set up a listener whenever a key changes
+		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+		
+
+		// Make sure we are consistent with any system changes/changes in that account
+		// specific sections
+		boolean anyEnabled = false;
+		for (String account : accountsList) {
+			if (autosyncHandler.isAutosyncEnabled(account)) {
+				anyEnabled = true;
+				break;
+			}
+		}
+		if (anyEnabled) {
+			// At least one account is enabled, so this should show
+			// the sync period
+			autosyncPref.setValue(Integer.toString(Preferences
+					.getLastNonZeroAutosyncPeriod(PreferenceActivity.this)));
+		} else {
+			// All the accounts are disabled, so set it to 0
+			autosyncPref.setValue("0");
+		}
 	}
 
 	@Override
@@ -151,13 +182,6 @@ public class PreferenceActivity extends SherlockPreferenceActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		updatePrefSummary(findPreference(key));
 
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		// Set up a listener whenever a key changes
-		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
