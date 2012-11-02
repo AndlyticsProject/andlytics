@@ -173,13 +173,13 @@ public class DevConsoleV1 {
 			// Environment.getExternalStorageDirectory(),
 			// "comments.json").getAbsolutePath());
 
-			return Comment.expandReplies(parseCommentsResponse(json, accountName));
+			return parseCommentsResponse(json, accountName);
 
 		} catch (DevConsoleProtocolException e) {
 			developerConsoleAuthentication(authtoken, false);
 			String json = grapComments(packageName, startIndex, lenght);
 
-			return Comment.expandReplies(parseCommentsResponse(json, accountName));
+			return parseCommentsResponse(json, accountName);
 		}
 	}
 

@@ -298,7 +298,7 @@ public class JsonParser {
 
 			JSONArray jsonReply = jsonComment.optJSONArray(11);
 			if (jsonReply != null) {
-				Comment reply = new Comment();
+				Comment reply = new Comment(true);
 				reply.setText(jsonReply.getString(1));
 				reply.setReplyDate(parseDate(jsonReply.getLong(3)));
 				reply.setDate(comment.getDate());

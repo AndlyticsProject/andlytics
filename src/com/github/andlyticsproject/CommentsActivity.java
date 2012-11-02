@@ -125,7 +125,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			comments = Comment.expandReplies(db.getCommentsFromCache(packageName));
+			comments = db.getCommentsFromCache(packageName);
 			rebuildCommentGroups();
 
 			return null;
@@ -251,7 +251,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 		commentGroups = new ArrayList<CommentGroup>();
 		Comment prevComment = null;
-		for (Comment comment : comments) {
+		for (Comment comment : Comment.expandReplies(comments)) {
 			if (prevComment != null) {
 
 				CommentGroup group = new CommentGroup();
