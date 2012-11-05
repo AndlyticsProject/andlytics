@@ -4,10 +4,9 @@ package com.github.andlyticsproject;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,6 +31,7 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 	private int currentPage, currentColumn;
 	private final boolean usesSmooth;
 	private final OnClickListener columnClickListener;
+	private final int listItemTextSize;
 
 	public abstract int getNumPages();
 
@@ -87,6 +87,7 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		usesSmooth = useSmoth;
 		maxColumns = max;
 		this.scale = activity.getResources().getDisplayMetrics().density;
+		listItemTextSize = activity.getResources().getDimensionPixelSize(R.dimen.chart_list_item_text_size);
 		currentPage = 0;
 		currentColumn = 1;
 
@@ -165,6 +166,7 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 
 	protected abstract boolean isSmothValue(int page, int position);
 
+	@SuppressWarnings("deprecation")
 	private TextView createTextView(String string, boolean bold, boolean weight) {
 		TextView view = new TextView(activity);
 		view.setText(string);
@@ -183,6 +185,7 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		if (bold) {
 			view.setTypeface(view.getTypeface(), Typeface.BOLD);
 		}
+		view.setTextSize(TypedValue.COMPLEX_UNIT_PX, listItemTextSize);
 
 		return view;
 	}

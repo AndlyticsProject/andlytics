@@ -15,6 +15,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
+import com.github.andlyticsproject.util.Utils;
 
 public class CommentsActivity extends BaseDetailsActivity implements AuthenticationCallback {
 
@@ -78,13 +79,8 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 		footer.setVisibility(View.GONE);
 
 		db = getDbAdapter();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		new LoadCommentsCache().execute();
-
+		
+		Utils.execute(new LoadCommentsCache());
 	}
 
 	@Override
@@ -116,6 +112,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 		}
 	}
 
+	// TODO Make this a static class that extends DetachableAsyncTask
 	private class LoadCommentsCache extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -142,6 +139,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 	}
 
+	// TODO Make this a static class that extends DetachableAsyncTask
 	private class LoadCommentsData extends AsyncTask<Void, Void, Exception> {
 
 		@Override
@@ -275,9 +273,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 	@Override
 	public void authenticationSuccess() {
-
-		new LoadCommentsData().execute();
-
+		Utils.execute(new LoadCommentsData());
 	}
 
 }

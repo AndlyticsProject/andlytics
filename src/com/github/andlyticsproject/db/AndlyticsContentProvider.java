@@ -22,7 +22,7 @@ public class AndlyticsContentProvider extends ContentProvider {
 
 	private static final String TAG = "AndlyticsContentProvider";
 
-	private static final int DATABASE_VERSION = 16;
+	private static final int DATABASE_VERSION = 17;
 
 	private static final String DATABASE_NAME = "andlytics";
 

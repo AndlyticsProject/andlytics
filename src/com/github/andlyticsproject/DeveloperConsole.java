@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject;
 
 import java.io.BufferedReader;
@@ -90,7 +89,8 @@ public class DeveloperConsole {
 	private static final String URL_FEEDBACK = "https://play.google.com/apps/publish/feedback";
 
 	private static final String GET_ASSET_INDEX_FOR_USER = "7|2|7|https://play.google.com/apps/publish/gwt/|2BCF4D167ACB0F4BCB3EBA75DDAA0575|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"
-			+ PARAM_XSRFTOKEN + "|com.google.wireless.android.vending.developer.shared.AppEditorService|getAssetIndexForUser|I|1|2|3|4|5|6|1|7|100|";
+			+ PARAM_XSRFTOKEN
+			+ "|com.google.wireless.android.vending.developer.shared.AppEditorService|getAssetIndexForUser|I|1|2|3|4|5|6|1|7|100|";
 	private static final String GET_FULL_ASSET_INFO_FOR_USER_REQUEST = "7|2|9|https://play.google.com/apps/publish/gwt/|2BCF4D167ACB0F4BCB3EBA75DDAA0575|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"
 			+ PARAM_XSRFTOKEN
 			+ "|com.google.wireless.android.vending.developer.shared.AppEditorService|getProductInfosForUser|java.lang.String/2004016611|I|"
@@ -99,7 +99,9 @@ public class DeveloperConsole {
 	private static final String GET_USER_COMMENTS_REQUEST = "7|2|11|https://play.google.com/apps/publish/gwt/|3B4252B1EA6FFDBEAC02B41B3975C468|com.google.gwt.user.client.rpc.XsrfToken/4254043109|"
 			+ PARAM_XSRFTOKEN
 			+ "|com.google.wireless.android.vending.developer.shared.CommentsService|getUserComments|java.lang.String/2004016611|J|java.lang.Iterable|"
-			+ PARAM_APPNAME + "|java.util.ArrayList/4159755760|1|2|3|4|5|6|7|7|8|8|9|9|9|7|10|" + PARAM_STARTINDEX + "|" + PARAM_LENGTH + "|11|0|11|0|11|0|0|";
+			+ PARAM_APPNAME
+			+ "|java.util.ArrayList/4159755760|1|2|3|4|5|6|7|7|8|8|9|9|9|7|10|"
+			+ PARAM_STARTINDEX + "|" + PARAM_LENGTH + "|11|0|11|0|11|0|0|";
 	private static final String GET_FEEDBACK_OVERVIEW = "7|0|6|https://play.google.com/apps/publish/gwt/|8A88A8C8E8E60107C7E013322C6CE8F2|com.google.wireless.android.vending.developer.shared.FeedbackService|getOverviewsForPackages|com.google.protos.userfeedback.gwt.AndroidFrontend$AndroidPackageListRequest$Json/4146859527|[,[<<packagelist>>] ] |1|2|3|4|1|5|5|6|";
 	//private static final String GET_FEEDBACK_REQUEST = "7|0|6|https://play.google.com/apps/publish/gwt/|8A88A8C8E8E60107C7E013322C6CE8F2|com.google.wireless.android.vending.developer.shared.FeedbackService|getDetailForPackage|com.google.protos.userfeedback.gwt.AndroidFrontend$AndroidPackageRequest$Json/2133352596|[,<<appname>>] |1|2|3|4|1|5|5|6|";
 
@@ -168,25 +170,35 @@ public class DeveloperConsole {
 			InvalidJSONResponseException, SignupException, AuthenticationException,
 			NoCookieSetException, MultiAccountAcception {
 
-		List<Comment> result = null;
-
 		try {
 
 			developerConsoleAuthentication(authtoken, true);
 			String json = grapComments(packageName, startIndex, lenght);
+			// for testing
+			//			String json = Utils.readFileAsString(new File(
+			//					Environment.getExternalStorageDirectory(), "comments.json").getAbsolutePath());
 
-			result = parseCommentsResponse(json, accountName);
+			return expandReplies(parseCommentsResponse(json, accountName));
 
 		} catch (DeveloperConsoleException e) {
 
 			developerConsoleAuthentication(authtoken, false);
 			String json = grapComments(packageName, startIndex, lenght);
 
-			result = parseCommentsResponse(json, accountName);
+			return expandReplies(parseCommentsResponse(json, accountName));
+		}
+	}
 
+	private List<Comment> expandReplies(List<Comment> result) {
+		List<Comment> withReplies = new ArrayList<Comment>();
+		for (Comment comment : result) {
+			withReplies.add(comment);
+			if (comment.getReply() != null) {
+				withReplies.add(comment.getReply());
+			}
 		}
 
-		return result;
+		return withReplies;
 	}
 
 	public List<AppInfo> parseAppStatisticsResponse(String json, String accountName)
@@ -280,7 +292,8 @@ public class DeveloperConsole {
 		return result;
 	}
 
-	private String grapAppStatistics(String startApp, long lenght) throws DeveloperConsoleException, NetworkException {
+	private String grapAppStatistics(String startApp, long lenght)
+			throws DeveloperConsoleException, NetworkException {
 
 		String developerPostData = Preferences.getRequestFullAssetInfo(context);
 
@@ -292,9 +305,11 @@ public class DeveloperConsole {
 		String lengthString = "" + lenght;
 		String xsrfToken = ((AndlyticsApp) context.getApplicationContext()).getXsrfToken();
 
-		developerPostData = developerPostData.replace(PARAM_APPNAME, startApp != null ? startApp : "");
+		developerPostData = developerPostData.replace(PARAM_APPNAME, startApp != null ? startApp
+				: "");
 		developerPostData = developerPostData.replace(PARAM_LENGTH, lengthString);
-		developerPostData = developerPostData.replace(PARAM_XSRFTOKEN, xsrfToken != null ? xsrfToken : "");
+		developerPostData = developerPostData.replace(PARAM_XSRFTOKEN,
+				xsrfToken != null ? xsrfToken : "");
 
 		String result = null;
 
@@ -302,7 +317,7 @@ public class DeveloperConsole {
 			URL aURL = new java.net.URL(URL_DEVELOPER_EDIT_APP + "?dev_acc=" + devacc);
 			result = getGwtRpcResponse(developerPostData, aURL);
 
-		}  catch (ConnectException ex) {
+		} catch (ConnectException ex) {
 			throw new NetworkException(ex);
 		} catch (Exception f) {
 			throw new DeveloperConsoleException(result, f);
@@ -324,7 +339,7 @@ public class DeveloperConsole {
 			URL aURL = new java.net.URL(URL_DEVELOPER_EDIT_APP);
 			result = getGwtRpcResponse(postData, aURL);
 
-		}  catch (ConnectException ex) {
+		} catch (ConnectException ex) {
 			throw new NetworkException(ex);
 		} catch (Exception f) {
 			throw new DeveloperConsoleException(postData, f);
@@ -352,7 +367,7 @@ public class DeveloperConsole {
 			URL aURL = new java.net.URL(URL_DEVELOPER_EDIT_APP + "?dev_acc=" + devacc);
 			result = getGwtRpcResponse(developerPostData, aURL);
 
-		}  catch (ConnectException ex) {
+		} catch (ConnectException ex) {
 			throw new NetworkException(ex);
 		} catch (Exception f) {
 			throw new DeveloperConsoleException(result, f);
@@ -396,7 +411,7 @@ public class DeveloperConsole {
 			URL aURL = new java.net.URL(URL_COMMENTS + "?dev_acc=" + devacc);
 			result = getGwtRpcResponse(postData, aURL);
 
-		}  catch (ConnectException ex) {
+		} catch (ConnectException ex) {
 			throw new NetworkException(ex);
 		} catch (Exception f) {
 			throw new DeveloperConsoleException(result, f);
@@ -433,7 +448,7 @@ public class DeveloperConsole {
 			URL aURL = new java.net.URL(URL_FEEDBACK);
 			result = getGwtRpcResponse(postData, aURL);
 
-		}  catch (ConnectException ex) {
+		} catch (ConnectException ex) {
 			throw new NetworkException(ex);
 		} catch (Exception f) {
 			throw new DeveloperConsoleException(result, f);
@@ -452,9 +467,11 @@ public class DeveloperConsole {
 		connection.setConnectTimeout(4000);
 
 		connection.setRequestProperty("Host", "play.google.com");
-		connection.setRequestProperty("User-Agent",
-				"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; de; rv:1.9.2.13) Gecko/20101203 Firefox/3.6.13");
-		connection.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+		connection
+				.setRequestProperty("User-Agent",
+						"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; de; rv:1.9.2.13) Gecko/20101203 Firefox/3.6.13");
+		connection.setRequestProperty("Accept",
+				"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 		connection.setRequestProperty("Accept-Language", "en-us,en;q=0.5");
 		connection.setRequestProperty("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
 		connection.setRequestProperty("Keep-Alive", "115");
@@ -462,7 +479,8 @@ public class DeveloperConsole {
 		connection.setRequestProperty("Connection", "keep-alive");
 		connection.setRequestProperty("Content-Type", "text/x-gwt-rpc; charset=utf-8");
 		connection.setRequestProperty("X-GWT-Permutation", getGwtPermutation());
-		connection.setRequestProperty("X-GWT-Module-Base", "https://play.google.com/apps/publish/gwt-play/");
+		connection.setRequestProperty("X-GWT-Module-Base",
+				"https://play.google.com/apps/publish/gwt-play/");
 		connection.setRequestProperty("Referer", "https://play.google.com/apps/publish/Home");
 
 		OutputStreamWriter streamToAuthorize = new java.io.OutputStreamWriter(

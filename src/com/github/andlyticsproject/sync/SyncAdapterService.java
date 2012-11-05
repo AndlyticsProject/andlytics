@@ -55,6 +55,9 @@ public class SyncAdapterService extends Service {
 		@Override
 		public void onPerformSync(Account account, Bundle extras, String authority,
 				ContentProviderClient provider, SyncResult syncResult) {
+			// TODO If the account is hidden and the user enables syncing for it via system
+			// then this could get called. We should check and either make the account visable,
+			// or disable syncing
 			try {
 				SyncAdapterService.performSync(mContext, account, extras, authority, provider,
 						syncResult);
@@ -77,6 +80,7 @@ public class SyncAdapterService extends Service {
 		return sSyncAdapter;
 	}
 
+	@SuppressWarnings("deprecation")
 	private static void performSync(Context context, Account account, Bundle extras,
 			String authority, ContentProviderClient provider, SyncResult syncResult)
 			throws OperationCanceledException {

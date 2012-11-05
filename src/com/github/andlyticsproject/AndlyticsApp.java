@@ -1,6 +1,7 @@
 package com.github.andlyticsproject;
 
 import org.acra.ACRA;
+import org.acra.ACRAConfiguration;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 import org.acra.sender.HttpPostSender;
@@ -41,8 +42,10 @@ public class AndlyticsApp extends Application {
 
 	private void initAcra() {
 		try {
-			ACRA.getConfig().setResToastText(R.string.crash_toast);
-			ACRA.getConfig().setSendReportsInDevMode(false);
+			ACRAConfiguration config = ACRA.getNewDefaultConfig(this);
+			config.setResToastText(R.string.crash_toast);
+			config.setSendReportsInDevMode(false);
+			ACRA.setConfig(config);
 			ACRA.init(this);
 			String bugsenseUrl = getResources().getString(R.string.bugsense_url);
 			ACRA.getErrorReporter().addReportSender(new HttpPostSender(bugsenseUrl, null));

@@ -211,6 +211,23 @@ public class GwtParser {
 	12 29:  0=null
 	13 30: 10=
 	14 31: 16=Sree Hari Reddy
+	
+	0 2=UserComment
+	1 3=<version string>
+	2 12=<comment text>
+	3 'ToTMmzv' <comment timestamp (long)>
+	4 13=<device name>
+	5 14=<device model>
+	6 15=gaia:... <Google account ID>
+	7 8=<language name>
+	8 9=<language code>
+	9 2=<rating> (2=**, etc.)
+	10 16=<comment reply> if any, otherwise "0"
+	11 1=1 (constant?)
+	12 17=java.lang.Long/4227064769 if has reply
+	13 ToTVmTk <reply timestamp (long)> if has reply, otherwise, ""
+	14 10=<reviewer nickname> if no reply, otherwise ""
+	15 18=<reviewer nickname> if has reply
 
 	*/
 	public List<Comment> getComments() {
@@ -222,6 +239,7 @@ public class GwtParser {
 			// remove first two values from index array - is arraylist definition
 			List<String> commentsIndexList = indexList.subList(2, indexList.size());
 			Comment comment = new Comment();
+			Comment reply = null;
 
 			int commentNumber = 0;
 			int commentIndex = -1;
@@ -234,6 +252,7 @@ public class GwtParser {
 				switch (commentIndex) {
 					case 0:
 						comment = new Comment();
+						reply = null;
 						break;
 					case 1:
 
@@ -272,15 +291,41 @@ public class GwtParser {
 					case 9:
 						comment.setRating(getIntForIndex(valueIndex));
 						break;
-
+					case 10:
+						// if we have a reply, this points to the reply text
+						if (!"0".equals(valueIndex)) {
+							reply = new Comment();
+							// XXX use resource
+							reply.setUser("Developer reply");
+							reply.setRating(-1);
+							comment.setReply(reply);
+							reply.setText(getStringForIndex(valueIndex));
+						}
+						break;
+					case 13:
+						if (reply != null) {
+							long time = decodeLong(indexList.get(commentIndex + 2 + commentNumber));
+							reply.setDate(DateFormat.format("EEEEE, d MMM yyyy", new Date(time))
+									.toString());
+						}
+						break;
 					case 14:
+						if (reply == null) {
+							comment.setUser(getStringForIndex(valueIndex));
+							commentIndex = -1;
+							result.add(comment);
 
-						comment.setUser(getStringForIndex(valueIndex));
-						commentIndex = -1;
-						result.add(comment);
+							commentNumber += 15;
+						}
+						break;
+					case 15:
+						if (reply != null) {
+							comment.setUser(getStringForIndex(valueIndex));
+							commentIndex = -1;
+							result.add(comment);
 
-						commentNumber += 15;
-
+							commentNumber += 16;
+						}
 						break;
 
 					default:

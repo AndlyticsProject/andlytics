@@ -1,5 +1,12 @@
-
 package com.github.andlyticsproject;
+
+import java.io.File;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,29 +19,22 @@ import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
-import android.view.animation.Animation.AnimationListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
-import java.io.File;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
 
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.cache.AppIconInMemoryCache;
@@ -177,22 +177,28 @@ public class MainListAdapter extends BaseAdapter {
 			holder.ratingbar = (RatingBar) convertView.findViewById(R.id.main_app_ratingbar);
 			holder.row = (RelativeLayout) convertView.findViewById(R.id.main_app_row);
 
-			holder.ratingtext1 = (TextView) convertView.findViewById(R.id.main_app_ratingbar1_text);
-			holder.ratingtext2 = (TextView) convertView.findViewById(R.id.main_app_ratingbar2_text);
-			holder.ratingtext3 = (TextView) convertView.findViewById(R.id.main_app_ratingbar3_text);
-			holder.ratingtext4 = (TextView) convertView.findViewById(R.id.main_app_ratingbar4_text);
-			holder.ratingtext5 = (TextView) convertView.findViewById(R.id.main_app_ratingbar5_text);
+			holder.ratingtext1 = (TextView) convertView.findViewById(R.id.main_app_rating_1_text);
+			holder.ratingtext2 = (TextView) convertView.findViewById(R.id.main_app_rating_2_text);
+			holder.ratingtext3 = (TextView) convertView.findViewById(R.id.main_app_rating_3_text);
+			holder.ratingtext4 = (TextView) convertView.findViewById(R.id.main_app_rating_4_text);
+			holder.ratingtext5 = (TextView) convertView.findViewById(R.id.main_app_rating_5_text);
+			
+			holder.ratings1 = (ProgressBar) convertView.findViewById(R.id.main_app_rating_1_rating_progressbar);
+			holder.ratings2 = (ProgressBar) convertView.findViewById(R.id.main_app_rating_2_rating_progressbar);
+			holder.ratings3 = (ProgressBar) convertView.findViewById(R.id.main_app_rating_3_rating_progressbar);
+			holder.ratings4 = (ProgressBar) convertView.findViewById(R.id.main_app_rating_4_rating_progressbar);
+			holder.ratings5 = (ProgressBar) convertView.findViewById(R.id.main_app_rating_5_rating_progressbar);
 
 			holder.ratingpercent1 = (TextView) convertView
-					.findViewById(R.id.main_app_ratingbar1_percent);
+					.findViewById(R.id.main_app_rating_1_percent);
 			holder.ratingpercent2 = (TextView) convertView
-					.findViewById(R.id.main_app_ratingbar2_percent);
+					.findViewById(R.id.main_app_rating_2_percent);
 			holder.ratingpercent3 = (TextView) convertView
-					.findViewById(R.id.main_app_ratingbar3_percent);
+					.findViewById(R.id.main_app_rating_3_percent);
 			holder.ratingpercent4 = (TextView) convertView
-					.findViewById(R.id.main_app_ratingbar4_percent);
+					.findViewById(R.id.main_app_rating_4_percent);
 			holder.ratingpercent5 = (TextView) convertView
-					.findViewById(R.id.main_app_ratingbar5_percent);
+					.findViewById(R.id.main_app_rating_5_percent);
 
 			holder.buttonHistory = (View) convertView.findViewById(R.id.main_app_button_history);
 			holder.ratingFrame = (View) convertView.findViewById(R.id.main_app_ratingdetain_frame);
@@ -233,6 +239,18 @@ public class MainListAdapter extends BaseAdapter {
 		holder.ratingtext3.setText(appStats.getRating3().toString());
 		holder.ratingtext4.setText(appStats.getRating4().toString());
 		holder.ratingtext5.setText(appStats.getRating5().toString());
+		
+		int numRatings = appStats.getRatingCount();
+		holder.ratings1.setMax(numRatings);
+		holder.ratings1.setProgress(appStats.getRating1());
+		holder.ratings2.setMax(numRatings);
+		holder.ratings2.setProgress(appStats.getRating2());
+		holder.ratings3.setMax(numRatings);
+		holder.ratings3.setProgress(appStats.getRating3());
+		holder.ratings4.setMax(numRatings);
+		holder.ratings4.setProgress(appStats.getRating4());
+		holder.ratings5.setMax(numRatings);
+		holder.ratings5.setProgress(appStats.getRating5());
 
 		if (statsMode.equals(StatsMode.DAY_CHANGES)) {
 			setupValueDiff(holder.ratingpercent1, appStats.getRating1Diff());
@@ -299,17 +317,8 @@ public class MainListAdapter extends BaseAdapter {
 			holder.icon.setTag(TAG_IMAGE_REF, packageName);
 			holder.icon.setImageDrawable(null);
 			holder.icon.clearAnimation();
-			if (appDownloadInfo.getPackageName().startsWith("com.github.andlyticsproject.demo")) {
-
-				holder.icon.setImageDrawable(activity.getResources().getDrawable(
-						R.drawable.default_app_icon));
-
-			} else {
-
-				new GetCachedImageTask(holder.icon, appDownloadInfo.getPackageName())
-						.execute(new File[] { iconFile });
-
-			}
+			new GetCachedImageTask(holder.icon, appDownloadInfo.getPackageName())
+					.execute(new File[] { iconFile });
 		}
 
 		holder.icon.setTag(TAG_IMAGE_REF, packageName);
@@ -549,6 +558,11 @@ public class MainListAdapter extends BaseAdapter {
 		public TextView ratingpercent3;
 		public TextView ratingpercent4;
 		public TextView ratingpercent5;
+		public ProgressBar ratings1;
+		public ProgressBar ratings2;
+		public ProgressBar ratings3;
+		public ProgressBar ratings4;
+		public ProgressBar ratings5;
 		public TextView name;
 		public TextView packageName;
 		public TextView downloadsCount;
@@ -615,6 +629,7 @@ public class MainListAdapter extends BaseAdapter {
 		imageView.startAnimation(fadeInAnimation);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void changeBackgroundDrawable(final View v, Drawable drawable) {
 		LayoutParams l = v.getLayoutParams();
 		int paddingBottom = v.getPaddingBottom();
@@ -670,14 +685,18 @@ public class MainListAdapter extends BaseAdapter {
 
 				int diffHeight = 0;
 				if (up) {
-					diffHeight = height - ((int) (height * inter.getInterpolation(animationtime / ANIMATION_DURATION)));
+					diffHeight = height
+							- ((int) (height * inter.getInterpolation(animationtime
+									/ ANIMATION_DURATION)));
 				} else {
-					diffHeight = (int) (height * inter.getInterpolation(animationtime / ANIMATION_DURATION));
+					diffHeight = (int) (height * inter.getInterpolation(animationtime
+							/ ANIMATION_DURATION));
 				}
 
 				int diffLeft = 0;
 				int diffRight = 0;
-				int diffMargin = (int) (margin * inter.getInterpolation(animationtime / ANIMATION_DURATION));
+				int diffMargin = (int) (margin * inter.getInterpolation(animationtime
+						/ ANIMATION_DURATION));
 				if (up) {
 					diffLeft = diffMargin;
 					diffRight = margin - diffMargin;

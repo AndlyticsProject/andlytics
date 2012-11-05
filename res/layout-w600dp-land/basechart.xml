@@ -8,6 +8,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/base_chart_buttonbarSpacer"
+        android:background="#eeeeee"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -42,7 +43,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="5dp"
                     android:text=""
-                    android:textSize="14dp"
+                    android:textSize="@dimen/chart_title_text_size"
                     android:visibility="visible" >
                 </TextView>
 
@@ -87,9 +88,10 @@
                         android:layout_height="fill_parent"
                         android:visibility="gone" >
 
-                        <include
+                        <View
                             android:id="@+id/base_chart_config"
-                            layout="@layout/base_chart_config" />
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -130,19 +132,6 @@
                                     android:paddingRight="5dp"
                                     android:text="@string/one_entry_hint_desc"
                                     android:visibility="visible" />
-
-                                <TextView
-                                    android:id="@+id/base_chart_one_entry_link"
-                                    style="@style/MainTableText"
-                                    android:layout_width="fill_parent"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:paddingBottom="20dp"
-                                    android:paddingLeft="5dp"
-                                    android:paddingRight="5dp"
-                                    android:paddingTop="5dp"
-                                    android:text="@string/one_entry_hint_demo"
-                                    android:visibility="invisible" />
                             </LinearLayout>
                         </ScrollView>
                     </RelativeLayout>

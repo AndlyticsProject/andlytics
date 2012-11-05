@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Arrays that are used directly in the app and shouldn't be translated -->
+    <!-- Arrays that are used directly in the app or that reference strings and shouldn't be translated -->
 
     <string-array name="autosync_periods_values" tools:ignore="MissingTranslation">
         <item>0</item>
@@ -14,6 +14,20 @@
         <item>480</item>
         <item>720</item>
         <item>1440</item>
+    </string-array>
+    
+    <string-array name="date_formats">
+        <item>@string/locale_default</item>
+        <item>@string/ddmmyy</item>
+        <item>@string/mmddyy</item>
+        <item>@string/yymmdd</item>
+    </string-array>
+    
+    <string-array name="date_format_values">
+        <item>DEFAULT</item>
+        <item>dd/MM/yyyy</item>
+        <item>MM/dd/yyyy</item>
+        <item>yyyy/MM/dd</item>
     </string-array>
 
 </resources>

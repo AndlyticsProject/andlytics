@@ -55,7 +55,6 @@
     <string name="select_files_export">Select apps to export</string>
     <string name="export_files_replaced">Existing export files will be replaced</string>
     <string name="run_export">Run export</string>
-    <string name="comments_author">by %s</string>
     <string name="comments_details_full">Version %1$s on device: %2$s</string>
     <string name="comments_details_version">Version %s</string>
     <string name="comments_details_device">On device: %s</string>
@@ -66,21 +65,22 @@
     <string name="time_frame">Time frame</string>
     <string name="seven_days">Last 7 days</string>
     <string name="thirty_days">Last 30 days</string>
+    <string name="ninety_days">Last 90 days</string>
     <string name="unlimited">Unlimited</string>
     <string name="date_format">Date format</string>
+    <string name="locale_default">Locale default</string>
     <string name="ddmmyy">Day/Month/Year</string>
     <string name="yymmdd">Year/Month/Day</string>
     <string name="mmddyy">Month/Day/Year</string>
     <string name="smooth_values">Smooth values</string>
     <string name="smoothed_values">* smoothed values</string>
-    <string name="info_smooth">Values for downloads and active installs are not updated on a daily basis by Google. You can choose to smooth these values. Ratings are not affected as they update nearly instantly.</string>
+    <string name="info_smooth">Smooth values for the downloads and active installs charts</string>
     <string name="auto_sync_period">Auto synchronization period</string>
     <string name="admob_login">ADMOB ACCOUNT LOGIN</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="login">Login</string>
-    <string name="remove_admob">Remove AdMob site association</string>
-    <string name="remove_admob_app">Remove AdMob values for this app</string>
+    <string name="remove_admob">Remove AdMob</string>
     <string name="loading_site">Loading site list&#8230;</string>
     <string name="select_admob_site">Select AdMob site to associate with this app</string>
     <string name="choose_app">Choose your app</string>
@@ -104,7 +104,6 @@
     <string name="admob__CTR">CTR</string>
     <string name="admob__house_ad_clicks">House ad clicks</string>
     <string name="admob__charts_available">AdMob charts available</string>
-    <string name="admob__remove_account">If you want to remove an account go to: Android Settings -> Accounts and Sync</string>
     <string name="last_update">Last update</string>
 
     <string name="changelog_title">Changelog</string>

@@ -1,591 +1,387 @@
-<RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:background="@color/andBackground"
-	android:paddingBottom="5dp">
-
-	<View
-		android:id="@+id/main_app_topspacer"
-		android:layout_width="fill_parent"
-		android:layout_height="10dp">
-	</View>
-
-	<RelativeLayout
-		android:layout_below="@+id/main_app_topspacer"
-		android:id="@+id/main_app_ratingdetain_frame"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:paddingLeft="15dp"
-		android:paddingRight="15dp"
-		android:background="@drawable/row_background_inner"
-		android:layout_marginLeft="5dp"
-		android:paddingBottom="10dp"
-		android:paddingTop="35dp">
-
-		<ImageView
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:scaleType="fitXY"
-			android:src="@drawable/icon_more"
-			android:layout_alignParentRight="true"
-			android:layout_centerVertical="true" />
-
-		<TextView
-			style="@style/MainTableText"
-			android:id="@+id/main_app_ratingbar5_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"			
-			android:paddingRight="5dp"
-			android:paddingTop="3dp"
-			android:gravity="right"
-			android:minWidth="65dp"  />
-
-		<RatingBar
-			style="@style/andRatingBar"
-			android:isIndicator="true"
-			android:layout_below="@+id/main_app_name"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:stepSize="1"
-			android:rating="5"
-			android:numStars="5"
-			android:id="@+id/main_app_ratingbar5"
-			android:minHeight="20dp"
-			android:paddingTop="3dp"
-			android:layout_toRightOf="@+id/main_app_ratingbar5_text" />
-		
-		<TextView
-			style="@style/MainTableText"
-			android:id="@+id/main_app_ratingbar5_percent"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:paddingTop="3dp"
-			android:paddingRight="50dp" />
-
-		<TextView
-			style="@style/MainTableText"
-			android:id="@+id/main_app_ratingbar4_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:minWidth="65dp" 
-			android:paddingRight="5dp"
-			android:gravity="right"
-			android:layout_below="@+id/main_app_ratingbar5" />
-
-		<RatingBar
-			style="@style/andRatingBar"
-			android:isIndicator="true"
-			android:layout_below="@+id/main_app_ratingbar5"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:stepSize="1"
-			android:rating="4"
-			android:numStars="5"
-			android:id="@+id/main_app_ratingbar4"
-			android:minHeight="20dp"
-			android:layout_toRightOf="@+id/main_app_ratingbar4_text" />
-		
-		<TextView
-			style="@style/MainTableText"
-			android:id="@+id/main_app_ratingbar4_percent"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_below="@+id/main_app_ratingbar5"
-			android:layout_alignParentRight="true"
-			android:paddingRight="50dp" />
-
-		<TextView
-			style="@style/MainTableText"
-			android:id="@+id/main_app_ratingbar3_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:minWidth="65dp" 
-			android:paddingRight="5dp"
-			android:gravity="right"
-			android:layout_below="@+id/main_app_ratingbar4" />
-
-		<RatingBar
-			style="@style/andRatingBar"
-			android:isIndicator="true"
-			android:layout_below="@+id/main_app_ratingbar4"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:stepSize="1"
-			android:rating="3"
-			android:numStars="5"
-			android:id="@+id/main_app_ratingbar3"
-			android:minHeight="20dp"
-			android:layout_toRightOf="@+id/main_app_ratingbar3_text" />
-				
-		<TextView
-			style="@style/MainTableText"
-			android:id="@+id/main_app_ratingbar3_percent"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_below="@+id/main_app_ratingbar4"
-			android:layout_alignParentRight="true"
-			android:paddingRight="50dp" />
-
-		<TextView
-			style="@style/MainTableText"
-			android:id="@+id/main_app_ratingbar2_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:minWidth="65dp" 
-			android:paddingRight="5dp"
-			android:gravity="right"
-			android:layout_below="@+id/main_app_ratingbar3" />
-
-		<RatingBar
-			style="@style/andRatingBar"
-			android:isIndicator="true"
-			android:layout_below="@+id/main_app_ratingbar3"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:stepSize="1"
-			android:rating="2"
-			android:numStars="5"
-			android:id="@+id/main_app_ratingbar2"
-			android:minHeight="20dp"
-			android:layout_toRightOf="@+id/main_app_ratingbar2_text" />
-
-		<TextView
-			style="@style/MainTableText"
-			android:id="@+id/main_app_ratingbar2_percent"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_below="@+id/main_app_ratingbar3"
-			android:layout_alignParentRight="true"
-			android:paddingRight="50dp" />
-
-
-		<TextView
-			style="@style/MainTableText"
-			android:id="@+id/main_app_ratingbar1_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:minWidth="65dp"
-			android:paddingRight="5dp"
-			android:gravity="right"
-			android:layout_below="@+id/main_app_ratingbar2" />
-
-		<RatingBar
-			style="@style/andRatingBar"
-			android:isIndicator="true"
-			android:layout_below="@+id/main_app_ratingbar2"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:stepSize="1"
-			android:rating="1"
-			android:numStars="5"
-			android:id="@+id/main_app_ratingbar1"
-			android:minHeight="20dp"
-			android:layout_toRightOf="@+id/main_app_ratingbar1_text" />
-
-		<TextView
-			style="@style/MainTableText"
-			android:id="@+id/main_app_ratingbar1_percent"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_below="@+id/main_app_ratingbar2"
-			android:layout_alignParentRight="true"
-			android:paddingRight="50dp" />
-
-		<TextView
-			style="@style/MainTableText"
-			android:layout_below="@+id/main_app_ratingbar1"
-			android:id="@+id/main_package_name"
-			android:layout_height="wrap_content"
-			android:paddingTop="2dp"
-			android:layout_centerHorizontal="true"
-			android:textColor="#bababa"
-			android:layout_width="wrap_content" />
-
-	</RelativeLayout>
-
-	<RelativeLayout
-		android:layout_below="@+id/main_app_topspacer"
-		android:id="@+id/main_app_row"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:background="@drawable/row_background"
-		android:layout_marginRight="5dp">
-
-		<RelativeLayout
-			android:id="@+id/main_app_top_frame"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:paddingTop="15dp"
-			android:paddingRight="15dp"
-			android:paddingLeft="15dp">
-
-			<ImageView
-				android:layout_width="wrap_content"
-				android:id="@+id/imageView1"
-				android:scaleType="fitXY"
-				android:src="@drawable/icon_more"
-				android:layout_height="wrap_content"
-				android:layout_alignParentRight="true"
-				android:layout_centerVertical="true"></ImageView>
-
-			<RelativeLayout
-				android:id="@+id/main_app_icon_frame"
-				android:layout_height="wrap_content"
-				android:layout_width="65dp">
-				<ImageView
-					android:layout_width="32dp"
-					android:layout_height="32dp"
-					android:src="@drawable/default_app_icon"
-					android:layout_marginRight="5dp"
-					android:layout_marginTop="2dp"
-					android:id="@+id/main_app_icon"
-					android:layout_alignParentRight="true"></ImageView>
-			</RelativeLayout>
-			<TextView
-				style="@style/MainTableText"
-				android:id="@+id/main_app_name"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textStyle="bold"
-				android:maxLines="1"
-				android:layout_toRightOf="@+id/main_app_icon_frame" />
-
-			<RatingBar
-				style="@style/andRatingBar"
-				android:isIndicator="true"
-				android:layout_below="@+id/main_app_name"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:stepSize="0.5"
-				android:rating="4.5"
-				android:numStars="5"
-				android:id="@+id/main_app_ratingbar"
-				android:layout_toRightOf="@+id/main_app_icon_frame" />
-
-			<TextView
-				android:id="@+id/main_app_commentscount"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_alignRight="@+id/main_app_rating"
-				android:paddingRight="5dp"
-				android:maxLines="1"
-				
-				android:layout_below="@+id/main_app_ratingbar"
-				android:minWidth="65dp"
-				android:gravity="right"
-				android:paddingBottom="2dp"
-				android:paddingTop="2dp"></TextView>
-
-			<TextView
-			    android:id="@+id/main_app_commentscountText"
-			    style="@style/MainTableText"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_alignBaseline="@+id/main_app_commentscount"
-			    android:layout_toRightOf="@+id/main_app_commentscount"
-			    android:minWidth="110dp"
-			    android:paddingRight="5dp"
-			    android:text="@string/num_comments" />
-
-			<TextView
-				android:id="@+id/main_app_commentscountPercent"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_alignBaseline="@+id/main_app_commentscountText"
-				android:layout_alignParentRight="true"
-				android:paddingRight="50dp" />
-
-		</RelativeLayout>
-
-
-		<RelativeLayout
-			android:id="@+id/main_app_download_frame"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_below="@+id/main_app_top_frame"
-			android:paddingLeft="10dp"
-			android:background="@drawable/row_background_inner_borderless"
-			android:paddingRight="10dp">
-
-			<ImageView
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:scaleType="fitXY"
-				android:src="@drawable/icon_more"
-				android:layout_alignParentRight="true"
-				android:layout_centerVertical="true"
-				android:paddingRight="5dp" />
-
-
-			<View
-				android:id="@+id/main_app_spacer"
-				android:layout_width="fill_parent"
-				android:background="@drawable/row_dash"
-				android:layout_height="2dp" />
-
-
-			<TextView
-				android:layout_below="@+id/main_app_spacer"
-				android:id="@+id/main_app_downloads"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:gravity="right"
-				android:paddingRight="5dp"
-				android:paddingLeft="10dp"
-				android:minWidth="70dp" 
-				android:paddingTop="3dp" />
-
-			<TextView
-			    android:id="@+id/main_app_downloadsText"
-			    style="@style/MainTableText"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_alignBaseline="@+id/main_app_downloads"
-			    android:layout_toRightOf="@+id/main_app_downloads"
-			    android:text="@string/num_total_downloads" />
-
-			<TextView
-				android:id="@+id/main_app_downloadsPercent"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_alignBaseline="@+id/main_app_downloadsText"
-				android:text=""
-				android:layout_alignParentRight="true"
-				android:paddingRight="55dp" />				
-			<TextView
-				android:id="@+id/main_app_activeinstalls"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_alignRight="@+id/main_app_downloads"
-				android:gravity="right"
-				android:paddingRight="5dp" 
-				android:layout_below="@+id/main_app_downloads"
-				android:paddingBottom="3dp" />
-
-			<TextView
-			    android:id="@+id/main_app_activeinstallsText"
-			    style="@style/MainTableText"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_alignBaseline="@+id/main_app_activeinstalls"
-			    android:layout_toRightOf="@+id/main_app_activeinstalls"
-			    android:minWidth="110dp"
-			    android:paddingRight="5dp"
-			    android:text="@string/num_active_installs" />
-
-			<TextView
-				android:id="@+id/main_app_activeinstallsPercent"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_alignBaseline="@+id/main_app_activeinstallsText"
-				android:layout_alignParentRight="true"
-				android:paddingRight="55dp" />
-
-		</RelativeLayout>
-
-
-		<RelativeLayout
-			android:id="@+id/main_app_admob_frame"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_below="@+id/main_app_download_frame"
-			android:paddingLeft="10dp"
-			android:background="@drawable/row_background_inner_borderless"
-			android:paddingRight="10dp">
-
-			<ImageView
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:scaleType="fitXY"
-				android:src="@drawable/icon_more"
-				android:layout_alignParentRight="true"
-				android:layout_centerVertical="true"
-				android:paddingRight="5dp" />
-
-
-			<View
-				android:id="@+id/main_app_spacer_admob"
-				android:layout_width="fill_parent"
-				android:background="@drawable/row_dash"
-				android:layout_height="2dp" />
-
-
-			<TextView
-				android:layout_below="@+id/main_app_spacer_admob"
-				android:id="@+id/main_app_admob_revenue"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:gravity="right"
-				android:paddingRight="5dp" 
-				android:paddingLeft="10dp"
-				android:minWidth="70dp" 
-				android:paddingTop="3dp" />
-
-			<TextView
-			    android:id="@+id/main_app_admob_revenue_text"
-			    style="@style/MainTableText"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_alignBaseline="@+id/main_app_admob_revenue"
-			    android:layout_toRightOf="@+id/main_app_admob_revenue"
-			    android:text="@string/admob_revenue" />
-
-			<TextView
-				android:id="@+id/main_app_admobPercent"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_alignBaseline="@+id/main_app_admob_revenue_text"
-				android:text=""
-				android:layout_alignParentRight="true"
-				android:paddingRight="55dp" />				
-			<TextView
-				android:id="@+id/main_app_admob_requests"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_alignRight="@+id/main_app_admob_revenue"
-				android:gravity="right"
-				android:paddingRight="5dp" 
-				android:layout_below="@+id/main_app_admob_revenue"
-				android:paddingBottom="3dp" />
-
-			<TextView
-			    android:id="@+id/main_app_admob_requests_text"
-			    style="@style/MainTableText"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_alignBaseline="@+id/main_app_admob_requests"
-			    android:layout_toRightOf="@+id/main_app_admob_requests"
-			    android:minWidth="110dp"
-			    android:paddingRight="5dp"
-			    android:text="@string/admob_requests" />
-
-			<TextView
-				android:id="@+id/main_app_admobRequestsPercent"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_alignBaseline="@+id/main_app_admob_requests_text"
-				android:text=""
-				android:layout_alignParentRight="true"
-				android:paddingRight="55dp" />
-
-		</RelativeLayout>
-
-
-		<RelativeLayout
-
-			android:id="@+id/main_app_button_history"
-			android:layout_height="wrap_content"
-			android:layout_below="@+id/main_app_admob_frame"
-			android:layout_width="fill_parent"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			android:paddingBottom="0dp"
-			android:background="@drawable/row_background_inner_borderless_bottom">
-
-
-			<ImageView
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:scaleType="fitXY"
-				android:src="@drawable/icon_down"
-				android:layout_alignParentRight="true"
-				android:layout_centerVertical="true"
-				android:id="@+id/main_app_expand_image"
-				android:layout_marginRight="5dp" />
-
-			<View
-				android:id="@+id/main_app_spacer2"
-				android:layout_width="fill_parent"
-				android:background="@drawable/row_dash"
-				android:layout_height="2dp" />
-
-
-			<TextView
-				android:layout_below="@+id/main_app_spacer2"
-
-				android:id="@+id/main_app_avgrating"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:paddingRight="5dp" 
-				android:maxLines="1"
-				android:layout_alignRight="@+id/main_app_rating"
-				android:paddingTop="2dp"></TextView>
-
-			<TextView
-			    android:id="@+id/main_app_avgratingText"
-			    style="@style/MainTableText"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_alignBaseline="@+id/main_app_avgrating"
-			    android:layout_toRightOf="@+id/main_app_avgrating"
-			    android:paddingRight="5dp"
-			    android:text="@string/num_average_rating" />
-
-			<TextView
-				android:layout_below="@+id/main_app_avgrating"
-				android:id="@+id/main_app_rating"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:paddingRight="5dp"
-				android:gravity="right"
-				android:paddingBottom="5dp"
-				android:minWidth="70dp" ></TextView>
-				
-
-			<TextView
-				android:id="@+id/main_app_avgratingPercent"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_alignBaseline="@+id/main_app_avgrating"
-				android:layout_alignParentRight="true"
-				android:paddingRight="55dp" />				
-
-			<TextView
-			    android:id="@+id/main_app_ratingText"
-			    style="@style/MainTableText"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_alignBaseline="@+id/main_app_rating"
-			    android:layout_toRightOf="@+id/main_app_rating"
-			    android:minWidth="110dp"
-			    android:paddingRight="5dp"
-			    android:text="@string/num_ratings" />
-
-			<TextView
-				android:id="@+id/main_app_ratingPercent"
-				style="@style/MainTableText"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_alignBaseline="@+id/main_app_ratingText"
-				android:layout_alignParentRight="true"
-				android:paddingRight="55dp" />
-
-
-			<View
-				android:layout_below="@+id/main_app_rating"
-				android:id="@+id/main_app_spacer3"
-				android:layout_width="fill_parent"
-				android:background="@drawable/row_dash"
-				android:layout_height="2dp" />
-
-		</RelativeLayout>
-
-
-	</RelativeLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/andBackground"
+    android:paddingBottom="5dp" >
+
+    <View
+        android:id="@+id/main_app_topspacer"
+        android:layout_width="fill_parent"
+        android:layout_height="10dp" >
+    </View>
+
+    <include layout="@layout/main_list_item_ratings_details" />
+
+    <RelativeLayout
+        android:id="@+id/main_app_row"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_app_topspacer"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/row_background" >
+
+        <RelativeLayout
+            android:id="@+id/main_app_top_frame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="15dp" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_more" >
+            </ImageView>
+
+            <RelativeLayout
+                android:id="@+id/main_app_icon_frame"
+                android:layout_width="65dp"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/main_app_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/default_app_icon" >
+                </ImageView>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/main_app_name"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/main_app_icon_frame"
+                android:maxLines="1"
+                android:textStyle="bold" />
+
+            <RatingBar
+                android:id="@+id/main_app_ratingbar"
+                style="@style/andRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/main_app_name"
+                android:layout_toRightOf="@+id/main_app_icon_frame"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:rating="4.5"
+                android:stepSize="0.5" />
+
+            <TextView
+                android:id="@+id/main_app_commentscount"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/main_app_rating"
+                android:layout_below="@+id/main_app_ratingbar"
+                android:gravity="right"
+                android:maxLines="1"
+                android:minWidth="65dp"
+                android:paddingBottom="2dp"
+                android:paddingRight="5dp"
+                android:paddingTop="2dp" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/main_app_commentscountText"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_commentscount"
+                android:layout_toRightOf="@+id/main_app_commentscount"
+                android:minWidth="110dp"
+                android:paddingRight="5dp"
+                android:text="@string/num_comments" />
+
+            <TextView
+                android:id="@+id/main_app_commentscountPercent"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_commentscountText"
+                android:layout_alignParentRight="true"
+                android:paddingRight="50dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/main_app_download_frame"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_app_top_frame"
+            android:background="@drawable/row_background_inner_borderless"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_more" />
+
+            <View
+                android:id="@+id/main_app_spacer"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/row_dash" />
+
+            <TextView
+                android:id="@+id/main_app_downloads"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/main_app_spacer"
+                android:gravity="right"
+                android:minWidth="70dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:paddingTop="3dp" />
+
+            <TextView
+                android:id="@+id/main_app_downloadsText"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_downloads"
+                android:layout_toRightOf="@+id/main_app_downloads"
+                android:text="@string/num_total_downloads" />
+
+            <TextView
+                android:id="@+id/main_app_downloadsPercent"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_downloadsText"
+                android:layout_alignParentRight="true"
+                android:paddingRight="55dp"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/main_app_activeinstalls"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/main_app_downloads"
+                android:layout_below="@+id/main_app_downloads"
+                android:gravity="right"
+                android:paddingBottom="3dp"
+                android:paddingRight="5dp" />
+
+            <TextView
+                android:id="@+id/main_app_activeinstallsText"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_activeinstalls"
+                android:layout_toRightOf="@+id/main_app_activeinstalls"
+                android:minWidth="110dp"
+                android:paddingRight="5dp"
+                android:text="@string/num_active_installs" />
+
+            <TextView
+                android:id="@+id/main_app_activeinstallsPercent"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_activeinstallsText"
+                android:layout_alignParentRight="true"
+                android:paddingRight="55dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/main_app_admob_frame"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_app_download_frame"
+            android:background="@drawable/row_background_inner_borderless"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_more" />
+
+            <View
+                android:id="@+id/main_app_spacer_admob"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/row_dash" />
+
+            <TextView
+                android:id="@+id/main_app_admob_revenue"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/main_app_spacer_admob"
+                android:gravity="right"
+                android:minWidth="70dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:paddingTop="3dp" />
+
+            <TextView
+                android:id="@+id/main_app_admob_revenue_text"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_admob_revenue"
+                android:layout_toRightOf="@+id/main_app_admob_revenue"
+                android:text="@string/admob_revenue" />
+
+            <TextView
+                android:id="@+id/main_app_admobPercent"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_admob_revenue_text"
+                android:layout_alignParentRight="true"
+                android:paddingRight="55dp"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/main_app_admob_requests"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/main_app_admob_revenue"
+                android:layout_below="@+id/main_app_admob_revenue"
+                android:gravity="right"
+                android:paddingBottom="3dp"
+                android:paddingRight="5dp" />
+
+            <TextView
+                android:id="@+id/main_app_admob_requests_text"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_admob_requests"
+                android:layout_toRightOf="@+id/main_app_admob_requests"
+                android:minWidth="110dp"
+                android:paddingRight="5dp"
+                android:text="@string/admob_requests" />
+
+            <TextView
+                android:id="@+id/main_app_admobRequestsPercent"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_admob_requests_text"
+                android:layout_alignParentRight="true"
+                android:paddingRight="55dp"
+                android:text="" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/main_app_button_history"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_app_admob_frame"
+            android:background="@drawable/row_background_inner_borderless_bottom"
+            android:paddingBottom="0dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <ImageView
+                android:id="@+id/main_app_expand_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_down" />
+
+            <View
+                android:id="@+id/main_app_spacer2"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/row_dash" />
+
+            <TextView
+                android:id="@+id/main_app_avgrating"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/main_app_rating"
+                android:layout_below="@+id/main_app_spacer2"
+                android:maxLines="1"
+                android:paddingRight="5dp"
+                android:paddingTop="2dp" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/main_app_avgratingText"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_avgrating"
+                android:layout_toRightOf="@+id/main_app_avgrating"
+                android:paddingRight="5dp"
+                android:text="@string/num_average_rating" />
+
+            <TextView
+                android:id="@+id/main_app_rating"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/main_app_avgrating"
+                android:gravity="right"
+                android:minWidth="70dp"
+                android:paddingBottom="5dp"
+                android:paddingRight="5dp" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/main_app_avgratingPercent"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_avgrating"
+                android:layout_alignParentRight="true"
+                android:paddingRight="55dp" />
+
+            <TextView
+                android:id="@+id/main_app_ratingText"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_rating"
+                android:layout_toRightOf="@+id/main_app_rating"
+                android:minWidth="110dp"
+                android:paddingRight="5dp"
+                android:text="@string/num_ratings" />
+
+            <TextView
+                android:id="@+id/main_app_ratingPercent"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_ratingText"
+                android:layout_alignParentRight="true"
+                android:paddingRight="55dp" />
+
+            <View
+                android:id="@+id/main_app_spacer3"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:layout_below="@+id/main_app_rating"
+                android:background="@drawable/row_dash" />
+        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -143,6 +143,7 @@ public class CrashDialog extends Dialog {
 		/**
 		 * Create the custom dialog
 		 */
+		@SuppressWarnings("deprecation")
 		public CrashDialog create() {
 
 			LayoutInflater inflater = (LayoutInflater) context

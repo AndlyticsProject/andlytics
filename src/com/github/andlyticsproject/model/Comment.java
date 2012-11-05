@@ -21,6 +21,8 @@ public class Comment {
 
 	private String device;
 
+	private Comment reply;
+
 	public Comment() {
 		format = new SimpleDateFormat("MMMMM dd, yyyy");
 	}
@@ -83,6 +85,14 @@ public class Comment {
 
 	public String getDevice() {
 		return device;
+	}
+
+	public Comment getReply() {
+		return reply;
+	}
+
+	public void setReply(Comment reply) {
+		this.reply = reply;
 	}
 
 }

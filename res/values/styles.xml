@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.Andlytics" parent="Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
+    <style name="Theme.Andlytics" parent="Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarStyle">@style/Widget.Andlytics.ActionBar</item>
     </style>
 
@@ -18,6 +18,17 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/blackText</item>
+    </style>
+    
+    <style name="MainTableRatingsChangeText" parent="@android:style/TextAppearance.Small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/blackText</item>
+        <item name="android:minWidth">120dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">50dp</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:gravity">right</item>
     </style>
     
     <style name="MainTableTextMedium" parent="@android:style/TextAppearance.Medium">
@@ -59,4 +70,25 @@
         <item name="android:maxHeight">24dip</item>
     </style>
     
+    <!-- Hidden on narrow screens -->
+    <style name="RatingsRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/and_ratingbar_full</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">24dip</item>
+        <item name="android:maxHeight">24dip</item>
+        <item name="android:isIndicator">true</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:numStars">5</item>
+        <item name="android:visibility">gone</item>
+    </style>
+    
+    <style name="RatingsProgressBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:minHeight">16dp</item>
+        <item name="android:maxHeight">16dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">18dp</item>
+        <item name="android:paddingTop">1dp</item>
+        <item name="android:paddingBottom">1dp</item>
+    </style>
 </resources>

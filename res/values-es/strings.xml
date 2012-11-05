@@ -55,7 +55,6 @@
     <string name="select_files_export">Selecciona las aplicaciones a exportar</string>
     <string name="export_files_replaced">Los archivos existentes serán reemplazados</string>
     <string name="run_export">Exportar</string>
-    <string name="comments_author">por %s</string>
     <string name="comments_details_full">Versión %1$s en el dispositivo: %2$s</string>
     <string name="comments_details_version">Versión %s</string>
     <string name="comments_details_device">En dispositivo: %s</string>
