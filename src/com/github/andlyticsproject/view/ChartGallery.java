@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.Gallery;
 
+@SuppressWarnings("deprecation")
 public class ChartGallery extends Gallery {
 
 	//  private static String LOG_TAG=ChartGallery.class.toString();
