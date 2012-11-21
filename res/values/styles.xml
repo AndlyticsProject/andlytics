@@ -56,14 +56,8 @@
      <style name="Animation.InfoDialog" parent="@android:style/Animation">
         <item name="@android:windowEnterAnimation">@anim/info_dialog_fade_in</item>
         <item name="@android:windowExitAnimation">@anim/info_dialog_fade_out</item>
-    </style>  
-    
-    <style name="ActionBarSeparator">
-        <item name="android:layout_width">2px</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:background">@drawable/actionbar_separator</item>
     </style>
-    
+
     <style name="andRatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/and_ratingbar_full</item>
         <item name="android:minHeight">24dip</item>

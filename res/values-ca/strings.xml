@@ -79,7 +79,6 @@
     <string name="email">Correu electrònic</string>
     <string name="login">Inici de sessió</string>
     <string name="remove_admob">Elimina l\'associació d\'AdMob per a aquest lloc</string>
-    <string name="remove_admob_app">Elimina els valors d\'AdMob per a aquesta aplicació</string>
     <string name="loading_site">S\'està carregant la llista de llocs&#8230;</string>
     <string name="select_admob_site">Escull el lloc d\'AdMob amb què associar aquesta aplicació</string>
     <string name="choose_app">Escull la teva aplicació</string>
@@ -103,7 +102,6 @@
     <string name="admob__CTR">CTR (% de clics)</string>
     <string name="admob__house_ad_clicks">Clics a anuncis propis</string>
     <string name="admob__charts_available">Gràfiques d\'AdMob disponibles</string>
-    <string name="admob__remove_account">Si vols esborrar un compte vés a: Configuració d\'Android -> Comptes i sincronització</string>
     <string name="last_update">Última actualització</string>
 
     <string name="changelog_title">Registre de canvis</string>
