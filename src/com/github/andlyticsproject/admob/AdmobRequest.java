@@ -1,6 +1,7 @@
 
 package com.github.andlyticsproject.admob;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 
@@ -65,6 +66,7 @@ public class AdmobRequest {
 	public static final String KEY_EXCHANGE_DOWNLOADS = "exchange_downloads";
 	public static final String KEY_DATE = "date";
 
+	@SuppressLint("SimpleDateFormat")
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
 	private static final boolean DEBUG = false;
