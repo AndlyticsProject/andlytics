@@ -25,6 +25,7 @@
     <application
         android:name="AndlyticsApp"
         android:allowBackup="true"
+        android:backupAgent=".io.AndlyticsBackupAgent"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/Theme.Andlytics" >
@@ -63,10 +64,9 @@
             android:name=".PreferenceActivity"
             android:label="@string/preferences" >
             <intent-filter>
-                <action
-                    android:name="com.github.andlyticsproject.PREFERENCES" />
-                <category
-                    android:name="android.intent.category.DEFAULT" />
+                <action android:name="com.github.andlyticsproject.PREFERENCES" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
@@ -79,7 +79,8 @@
         </activity>
         <activity
             android:name=".ImportActivity"
-            android:label="@string/statistics_import" tools:ignore="ExportedActivity">
+            android:label="@string/statistics_import"
+            tools:ignore="ExportedActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -109,7 +110,7 @@
 
         <service
             android:name=".sync.SyncAdapterService"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
@@ -147,11 +148,15 @@
 
         <receiver
             android:name="com.github.andlyticsproject.sync.AlarmReceiver"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
-                <action android:name="android.accounts.LOGIN_ACCOUNTS_CHANGED"/>
+                <action android:name="android.accounts.LOGIN_ACCOUNTS_CHANGED" />
             </intent-filter>
         </receiver>
+
+        <meta-data
+            android:name="com.google.android.backup.api_key"
+            android:value="@string/backup_api_key" />
     </application>
 
 </manifest>
