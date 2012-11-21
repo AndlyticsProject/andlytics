@@ -22,14 +22,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.NetworkException;
-import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2;
-import com.github.andlyticsproject.sync.notificationcompat2.NotificationCompat2.Builder;
 
 public class AccountManagerAuthenticator extends BaseAuthenticator {
 
@@ -106,7 +106,7 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				// silent mode, show notification
 				if (activity == null) {
 					Context ctx = AndlyticsApp.getInstance();
-					Builder builder = new NotificationCompat2.Builder(ctx);
+					Builder builder = new NotificationCompat.Builder(ctx);
 					builder.setSmallIcon(R.drawable.statusbar_andlytics);
 					builder.setContentTitle(ctx.getResources().getString(R.string.auth_error,
 							accountName));
