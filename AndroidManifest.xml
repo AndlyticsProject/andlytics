@@ -148,7 +148,7 @@
             android:exported="false" />
 
         <receiver
-            android:name="com.github.andlyticsproject.sync.AlarmReceiver"
+            android:name="com.github.andlyticsproject.sync.AccountsChangedReceiver"
             android:exported="false" >
             <intent-filter>
                 <action android:name="android.accounts.LOGIN_ACCOUNTS_CHANGED" />

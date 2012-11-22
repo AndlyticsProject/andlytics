@@ -46,8 +46,6 @@ public class Preferences {
 
 	public static final String DATE_FORMAT_LONG = "dateformat.long";
 
-	private static final String LEVEL_7_ALARM_MANAGER_PERIOD = "level7.AlarmManagerPeriod";
-
 	private static final String ADMOB_HIDE_FOR_UNCONFIGURED_APPS = "admob.hide_for_unconfigured_apps";
 
 	private static final String ADMOB_SITE_ID = "admob.siteid";
@@ -213,16 +211,6 @@ public class Preferences {
 
 	public static String getNotificationRingtone(Context context) {
 		return getSettings(context).getString(NOTIFICATION_RINGTONE, null);
-	}
-
-	public static void saveLevel7AlarmManagerPeriod(Integer periodInSeconds, Context context) {
-		SharedPreferences.Editor editor = getSettings(context).edit();
-		editor.putInt(LEVEL_7_ALARM_MANAGER_PERIOD, periodInSeconds);
-		editor.commit();
-	}
-
-	public static int getLevel7AlarmManagerPeriod(Context context) {
-		return getSettings(context).getInt(LEVEL_7_ALARM_MANAGER_PERIOD, 0);
 	}
 
 	public static Boolean getShowChartHint(Context context) {
