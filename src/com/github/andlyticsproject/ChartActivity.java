@@ -118,7 +118,8 @@ public class ChartActivity extends BaseChartActivity {
 			loadChartData = (LoadChartData) getLastNonConfigurationInstance();
 			loadChartData.attach(this);
 			if (loadChartData.statsForApp != null) {
-				updateView(loadChartData.statsForApp, loadChartData.smoothedValues);
+				// XXX causes NPE? race?
+				//updateView(loadChartData.statsForApp, loadChartData.smoothedValues);
 			}
 		}
 	}
