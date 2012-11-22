@@ -237,17 +237,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		AndlyticsApp.getInstance().setIsAppVisible(true);
 	}
 
-	private boolean shouldRemoteUpdateStats() {
-		long now = System.currentTimeMillis();
-		long lastUpdate = Preferences.getLastStatsRemoteUpdateTime(this);
-		// never updated
-		if (lastUpdate == 0) {
-			return true;
-		}
-
-		return (now - lastUpdate) >= Preferences.STATS_REMOTE_UPDATE_INTERVAL;
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.clear();

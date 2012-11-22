@@ -1,12 +1,14 @@
 package com.github.andlyticsproject;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,7 +22,9 @@ import com.github.andlyticsproject.util.Utils;
 
 public class ChartActivity extends BaseChartActivity {
 
-	// private static String LOG_TAG=ChartActivity.class.toString();
+	private static String TAG = ChartActivity.class.getSimpleName();
+	private static final boolean DEBUG = false;
+
 	private ContentAdapter db;
 	private ListView historyList;
 	private ChartListAdapter historyListAdapter;
@@ -30,7 +34,6 @@ public class ChartActivity extends BaseChartActivity {
 
 	private ChartSet currentChartSet;
 	private Boolean smoothEnabled;
-	public List<Date> versionUpdateDates;
 
 	private LoadChartData loadChartData;
 
@@ -39,6 +42,8 @@ public class ChartActivity extends BaseChartActivity {
 		if (loadChartData != null) {
 			loadChartData.detach();
 		}
+		// reload since time frame has changed
+		dataUpdateRequested = true;
 		loadChartData = new LoadChartData(this);
 		Utils.execute(loadChartData, timeFrame);
 
@@ -72,6 +77,7 @@ public class ChartActivity extends BaseChartActivity {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		smoothEnabled = Preferences.getChartSmooth(this);
@@ -117,13 +123,13 @@ public class ChartActivity extends BaseChartActivity {
 		if (getLastNonConfigurationInstance() != null) {
 			loadChartData = (LoadChartData) getLastNonConfigurationInstance();
 			loadChartData.attach(this);
-			if (loadChartData.statsForApp != null) {
-				// XXX causes NPE? race?
-				//updateView(loadChartData.statsForApp, loadChartData.smoothedValues);
+			if (loadChartData.statsForApp != null && loadChartData.versionUpdateDates != null) {
+				updateView(loadChartData.statsForApp, loadChartData.versionUpdateDates);
+				dataUpdateRequested = false;
 			}
 		}
+		// first load is handled in onResume()
 	}
-
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
@@ -139,9 +145,8 @@ public class ChartActivity extends BaseChartActivity {
 	protected void onResume() {
 		super.onResume();
 
-		dataUpdateRequested = true;
+		dataUpdateRequested = shouldRemoteUpdateStats();
 
-		// TODO -- do we load data always?
 		executeLoadDataDefault();
 	}
 
@@ -160,9 +165,8 @@ public class ChartActivity extends BaseChartActivity {
 			super(activity);
 		}
 
-		private List<AppStats> statsForApp;
-
-		private boolean smoothedValues = false;
+		private AppStatsList statsForApp;
+		private List<Date> versionUpdateDates;
 
 		@Override
 		protected Boolean doInBackground(Timeframe... params) {
@@ -170,24 +174,31 @@ public class ChartActivity extends BaseChartActivity {
 				return null;
 			}
 
-			if (activity.dataUpdateRequested || statsForApp == null || statsForApp.size() == 0) {
-				AppStatsList result = activity.db.getStatsForApp(activity.packageName, params[0],
+			if (activity.dataUpdateRequested
+					|| activity.historyListAdapter.getDownloadInfos() == null
+					|| activity.historyListAdapter.isEmpty()) {
+				statsForApp = activity.db.getStatsForApp(activity.packageName, params[0],
 						activity.smoothEnabled);
-				statsForApp = result.getAppStats();
-				activity.historyListAdapter.setOverallStats(result.getOverall());
-				activity.versionUpdateDates = activity.db
-						.getVersionUpdateDates(activity.packageName);
+				versionUpdateDates = activity.db.getVersionUpdateDates(activity.packageName);
 
-				activity.historyListAdapter
-						.setHeighestRatingChange(result.getHighestRatingChange());
-				activity.historyListAdapter.setLowestRatingChange(result.getLowestRatingChange());
+				if (DEBUG) {
+					Log.d(TAG,
+							"statsForApp::highestRatingChange "
+									+ statsForApp.getHighestRatingChange());
+					Log.d(TAG,
+							"statsForApp::lowestRatingChanage "
+									+ statsForApp.getLowestRatingChange());
+					Log.d(TAG, "statsForApp::appStats " + statsForApp.getAppStats().size());
+					Log.d(TAG, "statsForApps::overall " + statsForApp.getOverall());
+					Log.d(TAG, "versionUpdateDates " + versionUpdateDates.size());
+				}
 
 				activity.dataUpdateRequested = false;
 
-				smoothedValues = applySmoothedValues(statsForApp);
+				return true;
 			}
 
-			return true;
+			return false;
 		}
 
 		@Override
@@ -196,7 +207,9 @@ public class ChartActivity extends BaseChartActivity {
 				return;
 			}
 
-			activity.updateView(statsForApp, smoothedValues);
+			if (result && statsForApp != null && versionUpdateDates != null) {
+				activity.updateView(statsForApp, versionUpdateDates);
+			}
 		}
 
 	}
@@ -211,8 +224,14 @@ public class ChartActivity extends BaseChartActivity {
 		return false;
 	}
 
-	private void updateView(List<AppStats> statsForApp, boolean smoothedValues) {
+	private void updateView(AppStatsList appStatsList, List<Date> versionUpdateDates) {
+		List<AppStats> statsForApp = appStatsList.getAppStats();
 		if (statsForApp != null && statsForApp.size() > 0) {
+			boolean smoothedValues = applySmoothedValues(statsForApp);
+			historyListAdapter.setOverallStats(appStatsList.getOverall());
+			historyListAdapter.setHeighestRatingChange(appStatsList.getHighestRatingChange());
+			historyListAdapter.setLowestRatingChange(appStatsList.getLowestRatingChange());
+
 			updateCharts(statsForApp);
 
 			DateFormat dateFormat = Preferences.getDateFormatLong(this);
@@ -221,8 +240,12 @@ public class ChartActivity extends BaseChartActivity {
 
 			updateChartHeadline();
 
-			Collections.reverse(statsForApp);
-			historyListAdapter.setDownloadInfos(statsForApp);
+			// make a shallow copy, otherwise original data can't be used to
+			// restore state
+			List<AppStats> statsForAppReversed = new ArrayList<AppStats>();
+			statsForAppReversed.addAll(statsForApp);
+			Collections.reverse(statsForAppReversed);
+			historyListAdapter.setDownloadInfos(statsForAppReversed);
 			historyListAdapter.setVersionUpdateDates(versionUpdateDates);
 			/*
 			 * int page=historyListAdapter.getCurrentPage(); int

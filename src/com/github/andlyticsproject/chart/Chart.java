@@ -1,9 +1,4 @@
-
 package com.github.andlyticsproject.chart;
-
-import android.content.Context;
-import android.graphics.Color;
-import android.view.View;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,16 +7,25 @@ import java.util.Date;
 import java.util.List;
 
 import org.achartengine.ChartFactory;
-import org.achartengine.chart.PointStyle;
 import org.achartengine.chart.BarChart.Type;
+import org.achartengine.chart.PointStyle;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer.Orientation;
+import org.achartengine.renderer.XYSeriesRenderer;
 
-import com.github.andlyticsproject.R;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
+import android.view.View;
+
 import com.github.andlyticsproject.Preferences;
+import com.github.andlyticsproject.R;
 
 public class Chart extends AbstractChart {
+
+	private static final String TAG = Chart.class.getSimpleName();
+	private static final boolean DEBUG = false;
 
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -29,18 +33,16 @@ public class Chart extends AbstractChart {
 		RATINGS, DOWNLOADS, ADMOB
 	}
 
-	/*	public enum AdmobChartType {
-	        REVENUE, EPC,REQUESTS, CLICKS, FILL_RATE, ECPM, IMPRESSIONS, CTR, HOUSEAD_CLICKS
-	    }
-
-		public enum DownloadChartType {
-			TOTAL_DOWNLAODS, ACTIVE_INSTALLS_TOTAL, TOTAL_DOWNLAODS_BY_DAY, ACTIVE_INSTALLS_PERCENT
-		}
-
-		public enum RatingChartType {
-			AVG_RATING, RATINGS_5, RATINGS_4, RATINGS_3, RATINGS_2, RATINGS_1
-		}
-	*/
+	/*
+	 * public enum AdmobChartType { REVENUE, EPC,REQUESTS, CLICKS, FILL_RATE,
+	 * ECPM, IMPRESSIONS, CTR, HOUSEAD_CLICKS }
+	 * 
+	 * public enum DownloadChartType { TOTAL_DOWNLAODS, ACTIVE_INSTALLS_TOTAL,
+	 * TOTAL_DOWNLAODS_BY_DAY, ACTIVE_INSTALLS_PERCENT }
+	 * 
+	 * public enum RatingChartType { AVG_RATING, RATINGS_5, RATINGS_4,
+	 * RATINGS_3, RATINGS_2, RATINGS_1 }
+	 */
 	public interface ValueCallbackHander {
 		double getValue(Object appInfo);
 
@@ -51,6 +53,7 @@ public class Chart extends AbstractChart {
 
 	private static final int MAX_BAR_VALUES = Integer.MAX_VALUE;
 
+	@SuppressLint("SimpleDateFormat")
 	public View buildBarChart(Context context, Object[] appstats, ValueCallbackHander handler,
 			double heighestValue, double lowestValue) {
 
@@ -123,8 +126,8 @@ public class Chart extends AbstractChart {
 		}
 
 		// settings
-		setChartSettings(context.getResources(), renderer, "", "", "", 0, statsForApp.size(), valueDistanceBottom,
-				valueDistanceTop, Color.LTGRAY, Color.BLACK);
+		setChartSettings(context.getResources(), renderer, "", "", "", 0, statsForApp.size(),
+				valueDistanceBottom, valueDistanceTop, Color.LTGRAY, Color.BLACK);
 
 		renderer.setYLabels(7);
 		renderer.setXLabels(-1);
@@ -165,7 +168,7 @@ public class Chart extends AbstractChart {
 
 		double[] highlightValuesArray = new double[highlightDates.size()];
 
-		double heighestValue = Double.MIN_VALUE;
+		double highestValue = Double.MIN_VALUE;
 		double lowestValue = Double.MAX_VALUE;
 
 		for (int i = 0; i < statsForApp.size(); i++) {
@@ -173,8 +176,8 @@ public class Chart extends AbstractChart {
 			double value = handler.getValue(appInfo);
 			valuesArray[i] = value;
 
-			if (value > heighestValue) {
-				heighestValue = value;
+			if (value > highestValue) {
+				highestValue = value;
 			}
 			if (value < lowestValue) {
 				lowestValue = value;
@@ -185,6 +188,15 @@ public class Chart extends AbstractChart {
 				highlightValuesArray[indexOf] = value;
 			}
 
+		}
+
+		if (DEBUG) {
+			for (int i = 0; i < datesArray.length; i++) {
+				Log.d(TAG, String.format("%s->%f", datesArray[i].toString(), valuesArray[i]));
+			}
+			Log.d(TAG, "*********************************************************");
+			Log.d(TAG, String.format("high=%f, low=%f", highestValue, lowestValue));
+			Log.d(TAG, "*********************************************************");
 		}
 
 		List<Date[]> dateArrayList = new ArrayList<Date[]>();
@@ -209,20 +221,20 @@ public class Chart extends AbstractChart {
 		long dateDistance = datesArray[datesArray.length - 1].getTime() - datesArray[0].getTime();
 		dateDistance = (long) (dateDistance * .1f);
 
-		double valueDistance = heighestValue - lowestValue;
-		double valueDistanceTop = heighestValue + (valueDistance * .2f);
+		double valueDistance = highestValue - lowestValue;
+		double valueDistanceTop = highestValue + (valueDistance * .2f);
 		double valueDistanceBottom = lowestValue - (valueDistance * .1f);
 
-		if (heighestValue == lowestValue) {
+		if (highestValue == lowestValue) {
 
 			valueDistanceTop = lowestValue + (lowestValue / 2);
 			valueDistanceBottom = lowestValue / 2;
 		}
 
 		// settings
-		setChartSettings(context.getResources(), renderer, "", "", "", datesArray[0].getTime() - dateDistance,
-				datesArray[datesArray.length - 1].getTime() + dateDistance, valueDistanceBottom,
-				valueDistanceTop, Color.LTGRAY, Color.BLACK);
+		setChartSettings(context.getResources(), renderer, "", "", "", datesArray[0].getTime()
+				- dateDistance, datesArray[datesArray.length - 1].getTime() + dateDistance,
+				valueDistanceBottom, valueDistanceTop, Color.LTGRAY, Color.BLACK);
 
 		renderer.setYLabels(5);
 		renderer.setXLabels(10);
