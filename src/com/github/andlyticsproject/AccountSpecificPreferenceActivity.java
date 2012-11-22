@@ -6,9 +6,9 @@ import java.util.List;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
-import android.preference.Preference.OnPreferenceChangeListener;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -48,8 +48,8 @@ public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivit
 		PreferenceCategory autoSyncCat = (PreferenceCategory) getPreferenceScreen().findPreference(
 				"prefCatAutoSync");
 		autosyncPref = new CheckBoxPreference(this);
+		autosyncPref.setPersistent(false);
 		autosyncPref.setChecked(autosyncHandler.isAutosyncEnabled(accountName));
-		autosyncPref.setDefaultValue(true);
 		autosyncPref.setTitle(R.string.auto_sync);
 		autosyncPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
