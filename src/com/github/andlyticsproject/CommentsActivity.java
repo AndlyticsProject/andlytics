@@ -76,6 +76,20 @@ public class CommentsActivity extends BaseDetailsActivity {
 				loadCommentsData.attach(activity);
 			}
 		}
+
+		void setLoadCommentsCache(LoadCommentsCache task) {
+			if (loadCommentsCache != null) {
+				loadCommentsCache.detach();
+			}
+			loadCommentsCache = task;
+		}
+
+		void setLoadCommentsData(LoadCommentsData task) {
+			if (loadCommentsData != null) {
+				loadCommentsData.detach();
+			}
+			loadCommentsData = task;
+		}
 	}
 
 	private State state = new State();
@@ -127,7 +141,8 @@ public class CommentsActivity extends BaseDetailsActivity {
 				loadCommentsData();
 			}
 		} else {
-			Utils.execute(new LoadCommentsCache(this));
+			state.setLoadCommentsCache(new LoadCommentsCache(this));
+			Utils.execute(state.loadCommentsCache);
 		}
 	}
 
@@ -358,7 +373,8 @@ public class CommentsActivity extends BaseDetailsActivity {
 	}
 
 	private void loadCommentsData() {
-		Utils.execute(new LoadCommentsData(this));
+		state.setLoadCommentsData(new LoadCommentsData(this));
+		Utils.execute(state.loadCommentsData);
 	}
 
 	@Override
