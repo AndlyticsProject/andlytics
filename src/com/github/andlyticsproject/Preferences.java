@@ -4,13 +4,13 @@ package com.github.andlyticsproject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import com.github.andlyticsproject.sync.AutosyncHandler;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
+
+import com.github.andlyticsproject.sync.AutosyncHandler;
 
 public class Preferences {
 	
@@ -27,7 +27,6 @@ public class Preferences {
 	private static final String POST_REQUEST_USER_COMMENTS = "post_user_comments";
 	private static final String POST_REQUEST_FEEDBACK = "post_feedback";
 
-	private static final String AUTOSYNC = "autosync.initial.set";
 	public static final String AUTOSYNC_PERIOD = "autosync.period";
 	public static final String AUTOSYNC_PERIOD_LAST_NON_ZERO = "autosync.period.last";
 	private static final String CRASH_REPORT_DISABLE = "acra.enable";
@@ -121,16 +120,6 @@ public class Preferences {
 		// We use a ListPreference which only supports saving as strings, so need to convert it when reading
 		return Integer.parseInt(getSettings(activity).getString(AUTOSYNC_PERIOD,
 				Integer.toString(AutosyncHandler.DEFAULT_PERIOD)));
-	}
-
-	public static String getAutosyncSet(Context activity, String accountName) {
-		return getSettings(activity).getString(AUTOSYNC + accountName, null);
-	}
-
-	public static void saveAutoSyncSet(Context activity, String accountName) {
-		SharedPreferences.Editor editor = getSettings(activity).edit();
-		editor.putString(AUTOSYNC + accountName, "true");
-		editor.commit();
 	}
 
 	public static String getRequestFullAssetInfo(Context activity) {

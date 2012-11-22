@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject;
 
 import java.io.IOException;
@@ -38,7 +37,7 @@ public class LoginActivity extends SherlockActivity {
 
 	private static final String TAG = "Andlytics";
 	protected static final int CREATE_ACCOUNT_REQUEST = 1;
-	
+
 	private AccountStatus[] accountStatuses;
 
 	private boolean manageAccountsMode = false;
@@ -67,11 +66,11 @@ public class LoginActivity extends SherlockActivity {
 
 		setContentView(R.layout.login);
 		accountList = (LinearLayout) findViewById(R.id.login_input);
-		
-		
+
+
 		okButton = findViewById(R.id.login_ok_button);
 		okButton.setClickable(true);
-		okButton.setOnClickListener(new OnClickListener() {			
+		okButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (selectedAccount != null) {
@@ -85,11 +84,11 @@ public class LoginActivity extends SherlockActivity {
 						}
 					}
 				}
-				
+
 			}
 		});
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -119,17 +118,17 @@ public class LoginActivity extends SherlockActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.itemLoginmenuAdd:
-				addNewGoogleAccount();
-				break;
-			case android.R.id.home:
-				if (!blockGoingBack) {
-					setResult(RESULT_OK);
-					finish();
-				}
-				break;
-			default:
-				return false;
+		case R.id.itemLoginmenuAdd:
+			addNewGoogleAccount();
+			break;
+		case android.R.id.home:
+			if (!blockGoingBack) {
+				setResult(RESULT_OK);
+				finish();
+			}
+			break;
+		default:
+			return false;
 		}
 		return true;
 	}
@@ -151,6 +150,15 @@ public class LoginActivity extends SherlockActivity {
 			accountStatuses[i].name = accounts[i].name;
 			Boolean hiddenAccount = Preferences.getIsHiddenAccount(this, accountStatuses[i].name);
 			accountStatuses[i].hidden = hiddenAccount;
+
+			// Setup auto sync
+			final AutosyncHandler syncHandler = new AutosyncHandler();
+			// Ensure it matches the sync period (excluding disabled state)
+			syncHandler.setAutosyncPeriod(accounts[i].name,
+					Preferences.getLastNonZeroAutosyncPeriod(this));
+			// Now make it match the master sync (including disabled state)
+			syncHandler.setAutosyncPeriod(accounts[i].name, Preferences.getAutosyncPeriod(this));
+
 			View inflate = getLayoutInflater().inflate(R.layout.login_list_item, null);
 			TextView accountName = (TextView) inflate.findViewById(R.id.login_list_item_text);
 			accountName.setText(accounts[i].name);
@@ -160,15 +168,12 @@ public class LoginActivity extends SherlockActivity {
 			enabled.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					AccountStatus account = (AccountStatus) ((View) buttonView.getParent()).getTag();
+					AccountStatus account = (AccountStatus) ((View) buttonView.getParent())
+							.getTag();
 					Preferences.saveIsHiddenAccount(getApplicationContext(), account.name,
 							!isChecked);
 					// Enable/disable sync
-					AutosyncHandler syncHandler = new AutosyncHandler();
 					account.hidden = !isChecked;
-					// First ensure it has the most recent sync period (excluding disabled state)
-					syncHandler.setAutosyncPeriod(account.name,
-							Preferences.getLastNonZeroAutosyncPeriod(LoginActivity.this));
 					if (isChecked) {
 						// Now make it match the master sync period (including disabled state)
 						syncHandler.setAutosyncPeriod(account.name,
@@ -182,7 +187,7 @@ public class LoginActivity extends SherlockActivity {
 						// If they remove the current account, then stop them going back
 						blockGoingBack = !isChecked;
 					}
-					
+
 					// Update ok button
 					boolean atLeastOneAccountEnabled = false;
 					for (AccountStatus acc : accountStatuses) {
@@ -196,7 +201,7 @@ public class LoginActivity extends SherlockActivity {
 			});
 			accountList.addView(inflate);
 		}
-		
+
 		// Update ok button
 		boolean atLeastOneAccountEnabled = false;
 		for (AccountStatus acc : accountStatuses) {
@@ -243,7 +248,7 @@ public class LoginActivity extends SherlockActivity {
 		overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
 		finish();
 	}
-	
+
 	private static class AccountStatus {
 		public String name;
 		public boolean hidden;

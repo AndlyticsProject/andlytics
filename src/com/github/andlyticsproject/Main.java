@@ -57,7 +57,6 @@ import com.github.andlyticsproject.console.v2.HttpClientFactory;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
-import com.github.andlyticsproject.sync.AutosyncHandler;
 import com.github.andlyticsproject.sync.NotificationHandler;
 import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.Utils;
@@ -359,19 +358,6 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 			if (apps.size() > 0) {
 				footer.setVisibility(View.VISIBLE);
-
-				String autosyncSet = Preferences.getAutosyncSet(Main.this, accountName);
-				if (autosyncSet == null) {
-					// Setup auto sync for the first time
-					AutosyncHandler syncHandler = new AutosyncHandler();
-					// Ensure it matches the sync period (excluding disabled state)
-					syncHandler.setAutosyncPeriod(accountName,
-							Preferences.getLastNonZeroAutosyncPeriod(Main.this));
-					// Now make it match the master sync (including disabled state)
-					syncHandler.setAutosyncPeriod(accountName,
-							Preferences.getAutosyncPeriod(Main.this));
-					Preferences.saveAutoSyncSet(Main.this, accountName);
-				}
 			}
 
 			adapter.setAppInfos(apps);
