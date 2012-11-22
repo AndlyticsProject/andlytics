@@ -127,6 +127,8 @@ public class ExportService extends IntentService {
 		builder.setDefaults(Notification.DEFAULT_ALL);
 		builder.setAutoCancel(true);
 		builder.setOngoing(false);
+		builder.addAction(android.R.drawable.ic_menu_share,
+				getApplicationContext().getString(R.string.share), pendingIntent);
 
 		notificationManager.notify(NOTIFICATION_ID_FINISHED, builder.build());
 	}
