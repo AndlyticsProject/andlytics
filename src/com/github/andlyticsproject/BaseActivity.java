@@ -310,15 +310,12 @@ public class BaseActivity extends SherlockActivity {
 		switcher.showNext();
 	}
 
-	protected void hideLoadingIndecator(ViewSwitcher switcher) {
+	protected void hideLoadingIndicator(ViewSwitcher switcher) {
 		switcher.showPrevious();
 	}
 
 	public AndlyticsApp getAndlyticsApplication() {
 		return (AndlyticsApp) getApplication();
-	}
-
-	protected void onPostAuthentication() {
 	}
 
 	public static int getAppVersionCode(Context context) {

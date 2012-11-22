@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject;
 
 import java.text.DateFormat;
@@ -13,7 +12,7 @@ import android.util.Log;
 import com.github.andlyticsproject.sync.AutosyncHandler;
 
 public class Preferences {
-	
+
 	// TODO Review this class an clean it up a bit
 
 	public static final String PREF = "andlytics_pref";
@@ -58,6 +57,11 @@ public class Preferences {
 	private static final String SHOW_CHART_HINT = "show.chart.hint";
 
 	private static final String LATEST_VERSION_CODE = "latest.version.code";
+
+	private static final String LAST_STATS_REMOTE_UPDATE = "last.stats.remote.update";
+	// TODO maybe make this configurable?
+	// 15 minutes in millis
+	public static final long STATS_REMOTE_UPDATE_INTERVAL = 15 * 60 * 1000L;
 
 	public enum Timeframe {
 		LAST_NINETY_DAYS, LAST_THIRTY_DAYS, UNLIMITED, LAST_TWO_DAYS, LATEST_VALUE, LAST_SEVEN_DAYS
@@ -104,7 +108,7 @@ public class Preferences {
 	public static void saveGwtPermutation(Context activity, String gwtPermutation) {
 		saveVersionDependingProperty(GWTPERMUTATION, gwtPermutation, activity);
 	}
-	
+
 	public static int getLastNonZeroAutosyncPeriod(Context activity) {
 		return getSettings(activity).getInt(AUTOSYNC_PERIOD_LAST_NON_ZERO,
 				AutosyncHandler.DEFAULT_PERIOD);
@@ -206,7 +210,7 @@ public class Preferences {
 	public static boolean getNotificationPerf(Context context, String prefName) {
 		return getSettings(context).getBoolean(prefName, true);
 	}
-	
+
 	public static String getNotificationRingtone(Context context) {
 		return getSettings(context).getString(NOTIFICATION_RINGTONE, null);
 	}
@@ -260,7 +264,7 @@ public class Preferences {
 		cachedDateFormatShort = format;
 		return format;
 	}
-	
+
 	/**
 	 * Clears the cached string representations used for date formatting
 	 * Should be called whenever the user preference changes
@@ -276,14 +280,14 @@ public class Preferences {
 		}
 		String format = getSettings(context).getString(DATE_FORMAT_LONG, "DEFAULT");
 		if ("DEFAULT".equals(format)) {
-			format = ((SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT)).toPattern();
+			format = ((SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT)).toPattern();
 			// Make it consistent with our pre-defined formats (always show yyyy)
 			format = format.replace("yyyy", "yy").replace("yy", "yyyy");
 		}
 		cachedDateFormatLong = format;
 		return format;
 	}
-	
+
 	public static DateFormat getDateFormatLong(Context context) {
 		return new SimpleDateFormat(getDateFormatStringLong(context));
 	}
@@ -349,5 +353,13 @@ public class Preferences {
 
 	public static boolean getHideAdmobForUnconfiguredApps(Context context) {
 		return getSettings(context).getBoolean(ADMOB_HIDE_FOR_UNCONFIGURED_APPS, false);
+	}
+
+	public static long getLastStatsRemoteUpdateTime(Context activity) {
+		return getSettings(activity).getLong(LAST_STATS_REMOTE_UPDATE, 0);
+	}
+
+	public static void saveLastStatsRemoteUpdateTime(Context activity, long timestamp) {
+		getSettings(activity).edit().putLong(LAST_STATS_REMOTE_UPDATE, timestamp).commit();
 	}
 }

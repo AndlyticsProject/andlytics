@@ -172,15 +172,26 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		// more TODO Should always show data from DB first, and then
 		// trigger remote call if necessary
 		// Revise the whole application global flag thing
-		if (!mainSkipDataReload) {
-			Utils.execute(new LoadDbEntries(), true);
+		if (!mainSkipDataReload && shouldRemoteUpdateStats()) {
+			loadLocalEntriesAndUpdate();
 		} else {
-			Utils.execute(new LoadDbEntries(), false);
+			loadLocalEntriesOnly();
 		}
 
 		getAndlyticsApplication().setSkipMainReload(false);
 
 		AndlyticsApp.getInstance().setIsAppVisible(true);
+	}
+
+	private boolean shouldRemoteUpdateStats() {
+		long now = System.currentTimeMillis();
+		long lastUpdate = Preferences.getLastStatsRemoteUpdateTime(this);
+		// never updated
+		if (lastUpdate == 0) {
+			return true;
+		}
+
+		return (now - lastUpdate) >= Preferences.STATS_REMOTE_UPDATE_INTERVAL;
 	}
 
 	@Override
@@ -278,7 +289,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		} else if (requestCode == REQUEST_AUTHENTICATE) {
 			if (resultCode == RESULT_OK) {
 				// user entered credentials, etc, try to get data again
-				Utils.execute(new LoadRemoteEntries());
+				loadRemoteEntries();
 			} else {
 				Toast.makeText(this, getString(R.string.auth_error, accountName), Toast.LENGTH_LONG)
 						.show();
@@ -351,9 +362,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	}
 
 	private void updateMainList(List<AppInfo> apps) {
-
 		if (apps != null) {
-
 			if (apps.size() > 0) {
 				footer.setVisibility(View.VISIBLE);
 			}
@@ -377,7 +386,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 						+ Preferences.getDateFormatLong(this).format(lastUpdateDate) + " "
 						+ timeFormat.format(lastUpdateDate));
 			}
-
 		}
 
 		if (!(R.id.main_app_list == mainViewSwitcher.getCurrentView().getId())) {
@@ -485,12 +493,13 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			supportInvalidateOptionsMenu();
 
 			if (exception == null) {
-				new LoadDbEntries().execute(false);
+				Preferences.saveLastStatsRemoteUpdateTime(Main.this, System.currentTimeMillis());
+				loadLocalEntriesOnly();
 				return;
 			}
 
 			handleUserVisibleException(exception);
-			new LoadDbEntries().execute(false);
+			loadLocalEntriesOnly();
 		}
 
 		/*
@@ -504,6 +513,18 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			supportInvalidateOptionsMenu();
 		}
 
+	}
+
+	private void loadLocalEntriesOnly() {
+		loadDbEntries(false);
+	}
+
+	private void loadLocalEntriesAndUpdate() {
+		loadDbEntries(true);
+	}
+
+	private void loadDbEntries(boolean triggerRemoteCall) {
+		Utils.execute(new LoadDbEntries(), triggerRemoteCall);
 	}
 
 	private class LoadDbEntries extends AsyncTask<Boolean, Void, Boolean> {
