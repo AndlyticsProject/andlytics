@@ -119,7 +119,8 @@ public class Preferences {
 	}
 
 	public static int getAutosyncPeriod(Context activity) {
-		// We use a ListPreference which only supports saving as strings, so need to convert it when reading
+		// We use a ListPreference which only supports saving as strings, so
+		// need to convert it when reading
 		return Integer.parseInt(getSettings(activity).getString(AUTOSYNC_PERIOD,
 				Integer.toString(AutosyncHandler.DEFAULT_PERIOD)));
 	}
@@ -229,7 +230,8 @@ public class Preferences {
 		}
 		String dateFormatStringLong = getDateFormatStringLong(context);
 		// Build the short version by taking the long one and removing the year
-		// We do this rather than using pre-defined short versions so that the user
+		// We do this rather than using pre-defined short versions so that the
+		// user
 		// can use a default based on their locale
 		String format = dateFormatStringLong.replace("yyyy", "").replace("yy", "");
 		// Now go through the string removing any duplicate separators
@@ -254,8 +256,8 @@ public class Preferences {
 	}
 
 	/**
-	 * Clears the cached string representations used for date formatting
-	 * Should be called whenever the user preference changes
+	 * Clears the cached string representations used for date formatting Should
+	 * be called whenever the user preference changes
 	 */
 	public static void clearCachedDateFormats() {
 		cachedDateFormatShort = null;
@@ -269,7 +271,8 @@ public class Preferences {
 		String format = getSettings(context).getString(DATE_FORMAT_LONG, "DEFAULT");
 		if ("DEFAULT".equals(format)) {
 			format = ((SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT)).toPattern();
-			// Make it consistent with our pre-defined formats (always show yyyy)
+			// Make it consistent with our pre-defined formats (always show
+			// yyyy)
 			format = format.replace("yyyy", "yy").replace("yy", "yyyy");
 		}
 		cachedDateFormatLong = format;
@@ -343,11 +346,11 @@ public class Preferences {
 		return getSettings(context).getBoolean(ADMOB_HIDE_FOR_UNCONFIGURED_APPS, false);
 	}
 
-	public static long getLastStatsRemoteUpdateTime(Context activity) {
+	public static synchronized long getLastStatsRemoteUpdateTime(Context activity) {
 		return getSettings(activity).getLong(LAST_STATS_REMOTE_UPDATE, 0);
 	}
 
-	public static void saveLastStatsRemoteUpdateTime(Context activity, long timestamp) {
+	public static synchronized void saveLastStatsRemoteUpdateTime(Context activity, long timestamp) {
 		getSettings(activity).edit().putLong(LAST_STATS_REMOTE_UPDATE, timestamp).commit();
 	}
 }
