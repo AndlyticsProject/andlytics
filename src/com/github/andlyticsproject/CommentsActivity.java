@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +21,7 @@ import com.github.andlyticsproject.console.v2.HttpClientFactory;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
+import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
 public class CommentsActivity extends BaseDetailsActivity {
@@ -52,6 +52,35 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 	private static final int MAX_LOAD_COMMENTS = 20;
 
+	private static class State {
+		LoadCommentsCache loadCommentsCache;
+		LoadCommentsData loadCommentsData;
+		List<Comment> comments;
+
+		void detachAll() {
+			if (loadCommentsCache != null) {
+				loadCommentsCache.detach();
+			}
+
+			if (loadCommentsData != null) {
+				loadCommentsData.detach();
+			}
+		}
+
+		void attachAll(CommentsActivity activity) {
+			if (loadCommentsCache != null) {
+				loadCommentsCache.attach(activity);
+			}
+
+			if (loadCommentsData != null) {
+				loadCommentsData.attach(activity);
+			}
+		}
+	}
+
+	private State state = new State();
+
+	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.comments);
@@ -87,7 +116,27 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 		db = getDbAdapter();
 
-		Utils.execute(new LoadCommentsCache());
+		State lastState = (State) getLastNonConfigurationInstance();
+		if (lastState != null) {
+			state = lastState;
+			state.attachAll(this);
+			if (state.comments != null) {
+				comments = state.comments;
+				rebuildCommentGroups();
+				expandCommentGroups();
+				loadCommentsData();
+			}
+		} else {
+			Utils.execute(new LoadCommentsCache(this));
+		}
+	}
+
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		state.comments = comments;
+		state.detachAll();
+
+		return state;
 	}
 
 	@Override
@@ -120,85 +169,116 @@ public class CommentsActivity extends BaseDetailsActivity {
 		}
 	}
 
-	// TODO Make this a static class that extends DetachableAsyncTask
-	private class LoadCommentsCache extends AsyncTask<Void, Void, Void> {
+	private static class LoadCommentsCache extends
+			DetachableAsyncTask<Void, Void, Void, CommentsActivity> {
+
+		LoadCommentsCache(CommentsActivity activity) {
+			super(activity);
+		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			comments = db.getCommentsFromCache(packageName);
-			rebuildCommentGroups();
+			if (activity == null) {
+				return null;
+			}
+
+			activity.comments = activity.db.getCommentsFromCache(activity.packageName);
+			activity.rebuildCommentGroups();
 
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
-			if (comments.size() > 0) {
-				commentsListAdapter.setCommentGroups(commentGroups);
-				for (int i = 0; i < commentGroups.size(); i++) {
-					list.expandGroup(i);
-				}
-				commentsListAdapter.notifyDataSetChanged();
+			if (activity == null) {
+				return;
 			}
 
-			loadCommentsData();
-
+			activity.expandCommentGroups();
+			activity.loadCommentsData();
 		}
 
 	}
 
-	// TODO Make this a static class that extends DetachableAsyncTask
-	private class LoadCommentsData extends AsyncTask<Void, Void, Exception> {
+	private void expandCommentGroups() {
+		if (comments.size() > 0) {
+			commentsListAdapter.setCommentGroups(commentGroups);
+			for (int i = 0; i < commentGroups.size(); i++) {
+				list.expandGroup(i);
+			}
+			commentsListAdapter.notifyDataSetChanged();
+		}
+	}
+
+	private static class LoadCommentsData extends
+			DetachableAsyncTask<Void, Void, Exception, CommentsActivity> {
+
+		LoadCommentsData(CommentsActivity activity) {
+			super(activity);
+		}
+
+		@Override
+		protected void onPreExecute() {
+			if (activity == null) {
+				return;
+			}
+
+			activity.refreshing = true;
+			activity.supportInvalidateOptionsMenu();
+			activity.footer.setEnabled(false);
+		}
 
 		@Override
 		protected Exception doInBackground(Void... params) {
+			if (activity == null) {
+				return null;
+			}
 
 			Exception exception = null;
 
-			if (maxAvalibleComments == -1) {
+			if (activity.maxAvalibleComments == -1) {
 
-				ContentAdapter db = getDbAdapter();
-				AppStats appInfo = db.getLatestForApp(packageName);
+				ContentAdapter db = activity.getDbAdapter();
+				AppStats appInfo = db.getLatestForApp(activity.packageName);
 				if (appInfo != null) {
-					maxAvalibleComments = appInfo.getNumberOfComments();
+					activity.maxAvalibleComments = appInfo.getNumberOfComments();
 				} else {
-					maxAvalibleComments = MAX_LOAD_COMMENTS;
+					activity.maxAvalibleComments = MAX_LOAD_COMMENTS;
 				}
 			}
 
-			if (maxAvalibleComments != 0) {
-				DevConsoleV2 console = DevConsoleRegistry.getInstance().get(accountName);
+			if (activity.maxAvalibleComments != 0) {
+				DevConsoleV2 console = DevConsoleRegistry.getInstance().get(activity.accountName);
 				if (console == null) {
 					DefaultHttpClient httpClient = HttpClientFactory
 							.createDevConsoleHttpClient(DevConsoleV2.TIMEOUT);
-					console = DevConsoleV2.createForAccount(accountName, httpClient);
-					DevConsoleRegistry.getInstance().put(accountName, console);
+					console = DevConsoleV2.createForAccount(activity.accountName, httpClient);
+					DevConsoleRegistry.getInstance().put(activity.accountName, console);
 				}
 				try {
 
-					List<Comment> result = console.getComments(CommentsActivity.this, packageName,
-							nextCommentIndex, MAX_LOAD_COMMENTS);
+					List<Comment> result = console.getComments(activity, activity.packageName,
+							activity.nextCommentIndex, MAX_LOAD_COMMENTS);
 
 					// put in cache if index == 0
-					if (nextCommentIndex == 0) {
-						db.updateCommentsCache(result, packageName);
-						comments.clear();
+					if (activity.nextCommentIndex == 0) {
+						activity.db.updateCommentsCache(result, activity.packageName);
+						activity.comments.clear();
 					}
-					comments.addAll(result);
+					activity.comments.addAll(result);
 
-					rebuildCommentGroups();
+					activity.rebuildCommentGroups();
 
 				} catch (Exception e) {
 					exception = e;
 				}
 
-				nextCommentIndex += MAX_LOAD_COMMENTS;
-				if (nextCommentIndex >= maxAvalibleComments) {
-					hasMoreComments = false;
+				activity.nextCommentIndex += MAX_LOAD_COMMENTS;
+				if (activity.nextCommentIndex >= activity.maxAvalibleComments) {
+					activity.hasMoreComments = false;
 				} else {
-					hasMoreComments = true;
+					activity.hasMoreComments = true;
 				}
-
 			}
 
 			return exception;
@@ -206,49 +286,42 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 		@Override
 		protected void onPostExecute(Exception exception) {
+			if (activity == null) {
+				return;
+			}
 
-			footer.setEnabled(true);
+			activity.footer.setEnabled(true);
 
 			if (exception != null) {
 				Log.e(TAG, "Error fetching comments: " + exception.getMessage(), exception);
-				handleUserVisibleException(exception);
-				footer.setVisibility(View.GONE);
+				activity.handleUserVisibleException(exception);
+				activity.footer.setVisibility(View.GONE);
 			} else {
+				activity.footer.setVisibility(View.VISIBLE);
 
-				footer.setVisibility(View.VISIBLE);
+				if (activity.comments != null && activity.comments.size() > 0) {
 
-				if (comments != null && comments.size() > 0) {
-
-					commentsListAdapter.setCommentGroups(commentGroups);
-					for (int i = 0; i < commentGroups.size(); i++) {
-						list.expandGroup(i);
+					activity.commentsListAdapter.setCommentGroups(activity.commentGroups);
+					for (int i = 0; i < activity.commentGroups.size(); i++) {
+						activity.list.expandGroup(i);
 					}
-					commentsListAdapter.notifyDataSetChanged();
+					activity.commentsListAdapter.notifyDataSetChanged();
 				} else {
-					nocomments.setVisibility(View.VISIBLE);
+					activity.nocomments.setVisibility(View.VISIBLE);
 				}
 
-				if (!hasMoreComments) {
-					footer.setVisibility(View.GONE);
+				if (!activity.hasMoreComments) {
+					activity.footer.setVisibility(View.GONE);
 				}
-
 			}
 
-			refreshing = false;
-			supportInvalidateOptionsMenu();
-		}
-
-		@Override
-		protected void onPreExecute() {
-			refreshing = true;
-			supportInvalidateOptionsMenu();
-			footer.setEnabled(false);
+			activity.refreshing = false;
+			activity.supportInvalidateOptionsMenu();
 		}
 
 	}
 
 	public void rebuildCommentGroups() {
-
 		commentGroups = new ArrayList<CommentGroup>();
 		Comment prevComment = null;
 		for (Comment comment : Comment.expandReplies(comments)) {
@@ -285,7 +358,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 	}
 
 	private void loadCommentsData() {
-		Utils.execute(new LoadCommentsData());
+		Utils.execute(new LoadCommentsData(this));
 	}
 
 	@Override
@@ -293,7 +366,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 		if (requestCode == REQUEST_AUTHENTICATE) {
 			if (resultCode == RESULT_OK) {
 				// user entered credentials, etc, try to get data again
-				new LoadCommentsData().execute();
+				loadCommentsData();
 			} else {
 				Toast.makeText(this, getString(R.string.auth_error, accountName), Toast.LENGTH_LONG)
 						.show();
