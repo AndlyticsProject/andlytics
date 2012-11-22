@@ -14,9 +14,9 @@ import android.util.Log;
 import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.Preferences;
 
-public class AlarmReceiver extends BroadcastReceiver {
+public class AccountsChangedReceiver extends BroadcastReceiver {
 
-	private static final String TAG = AlarmReceiver.class.getSimpleName();
+	private static final String TAG = AccountsChangedReceiver.class.getSimpleName();
 
 	@SuppressWarnings("deprecation")
 	@Override

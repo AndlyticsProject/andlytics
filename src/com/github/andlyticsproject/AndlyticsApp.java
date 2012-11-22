@@ -80,6 +80,8 @@ public class AndlyticsApp extends Application {
 		return db;
 	}
 
+	// XXX global authToken and xsrfToken are only used by v1 code 
+	// and should be removed at some point
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken;
 	}
