@@ -292,8 +292,11 @@ public class JsonParser {
 			comment.setText(jsonComment.getString(6));
 			JSONArray jsonDevice = jsonComment.optJSONArray(9);
 			if (jsonDevice != null) {
-				String device = jsonDevice.optString(3) + " "
-						+ jsonDevice.getJSONArray(2).optString(0);
+				String device = jsonDevice.optString(3);
+				JSONArray extraInfo = jsonDevice.optJSONArray(2);
+				if (extraInfo != null) {
+					device += " " + extraInfo.optString(0);
+				}
 				comment.setDevice(device.trim());
 			}
 
