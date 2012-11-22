@@ -119,6 +119,27 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				loadIconInCache.attach(activity);
 			}
 		}
+
+		void setLoadDbEntries(LoadDbEntries task) {
+			if (loadDbEntries != null) {
+				loadDbEntries.detach();
+			}
+			loadDbEntries = task;
+		}
+
+		void setLoadRemoteEntries(LoadRemoteEntries task) {
+			if (loadRemoteEntries != null) {
+				loadRemoteEntries.detach();
+			}
+			loadRemoteEntries = task;
+		}
+
+		void setLoadIconInCache(LoadIconInCache task) {
+			if (loadIconInCache != null) {
+				loadIconInCache.detach();
+			}
+			loadIconInCache = task;
+		}
 	}
 
 	private State state = new State();
@@ -508,7 +529,8 @@ public class Main extends BaseActivity implements OnNavigationListener {
 							admobAccountSiteMap.get(admobAccount), null);
 				}
 
-				Utils.execute(new LoadIconInCache(activity), appDownloadInfos);
+				activity.state.setLoadIconInCache(new LoadIconInCache(activity));
+				Utils.execute(activity.state.loadIconInCache, appDownloadInfos);
 
 			} catch (Exception e) {
 				Log.e(TAG, "Error while requesting developer console : " + e.getMessage(), e);
@@ -548,7 +570,8 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	}
 
 	private void loadDbEntries(boolean triggerRemoteCall) {
-		Utils.execute(new LoadDbEntries(this), triggerRemoteCall);
+		state.setLoadDbEntries(new LoadDbEntries(this));
+		Utils.execute(state.loadDbEntries, triggerRemoteCall);
 	}
 
 	private static class LoadDbEntries extends DetachableAsyncTask<Boolean, Void, Boolean, Main> {
@@ -710,7 +733,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	}
 
 	private void loadRemoteEntries() {
-		state.loadRemoteEntries = new LoadRemoteEntries(this);
+		state.setLoadRemoteEntries(new LoadRemoteEntries(this));
 		Utils.execute(state.loadRemoteEntries);
 	}
 
