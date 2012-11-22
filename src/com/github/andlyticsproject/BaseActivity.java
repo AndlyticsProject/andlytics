@@ -318,6 +318,17 @@ public class BaseActivity extends SherlockActivity {
 		return (AndlyticsApp) getApplication();
 	}
 
+	protected boolean shouldRemoteUpdateStats() {
+		long now = System.currentTimeMillis();
+		long lastUpdate = Preferences.getLastStatsRemoteUpdateTime(this);
+		// never updated
+		if (lastUpdate == 0) {
+			return true;
+		}
+	
+		return (now - lastUpdate) >= Preferences.STATS_REMOTE_UPDATE_INTERVAL;
+	}
+
 	public static int getAppVersionCode(Context context) {
 		try {
 			PackageInfo pinfo = context.getPackageManager().getPackageInfo(
