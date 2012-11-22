@@ -13,24 +13,24 @@ public class AndlyticsBackupAgent extends BackupAgentHelper {
 
 	private static final String TAG = AndlyticsBackupAgent.class.getSimpleName();
 
-	private static final String PREFS = "andlytics_pref";
 	private static final String PREFS_BACKUP_KEY = "prefs";
+	private static final String PREFS = "andlytics_pref";
 	private static final String STATS_BACKUP_KEY = "stats";
+	private static final String STATS_DB = "andlytics";
 
 	private Object fileLock = new Object();
 
 	@Override
 	public void onCreate() {
-		SharedPreferencesBackupHelper helper = new SharedPreferencesBackupHelper(this, PREFS);
-		addHelper(PREFS_BACKUP_KEY, helper);
-		// addHelper(STATS_BACKUP_KEY, new StatsDbBackupHelper(this));
-		addHelper(STATS_BACKUP_KEY, new DbBackupHelper(this, "andlytics"));
+		addHelper(PREFS_BACKUP_KEY, new SharedPreferencesBackupHelper(this, PREFS));
+		addHelper(STATS_BACKUP_KEY, new DbBackupHelper(this, STATS_DB));
 	}
 
 	@Override
 	public void onBackup(ParcelFileDescriptor oldState, BackupDataOutput data,
 			ParcelFileDescriptor newState) throws IOException {
 		Log.d(TAG, "onBackup");
+
 		synchronized (fileLock) {
 			super.onBackup(oldState, data, newState);
 		}
