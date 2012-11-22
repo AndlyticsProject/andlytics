@@ -2,10 +2,6 @@ package com.github.andlyticsproject;
 
 import org.acra.ACRA;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -307,78 +303,7 @@ public class BaseActivity extends SherlockActivity {
 		return getAndlyticsApplication().getDbAdapter();
 	}
 
-	protected void authenticateAccountFromPreferences(boolean invalidateToken,
-			AuthenticationCallback callback) {
-
-		String accountName = Preferences.getAccountName(this);
-
-		if (accountName != null) {
-			AccountManager manager = AccountManager.get(this);
-			Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
-			int size = accounts.length;
-			for (int i = 0; i < size; i++) {
-				Account account = accounts[i];
-				if (accountName.equals(account.name)) {
-					if (invalidateToken) {
-						manager.invalidateAuthToken(Constants.ACCOUNT_TYPE_GOOGLE,
-								getAndlyticsApplication().getAuthToken());
-					}
-					getAndlyticsApplication().setAuthToken(null);
-					authenticateAccount(manager, account, callback);
-				}
-			}
-		} else {
-			getAndlyticsApplication().setAuthToken(null);
-		}
-	}
-
-	private void authenticateAccount(final AccountManager manager, final Account account,
-			final AuthenticationCallback callback) {
-
-		Preferences.saveAccountName(this, account.name);
-
-		AccountManager accountManager = AccountManager.get(this.getApplicationContext());
-
-		final AccountManagerCallback<Bundle> myCallback = new AccountManagerCallback<Bundle>() {
-
-			public void run(final AccountManagerFuture<Bundle> future) {
-				try {
-					String authToken = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
-
-					if (authToken != null) {
-						// do something with the auth token
-						// got token form manager - set in application an exit
-						getAndlyticsApplication().setAuthToken(authToken);
-
-						runOnUiThread(new Runnable() {
-
-							@Override
-							public void run() {
-								callback.authenticationSuccess();
-							}
-						});
-
-					} else {
-
-						Log.e(TAG, "auth token is null, authentication failed");
-						// not expected at all
-					}
-
-				} catch (Exception e) {
-					getAndlyticsApplication().setSkipMainReload(true);
-					Log.e(TAG, "error during authentication", e);
-					// error
-				}
-
-			}
-
-		};
-
-		accountManager.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, null,
-				BaseActivity.this, myCallback, null);
-	}
-
-	protected void showLoadingIndecator(ViewSwitcher switcher) {
+	protected void showLoadingIndicator(ViewSwitcher switcher) {
 		Animation loadingAnim = AnimationUtils.loadAnimation(this, R.anim.loading);
 		loadingAnim.setInterpolator(new LinearInterpolator());
 

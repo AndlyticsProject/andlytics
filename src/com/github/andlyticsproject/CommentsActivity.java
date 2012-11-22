@@ -24,7 +24,7 @@ import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
 import com.github.andlyticsproject.util.Utils;
 
-public class CommentsActivity extends BaseDetailsActivity implements AuthenticationCallback {
+public class CommentsActivity extends BaseDetailsActivity {
 
 	public static final String TAG = Main.class.getSimpleName();
 
@@ -80,13 +80,13 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 			@Override
 			public void onClick(View v) {
-				authenticateAccountFromPreferences(false, CommentsActivity.this);
+				loadCommentsData();
 			}
 		});
 		footer.setVisibility(View.GONE);
 
 		db = getDbAdapter();
-		
+
 		Utils.execute(new LoadCommentsCache());
 	}
 
@@ -113,7 +113,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 		case R.id.itemCommentsmenuRefresh:
 			maxAvalibleComments = -1;
 			nextCommentIndex = 0;
-			authenticateAccountFromPreferences(false, CommentsActivity.this);
+			loadCommentsData();
 			return true;
 		default:
 			return (super.onOptionsItemSelected(item));
@@ -141,7 +141,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 				commentsListAdapter.notifyDataSetChanged();
 			}
 
-			authenticateAccountFromPreferences(false, CommentsActivity.this);
+			loadCommentsData();
 
 		}
 
@@ -284,8 +284,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 		commentGroups.add(group);
 	}
 
-	@Override
-	public void authenticationSuccess() {
+	private void loadCommentsData() {
 		Utils.execute(new LoadCommentsData());
 	}
 

@@ -49,8 +49,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
-import com.github.andlyticsproject.console.AuthenticationException;
-import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.console.v2.HttpClientFactory;
@@ -61,7 +59,7 @@ import com.github.andlyticsproject.sync.NotificationHandler;
 import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.Utils;
 
-public class Main extends BaseActivity implements AuthenticationCallback, OnNavigationListener {
+public class Main extends BaseActivity implements OnNavigationListener {
 
 	/** Key for latest version code preference. */
 	private static final String LAST_VERSION_CODE_KEY = "last_version_code";
@@ -85,7 +83,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private MenuItem statsModeMenuItem;
 
 	private List<String> accountsList;
-	
+
 	private DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);
 
 	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
@@ -96,10 +94,10 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
+
 		db = getDbAdapter();
 		LayoutInflater layoutInflater = getLayoutInflater();
-		
+
 		// Hack in case the account is hidden and then the app is killed
 		// which means when it starts up next, it goes straight to the account
 		// even though it shouldn't. To work around this, just mark it as not
@@ -209,7 +207,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		Intent i = null;
 		switch (item.getItemId()) {
 		case R.id.itemMainmenuRefresh:
-			authenticateAccountFromPreferences(false, Main.this);
+			loadRemoteEntries();
 			break;
 		case R.id.itemMainmenuImport:
 			File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
@@ -491,18 +489,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				return;
 			}
 
-			// TODO -- is this needed? DevConsoleV2 already retries
-			// in the case of AuthenticationException
-			if ((exception instanceof DevConsoleProtocolException || exception instanceof AuthenticationException)
-					&& !isAuthenticationRetry) {
-				Log.w("Andlytics", "authentication faild, retry with new token");
-				isAuthenticationRetry = true;
-				authenticateAccountFromPreferences(true, Main.this);
-
-			} else {
-				handleUserVisibleException(exception);
-				new LoadDbEntries().execute(false);
-			}
+			handleUserVisibleException(exception);
+			new LoadDbEntries().execute(false);
 		}
 
 		/*
@@ -559,8 +547,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			updateMainList(filteredStats);
 
 			if (triggerRemoteCall) {
-				authenticateAccountFromPreferences(false, Main.this);
-
+				loadRemoteEntries();
 			} else {
 
 				if (allStats.size() == 0) {
@@ -670,8 +657,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		Preferences.saveStatsMode(currentStatsMode, Main.this);
 	}
 
-	@Override
-	public void authenticationSuccess() {
+	// XXX better name?
+	private void loadRemoteEntries() {
 		Utils.execute(new LoadRemoteEntries());
 	}
 

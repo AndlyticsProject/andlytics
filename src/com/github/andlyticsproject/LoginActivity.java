@@ -213,6 +213,7 @@ public class LoginActivity extends SherlockActivity {
 		okButton.setEnabled(atLeastOneAccountEnabled);
 	}
 
+	// XXX is this really needed? 
 	private void addNewGoogleAccount() {
 		AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
 			public void run(AccountManagerFuture<Bundle> future) {
