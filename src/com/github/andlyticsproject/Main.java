@@ -27,7 +27,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -57,6 +56,7 @@ import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.sync.NotificationHandler;
 import com.github.andlyticsproject.util.ChangelogBuilder;
+import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
 public class Main extends BaseActivity implements OnNavigationListener {
@@ -72,10 +72,8 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private TextView statusText;
 	private ViewSwitcher mainViewSwitcher;
 	private MainListAdapter adapter;
-	public boolean dotracking;
 	private View footer;
 
-	private boolean isAuthenticationRetry;
 	public Animation aniPrevIn;
 	private StatsMode currentStatsMode;
 	private boolean refreshing;
@@ -88,8 +86,45 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
 
+	private static class State {
+		LoadDbEntries loadDbEntries;
+		LoadRemoteEntries loadRemoteEntries;
+		LoadIconInCache loadIconInCache;
+		List<AppInfo> lastAppList;
+
+		void detachAll() {
+			if (loadDbEntries != null) {
+				loadDbEntries.detach();
+			}
+
+			if (loadRemoteEntries != null) {
+				loadRemoteEntries.detach();
+			}
+
+			if (loadIconInCache != null) {
+				loadIconInCache.detach();
+			}
+		}
+
+		void attachAll(Main activity) {
+			if (loadDbEntries != null) {
+				loadDbEntries.attach(activity);
+			}
+
+			if (loadRemoteEntries != null) {
+				loadRemoteEntries.attach(activity);
+			}
+
+			if (loadIconInCache != null) {
+				loadIconInCache.attach(activity);
+			}
+		}
+	}
+
+	private State state = new State();
+
 	/** Called when the activity is first created. */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -121,21 +156,21 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		mainListView.setAdapter(adapter);
 		mainViewSwitcher = (ViewSwitcher) findViewById(R.id.main_viewswitcher);
 
-		// status & progess bar
+		// status & progress bar
 		statusText = (TextView) findViewById(R.id.main_app_status_line);
-
 		aniPrevIn = AnimationUtils.loadAnimation(Main.this, R.anim.activity_fade_in);
-
-		dotracking = true;
-		isAuthenticationRetry = false;
 
 		currentStatsMode = Preferences.getStatsMode(this);
 		updateStatsMode();
 
-		final List<AppInfo> lastAppList = (List<AppInfo>) getLastNonConfigurationInstance();
-		if (lastAppList != null) {
-			getAndlyticsApplication().setSkipMainReload(true);
-
+		State lastState = (State) getLastNonConfigurationInstance();
+		if (lastState != null) {
+			state = lastState;
+			state.attachAll(this);
+			if (state.lastAppList != null) {
+				adapter.setAppInfos(state.lastAppList);
+				getAndlyticsApplication().setSkipMainReload(true);
+			}
 		}
 
 		// show changelog
@@ -169,9 +204,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		// for the preferences
 		// to ensure that we do update if hidden apps are changed
 
-		// more TODO Should always show data from DB first, and then
-		// trigger remote call if necessary
-		// Revise the whole application global flag thing
+		// TODO Revise the whole application global flag thing
 		if (!mainSkipDataReload && shouldRemoteUpdateStats()) {
 			loadLocalEntriesAndUpdate();
 		} else {
@@ -300,7 +333,10 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return adapter.getAppInfos();
+		state.lastAppList = adapter.getAppInfos();
+		state.detachAll();
+
+		return state;
 	}
 
 	@Override
@@ -380,8 +416,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			}
 
 			if (lastUpdateDate != null) {
-				// TODO Let the user configure this, or at least make it the
-				// locale's default
 				statusText.setText(this.getString(R.string.last_update) + ": "
 						+ Preferences.getDateFormatLong(this).format(lastUpdateDate) + " "
 						+ timeFormat.format(lastUpdateDate));
@@ -394,33 +428,50 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 	}
 
-	// TODO Make this a static class and use a callback for UI updates, or move
-	// to fragments with savedInstanceState
-	private class LoadRemoteEntries extends AsyncTask<String, Integer, Exception> {
+	private static class LoadRemoteEntries extends
+			DetachableAsyncTask<String, Integer, Exception, Main> {
+
+		public LoadRemoteEntries(Main activity) {
+			super(activity);
+		}
+
+		@Override
+		protected void onPreExecute() {
+			if (activity == null) {
+				return;
+			}
+
+			activity.refreshing = true;
+			activity.supportInvalidateOptionsMenu();
+		}
 
 		@SuppressLint("NewApi")
 		@SuppressWarnings("unchecked")
 		@Override
 		protected Exception doInBackground(String... params) {
+			if (activity == null) {
+				return null;
+			}
+
 			Exception exception = null;
 
 			List<AppInfo> appDownloadInfos = null;
 			try {
-				DevConsoleV2 v2 = DevConsoleRegistry.getInstance().get(accountName);
+				DevConsoleV2 v2 = DevConsoleRegistry.getInstance().get(activity.accountName);
 				if (v2 == null) {
 					// this is pre-configured with needed headers and keeps
 					// track
 					// of cookies, etc.
 					DefaultHttpClient httpClient = HttpClientFactory
 							.createDevConsoleHttpClient(DevConsoleV2.TIMEOUT);
-					v2 = DevConsoleV2.createForAccount(accountName, httpClient);
-					DevConsoleRegistry.getInstance().put(accountName, v2);
+					v2 = DevConsoleV2.createForAccount(activity.accountName, httpClient);
+					DevConsoleRegistry.getInstance().put(activity.accountName, v2);
 				}
 
-				appDownloadInfos = v2.getAppInfo(Main.this);
+				appDownloadInfos = v2.getAppInfo(activity);
 
-				if (cancelRequested) {
-					cancelRequested = false;
+				if (activity.cancelRequested) {
+					activity.cancelRequested = false;
 					return null;
 				}
 
@@ -430,11 +481,11 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 				for (AppInfo appDownloadInfo : appDownloadInfos) {
 					// update in database and check for diffs
-					diffs.add(db.insertOrUpdateStats(appDownloadInfo));
-					String admobSiteId = Preferences.getAdmobSiteId(Main.this,
+					diffs.add(activity.db.insertOrUpdateStats(appDownloadInfo));
+					String admobSiteId = Preferences.getAdmobSiteId(activity,
 							appDownloadInfo.getPackageName());
 					if (admobSiteId != null) {
-						String admobAccount = Preferences.getAdmobAccount(Main.this, admobSiteId);
+						String admobAccount = Preferences.getAdmobAccount(activity, admobSiteId);
 						if (admobAccount != null) {
 							List<String> siteList = admobAccountSiteMap.get(admobAccount);
 							if (siteList == null) {
@@ -447,70 +498,43 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				}
 
 				// check for notifications
-				NotificationHandler.handleNotificaions(Main.this, diffs, accountName);
+				NotificationHandler.handleNotificaions(activity, diffs, activity.accountName);
 
 				// sync admob accounts
 				Set<String> admobAccuntKeySet = admobAccountSiteMap.keySet();
 				for (String admobAccount : admobAccuntKeySet) {
 
-					AdmobRequest.syncSiteStats(admobAccount, Main.this,
+					AdmobRequest.syncSiteStats(admobAccount, activity,
 							admobAccountSiteMap.get(admobAccount), null);
 				}
 
-				Utils.execute(new LoadIconInCache(), appDownloadInfos);
+				Utils.execute(new LoadIconInCache(activity), appDownloadInfos);
 
 			} catch (Exception e) {
 				Log.e(TAG, "Error while requesting developer console : " + e.getMessage(), e);
 				exception = e;
 			}
 
-			if (dotracking == true) {
-				int size = 0;
-				if (appDownloadInfos != null) {
-					size = appDownloadInfos.size();
-				}
-				// TODO endless loop in case of exception!!!
-				if (exception == null) {
-					Map<String, String> map = new HashMap<String, String>();
-					map.put("num", size + "");
-				} else {
-				}
-				dotracking = false;
-			}
-
 			return exception;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
-		 */
 		@Override
 		protected void onPostExecute(Exception exception) {
-
-			refreshing = false;
-			supportInvalidateOptionsMenu();
-
-			if (exception == null) {
-				Preferences.saveLastStatsRemoteUpdateTime(Main.this, System.currentTimeMillis());
-				loadLocalEntriesOnly();
+			if (activity == null) {
 				return;
 			}
 
-			handleUserVisibleException(exception);
-			loadLocalEntriesOnly();
-		}
+			activity.refreshing = false;
+			activity.supportInvalidateOptionsMenu();
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see android.os.AsyncTask#onPreExecute()
-		 */
-		@Override
-		protected void onPreExecute() {
-			refreshing = true;
-			supportInvalidateOptionsMenu();
+			if (exception == null) {
+				Preferences.saveLastStatsRemoteUpdateTime(activity, System.currentTimeMillis());
+				activity.loadLocalEntriesOnly();
+				return;
+			}
+
+			activity.handleUserVisibleException(exception);
+			activity.loadLocalEntriesOnly();
 		}
 
 	}
@@ -524,10 +548,14 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	}
 
 	private void loadDbEntries(boolean triggerRemoteCall) {
-		Utils.execute(new LoadDbEntries(), triggerRemoteCall);
+		Utils.execute(new LoadDbEntries(this), triggerRemoteCall);
 	}
 
-	private class LoadDbEntries extends AsyncTask<Boolean, Void, Boolean> {
+	private static class LoadDbEntries extends DetachableAsyncTask<Boolean, Void, Boolean, Main> {
+
+		LoadDbEntries(Main activity) {
+			super(activity);
+		}
 
 		private List<AppInfo> allStats = new ArrayList<AppInfo>();
 		private List<AppInfo> filteredStats = new ArrayList<AppInfo>();
@@ -536,16 +564,19 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 		@Override
 		protected Boolean doInBackground(Boolean... params) {
+			if (activity == null) {
+				return null;
+			}
 
-			allStats = db.getAllAppsLatestStats(accountName);
+			allStats = activity.db.getAllAppsLatestStats(activity.accountName);
 
 			for (AppInfo appInfo : allStats) {
 
 				if (!appInfo.isGhost()) {
-					String admobSiteId = Preferences.getAdmobSiteId(Main.this,
+					String admobSiteId = Preferences.getAdmobSiteId(activity,
 							appInfo.getPackageName());
 					if (admobSiteId != null) {
-						List<Admob> admobStats = db.getAdmobStats(admobSiteId,
+						List<Admob> admobStats = activity.db.getAdmobStats(admobSiteId,
 								Timeframe.LAST_TWO_DAYS).getAdmobs();
 						if (admobStats.size() > 0) {
 							Admob admob = admobStats.get(admobStats.size() - 1);
@@ -564,26 +595,35 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-
-			updateMainList(filteredStats);
-
-			if (triggerRemoteCall) {
-				loadRemoteEntries();
-			} else {
-
-				if (allStats.size() == 0) {
-					Toast.makeText(Main.this, R.string.no_published_apps, Toast.LENGTH_LONG).show();
-				}
+			if (activity == null) {
+				return;
 			}
 
+			activity.updateMainList(filteredStats);
+
+			if (triggerRemoteCall) {
+				activity.loadRemoteEntries();
+			} else {
+				if (allStats.size() == 0) {
+					Toast.makeText(activity, R.string.no_published_apps, Toast.LENGTH_LONG).show();
+				}
+			}
 		}
 
 	}
 
-	private class LoadIconInCache extends AsyncTask<List<AppInfo>, Void, Boolean> {
+	private static class LoadIconInCache extends
+			DetachableAsyncTask<List<AppInfo>, Void, Boolean, Main> {
+
+		LoadIconInCache(Main activity) {
+			super(activity);
+		}
 
 		@Override
 		protected Boolean doInBackground(List<AppInfo>... params) {
+			if (activity == null) {
+				return null;
+			}
 
 			List<AppInfo> appInfos = params[0];
 
@@ -595,7 +635,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 				if (iconUrl != null) {
 
-					File iconFile = new File(getCacheDir() + "/" + appInfo.getIconName());
+					File iconFile = new File(activity.getCacheDir() + "/" + appInfo.getIconName());
 					if (!iconFile.exists()) {
 
 						try {
@@ -620,40 +660,31 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 							success = true;
 						} catch (IOException e) {
-
 							if (iconFile.exists()) {
 								iconFile.delete();
 							}
 
 							Log.d("log_tag", "Error: " + e);
 						}
-
 					}
 				}
 
 			}
 
 			return success;
-
 		}
 
 		@Override
 		protected void onPostExecute(Boolean success) {
+			if (activity == null) {
+				return;
+			}
+
 			if (success) {
-				adapter.notifyDataSetChanged();
+				activity.adapter.notifyDataSetChanged();
 			}
 		}
 
-	}
-
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
 	}
 
 	private void updateStatsMode() {
@@ -678,12 +709,10 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		Preferences.saveStatsMode(currentStatsMode, Main.this);
 	}
 
-	// XXX better name?
 	private void loadRemoteEntries() {
-		Utils.execute(new LoadRemoteEntries());
+		state.loadRemoteEntries = new LoadRemoteEntries(this);
+		Utils.execute(state.loadRemoteEntries);
 	}
-
-	// FIXME isUpdate
 
 	/**
 	 * checks if the app is started for the first time (after an update).
