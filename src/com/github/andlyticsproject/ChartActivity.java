@@ -23,6 +23,7 @@ import com.github.andlyticsproject.util.Utils;
 public class ChartActivity extends BaseChartActivity {
 
 	private static String TAG = ChartActivity.class.getSimpleName();
+	private static final boolean DEBUG = false;
 
 	private ContentAdapter db;
 	private ListView historyList;
@@ -41,6 +42,8 @@ public class ChartActivity extends BaseChartActivity {
 		if (loadChartData != null) {
 			loadChartData.detach();
 		}
+		// reload since time frame has changed
+		dataUpdateRequested = true;
 		loadChartData = new LoadChartData(this);
 		Utils.execute(loadChartData, timeFrame);
 
@@ -171,24 +174,31 @@ public class ChartActivity extends BaseChartActivity {
 				return null;
 			}
 
-			if (activity.dataUpdateRequested || statsForApp == null
-					|| statsForApp.getAppStats().size() == 0) {
+			if (activity.dataUpdateRequested
+					|| activity.historyListAdapter.getDownloadInfos() == null
+					|| activity.historyListAdapter.isEmpty()) {
 				statsForApp = activity.db.getStatsForApp(activity.packageName, params[0],
 						activity.smoothEnabled);
 				versionUpdateDates = activity.db.getVersionUpdateDates(activity.packageName);
 
-				Log.d(TAG,
-						"statsForApp::highestRatingChange " + statsForApp.getHighestRatingChange());
-				Log.d(TAG,
-						"statsForApp::lowestRatingChanage " + statsForApp.getLowestRatingChange());
-				Log.d(TAG, "statsForApp::appStats " + statsForApp.getAppStats().size());
-				Log.d(TAG, "statsForApps::overall " + statsForApp.getOverall());
-				Log.d(TAG, "versionUpdateDates " + versionUpdateDates.size());
+				if (DEBUG) {
+					Log.d(TAG,
+							"statsForApp::highestRatingChange "
+									+ statsForApp.getHighestRatingChange());
+					Log.d(TAG,
+							"statsForApp::lowestRatingChanage "
+									+ statsForApp.getLowestRatingChange());
+					Log.d(TAG, "statsForApp::appStats " + statsForApp.getAppStats().size());
+					Log.d(TAG, "statsForApps::overall " + statsForApp.getOverall());
+					Log.d(TAG, "versionUpdateDates " + versionUpdateDates.size());
+				}
 
 				activity.dataUpdateRequested = false;
+
+				return true;
 			}
 
-			return true;
+			return false;
 		}
 
 		@Override
@@ -197,7 +207,9 @@ public class ChartActivity extends BaseChartActivity {
 				return;
 			}
 
-			activity.updateView(statsForApp, versionUpdateDates);
+			if (result && statsForApp != null && versionUpdateDates != null) {
+				activity.updateView(statsForApp, versionUpdateDates);
+			}
 		}
 
 	}
