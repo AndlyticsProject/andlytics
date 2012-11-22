@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import android.app.backup.BackupManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -34,8 +35,11 @@ public class ContentAdapter {
 	private final Context context;
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+	private BackupManager backupManager;
+
 	public ContentAdapter(Context ctx) {
 		this.context = ctx;
+		this.backupManager = new BackupManager(ctx);
 	}
 
 	public AdmobList getAdmobStats(String siteId, Timeframe currentTimeFrame) {
@@ -170,6 +174,7 @@ public class ContentAdapter {
 			context.getContentResolver().insert(AdmobTable.CONTENT_URI, value);
 		}
 
+		backupManager.dataChanged();
 	}
 
 	private long getAdmobStatsIdForDate(Date date, String siteId) {
@@ -206,7 +211,7 @@ public class ContentAdapter {
 
 		context.getContentResolver().bulkInsert(AdmobTable.CONTENT_URI,
 				values.toArray(new ContentValues[values.size()]));
-
+		backupManager.dataChanged();
 	}
 
 	private ContentValues createAdmobContentValues(Admob admob) {
@@ -278,6 +283,8 @@ public class ContentAdapter {
 		values.put(AppStatsTable.KEY_STATS_VERSIONCODE, downloadInfo.getVersionCode());
 
 		context.getContentResolver().insert(AppStatsTable.CONTENT_URI, values);
+
+		backupManager.dataChanged();
 	}
 
 	private AppStatsDiff createAppStatsDiff(AppStats newStats, AppStats previousStats,
@@ -313,11 +320,11 @@ public class ContentAdapter {
 		return diff;
 	}
 
-	private long insertOrUpdateApp(AppInfo appInfo) {
+	private void insertOrUpdateApp(AppInfo appInfo) {
 
 		// do not insert draft apps
 		if (appInfo == null || appInfo.isDraftOnly()) {
-			return -1;
+			return;
 		}
 
 		ContentValues initialValues = new ContentValues();
@@ -332,8 +339,7 @@ public class ContentAdapter {
 
 		context.getContentResolver().insert(AppInfoTable.CONTENT_URI, initialValues);
 
-		return -1;
-
+		backupManager.dataChanged();
 	}
 
 	public String formatDate(Date date) {
@@ -466,6 +472,8 @@ public class ContentAdapter {
 			context.getContentResolver().update(AppInfoTable.CONTENT_URI, initialValues,
 					AppInfoTable.KEY_ROWID + "=" + exisitingId, null);
 			result = exisitingId;
+
+			backupManager.dataChanged();
 		}
 
 		return result;
@@ -483,6 +491,8 @@ public class ContentAdapter {
 					AppInfoTable.KEY_ROWID + "=" + exisitingId, null);
 
 			result = exisitingId;
+
+			backupManager.dataChanged();
 		}
 
 		return result;
@@ -960,7 +970,7 @@ public class ContentAdapter {
 	public void updateCommentsCache(List<Comment> comments, String packageName) {
 
 		// TODO Do not drop the table each time
-		
+
 		// clear table
 		context.getContentResolver().delete(CommentsTable.CONTENT_URI,
 				CommentsTable.KEY_COMMENT_PACKAGENAME + "='" + packageName + "'", null);
@@ -979,7 +989,7 @@ public class ContentAdapter {
 			String replyText = null;
 			String replyDate = null;
 			if (reply != null) {
-				replyText =  reply.getText();
+				replyText = reply.getText();
 				replyDate = formatDate(reply.getDate());
 			}
 			initialValues.put(CommentsTable.KEY_COMMENT_REPLY_TEXT, replyText);
@@ -988,21 +998,25 @@ public class ContentAdapter {
 			context.getContentResolver().insert(CommentsTable.CONTENT_URI, initialValues);
 
 		}
+
+		backupManager.dataChanged();
 	}
 
 	public List<Comment> getCommentsFromCache(String packageName) {
 
 		List<Comment> result = new ArrayList<Comment>();
 
-		Cursor mCursor = context.getContentResolver().query(
-				CommentsTable.CONTENT_URI,
-				new String[] { CommentsTable.KEY_COMMENT_DATE,
-						CommentsTable.KEY_COMMENT_PACKAGENAME, CommentsTable.KEY_COMMENT_RATING,
-						CommentsTable.KEY_COMMENT_TEXT, CommentsTable.KEY_COMMENT_USER,
-						CommentsTable.KEY_COMMENT_DEVICE, CommentsTable.KEY_COMMENT_APP_VERSION,
-						CommentsTable.KEY_COMMENT_REPLY_TEXT, CommentsTable.KEY_COMMENT_REPLY_DATE},
-				AppInfoTable.KEY_APP_PACKAGENAME + "='" + packageName + "'", null,
-				CommentsTable.KEY_ROWID);
+		Cursor mCursor = context.getContentResolver()
+				.query(CommentsTable.CONTENT_URI,
+						new String[] { CommentsTable.KEY_COMMENT_DATE,
+								CommentsTable.KEY_COMMENT_PACKAGENAME,
+								CommentsTable.KEY_COMMENT_RATING, CommentsTable.KEY_COMMENT_TEXT,
+								CommentsTable.KEY_COMMENT_USER, CommentsTable.KEY_COMMENT_DEVICE,
+								CommentsTable.KEY_COMMENT_APP_VERSION,
+								CommentsTable.KEY_COMMENT_REPLY_TEXT,
+								CommentsTable.KEY_COMMENT_REPLY_DATE },
+						AppInfoTable.KEY_APP_PACKAGENAME + "='" + packageName + "'", null,
+						CommentsTable.KEY_ROWID);
 		if (mCursor != null && mCursor.moveToFirst()) {
 
 			do {
@@ -1026,7 +1040,7 @@ public class ContentAdapter {
 					Comment reply = new Comment(true);
 					reply.setText(replyText);
 					reply.setReplyDate(parseDate(mCursor.getString(mCursor
-						.getColumnIndex(CommentsTable.KEY_COMMENT_REPLY_DATE))));
+							.getColumnIndex(CommentsTable.KEY_COMMENT_REPLY_DATE))));
 					reply.setDate(comment.getDate());
 					comment.setReply(reply);
 				}
