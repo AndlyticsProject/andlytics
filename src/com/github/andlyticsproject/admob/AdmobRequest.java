@@ -1,6 +1,7 @@
 
 package com.github.andlyticsproject.admob;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 
@@ -32,7 +33,7 @@ import org.json.JSONObject;
 
 import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.Preferences.Timeframe;
-import com.github.andlyticsproject.exception.NetworkException;
+import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.model.Admob;
 
 public class AdmobRequest {
@@ -65,7 +66,10 @@ public class AdmobRequest {
 	public static final String KEY_EXCHANGE_DOWNLOADS = "exchange_downloads";
 	public static final String KEY_DATE = "date";
 
+	@SuppressLint("SimpleDateFormat")
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	private static final boolean DEBUG = false;
 
 	//base access url to admob api
 	private static final String BASE_URL = "https://api.admob.com/v2/";
@@ -85,12 +89,13 @@ public class AdmobRequest {
 		String token = null;
 
 		//create the parameters
+		@SuppressWarnings("deprecation")
 		String params = "client_key=" + clientKey + "&email=" + URLEncoder.encode(email)
 				+ "&password=" + URLEncoder.encode(password);
 
 		try {
 			//try to login
-			Log.d(TAG, email + " admob login request");
+			if (DEBUG) Log.d(TAG, email + " admob login request");
 			JSONArray data = getResponse("auth", "login", params, true, true);
 
 			//decode the json response and assign token for future use in this session
@@ -184,7 +189,7 @@ public class AdmobRequest {
 				out.close();
 
 			} else {
-				Log.d(TAG, subUrl);
+				if (DEBUG) Log.d(TAG, subUrl);
 				con = (HttpsURLConnection) new URL(subUrl + "?" + urlParameters).openConnection();
 				con.setHostnameVerifier(new AllowAllHostnameVerifier());
 				//System.out.println("admob request: " + subUrl + "?" + urlParameters);
@@ -314,7 +319,7 @@ public class AdmobRequest {
 			AdmobAccountRemovedException, NetworkException, AdmobInvalidTokenException,
 			AdmobGenericException, AdmobAskForPasswordException, AdmobInvalidRequestException {
 
-		Log.w(TAG, "admob site sync request for " + siteList.size() + " sites");
+		if (DEBUG) Log.d(TAG, "admob site sync request for " + siteList.size() + " sites");
 
 		String token = authenticateAdmobAccount(account, context);
 
@@ -448,14 +453,14 @@ public class AdmobRequest {
 		} else if (AdmobRequest.ERROR_ACCOUNT_REMOVED.equals(admobToken)) {
 			throw new AdmobAccountRemovedException(admobToken, currentAdmobAccount);
 		} else if (AdmobRequest.ERROR_ASK_USER_PASSWORD.equals(admobToken)) {
-			throw new AdmobAskForPasswordException();
+			throw new AdmobAskForPasswordException("Missing password");
 		}
 
 		return admobToken;
 	}
 
 	private static void invalidateAdmobToken(String accountName, String token, Context context) {
-		Log.d(TAG, "invalidate admob token for " + accountName);
+		if (DEBUG) Log.d(TAG, "invalidate admob token for " + accountName);
 		AdmobAuthenticationUtilities.invalidateToken(token, context);
 	}
 

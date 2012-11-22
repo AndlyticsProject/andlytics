@@ -31,7 +31,7 @@ import java.io.IOException;
 
 import com.github.andlyticsproject.AdmobAuthenticatorActivity;
 import com.github.andlyticsproject.Constants;
-import com.github.andlyticsproject.exception.NetworkException;
+import com.github.andlyticsproject.console.NetworkException;
 
 /**
  * Provides utility methods for communicating with the server.
@@ -181,6 +181,7 @@ public class AdmobAuthenticationUtilities {
 		return token;
 	}
 
+	@SuppressWarnings("deprecation")
 	protected static String authenticateAccount(final AccountManager manager,
 			final Account account, Context context) {
 
@@ -188,9 +189,8 @@ public class AdmobAuthenticationUtilities {
 
 		Bundle bundle;
 		try {
-			bundle = manager
-					.getAuthToken(account, Constants.AUTHTOKEN_TYPE_ADMOB, true, null, null)
-					.getResult();
+			bundle = manager.getAuthToken(account, Constants.AUTHTOKEN_TYPE_ADMOB, true, null, null)
+								.getResult();
 
 			if (bundle.containsKey(AccountManager.KEY_INTENT)) {
 

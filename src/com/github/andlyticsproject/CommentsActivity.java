@@ -1,20 +1,28 @@
-
 package com.github.andlyticsproject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
+import com.github.andlyticsproject.console.v2.DevConsoleV2;
+import com.github.andlyticsproject.console.v2.HttpClientFactory;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
+import com.github.andlyticsproject.util.Utils;
 
 public class CommentsActivity extends BaseDetailsActivity implements AuthenticationCallback {
 
@@ -78,13 +86,8 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 		footer.setVisibility(View.GONE);
 
 		db = getDbAdapter();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		new LoadCommentsCache().execute();
-
+		
+		Utils.execute(new LoadCommentsCache());
 	}
 
 	@Override
@@ -100,22 +103,24 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 	/**
 	 * Called if item in option menu is selected.
 	 * 
-	 * @param item The chosen menu item
+	 * @param item
+	 *            The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.itemCommentsmenuRefresh:
-				maxAvalibleComments = -1;
-				nextCommentIndex = 0;
-				authenticateAccountFromPreferences(false, CommentsActivity.this);
-				return true;
-			default:
-				return (super.onOptionsItemSelected(item));
+		case R.id.itemCommentsmenuRefresh:
+			maxAvalibleComments = -1;
+			nextCommentIndex = 0;
+			authenticateAccountFromPreferences(false, CommentsActivity.this);
+			return true;
+		default:
+			return (super.onOptionsItemSelected(item));
 		}
 	}
 
+	// TODO Make this a static class that extends DetachableAsyncTask
 	private class LoadCommentsCache extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -142,6 +147,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 	}
 
+	// TODO Make this a static class that extends DetachableAsyncTask
 	private class LoadCommentsData extends AsyncTask<Void, Void, Exception> {
 
 		@Override
@@ -161,12 +167,17 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 			}
 
 			if (maxAvalibleComments != 0) {
-				DeveloperConsole console = new DeveloperConsole(CommentsActivity.this);
+				DevConsoleV2 console = DevConsoleRegistry.getInstance().get(accountName);
+				if (console == null) {
+					DefaultHttpClient httpClient = HttpClientFactory
+							.createDevConsoleHttpClient(DevConsoleV2.TIMEOUT);
+					console = DevConsoleV2.createForAccount(accountName, httpClient);
+					DevConsoleRegistry.getInstance().put(accountName, console);
+				}
 				try {
 
-					String authtoken = getAndlyticsApplication().getAuthToken();
-					List<Comment> result = console.getAppComments(authtoken, accountName,
-							packageName, nextCommentIndex, MAX_LOAD_COMMENTS);
+					List<Comment> result = console.getComments(CommentsActivity.this, packageName,
+							nextCommentIndex, MAX_LOAD_COMMENTS);
 
 					// put in cache if index == 0
 					if (nextCommentIndex == 0) {
@@ -194,13 +205,13 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 		}
 
 		@Override
-		protected void onPostExecute(Exception result) {
+		protected void onPostExecute(Exception exception) {
 
 			footer.setEnabled(true);
 
-			if (result != null) {
-				handleUserVisibleException(result);
-				result.printStackTrace();
+			if (exception != null) {
+				Log.e(TAG, "Error fetching comments: " + exception.getMessage(), exception);
+				handleUserVisibleException(exception);
 				footer.setVisibility(View.GONE);
 			} else {
 
@@ -224,13 +235,13 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 			}
 
 			refreshing = false;
-			invalidateOptionsMenu();
+			supportInvalidateOptionsMenu();
 		}
 
 		@Override
 		protected void onPreExecute() {
 			refreshing = true;
-			invalidateOptionsMenu();
+			supportInvalidateOptionsMenu();
 			footer.setEnabled(false);
 		}
 
@@ -240,11 +251,11 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 		commentGroups = new ArrayList<CommentGroup>();
 		Comment prevComment = null;
-		for (Comment comment : comments) {
+		for (Comment comment : Comment.expandReplies(comments)) {
 			if (prevComment != null) {
 
 				CommentGroup group = new CommentGroup();
-				group.setDateString(comment.getDate());
+				group.setDate(comment.getDate());
 
 				if (commentGroups.contains(group)) {
 
@@ -266,7 +277,7 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 	private void addNewCommentGroup(Comment comment) {
 		CommentGroup group = new CommentGroup();
-		group.setDateString(comment.getDate());
+		group.setDate(comment.getDate());
 		List<Comment> groupComments = new ArrayList<Comment>();
 		groupComments.add(comment);
 		group.setComments(groupComments);
@@ -275,9 +286,21 @@ public class CommentsActivity extends BaseDetailsActivity implements Authenticat
 
 	@Override
 	public void authenticationSuccess() {
+		Utils.execute(new LoadCommentsData());
+	}
 
-		new LoadCommentsData().execute();
-
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_AUTHENTICATE) {
+			if (resultCode == RESULT_OK) {
+				// user entered credentials, etc, try to get data again
+				new LoadCommentsData().execute();
+			} else {
+				Toast.makeText(this, getString(R.string.auth_error, accountName), Toast.LENGTH_LONG)
+						.show();
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 }

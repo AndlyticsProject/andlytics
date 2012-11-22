@@ -29,6 +29,9 @@ import org.achartengine.renderer.SimpleSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
+import com.github.andlyticsproject.R;
+
+import android.content.res.Resources;
 import android.graphics.Color;
 
 /**
@@ -83,6 +86,7 @@ public abstract class AbstractChart {
 	/**
 	 * Sets a few of the series renderer settings.
 	 *
+	 * @param res
 	 * @param renderer the renderer to set the properties to
 	 * @param title the chart title
 	 * @param xTitle the title for the X axis
@@ -94,9 +98,9 @@ public abstract class AbstractChart {
 	 * @param axesColor the axes color
 	 * @param labelsColor the labels color
 	 */
-	protected void setChartSettings(XYMultipleSeriesRenderer renderer, String title, String xTitle,
-			String yTitle, double xMin, double xMax, double yMin, double yMax, int axesColor,
-			int labelsColor) {
+	protected void setChartSettings(Resources res, XYMultipleSeriesRenderer renderer, String title,
+			String xTitle, String yTitle, double xMin, double xMax, double yMin, double yMax,
+			int axesColor, int labelsColor) {
 		renderer.setChartTitle(title);
 		renderer.setXTitle(xTitle);
 		renderer.setYTitle(yTitle);
@@ -108,6 +112,8 @@ public abstract class AbstractChart {
 		renderer.setLabelsColor(labelsColor);
 		renderer.setXLabelsColor(labelsColor);
 		renderer.setYLabelsColor(0, labelsColor);
+		renderer.setLabelsTextSize(res.getDimensionPixelSize(R.dimen.chart_label_text_size));
+		
 
 		renderer.setApplyBackgroundColor(true);
 		renderer.setBackgroundColor(Color.parseColor("#eeeeee"));

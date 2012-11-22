@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/comments_list_item_app_row"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/button_background"
+	android:padding="15dp">
+
+	<RatingBar
+		android:id="@+id/comments_list_item_app_ratingbar"
+		style="@style/andRatingBar"
+		android:isIndicator="true"
+		android:layout_marginLeft="10dp"			
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:stepSize="1"
+		android:rating="5"
+		android:numStars="5"
+		android:paddingTop="2dp" />
+
+	<TextView
+		android:id="@+id/comments_list_item_username"
+		android:layout_height="wrap_content"
+		style="@style/MainTableText"
+		android:layout_width="wrap_content"
+		android:paddingLeft="5dp"
+		android:paddingRight="5dp"
+		android:layout_toRightOf="@+id/comments_list_item_app_ratingbar">
+	</TextView>
+
+	<TextView
+		style="@style/MainTableText"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_below="@+id/comments_list_item_username"		
+		android:paddingRight="10dp"
+		android:paddingLeft="10dp"
+		android:id="@+id/comments_list_item_text"
+		android:paddingTop="5dp"/>
+
+	<TextView
+	    android:id="@+id/comments_list_item_device"
+	    style="@style/MainTableText"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/comments_list_item_text"
+	    android:paddingLeft="10dp"
+	    android:paddingRight="10dp"
+	    android:paddingTop="5dp"
+	    android:text="@string/comments_details_full" />
+
+</RelativeLayout>

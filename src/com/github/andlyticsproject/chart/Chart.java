@@ -74,15 +74,15 @@ public class Chart extends AbstractChart {
 		if (statsForApp.size() > 0) {
 			xLabelDistance = statsForApp.size() / 6;
 		}
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				Preferences.getDateFormatStringShort(context));
 		int nextXLabelPrint = 1;
 		for (int i = 1; i < statsForApp.size(); i++) {
 			Object appInfo = statsForApp.get(i);
 			dates.add(getDateString(handler.getDate(appInfo)));
 
 			if (i == nextXLabelPrint) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(
-						Preferences.getDateFormatShort(context));
-				renderer.addTextLabel(i, dateFormat.format(handler.getDate(appInfo)));
+				renderer.addXTextLabel(i, dateFormat.format(handler.getDate(appInfo)));
 				nextXLabelPrint += xLabelDistance;
 			}
 		}
@@ -123,7 +123,7 @@ public class Chart extends AbstractChart {
 		}
 
 		// settings
-		setChartSettings(renderer, "", "", "", 0, statsForApp.size(), valueDistanceBottom,
+		setChartSettings(context.getResources(), renderer, "", "", "", 0, statsForApp.size(), valueDistanceBottom,
 				valueDistanceTop, Color.LTGRAY, Color.BLACK);
 
 		renderer.setYLabels(7);
@@ -132,7 +132,6 @@ public class Chart extends AbstractChart {
 		renderer.setShowAxes(false);
 		renderer.setShowGrid(true);
 		renderer.setAntialiasing(true);
-		renderer.setLabelsTextSize(12);
 
 		return ChartFactory.getBarChartView(context, buildBarDataset(titles, values), renderer,
 				Type.DEFAULT);
@@ -164,7 +163,6 @@ public class Chart extends AbstractChart {
 		Date[] datesArray = dates.toArray(new Date[dates.size()]);
 		double[] valuesArray = new double[dates.size()];
 
-		Date[] highlightDatesArray = highlightDates.toArray(new Date[highlightDates.size()]);
 		double[] highlightValuesArray = new double[highlightDates.size()];
 
 		double heighestValue = Double.MIN_VALUE;
@@ -222,7 +220,7 @@ public class Chart extends AbstractChart {
 		}
 
 		// settings
-		setChartSettings(renderer, "", "", "", datesArray[0].getTime() - dateDistance,
+		setChartSettings(context.getResources(), renderer, "", "", "", datesArray[0].getTime() - dateDistance,
 				datesArray[datesArray.length - 1].getTime() + dateDistance, valueDistanceBottom,
 				valueDistanceTop, Color.LTGRAY, Color.BLACK);
 
@@ -232,11 +230,10 @@ public class Chart extends AbstractChart {
 		renderer.setShowAxes(false);
 		renderer.setShowGrid(true);
 		renderer.setAntialiasing(true);
-		renderer.setLabelsTextSize(12);
 
 		return ChartFactory.getTimeChartView(context,
 				buildDateDataset(titles, dateArrayList, values), renderer,
-				Preferences.getDateFormatShort(context));
+				Preferences.getDateFormatStringShort(context));
 
 	}
 

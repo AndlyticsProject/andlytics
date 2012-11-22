@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -18,11 +19,12 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
 
+@SuppressLint("SimpleDateFormat")
 public class AndlyticsContentProvider extends ContentProvider {
 
 	private static final String TAG = "AndlyticsContentProvider";
 
-	private static final int DATABASE_VERSION = 17;
+	private static final int DATABASE_VERSION = 18;
 
 	private static final String DATABASE_NAME = "andlytics";
 
@@ -101,6 +103,18 @@ public class AndlyticsContentProvider extends ContentProvider {
 						+ CommentsTable.KEY_COMMENT_APP_VERSION + " text");
 				db.execSQL("ALTER table " + CommentsTable.DATABASE_TABLE_NAME + " add "
 						+ CommentsTable.KEY_COMMENT_DEVICE + " text");
+			}
+			
+			if (oldVersion < 17){
+				Log.w(TAG, "Old version < 17 - changing comments date format");
+				db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.DATABASE_TABLE_NAME);
+				db.execSQL(CommentsTable.TABLE_CREATE_COMMENTS);
+			}			
+
+			if (oldVersion < 18){
+				Log.w(TAG, "Old version < 18 - adding replies to comments");
+				db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.DATABASE_TABLE_NAME);
+				db.execSQL(CommentsTable.TABLE_CREATE_COMMENTS);
 			}
 
 		}
@@ -281,8 +295,19 @@ public class AndlyticsContentProvider extends ContentProvider {
 			default:
 				throw new IllegalArgumentException("Unknown URI " + uri);
 		}
-
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		
+		// TODO What is the best way to deal with upgrades while still
+		// only getting write access if we really need it?
+		SQLiteDatabase db = null;
+		try {
+			db = dbHelper.getReadableDatabase();
+		} catch (SQLException ex) {
+			if (ex.getMessage().startsWith("Can't upgrade read-only database")) {
+				db = dbHelper.getWritableDatabase();
+			} else {
+				throw ex;
+			}
+		}
 
 		Cursor c = null;
 

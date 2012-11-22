@@ -79,7 +79,6 @@
     <string name="email">E-Mail</string>
     <string name="login">Einloggen</string>
     <string name="remove_admob">AdMob Verknüpfung entfernen</string>
-    <string name="remove_admob_app">AdMob Werte von dieser App entfernen</string>
     <string name="loading_site">Lade Seiten&#8230;</string>
     <string name="select_admob_site">Die mit dieser App zu verknüpfende AdMob Seite auswählen</string>
     <string name="choose_app">App auswählen</string>
@@ -103,7 +102,6 @@
     <string name="admob__CTR">Klickrate</string>
     <string name="admob__house_ad_clicks">House-Ad Klicks</string>
     <string name="admob__charts_available">AdMob Tabellen verfügbar</string>
-    <string name="admob__remove_account">Konten können entfernt werden über: Android Einstellungen -> Konten und Synchronisation</string>
     <string name="last_update">Letzte Änderung</string>
 
     <string name="changelog_title">Changelog</string>

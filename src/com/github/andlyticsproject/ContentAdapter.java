@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject;
 
 import java.math.BigDecimal;
@@ -33,6 +32,7 @@ import com.github.andlyticsproject.model.Comment;
 public class ContentAdapter {
 
 	private final Context context;
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public ContentAdapter(Context ctx) {
 		this.context = ctx;
@@ -47,7 +47,9 @@ public class ContentAdapter {
 		List<Admob> result = new ArrayList<Admob>();
 
 		int limit = Integer.MAX_VALUE;
-		if (currentTimeFrame.equals(Timeframe.LAST_THIRTY_DAYS)) {
+		if (currentTimeFrame.equals(Timeframe.LAST_NINETY_DAYS)) {
+			limit = 90;
+		} else if (currentTimeFrame.equals(Timeframe.LAST_THIRTY_DAYS)) {
 			limit = 30;
 		} else if (currentTimeFrame.equals(Timeframe.LAST_SEVEN_DAYS)) {
 			limit = 7;
@@ -71,7 +73,10 @@ public class ContentAdapter {
 						AdmobTable.KEY_DATE
 
 				}, AdmobTable.KEY_SITE_ID + "='" + siteId + "'", null,
-				AdmobTable.KEY_DATE + " desc LIMIT " + limit + ""); // sort order -> new to old
+				AdmobTable.KEY_DATE + " desc LIMIT " + limit + ""); // sort
+																	// order ->
+																	// new to
+																	// old
 
 		int count = 0;
 
@@ -331,13 +336,11 @@ public class ContentAdapter {
 
 	}
 
-	public static String formatDate(Date date) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	public String formatDate(Date date) {
 		return dateFormat.format(date);
 	}
 
 	private Date parseDate(String string) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			return dateFormat.parse(string);
 		} catch (ParseException e) {
@@ -533,12 +536,14 @@ public class ContentAdapter {
 		AppStats overall = new AppStats();
 
 		int limit = Integer.MAX_VALUE;
-		if (currentTimeFrame.equals(Timeframe.LAST_THIRTY_DAYS)) {
+		if (currentTimeFrame.equals(Timeframe.LAST_NINETY_DAYS)) {
+			limit = 90;
+		} else if (currentTimeFrame.equals(Timeframe.LAST_THIRTY_DAYS)) {
 			limit = 30;
-		} else if (currentTimeFrame.equals(Timeframe.LAST_TWO_DAYS)) {
-			limit = 2;
 		} else if (currentTimeFrame.equals(Timeframe.LAST_SEVEN_DAYS)) {
 			limit = 7;
+		} else if (currentTimeFrame.equals(Timeframe.LAST_TWO_DAYS)) {
+			limit = 2;
 		} else if (currentTimeFrame.equals(Timeframe.LATEST_VALUE)) {
 			limit = 1;
 		}
@@ -553,7 +558,12 @@ public class ContentAdapter {
 						AppStatsTable.KEY_STATS_2STARS, AppStatsTable.KEY_STATS_1STARS,
 						AppStatsTable.KEY_STATS_REQUESTDATE, AppStatsTable.KEY_STATS_VERSIONCODE },
 				AppStatsTable.KEY_STATS_PACKAGENAME + "='" + packageName + "'", null,
-				AppStatsTable.KEY_STATS_REQUESTDATE + " desc LIMIT " + limit + ""); // sort order -> new to old
+				AppStatsTable.KEY_STATS_REQUESTDATE + " desc LIMIT " + limit + ""); // sort
+																					// order
+																					// ->
+																					// new
+																					// to
+																					// old
 
 		if (cursor.moveToFirst()) {
 
@@ -949,6 +959,8 @@ public class ContentAdapter {
 
 	public void updateCommentsCache(List<Comment> comments, String packageName) {
 
+		// TODO Do not drop the table each time
+		
 		// clear table
 		context.getContentResolver().delete(CommentsTable.CONTENT_URI,
 				CommentsTable.KEY_COMMENT_PACKAGENAME + "='" + packageName + "'", null);
@@ -957,12 +969,21 @@ public class ContentAdapter {
 		for (Comment comment : comments) {
 			ContentValues initialValues = new ContentValues();
 			initialValues.put(CommentsTable.KEY_COMMENT_PACKAGENAME, packageName);
-			initialValues.put(CommentsTable.KEY_COMMENT_DATE, comment.getDate());
+			initialValues.put(CommentsTable.KEY_COMMENT_DATE, formatDate(comment.getDate()));
 			initialValues.put(CommentsTable.KEY_COMMENT_RATING, comment.getRating());
 			initialValues.put(CommentsTable.KEY_COMMENT_TEXT, comment.getText());
 			initialValues.put(CommentsTable.KEY_COMMENT_USER, comment.getUser());
 			initialValues.put(CommentsTable.KEY_COMMENT_APP_VERSION, comment.getAppVersion());
 			initialValues.put(CommentsTable.KEY_COMMENT_DEVICE, comment.getDevice());
+			Comment reply = comment.getReply();
+			String replyText = null;
+			String replyDate = null;
+			if (reply != null) {
+				replyText =  reply.getText();
+				replyDate = formatDate(reply.getDate());
+			}
+			initialValues.put(CommentsTable.KEY_COMMENT_REPLY_TEXT, replyText);
+			initialValues.put(CommentsTable.KEY_COMMENT_REPLY_DATE, replyDate);
 
 			context.getContentResolver().insert(CommentsTable.CONTENT_URI, initialValues);
 
@@ -978,15 +999,17 @@ public class ContentAdapter {
 				new String[] { CommentsTable.KEY_COMMENT_DATE,
 						CommentsTable.KEY_COMMENT_PACKAGENAME, CommentsTable.KEY_COMMENT_RATING,
 						CommentsTable.KEY_COMMENT_TEXT, CommentsTable.KEY_COMMENT_USER,
-						CommentsTable.KEY_COMMENT_DEVICE, CommentsTable.KEY_COMMENT_APP_VERSION },
+						CommentsTable.KEY_COMMENT_DEVICE, CommentsTable.KEY_COMMENT_APP_VERSION,
+						CommentsTable.KEY_COMMENT_REPLY_TEXT, CommentsTable.KEY_COMMENT_REPLY_DATE},
 				AppInfoTable.KEY_APP_PACKAGENAME + "='" + packageName + "'", null,
 				CommentsTable.KEY_ROWID);
 		if (mCursor != null && mCursor.moveToFirst()) {
 
 			do {
 				Comment comment = new Comment();
-				comment.setDate(mCursor.getString(mCursor
-						.getColumnIndex(CommentsTable.KEY_COMMENT_DATE)));
+				String dateString = mCursor.getString(mCursor
+						.getColumnIndex(CommentsTable.KEY_COMMENT_DATE));
+				comment.setDate(parseDate(dateString));
 				comment.setUser(mCursor.getString(mCursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_USER)));
 				comment.setText(mCursor.getString(mCursor
@@ -997,6 +1020,16 @@ public class ContentAdapter {
 						.getColumnIndex(CommentsTable.KEY_COMMENT_APP_VERSION)));
 				comment.setRating(mCursor.getInt(mCursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_RATING)));
+				String replyText = mCursor.getString(mCursor
+						.getColumnIndex(CommentsTable.KEY_COMMENT_REPLY_TEXT));
+				if (replyText != null) {
+					Comment reply = new Comment(true);
+					reply.setText(replyText);
+					reply.setReplyDate(parseDate(mCursor.getString(mCursor
+						.getColumnIndex(CommentsTable.KEY_COMMENT_REPLY_DATE))));
+					reply.setDate(comment.getDate());
+					comment.setReply(reply);
+				}
 				result.add(comment);
 			} while (mCursor.moveToNext());
 		}
@@ -1045,7 +1078,8 @@ public class ContentAdapter {
 						AppStatsTable.KEY_STATS_2STARS, AppStatsTable.KEY_STATS_1STARS,
 						AppStatsTable.KEY_STATS_REQUESTDATE, AppStatsTable.KEY_STATS_VERSIONCODE },
 				AppStatsTable.KEY_STATS_PACKAGENAME + "='" + packageName + "'", null,
-				AppStatsTable.KEY_STATS_REQUESTDATE); // sort order -> new to old
+				AppStatsTable.KEY_STATS_REQUESTDATE); // sort order -> new to
+														// old
 
 		if (cursor.moveToFirst()) {
 
@@ -1080,7 +1114,12 @@ public class ContentAdapter {
 					AppStatsTable.KEY_STATS_REQUESTDATE, AppStatsTable.KEY_STATS_VERSIONCODE },
 					AppStatsTable.KEY_STATS_PACKAGENAME + "='" + packageName + "' and "
 							+ AppStatsTable.KEY_STATS_VERSIONCODE + "=" + code, null,
-					AppStatsTable.KEY_STATS_REQUESTDATE + " limit 1"); // sort order -> new to old
+					AppStatsTable.KEY_STATS_REQUESTDATE + " limit 1"); // sort
+																		// order
+																		// ->
+																		// new
+																		// to
+																		// old
 
 			if (cursor.moveToFirst()) {
 

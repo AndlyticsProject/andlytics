@@ -1,6 +1,9 @@
 
 package com.github.andlyticsproject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import com.github.andlyticsproject.sync.AutosyncHandler;
 
 import android.content.Context;
@@ -26,7 +29,7 @@ public class Preferences {
 
 	private static final String AUTOSYNC = "autosync.initial.set";
 	public static final String AUTOSYNC_PERIOD = "autosync.period";
-	public static final String AUTOSYNC_ENABLE = "autosync.enable";
+	public static final String AUTOSYNC_PERIOD_LAST_NON_ZERO = "autosync.period.last";
 	private static final String CRASH_REPORT_DISABLE = "acra.enable";
 
 	public static final String CHART_TIMEFRAME = "chart.timeframe";
@@ -43,8 +46,7 @@ public class Preferences {
 	public static final String NOTIFICATION_LIGHT = "notification.light";
 	public static final String NOTIFICATION_WHEN_ACCOUNT_VISISBLE = "notification.when_account_visible";
 
-	public static final String DATE_FORMAT_SHORT = "dateformat.short1";
-	public static final String DATE_FORMAT_LONG = "dateformat.long1";
+	public static final String DATE_FORMAT_LONG = "dateformat.long";
 
 	private static final String LEVEL_7_ALARM_MANAGER_PERIOD = "level7.AlarmManagerPeriod";
 
@@ -59,12 +61,16 @@ public class Preferences {
 	private static final String LATEST_VERSION_CODE = "latest.version.code";
 
 	public enum Timeframe {
-		LAST_THIRTY_DAYS, UNLIMITED, LAST_TWO_DAYS, LATEST_VALUE, LAST_SEVEN_DAYS
+		LAST_NINETY_DAYS, LAST_THIRTY_DAYS, UNLIMITED, LAST_TWO_DAYS, LATEST_VALUE, LAST_SEVEN_DAYS
 	}
 
 	public enum StatsMode {
 		PERCENT, DAY_CHANGES
 	}
+
+	private static String cachedDateFormatShort;
+
+	private static String cachedDateFormatLong;
 
 	public static void disableCrashReports(Context context) {
 		SharedPreferences.Editor editor = getSettings(context).edit();
@@ -99,18 +105,25 @@ public class Preferences {
 	public static void saveGwtPermutation(Context activity, String gwtPermutation) {
 		saveVersionDependingProperty(GWTPERMUTATION, gwtPermutation, activity);
 	}
-
-	public static Boolean isAutoSyncEnabled(Context activity, String accountName) {
-		return getSettings(activity).getBoolean(AUTOSYNC_ENABLE + accountName, true);
+	
+	public static int getLastNonZeroAutosyncPeriod(Context activity) {
+		return getSettings(activity).getInt(AUTOSYNC_PERIOD_LAST_NON_ZERO,
+				AutosyncHandler.DEFAULT_PERIOD);
 	}
 
-	public static int getAutoSyncPeriod(Context activity) {
+	public static void saveLastNonZeroAutosyncPeriod(Context activity, int syncPeriod) {
+		SharedPreferences.Editor editor = getSettings(activity).edit();
+		editor.putInt(AUTOSYNC_PERIOD_LAST_NON_ZERO, syncPeriod);
+		editor.commit();
+	}
+
+	public static int getAutosyncPeriod(Context activity) {
 		// We use a ListPreference which only supports saving as strings, so need to convert it when reading
 		return Integer.parseInt(getSettings(activity).getString(AUTOSYNC_PERIOD,
 				Integer.toString(AutosyncHandler.DEFAULT_PERIOD)));
 	}
 
-	public static String getAutoSyncSet(Context activity, String accountName) {
+	public static String getAutosyncSet(Context activity, String accountName) {
 		return getSettings(activity).getString(AUTOSYNC + accountName, null);
 	}
 
@@ -180,12 +193,6 @@ public class Preferences {
 		return getSettings(context).getBoolean(CHART_SMOOTH, true);
 	}
 
-	public static void saveSmooth(boolean value, Context context) {
-		SharedPreferences.Editor editor = getSettings(context).edit();
-		editor.putBoolean(CHART_SMOOTH, value);
-		editor.commit();
-	}
-
 	public static boolean getSkipAutologin(Context context) {
 		return getSettings(context).getBoolean(SKIP_AUTO_LOGIN, false);
 	}
@@ -235,24 +242,61 @@ public class Preferences {
 		editor.commit();
 	}
 
-	public static String getDateFormatShort(Context context) {
-		return getSettings(context).getString(DATE_FORMAT_SHORT, "dd/MM");
+	public static String getDateFormatStringShort(Context context) {
+		if (cachedDateFormatShort != null) {
+			return cachedDateFormatShort;
+		}
+		String dateFormatStringLong = getDateFormatStringLong(context);
+		// Build the short version by taking the long one and removing the year
+		// We do this rather than using pre-defined short versions so that the user
+		// can use a default based on their locale
+		String format = dateFormatStringLong.replace("yyyy", "").replace("yy", "");
+		// Now go through the string removing any duplicate separators
+		// and trimming leading/ending separators
+		StringBuilder builder = new StringBuilder();
+		char[] chars = format.toCharArray();
+		int length = chars.length;
+		for (int i = 0; i < length; i++) {
+			char c = chars[i];
+			if (Character.isLetter(c)) {
+				// Always accept letters
+				builder.append(c);
+			} else if ((i > 0) && (i + 1 < length) && (c != chars[i + 1])) {
+				// Only accept separators is they aren't duplicated
+				// and aren't at the start or end
+				builder.append(c);
+			}
+		}
+		format = builder.toString();
+		cachedDateFormatShort = format;
+		return format;
+	}
+	
+	/**
+	 * Clears the cached string representations used for date formatting
+	 * Should be called whenever the user preference changes
+	 */
+	public static void clearCachedDateFormats() {
+		cachedDateFormatShort = null;
+		cachedDateFormatLong = null;
 	}
 
-	public static void saveDateFormatShort(Context context, String value) {
-		SharedPreferences.Editor editor = getSettings(context).edit();
-		editor.putString(DATE_FORMAT_SHORT, value);
-		editor.commit();
+	private static String getDateFormatStringLong(Context context) {
+		if (cachedDateFormatLong != null) {
+			return cachedDateFormatLong;
+		}
+		String format = getSettings(context).getString(DATE_FORMAT_LONG, "DEFAULT");
+		if ("DEFAULT".equals(format)) {
+			format = ((SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT)).toPattern();
+			// Make it consistent with our pre-defined formats (always show yyyy)
+			format = format.replace("yyyy", "yy").replace("yy", "yyyy");
+		}
+		cachedDateFormatLong = format;
+		return format;
 	}
-
-	public static String getDateFormatLong(Context context) {
-		return getSettings(context).getString(DATE_FORMAT_LONG, "dd/MM/yyyy");
-	}
-
-	public static void saveDateFormatLong(Context context, String value) {
-		SharedPreferences.Editor editor = getSettings(context).edit();
-		editor.putString(DATE_FORMAT_LONG, value);
-		editor.commit();
+	
+	public static DateFormat getDateFormatLong(Context context) {
+		return new SimpleDateFormat(getDateFormatStringLong(context));
 	}
 
 	public static void saveAdmobSiteId(Context context, String packageName, String value) {

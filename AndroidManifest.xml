@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.andlyticsproject"
     android:installLocation="auto"
-    android:versionCode="217"
-    android:versionName="2.2.3" xmlns:tools="http://schemas.android.com/tools">
+    android:versionCode="218"
+    android:versionName="2.3-Beta1" xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -19,8 +19,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-sdk
-        android:minSdkVersion="7"
-        android:targetSdkVersion="16" />
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
 
     <application
         android:name="AndlyticsApp"
@@ -62,6 +62,12 @@
         <activity
             android:name=".PreferenceActivity"
             android:label="@string/preferences" >
+            <intent-filter>
+                <action
+                    android:name="com.github.andlyticsproject.PREFERENCES" />
+                <category
+                    android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".NotificationPreferenceActivity"
@@ -103,8 +109,7 @@
 
         <service
             android:name=".sync.SyncAdapterService"
-            android:exported="false"
-            android:process=":andlytics" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
@@ -142,8 +147,10 @@
 
         <receiver
             android:name="com.github.andlyticsproject.sync.AlarmReceiver"
-            android:exported="false"
-            android:process=":remote" >
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.accounts.LOGIN_ACCOUNTS_CHANGED"/>
+            </intent-filter>
         </receiver>
     </application>
 

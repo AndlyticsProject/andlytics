@@ -54,7 +54,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 		BLACK_TEXT = activity.getResources().getColor(R.color.blackText);
 		this.setDownloadInfos(new ArrayList<AppStats>());
 		this.activity = activity;
-		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatShort(activity));
+		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatStringShort(activity));
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 
 	@Override
 	public void notifyDataSetChanged() {
-		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatShort(activity));
+		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatStringShort(activity));
 		super.notifyDataSetChanged();
 	}
 

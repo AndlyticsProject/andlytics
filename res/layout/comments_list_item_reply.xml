@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="5dp" >
+        
+    <!-- TODO Fix the paddings for views (so they fit within the background properly -->
+
+    <RelativeLayout
+        android:id="@+id/comments_list_item_app_row"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_background"
+        android:paddingTop="15dp" >
+
+        <TextView
+            android:layout_alignParentLeft="true"
+            android:textStyle="bold"
+            android:id="@+id/comments_list_item_username"
+            style="@style/MainTableText"
+            android:text="@string/comment_reply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="25dp"
+            android:paddingRight="5dp" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/comments_list_item_date"
+            style="@style/MainTableText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/comments_list_item_username"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" >
+        </TextView>
+
+        <TextView
+            android:layout_alignParentLeft="true"
+            android:id="@+id/comments_list_item_text"
+            style="@style/MainTableText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/comments_list_item_username"
+            android:layout_alignParentBottom="true"
+            android:paddingLeft="25dp"
+            android:paddingRight="20dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="15dp" />
+    </RelativeLayout>
+
+</FrameLayout>

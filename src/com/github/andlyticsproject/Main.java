@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject;
 
 import java.io.File;
@@ -7,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,8 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -46,13 +49,15 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
-import com.github.andlyticsproject.exception.AuthenticationException;
-import com.github.andlyticsproject.exception.InvalidJSONResponseException;
-import com.github.andlyticsproject.exception.NetworkException;
+import com.github.andlyticsproject.console.AuthenticationException;
+import com.github.andlyticsproject.console.DevConsoleProtocolException;
+import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
+import com.github.andlyticsproject.console.v2.DevConsoleV2;
+import com.github.andlyticsproject.console.v2.HttpClientFactory;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
-import com.github.andlyticsproject.sync.AutosyncHandlerFactory;
+import com.github.andlyticsproject.sync.AutosyncHandler;
 import com.github.andlyticsproject.sync.NotificationHandler;
 import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.Utils;
@@ -63,6 +68,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private static final String LAST_VERSION_CODE_KEY = "last_version_code";
 
 	public static final String TAG = Main.class.getSimpleName();
+
 	private boolean cancelRequested;
 	private ListView mainListView;
 	private ContentAdapter db;
@@ -80,6 +86,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private MenuItem statsModeMenuItem;
 
 	private List<String> accountsList;
+	
+	private DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);
 
 	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
 
@@ -89,15 +97,17 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+		
 		db = getDbAdapter();
 		LayoutInflater layoutInflater = getLayoutInflater();
-
+		
 		// Hack in case the account is hidden and then the app is killed
 		// which means when it starts up next, it goes straight to the account
-		// even though it shouldn't. To work around this, just mark it as not hidden
+		// even though it shouldn't. To work around this, just mark it as not
+		// hidden
 		// in the sense that that change they made never got applied
-		// TODO Do something clever in login activity to prevent this while keeping the ability
+		// TODO Do something clever in login activity to prevent this while
+		// keeping the ability
 		// to block going 'back'
 		Preferences.saveIsHiddenAccount(this, accountName, false);
 
@@ -158,9 +168,13 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		boolean mainSkipDataReload = getAndlyticsApplication().isSkipMainReload();
 
 		// TODO We shouldn't be reloading in every onResume
-		// When we move this, make sure we move to using startActivityForResult for the preferences
+		// When we move this, make sure we move to using startActivityForResult
+		// for the preferences
 		// to ensure that we do update if hidden apps are changed
 
+		// more TODO Should always show data from DB first, and then
+		// trigger remote call if necessary
+		// Revise the whole application global flag thing
 		if (!mainSkipDataReload) {
 			Utils.execute(new LoadDbEntries(), true);
 		} else {
@@ -186,7 +200,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	/**
 	 * Called if item in option menu is selected.
-	 *
+	 * 
 	 * @param item
 	 *            The chosen menu item
 	 * @return boolean true/false
@@ -195,69 +209,82 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent i = null;
 		switch (item.getItemId()) {
-			case R.id.itemMainmenuRefresh:
-				authenticateAccountFromPreferences(false, Main.this);
-				break;
-			case R.id.itemMainmenuImport:
-				File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
-				if (!fileToImport.exists()) {
-					Toast.makeText(this, getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
-							Toast.LENGTH_LONG).show();
-					return true;
-				}
+		case R.id.itemMainmenuRefresh:
+			authenticateAccountFromPreferences(false, Main.this);
+			break;
+		case R.id.itemMainmenuImport:
+			File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
+			if (!fileToImport.exists()) {
+				Toast.makeText(this,
+						getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
+						Toast.LENGTH_LONG).show();
+				return true;
+			}
 
-				Intent importIntent = new Intent(this, ImportActivity.class);
-				importIntent.setAction(Intent.ACTION_VIEW);
-				importIntent.setData(Uri.fromFile(fileToImport));
-				startActivity(importIntent);
-				break;
-			case R.id.itemMainmenuExport:
-				Intent exportIntent = new Intent(this, ExportActivity.class);
-				exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
-				startActivity(exportIntent);
-				break;
-			case R.id.itemMainmenuFeedback:
-				startActivity(new Intent(Intent.ACTION_VIEW,
-						Uri.parse(getString(R.string.github_issues_url))));
-				break;
-			case R.id.itemMainmenuPreferences:
-				i = new Intent(this, PreferenceActivity.class);
-				i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
-				startActivity(i);
-				break;
-			case R.id.itemMainmenuStatsMode:
-				if (currentStatsMode.equals(StatsMode.PERCENT)) {
-					currentStatsMode = StatsMode.DAY_CHANGES;
-				} else {
-					currentStatsMode = StatsMode.PERCENT;
-				}
-				updateStatsMode();
-				break;
-			case R.id.itemMainmenuAccounts:
-				i = new Intent(this, LoginActivity.class);
-				i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
-				startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
-				break;
-			default:
-				return false;
+			Intent importIntent = new Intent(this, ImportActivity.class);
+			importIntent.setAction(Intent.ACTION_VIEW);
+			importIntent.setData(Uri.fromFile(fileToImport));
+			startActivity(importIntent);
+			break;
+		case R.id.itemMainmenuExport:
+			Intent exportIntent = new Intent(this, ExportActivity.class);
+			exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
+			startActivity(exportIntent);
+			break;
+		case R.id.itemMainmenuFeedback:
+			startActivity(new Intent(Intent.ACTION_VIEW,
+					Uri.parse(getString(R.string.github_issues_url))));
+			break;
+		case R.id.itemMainmenuPreferences:
+			i = new Intent(this, PreferenceActivity.class);
+			i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+			startActivity(i);
+			break;
+		case R.id.itemMainmenuStatsMode:
+			if (currentStatsMode.equals(StatsMode.PERCENT)) {
+				currentStatsMode = StatsMode.DAY_CHANGES;
+			} else {
+				currentStatsMode = StatsMode.PERCENT;
+			}
+			updateStatsMode();
+			break;
+		case R.id.itemMainmenuAccounts:
+			i = new Intent(this, LoginActivity.class);
+			i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
+			startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
+			break;
+		default:
+			return false;
 		}
 		return true;
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// NOTE startActivityForResult does not work when singleTask is set in the manifiest
+		// NOTE startActivityForResult does not work when singleTask is set in
+		// the manifiest
 		// Therefore, FLAG_ACTIVITY_CLEAR_TOP is used on any intents instead.
 		if (requestCode == REQUEST_CODE_MANAGE_ACCOUNTS) {
 			if (resultCode == RESULT_OK) {
-				// Went to manage accounts, didn't do anything to the current account,
+				// Went to manage accounts, didn't do anything to the current
+				// account,
 				// but might have added/removed other accounts
 				updateAccountsList();
 			} else if (resultCode == RESULT_CANCELED) {
-				// The user removed the current account, remove it from preferences and finish
-				// so that the user has to choose an account when they next start the app
+				// The user removed the current account, remove it from
+				// preferences and finish
+				// so that the user has to choose an account when they next
+				// start the app
 				Preferences.removeAccountName(this);
 				finish();
+			}
+		} else if (requestCode == REQUEST_AUTHENTICATE) {
+			if (resultCode == RESULT_OK) {
+				// user entered credentials, etc, try to get data again
+				Utils.execute(new LoadRemoteEntries());
+			} else {
+				Toast.makeText(this, getString(R.string.auth_error, accountName), Toast.LENGTH_LONG)
+						.show();
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
@@ -302,9 +329,10 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(context,
 						R.layout.account_selector_item, accountsList);
 				accountsAdapter
-				.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
+						.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
 
-				// Hide the title to avoid duplicated info on tablets/landscape & setup the spinner
+				// Hide the title to avoid duplicated info on tablets/landscape
+				// & setup the spinner
 				getSupportActionBar().setDisplayShowTitleEnabled(false);
 				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 				getSupportActionBar().setListNavigationCallbacks(accountsAdapter, this);
@@ -332,11 +360,16 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			if (apps.size() > 0) {
 				footer.setVisibility(View.VISIBLE);
 
-				String autosyncSet = Preferences.getAutoSyncSet(Main.this, accountName);
+				String autosyncSet = Preferences.getAutosyncSet(Main.this, accountName);
 				if (autosyncSet == null) {
-					// Setup auto sync
-					AutosyncHandlerFactory.getInstance(Main.this).setAutosyncPeriod(accountName,
-							Preferences.getAutoSyncPeriod(Main.this));
+					// Setup auto sync for the first time
+					AutosyncHandler syncHandler = new AutosyncHandler();
+					// Ensure it matches the sync period (excluding disabled state)
+					syncHandler.setAutosyncPeriod(accountName,
+							Preferences.getLastNonZeroAutosyncPeriod(Main.this));
+					// Now make it match the master sync (including disabled state)
+					syncHandler.setAutosyncPeriod(accountName,
+							Preferences.getAutosyncPeriod(Main.this));
 					Preferences.saveAutoSyncSet(Main.this, accountName);
 				}
 			}
@@ -354,8 +387,11 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			}
 
 			if (lastUpdateDate != null) {
+				// TODO Let the user configure this, or at least make it the
+				// locale's default
 				statusText.setText(this.getString(R.string.last_update) + ": "
-						+ ContentAdapter.formatDate(lastUpdateDate));
+						+ Preferences.getDateFormatLong(this).format(lastUpdateDate) + " "
+						+ timeFormat.format(lastUpdateDate));
 			}
 
 		}
@@ -366,24 +402,30 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 	}
 
-	// TODO Make this a static class and use a callback for UI updates, or move to fragments with savedInstanceState
+	// TODO Make this a static class and use a callback for UI updates, or move
+	// to fragments with savedInstanceState
 	private class LoadRemoteEntries extends AsyncTask<String, Integer, Exception> {
 
+		@SuppressLint("NewApi")
 		@SuppressWarnings("unchecked")
 		@Override
 		protected Exception doInBackground(String... params) {
-
-			// authentication failed before, retry with token invalidation
-
 			Exception exception = null;
-
-			String authtoken = ((AndlyticsApp) getApplication()).getAuthToken();
 
 			List<AppInfo> appDownloadInfos = null;
 			try {
+				DevConsoleV2 v2 = DevConsoleRegistry.getInstance().get(accountName);
+				if (v2 == null) {
+					// this is pre-configured with needed headers and keeps
+					// track
+					// of cookies, etc.
+					DefaultHttpClient httpClient = HttpClientFactory
+							.createDevConsoleHttpClient(DevConsoleV2.TIMEOUT);
+					v2 = DevConsoleV2.createForAccount(accountName, httpClient);
+					DevConsoleRegistry.getInstance().put(accountName, v2);
+				}
 
-				DeveloperConsole console = new DeveloperConsole(Main.this);
-				appDownloadInfos = console.getAppDownloadInfos(authtoken, accountName);
+				appDownloadInfos = v2.getAppInfo(Main.this);
 
 				if (cancelRequested) {
 					cancelRequested = false;
@@ -426,15 +468,8 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 				Utils.execute(new LoadIconInCache(), appDownloadInfos);
 
 			} catch (Exception e) {
-
-				if (e instanceof IOException) {
-					e = new NetworkException(e);
-				}
-
+				Log.e(TAG, "Error while requesting developer console : " + e.getMessage(), e);
 				exception = e;
-
-				Log.e(TAG, "error while requesting developer console", e);
-				e.printStackTrace();
 			}
 
 			if (dotracking == true) {
@@ -456,43 +491,43 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 
 		/*
 		 * (non-Javadoc)
-		 *
+		 * 
 		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
 		 */
 		@Override
-		protected void onPostExecute(Exception e) {
+		protected void onPostExecute(Exception exception) {
 
 			refreshing = false;
-			invalidateOptionsMenu();
+			supportInvalidateOptionsMenu();
 
-			if (e != null) {
-
-				if ((e instanceof InvalidJSONResponseException || e instanceof AuthenticationException)
-						&& !isAuthenticationRetry) {
-					Log.w("Andlytics", "authentication faild, retry with new token");
-					isAuthenticationRetry = true;
-					authenticateAccountFromPreferences(true, Main.this);
-
-				} else {
-					handleUserVisibleException(e);
-					new LoadDbEntries().execute(false);
-				}
-
-			} else {
+			if (exception == null) {
 				new LoadDbEntries().execute(false);
+				return;
 			}
 
+			// TODO -- is this needed? DevConsoleV2 already retries
+			// in the case of AuthenticationException
+			if ((exception instanceof DevConsoleProtocolException || exception instanceof AuthenticationException)
+					&& !isAuthenticationRetry) {
+				Log.w("Andlytics", "authentication faild, retry with new token");
+				isAuthenticationRetry = true;
+				authenticateAccountFromPreferences(true, Main.this);
+
+			} else {
+				handleUserVisibleException(exception);
+				new LoadDbEntries().execute(false);
+			}
 		}
 
 		/*
 		 * (non-Javadoc)
-		 *
+		 * 
 		 * @see android.os.AsyncTask#onPreExecute()
 		 */
 		@Override
 		protected void onPreExecute() {
 			refreshing = true;
-			invalidateOptionsMenu();
+			supportInvalidateOptionsMenu();
 		}
 
 	}
@@ -574,7 +609,7 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 							URL url = new URL(iconUrl);
 							HttpURLConnection c = (HttpURLConnection) url.openConnection();
 							c.setRequestMethod("GET");
-							//c.setDoOutput(true);
+							// c.setDoOutput(true);
 							c.connect();
 
 							FileOutputStream fos = new FileOutputStream(iconFile);
@@ -630,18 +665,18 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 	private void updateStatsMode() {
 		if (statsModeMenuItem != null) {
 			switch (currentStatsMode) {
-				case PERCENT:
-					statsModeMenuItem.setTitle(R.string.daily);
-					statsModeMenuItem.setIcon(R.drawable.icon_plusminus);
-					break;
+			case PERCENT:
+				statsModeMenuItem.setTitle(R.string.daily);
+				statsModeMenuItem.setIcon(R.drawable.icon_plusminus);
+				break;
 
-				case DAY_CHANGES:
-					statsModeMenuItem.setTitle(R.string.percentage);
-					statsModeMenuItem.setIcon(R.drawable.icon_percent);
-					break;
+			case DAY_CHANGES:
+				statsModeMenuItem.setTitle(R.string.percentage);
+				statsModeMenuItem.setIcon(R.drawable.icon_percent);
+				break;
 
-				default:
-					break;
+			default:
+				break;
 			}
 		}
 		adapter.setStatsMode(currentStatsMode);
@@ -654,11 +689,11 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 		Utils.execute(new LoadRemoteEntries());
 	}
 
-	//FIXME isUpdate
+	// FIXME isUpdate
 
 	/**
 	 * checks if the app is started for the first time (after an update).
-	 *
+	 * 
 	 * @return <code>true</code> if this is the first start (after an update)
 	 *         else <code>false</code>
 	 */
@@ -720,17 +755,21 @@ public class Main extends BaseActivity implements AuthenticationCallback, OnNavi
 			subtitle.setText(accounts.get(position));
 			Resources res = context.getResources();
 			if (res.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-				// Scale the text down slightly to fit on landscape due to the shorter Action Bar
+				// Scale the text down slightly to fit on landscape due to the
+				// shorter Action Bar
 				// and additional padding due to the drop down
-				// We don't use predefined values as it saves duplicating all of the different display
+				// We don't use predefined values as it saves duplicating all of
+				// the different display
 				// configuration values from the ABS library
 				float px = subtitle.getTextSize() * 0.9f;
 				subtitle.setTextSize(px / (res.getDisplayMetrics().densityDpi / 160f));
 
 			}
 
-			// TODO In the future when accounts linked to multiple developer consoles are supported
-			// we can either merge all the apps together, or extend this adapter to let the user select 
+			// TODO In the future when accounts linked to multiple developer
+			// consoles are supported
+			// we can either merge all the apps together, or extend this adapter
+			// to let the user select
 			// account/console E.g:
 			// account1
 			// account2/console1

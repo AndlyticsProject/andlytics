@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.github.andlyticsproject.chart.Chart;
 import com.github.andlyticsproject.chart.Chart.ValueCallbackHander;
 import com.github.andlyticsproject.model.Admob;
 
+@SuppressLint("SimpleDateFormat")
 public class AdmobListAdapter extends BaseChartListAdapter {
 	private static final int DATE = 0;
 	private static final int REVENUE = 1;
@@ -49,7 +51,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 		this.stats = new ArrayList<Admob>();
 		//		this.layoutInflater = activity.getLayoutInflater();
 		this.activity = activity;
-		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatShort(activity));
+		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatStringShort(activity));
 	}
 
 	@Override
@@ -81,7 +83,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 
 	@Override
 	public void notifyDataSetChanged() {
-		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatShort(activity));
+		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatStringShort(activity));
 		super.notifyDataSetChanged();
 	}
 
