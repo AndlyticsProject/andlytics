@@ -61,6 +61,11 @@ public class Preferences {
 	// 15 minutes in millis
 	public static final long STATS_REMOTE_UPDATE_INTERVAL = 15 * 60 * 1000L;
 
+	private static final String LAST_COMMENTS_REMOTE_UPDATE = "last.commentts.remote.update";
+	// TODO maybe make this configurable?
+	// make it shorter for comments 5 minutes in millis
+	public static final long COMMENTS_REMOTE_UPDATE_INTERVAL = 5 * 60 * 1000L;
+
 	public enum Timeframe {
 		LAST_NINETY_DAYS, LAST_THIRTY_DAYS, UNLIMITED, LAST_TWO_DAYS, LATEST_VALUE, LAST_SEVEN_DAYS
 	}
@@ -346,11 +351,25 @@ public class Preferences {
 		return getSettings(context).getBoolean(ADMOB_HIDE_FOR_UNCONFIGURED_APPS, false);
 	}
 
-	public static synchronized long getLastStatsRemoteUpdateTime(Context activity) {
-		return getSettings(activity).getLong(LAST_STATS_REMOTE_UPDATE, 0);
+	public static synchronized long getLastStatsRemoteUpdateTime(Context activity,
+			String accountName) {
+		return getSettings(activity).getLong(LAST_STATS_REMOTE_UPDATE + "." + accountName, 0);
 	}
 
-	public static synchronized void saveLastStatsRemoteUpdateTime(Context activity, long timestamp) {
-		getSettings(activity).edit().putLong(LAST_STATS_REMOTE_UPDATE, timestamp).commit();
+	public static synchronized void saveLastStatsRemoteUpdateTime(Context activity,
+			String accountName, long timestamp) {
+		getSettings(activity).edit()
+				.putLong(LAST_STATS_REMOTE_UPDATE + "." + accountName, timestamp).commit();
+	}
+
+	public static synchronized long getLastCommentsRemoteUpdateTime(Context activity,
+			String accountName) {
+		return getSettings(activity).getLong(LAST_COMMENTS_REMOTE_UPDATE + "." + accountName, 0);
+	}
+
+	public static synchronized void saveLastCommentsRemoteUpdateTime(Context activity,
+			String accountName, long timestamp) {
+		getSettings(activity).edit()
+				.putLong(LAST_COMMENTS_REMOTE_UPDATE + "." + accountName, timestamp).commit();
 	}
 }

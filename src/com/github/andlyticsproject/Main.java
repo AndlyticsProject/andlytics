@@ -76,8 +76,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 	public Animation aniPrevIn;
 	private StatsMode currentStatsMode;
-	private boolean refreshing;
-
 	private MenuItem statsModeMenuItem;
 
 	private List<String> accountsList;
@@ -242,7 +240,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		menu.clear();
 		getSupportMenuInflater().inflate(R.menu.main_menu, menu);
 		statsModeMenuItem = menu.findItem(R.id.itemMainmenuStatsMode);
-		if (refreshing)
+		if (isRefreshing())
 			menu.findItem(R.id.itemMainmenuRefresh).setActionView(
 					R.layout.action_bar_indeterminate_progress);
 		updateStatsMode();
@@ -451,8 +449,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				return;
 			}
 
-			activity.refreshing = true;
-			activity.supportInvalidateOptionsMenu();
+			activity.refreshStarted();
 		}
 
 		@SuppressLint("NewApi")
@@ -535,11 +532,11 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				return;
 			}
 
-			activity.refreshing = false;
-			activity.supportInvalidateOptionsMenu();
+			activity.refreshFinished();
 
 			if (exception == null) {
-				Preferences.saveLastStatsRemoteUpdateTime(activity, System.currentTimeMillis());
+				Preferences.saveLastStatsRemoteUpdateTime(activity, activity.accountName,
+						System.currentTimeMillis());
 				activity.loadLocalEntriesOnly();
 				return;
 			}

@@ -140,7 +140,8 @@ public class SyncAdapterService extends Service {
 					Log.d(TAG, "Sucessfully synced AdMob stats");
 				}
 
-				Preferences.saveLastStatsRemoteUpdateTime(context, System.currentTimeMillis());
+				Preferences.saveLastStatsRemoteUpdateTime(context, account.name,
+						System.currentTimeMillis());
 
 			}
 		} catch (DevConsoleException e) {

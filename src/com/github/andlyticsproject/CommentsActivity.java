@@ -48,8 +48,6 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 	private ContentAdapter db;
 
-	private boolean refreshing;
-
 	private static final int MAX_LOAD_COMMENTS = 20;
 
 	private static class State {
@@ -158,7 +156,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.clear();
 		getSupportMenuInflater().inflate(R.menu.comments_menu, menu);
-		if (refreshing)
+		if (isRefreshing())
 			menu.findItem(R.id.itemCommentsmenuRefresh).setActionView(
 					R.layout.action_bar_indeterminate_progress);
 		return true;
@@ -215,6 +213,17 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 	}
 
+	protected boolean shouldRemoteUpdateComments() {
+		long now = System.currentTimeMillis();
+		long lastUpdate = Preferences.getLastCommentsRemoteUpdateTime(this, accountName);
+		// never updated
+		if (lastUpdate == 0) {
+			return true;
+		}
+
+		return (now - lastUpdate) >= Preferences.COMMENTS_REMOTE_UPDATE_INTERVAL;
+	}
+
 	private void expandCommentGroups() {
 		if (comments.size() > 0) {
 			commentsListAdapter.setCommentGroups(commentGroups);
@@ -238,8 +247,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 				return;
 			}
 
-			activity.refreshing = true;
-			activity.supportInvalidateOptionsMenu();
+			activity.refreshStarted();
 			activity.footer.setEnabled(false);
 		}
 
@@ -330,8 +338,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 				}
 			}
 
-			activity.refreshing = false;
-			activity.supportInvalidateOptionsMenu();
+			activity.refreshFinished();
 		}
 
 	}
@@ -373,8 +380,10 @@ public class CommentsActivity extends BaseDetailsActivity {
 	}
 
 	private void loadCommentsData() {
-		state.setLoadCommentsData(new LoadCommentsData(this));
-		Utils.execute(state.loadCommentsData);
+		if (shouldRemoteUpdateComments()) {
+			state.setLoadCommentsData(new LoadCommentsData(this));
+			Utils.execute(state.loadCommentsData);
+		}
 	}
 
 	@Override

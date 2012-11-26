@@ -169,6 +169,15 @@ public class ChartActivity extends BaseChartActivity {
 		private List<Date> versionUpdateDates;
 
 		@Override
+		protected void onPreExecute() {
+			if (activity == null) {
+				return;
+			}
+
+			activity.refreshStarted();
+		}
+
+		@Override
 		protected Boolean doInBackground(Timeframe... params) {
 			if (activity == null) {
 				return null;
@@ -210,6 +219,7 @@ public class ChartActivity extends BaseChartActivity {
 			if (result && statsForApp != null && versionUpdateDates != null) {
 				activity.updateView(statsForApp, versionUpdateDates);
 			}
+			activity.refreshFinished();
 		}
 
 	}

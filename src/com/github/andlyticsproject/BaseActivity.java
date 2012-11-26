@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -40,6 +41,8 @@ public class BaseActivity extends SherlockActivity {
 	protected String packageName;
 	protected String iconFilePath;
 	protected String accountName;
+
+	private boolean refreshing;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -320,13 +323,38 @@ public class BaseActivity extends SherlockActivity {
 
 	protected boolean shouldRemoteUpdateStats() {
 		long now = System.currentTimeMillis();
-		long lastUpdate = Preferences.getLastStatsRemoteUpdateTime(this);
+		long lastUpdate = Preferences.getLastStatsRemoteUpdateTime(this, accountName);
 		// never updated
 		if (lastUpdate == 0) {
 			return true;
 		}
-	
+
 		return (now - lastUpdate) >= Preferences.STATS_REMOTE_UPDATE_INTERVAL;
+	}
+
+	public boolean isRefreshing() {
+		return refreshing;
+	}
+
+	public void refreshStarted() {
+		ensureMainThread();
+	
+		refreshing = true;
+		supportInvalidateOptionsMenu();
+	}
+
+	public void refreshFinished() {
+		ensureMainThread();
+	
+		refreshing = false;
+		supportInvalidateOptionsMenu();
+	}
+
+	private void ensureMainThread() {
+		Looper looper = Looper.myLooper();
+		if (looper != null && looper != getMainLooper()) {
+			throw new IllegalStateException("Only call this from your main thread.");
+		}
 	}
 
 	public static int getAppVersionCode(Context context) {

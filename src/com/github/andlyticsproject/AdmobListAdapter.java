@@ -36,7 +36,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 
 	//	private LayoutInflater layoutInflater;
 
-	private BaseChartActivity activity;
+	private BaseActivity activity;
 
 	//	private Object currentChart;
 
