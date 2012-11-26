@@ -153,11 +153,16 @@ public class LoginActivity extends SherlockActivity {
 
 			// Setup auto sync
 			final AutosyncHandler syncHandler = new AutosyncHandler();
-			// Ensure it matches the sync period (excluding disabled state)
-			syncHandler.setAutosyncPeriod(accounts[i].name,
-					Preferences.getLastNonZeroAutosyncPeriod(this));
-			// Now make it match the master sync (including disabled state)
-			syncHandler.setAutosyncPeriod(accounts[i].name, Preferences.getAutosyncPeriod(this));
+			// only do this when managing accounts, otherwise sync may start 
+			// in the background before accounts are actually configured
+			if (manageAccountsMode) {
+				// Ensure it matches the sync period (excluding disabled state)
+				syncHandler.setAutosyncPeriod(accounts[i].name,
+						Preferences.getLastNonZeroAutosyncPeriod(this));
+				// Now make it match the master sync (including disabled state)
+				syncHandler
+						.setAutosyncPeriod(accounts[i].name, Preferences.getAutosyncPeriod(this));
+			}
 
 			View inflate = getLayoutInflater().inflate(R.layout.login_list_item, null);
 			TextView accountName = (TextView) inflate.findViewById(R.id.login_list_item_text);
@@ -170,17 +175,18 @@ public class LoginActivity extends SherlockActivity {
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					AccountStatus account = (AccountStatus) ((View) buttonView.getParent())
 							.getTag();
-					Preferences.saveIsHiddenAccount(getApplicationContext(), account.name,
-							!isChecked);
-					// Enable/disable sync
 					account.hidden = !isChecked;
-					if (isChecked) {
+					Preferences.saveIsHiddenAccount(getApplicationContext(), account.name,
+							account.hidden);
+
+					// Enable/disable sync
+					if (account.hidden) {
+						// They are removing the account from Andlytics, disable syncing
+						syncHandler.setAutosyncEnabled(account.name, false);
+					} else {
 						// Now make it match the master sync period (including disabled state)
 						syncHandler.setAutosyncPeriod(account.name,
 								Preferences.getAutosyncPeriod(LoginActivity.this));
-					} else {
-						// They are removing the account from Andlytics, disable syncing
-						syncHandler.setAutosyncEnabled(account.name, false);
 					}
 
 					if (manageAccountsMode && (account.name).equals(selectedAccount)) {
