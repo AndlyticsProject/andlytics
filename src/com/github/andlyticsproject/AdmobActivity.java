@@ -38,6 +38,7 @@ import com.github.andlyticsproject.model.AdmobList;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
 
 public class AdmobActivity extends BaseChartActivity {
+
 	public static final String TAG = AdmobActivity.class.getSimpleName();
 
 	protected ContentAdapter db;
@@ -54,7 +55,6 @@ public class AdmobActivity extends BaseChartActivity {
 	protected String admobToken;
 
 	private ViewGroup siteList;
-	private boolean refreshing;
 
 	@Override
 	protected void executeLoadData(Timeframe timeFrame) {
@@ -107,14 +107,14 @@ public class AdmobActivity extends BaseChartActivity {
 		if (currentSiteId != null) {
 			currentAdmobAccount = Preferences.getAdmobAccount(this, currentSiteId);
 		}
-		if (refreshing) {
-			menu.findItem(R.id.itemAdmobsmenuRefresh).setActionView(
+		if (isRefreshing()) {
+			menu.findItem(R.id.itemChartsmenuRefresh).setActionView(
 					R.layout.action_bar_indeterminate_progress);
 		}
 		if (currentAdmobAccount == null) {
 			menu.findItem(R.id.itemAdmobsmenuRemove).setVisible(false);
 			menu.findItem(R.id.itemChartsmenuTimeframe).setVisible(false);
-			menu.findItem(R.id.itemAdmobsmenuRefresh).setVisible(refreshing);
+			menu.findItem(R.id.itemChartsmenuRefresh).setVisible(isRefreshing());
 		}
 		return true;
 	}
@@ -128,21 +128,21 @@ public class AdmobActivity extends BaseChartActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.itemAdmobsmenuRefresh:
-				setChartIgnoreCallLayouts(true);
-				new LoadRemoteEntiesTask().execute();
-				return true;
-			case R.id.itemAdmobsmenuRemove:
-				Preferences.saveAdmobSiteId(AdmobActivity.this, packageName, null);
-				showAccountList();
-				if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
-					configSwitcher.showPrevious();
-				}
-				mainViewSwitcher.swap();
-				invalidateOptionsMenu();
-				return true;
-			default:
-				return (super.onOptionsItemSelected(item));
+		case R.id.itemChartsmenuRefresh:
+			setChartIgnoreCallLayouts(true);
+			new LoadRemoteEntiesTask().execute();
+			return true;
+		case R.id.itemAdmobsmenuRemove:
+			Preferences.saveAdmobSiteId(AdmobActivity.this, packageName, null);
+			showAccountList();
+			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
+				configSwitcher.showPrevious();
+			}
+			mainViewSwitcher.swap();
+			supportInvalidateOptionsMenu();
+			return true;
+		default:
+			return (super.onOptionsItemSelected(item));
 		}
 	}
 
@@ -239,17 +239,14 @@ public class AdmobActivity extends BaseChartActivity {
 				new LoadRemoteEntiesTask().execute();
 			}
 
-			refreshing = false;
-			invalidateOptionsMenu();
-
+			refreshFinished();
 		}
 	};
 
 	private class LoadRemoteEntiesTask extends AsyncTask<Void, Void, Exception> {
 		@Override
 		protected void onPreExecute() {
-			refreshing = true;
-			invalidateOptionsMenu();
+			refreshStarted();
 		}
 
 		@Override
@@ -303,8 +300,7 @@ public class AdmobActivity extends BaseChartActivity {
 				executeLoadDataDefault(false);
 			}
 
-			refreshing = false;
-			invalidateOptionsMenu();
+			refreshFinished();
 		}
 	};
 
@@ -319,8 +315,7 @@ public class AdmobActivity extends BaseChartActivity {
 
 		@Override
 		protected void onPreExecute() {
-			refreshing = true;
-			invalidateOptionsMenu();
+			refreshStarted();
 		}
 
 		@Override
@@ -368,7 +363,7 @@ public class AdmobActivity extends BaseChartActivity {
 										(String) view.getTag(), currentAdmobAccount);
 								mainViewSwitcher.swap();
 								executeLoadDataDefault(true);
-								invalidateOptionsMenu();
+								supportInvalidateOptionsMenu();
 							}
 						});
 						siteList.addView(inflate);
@@ -377,8 +372,7 @@ public class AdmobActivity extends BaseChartActivity {
 				}
 			}
 
-			refreshing = false;
-			invalidateOptionsMenu();
+			refreshFinished();
 		}
 	};
 
