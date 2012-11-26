@@ -362,14 +362,26 @@ public class Preferences {
 				.putLong(LAST_STATS_REMOTE_UPDATE + "." + accountName, timestamp).commit();
 	}
 
+	/**
+	 * Gets the last time that comments were updated for the given <b>packageName</b>
+	 * @param activity
+	 * @param packageName
+	 * @return
+	 */
 	public static synchronized long getLastCommentsRemoteUpdateTime(Context activity,
-			String accountName) {
-		return getSettings(activity).getLong(LAST_COMMENTS_REMOTE_UPDATE + "." + accountName, 0);
+			String packageName) {
+		return getSettings(activity).getLong(LAST_COMMENTS_REMOTE_UPDATE + "." + packageName, 0);
 	}
-
+	
+	/**
+	 * Sets the time that comments were last updated for the given <b>packageName</b>
+	 * @param activity
+	 * @param packageName
+	 * @param timestamp
+	 */
 	public static synchronized void saveLastCommentsRemoteUpdateTime(Context activity,
-			String accountName, long timestamp) {
+			String packageName, long timestamp) {
 		getSettings(activity).edit()
-				.putLong(LAST_COMMENTS_REMOTE_UPDATE + "." + accountName, timestamp).commit();
+				.putLong(LAST_COMMENTS_REMOTE_UPDATE + "." + packageName, timestamp).commit();
 	}
 }

@@ -215,7 +215,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 	protected boolean shouldRemoteUpdateComments() {
 		long now = System.currentTimeMillis();
-		long lastUpdate = Preferences.getLastCommentsRemoteUpdateTime(this, accountName);
+		long lastUpdate = Preferences.getLastCommentsRemoteUpdateTime(this, packageName);
 		// never updated
 		if (lastUpdate == 0) {
 			return true;
@@ -336,6 +336,9 @@ public class CommentsActivity extends BaseDetailsActivity {
 				if (!activity.hasMoreComments) {
 					activity.footer.setVisibility(View.GONE);
 				}
+
+				Preferences.saveLastCommentsRemoteUpdateTime(activity, activity.packageName,
+						System.currentTimeMillis());
 			}
 
 			activity.refreshFinished();
