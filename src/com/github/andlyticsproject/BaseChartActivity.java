@@ -24,7 +24,10 @@ import com.github.andlyticsproject.view.ChartGalleryAdapter;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
 import com.github.andlyticsproject.view.ViewSwitcher3D.ViewSwitcherListener;
 
+@SuppressWarnings("deprecation")
 public abstract class BaseChartActivity extends BaseDetailsActivity implements ViewSwitcherListener {
+
+	static final String SELECTED_CHART_POISTION = "selected_chart_position";
 
 	private ChartGalleryAdapter chartGalleryAdapter;
 	private ChartGallery chartGallery;
@@ -84,6 +87,19 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 
 		dataList = (ListView) findViewById(R.id.base_chart_list);
 		timeframeText = (TextView) findViewById(R.id.base_chart_timeframe);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle state) {
+		super.onSaveInstanceState(state);
+		state.putInt(SELECTED_CHART_POISTION, chartGallery.getSelectedItemPosition());
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle state) {
+		super.onRestoreInstanceState(state);
+		int chartIndex = state.getInt(SELECTED_CHART_POISTION);
+		chartGallery.setSelection(chartIndex);
 	}
 
 
@@ -238,7 +254,6 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 				 * if(chartView==null) { Log.i(LOG_TAG,"Ignoring chart p="+i+" c="+j+"for class="
 				 * +this.getClass().toString()); continue; }
 				 */
-				@SuppressWarnings("deprecation")
 				Gallery.LayoutParams params = new Gallery.LayoutParams(LayoutParams.FILL_PARENT,
 						LayoutParams.FILL_PARENT);
 				chartView.setLayoutParams(params);
