@@ -22,7 +22,8 @@ public class AndlyticsBackupAgent extends BackupAgentHelper {
 
 	@Override
 	public void onCreate() {
-		addHelper(PREFS_BACKUP_KEY, new SharedPreferencesBackupHelper(this, PREFS));
+		addHelper(PREFS_BACKUP_KEY, new SharedPreferencesBackupHelper(this, PREFS, getPackageName()
+				+ "_preferences"));
 		addHelper(STATS_BACKUP_KEY, new DbBackupHelper(this, STATS_DB));
 	}
 
