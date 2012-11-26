@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
-import android.os.Looper;
 import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +35,6 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 	private ViewSwitcher3D listViewSwitcher;
 
 	BaseChartListAdapter myAdapter;
-
-	private boolean refreshing;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +108,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 		}
 		activeTimeFrame.setChecked(true);
 
-		if (refreshing) {
+		if (isRefreshing()) {
 			menu.findItem(R.id.itemChartsmenuRefresh).setActionView(
 					R.layout.action_bar_indeterminate_progress);
 		}
@@ -294,32 +291,6 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 
 	public void setAllowChangePageSliding(boolean allowChangePageSliding) {
 		chartGallery.setAllowChangePageSliding(allowChangePageSliding);
-	}
-
-
-	public synchronized boolean isRefreshing() {
-		return refreshing;
-	}
-
-	public void refreshStarted() {
-		ensureMainThread();
-
-		refreshing = true;
-		supportInvalidateOptionsMenu();
-	}
-
-	public void refreshFinished() {
-		ensureMainThread();
-
-		refreshing = false;
-		supportInvalidateOptionsMenu();
-	}
-
-	private void ensureMainThread() {
-		Looper looper = Looper.myLooper();
-		if (looper != null && looper != getMainLooper()) {
-			throw new IllegalStateException("Only call this from your main thread.");
-		}
 	}
 
 }
