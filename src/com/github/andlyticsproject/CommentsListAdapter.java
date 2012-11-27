@@ -31,7 +31,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	private ArrayList<CommentGroup> commentGroups;
 
 	private CommentsActivity context;
-	
+
 	private DateFormat commentDateFormat = DateFormat.getDateInstance(DateFormat.FULL);
 
 
@@ -50,15 +50,17 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		ViewHolderChild holder;
 
 		if (convertView == null) {
-			convertView = layoutInflater.inflate(comment.isReply() ? R.layout.comments_list_item_reply
-					: R.layout.comments_list_item_comment, null);
+			convertView = layoutInflater.inflate(
+					comment.isReply() ? R.layout.comments_list_item_reply
+							: R.layout.comments_list_item_comment, null);
 
 			holder = new ViewHolderChild();
 			holder.text = (TextView) convertView.findViewById(R.id.comments_list_item_text);
 			holder.user = (TextView) convertView.findViewById(R.id.comments_list_item_username);
 			holder.date = (TextView) convertView.findViewById(R.id.comments_list_item_date);
 			holder.device = (TextView) convertView.findViewById(R.id.comments_list_item_device);
-			holder.rating = (RatingBar) convertView.findViewById(R.id.comments_list_item_app_ratingbar);
+			holder.rating = (RatingBar) convertView
+					.findViewById(R.id.comments_list_item_app_ratingbar);
 
 			convertView.setTag(holder);
 		} else {
@@ -69,7 +71,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		if (comment.isReply()) {
 			holder.date.setText(formatCommentDate(comment.getReplyDate()));
 		} else {
-			holder.user.setText(comment.getUser());
+			holder.user.setText(comment.getUser() == null ? "A Google User" : comment.getUser());
 			String version = comment.getAppVersion();
 			String device = comment.getDevice();
 			String deviceText = "";
@@ -126,7 +128,6 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	public int getChildType(int groupPosition, int childPosition) {
 		return getChild(groupPosition, childPosition).isReply() ? TYPE_REPLY : TYPE_COMMENT;
 	}
-
 
 
 	@Override
@@ -218,7 +219,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	public ArrayList<CommentGroup> getCommentGroups() {
 		return commentGroups;
 	}
-	
+
 	private String formatCommentDate(Date date) {
 		return commentDateFormat.format(date);
 	}

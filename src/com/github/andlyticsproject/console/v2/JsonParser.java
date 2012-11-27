@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject.console.v2;
 
 import java.util.ArrayList;
@@ -20,9 +19,9 @@ import com.github.andlyticsproject.model.Comment;
  *
  */
 public class JsonParser {
-	
+
 	private JsonParser() {
-		
+
 	}
 
 	/**
@@ -51,8 +50,7 @@ public class JsonParser {
 	 * @param statsType
 	 * @throws JSONException
 	 */
-	static void parseStatistics(String json, AppStats stats, int statsType)
-			throws JSONException {
+	static void parseStatistics(String json, AppStats stats, int statsType) throws JSONException {
 		// Extract the top level values array
 		JSONArray values = new JSONObject(json).getJSONArray("result").getJSONArray(1);
 		/*
@@ -79,13 +77,13 @@ public class JsonParser {
 
 		switch (statsType) {
 		case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
-				stats.setTotalDownloads(latestValue);
-				break;
+			stats.setTotalDownloads(latestValue);
+			break;
 		case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
-				stats.setActiveInstalls(latestValue);
-				break;
-			default:
-				break;
+			stats.setActiveInstalls(latestValue);
+			break;
+		default:
+			break;
 		}
 
 	}
@@ -97,8 +95,7 @@ public class JsonParser {
 	 * @return List of apps
 	 * @throws JSONException
 	 */
-	static List<AppInfo> parseAppInfos(String json, String accountName)
-			throws JSONException {
+	static List<AppInfo> parseAppInfos(String json, String accountName) throws JSONException {
 
 		Date now = new Date();
 		List<AppInfo> apps = new ArrayList<AppInfo>();
@@ -137,8 +134,8 @@ public class JsonParser {
 			JSONArray jsonAppInfo = jsonApp.getJSONArray(1);
 			String packageName = jsonAppInfo.getString(1);
 			// Look for "tmp.7238057230750432756094760456.235728507238057230542"
-			if (packageName == null || (packageName.startsWith("tmp.")
-					&& Character.isDigit(packageName.charAt(4)))) {
+			if (packageName == null
+					|| (packageName.startsWith("tmp.") && Character.isDigit(packageName.charAt(4)))) {
 				break;
 				// Draft app
 			}
@@ -224,7 +221,7 @@ public class JsonParser {
 	 * @throws JSONException
 	 */
 	static List<Comment> parseComments(String json) throws JSONException {
-		List<Comment> comments  = new ArrayList<Comment>();
+		List<Comment> comments = new ArrayList<Comment>();
 		/*
 		 * null
 		 * Array containing arrays of comments
@@ -282,7 +279,10 @@ public class JsonParser {
 			   1
 			]
 			 */
-			comment.setUser(jsonComment.getString(2));
+			String user = jsonComment.getString(2);
+			if (user != null && !"null".equals(user)) {
+				comment.setUser(user);
+			}
 			comment.setDate(parseDate(jsonComment.getLong(3)));
 			comment.setRating(jsonComment.getInt(4));
 			String version = jsonComment.getString(8);
@@ -309,8 +309,8 @@ public class JsonParser {
 				comment.setReply(reply);
 			}
 
-			comments.add(comment);			
-		}		
+			comments.add(comment);
+		}
 
 		return comments;
 	}
@@ -320,7 +320,7 @@ public class JsonParser {
 	 * @param unixDateCode
 	 * @return
 	 */
-	private static Date parseDate(long unixDateCode){
+	private static Date parseDate(long unixDateCode) {
 		return new Date(unixDateCode);
 	}
 
