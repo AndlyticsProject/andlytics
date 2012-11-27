@@ -57,12 +57,10 @@ public class Preferences {
 	private static final String LATEST_VERSION_CODE = "latest.version.code";
 
 	private static final String LAST_STATS_REMOTE_UPDATE = "last.stats.remote.update";
-	// TODO maybe make this configurable?
 	// 15 minutes in millis
 	public static final long STATS_REMOTE_UPDATE_INTERVAL = 15 * 60 * 1000L;
 
 	private static final String LAST_COMMENTS_REMOTE_UPDATE = "last.commentts.remote.update";
-	// TODO maybe make this configurable?
 	// make it shorter for comments 5 minutes in millis
 	public static final long COMMENTS_REMOTE_UPDATE_INTERVAL = 5 * 60 * 1000L;
 

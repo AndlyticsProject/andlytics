@@ -11,6 +11,8 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.util.Log;
 
+import com.github.andlyticsproject.db.AndlyticsDb;
+
 @ReportsCrashes(formKey = "dHBKcnZqTHMyMHlfLTB0RjhMejZfbkE6MQ", sharedPreferencesMode = Context.MODE_PRIVATE, sharedPreferencesName = Preferences.PREF, mode = ReportingInteractionMode.TOAST)
 public class AndlyticsApp extends Application {
 
@@ -36,6 +38,9 @@ public class AndlyticsApp extends Application {
 		super.onCreate();
 
 		initAcra();
+
+		// get DB instance here to  force schema and preferences migration
+		AndlyticsDb.getInstance(getApplicationContext());
 
 		setDbAdapter(new ContentAdapter(this));
 		sInstance = this;
