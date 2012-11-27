@@ -313,35 +313,35 @@ public class CommentsActivity extends BaseDetailsActivity {
 				return;
 			}
 
+			activity.refreshFinished();
 			activity.footer.setEnabled(true);
 
 			if (exception != null) {
 				Log.e(TAG, "Error fetching comments: " + exception.getMessage(), exception);
 				activity.handleUserVisibleException(exception);
 				activity.footer.setVisibility(View.GONE);
-			} else {
-				activity.footer.setVisibility(View.VISIBLE);
 
-				if (activity.comments != null && activity.comments.size() > 0) {
-
-					activity.commentsListAdapter.setCommentGroups(activity.commentGroups);
-					for (int i = 0; i < activity.commentGroups.size(); i++) {
-						activity.list.expandGroup(i);
-					}
-					activity.commentsListAdapter.notifyDataSetChanged();
-				} else {
-					activity.nocomments.setVisibility(View.VISIBLE);
-				}
-
-				if (!activity.hasMoreComments) {
-					activity.footer.setVisibility(View.GONE);
-				}
-
-				Preferences.saveLastCommentsRemoteUpdateTime(activity, activity.packageName,
-						System.currentTimeMillis());
+				return;
 			}
 
-			activity.refreshFinished();
+			activity.footer.setVisibility(View.VISIBLE);
+
+			if (activity.comments != null && activity.comments.size() > 0) {
+				activity.commentsListAdapter.setCommentGroups(activity.commentGroups);
+				for (int i = 0; i < activity.commentGroups.size(); i++) {
+					activity.list.expandGroup(i);
+				}
+				activity.commentsListAdapter.notifyDataSetChanged();
+			} else {
+				activity.nocomments.setVisibility(View.VISIBLE);
+			}
+
+			if (!activity.hasMoreComments) {
+				activity.footer.setVisibility(View.GONE);
+			}
+
+			Preferences.saveLastCommentsRemoteUpdateTime(activity, activity.packageName,
+					System.currentTimeMillis());
 		}
 
 	}
