@@ -175,7 +175,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 		case R.id.itemCommentsmenuRefresh:
 			maxAvalibleComments = -1;
 			nextCommentIndex = 0;
-			loadCommentsData();
+			loadCommentsData(true);
 			return true;
 		default:
 			return (super.onOptionsItemSelected(item));
@@ -381,9 +381,13 @@ public class CommentsActivity extends BaseDetailsActivity {
 		group.setComments(groupComments);
 		commentGroups.add(group);
 	}
-
+	
 	private void loadCommentsData() {
-		if (shouldRemoteUpdateComments()) {
+		loadCommentsData(false);
+	}
+
+	private void loadCommentsData(boolean forceLoad) {
+		if (forceLoad || shouldRemoteUpdateComments()) {
 			state.setLoadCommentsData(new LoadCommentsData(this));
 			Utils.execute(state.loadCommentsData);
 		}
