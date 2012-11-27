@@ -71,7 +71,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		if (comment.isReply()) {
 			holder.date.setText(formatCommentDate(comment.getReplyDate()));
 		} else {
-			holder.user.setText(comment.getUser() == null ? "A Google User" : comment.getUser());
+			holder.user.setText(comment.getUser() == null ?
+					context.getString(R.string.comment_no_user_info) : comment.getUser());
 			String version = comment.getAppVersion();
 			String device = comment.getDevice();
 			String deviceText = "";
