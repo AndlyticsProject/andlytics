@@ -113,13 +113,80 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		}
 
 		if (oldVersion < 19) {
-			Log.w(TAG, "Adding accounts table");
+			Log.w(TAG, "Old version < 19 - adding developer_accounts table");
 			db.execSQL("DROP TABLE IF EXISTS " + DeveloperAccountsTable.DATABASE_TABLE_NAME);
 			db.execSQL(DeveloperAccountsTable.TABLE_CREATE_DEVELOPER_ACCOUNT);
 
 			migrateAccountsFromPrefs(db);
+
+			Log.d(TAG, "Old version < 19 - adding new appinfo columns");
+			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
+					+ AppInfoTable.KEY_APP_ADMOB_ACCOUNT + " text");
+			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
+					+ AppInfoTable.KEY_APP_ADMOB_SITE_ID + " text");
+			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
+					+ AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE + " date");
+
+			migrateAppInfoPrefs(db);
 		}
 
+	}
+
+	private void migrateAppInfoPrefs(SQLiteDatabase db) {
+		Log.d(TAG, "Migrating app info settings from preferences...");
+		int migrated = 0;
+
+		db.beginTransaction();
+		try {
+			Cursor c = null;
+			class Pair {
+				long id;
+				String packageName;
+			}
+			List<Pair> packages = new ArrayList<Pair>();
+			try {
+				c = db.query(AppInfoTable.DATABASE_TABLE_NAME, new String[] {
+						AppInfoTable.KEY_ROWID, AppInfoTable.KEY_APP_PACKAGENAME }, null, null,
+						null, null, "_id asc", null);
+				while (c.moveToNext()) {
+					Pair p = new Pair();
+					p.id = c.getLong(0);
+					p.packageName = c.getString(1);
+					packages.add(p);
+				}
+			} finally {
+				if (c != null) {
+					c.close();
+				}
+			}
+			for (Pair p : packages) {
+				Log.d(TAG, "Migrating package: " + p.packageName);
+				String admobSiteId = Preferences.getAdmobSiteId(context, p.packageName);
+				if (admobSiteId != null) {
+					String admobAccount = Preferences.getAdmobAccount(context, admobSiteId);
+					ContentValues values = new ContentValues();
+					values.put(AppInfoTable.KEY_APP_ADMOB_SITE_ID, admobSiteId);
+					values.put(AppInfoTable.KEY_APP_ADMOB_ACCOUNT, admobAccount);
+					db.update(AppInfoTable.DATABASE_TABLE_NAME, values, "_id = ?",
+							new String[] { Long.toString(p.id) });
+				}
+				long lastCommentsUpdate = Preferences.getLastCommentsRemoteUpdateTime(context,
+						p.packageName);
+				if (lastCommentsUpdate != 0) {
+					ContentValues values = new ContentValues();
+					values.put(AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE, lastCommentsUpdate);
+					db.update(AppInfoTable.DATABASE_TABLE_NAME, values, "_id = ?",
+							new String[] { Long.toString(p.id) });
+				}
+				migrated++;
+			}
+
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+		Log.d(TAG,
+				String.format("Successfully migrated app info settings for %d packages", migrated));
 	}
 
 	private void migrateAccountsFromPrefs(SQLiteDatabase db) {
