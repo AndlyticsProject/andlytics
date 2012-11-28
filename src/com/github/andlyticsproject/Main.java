@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
@@ -50,7 +48,7 @@ import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
-import com.github.andlyticsproject.console.v2.HttpClientFactory;
+import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
@@ -465,15 +463,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			List<AppInfo> appDownloadInfos = null;
 			try {
 				DevConsoleV2 v2 = DevConsoleRegistry.getInstance().get(activity.accountName);
-				if (v2 == null) {
-					// this is pre-configured with needed headers and keeps
-					// track
-					// of cookies, etc.
-					DefaultHttpClient httpClient = HttpClientFactory
-							.createDevConsoleHttpClient(DevConsoleV2.TIMEOUT);
-					v2 = DevConsoleV2.createForAccount(activity.accountName, httpClient);
-					DevConsoleRegistry.getInstance().put(activity.accountName, v2);
-				}
 
 				appDownloadInfos = v2.getAppInfo(activity);
 
@@ -489,10 +478,11 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				for (AppInfo appDownloadInfo : appDownloadInfos) {
 					// update in database and check for diffs
 					diffs.add(activity.db.insertOrUpdateStats(appDownloadInfo));
-					String admobSiteId = Preferences.getAdmobSiteId(activity,
+					String[] admobDetails = AndlyticsDb.getInstance(activity).getAdmobDetails(
 							appDownloadInfo.getPackageName());
-					if (admobSiteId != null) {
-						String admobAccount = Preferences.getAdmobAccount(activity, admobSiteId);
+					if (admobDetails != null) {
+						String admobAccount = admobDetails[0];
+						String admobSiteId = admobDetails[1];
 						if (admobAccount != null) {
 							List<String> siteList = admobAccountSiteMap.get(admobAccount);
 							if (siteList == null) {
@@ -535,8 +525,8 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			activity.refreshFinished();
 
 			if (exception == null) {
-				Preferences.saveLastStatsRemoteUpdateTime(activity, activity.accountName,
-						System.currentTimeMillis());
+				AndlyticsDb.getInstance(activity).saveLastStatsRemoteUpdateTime(
+						activity.accountName, System.currentTimeMillis());
 				activity.loadLocalEntriesOnly();
 				return;
 			}
@@ -580,13 +570,10 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			allStats = activity.db.getAllAppsLatestStats(activity.accountName);
 
 			for (AppInfo appInfo : allStats) {
-
 				if (!appInfo.isGhost()) {
-					String admobSiteId = Preferences.getAdmobSiteId(activity,
-							appInfo.getPackageName());
-					if (admobSiteId != null) {
-						List<Admob> admobStats = activity.db.getAdmobStats(admobSiteId,
-								Timeframe.LAST_TWO_DAYS).getAdmobs();
+					if (appInfo.getAdmobSiteId() != null) {
+						List<Admob> admobStats = activity.db.getAdmobStats(
+								appInfo.getAdmobSiteId(), Timeframe.LAST_TWO_DAYS).getAdmobs();
 						if (admobStats.size() > 0) {
 							Admob admob = admobStats.get(admobStats.size() - 1);
 							appInfo.setAdmobStats(admob);

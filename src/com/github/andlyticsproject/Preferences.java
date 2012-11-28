@@ -3,6 +3,7 @@ package com.github.andlyticsproject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -282,26 +283,31 @@ public class Preferences {
 		return format;
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	public static DateFormat getDateFormatLong(Context context) {
 		return new SimpleDateFormat(getDateFormatStringLong(context));
 	}
 
+	@Deprecated
 	public static void saveAdmobSiteId(Context context, String packageName, String value) {
 		SharedPreferences.Editor editor = getSettings(context).edit();
 		editor.putString(ADMOB_SITE_ID + packageName, value);
 		editor.commit();
 	}
 
+	@Deprecated
 	public static String getAdmobSiteId(Context context, String packageName) {
 		return getSettings(context).getString(ADMOB_SITE_ID + packageName, null);
 	}
 
+	@Deprecated
 	public static void saveAdmobAccount(AdmobActivity context, String siteId, String accountName) {
 		SharedPreferences.Editor editor = getSettings(context).edit();
 		editor.putString(ADMOB_ACCOUNT + siteId, accountName);
 		editor.commit();
 	}
 
+	@Deprecated
 	public static String getAdmobAccount(Context context, String siteId) {
 		return getSettings(context).getString(ADMOB_ACCOUNT + siteId, null);
 	}
@@ -349,11 +355,13 @@ public class Preferences {
 		return getSettings(context).getBoolean(ADMOB_HIDE_FOR_UNCONFIGURED_APPS, false);
 	}
 
+	@Deprecated
 	public static synchronized long getLastStatsRemoteUpdateTime(Context activity,
 			String accountName) {
 		return getSettings(activity).getLong(LAST_STATS_REMOTE_UPDATE + "." + accountName, 0);
 	}
 
+	@Deprecated
 	public static synchronized void saveLastStatsRemoteUpdateTime(Context activity,
 			String accountName, long timestamp) {
 		getSettings(activity).edit()
@@ -366,6 +374,7 @@ public class Preferences {
 	 * @param packageName
 	 * @return
 	 */
+	@Deprecated
 	public static synchronized long getLastCommentsRemoteUpdateTime(Context activity,
 			String packageName) {
 		return getSettings(activity).getLong(LAST_COMMENTS_REMOTE_UPDATE + "." + packageName, 0);
@@ -377,6 +386,7 @@ public class Preferences {
 	 * @param packageName
 	 * @param timestamp
 	 */
+	@Deprecated
 	public static synchronized void saveLastCommentsRemoteUpdateTime(Context activity,
 			String packageName, long timestamp) {
 		getSettings(activity).edit()

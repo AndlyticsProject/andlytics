@@ -31,6 +31,7 @@ import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.admob.AdmobRequest.SyncCallback;
 import com.github.andlyticsproject.console.NetworkException;
+import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AdmobList;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
@@ -143,13 +144,8 @@ public class AdmobActivity extends BaseChartActivity {
 
 		setAdapter(admobListAdapter);
 
-		String currentAdmobAccount = null;
-		String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
-		if (currentSiteId != null) {
-			currentAdmobAccount = Preferences.getAdmobAccount(this, currentSiteId);
-		}
-
-		if (currentAdmobAccount == null) {
+		String[] admobDetails = AndlyticsDb.getInstance(this).getAdmobDetails(packageName);
+		if (admobDetails == null) {
 			mainViewSwitcher.swap();
 			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
 				configSwitcher.showPrevious();
@@ -178,16 +174,13 @@ public class AdmobActivity extends BaseChartActivity {
 		menu.clear();
 		getSupportMenuInflater().inflate(R.menu.admob_menu, menu);
 		super.onCreateOptionsMenu(menu);
-		String currentAdmobAccount = null;
-		String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
-		if (currentSiteId != null) {
-			currentAdmobAccount = Preferences.getAdmobAccount(this, currentSiteId);
-		}
+		String[] admobDetails = AndlyticsDb.getInstance(this).getAdmobDetails(packageName);
+
 		if (isRefreshing()) {
 			menu.findItem(R.id.itemChartsmenuRefresh).setActionView(
 					R.layout.action_bar_indeterminate_progress);
 		}
-		if (currentAdmobAccount == null) {
+		if (admobDetails == null) {
 			menu.findItem(R.id.itemAdmobsmenuRemove).setVisible(false);
 			menu.findItem(R.id.itemChartsmenuTimeframe).setVisible(false);
 			menu.findItem(R.id.itemChartsmenuRefresh).setVisible(isRefreshing());
@@ -209,7 +202,7 @@ public class AdmobActivity extends BaseChartActivity {
 			loadRemoteEntries();
 			return true;
 		case R.id.itemAdmobsmenuRemove:
-			Preferences.saveAdmobSiteId(AdmobActivity.this, packageName, null);
+			AndlyticsDb.getInstance(this).saveAdmobDetails(TAG, null, null);
 			showAccountList();
 			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
 				configSwitcher.showPrevious();
@@ -320,11 +313,19 @@ public class AdmobActivity extends BaseChartActivity {
 				return null;
 			}
 
-			String currentSiteId = Preferences.getAdmobSiteId(activity, activity.packageName);
+			String[] admobDetails = AndlyticsDb.getInstance(activity).getAdmobDetails(
+					activity.packageName);
+			if (admobDetails == null) {
+				Log.w(TAG, "Admob account and site ID not founf for " + activity.packageName);
+				return null;
+			}
+
+			String currentSiteId = admobDetails[1];
 			AdmobList admobList = activity.db.getAdmobStats(currentSiteId, (Timeframe) params[1]);
 			admobStats = admobList.getAdmobs();
 			activity.admobListAdapter.setOverallStats(admobList.getOverallStats());
 			executeRemoteCall = (Boolean) params[0];
+
 			return null;
 		}
 
@@ -387,14 +388,16 @@ public class AdmobActivity extends BaseChartActivity {
 				return null;
 			}
 
-			String currentAdmobAccount = null;
-			String currentSiteId = Preferences.getAdmobSiteId(activity, activity.packageName);
-			if (currentSiteId != null) {
-				currentAdmobAccount = Preferences.getAdmobAccount(activity, currentSiteId);
+			String[] admobDetails = AndlyticsDb.getInstance(activity).getAdmobDetails(
+					activity.packageName);
+			if (admobDetails == null) {
+				Log.w(TAG, "Admob account and site ID not founf for " + activity.packageName);
+				return null;
 			}
 
+			String currentAdmobAccount = admobDetails[0];
+			String currentSiteId = admobDetails[1];
 			try {
-
 				List<String> siteList = new ArrayList<String>();
 				siteList.add(currentSiteId);
 
@@ -512,11 +515,10 @@ public class AdmobActivity extends BaseChartActivity {
 
 						@Override
 						public void onClick(View view) {
+							String admobSiteId = (String) view.getTag();
+							AndlyticsDb.getInstance(activity).saveAdmobDetails(
+									activity.packageName, currentAdmobAccount, admobSiteId);
 
-							Preferences.saveAdmobSiteId(activity, activity.packageName,
-									(String) view.getTag());
-							Preferences.saveAdmobAccount(activity, (String) view.getTag(),
-									currentAdmobAccount);
 							activity.mainViewSwitcher.swap();
 							activity.executeLoadDataDefault(true);
 							activity.supportInvalidateOptionsMenu();

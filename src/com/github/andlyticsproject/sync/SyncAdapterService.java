@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.accounts.Account;
 import android.accounts.OperationCanceledException;
 import android.app.Service;
@@ -22,13 +20,12 @@ import android.util.Log;
 
 import com.github.andlyticsproject.AppStatsDiff;
 import com.github.andlyticsproject.ContentAdapter;
-import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.admob.AdmobException;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.console.DevConsoleException;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
-import com.github.andlyticsproject.console.v2.HttpClientFactory;
+import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.AppInfo;
 
 public class SyncAdapterService extends Service {
@@ -84,12 +81,6 @@ public class SyncAdapterService extends Service {
 			throws OperationCanceledException {
 		try {
 			DevConsoleV2 console = DevConsoleRegistry.getInstance().get(account.name);
-			if (console == null) {
-				DefaultHttpClient httpClient = HttpClientFactory
-						.createDevConsoleHttpClient(DevConsoleV2.TIMEOUT);
-				console = DevConsoleV2.createForAccount(account.name, httpClient);
-				DevConsoleRegistry.getInstance().put(account.name, console);
-			}
 
 			if (console != null) {
 				List<AppInfo> appDownloadInfos = console.getAppInfo(null);
@@ -109,10 +100,11 @@ public class SyncAdapterService extends Service {
 				for (AppInfo appDownloadInfo : appDownloadInfos) {
 					// update in database
 					diffs.add(db.insertOrUpdateStats(appDownloadInfo));
-					String admobSiteId = Preferences.getAdmobSiteId(context,
+					String[] admobDetails = AndlyticsDb.getInstance(context).getAdmobDetails(
 							appDownloadInfo.getPackageName());
-					if (admobSiteId != null) {
-						String admobAccount = Preferences.getAdmobAccount(context, admobSiteId);
+					if (admobDetails != null) {
+						String admobAccount = admobDetails[0];
+						String admobSiteId = admobDetails[1];
 						if (admobAccount != null) {
 							List<String> siteList = admobAccountSiteMap.get(admobAccount);
 							if (siteList == null) {
@@ -140,7 +132,7 @@ public class SyncAdapterService extends Service {
 					Log.d(TAG, "Sucessfully synced AdMob stats");
 				}
 
-				Preferences.saveLastStatsRemoteUpdateTime(context, account.name,
+				AndlyticsDb.getInstance(context).saveLastStatsRemoteUpdateTime(account.name,
 						System.currentTimeMillis());
 
 			}

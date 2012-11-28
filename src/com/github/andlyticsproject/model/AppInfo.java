@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject.model;
 
 import java.util.ArrayList;
@@ -34,6 +33,11 @@ public class AppInfo {
 	private Admob admobStats;
 
 	private Integer numberOfErrors;
+
+	private String admobAccount;
+	private String admobSiteId;
+
+	private Date lastCommentsUpdate;
 
 	public String getAccount() {
 		return account;
@@ -107,6 +111,9 @@ public class AppInfo {
 		return latestStats;
 	}
 
+	// XXX -- do we need to compare everything? 
+	// an app should be uniquely identified by the package name alone
+	// (this is enforced by the Play Store)
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -118,9 +125,16 @@ public class AppInfo {
 		result = prime * result + ((latestStats == null) ? 0 : latestStats.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((packageName == null) ? 0 : packageName.hashCode());
+		result = prime * result + ((admobAccount == null) ? 0 : admobAccount.hashCode());
+		result = prime * result + ((admobSiteId == null) ? 0 : admobSiteId.hashCode());
+		result = prime * result
+				+ ((lastCommentsUpdate == null) ? 0 : lastCommentsUpdate.hashCode());
 		return result;
 	}
 
+	// XXX -- do we need to compare everything? 
+	// an app should be uniquely identified by the package name alone
+	// (this is enforced by the Play Store)
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -165,6 +179,28 @@ public class AppInfo {
 				return false;
 		} else if (!packageName.equals(other.packageName))
 			return false;
+		if (admobAccount == null) {
+			if (other.admobAccount != null) {
+				return false;
+			}
+		} else if (!admobAccount.equals(other.admobAccount)) {
+			return false;
+		}
+		if (admobSiteId == null) {
+			if (other.admobSiteId != null) {
+				return false;
+			}
+		} else if (!admobSiteId.equals(other.admobSiteId)) {
+			return false;
+		}
+		if (lastCommentsUpdate == null) {
+			if (other.lastCommentsUpdate != null) {
+				return false;
+			}
+		} else if (!lastCommentsUpdate.equals(other.lastCommentsUpdate)) {
+			return false;
+		}
+
 		return true;
 	}
 
@@ -224,4 +260,28 @@ public class AppInfo {
 		return numberOfErrors;
 	}
 
+	public String getAdmobAccount() {
+		return admobAccount;
+	}
+
+	public void setAdmobAccount(String admobAccount) {
+		this.admobAccount = admobAccount;
+	}
+
+	public String getAdmobSiteId() {
+		return admobSiteId;
+	}
+
+	public void setAdmobSiteId(String admobSiteId) {
+		this.admobSiteId = admobSiteId;
+	}
+
+	public Date getLastCommentsUpdate() {
+		return lastCommentsUpdate == null ? null : (Date) lastCommentsUpdate.clone();
+	}
+
+	public void setLastCommentsUpdate(Date lastCommentsUpdate) {
+		this.lastCommentsUpdate = lastCommentsUpdate == null ? null : (Date) lastCommentsUpdate
+				.clone();
+	}
 }
