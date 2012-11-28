@@ -45,9 +45,14 @@ public class BaseActivity extends SherlockActivity {
 
 	private boolean refreshing;
 
+	protected AndlyticsDb andlyticsDb;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		andlyticsDb = AndlyticsDb.getInstance(getApplication());
+
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
 			// TODO move packageName and iconFilePath assignments to
@@ -57,7 +62,7 @@ public class BaseActivity extends SherlockActivity {
 			packageName = b.getString(Constants.PACKAGE_NAME_PARCEL);
 			iconFilePath = b.getString(Constants.ICON_FILE_PARCEL);
 			accountName = b.getString(Constants.AUTH_ACCOUNT_NAME);
-			Preferences.saveAccountName(this, accountName);
+			andlyticsDb.selectDeveloperAccount(accountName);
 		}
 
 	}
@@ -272,7 +277,7 @@ public class BaseActivity extends SherlockActivity {
 
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
-							Preferences.removeAccountName(BaseActivity.this);
+							andlyticsDb.unselectDeveloperAccount();
 							Preferences.saveSkipAutoLogin(BaseActivity.this, true);
 							Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
 							startActivity(intent);
@@ -287,7 +292,7 @@ public class BaseActivity extends SherlockActivity {
 
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
-							Preferences.removeAccountName(BaseActivity.this);
+							andlyticsDb.unselectDeveloperAccount();
 							Preferences.saveSkipAutoLogin(BaseActivity.this, true);
 							Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
 							startActivity(intent);

@@ -271,7 +271,27 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 	}
 
 	public List<DeveloperAccount> getActiveDeveloperAccounts() {
-		return getDeveloperAccountsByState(DeveloperAccount.State.ACTIVE);
+		List<DeveloperAccount> result = new ArrayList<DeveloperAccount>();
+
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = null;
+		try {
+			c = db.query(DeveloperAccountsTable.DATABASE_TABLE_NAME,
+					DeveloperAccountsTable.ALL_COLUMNS, "state = ? or state = ?",
+					new String[] { Integer.toString(DeveloperAccount.State.ACTIVE.ordinal()),
+							Integer.toString(DeveloperAccount.State.SELECTED.ordinal()) }, null,
+					null, "_id asc", null);
+			while (c.moveToNext()) {
+				DeveloperAccount account = createAcount(c);
+				result.add(account);
+			}
+
+			return result;
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+		}
 	}
 
 	public List<DeveloperAccount> getHiddenDeveloperAccounts() {
@@ -358,6 +378,67 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 
 		db.update(DeveloperAccountsTable.DATABASE_TABLE_NAME, values, "_id = ?",
 				new String[] { Long.toString(account.getId()) });
+	}
+
+	public synchronized void selectDeveloperAccount(String name) {
+		SQLiteDatabase db = getWritableDatabase();
+		db.beginTransaction();
+		try {
+			List<DeveloperAccount> currentlySelected = getDeveloperAccountsByState(DeveloperAccount.State.SELECTED);
+			if (currentlySelected.size() > 1) {
+				throw new IllegalStateException("More than one selected account: "
+						+ currentlySelected);
+			}
+
+			if (!currentlySelected.isEmpty()) {
+				DeveloperAccount selected = currentlySelected.get(0);
+				if (selected.getName().equals(name)) {
+					return;
+				}
+
+				selected.deslect();
+				updateDeveloperAccount(selected);
+				Log.d(TAG, "Set to ACTIVE: " + selected);
+			}
+
+			DeveloperAccount toSelect = findDeveloperAccountByName(name);
+			if (toSelect == null) {
+				throw new IllegalStateException("Account not found: " + name);
+			}
+			toSelect.select();
+			updateDeveloperAccount(toSelect);
+			Log.d(TAG, "Set to SELECTED: " + toSelect);
+			new Exception().printStackTrace();
+
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+	}
+
+	public synchronized void unselectDeveloperAccount() {
+		SQLiteDatabase db = getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(DeveloperAccountsTable.STATE, DeveloperAccount.State.ACTIVE.ordinal());
+		db.update(DeveloperAccountsTable.DATABASE_TABLE_NAME, values, DeveloperAccountsTable.STATE
+				+ " = ?",
+				new String[] { Integer.toString(DeveloperAccount.State.SELECTED.ordinal()) });
+	}
+
+	public synchronized void activateDeveloperAccount(String accountName) {
+		setAccountState(accountName, DeveloperAccount.State.ACTIVE);
+	}
+
+	public synchronized void hideDeveloperAccount(String accountName) {
+		setAccountState(accountName, DeveloperAccount.State.HIDDEN);
+	}
+
+	private void setAccountState(String accountName, DeveloperAccount.State state) {
+		SQLiteDatabase db = getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(DeveloperAccountsTable.STATE, state.ordinal());
+		db.update(DeveloperAccountsTable.DATABASE_TABLE_NAME, values, DeveloperAccountsTable.NAME
+				+ " = ?", new String[] { accountName });
 	}
 
 	public long getLastStatsRemoteUpdateTime(String accountName) {

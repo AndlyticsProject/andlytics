@@ -22,36 +22,45 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.andlyticsproject.db.AndlyticsDb;
+import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.sync.AutosyncHandler;
 
 /**
- * Used for initial login and managing accounts Because of this original legacy as the launcher
- * activity, navigation is a little odd. 
- * On first startup: LoginActivity -> Main 
- * When managing
- * accounts: Main -> LoginActivity <- Main
- * or 
- * Main -> LoginActivity -> Main
+ * Used for initial login and managing accounts Because of this original legacy
+ * as the launcher activity, navigation is a little odd. On first startup:
+ * LoginActivity -> Main When managing accounts: Main -> LoginActivity <- Main
+ * or Main -> LoginActivity -> Main
  */
 public class LoginActivity extends SherlockActivity {
 
-	private static final String TAG = "Andlytics";
+	private static final String TAG = LoginActivity.class.getSimpleName();
+
 	protected static final int CREATE_ACCOUNT_REQUEST = 1;
 
 	private AccountStatus[] accountStatuses;
 
 	private boolean manageAccountsMode = false;
 	private boolean blockGoingBack = false;
-	private String selectedAccount = null;
+	private DeveloperAccount selectedAccount = null;
 	private View okButton;
 	private LinearLayout accountList;
 
-	// TODO Clean this code and res/layout/login.xml up e.g. using a ListView instead of a LinearLayout
+	private AccountManager accountManager;
+	private AndlyticsDb andlyticsDb;
+
+	// TODO Clean this code and res/layout/login.xml up e.g. using a ListView
+	// instead of a LinearLayout
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// When called from accounts action item in Main, this flag is passed to indicate
-		// that LoginActivity should not auto login as we are managing the accounts,
+		accountManager = AccountManager.get(this);
+		andlyticsDb = AndlyticsDb.getInstance(getApplicationContext());
+
+		// When called from accounts action item in Main, this flag is passed to
+		// indicate
+		// that LoginActivity should not auto login as we are managing the
+		// accounts,
 		// rather than performing the initial login
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -62,11 +71,10 @@ public class LoginActivity extends SherlockActivity {
 			getSupportActionBar().setTitle(R.string.manage_accounts);
 		}
 
-		selectedAccount = Preferences.getAccountName(this);
+		selectedAccount = andlyticsDb.getSelectedDeveloperAccount();
 
 		setContentView(R.layout.login);
 		accountList = (LinearLayout) findViewById(R.id.login_input);
-
 
 		okButton = findViewById(R.id.login_ok_button);
 		okButton.setClickable(true);
@@ -74,7 +82,7 @@ public class LoginActivity extends SherlockActivity {
 			@Override
 			public void onClick(View v) {
 				if (selectedAccount != null) {
-					redirectToMain(selectedAccount);
+					redirectToMain(selectedAccount.getName());
 				} else {
 					// Go to the first non hidden account
 					for (AccountStatus account : accountStatuses) {
@@ -96,7 +104,7 @@ public class LoginActivity extends SherlockActivity {
 		boolean skipAutologin = Preferences.getSkipAutologin(this);
 
 		if (!manageAccountsMode & !skipAutologin & selectedAccount != null) {
-			redirectToMain(selectedAccount);
+			redirectToMain(selectedAccount.getName());
 		} else {
 			showAccountList();
 		}
@@ -112,23 +120,24 @@ public class LoginActivity extends SherlockActivity {
 	/**
 	 * Called if item in option menu is selected.
 	 * 
-	 * @param item The chosen menu item
+	 * @param item
+	 *            The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.itemLoginmenuAdd:
-			addNewGoogleAccount();
-			break;
-		case android.R.id.home:
-			if (!blockGoingBack) {
-				setResult(RESULT_OK);
-				finish();
-			}
-			break;
-		default:
-			return false;
+			case R.id.itemLoginmenuAdd:
+				addNewGoogleAccount();
+				break;
+			case android.R.id.home:
+				if (!blockGoingBack) {
+					setResult(RESULT_OK);
+					finish();
+				}
+				break;
+			default:
+				return false;
 		}
 		return true;
 	}
@@ -140,20 +149,22 @@ public class LoginActivity extends SherlockActivity {
 	}
 
 	protected void showAccountList() {
-		final AccountManager manager = AccountManager.get(this);
-		final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
+		final Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
+
 		final int size = accounts.length;
 		accountStatuses = new AccountStatus[size];
 		accountList.removeAllViews();
 		for (int i = 0; i < size; i++) {
 			accountStatuses[i] = new AccountStatus();
 			accountStatuses[i].name = accounts[i].name;
-			Boolean hiddenAccount = Preferences.getIsHiddenAccount(this, accountStatuses[i].name);
+			final DeveloperAccount developerAccount = andlyticsDb
+					.findDeveloperAccountByName(accounts[i].name);
+			boolean hiddenAccount = developerAccount == null ? true : developerAccount.isHidden();
 			accountStatuses[i].hidden = hiddenAccount;
 
 			// Setup auto sync
 			final AutosyncHandler syncHandler = new AutosyncHandler();
-			// only do this when managing accounts, otherwise sync may start 
+			// only do this when managing accounts, otherwise sync may start
 			// in the background before accounts are actually configured
 			if (manageAccountsMode) {
 				// Ensure it matches the sync period (excluding disabled state)
@@ -164,11 +175,11 @@ public class LoginActivity extends SherlockActivity {
 						.setAutosyncPeriod(accounts[i].name, Preferences.getAutosyncPeriod(this));
 			}
 
-			View inflate = getLayoutInflater().inflate(R.layout.login_list_item, null);
-			TextView accountName = (TextView) inflate.findViewById(R.id.login_list_item_text);
+			View accountItem = getLayoutInflater().inflate(R.layout.login_list_item, null);
+			TextView accountName = (TextView) accountItem.findViewById(R.id.login_list_item_text);
 			accountName.setText(accounts[i].name);
-			inflate.setTag(accountStatuses[i]);
-			CheckBox enabled = (CheckBox) inflate.findViewById(R.id.login_list_item_enabled);
+			accountItem.setTag(accountStatuses[i]);
+			CheckBox enabled = (CheckBox) accountItem.findViewById(R.id.login_list_item_enabled);
 			enabled.setChecked(!hiddenAccount);
 			enabled.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				@Override
@@ -176,22 +187,35 @@ public class LoginActivity extends SherlockActivity {
 					AccountStatus account = (AccountStatus) ((View) buttonView.getParent())
 							.getTag();
 					account.hidden = !isChecked;
-					Preferences.saveIsHiddenAccount(getApplicationContext(), account.name,
-							account.hidden);
-
-					// Enable/disable sync
 					if (account.hidden) {
-						// They are removing the account from Andlytics, disable syncing
+						if (developerAccount != null) {
+							developerAccount.hide();
+							andlyticsDb.updateDeveloperAccount(developerAccount);
+						}
+
+						// They are removing the account from Andlytics, disable
+						// syncing
 						syncHandler.setAutosyncEnabled(account.name, false);
 					} else {
-						// Now make it match the master sync period (including disabled state)
+						if (developerAccount != null) {
+							developerAccount.activate();
+							andlyticsDb.updateDeveloperAccount(developerAccount);
+						} else {
+							DeveloperAccount newDeveloperAccount = new DeveloperAccount(
+									account.name, DeveloperAccount.State.ACTIVE);
+							andlyticsDb.addDeveloperAccount(newDeveloperAccount);
+						}
+
+						// Make it match the master sync period (including
+						// disabled state)
 						syncHandler.setAutosyncPeriod(account.name,
 								Preferences.getAutosyncPeriod(LoginActivity.this));
 					}
 
 					if (manageAccountsMode && (account.name).equals(selectedAccount)) {
-						// If they remove the current account, then stop them going back
-						blockGoingBack = !isChecked;
+						// If they remove the current account, then stop them
+						// going back
+						blockGoingBack = account.hidden;
 					}
 
 					// Update ok button
@@ -205,7 +229,7 @@ public class LoginActivity extends SherlockActivity {
 					okButton.setEnabled(atLeastOneAccountEnabled);
 				}
 			});
-			accountList.addView(inflate);
+			accountList.addView(accountItem);
 		}
 
 		// Update ok button
@@ -219,7 +243,6 @@ public class LoginActivity extends SherlockActivity {
 		okButton.setEnabled(atLeastOneAccountEnabled);
 	}
 
-	// XXX is this really needed? 
 	private void addNewGoogleAccount() {
 		AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
 			public void run(AccountManagerFuture<Bundle> future) {
@@ -241,7 +264,7 @@ public class LoginActivity extends SherlockActivity {
 			}
 		};
 
-		AccountManager.get(LoginActivity.this).addAccount(Constants.ACCOUNT_TYPE_GOOGLE,
+		accountManager.addAccount(Constants.ACCOUNT_TYPE_GOOGLE,
 				Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, null, null /* options */,
 				LoginActivity.this, callback, null /* handler */);
 	}

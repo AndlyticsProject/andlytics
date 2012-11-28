@@ -57,4 +57,29 @@ public class DeveloperAccount {
 	public String toString() {
 		return String.format("DeveloperAccount [name=%s, state=%s]", name, state);
 	}
+
+	public boolean isHidden() {
+		return state == State.HIDDEN;
+	}
+
+	public boolean isSelected() {
+		return state == State.SELECTED;
+	}
+
+	public void select() {
+		state = State.SELECTED;
+	}
+
+	public void hide() {
+		state = State.HIDDEN;
+	}
+
+	public void activate() {
+		state = State.ACTIVE;
+	}
+
+	public void deslect() {
+		activate();
+	}
+
 }

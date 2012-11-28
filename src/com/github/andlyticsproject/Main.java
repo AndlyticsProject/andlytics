@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -52,6 +50,7 @@ import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
+import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.sync.NotificationHandler;
 import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
@@ -76,7 +75,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private StatsMode currentStatsMode;
 	private MenuItem statsModeMenuItem;
 
-	private List<String> accountsList;
+	private List<DeveloperAccount> accountsList;
 
 	private DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);
 
@@ -158,7 +157,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		// TODO Do something clever in login activity to prevent this while
 		// keeping the ability
 		// to block going 'back'
-		Preferences.saveIsHiddenAccount(this, accountName, false);
+		andlyticsDb.activateDeveloperAccount(accountName);
 
 		updateAccountsList();
 
@@ -198,11 +197,11 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		if (!accountsList.get(itemPosition).equals(accountName)) {
+		if (!accountsList.get(itemPosition).getName().equals(accountName)) {
 			// Only switch if it is a new account
-			Preferences.removeAccountName(Main.this);
+			andlyticsDb.selectDeveloperAccount(accountName);
 			Intent intent = new Intent(Main.this, Main.class);
-			intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountsList.get(itemPosition));
+			intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountsList.get(itemPosition).getName());
 			startActivity(intent);
 			overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
 			// Call finish to ensure we don't get multiple activities running
@@ -256,52 +255,53 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent i = null;
 		switch (item.getItemId()) {
-		case R.id.itemMainmenuRefresh:
-			loadRemoteEntries();
-			break;
-		case R.id.itemMainmenuImport:
-			File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
-			if (!fileToImport.exists()) {
-				Toast.makeText(this,
-						getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
-						Toast.LENGTH_LONG).show();
-				return true;
-			}
+			case R.id.itemMainmenuRefresh:
+				loadRemoteEntries();
+				break;
+			case R.id.itemMainmenuImport:
+				File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
+				if (!fileToImport.exists()) {
+					Toast.makeText(
+							this,
+							getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
+							Toast.LENGTH_LONG).show();
+					return true;
+				}
 
-			Intent importIntent = new Intent(this, ImportActivity.class);
-			importIntent.setAction(Intent.ACTION_VIEW);
-			importIntent.setData(Uri.fromFile(fileToImport));
-			startActivity(importIntent);
-			break;
-		case R.id.itemMainmenuExport:
-			Intent exportIntent = new Intent(this, ExportActivity.class);
-			exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
-			startActivity(exportIntent);
-			break;
-		case R.id.itemMainmenuFeedback:
-			startActivity(new Intent(Intent.ACTION_VIEW,
-					Uri.parse(getString(R.string.github_issues_url))));
-			break;
-		case R.id.itemMainmenuPreferences:
-			i = new Intent(this, PreferenceActivity.class);
-			i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
-			startActivity(i);
-			break;
-		case R.id.itemMainmenuStatsMode:
-			if (currentStatsMode.equals(StatsMode.PERCENT)) {
-				currentStatsMode = StatsMode.DAY_CHANGES;
-			} else {
-				currentStatsMode = StatsMode.PERCENT;
-			}
-			updateStatsMode();
-			break;
-		case R.id.itemMainmenuAccounts:
-			i = new Intent(this, LoginActivity.class);
-			i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
-			startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
-			break;
-		default:
-			return false;
+				Intent importIntent = new Intent(this, ImportActivity.class);
+				importIntent.setAction(Intent.ACTION_VIEW);
+				importIntent.setData(Uri.fromFile(fileToImport));
+				startActivity(importIntent);
+				break;
+			case R.id.itemMainmenuExport:
+				Intent exportIntent = new Intent(this, ExportActivity.class);
+				exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
+				startActivity(exportIntent);
+				break;
+			case R.id.itemMainmenuFeedback:
+				startActivity(new Intent(Intent.ACTION_VIEW,
+						Uri.parse(getString(R.string.github_issues_url))));
+				break;
+			case R.id.itemMainmenuPreferences:
+				i = new Intent(this, PreferenceActivity.class);
+				i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+				startActivity(i);
+				break;
+			case R.id.itemMainmenuStatsMode:
+				if (currentStatsMode.equals(StatsMode.PERCENT)) {
+					currentStatsMode = StatsMode.DAY_CHANGES;
+				} else {
+					currentStatsMode = StatsMode.PERCENT;
+				}
+				updateStatsMode();
+				break;
+			case R.id.itemMainmenuAccounts:
+				i = new Intent(this, LoginActivity.class);
+				i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
+				startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
+				break;
+			default:
+				return false;
 		}
 		return true;
 	}
@@ -322,7 +322,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				// preferences and finish
 				// so that the user has to choose an account when they next
 				// start the app
-				Preferences.removeAccountName(this);
+				andlyticsDb.unselectDeveloperAccount();
 				finish();
 			}
 		} else if (requestCode == REQUEST_AUTHENTICATE) {
@@ -358,20 +358,15 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	}
 
 	private void updateAccountsList() {
-		final AccountManager manager = AccountManager.get(this);
-		final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
-		if (accounts.length > 1) {
-			accountsList = new ArrayList<String>();
+		accountsList = andlyticsDb.getActiveDeveloperAccounts();
+		if (accountsList.size() > 1) {
 			int selectedIndex = 0;
 			int index = 0;
-			for (Account account : accounts) {
-				if (!Preferences.getIsHiddenAccount(this, account.name)) {
-					accountsList.add(account.name);
-					if (account.name.equals(accountName)) {
-						selectedIndex = index;
-					}
-					index++;
+			for (DeveloperAccount account : accountsList) {
+				if (account.getName().equals(accountName)) {
+					selectedIndex = index;
 				}
+				index++;
 			}
 			if (accountsList.size() > 1) {
 				// Only use the spinner if we have multiple accounts
@@ -686,18 +681,18 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private void updateStatsMode() {
 		if (statsModeMenuItem != null) {
 			switch (currentStatsMode) {
-			case PERCENT:
-				statsModeMenuItem.setTitle(R.string.daily);
-				statsModeMenuItem.setIcon(R.drawable.icon_plusminus);
-				break;
+				case PERCENT:
+					statsModeMenuItem.setTitle(R.string.daily);
+					statsModeMenuItem.setIcon(R.drawable.icon_plusminus);
+					break;
 
-			case DAY_CHANGES:
-				statsModeMenuItem.setTitle(R.string.percentage);
-				statsModeMenuItem.setIcon(R.drawable.icon_percent);
-				break;
+				case DAY_CHANGES:
+					statsModeMenuItem.setTitle(R.string.percentage);
+					statsModeMenuItem.setIcon(R.drawable.icon_percent);
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 		adapter.setStatsMode(currentStatsMode);
@@ -749,12 +744,13 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		}).show();
 	}
 
-	private static class AccountSelectorAdaper extends ArrayAdapter<String> {
+	private static class AccountSelectorAdaper extends ArrayAdapter<DeveloperAccount> {
 		private Context context;
-		private List<String> accounts;
+		private List<DeveloperAccount> accounts;
 		private int textViewResourceId;
 
-		public AccountSelectorAdaper(Context context, int textViewResourceId, List<String> objects) {
+		public AccountSelectorAdaper(Context context, int textViewResourceId,
+				List<DeveloperAccount> objects) {
 			super(context, textViewResourceId, objects);
 			this.context = context;
 			this.accounts = objects;
@@ -771,7 +767,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			}
 
 			TextView subtitle = (TextView) rowView.findViewById(android.R.id.text1);
-			subtitle.setText(accounts.get(position));
+			subtitle.setText(accounts.get(position).getName());
 			Resources res = context.getResources();
 			if (res.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 				// Scale the text down slightly to fit on landscape due to the
@@ -796,6 +792,14 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			// ...
 
 			return rowView;
+		}
+
+		@Override
+		public View getDropDownView(int position, View convertView, ViewGroup parent) {
+			View result = super.getDropDownView(position, convertView, parent);
+			((TextView)result).setText(accounts.get(position).getName());
+
+			return result;
 		}
 
 	}
