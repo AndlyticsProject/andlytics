@@ -3,8 +3,6 @@ package com.github.andlyticsproject;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,7 +15,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
-import com.github.andlyticsproject.console.v2.HttpClientFactory;
+import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
@@ -215,7 +213,8 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 	protected boolean shouldRemoteUpdateComments() {
 		long now = System.currentTimeMillis();
-		long lastUpdate = Preferences.getLastCommentsRemoteUpdateTime(this, packageName);
+		long lastUpdate = AndlyticsDb.getInstance(this)
+				.getLastCommentsRemoteUpdateTime(packageName);
 		// never updated
 		if (lastUpdate == 0) {
 			return true;
@@ -272,12 +271,6 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 			if (activity.maxAvalibleComments != 0) {
 				DevConsoleV2 console = DevConsoleRegistry.getInstance().get(activity.accountName);
-				if (console == null) {
-					DefaultHttpClient httpClient = HttpClientFactory
-							.createDevConsoleHttpClient(DevConsoleV2.TIMEOUT);
-					console = DevConsoleV2.createForAccount(activity.accountName, httpClient);
-					DevConsoleRegistry.getInstance().put(activity.accountName, console);
-				}
 				try {
 
 					List<Comment> result = console.getComments(activity, activity.packageName,
@@ -340,8 +333,8 @@ public class CommentsActivity extends BaseDetailsActivity {
 				activity.footer.setVisibility(View.GONE);
 			}
 
-			Preferences.saveLastCommentsRemoteUpdateTime(activity, activity.packageName,
-					System.currentTimeMillis());
+			AndlyticsDb.getInstance(activity).saveLastCommentsRemoteUpdateTime(
+					activity.packageName, System.currentTimeMillis());
 		}
 
 	}
@@ -381,7 +374,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 		group.setComments(groupComments);
 		commentGroups.add(group);
 	}
-	
+
 	private void loadCommentsData() {
 		loadCommentsData(false);
 	}

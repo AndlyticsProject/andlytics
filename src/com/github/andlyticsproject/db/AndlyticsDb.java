@@ -132,6 +132,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void migrateAppInfoPrefs(SQLiteDatabase db) {
 		Log.d(TAG, "Migrating app info settings from preferences...");
 		int migrated = 0;
@@ -139,19 +140,19 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		db.beginTransaction();
 		try {
 			Cursor c = null;
-			class Pair {
+			class Package {
 				long id;
-				String packageName;
+				String name;
 			}
-			List<Pair> packages = new ArrayList<Pair>();
+			List<Package> packages = new ArrayList<Package>();
 			try {
 				c = db.query(AppInfoTable.DATABASE_TABLE_NAME, new String[] {
 						AppInfoTable.KEY_ROWID, AppInfoTable.KEY_APP_PACKAGENAME }, null, null,
 						null, null, "_id asc", null);
 				while (c.moveToNext()) {
-					Pair p = new Pair();
+					Package p = new Package();
 					p.id = c.getLong(0);
-					p.packageName = c.getString(1);
+					p.name = c.getString(1);
 					packages.add(p);
 				}
 			} finally {
@@ -159,9 +160,9 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 					c.close();
 				}
 			}
-			for (Pair p : packages) {
-				Log.d(TAG, "Migrating package: " + p.packageName);
-				String admobSiteId = Preferences.getAdmobSiteId(context, p.packageName);
+			for (Package p : packages) {
+				Log.d(TAG, "Migrating package: " + p.name);
+				String admobSiteId = Preferences.getAdmobSiteId(context, p.name);
 				if (admobSiteId != null) {
 					String admobAccount = Preferences.getAdmobAccount(context, admobSiteId);
 					ContentValues values = new ContentValues();
@@ -171,7 +172,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 							new String[] { Long.toString(p.id) });
 				}
 				long lastCommentsUpdate = Preferences.getLastCommentsRemoteUpdateTime(context,
-						p.packageName);
+						p.name);
 				if (lastCommentsUpdate != 0) {
 					ContentValues values = new ContentValues();
 					values.put(AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE, lastCommentsUpdate);
@@ -189,6 +190,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 				String.format("Successfully migrated app info settings for %d packages", migrated));
 	}
 
+	@SuppressWarnings("deprecation")
 	private void migrateAccountsFromPrefs(SQLiteDatabase db) {
 		Log.d(TAG, "Migrating developer accounts from preferences...");
 		int migrated = 0;
@@ -311,7 +313,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		}
 	}
 
-	public DeveloperAccount findAccountById(long id) {
+	public DeveloperAccount findDeveloperAccountById(long id) {
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = null;
 		try {
@@ -330,7 +332,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		}
 	}
 
-	public DeveloperAccount findAccountByName(String name) {
+	public DeveloperAccount findDeveloperAccountByName(String name) {
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = null;
 		try {
@@ -358,6 +360,25 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 				new String[] { Long.toString(account.getId()) });
 	}
 
+	public long getLastStatsRemoteUpdateTime(String accountName) {
+		DeveloperAccount account = findDeveloperAccountByName(accountName);
+		if (account == null) {
+			throw new IllegalStateException("Account not found: " + accountName);
+		}
+
+		return account.getLastStatsUpdate().getTime();
+	}
+
+	public synchronized void saveLastStatsRemoteUpdateTime(String accountName, long timestamp) {
+		DeveloperAccount account = findDeveloperAccountByName(accountName);
+		if (account == null) {
+			throw new IllegalStateException("Account not found: " + accountName);
+		}
+
+		account.setLastStatsUpdate(new Date(timestamp));
+		updateDeveloperAccount(account);
+	}
+
 	private DeveloperAccount createAcount(Cursor c) {
 		long id = c.getLong(c.getColumnIndex(DeveloperAccountsTable.ROWID));
 		String name = c.getString(c.getColumnIndex(DeveloperAccountsTable.NAME));
@@ -370,5 +391,116 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		account.setId(id);
 		account.setLastStatsUpdate(lastStatsUpdate);
 		return account;
+	}
+
+	// account, site ID
+	public String[] getAdmobDetails(String packageName) {
+		SQLiteDatabase db = getWritableDatabase();
+		Cursor c = null;
+		try {
+			c = db.query(AppInfoTable.DATABASE_TABLE_NAME, new String[] {
+					AppInfoTable.KEY_APP_ADMOB_ACCOUNT, AppInfoTable.KEY_APP_ADMOB_SITE_ID },
+					AppInfoTable.KEY_APP_PACKAGENAME + "=?", new String[] { packageName }, null,
+					null, null);
+			if (!c.moveToNext()) {
+				return null;
+			}
+
+			String[] result = new String[2];
+			result[0] = c.getString(c.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_ACCOUNT));
+			result[1] = c.getString(c.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_SITE_ID));
+			if (result[0] == null || result[1] == null) {
+				return null;
+			}
+
+			return result;
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+		}
+	}
+
+	public synchronized void saveAdmobDetails(String packageName, String admobAccount,
+			String admobSiteId) {
+		SQLiteDatabase db = getWritableDatabase();
+		db.beginTransaction();
+		try {
+			long id = findPackageId(db, packageName);
+
+			ContentValues values = new ContentValues();
+			values.put(AppInfoTable.KEY_APP_ADMOB_ACCOUNT, admobAccount);
+			values.put(AppInfoTable.KEY_APP_ADMOB_SITE_ID, admobSiteId);
+
+			db.update(AppInfoTable.DATABASE_TABLE_NAME, values, "_id = ?",
+					new String[] { Long.toString(id) });
+
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+	}
+
+	public synchronized long getLastCommentsRemoteUpdateTime(String packageName) {
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = null;
+		try {
+			c = db.query(AppInfoTable.DATABASE_TABLE_NAME,
+					new String[] { AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE },
+					AppInfoTable.KEY_APP_PACKAGENAME + "=?", new String[] { packageName }, null,
+					null, null);
+			if (c.getCount() != 1 || !c.moveToNext()) {
+				throw new IllegalStateException("Package name not found in AppInfo table: "
+						+ packageName);
+			}
+
+			int idx = c.getColumnIndex(AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE);
+			if (c.isNull(idx)) {
+				return 0;
+			}
+
+			return c.getLong(idx);
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+		}
+	}
+
+	public synchronized void saveLastCommentsRemoteUpdateTime(String packageName, long updateTime) {
+		SQLiteDatabase db = getWritableDatabase();
+		db.beginTransaction();
+		try {
+			long id = findPackageId(db, packageName);
+
+			ContentValues values = new ContentValues();
+			values.put(AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE, updateTime);
+
+			db.update(AppInfoTable.DATABASE_TABLE_NAME, values, "_id = ?",
+					new String[] { Long.toString(id) });
+
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+	}
+
+	private long findPackageId(SQLiteDatabase db, String packageName) {
+		Cursor c = null;
+		try {
+			c = db.query(AppInfoTable.DATABASE_TABLE_NAME, new String[] { AppInfoTable.KEY_ROWID },
+					AppInfoTable.KEY_APP_PACKAGENAME + "=?", new String[] { packageName }, null,
+					null, null);
+			if (c.getCount() != 1 || !c.moveToNext()) {
+				throw new IllegalStateException("Package name not found in AppInfo table: "
+						+ packageName);
+			}
+
+			return c.getLong(c.getColumnIndex(AppInfoTable.KEY_ROWID));
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+		}
 	}
 }

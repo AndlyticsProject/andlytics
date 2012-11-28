@@ -29,6 +29,7 @@ import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.console.MultiAccountException;
 import com.github.andlyticsproject.console.NetworkException;
+import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.dialog.CrashDialog;
 import com.github.andlyticsproject.dialog.CrashDialog.CrashDialogBuilder;
 
@@ -323,7 +324,7 @@ public class BaseActivity extends SherlockActivity {
 
 	protected boolean shouldRemoteUpdateStats() {
 		long now = System.currentTimeMillis();
-		long lastUpdate = Preferences.getLastStatsRemoteUpdateTime(this, accountName);
+		long lastUpdate = AndlyticsDb.getInstance(this).getLastStatsRemoteUpdateTime(accountName);
 		// never updated
 		if (lastUpdate == 0) {
 			return true;
@@ -338,14 +339,14 @@ public class BaseActivity extends SherlockActivity {
 
 	public void refreshStarted() {
 		ensureMainThread();
-	
+
 		refreshing = true;
 		supportInvalidateOptionsMenu();
 	}
 
 	public void refreshFinished() {
 		ensureMainThread();
-	
+
 		refreshing = false;
 		supportInvalidateOptionsMenu();
 	}
