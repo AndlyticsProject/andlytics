@@ -260,27 +260,27 @@ public class AppInfo {
 		return numberOfErrors;
 	}
 
-	public synchronized String getAdmobAccount() {
+	public String getAdmobAccount() {
 		return admobAccount;
 	}
 
-	public synchronized void setAdmobAccount(String admobAccount) {
+	public void setAdmobAccount(String admobAccount) {
 		this.admobAccount = admobAccount;
 	}
 
-	public synchronized String getAdmobSiteId() {
+	public String getAdmobSiteId() {
 		return admobSiteId;
 	}
 
-	public synchronized void setAdmobSiteId(String admobSiteId) {
+	public void setAdmobSiteId(String admobSiteId) {
 		this.admobSiteId = admobSiteId;
 	}
 
-	public synchronized Date getLastCommentsUpdate() {
+	public Date getLastCommentsUpdate() {
 		return lastCommentsUpdate == null ? null : (Date) lastCommentsUpdate.clone();
 	}
 
-	public synchronized void setLastCommentsUpdate(Date lastCommentsUpdate) {
+	public void setLastCommentsUpdate(Date lastCommentsUpdate) {
 		this.lastCommentsUpdate = lastCommentsUpdate == null ? null : (Date) lastCommentsUpdate
 				.clone();
 	}
