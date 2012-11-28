@@ -157,7 +157,8 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		// TODO Do something clever in login activity to prevent this while
 		// keeping the ability
 		// to block going 'back'
-		andlyticsDb.activateDeveloperAccount(accountName);
+		// XXX -- not needed anymore?
+		// andlyticsDb.activateDeveloperAccount(accountName);
 
 		updateAccountsList();
 
@@ -199,7 +200,8 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 		if (!accountsList.get(itemPosition).getName().equals(accountName)) {
 			// Only switch if it is a new account
-			andlyticsDb.selectDeveloperAccount(accountName);
+			// XXX this might not be needed -- DB code does this automatically
+			// andlyticsDb.unselectDeveloperAccount();
 			Intent intent = new Intent(Main.this, Main.class);
 			intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountsList.get(itemPosition).getName());
 			startActivity(intent);
@@ -221,6 +223,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		// to ensure that we do update if hidden apps are changed
 
 		// TODO Revise the whole application global flag thing
+		// XXX force DB load when switching accounts?
 		if (!mainSkipDataReload && shouldRemoteUpdateStats()) {
 			loadLocalEntriesAndUpdate();
 		} else {
@@ -797,7 +800,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		@Override
 		public View getDropDownView(int position, View convertView, ViewGroup parent) {
 			View result = super.getDropDownView(position, convertView, parent);
-			((TextView)result).setText(accounts.get(position).getName());
+			((TextView) result).setText(accounts.get(position).getName());
 
 			return result;
 		}
