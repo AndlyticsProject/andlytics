@@ -91,7 +91,7 @@ public class LoginActivity extends SherlockActivity {
 				} else {
 					// Go to the first non hidden account
 					for (DeveloperAccount account : developerAccounts) {
-						if (!account.isHidden()) {
+						if (account.isVisible()) {
 							redirectToMain(account.getName());
 							break;
 						}
@@ -155,15 +155,17 @@ public class LoginActivity extends SherlockActivity {
 
 	protected void showAccountList() {
 		Account[] googleAccounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
+		List<DeveloperAccount> dbAccounts = andlyticsDb.getAllDeveloperAccounts();
 		developerAccounts = new ArrayList<DeveloperAccount>();
 
 		accountList.removeAllViews();
 		for (int i = 0; i < googleAccounts.length; i++) {
-			DeveloperAccount developerAccount = andlyticsDb
-					.findDeveloperAccountByName(googleAccounts[i].name);
-			if (developerAccount == null) {
-				developerAccount = new DeveloperAccount(googleAccounts[i].name,
-						DeveloperAccount.State.HIDDEN);
+			DeveloperAccount developerAccount = DeveloperAccount
+					.createHidden(googleAccounts[i].name);
+			int idx = dbAccounts.indexOf(developerAccount);
+			// use persistent object if exists
+			if (idx != -1) {
+				developerAccount = dbAccounts.get(idx);
 			}
 			developerAccounts.add(developerAccount);
 
@@ -210,7 +212,7 @@ public class LoginActivity extends SherlockActivity {
 					}
 					andlyticsDb.addOrUpdateDeveloperAccount(account);
 
-					if (manageAccountsMode && (account.getName()).equals(selectedAccount)) {
+					if (manageAccountsMode && account.equals(selectedAccount)) {
 						// If they remove the current account, then stop them
 						// going back
 						blockGoingBack = account.isHidden();
@@ -228,7 +230,7 @@ public class LoginActivity extends SherlockActivity {
 
 	private boolean isAtLeastOneAccountEnabled() {
 		for (DeveloperAccount acc : developerAccounts) {
-			if (!acc.isHidden()) {
+			if (acc.isVisible()) {
 				return true;
 			}
 		}
@@ -257,6 +259,7 @@ public class LoginActivity extends SherlockActivity {
 			}
 		};
 
+		// TODO request a weblogin: token here, so we have it cached?
 		accountManager.addAccount(Constants.ACCOUNT_TYPE_GOOGLE,
 				Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, null, null /* options */,
 				LoginActivity.this, callback, null /* handler */);
