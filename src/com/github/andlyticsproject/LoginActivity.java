@@ -11,6 +11,7 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.sync.AutosyncHandler;
 
@@ -52,14 +54,19 @@ public class LoginActivity extends SherlockActivity {
 
 	private AccountManager accountManager;
 	private DeveloperAccountManager developerAccountManager;
+	private AutosyncHandler syncHandler;
 
 	// TODO Clean this code and res/layout/login.xml up e.g. using a ListView
 	// instead of a LinearLayout
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		setSupportProgressBarIndeterminateVisibility(false);
+
 		accountManager = AccountManager.get(this);
 		developerAccountManager = DeveloperAccountManager.getInstance(getApplicationContext());
+		syncHandler = new AutosyncHandler();
 
 		// When called from accounts action item in Main, this flag is passed to
 		// indicate
@@ -85,18 +92,39 @@ public class LoginActivity extends SherlockActivity {
 		okButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (selectedAccount != null) {
-					redirectToMain(selectedAccount.getName());
-				} else {
-					// Go to the first non hidden account
-					for (DeveloperAccount account : developerAccounts) {
-						if (account.isVisible()) {
-							redirectToMain(account.getName());
-							break;
+				new AsyncTask<Void, Void, Void>() {
+
+					@Override
+					protected void onPreExecute() {
+						setSupportProgressBarIndeterminateVisibility(true);
+						okButton.setEnabled(false);
+					}
+
+					@Override
+					protected Void doInBackground(Void... args) {
+						saveDeveloperAccounts();
+
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Void arg) {
+						setSupportProgressBarIndeterminateVisibility(false);
+						okButton.setEnabled(true);
+
+						if (selectedAccount != null) {
+							redirectToMain(selectedAccount.getName());
+						} else {
+							// Go to the first non hidden account
+							for (DeveloperAccount account : developerAccounts) {
+								if (account.isVisible()) {
+									redirectToMain(account.getName());
+									break;
+								}
+							}
 						}
 					}
-				}
-
+				}.execute();
 			}
 		});
 	}
@@ -125,23 +153,23 @@ public class LoginActivity extends SherlockActivity {
 	 * Called if item in option menu is selected.
 	 * 
 	 * @param item
-	 * The chosen menu item
+	 *            The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.itemLoginmenuAdd:
-			addNewGoogleAccount();
-			break;
-		case android.R.id.home:
-			if (!blockGoingBack) {
-				setResult(RESULT_OK);
-				finish();
-			}
-			break;
-		default:
-			return false;
+			case R.id.itemLoginmenuAdd:
+				addNewGoogleAccount();
+				break;
+			case android.R.id.home:
+				if (!blockGoingBack) {
+					setResult(RESULT_OK);
+					finish();
+				}
+				break;
+			default:
+				return false;
 		}
 		return true;
 	}
@@ -168,9 +196,7 @@ public class LoginActivity extends SherlockActivity {
 			}
 			developerAccounts.add(developerAccount);
 
-
 			// Setup auto sync
-			final AutosyncHandler syncHandler = new AutosyncHandler();
 			// only do this when managing accounts, otherwise sync may start
 			// in the background before accounts are actually configured
 			if (manageAccountsMode) {
@@ -199,18 +225,6 @@ public class LoginActivity extends SherlockActivity {
 						account.hide();
 					}
 
-					if (account.isHidden()) {
-						// They are removing the account from Andlytics, disable
-						// syncing
-						syncHandler.setAutosyncEnabled(account.getName(), false);
-					} else {
-						// Make it match the master sync period (including
-						// disabled state)
-						syncHandler.setAutosyncPeriod(account.getName(),
-								Preferences.getAutosyncPeriod(LoginActivity.this));
-					}
-					developerAccountManager.addOrUpdateDeveloperAccount(account);
-
 					if (manageAccountsMode && account.equals(selectedAccount)) {
 						// If they remove the current account, then stop them
 						// going back
@@ -225,6 +239,22 @@ public class LoginActivity extends SherlockActivity {
 
 		// Update ok button
 		okButton.setEnabled(isAtLeastOneAccountEnabled());
+	}
+
+	private void saveDeveloperAccounts() {
+		for (DeveloperAccount account : developerAccounts) {
+			if (account.isHidden()) {
+				// They are removing the account from Andlytics, disable
+				// syncing
+				syncHandler.setAutosyncEnabled(account.getName(), false);
+			} else {
+				// Make it match the master sync period (including
+				// disabled state)
+				syncHandler.setAutosyncPeriod(account.getName(),
+						Preferences.getAutosyncPeriod(LoginActivity.this));
+			}
+			developerAccountManager.addOrUpdateDeveloperAccount(account);
+		}
 	}
 
 	private boolean isAtLeastOneAccountEnabled() {
