@@ -202,7 +202,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	protected void onResume() {
 		super.onResume();
 
-		// XXX force DB load when switching accounts?
 		if (!isSkipMainReload() && shouldRemoteUpdateStats()) {
 			loadLocalEntriesAndUpdate();
 		} else {
@@ -230,59 +229,60 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	 * Called if item in option menu is selected.
 	 * 
 	 * @param item
-	 * The chosen menu item
+	 *            The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent i = null;
 		switch (item.getItemId()) {
-		case R.id.itemMainmenuRefresh:
-			loadRemoteEntries();
-			break;
-		case R.id.itemMainmenuImport:
-			File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
-			if (!fileToImport.exists()) {
-				Toast.makeText(this,
-						getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
-						Toast.LENGTH_LONG).show();
-				return true;
-			}
+			case R.id.itemMainmenuRefresh:
+				loadRemoteEntries();
+				break;
+			case R.id.itemMainmenuImport:
+				File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
+				if (!fileToImport.exists()) {
+					Toast.makeText(
+							this,
+							getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
+							Toast.LENGTH_LONG).show();
+					return true;
+				}
 
-			Intent importIntent = new Intent(this, ImportActivity.class);
-			importIntent.setAction(Intent.ACTION_VIEW);
-			importIntent.setData(Uri.fromFile(fileToImport));
-			startActivity(importIntent);
-			break;
-		case R.id.itemMainmenuExport:
-			Intent exportIntent = new Intent(this, ExportActivity.class);
-			exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
-			startActivity(exportIntent);
-			break;
-		case R.id.itemMainmenuFeedback:
-			startActivity(new Intent(Intent.ACTION_VIEW,
-					Uri.parse(getString(R.string.github_issues_url))));
-			break;
-		case R.id.itemMainmenuPreferences:
-			i = new Intent(this, PreferenceActivity.class);
-			i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
-			startActivity(i);
-			break;
-		case R.id.itemMainmenuStatsMode:
-			if (currentStatsMode.equals(StatsMode.PERCENT)) {
-				currentStatsMode = StatsMode.DAY_CHANGES;
-			} else {
-				currentStatsMode = StatsMode.PERCENT;
-			}
-			updateStatsMode();
-			break;
-		case R.id.itemMainmenuAccounts:
-			i = new Intent(this, LoginActivity.class);
-			i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
-			startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
-			break;
-		default:
-			return false;
+				Intent importIntent = new Intent(this, ImportActivity.class);
+				importIntent.setAction(Intent.ACTION_VIEW);
+				importIntent.setData(Uri.fromFile(fileToImport));
+				startActivity(importIntent);
+				break;
+			case R.id.itemMainmenuExport:
+				Intent exportIntent = new Intent(this, ExportActivity.class);
+				exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
+				startActivity(exportIntent);
+				break;
+			case R.id.itemMainmenuFeedback:
+				startActivity(new Intent(Intent.ACTION_VIEW,
+						Uri.parse(getString(R.string.github_issues_url))));
+				break;
+			case R.id.itemMainmenuPreferences:
+				i = new Intent(this, PreferenceActivity.class);
+				i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+				startActivity(i);
+				break;
+			case R.id.itemMainmenuStatsMode:
+				if (currentStatsMode.equals(StatsMode.PERCENT)) {
+					currentStatsMode = StatsMode.DAY_CHANGES;
+				} else {
+					currentStatsMode = StatsMode.PERCENT;
+				}
+				updateStatsMode();
+				break;
+			case R.id.itemMainmenuAccounts:
+				i = new Intent(this, LoginActivity.class);
+				i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
+				startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
+				break;
+			default:
+				return false;
 		}
 		return true;
 	}
@@ -502,8 +502,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 			if (exception == null) {
 				activity.developerAccountManager.saveLastStatsRemoteUpdateTime(
-						activity.accountName,
-						System.currentTimeMillis());
+						activity.accountName, System.currentTimeMillis());
 				activity.loadLocalEntriesOnly();
 				return;
 			}
@@ -577,7 +576,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			if (triggerRemoteCall) {
 				activity.loadRemoteEntries();
 			} else {
-				if (allStats.size() == 0) {
+				if (allStats.isEmpty()) {
 					Toast.makeText(activity, R.string.no_published_apps, Toast.LENGTH_LONG).show();
 				}
 			}
@@ -644,18 +643,18 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private void updateStatsMode() {
 		if (statsModeMenuItem != null) {
 			switch (currentStatsMode) {
-			case PERCENT:
-				statsModeMenuItem.setTitle(R.string.daily);
-				statsModeMenuItem.setIcon(R.drawable.icon_plusminus);
-				break;
+				case PERCENT:
+					statsModeMenuItem.setTitle(R.string.daily);
+					statsModeMenuItem.setIcon(R.drawable.icon_plusminus);
+					break;
 
-			case DAY_CHANGES:
-				statsModeMenuItem.setTitle(R.string.percentage);
-				statsModeMenuItem.setIcon(R.drawable.icon_percent);
-				break;
+				case DAY_CHANGES:
+					statsModeMenuItem.setTitle(R.string.percentage);
+					statsModeMenuItem.setIcon(R.drawable.icon_percent);
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 		adapter.setStatsMode(currentStatsMode);
@@ -672,7 +671,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	 * checks if the app is started for the first time (after an update).
 	 * 
 	 * @return <code>true</code> if this is the first start (after an update)
-	 * else <code>false</code>
+	 *         else <code>false</code>
 	 */
 	private boolean isUpdate() {
 		// Get the versionCode of the Package, which must be different
