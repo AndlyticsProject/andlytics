@@ -13,8 +13,12 @@ public class DeveloperAccount {
 	private State state;
 	private Date lastStatsUpdate;
 
-	public DeveloperAccount(String name) {
-		this(name, State.ACTIVE);
+	public static DeveloperAccount createActive(String name) {
+		return new DeveloperAccount(name, State.ACTIVE);
+	}
+
+	public static DeveloperAccount createHidden(String name) {
+		return new DeveloperAccount(name, State.HIDDEN);
 	}
 
 	public DeveloperAccount(String name, State state) {
@@ -54,7 +58,56 @@ public class DeveloperAccount {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof DeveloperAccount)) {
+			return false;
+		}
+		DeveloperAccount rhs = (DeveloperAccount) o;
+
+		return name.equals(rhs.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+
+	@Override
 	public String toString() {
 		return String.format("DeveloperAccount [name=%s, state=%s]", name, state);
 	}
+
+	public boolean isHidden() {
+		return state == State.HIDDEN;
+	}
+
+	public boolean isActive() {
+		return state == State.ACTIVE;
+	}
+
+	public boolean isSelected() {
+		return state == State.SELECTED;
+	}
+
+	public boolean isVisible() {
+		return state != State.HIDDEN;
+	}
+
+	public void select() {
+		state = State.SELECTED;
+	}
+
+	public void hide() {
+		state = State.HIDDEN;
+		lastStatsUpdate = null;
+	}
+
+	public void activate() {
+		state = State.ACTIVE;
+	}
+
+	public void deselect() {
+		activate();
+	}
+
 }

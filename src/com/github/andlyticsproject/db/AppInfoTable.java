@@ -41,7 +41,7 @@ public class AppInfoTable {
 			+ KEY_APP_PUBLISHSTATE + " integer," + KEY_APP_GHOST + " integer,"
 			+ KEY_APP_RATINGS_EXPANDED + " integer," + KEY_APP_SKIP_NOTIFICATION + " integer,"
 			+ KEY_APP_VERSION_NAME + " text, " + KEY_APP_ADMOB_ACCOUNT + " text, "
-			+ KEY_APP_ADMOB_SITE_ID + "text, " + KEY_APP_LAST_COMMENTS_UPDATE + " date)";
+			+ KEY_APP_ADMOB_SITE_ID + " text, " + KEY_APP_LAST_COMMENTS_UPDATE + " date)";
 
 	public static HashMap<String, String> PROJECTION_MAP;
 	public static HashMap<String, String> PACKAGE_NAMES_MAP;

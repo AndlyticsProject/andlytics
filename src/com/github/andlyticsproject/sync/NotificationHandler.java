@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject.sync;
 
 import java.io.File;
@@ -20,6 +19,7 @@ import android.support.v4.app.NotificationCompat.Builder;
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.AppStatsDiff;
 import com.github.andlyticsproject.Constants;
+import com.github.andlyticsproject.DeveloperAccountManager;
 import com.github.andlyticsproject.Main;
 import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.R;
@@ -41,10 +41,14 @@ public class NotificationHandler {
 		String contentText = "";
 		String iconName = null;
 
-		boolean downloadsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_DOWNLOADS);
-		boolean commentsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_COMMENTS);
-		boolean ratingsEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_CHANGES_RATING);
-		boolean lightEnabled = Preferences.getNotificationPerf(context, Preferences.NOTIFICATION_LIGHT);
+		boolean downloadsEnabled = Preferences.getNotificationPerf(context,
+				Preferences.NOTIFICATION_CHANGES_DOWNLOADS);
+		boolean commentsEnabled = Preferences.getNotificationPerf(context,
+				Preferences.NOTIFICATION_CHANGES_COMMENTS);
+		boolean ratingsEnabled = Preferences.getNotificationPerf(context,
+				Preferences.NOTIFICATION_CHANGES_RATING);
+		boolean lightEnabled = Preferences.getNotificationPerf(context,
+				Preferences.NOTIFICATION_LIGHT);
 		String ringtone = Preferences.getNotificationRingtone(context);
 
 		List<String> appNameList = new ArrayList<String>();
@@ -104,8 +108,10 @@ public class NotificationHandler {
 				}
 			}
 
+			String selectedAccountName = DeveloperAccountManager.getInstance(context)
+					.getSelectedDeveloperAccount().getName();
 			if (!AndlyticsApp.getInstance().isAppVisible()
-					|| !accountName.equals(Preferences.getAccountName(context))
+					|| !accountName.equals(selectedAccountName)
 					|| Preferences.getNotificationPerf(context,
 							Preferences.NOTIFICATION_WHEN_ACCOUNT_VISISBLE)) {
 				// The user can choose not to see notifications if the current account is visible
@@ -131,8 +137,9 @@ public class NotificationHandler {
 				notificationIntent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
 				notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-				PendingIntent contentIntent = PendingIntent.getActivity(context, accountName.hashCode(),
-						notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+				PendingIntent contentIntent = PendingIntent.getActivity(context,
+						accountName.hashCode(), notificationIntent,
+						PendingIntent.FLAG_UPDATE_CURRENT);
 
 				builder.setContentIntent(contentIntent);
 				builder.setTicker(contentTitle);

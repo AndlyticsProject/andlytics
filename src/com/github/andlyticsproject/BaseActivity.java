@@ -2,11 +2,8 @@ package com.github.andlyticsproject;
 
 import org.acra.ACRA;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
@@ -29,9 +26,9 @@ import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.console.MultiAccountException;
 import com.github.andlyticsproject.console.NetworkException;
-import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.dialog.CrashDialog;
 import com.github.andlyticsproject.dialog.CrashDialog.CrashDialogBuilder;
+import com.github.andlyticsproject.util.Utils;
 
 public class BaseActivity extends SherlockActivity {
 
@@ -45,9 +42,16 @@ public class BaseActivity extends SherlockActivity {
 
 	private boolean refreshing;
 
+	private boolean skipMainReload;
+
+	protected DeveloperAccountManager developerAccountManager;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		developerAccountManager = DeveloperAccountManager.getInstance(getApplication());
+
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
 			// TODO move packageName and iconFilePath assignments to
@@ -57,7 +61,7 @@ public class BaseActivity extends SherlockActivity {
 			packageName = b.getString(Constants.PACKAGE_NAME_PARCEL);
 			iconFilePath = b.getString(Constants.ICON_FILE_PARCEL);
 			accountName = b.getString(Constants.AUTH_ACCOUNT_NAME);
-			Preferences.saveAccountName(this, accountName);
+			developerAccountManager.selectDeveloperAccount(accountName);
 		}
 
 	}
@@ -80,7 +84,7 @@ public class BaseActivity extends SherlockActivity {
 			intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		}
 		if (skipDataReload) {
-			getAndlyticsApplication().setSkipMainReload(true);
+			setSkipMainReload(true);
 		}
 
 		startActivity(intent);
@@ -109,7 +113,7 @@ public class BaseActivity extends SherlockActivity {
 					Toast.LENGTH_LONG).show();
 		} else if (e instanceof AdmobAskForPasswordException) {
 			Log.w(TAG, "ask for admob credentials");
-			getAndlyticsApplication().setSkipMainReload(true);
+			setSkipMainReload(true);
 		} else if (e instanceof AdmobAccountRemovedException) {
 			String wrongAccount = ((AdmobAccountRemovedException) e).getAccountName();
 			Toast.makeText(BaseActivity.this,
@@ -126,7 +130,7 @@ public class BaseActivity extends SherlockActivity {
 			Toast.makeText(BaseActivity.this, getString(R.string.admob_generic_error),
 					Toast.LENGTH_LONG).show();
 		} else if (e instanceof DevConsoleProtocolException) {
-			int appVersionCode = getAppVersionCode(this);
+			int appVersionCode = Utils.getAppVersionCode(this);
 			if (Preferences.getLatestVersionCode(this) > appVersionCode) {
 				showNewVersionDialog(e);
 			} else {
@@ -272,7 +276,7 @@ public class BaseActivity extends SherlockActivity {
 
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
-							Preferences.removeAccountName(BaseActivity.this);
+							developerAccountManager.unselectDeveloperAccount();
 							Preferences.saveSkipAutoLogin(BaseActivity.this, true);
 							Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
 							startActivity(intent);
@@ -287,7 +291,7 @@ public class BaseActivity extends SherlockActivity {
 
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
-							Preferences.removeAccountName(BaseActivity.this);
+							developerAccountManager.unselectDeveloperAccount();
 							Preferences.saveSkipAutoLogin(BaseActivity.this, true);
 							Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
 							startActivity(intent);
@@ -324,7 +328,7 @@ public class BaseActivity extends SherlockActivity {
 
 	protected boolean shouldRemoteUpdateStats() {
 		long now = System.currentTimeMillis();
-		long lastUpdate = AndlyticsDb.getInstance(this).getLastStatsRemoteUpdateTime(accountName);
+		long lastUpdate = developerAccountManager.getLastStatsRemoteUpdateTime(accountName);
 		// never updated
 		if (lastUpdate == 0) {
 			return true;
@@ -358,14 +362,12 @@ public class BaseActivity extends SherlockActivity {
 		}
 	}
 
-	public static int getAppVersionCode(Context context) {
-		try {
-			PackageInfo pinfo = context.getPackageManager().getPackageInfo(
-					context.getPackageName(), 0);
-			return pinfo.versionCode;
-		} catch (NameNotFoundException e) {
-			Log.e(AndlyticsApp.class.getSimpleName(), "unable to read version code", e);
-		}
-		return 0;
+	protected void setSkipMainReload(boolean skipMainReload) {
+		this.skipMainReload = skipMainReload;
 	}
+
+	protected boolean isSkipMainReload() {
+		return skipMainReload;
+	}
+
 }

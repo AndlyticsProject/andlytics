@@ -49,6 +49,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		db.execSQL(AppStatsTable.TABLE_CREATE_STATS);
 		db.execSQL(CommentsTable.TABLE_CREATE_COMMENTS);
 		db.execSQL(AdmobTable.TABLE_CREATE_ADMOB);
+		db.execSQL(DeveloperAccountsTable.TABLE_CREATE_DEVELOPER_ACCOUNT);
 	}
 
 	@Override
@@ -237,160 +238,15 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		return addDeveloperAccount(getWritableDatabase(), account);
 	}
 
-	private ContentValues toValues(DeveloperAccount account) {
+	public static ContentValues toValues(DeveloperAccount account) {
 		ContentValues result = new ContentValues();
 		result.put(DeveloperAccountsTable.NAME, account.getName());
 		result.put(DeveloperAccountsTable.STATE, account.getState().ordinal());
-		if (account.getLastStatsUpdate() != null) {
-			result.put(DeveloperAccountsTable.LAST_STATS_UPDATE, account.getLastStatsUpdate()
-					.getTime());
-		}
+		long updateTime = account.getLastStatsUpdate() == null ? 0 : account.getLastStatsUpdate()
+				.getTime();
+		result.put(DeveloperAccountsTable.LAST_STATS_UPDATE, updateTime);
 
 		return result;
-	}
-
-	public List<DeveloperAccount> getAllDeveloperAccounts() {
-		List<DeveloperAccount> result = new ArrayList<DeveloperAccount>();
-
-		SQLiteDatabase db = getReadableDatabase();
-		Cursor c = null;
-		try {
-			c = db.query(DeveloperAccountsTable.DATABASE_TABLE_NAME,
-					DeveloperAccountsTable.ALL_COLUMNS, null, null, null, null, "_id asc", null);
-			while (c.moveToNext()) {
-				DeveloperAccount account = createAcount(c);
-				result.add(account);
-			}
-
-			return result;
-		} finally {
-			if (c != null) {
-				c.close();
-			}
-		}
-	}
-
-	public List<DeveloperAccount> getActiveDeveloperAccounts() {
-		return getDeveloperAccountsByState(DeveloperAccount.State.ACTIVE);
-	}
-
-	public List<DeveloperAccount> getHiddenDeveloperAccounts() {
-		return getDeveloperAccountsByState(DeveloperAccount.State.HIDDEN);
-	}
-
-	public DeveloperAccount getSelectedDeveloperAccount() {
-		List<DeveloperAccount> accounts = getDeveloperAccountsByState(DeveloperAccount.State.SELECTED);
-		if (accounts.isEmpty()) {
-			return null;
-		}
-
-		if (accounts.size() > 1) {
-			throw new IllegalStateException("More than one selected developer account: " + accounts);
-		}
-
-		return accounts.get(0);
-	}
-
-	public List<DeveloperAccount> getDeveloperAccountsByState(DeveloperAccount.State state) {
-		List<DeveloperAccount> result = new ArrayList<DeveloperAccount>();
-
-		SQLiteDatabase db = getReadableDatabase();
-		Cursor c = null;
-		try {
-			c = db.query(DeveloperAccountsTable.DATABASE_TABLE_NAME,
-					DeveloperAccountsTable.ALL_COLUMNS, "state = ?",
-					new String[] { Integer.toString(state.ordinal()) }, null, null, "_id asc", null);
-			while (c.moveToNext()) {
-				DeveloperAccount account = createAcount(c);
-				result.add(account);
-			}
-
-			return result;
-		} finally {
-			if (c != null) {
-				c.close();
-			}
-		}
-	}
-
-	public DeveloperAccount findDeveloperAccountById(long id) {
-		SQLiteDatabase db = getReadableDatabase();
-		Cursor c = null;
-		try {
-			c = db.query(DeveloperAccountsTable.DATABASE_TABLE_NAME,
-					DeveloperAccountsTable.ALL_COLUMNS, "_id = ?",
-					new String[] { Long.toString(id) }, null, null, "_id asc", null);
-			if (!c.moveToNext()) {
-				return null;
-			}
-
-			return createAcount(c);
-		} finally {
-			if (c != null) {
-				c.close();
-			}
-		}
-	}
-
-	public DeveloperAccount findDeveloperAccountByName(String name) {
-		SQLiteDatabase db = getReadableDatabase();
-		Cursor c = null;
-		try {
-			c = db.query(DeveloperAccountsTable.DATABASE_TABLE_NAME,
-					DeveloperAccountsTable.ALL_COLUMNS, "name = ?", new String[] { name }, null,
-					null, "_id asc", null);
-			if (!c.moveToNext()) {
-				return null;
-			}
-
-			return createAcount(c);
-		} finally {
-			if (c != null) {
-				c.close();
-			}
-		}
-	}
-
-	public synchronized void updateDeveloperAccount(DeveloperAccount account) {
-		SQLiteDatabase db = getWritableDatabase();
-		ContentValues values = toValues(account);
-		values.put(DeveloperAccountsTable.ROWID, account.getId());
-
-		db.update(DeveloperAccountsTable.DATABASE_TABLE_NAME, values, "_id = ?",
-				new String[] { Long.toString(account.getId()) });
-	}
-
-	public long getLastStatsRemoteUpdateTime(String accountName) {
-		DeveloperAccount account = findDeveloperAccountByName(accountName);
-		if (account == null) {
-			throw new IllegalStateException("Account not found: " + accountName);
-		}
-
-		return account.getLastStatsUpdate().getTime();
-	}
-
-	public synchronized void saveLastStatsRemoteUpdateTime(String accountName, long timestamp) {
-		DeveloperAccount account = findDeveloperAccountByName(accountName);
-		if (account == null) {
-			throw new IllegalStateException("Account not found: " + accountName);
-		}
-
-		account.setLastStatsUpdate(new Date(timestamp));
-		updateDeveloperAccount(account);
-	}
-
-	private DeveloperAccount createAcount(Cursor c) {
-		long id = c.getLong(c.getColumnIndex(DeveloperAccountsTable.ROWID));
-		String name = c.getString(c.getColumnIndex(DeveloperAccountsTable.NAME));
-		DeveloperAccount.State currentState = DeveloperAccount.State.values()[c.getInt(c
-				.getColumnIndex(DeveloperAccountsTable.STATE))];
-		Date lastStatsUpdate = new Date(c.getLong(c
-				.getColumnIndex(DeveloperAccountsTable.LAST_STATS_UPDATE)));
-
-		DeveloperAccount account = new DeveloperAccount(name, currentState);
-		account.setId(id);
-		account.setLastStatsUpdate(lastStatsUpdate);
-		return account;
 	}
 
 	// account, site ID

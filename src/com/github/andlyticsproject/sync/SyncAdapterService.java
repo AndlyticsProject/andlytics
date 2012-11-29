@@ -20,6 +20,7 @@ import android.util.Log;
 
 import com.github.andlyticsproject.AppStatsDiff;
 import com.github.andlyticsproject.ContentAdapter;
+import com.github.andlyticsproject.DeveloperAccountManager;
 import com.github.andlyticsproject.admob.AdmobException;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.console.DevConsoleException;
@@ -132,7 +133,8 @@ public class SyncAdapterService extends Service {
 					Log.d(TAG, "Sucessfully synced AdMob stats");
 				}
 
-				AndlyticsDb.getInstance(context).saveLastStatsRemoteUpdateTime(account.name,
+				DeveloperAccountManager.getInstance(context).saveLastStatsRemoteUpdateTime(
+						account.name,
 						System.currentTimeMillis());
 
 			}

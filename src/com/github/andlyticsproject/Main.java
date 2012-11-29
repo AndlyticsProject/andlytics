@@ -1,10 +1,7 @@
 package com.github.andlyticsproject;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -14,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -52,6 +47,7 @@ import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
+import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.sync.NotificationHandler;
 import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
@@ -76,7 +72,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private StatsMode currentStatsMode;
 	private MenuItem statsModeMenuItem;
 
-	private List<String> accountsList;
+	private List<DeveloperAccount> developerAccounts;
 
 	private DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);
 
@@ -150,16 +146,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		db = getDbAdapter();
 		LayoutInflater layoutInflater = getLayoutInflater();
 
-		// Hack in case the account is hidden and then the app is killed
-		// which means when it starts up next, it goes straight to the account
-		// even though it shouldn't. To work around this, just mark it as not
-		// hidden
-		// in the sense that that change they made never got applied
-		// TODO Do something clever in login activity to prevent this while
-		// keeping the ability
-		// to block going 'back'
-		Preferences.saveIsHiddenAccount(this, accountName, false);
-
+		// BaseActivity has already selected the account
 		updateAccountsList();
 
 		// setup main list
@@ -186,7 +173,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			state.attachAll(this);
 			if (state.lastAppList != null) {
 				adapter.setAppInfos(state.lastAppList);
-				getAndlyticsApplication().setSkipMainReload(true);
+				setSkipMainReload(true);
 			}
 		}
 
@@ -198,11 +185,11 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		if (!accountsList.get(itemPosition).equals(accountName)) {
+		if (!developerAccounts.get(itemPosition).getName().equals(accountName)) {
 			// Only switch if it is a new account
-			Preferences.removeAccountName(Main.this);
 			Intent intent = new Intent(Main.this, Main.class);
-			intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountsList.get(itemPosition));
+			intent.putExtra(Constants.AUTH_ACCOUNT_NAME, developerAccounts.get(itemPosition)
+					.getName());
 			startActivity(intent);
 			overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
 			// Call finish to ensure we don't get multiple activities running
@@ -214,21 +201,15 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		boolean mainSkipDataReload = getAndlyticsApplication().isSkipMainReload();
 
-		// TODO We shouldn't be reloading in every onResume
-		// When we move this, make sure we move to using startActivityForResult
-		// for the preferences
-		// to ensure that we do update if hidden apps are changed
-
-		// TODO Revise the whole application global flag thing
-		if (!mainSkipDataReload && shouldRemoteUpdateStats()) {
+		// XXX force DB load when switching accounts?
+		if (!isSkipMainReload() && shouldRemoteUpdateStats()) {
 			loadLocalEntriesAndUpdate();
 		} else {
 			loadLocalEntriesOnly();
 		}
 
-		getAndlyticsApplication().setSkipMainReload(false);
+		setSkipMainReload(false);
 
 		AndlyticsApp.getInstance().setIsAppVisible(true);
 	}
@@ -249,7 +230,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	 * Called if item in option menu is selected.
 	 * 
 	 * @param item
-	 *            The chosen menu item
+	 * The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
@@ -322,7 +303,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				// preferences and finish
 				// so that the user has to choose an account when they next
 				// start the app
-				Preferences.removeAccountName(this);
+				developerAccountManager.unselectDeveloperAccount();
 				finish();
 			}
 		} else if (requestCode == REQUEST_AUTHENTICATE) {
@@ -358,26 +339,21 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	}
 
 	private void updateAccountsList() {
-		final AccountManager manager = AccountManager.get(this);
-		final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
-		if (accounts.length > 1) {
-			accountsList = new ArrayList<String>();
+		developerAccounts = developerAccountManager.getActiveDeveloperAccounts();
+		if (developerAccounts.size() > 1) {
 			int selectedIndex = 0;
 			int index = 0;
-			for (Account account : accounts) {
-				if (!Preferences.getIsHiddenAccount(this, account.name)) {
-					accountsList.add(account.name);
-					if (account.name.equals(accountName)) {
-						selectedIndex = index;
-					}
-					index++;
+			for (DeveloperAccount account : developerAccounts) {
+				if (account.getName().equals(accountName)) {
+					selectedIndex = index;
 				}
+				index++;
 			}
-			if (accountsList.size() > 1) {
+			if (developerAccounts.size() > 1) {
 				// Only use the spinner if we have multiple accounts
 				Context context = getSupportActionBar().getThemedContext();
 				AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(context,
-						R.layout.account_selector_item, accountsList);
+						R.layout.account_selector_item, developerAccounts);
 				accountsAdapter
 						.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
 
@@ -525,8 +501,9 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			activity.refreshFinished();
 
 			if (exception == null) {
-				AndlyticsDb.getInstance(activity).saveLastStatsRemoteUpdateTime(
-						activity.accountName, System.currentTimeMillis());
+				activity.developerAccountManager.saveLastStatsRemoteUpdateTime(
+						activity.accountName,
+						System.currentTimeMillis());
 				activity.loadLocalEntriesOnly();
 				return;
 			}
@@ -622,39 +599,20 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			}
 
 			List<AppInfo> appInfos = params[0];
-
-			Boolean success = false;
+			Boolean success = Boolean.FALSE;
 
 			for (AppInfo appInfo : appInfos) {
-
 				String iconUrl = appInfo.getIconUrl();
 
 				if (iconUrl != null) {
-
-					File iconFile = new File(activity.getCacheDir() + "/" + appInfo.getIconName());
+					File iconFile = new File(activity.getCacheDir(), appInfo.getIconName());
 					if (!iconFile.exists()) {
-
 						try {
-							iconFile.createNewFile();
-							URL url = new URL(iconUrl);
-							HttpURLConnection c = (HttpURLConnection) url.openConnection();
-							c.setRequestMethod("GET");
-							// c.setDoOutput(true);
-							c.connect();
+							if (iconFile.createNewFile()) {
+								Utils.getAndSaveToFile(new URL(iconUrl), iconFile);
 
-							FileOutputStream fos = new FileOutputStream(iconFile);
-
-							InputStream is = c.getInputStream();
-
-							byte[] buffer = new byte[1024];
-							int len1 = 0;
-							while ((len1 = is.read(buffer)) != -1) {
-								fos.write(buffer, 0, len1);
+								success = Boolean.TRUE;
 							}
-							fos.close();
-							is.close();
-
-							success = true;
 						} catch (IOException e) {
 							if (iconFile.exists()) {
 								iconFile.delete();
@@ -714,7 +672,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	 * checks if the app is started for the first time (after an update).
 	 * 
 	 * @return <code>true</code> if this is the first start (after an update)
-	 *         else <code>false</code>
+	 * else <code>false</code>
 	 */
 	private boolean isUpdate() {
 		// Get the versionCode of the Package, which must be different
@@ -749,12 +707,13 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		}).show();
 	}
 
-	private static class AccountSelectorAdaper extends ArrayAdapter<String> {
+	private static class AccountSelectorAdaper extends ArrayAdapter<DeveloperAccount> {
 		private Context context;
-		private List<String> accounts;
+		private List<DeveloperAccount> accounts;
 		private int textViewResourceId;
 
-		public AccountSelectorAdaper(Context context, int textViewResourceId, List<String> objects) {
+		public AccountSelectorAdaper(Context context, int textViewResourceId,
+				List<DeveloperAccount> objects) {
 			super(context, textViewResourceId, objects);
 			this.context = context;
 			this.accounts = objects;
@@ -771,7 +730,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			}
 
 			TextView subtitle = (TextView) rowView.findViewById(android.R.id.text1);
-			subtitle.setText(accounts.get(position));
+			subtitle.setText(accounts.get(position).getName());
 			Resources res = context.getResources();
 			if (res.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 				// Scale the text down slightly to fit on landscape due to the
@@ -796,6 +755,14 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			// ...
 
 			return rowView;
+		}
+
+		@Override
+		public View getDropDownView(int position, View convertView, ViewGroup parent) {
+			View result = super.getDropDownView(position, convertView, parent);
+			((TextView) result).setText(accounts.get(position).getName());
+
+			return result;
 		}
 
 	}

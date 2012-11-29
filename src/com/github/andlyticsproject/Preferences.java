@@ -83,18 +83,21 @@ public class Preferences {
 		editor.commit();
 	}
 
+	@Deprecated
 	public static void saveAccountName(Context activity, String accountName) {
 		SharedPreferences.Editor editor = getSettings(activity).edit();
 		editor.putString(ACCOUNT_NAME, accountName);
 		editor.commit();
 	}
 
+	@Deprecated
 	public static void removeAccountName(Context activity) {
 		SharedPreferences.Editor editor = getSettings(activity).edit();
 		editor.remove(ACCOUNT_NAME);
 		editor.commit();
 	}
 
+	@Deprecated
 	public static String getAccountName(Context activity) {
 		return getSettings(activity).getString(ACCOUNT_NAME, null);
 	}
@@ -341,12 +344,14 @@ public class Preferences {
 		editor.commit();
 	}
 
+	@Deprecated
 	public static void saveIsHiddenAccount(Context context, String accountName, Boolean hidden) {
 		SharedPreferences.Editor editor = getSettings(context).edit();
 		editor.putBoolean(HIDDEN_ACCOUNT + accountName, hidden);
 		editor.commit();
 	}
 
+	@Deprecated
 	public static boolean getIsHiddenAccount(Context context, String accountName) {
 		return getSettings(context).getBoolean(HIDDEN_ACCOUNT + accountName, false);
 	}

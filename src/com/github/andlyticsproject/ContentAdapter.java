@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import android.annotation.SuppressLint;
 import android.app.backup.BackupManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -33,6 +34,7 @@ import com.github.andlyticsproject.model.Comment;
 public class ContentAdapter {
 
 	private final Context context;
+	@SuppressLint("SimpleDateFormat")
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	private BackupManager backupManager;
@@ -177,6 +179,7 @@ public class ContentAdapter {
 		backupManager.dataChanged();
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	private long getAdmobStatsIdForDate(Date date, String siteId) {
 
 		long result = -1;
@@ -535,6 +538,7 @@ public class ContentAdapter {
 		return result;
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	public AppStatsList getStatsForApp(String packageName, Timeframe currentTimeFrame,
 			Boolean smoothEnabled) {
 
@@ -876,6 +880,7 @@ public class ContentAdapter {
 		return info;
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	public Map<Date, Map<Integer, Integer>> getDailyRatings(Date maxDate, String packagename) {
 
 		Map<Date, Map<Integer, Integer>> result = new TreeMap<Date, Map<Integer, Integer>>(
@@ -1069,6 +1074,7 @@ public class ContentAdapter {
 		return result;
 	}
 
+	// XXX this does nothing. Remove?
 	public List<Date> getVersionUpdateDates(String packageName) {
 
 		List<Date> result = new ArrayList<Date>();

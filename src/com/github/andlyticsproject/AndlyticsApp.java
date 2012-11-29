@@ -25,8 +25,6 @@ public class AndlyticsApp extends Application {
 
 	private ContentAdapter db;
 
-	private boolean skipMainReload;
-
 	private String feedbackMessage;
 
 	private static AndlyticsApp sInstance;
@@ -101,14 +99,6 @@ public class AndlyticsApp extends Application {
 
 	public String getXsrfToken() {
 		return xsrfToken;
-	}
-
-	public void setSkipMainReload(boolean skipMainReload) {
-		this.skipMainReload = skipMainReload;
-	}
-
-	public boolean isSkipMainReload() {
-		return skipMainReload;
 	}
 
 	public void setFeedbackMessage(String feedbackMessage) {
