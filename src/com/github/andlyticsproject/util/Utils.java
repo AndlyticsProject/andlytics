@@ -2,8 +2,13 @@
 package com.github.andlyticsproject.util;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -106,6 +111,33 @@ public final class Utils {
 		} finally {
 			if (in != null) {
 				Utils.closeSilently(in);
+			}
+		}
+	}
+
+	public static void getAndSaveToFile(URL url, File file) throws IOException {
+		InputStream is = null;
+		FileOutputStream fos = null;
+
+		try {
+			HttpURLConnection c = (HttpURLConnection) url.openConnection();
+			c.setRequestMethod("GET");
+			c.connect();
+
+			is = c.getInputStream();
+			fos = new FileOutputStream(file);
+
+			byte[] buffer = new byte[1024];
+			int read = 0;
+			while ((read = is.read(buffer)) != -1) {
+				fos.write(buffer, 0, read);
+			}
+		} finally {
+			if (is != null) {
+				is.close();
+			}
+			if (fos != null) {
+				fos.close();
 			}
 		}
 	}
