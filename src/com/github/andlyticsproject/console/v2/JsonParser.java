@@ -146,7 +146,12 @@ public class JsonParser {
 				// Draft app
 			}
 			// Check number code and last updated date
-			if (jsonAppInfo.getInt(7) == 5 || jsonAppInfo.optInt(6) == 0) {
+			// Published: 1
+			// Unpublished: 2
+			// Draft: 5
+			// TODO figure out the rest and add to model, filter, etc. Cf. #223
+			int publishStatus = jsonAppInfo.getInt(7);
+			if (publishStatus == 5 || jsonAppInfo.optInt(6) == 0) {
 				break;
 				// Probably a draft app
 			}
