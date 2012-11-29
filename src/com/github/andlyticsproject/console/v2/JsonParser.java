@@ -15,8 +15,9 @@ import com.github.andlyticsproject.model.Comment;
 /**
  * This class contains static methods used to parse JSON from {@link DevConsoleV2}
  * 
- * See {@link https://github.com/AndlyticsProject/andlytics/wiki/Developer-Console-v2} for some more documentation
- *
+ * See {@link https://github.com/AndlyticsProject/andlytics/wiki/Developer-Console-v2} for some more
+ * documentation
+ * 
  */
 public class JsonParser {
 
@@ -25,7 +26,9 @@ public class JsonParser {
 	}
 
 	/**
-	 * Parses the supplied JSON string and adds the extracted ratings to the supplied {@link AppStats} object
+	 * Parses the supplied JSON string and adds the extracted ratings to the supplied
+	 * {@link AppStats} object
+	 * 
 	 * @param json
 	 * @param stats
 	 * @throws JSONException
@@ -42,9 +45,11 @@ public class JsonParser {
 	}
 
 	/**
-	 * Parses the supplied JSON string and adds the extracted statistics to the supplied {@link AppStats} object
+	 * Parses the supplied JSON string and adds the extracted statistics to the supplied
+	 * {@link AppStats} object
 	 * based on the supplied statsType
 	 * Not used at the moment
+	 * 
 	 * @param json
 	 * @param stats
 	 * @param statsType
@@ -59,11 +64,11 @@ public class JsonParser {
 		 * null
 		 * null
 		 * null
-		 * Nested arrays containing summary and historical data broken down by dimension e.g. Android version
+		 * Nested arrays containing summary and historical data broken down by dimension e.g.
+		 * Android version
 		 * null
 		 * null
 		 * App name
-		 * 
 		 */
 		// For now we just care about todays value, later we may delve into the historical and dimensioned data		
 		JSONArray historicalData = values.getJSONArray(1).getJSONArray(1);
@@ -90,6 +95,7 @@ public class JsonParser {
 
 	/**
 	 * Parses the supplied JSON string and builds a list of apps from it
+	 * 
 	 * @param json
 	 * @param accountName
 	 * @return List of apps
@@ -107,27 +113,27 @@ public class JsonParser {
 			AppInfo app = new AppInfo();
 			app.setAccount(accountName);
 			app.setLastUpdate(now);
-			/* 
+			/*
 			 * Per app:
 			 * null
 			 * [ APP_INFO_ARRAY
-			 ** null
-			 ** packageName
-			 ** Nested array with details
-			 ** null
-			 ** Nested array with version details
-			 ** Nested array with price details
-			 ** Last update Date
-			 ** Number [1=published, 5 = draft?]
+			 * * null
+			 * * packageName
+			 * * Nested array with details
+			 * * null
+			 * * Nested array with version details
+			 * * Nested array with price details
+			 * * Last update Date
+			 * * Number [1=published, 5 = draft?]
 			 * ]
 			 * null
 			 * [ APP_STATS_ARRAY
-			 ** null,
-			 ** Active installs
-			 ** Total ratings
-			 ** Average rating
-			 ** Errors
-			 ** Total installs
+			 * * null,
+			 * * Active installs
+			 * * Total ratings
+			 * * Average rating
+			 * * Errors
+			 * * Total installs
 			 * ]
 			 */
 			JSONArray jsonApp = jsonApps.getJSONArray(i);
@@ -146,7 +152,7 @@ public class JsonParser {
 			}
 			app.setPackageName(packageName);
 
-			/* 
+			/*
 			 * Per app details:
 			 * null
 			 * Country code
@@ -154,7 +160,6 @@ public class JsonParser {
 			 * Description
 			 * Unknown
 			 * Last what's new
-			 * 
 			 */
 			JSONArray appDetails = jsonAppInfo.getJSONArray(2).getJSONArray(1).getJSONArray(0);
 			app.setName(appDetails.getString(2));
@@ -189,6 +194,8 @@ public class JsonParser {
 			stats.setRequestDate(now);
 			stats.setActiveInstalls(jsonAppStats.getInt(1));
 			stats.setTotalDownloads(jsonAppStats.getInt(5));
+			// XXX do we put in AppInfo or AppStats
+			app.setNumberOfErrors(jsonAppStats.optInt(4));
 			app.setLatestStats(stats);
 
 			apps.add(app);
@@ -199,7 +206,8 @@ public class JsonParser {
 	}
 
 	/**
-	 * Parses the supplied JSON string and returns the number of comments. 
+	 * Parses the supplied JSON string and returns the number of comments.
+	 * 
 	 * @param json
 	 * @return
 	 * @throws JSONException
@@ -216,6 +224,7 @@ public class JsonParser {
 
 	/**
 	 * Parses the supplied JSON string and returns a list of comments.
+	 * 
 	 * @param json
 	 * @return
 	 * @throws JSONException
@@ -243,9 +252,9 @@ public class JsonParser {
 			 * null,
 			 * "VERSION_NAME",
 			 * [ null,
-			 *   "DEVICE_CODE_NAME",
-			 *   "DEVICE_MANFACTURER",
-			 *   "DEVICE_MODEL"
+			 * "DEVICE_CODE_NAME",
+			 * "DEVICE_MANFACTURER",
+			 * "DEVICE_MODEL"
 			 * ],
 			 * "LOCALE",
 			 * null,
@@ -253,31 +262,32 @@ public class JsonParser {
 			 */
 			// Example with developer reply
 			/*
-			[
-			   null,
-			   "gaia:12824185113034449316:1:vm:18363775304595766012",
-			   "Micka�l",
-			   "1350333837326",
-			   1,
-			   "",
-			   "Nul\tNul!! N'arrive pas a scanner le moindre code barre!",
-			   73,
-			   "3.2.5",
-			   [
-			      null,
-			      "X10i",
-			      "SEMC",
-			      "Xperia X10"
-			   ],
-			   "fr_FR",
-			   [
-			      null,
-			      "Prixing fonctionne pourtant bien sur Xperia X10. Essayez de prendre un minimum de recul, au moins 20 � 30cm, �vitez les ombres et les reflets. N'h�sitez pas � nous �crire sur contact@prixing.fr pour une assistance personnalis�e.",
-			      null,
-			      "1350393460968"
-			   ],
-			   1
-			]
+			 * [
+			 * null,
+			 * "gaia:12824185113034449316:1:vm:18363775304595766012",
+			 * "Micka�l",
+			 * "1350333837326",
+			 * 1,
+			 * "",
+			 * "Nul\tNul!! N'arrive pas a scanner le moindre code barre!",
+			 * 73,
+			 * "3.2.5",
+			 * [
+			 * null,
+			 * "X10i",
+			 * "SEMC",
+			 * "Xperia X10"
+			 * ],
+			 * "fr_FR",
+			 * [
+			 * null,
+			 * "Prixing fonctionne pourtant bien sur Xperia X10. Essayez de prendre un minimum de recul, au moins 20 � 30cm, �vitez les ombres et les reflets. N'h�sitez pas � nous �crire sur contact@prixing.fr pour une assistance personnalis�e."
+			 * ,
+			 * null,
+			 * "1350393460968"
+			 * ],
+			 * 1
+			 * ]
 			 */
 			String user = jsonComment.getString(2);
 			if (user != null && !"null".equals(user)) {
@@ -317,6 +327,7 @@ public class JsonParser {
 
 	/**
 	 * Parses the given date
+	 * 
 	 * @param unixDateCode
 	 * @return
 	 */

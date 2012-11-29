@@ -339,6 +339,7 @@ public class ContentAdapter {
 		initialValues.put(AppInfoTable.KEY_APP_PUBLISHSTATE, -1);
 		initialValues.put(AppInfoTable.KEY_APP_CATEGORY, -1);
 		initialValues.put(AppInfoTable.KEY_APP_VERSION_NAME, appInfo.getVersionName());
+		initialValues.put(AppInfoTable.KEY_APP_NUM_ERRORS, appInfo.getNumberOfErrors());
 
 		context.getContentResolver().insert(AppInfoTable.CONTENT_URI, initialValues);
 
