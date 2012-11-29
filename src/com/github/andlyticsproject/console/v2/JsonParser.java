@@ -149,12 +149,13 @@ public class JsonParser {
 			// Published: 1
 			// Unpublished: 2
 			// Draft: 5
-			// TODO figure out the rest and add to model, filter, etc. Cf. #223
-			int publishStatus = jsonAppInfo.getInt(7);
-			if (publishStatus == 5 || jsonAppInfo.optInt(6) == 0) {
+			// TODO figure out the rest and add don't just skip, filter, etc. Cf. #223
+			int publishState = jsonAppInfo.getInt(7);
+			if (publishState == 5 || jsonAppInfo.optInt(6) == 0) {
 				break;
 				// Probably a draft app
 			}
+			app.setPublishState(publishState);
 			app.setPackageName(packageName);
 
 			/*
@@ -199,8 +200,7 @@ public class JsonParser {
 			stats.setRequestDate(now);
 			stats.setActiveInstalls(jsonAppStats.getInt(1));
 			stats.setTotalDownloads(jsonAppStats.getInt(5));
-			// XXX do we put in AppInfo or AppStats
-			app.setNumberOfErrors(jsonAppStats.optInt(4));
+			stats.setNumberOfErrors(jsonAppStats.optInt(4));
 			app.setLatestStats(stats);
 
 			apps.add(app);

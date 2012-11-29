@@ -284,6 +284,7 @@ public class ContentAdapter {
 		values.put(AppStatsTable.KEY_STATS_2STARS, downloadInfo.getRating2());
 		values.put(AppStatsTable.KEY_STATS_1STARS, downloadInfo.getRating1());
 		values.put(AppStatsTable.KEY_STATS_VERSIONCODE, downloadInfo.getVersionCode());
+		values.put(AppStatsTable.KEY_STATS_NUM_ERRORS, downloadInfo.getNumberOfErrors());
 
 		context.getContentResolver().insert(AppStatsTable.CONTENT_URI, values);
 
@@ -336,10 +337,9 @@ public class ContentAdapter {
 		initialValues.put(AppInfoTable.KEY_APP_ACCOUNT, appInfo.getAccount());
 		initialValues.put(AppInfoTable.KEY_APP_NAME, appInfo.getName());
 		initialValues.put(AppInfoTable.KEY_APP_ICONURL, appInfo.getIconUrl());
-		initialValues.put(AppInfoTable.KEY_APP_PUBLISHSTATE, -1);
+		initialValues.put(AppInfoTable.KEY_APP_PUBLISHSTATE, appInfo.getPublishState());
 		initialValues.put(AppInfoTable.KEY_APP_CATEGORY, -1);
 		initialValues.put(AppInfoTable.KEY_APP_VERSION_NAME, appInfo.getVersionName());
-		initialValues.put(AppInfoTable.KEY_APP_NUM_ERRORS, appInfo.getNumberOfErrors());
 
 		context.getContentResolver().insert(AppInfoTable.CONTENT_URI, initialValues);
 

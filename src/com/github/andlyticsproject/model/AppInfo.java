@@ -22,6 +22,9 @@ public class AppInfo {
 
 	private boolean isDraftOnly;
 
+	// TODO -- make this an enum? Currently not used
+	private int publishState;
+
 	private boolean ghost;
 
 	private boolean skipNotification;
@@ -31,8 +34,6 @@ public class AppInfo {
 	private String versionName;
 
 	private Admob admobStats;
-
-	private Integer numberOfErrors;
 
 	private String admobAccount;
 	private String admobSiteId;
@@ -212,6 +213,14 @@ public class AppInfo {
 		return isDraftOnly;
 	}
 
+	public int getPublishState() {
+		return publishState;
+	}
+
+	public void setPublishState(int publishState) {
+		this.publishState = publishState;
+	}
+
 	public void setGhost(boolean ghost) {
 		this.ghost = ghost;
 	}
@@ -250,14 +259,6 @@ public class AppInfo {
 
 	public Admob getAdmobStats() {
 		return admobStats;
-	}
-
-	public void setNumberOfErrors(Integer numberOfErrors) {
-		this.numberOfErrors = numberOfErrors;
-	}
-
-	public Integer getNumberOfErrors() {
-		return numberOfErrors;
 	}
 
 	public String getAdmobAccount() {

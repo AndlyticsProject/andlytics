@@ -122,8 +122,6 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 
 			Log.d(TAG, "Old version < 19 - adding new appinfo columns");
 			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
-					+ AppInfoTable.KEY_APP_NUM_ERRORS + " integer");
-			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
 					+ AppInfoTable.KEY_APP_ADMOB_ACCOUNT + " text");
 			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
 					+ AppInfoTable.KEY_APP_ADMOB_SITE_ID + " text");
@@ -131,6 +129,10 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 					+ AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE + " date");
 
 			migrateAppInfoPrefs(db);
+
+			Log.d(TAG, "Old version < 19 - adding new appstats columns");
+			db.execSQL("ALTER table " + AppStatsTable.DATABASE_TABLE_NAME + " add "
+					+ AppStatsTable.KEY_STATS_NUM_ERRORS + " integer");
 		}
 
 	}
