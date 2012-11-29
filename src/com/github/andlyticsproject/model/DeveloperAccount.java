@@ -72,6 +72,7 @@ public class DeveloperAccount {
 
 	public void hide() {
 		state = State.HIDDEN;
+		lastStatsUpdate = null;
 	}
 
 	public void activate() {

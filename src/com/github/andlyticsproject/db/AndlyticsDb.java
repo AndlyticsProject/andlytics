@@ -237,14 +237,25 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		return addDeveloperAccount(getWritableDatabase(), account);
 	}
 
+	public synchronized long addOrUpdateDeveloperAccount(DeveloperAccount account) {
+		if (account.getId() != null) {
+			updateDeveloperAccount(account);
+			return account.getId();
+		}
+
+		long id = addDeveloperAccount(account);
+		account.setId(id);
+
+		return id;
+	}
+
 	private ContentValues toValues(DeveloperAccount account) {
 		ContentValues result = new ContentValues();
 		result.put(DeveloperAccountsTable.NAME, account.getName());
 		result.put(DeveloperAccountsTable.STATE, account.getState().ordinal());
-		if (account.getLastStatsUpdate() != null) {
-			result.put(DeveloperAccountsTable.LAST_STATS_UPDATE, account.getLastStatsUpdate()
-					.getTime());
-		}
+		long updateTime = account.getLastStatsUpdate() == null ? 0 : account.getLastStatsUpdate()
+				.getTime();
+		result.put(DeveloperAccountsTable.LAST_STATS_UPDATE, updateTime);
 
 		return result;
 	}

@@ -1,6 +1,8 @@
 package com.github.andlyticsproject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -27,10 +29,13 @@ import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.sync.AutosyncHandler;
 
 /**
- * Used for initial login and managing accounts Because of this original legacy
- * as the launcher activity, navigation is a little odd. On first startup:
- * LoginActivity -> Main When managing accounts: Main -> LoginActivity <- Main
- * or Main -> LoginActivity -> Main
+ * Used for initial login and managing accounts Because of this original legacy as the launcher
+ * activity, navigation is a little odd.
+ * On first startup: LoginActivity -> Main
+ * When managing
+ * accounts: Main -> LoginActivity <- Main
+ * or
+ * Main -> LoginActivity -> Main
  */
 public class LoginActivity extends SherlockActivity {
 
@@ -38,7 +43,7 @@ public class LoginActivity extends SherlockActivity {
 
 	protected static final int CREATE_ACCOUNT_REQUEST = 1;
 
-	private AccountStatus[] accountStatuses;
+	private List<DeveloperAccount> developerAccounts;
 
 	private boolean manageAccountsMode = false;
 	private boolean blockGoingBack = false;
@@ -85,9 +90,9 @@ public class LoginActivity extends SherlockActivity {
 					redirectToMain(selectedAccount.getName());
 				} else {
 					// Go to the first non hidden account
-					for (AccountStatus account : accountStatuses) {
-						if (!account.hidden) {
-							redirectToMain(account.name);
+					for (DeveloperAccount account : developerAccounts) {
+						if (!account.isHidden()) {
+							redirectToMain(account.getName());
 							break;
 						}
 					}
@@ -121,23 +126,23 @@ public class LoginActivity extends SherlockActivity {
 	 * Called if item in option menu is selected.
 	 * 
 	 * @param item
-	 *            The chosen menu item
+	 * The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.itemLoginmenuAdd:
-				addNewGoogleAccount();
-				break;
-			case android.R.id.home:
-				if (!blockGoingBack) {
-					setResult(RESULT_OK);
-					finish();
-				}
-				break;
-			default:
-				return false;
+		case R.id.itemLoginmenuAdd:
+			addNewGoogleAccount();
+			break;
+		case android.R.id.home:
+			if (!blockGoingBack) {
+				setResult(RESULT_OK);
+				finish();
+			}
+			break;
+		default:
+			return false;
 		}
 		return true;
 	}
@@ -149,18 +154,19 @@ public class LoginActivity extends SherlockActivity {
 	}
 
 	protected void showAccountList() {
-		final Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
+		Account[] googleAccounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
+		developerAccounts = new ArrayList<DeveloperAccount>();
 
-		final int size = accounts.length;
-		accountStatuses = new AccountStatus[size];
 		accountList.removeAllViews();
-		for (int i = 0; i < size; i++) {
-			accountStatuses[i] = new AccountStatus();
-			accountStatuses[i].name = accounts[i].name;
-			final DeveloperAccount developerAccount = andlyticsDb
-					.findDeveloperAccountByName(accounts[i].name);
-			boolean hiddenAccount = developerAccount == null ? true : developerAccount.isHidden();
-			accountStatuses[i].hidden = hiddenAccount;
+		for (int i = 0; i < googleAccounts.length; i++) {
+			DeveloperAccount developerAccount = andlyticsDb
+					.findDeveloperAccountByName(googleAccounts[i].name);
+			if (developerAccount == null) {
+				developerAccount = new DeveloperAccount(googleAccounts[i].name,
+						DeveloperAccount.State.HIDDEN);
+			}
+			developerAccounts.add(developerAccount);
+
 
 			// Setup auto sync
 			final AutosyncHandler syncHandler = new AutosyncHandler();
@@ -168,79 +174,66 @@ public class LoginActivity extends SherlockActivity {
 			// in the background before accounts are actually configured
 			if (manageAccountsMode) {
 				// Ensure it matches the sync period (excluding disabled state)
-				syncHandler.setAutosyncPeriod(accounts[i].name,
+				syncHandler.setAutosyncPeriod(googleAccounts[i].name,
 						Preferences.getLastNonZeroAutosyncPeriod(this));
 				// Now make it match the master sync (including disabled state)
-				syncHandler
-						.setAutosyncPeriod(accounts[i].name, Preferences.getAutosyncPeriod(this));
+				syncHandler.setAutosyncPeriod(googleAccounts[i].name,
+						Preferences.getAutosyncPeriod(this));
 			}
 
 			View accountItem = getLayoutInflater().inflate(R.layout.login_list_item, null);
 			TextView accountName = (TextView) accountItem.findViewById(R.id.login_list_item_text);
-			accountName.setText(accounts[i].name);
-			accountItem.setTag(accountStatuses[i]);
+			accountName.setText(googleAccounts[i].name);
+			accountItem.setTag(developerAccount);
 			CheckBox enabled = (CheckBox) accountItem.findViewById(R.id.login_list_item_enabled);
-			enabled.setChecked(!hiddenAccount);
+			enabled.setChecked(!developerAccount.isHidden());
 			enabled.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					AccountStatus account = (AccountStatus) ((View) buttonView.getParent())
+					DeveloperAccount account = (DeveloperAccount) ((View) buttonView.getParent())
 							.getTag();
-					account.hidden = !isChecked;
-					if (account.hidden) {
-						if (developerAccount != null) {
-							developerAccount.hide();
-							andlyticsDb.updateDeveloperAccount(developerAccount);
-						}
+					if (isChecked) {
+						account.activate();
+					} else {
+						account.hide();
+					}
 
+					if (account.isHidden()) {
 						// They are removing the account from Andlytics, disable
 						// syncing
-						syncHandler.setAutosyncEnabled(account.name, false);
+						syncHandler.setAutosyncEnabled(account.getName(), false);
 					} else {
-						if (developerAccount != null) {
-							developerAccount.activate();
-							andlyticsDb.updateDeveloperAccount(developerAccount);
-						} else {
-							DeveloperAccount newDeveloperAccount = new DeveloperAccount(
-									account.name, DeveloperAccount.State.ACTIVE);
-							andlyticsDb.addDeveloperAccount(newDeveloperAccount);
-						}
-
 						// Make it match the master sync period (including
 						// disabled state)
-						syncHandler.setAutosyncPeriod(account.name,
+						syncHandler.setAutosyncPeriod(account.getName(),
 								Preferences.getAutosyncPeriod(LoginActivity.this));
 					}
+					andlyticsDb.addOrUpdateDeveloperAccount(account);
 
-					if (manageAccountsMode && (account.name).equals(selectedAccount)) {
+					if (manageAccountsMode && (account.getName()).equals(selectedAccount)) {
 						// If they remove the current account, then stop them
 						// going back
-						blockGoingBack = account.hidden;
+						blockGoingBack = account.isHidden();
 					}
 
-					// Update ok button
-					boolean atLeastOneAccountEnabled = false;
-					for (AccountStatus acc : accountStatuses) {
-						if (!acc.hidden) {
-							atLeastOneAccountEnabled = true;
-							break;
-						}
-					}
-					okButton.setEnabled(atLeastOneAccountEnabled);
+					okButton.setEnabled(isAtLeastOneAccountEnabled());
 				}
 			});
 			accountList.addView(accountItem);
 		}
 
 		// Update ok button
-		boolean atLeastOneAccountEnabled = false;
-		for (AccountStatus acc : accountStatuses) {
-			if (!acc.hidden) {
-				atLeastOneAccountEnabled = true;
-				break;
+		okButton.setEnabled(isAtLeastOneAccountEnabled());
+	}
+
+	private boolean isAtLeastOneAccountEnabled() {
+		for (DeveloperAccount acc : developerAccounts) {
+			if (!acc.isHidden()) {
+				return true;
 			}
 		}
-		okButton.setEnabled(atLeastOneAccountEnabled);
+
+		return false;
 	}
 
 	private void addNewGoogleAccount() {
@@ -277,11 +270,6 @@ public class LoginActivity extends SherlockActivity {
 		startActivity(intent);
 		overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
 		finish();
-	}
-
-	private static class AccountStatus {
-		public String name;
-		public boolean hidden;
 	}
 
 }
