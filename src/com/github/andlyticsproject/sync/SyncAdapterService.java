@@ -28,6 +28,7 @@ import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.AppInfo;
+import com.github.andlyticsproject.model.DeveloperAccount;
 
 public class SyncAdapterService extends Service {
 
@@ -52,14 +53,18 @@ public class SyncAdapterService extends Service {
 		@Override
 		public void onPerformSync(Account account, Bundle extras, String authority,
 				ContentProviderClient provider, SyncResult syncResult) {
-			// TODO If the account is hidden and the user enables syncing for it via system
-			// then this could get called. We should check and either make the account visable,
-			// or disable syncing
-			try {
-				SyncAdapterService.performSync(mContext, account, extras, authority, provider,
-						syncResult);
-			} catch (OperationCanceledException e) {
-				Log.w(TAG, "operation canceled", e);
+			// If the account is hidden and the user enables syncing for it via system
+			// then this could get called. Check account state and only sync
+			// if not hidden.
+			DeveloperAccount developerAccount = DeveloperAccountManager.getInstance(mContext)
+					.findDeveloperAccountByName(account.name);
+			if (developerAccount != null && developerAccount.isVisible()) {
+				try {
+					SyncAdapterService.performSync(mContext, account, extras, authority, provider,
+							syncResult);
+				} catch (OperationCanceledException e) {
+					Log.w(TAG, "operation canceled", e);
+				}
 			}
 		}
 	}
@@ -85,7 +90,7 @@ public class SyncAdapterService extends Service {
 
 			if (console != null) {
 				List<AppInfo> appDownloadInfos = console.getAppInfo(null);
-				// this can also happen if authentication fails and the user 
+				// this can also happen if authentication fails and the user
 				// need to click on a notification to confirm or re-enter
 				// password (e.g., if password changed or 2FA enabled)
 				if (appDownloadInfos.isEmpty()) {
@@ -134,8 +139,7 @@ public class SyncAdapterService extends Service {
 				}
 
 				DeveloperAccountManager.getInstance(context).saveLastStatsRemoteUpdateTime(
-						account.name,
-						System.currentTimeMillis());
+						account.name, System.currentTimeMillis());
 
 			}
 		} catch (DevConsoleException e) {
