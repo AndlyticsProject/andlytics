@@ -391,6 +391,13 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 				new String[] { Long.toString(account.getId()) });
 	}
 
+	public synchronized void deleteDeveloperAccount(DeveloperAccount account) {
+		SQLiteDatabase db = getWritableDatabase();
+
+		db.delete(DeveloperAccountsTable.DATABASE_TABLE_NAME, "name = ?",
+				new String[] { account.getName() });
+	}
+
 	public synchronized void selectDeveloperAccount(String name) {
 		SQLiteDatabase db = getWritableDatabase();
 		db.beginTransaction();
@@ -419,7 +426,6 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			toSelect.select();
 			updateDeveloperAccount(toSelect);
 			Log.d(TAG, "Set to SELECTED: " + toSelect);
-			new Exception().printStackTrace();
 
 			db.setTransactionSuccessful();
 		} finally {

@@ -118,6 +118,9 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/sync" />
         </service>
+        
+        <service android:name=".sync.SyncDeveloperAccountsService"/>
+        
         <service
             android:name=".admob.AdmobAccountAuthenticator"
             android:exported="false" >
@@ -145,9 +148,7 @@
             android:authorities="com.github.andlyticsproject.db.AndlyticsContentProvider"
             android:exported="false" />
 
-        <receiver
-            android:name="com.github.andlyticsproject.sync.AccountsChangedReceiver"
-            android:exported="false" >
+        <receiver android:name="com.github.andlyticsproject.sync.AccountsChangedReceiver">
             <intent-filter>
                 <action android:name="android.accounts.LOGIN_ACCOUNTS_CHANGED" />
             </intent-filter>
