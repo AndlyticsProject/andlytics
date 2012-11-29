@@ -72,7 +72,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private StatsMode currentStatsMode;
 	private MenuItem statsModeMenuItem;
 
-	private List<DeveloperAccount> accountsList;
+	private List<DeveloperAccount> developerAccounts;
 
 	private DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);
 
@@ -146,17 +146,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		db = getDbAdapter();
 		LayoutInflater layoutInflater = getLayoutInflater();
 
-		// Hack in case the account is hidden and then the app is killed
-		// which means when it starts up next, it goes straight to the account
-		// even though it shouldn't. To work around this, just mark it as not
-		// hidden
-		// in the sense that that change they made never got applied
-		// TODO Do something clever in login activity to prevent this while
-		// keeping the ability
-		// to block going 'back'
-		// XXX -- not needed anymore?
-		// andlyticsDb.activateDeveloperAccount(accountName);
-
+		// BaseActivity has already selected the account
 		updateAccountsList();
 
 		// setup main list
@@ -195,12 +185,10 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		if (!accountsList.get(itemPosition).getName().equals(accountName)) {
+		if (!developerAccounts.get(itemPosition).getName().equals(accountName)) {
 			// Only switch if it is a new account
-			// XXX this might not be needed -- DB code does this automatically
-			// andlyticsDb.unselectDeveloperAccount();
 			Intent intent = new Intent(Main.this, Main.class);
-			intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountsList.get(itemPosition).getName());
+			intent.putExtra(Constants.AUTH_ACCOUNT_NAME, developerAccounts.get(itemPosition).getName());
 			startActivity(intent);
 			overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
 			// Call finish to ensure we don't get multiple activities running
@@ -212,14 +200,10 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		boolean mainSkipDataReload = getAndlyticsApplication().isSkipMainReload();
-
-		// TODO We shouldn't be reloading in every onResume
-		// When we move this, make sure we move to using startActivityForResult
-		// for the preferences
-		// to ensure that we do update if hidden apps are changed
 
 		// TODO Revise the whole application global flag thing
+		boolean mainSkipDataReload = getAndlyticsApplication().isSkipMainReload();
+
 		// XXX force DB load when switching accounts?
 		if (!mainSkipDataReload && shouldRemoteUpdateStats()) {
 			loadLocalEntriesAndUpdate();
@@ -357,21 +341,21 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	}
 
 	private void updateAccountsList() {
-		accountsList = andlyticsDb.getActiveDeveloperAccounts();
-		if (accountsList.size() > 1) {
+		developerAccounts = andlyticsDb.getActiveDeveloperAccounts();
+		if (developerAccounts.size() > 1) {
 			int selectedIndex = 0;
 			int index = 0;
-			for (DeveloperAccount account : accountsList) {
+			for (DeveloperAccount account : developerAccounts) {
 				if (account.getName().equals(accountName)) {
 					selectedIndex = index;
 				}
 				index++;
 			}
-			if (accountsList.size() > 1) {
+			if (developerAccounts.size() > 1) {
 				// Only use the spinner if we have multiple accounts
 				Context context = getSupportActionBar().getThemedContext();
 				AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(context,
-						R.layout.account_selector_item, accountsList);
+						R.layout.account_selector_item, developerAccounts);
 				accountsAdapter
 						.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
 
