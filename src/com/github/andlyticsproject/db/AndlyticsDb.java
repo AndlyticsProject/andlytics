@@ -407,7 +407,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 					return;
 				}
 
-				selected.deslect();
+				selected.deselect();
 				updateDeveloperAccount(selected);
 				Log.d(TAG, "Set to ACTIVE: " + selected);
 			}

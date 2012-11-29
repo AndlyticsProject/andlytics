@@ -79,7 +79,7 @@ public class DeveloperAccount {
 		state = State.ACTIVE;
 	}
 
-	public void deslect() {
+	public void deselect() {
 		activate();
 	}
 
