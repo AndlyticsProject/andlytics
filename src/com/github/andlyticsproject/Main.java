@@ -173,7 +173,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			state.attachAll(this);
 			if (state.lastAppList != null) {
 				adapter.setAppInfos(state.lastAppList);
-				getAndlyticsApplication().setSkipMainReload(true);
+				setSkipMainReload(true);
 			}
 		}
 
@@ -202,17 +202,14 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	protected void onResume() {
 		super.onResume();
 
-		// TODO Revise the whole application global flag thing
-		boolean mainSkipDataReload = getAndlyticsApplication().isSkipMainReload();
-
 		// XXX force DB load when switching accounts?
-		if (!mainSkipDataReload && shouldRemoteUpdateStats()) {
+		if (!isSkipMainReload() && shouldRemoteUpdateStats()) {
 			loadLocalEntriesAndUpdate();
 		} else {
 			loadLocalEntriesOnly();
 		}
 
-		getAndlyticsApplication().setSkipMainReload(false);
+		setSkipMainReload(false);
 
 		AndlyticsApp.getInstance().setIsAppVisible(true);
 	}

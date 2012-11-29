@@ -12,11 +12,14 @@ import java.net.URL;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 
+import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.io.MediaScannerWrapper;
 
 /**
@@ -140,6 +143,17 @@ public final class Utils {
 				fos.close();
 			}
 		}
+	}
+
+	public static int getAppVersionCode(Context context) {
+		try {
+			PackageInfo pinfo = context.getPackageManager().getPackageInfo(
+					context.getPackageName(), 0);
+			return pinfo.versionCode;
+		} catch (NameNotFoundException e) {
+			Log.e(AndlyticsApp.class.getSimpleName(), "unable to read version code", e);
+		}
+		return 0;
 	}
 
 }
