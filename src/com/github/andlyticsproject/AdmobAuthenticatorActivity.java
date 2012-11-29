@@ -1,8 +1,4 @@
-
 package com.github.andlyticsproject;
-
-import com.github.andlyticsproject.admob.AdmobAuthenticationUtilities;
-import com.github.andlyticsproject.admob.AdmobRequest;
 
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
@@ -18,11 +14,15 @@ import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.github.andlyticsproject.admob.AdmobAuthenticationUtilities;
+import com.github.andlyticsproject.admob.AdmobRequest;
+import com.github.andlyticsproject.db.AndlyticsDb;
 
 public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
 
@@ -70,7 +70,7 @@ public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
 		mUsernameEdit = (EditText) findViewById(R.id.admob_login_username_edit);
 		mPasswordEdit = (EditText) findViewById(R.id.admob_login_password_edit);
 		if (mUsername == null) {
-			mUsername = Preferences.getAccountName(AdmobAuthenticatorActivity.this);
+			mUsername = AndlyticsDb.getInstance(this).getSelectedDeveloperAccount().getName();
 		}
 		mUsernameEdit.setText(mUsername);
 		if (mUsername != null) {

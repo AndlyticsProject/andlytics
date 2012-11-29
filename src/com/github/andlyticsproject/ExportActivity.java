@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.github.andlyticsproject.cache.AppIconInMemoryCache;
+import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.io.ExportService;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.model.AppInfo;
@@ -135,8 +136,9 @@ public class ExportActivity extends SherlockFragmentActivity {
 					return;
 				}
 
-				File exportFile = StatsCsvReaderWriter.getExportFileForAccount(Preferences
-						.getAccountName(ExportActivity.this));
+				String accountName = AndlyticsDb.getInstance(ExportActivity.this)
+						.getSelectedDeveloperAccount().getName();
+				File exportFile = StatsCsvReaderWriter.getExportFileForAccount(accountName);
 				if (exportFile.exists()) {
 					ConfirmExportDialogFragment.newInstance(exportFile.getName()).show(
 							getSupportFragmentManager(), "confirmExportDialog");

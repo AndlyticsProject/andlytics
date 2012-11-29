@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
+import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.io.ImportService;
 import com.github.andlyticsproject.io.ServiceException;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
@@ -77,7 +78,8 @@ public class ImportActivity extends SherlockFragmentActivity {
 		if (Intent.ACTION_VIEW.equals(getIntent().getAction())) {
 			Uri data = getIntent().getData();
 			if (data == null) {
-				Toast.makeText(this, getString(R.string.stats_file_not_specified_error), Toast.LENGTH_LONG).show();
+				Toast.makeText(this, getString(R.string.stats_file_not_specified_error),
+						Toast.LENGTH_LONG).show();
 				finish();
 			}
 
@@ -151,7 +153,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 		if (ownerAccount == null) {
 			// fall back to value from preferences
 			// XXX should we give a choice instead?
-			ownerAccount = Preferences.getAccountName(this);
+			ownerAccount = AndlyticsDb.getInstance(this).getSelectedDeveloperAccount().getName();
 		}
 		return ownerAccount;
 	}
