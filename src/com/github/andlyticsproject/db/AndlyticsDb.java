@@ -49,6 +49,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		db.execSQL(AppStatsTable.TABLE_CREATE_STATS);
 		db.execSQL(CommentsTable.TABLE_CREATE_COMMENTS);
 		db.execSQL(AdmobTable.TABLE_CREATE_ADMOB);
+		db.execSQL(DeveloperAccountsTable.TABLE_CREATE_DEVELOPER_ACCOUNT);
 	}
 
 	@Override
