@@ -188,7 +188,8 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		if (!developerAccounts.get(itemPosition).getName().equals(accountName)) {
 			// Only switch if it is a new account
 			Intent intent = new Intent(Main.this, Main.class);
-			intent.putExtra(Constants.AUTH_ACCOUNT_NAME, developerAccounts.get(itemPosition).getName());
+			intent.putExtra(Constants.AUTH_ACCOUNT_NAME, developerAccounts.get(itemPosition)
+					.getName());
 			startActivity(intent);
 			overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
 			// Call finish to ensure we don't get multiple activities running
@@ -305,7 +306,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				// preferences and finish
 				// so that the user has to choose an account when they next
 				// start the app
-				andlyticsDb.unselectDeveloperAccount();
+				developerAccountManager.unselectDeveloperAccount();
 				finish();
 			}
 		} else if (requestCode == REQUEST_AUTHENTICATE) {
@@ -341,7 +342,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	}
 
 	private void updateAccountsList() {
-		developerAccounts = andlyticsDb.getActiveDeveloperAccounts();
+		developerAccounts = developerAccountManager.getActiveDeveloperAccounts();
 		if (developerAccounts.size() > 1) {
 			int selectedIndex = 0;
 			int index = 0;
@@ -503,8 +504,9 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			activity.refreshFinished();
 
 			if (exception == null) {
-				AndlyticsDb.getInstance(activity).saveLastStatsRemoteUpdateTime(
-						activity.accountName, System.currentTimeMillis());
+				activity.developerAccountManager.saveLastStatsRemoteUpdateTime(
+						activity.accountName,
+						System.currentTimeMillis());
 				activity.loadLocalEntriesOnly();
 				return;
 			}

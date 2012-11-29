@@ -29,7 +29,6 @@ import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.console.MultiAccountException;
 import com.github.andlyticsproject.console.NetworkException;
-import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.dialog.CrashDialog;
 import com.github.andlyticsproject.dialog.CrashDialog.CrashDialogBuilder;
 
@@ -45,13 +44,13 @@ public class BaseActivity extends SherlockActivity {
 
 	private boolean refreshing;
 
-	protected AndlyticsDb andlyticsDb;
+	protected DeveloperAccountManager developerAccountManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		andlyticsDb = AndlyticsDb.getInstance(getApplication());
+		developerAccountManager = DeveloperAccountManager.getInstance(getApplication());
 
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
@@ -62,7 +61,7 @@ public class BaseActivity extends SherlockActivity {
 			packageName = b.getString(Constants.PACKAGE_NAME_PARCEL);
 			iconFilePath = b.getString(Constants.ICON_FILE_PARCEL);
 			accountName = b.getString(Constants.AUTH_ACCOUNT_NAME);
-			andlyticsDb.selectDeveloperAccount(accountName);
+			developerAccountManager.selectDeveloperAccount(accountName);
 		}
 
 	}
@@ -277,7 +276,7 @@ public class BaseActivity extends SherlockActivity {
 
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
-							andlyticsDb.unselectDeveloperAccount();
+							developerAccountManager.unselectDeveloperAccount();
 							Preferences.saveSkipAutoLogin(BaseActivity.this, true);
 							Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
 							startActivity(intent);
@@ -292,7 +291,7 @@ public class BaseActivity extends SherlockActivity {
 
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
-							andlyticsDb.unselectDeveloperAccount();
+							developerAccountManager.unselectDeveloperAccount();
 							Preferences.saveSkipAutoLogin(BaseActivity.this, true);
 							Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
 							startActivity(intent);
@@ -329,7 +328,7 @@ public class BaseActivity extends SherlockActivity {
 
 	protected boolean shouldRemoteUpdateStats() {
 		long now = System.currentTimeMillis();
-		long lastUpdate = AndlyticsDb.getInstance(this).getLastStatsRemoteUpdateTime(accountName);
+		long lastUpdate = developerAccountManager.getLastStatsRemoteUpdateTime(accountName);
 		// never updated
 		if (lastUpdate == 0) {
 			return true;

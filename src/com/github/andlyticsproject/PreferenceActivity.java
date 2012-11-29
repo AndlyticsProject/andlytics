@@ -16,7 +16,6 @@ import android.preference.PreferenceManager;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.sync.AutosyncHandler;
 
@@ -63,7 +62,7 @@ public class PreferenceActivity extends SherlockPreferenceActivity implements
 	}
 
 	private void buildAccountsList() {
-		developerAccounts = AndlyticsDb.getInstance(this).getActiveDeveloperAccounts();
+		developerAccounts = DeveloperAccountManager.getInstance(this).getActiveDeveloperAccounts();
 		for (DeveloperAccount account : developerAccounts) {
 			// Create a preference representing the account and add it to the screen
 			Preference pref = new Preference(this);

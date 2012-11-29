@@ -24,7 +24,6 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.sync.AutosyncHandler;
 
@@ -52,7 +51,7 @@ public class LoginActivity extends SherlockActivity {
 	private LinearLayout accountList;
 
 	private AccountManager accountManager;
-	private AndlyticsDb andlyticsDb;
+	private DeveloperAccountManager developerAccountManager;
 
 	// TODO Clean this code and res/layout/login.xml up e.g. using a ListView
 	// instead of a LinearLayout
@@ -60,7 +59,7 @@ public class LoginActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 
 		accountManager = AccountManager.get(this);
-		andlyticsDb = AndlyticsDb.getInstance(getApplicationContext());
+		developerAccountManager = DeveloperAccountManager.getInstance(getApplicationContext());
 
 		// When called from accounts action item in Main, this flag is passed to
 		// indicate
@@ -76,7 +75,7 @@ public class LoginActivity extends SherlockActivity {
 			getSupportActionBar().setTitle(R.string.manage_accounts);
 		}
 
-		selectedAccount = andlyticsDb.getSelectedDeveloperAccount();
+		selectedAccount = developerAccountManager.getSelectedDeveloperAccount();
 
 		setContentView(R.layout.login);
 		accountList = (LinearLayout) findViewById(R.id.login_input);
@@ -155,7 +154,7 @@ public class LoginActivity extends SherlockActivity {
 
 	protected void showAccountList() {
 		Account[] googleAccounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
-		List<DeveloperAccount> dbAccounts = andlyticsDb.getAllDeveloperAccounts();
+		List<DeveloperAccount> dbAccounts = developerAccountManager.getAllDeveloperAccounts();
 		developerAccounts = new ArrayList<DeveloperAccount>();
 
 		accountList.removeAllViews();
@@ -210,7 +209,7 @@ public class LoginActivity extends SherlockActivity {
 						syncHandler.setAutosyncPeriod(account.getName(),
 								Preferences.getAutosyncPeriod(LoginActivity.this));
 					}
-					andlyticsDb.addOrUpdateDeveloperAccount(account);
+					developerAccountManager.addOrUpdateDeveloperAccount(account);
 
 					if (manageAccountsMode && account.equals(selectedAccount)) {
 						// If they remove the current account, then stop them

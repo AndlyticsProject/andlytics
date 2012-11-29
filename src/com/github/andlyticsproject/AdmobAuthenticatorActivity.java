@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.github.andlyticsproject.admob.AdmobAuthenticationUtilities;
 import com.github.andlyticsproject.admob.AdmobRequest;
-import com.github.andlyticsproject.db.AndlyticsDb;
 
 public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
 
@@ -70,7 +69,8 @@ public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
 		mUsernameEdit = (EditText) findViewById(R.id.admob_login_username_edit);
 		mPasswordEdit = (EditText) findViewById(R.id.admob_login_password_edit);
 		if (mUsername == null) {
-			mUsername = AndlyticsDb.getInstance(this).getSelectedDeveloperAccount().getName();
+			mUsername = DeveloperAccountManager.getInstance(this).getSelectedDeveloperAccount()
+					.getName();
 		}
 		mUsernameEdit.setText(mUsername);
 		if (mUsername != null) {

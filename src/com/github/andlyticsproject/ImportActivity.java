@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
-import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.io.ImportService;
 import com.github.andlyticsproject.io.ServiceException;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
@@ -153,7 +152,8 @@ public class ImportActivity extends SherlockFragmentActivity {
 		if (ownerAccount == null) {
 			// fall back to value from preferences
 			// XXX should we give a choice instead?
-			ownerAccount = AndlyticsDb.getInstance(this).getSelectedDeveloperAccount().getName();
+			ownerAccount = DeveloperAccountManager.getInstance(this).getSelectedDeveloperAccount()
+					.getName();
 		}
 		return ownerAccount;
 	}

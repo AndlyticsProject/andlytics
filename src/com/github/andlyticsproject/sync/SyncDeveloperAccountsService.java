@@ -12,14 +12,14 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.github.andlyticsproject.Constants;
-import com.github.andlyticsproject.db.AndlyticsDb;
+import com.github.andlyticsproject.DeveloperAccountManager;
 import com.github.andlyticsproject.model.DeveloperAccount;
 
 public class SyncDeveloperAccountsService extends IntentService {
 
 	private static final String TAG = SyncDeveloperAccountsService.class.getSimpleName();
 
-	private AndlyticsDb db;
+	private DeveloperAccountManager developerAccountManager;
 
 	public SyncDeveloperAccountsService() {
 		super("SyncDeveloperAccountsService");
@@ -27,7 +27,7 @@ public class SyncDeveloperAccountsService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		db = AndlyticsDb.getInstance(this);
+		developerAccountManager = DeveloperAccountManager.getInstance(this);
 		Account[] googleAccounts = AccountManager.get(this).getAccountsByType(
 				Constants.ACCOUNT_TYPE_GOOGLE);
 
@@ -41,12 +41,12 @@ public class SyncDeveloperAccountsService extends IntentService {
 
 	private void removeStaleGoogleAccounts(Account[] googleAccounts) {
 		int removed = 0;
-		List<DeveloperAccount> developerAccounts = db.getAllDeveloperAccounts();
+		List<DeveloperAccount> developerAccounts = developerAccountManager.getAllDeveloperAccounts();
 		for (DeveloperAccount account : developerAccounts) {
 			Account googleAccount = findMatchingAccount(account, googleAccounts);
 			if (googleAccount == null) {
 				Log.d(TAG, "Removing  " + account);
-				db.deleteDeveloperAccount(account);
+				developerAccountManager.deleteDeveloperAccount(account);
 				removed++;
 			}
 		}
@@ -57,12 +57,12 @@ public class SyncDeveloperAccountsService extends IntentService {
 	private void addNewGoogleAccounts(Account[] googleAccounts) {
 		// add new accounts as hidden
 		int added = 0;
-		List<DeveloperAccount> developerAccounts = db.getAllDeveloperAccounts();
+		List<DeveloperAccount> developerAccounts = developerAccountManager.getAllDeveloperAccounts();
 		for (Account googleAccount : googleAccounts) {
 			DeveloperAccount account = DeveloperAccount.createHidden(googleAccount.name);
 			if (!developerAccounts.contains(account)) {
 				Log.d(TAG, "Adding  " + account);
-				db.addDeveloperAccount(account);
+				developerAccountManager.addDeveloperAccount(account);
 				added++;
 			}
 		}
@@ -72,7 +72,7 @@ public class SyncDeveloperAccountsService extends IntentService {
 
 	@SuppressWarnings("deprecation")
 	private void syncData() {
-		List<DeveloperAccount> accounts = db.getActiveDeveloperAccounts();
+		List<DeveloperAccount> accounts = developerAccountManager.getActiveDeveloperAccounts();
 		for (DeveloperAccount developerAccount : accounts) {
 			Account googleAccount = new Account(developerAccount.getName(),
 					Constants.ACCOUNT_TYPE_GOOGLE);
