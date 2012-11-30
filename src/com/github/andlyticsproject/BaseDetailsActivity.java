@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject;
 
 import android.graphics.Bitmap;
@@ -10,6 +9,7 @@ import android.view.View.OnClickListener;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
+import com.github.andlyticsproject.db.AndlyticsDb;
 
 /**
  * A base class for the details activities (Comments, Downloads etc...)
@@ -54,12 +54,12 @@ public class BaseDetailsActivity extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				overridePendingTransition(R.anim.activity_prev_in, R.anim.activity_prev_out);
-				return true;
-			default:
-				return (super.onOptionsItemSelected(item));
+		case android.R.id.home:
+			finish();
+			overridePendingTransition(R.anim.activity_prev_in, R.anim.activity_prev_out);
+			return true;
+		default:
+			return (super.onOptionsItemSelected(item));
 		}
 	}
 
@@ -101,12 +101,8 @@ public class BaseDetailsActivity extends BaseActivity {
 		admobButton = findViewById(R.id.tabbar_button_back);
 
 		// Check if AdMob is configured for this app
-		String currentAdmobAccount = null;
-		String currentSiteId = Preferences.getAdmobSiteId(this, packageName);
-		if (currentSiteId != null) {
-			currentAdmobAccount = Preferences.getAdmobAccount(this, currentSiteId);
-		}
-		boolean admobConfigured = currentAdmobAccount == null ? false : true;
+		String[] admobDetails = AndlyticsDb.getInstance(this).getAdmobDetails(packageName);
+		boolean admobConfigured = admobDetails != null;
 		if (!admobConfigured && Preferences.getHideAdmobForUnconfiguredApps(this)) {
 			admobButton.setVisibility(View.GONE);
 		}

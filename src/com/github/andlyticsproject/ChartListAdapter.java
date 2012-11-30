@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject;
 
 import java.text.SimpleDateFormat;
@@ -18,7 +17,7 @@ import com.github.andlyticsproject.chart.Chart.ValueCallbackHander;
 import com.github.andlyticsproject.model.AppStats;
 
 public class ChartListAdapter extends BaseChartListAdapter {
-	//		private static String LOG_TAG=ChartListAdapter.class.toString();
+	// private static String LOG_TAG=ChartListAdapter.class.toString();
 
 	private static int BLACK_TEXT;
 
@@ -72,14 +71,12 @@ public class ChartListAdapter extends BaseChartListAdapter {
 		return position;
 	}
 
-	/*	public Object getCurrentChart() {
-			return currentChart;
-		}
-
-		public void setCurrentChart(Object currentChart) {
-			this.currentChart = currentChart;
-		}
-	*/
+	/*
+	 * public Object getCurrentChart() { return currentChart; }
+	 * 
+	 * public void setCurrentChart(Object currentChart) { this.currentChart =
+	 * currentChart; }
+	 */
 	public void setDownloadInfos(List<AppStats> downloadInfos) {
 		this.downloadInfos = downloadInfos;
 	}
@@ -298,7 +295,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 	@Override
 	protected View buildChart(Context context, Chart baseChart, List<?> statsForApp, int page,
 			int column) throws IndexOutOfBoundsException {
-		//    	Log.i(LOG_TAG,"buildChart p="+page+" c="+column);
+		// Log.i(LOG_TAG,"buildChart p="+page+" c="+column);
 		ValueCallbackHander handler = null;
 		switch (ChartSet.values()[page]) {
 			case DOWNLOADS: {
@@ -415,7 +412,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 			}
 				break;
 		}
-		throw new IndexOutOfBoundsException("page=" + page + " columnt=" + column);
+		throw new IndexOutOfBoundsException("page=" + page + " column=" + column);
 	}
 
 	public void setHeighestRatingChange(Integer heighestRatingChange) {

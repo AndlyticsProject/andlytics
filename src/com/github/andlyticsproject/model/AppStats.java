@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.util.SparseArray;
 
 public class AppStats {
@@ -69,6 +70,9 @@ public class AppStats {
 
 	// XXX should put in wrapper class
 	private String packageName;
+
+	// TODO -- do we support diffs for this?
+	private Integer numberOfErrors;
 
 	public AppStats() {
 	}
@@ -330,6 +334,7 @@ public class AppStats {
 		this.setActiveInstallsPercentString(percentBigDecimal.toPlainString());
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	public String getRequestDateString() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return dateFormat.format(getRequestDate());
@@ -558,6 +563,14 @@ public class AppStats {
 
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
+	}
+
+	public void setNumberOfErrors(Integer numberOfErrors) {
+		this.numberOfErrors = numberOfErrors;
+	}
+
+	public Integer getNumberOfErrors() {
+		return numberOfErrors;
 	}
 
 }

@@ -1,9 +1,12 @@
-
 package com.github.andlyticsproject.sync;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Service;
 import android.content.AbstractThreadedSyncAdapter;
@@ -15,21 +18,15 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.andlyticsproject.AppStatsDiff;
-import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.ContentAdapter;
-import com.github.andlyticsproject.DeveloperConsole;
-import com.github.andlyticsproject.exception.AuthenticationException;
-import com.github.andlyticsproject.exception.DeveloperConsoleException;
-import com.github.andlyticsproject.exception.InvalidJSONResponseException;
-import com.github.andlyticsproject.exception.MultiAccountAcception;
-import com.github.andlyticsproject.exception.NetworkException;
-import com.github.andlyticsproject.exception.NoCookieSetException;
-import com.github.andlyticsproject.exception.SignupException;
+import com.github.andlyticsproject.DeveloperAccountManager;
+import com.github.andlyticsproject.admob.AdmobException;
+import com.github.andlyticsproject.admob.AdmobRequest;
+import com.github.andlyticsproject.console.DevConsoleException;
+import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
+import com.github.andlyticsproject.console.v2.DevConsoleV2;
+import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.AppInfo;
 
 public class SyncAdapterService extends Service {
@@ -80,58 +77,71 @@ public class SyncAdapterService extends Service {
 		return sSyncAdapter;
 	}
 
-	@SuppressWarnings("deprecation")
 	private static void performSync(Context context, Account account, Bundle extras,
 			String authority, ContentProviderClient provider, SyncResult syncResult)
 			throws OperationCanceledException {
-
-		Bundle bundle = null;
-		String token = null;
-
 		try {
-			bundle = AccountManager.get(context)
-					.getAuthToken(account, Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, true, null, null).getResult();
-			if (bundle != null && bundle.containsKey(AccountManager.KEY_AUTHTOKEN)) {
-				token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+			DevConsoleV2 console = DevConsoleRegistry.getInstance().get(account.name);
 
-				DeveloperConsole console = new DeveloperConsole(context);
-				List<AppInfo> appDownloadInfos = console.getAppDownloadInfos(token, account.name);
+			if (console != null) {
+				List<AppInfo> appDownloadInfos = console.getAppInfo(null);
+				// this can also happen if authentication fails and the user 
+				// need to click on a notification to confirm or re-enter
+				// password (e.g., if password changed or 2FA enabled)
+				if (appDownloadInfos.isEmpty()) {
+					return;
+				}
 
 				Log.d(TAG, "andlytics from sync adapter, size: " + appDownloadInfos.size());
 
 				List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
+				Map<String, List<String>> admobAccountSiteMap = new HashMap<String, List<String>>();
 
 				db = new ContentAdapter(context);
 				for (AppInfo appDownloadInfo : appDownloadInfos) {
 					// update in database
 					diffs.add(db.insertOrUpdateStats(appDownloadInfo));
+					String[] admobDetails = AndlyticsDb.getInstance(context).getAdmobDetails(
+							appDownloadInfo.getPackageName());
+					if (admobDetails != null) {
+						String admobAccount = admobDetails[0];
+						String admobSiteId = admobDetails[1];
+						if (admobAccount != null) {
+							List<String> siteList = admobAccountSiteMap.get(admobAccount);
+							if (siteList == null) {
+								siteList = new ArrayList<String>();
+							}
+							siteList.add(admobSiteId);
+							admobAccountSiteMap.put(admobAccount, siteList);
+						}
+					}
 				}
 				Log.d(TAG, "sucessfully synced andlytics");
 
 				// check for notifications
 				NotificationHandler.handleNotificaions(context, diffs, account.name);
 
-			} else {
-				Log.e(TAG, "error during sync auth, no token found");
+				if (!admobAccountSiteMap.isEmpty()) {
+					Log.d(TAG, "Syncing AdMob stats");
+					// sync admob accounts
+					Set<String> admobAccuntKeySet = admobAccountSiteMap.keySet();
+					for (String admobAccount : admobAccuntKeySet) {
+
+						AdmobRequest.syncSiteStats(admobAccount, context,
+								admobAccountSiteMap.get(admobAccount), null);
+					}
+					Log.d(TAG, "Sucessfully synced AdMob stats");
+				}
+
+				DeveloperAccountManager.getInstance(context).saveLastStatsRemoteUpdateTime(
+						account.name,
+						System.currentTimeMillis());
+
 			}
-		} catch (AuthenticatorException e) {
-			Log.e(TAG, "error during sync auth", e);
-		} catch (IOException e) {
-			Log.e(TAG, "error during sync auth", e);
-		} catch (NetworkException e) {
-			Log.e(TAG, "error during sync auth", e);
-		} catch (DeveloperConsoleException e) {
-			Log.e(TAG, "error during sync auth", e);
-		} catch (InvalidJSONResponseException e) {
-			Log.e(TAG, "error during sync auth", e);
-		} catch (SignupException e) {
-			Log.e(TAG, "error during sync auth", e);
-		} catch (AuthenticationException e) {
-			Log.e(TAG, "error during sync auth", e);
-		} catch (NoCookieSetException e) {
-			Log.e(TAG, "error during sync auth", e);
-		} catch (MultiAccountAcception e) {
-			Log.e(TAG, "error during sync auth", e);
+		} catch (DevConsoleException e) {
+			Log.e(TAG, "error during sync", e);
+		} catch (AdmobException e) {
+			Log.e(TAG, "error during Admob sync", e);
 		}
 
 	}

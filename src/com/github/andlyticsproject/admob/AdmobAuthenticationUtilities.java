@@ -31,7 +31,7 @@ import java.io.IOException;
 
 import com.github.andlyticsproject.AdmobAuthenticatorActivity;
 import com.github.andlyticsproject.Constants;
-import com.github.andlyticsproject.exception.NetworkException;
+import com.github.andlyticsproject.console.NetworkException;
 
 /**
  * Provides utility methods for communicating with the server.
