@@ -135,8 +135,9 @@ public class ExportActivity extends SherlockFragmentActivity {
 					return;
 				}
 
-				File exportFile = StatsCsvReaderWriter.getExportFileForAccount(Preferences
-						.getAccountName(ExportActivity.this));
+				String accountName = DeveloperAccountManager.getInstance(ExportActivity.this)
+						.getSelectedDeveloperAccount().getName();
+				File exportFile = StatsCsvReaderWriter.getExportFileForAccount(accountName);
 				if (exportFile.exists()) {
 					ConfirmExportDialogFragment.newInstance(exportFile.getName()).show(
 							getSupportFragmentManager(), "confirmExportDialog");

@@ -1,10 +1,9 @@
-
 package com.github.andlyticsproject.db;
+
+import java.util.HashMap;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
-
-import java.util.HashMap;
 
 public final class AppStatsTable implements BaseColumns {
 
@@ -30,6 +29,7 @@ public final class AppStatsTable implements BaseColumns {
 	public static final String KEY_STATS_2STARS = "starstwo";
 	public static final String KEY_STATS_1STARS = "starsone";
 	public static final String KEY_STATS_VERSIONCODE = "versioncode";
+	public static final String KEY_STATS_NUM_ERRORS = "numerrors";
 
 	public static final String TABLE_CREATE_STATS = "create table "
 			+ AppStatsTable.DATABASE_TABLE_NAME + " (_id integer primary key autoincrement, "
@@ -42,7 +42,8 @@ public final class AppStatsTable implements BaseColumns {
 			+ AppStatsTable.KEY_STATS_5STARS + " integer," + AppStatsTable.KEY_STATS_4STARS
 			+ " integer," + AppStatsTable.KEY_STATS_3STARS + " integer,"
 			+ AppStatsTable.KEY_STATS_2STARS + " integer," + AppStatsTable.KEY_STATS_1STARS
-			+ " integer," + AppStatsTable.KEY_STATS_VERSIONCODE + " integer);";
+			+ " integer," + AppStatsTable.KEY_STATS_VERSIONCODE + " integer, "
+			+ KEY_STATS_NUM_ERRORS + " integer)";
 
 	public static HashMap<String, String> PROJECTION_MAP;
 
@@ -68,6 +69,7 @@ public final class AppStatsTable implements BaseColumns {
 		PROJECTION_MAP.put(AppStatsTable.KEY_STATS_1STARS, AppStatsTable.KEY_STATS_1STARS);
 		PROJECTION_MAP
 				.put(AppStatsTable.KEY_STATS_VERSIONCODE, AppStatsTable.KEY_STATS_VERSIONCODE);
+		PROJECTION_MAP.put(AppStatsTable.KEY_STATS_NUM_ERRORS, AppStatsTable.KEY_STATS_NUM_ERRORS);
 	}
 
 }

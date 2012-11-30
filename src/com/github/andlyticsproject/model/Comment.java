@@ -1,30 +1,36 @@
 
 package com.github.andlyticsproject.model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Comment {
+	
+	private boolean isReply = false;
 
 	private String text;
 
-	private String date;
+	private Date date;
+	
+	private Date replyDate;
 
 	private int rating;
 
 	private String user;
-
-	private SimpleDateFormat format;
 
 	private String appVersion;
 
 	private String device;
 
 	private Comment reply;
-
-	public Comment() {
-		format = new SimpleDateFormat("MMMMM dd, yyyy");
+	
+	public Comment(){
+		
+	}
+	
+	public Comment(boolean isReply) {
+		this.isReply = isReply;
 	}
 
 	public String getText() {
@@ -35,24 +41,30 @@ public class Comment {
 		this.text = text;
 	}
 
-	public String getDate() {
+	/**
+	 * Date or the comment
+	 * In the case of a reply, this is the date or the original comment
+	 *  - used for displaying comments correctly in the groups
+	 * @return
+	 */
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
-
-	public Date getDateObject() {
-		Date result = null;
-		if (date != null) {
-			try {
-				result = format.parse(date);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
-		return result;
+	
+	/**
+	 * Date of the reply
+	 * @return
+	 */
+	public Date getReplyDate() {
+		return replyDate;
+	}
+	
+	public void setReplyDate(Date date) {
+		this.replyDate = date;
 	}
 
 	public int getRating() {
@@ -93,6 +105,22 @@ public class Comment {
 
 	public void setReply(Comment reply) {
 		this.reply = reply;
+	}
+	
+	public boolean isReply() {
+		return isReply;
+	}
+
+	public static List<Comment> expandReplies(List<Comment> result) {
+		List<Comment> withReplies = new ArrayList<Comment>();
+		for (Comment comment : result) {
+			withReplies.add(comment);
+			if (comment.getReply() != null) {
+				withReplies.add(comment.getReply());
+			}
+		}
+	
+		return withReplies;
 	}
 
 }

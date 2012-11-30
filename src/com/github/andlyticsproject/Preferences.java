@@ -1,19 +1,19 @@
-
 package com.github.andlyticsproject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import com.github.andlyticsproject.sync.AutosyncHandler;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
+import com.github.andlyticsproject.sync.AutosyncHandler;
+
 public class Preferences {
-	
+
 	// TODO Review this class an clean it up a bit
 
 	public static final String PREF = "andlytics_pref";
@@ -27,7 +27,6 @@ public class Preferences {
 	private static final String POST_REQUEST_USER_COMMENTS = "post_user_comments";
 	private static final String POST_REQUEST_FEEDBACK = "post_feedback";
 
-	private static final String AUTOSYNC = "autosync.initial.set";
 	public static final String AUTOSYNC_PERIOD = "autosync.period";
 	public static final String AUTOSYNC_PERIOD_LAST_NON_ZERO = "autosync.period.last";
 	private static final String CRASH_REPORT_DISABLE = "acra.enable";
@@ -48,8 +47,6 @@ public class Preferences {
 
 	public static final String DATE_FORMAT_LONG = "dateformat.long";
 
-	private static final String LEVEL_7_ALARM_MANAGER_PERIOD = "level7.AlarmManagerPeriod";
-
 	private static final String ADMOB_HIDE_FOR_UNCONFIGURED_APPS = "admob.hide_for_unconfigured_apps";
 
 	private static final String ADMOB_SITE_ID = "admob.siteid";
@@ -59,6 +56,14 @@ public class Preferences {
 	private static final String SHOW_CHART_HINT = "show.chart.hint";
 
 	private static final String LATEST_VERSION_CODE = "latest.version.code";
+
+	private static final String LAST_STATS_REMOTE_UPDATE = "last.stats.remote.update";
+	// 15 minutes in millis
+	public static final long STATS_REMOTE_UPDATE_INTERVAL = 15 * 60 * 1000L;
+
+	private static final String LAST_COMMENTS_REMOTE_UPDATE = "last.commentts.remote.update";
+	// make it shorter for comments 5 minutes in millis
+	public static final long COMMENTS_REMOTE_UPDATE_INTERVAL = 5 * 60 * 1000L;
 
 	public enum Timeframe {
 		LAST_NINETY_DAYS, LAST_THIRTY_DAYS, UNLIMITED, LAST_TWO_DAYS, LATEST_VALUE, LAST_SEVEN_DAYS
@@ -78,18 +83,21 @@ public class Preferences {
 		editor.commit();
 	}
 
+	@Deprecated
 	public static void saveAccountName(Context activity, String accountName) {
 		SharedPreferences.Editor editor = getSettings(activity).edit();
 		editor.putString(ACCOUNT_NAME, accountName);
 		editor.commit();
 	}
 
+	@Deprecated
 	public static void removeAccountName(Context activity) {
 		SharedPreferences.Editor editor = getSettings(activity).edit();
 		editor.remove(ACCOUNT_NAME);
 		editor.commit();
 	}
 
+	@Deprecated
 	public static String getAccountName(Context activity) {
 		return getSettings(activity).getString(ACCOUNT_NAME, null);
 	}
@@ -105,7 +113,7 @@ public class Preferences {
 	public static void saveGwtPermutation(Context activity, String gwtPermutation) {
 		saveVersionDependingProperty(GWTPERMUTATION, gwtPermutation, activity);
 	}
-	
+
 	public static int getLastNonZeroAutosyncPeriod(Context activity) {
 		return getSettings(activity).getInt(AUTOSYNC_PERIOD_LAST_NON_ZERO,
 				AutosyncHandler.DEFAULT_PERIOD);
@@ -118,19 +126,10 @@ public class Preferences {
 	}
 
 	public static int getAutosyncPeriod(Context activity) {
-		// We use a ListPreference which only supports saving as strings, so need to convert it when reading
+		// We use a ListPreference which only supports saving as strings, so
+		// need to convert it when reading
 		return Integer.parseInt(getSettings(activity).getString(AUTOSYNC_PERIOD,
 				Integer.toString(AutosyncHandler.DEFAULT_PERIOD)));
-	}
-
-	public static String getAutosyncSet(Context activity, String accountName) {
-		return getSettings(activity).getString(AUTOSYNC + accountName, null);
-	}
-
-	public static void saveAutoSyncSet(Context activity, String accountName) {
-		SharedPreferences.Editor editor = getSettings(activity).edit();
-		editor.putString(AUTOSYNC + accountName, "true");
-		editor.commit();
 	}
 
 	public static String getRequestFullAssetInfo(Context activity) {
@@ -217,19 +216,9 @@ public class Preferences {
 	public static boolean getNotificationPerf(Context context, String prefName) {
 		return getSettings(context).getBoolean(prefName, true);
 	}
-	
+
 	public static String getNotificationRingtone(Context context) {
 		return getSettings(context).getString(NOTIFICATION_RINGTONE, null);
-	}
-
-	public static void saveLevel7AlarmManagerPeriod(Integer periodInSeconds, Context context) {
-		SharedPreferences.Editor editor = getSettings(context).edit();
-		editor.putInt(LEVEL_7_ALARM_MANAGER_PERIOD, periodInSeconds);
-		editor.commit();
-	}
-
-	public static int getLevel7AlarmManagerPeriod(Context context) {
-		return getSettings(context).getInt(LEVEL_7_ALARM_MANAGER_PERIOD, 0);
 	}
 
 	public static Boolean getShowChartHint(Context context) {
@@ -248,7 +237,8 @@ public class Preferences {
 		}
 		String dateFormatStringLong = getDateFormatStringLong(context);
 		// Build the short version by taking the long one and removing the year
-		// We do this rather than using pre-defined short versions so that the user
+		// We do this rather than using pre-defined short versions so that the
+		// user
 		// can use a default based on their locale
 		String format = dateFormatStringLong.replace("yyyy", "").replace("yy", "");
 		// Now go through the string removing any duplicate separators
@@ -271,10 +261,10 @@ public class Preferences {
 		cachedDateFormatShort = format;
 		return format;
 	}
-	
+
 	/**
-	 * Clears the cached string representations used for date formatting
-	 * Should be called whenever the user preference changes
+	 * Clears the cached string representations used for date formatting Should
+	 * be called whenever the user preference changes
 	 */
 	public static void clearCachedDateFormats() {
 		cachedDateFormatShort = null;
@@ -287,34 +277,40 @@ public class Preferences {
 		}
 		String format = getSettings(context).getString(DATE_FORMAT_LONG, "DEFAULT");
 		if ("DEFAULT".equals(format)) {
-			format = ((SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT)).toPattern();
-			// Make it consistent with our pre-defined formats (always show yyyy)
+			format = ((SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT)).toPattern();
+			// Make it consistent with our pre-defined formats (always show
+			// yyyy)
 			format = format.replace("yyyy", "yy").replace("yy", "yyyy");
 		}
 		cachedDateFormatLong = format;
 		return format;
 	}
-	
+
+	@SuppressLint("SimpleDateFormat")
 	public static DateFormat getDateFormatLong(Context context) {
 		return new SimpleDateFormat(getDateFormatStringLong(context));
 	}
 
+	@Deprecated
 	public static void saveAdmobSiteId(Context context, String packageName, String value) {
 		SharedPreferences.Editor editor = getSettings(context).edit();
 		editor.putString(ADMOB_SITE_ID + packageName, value);
 		editor.commit();
 	}
 
+	@Deprecated
 	public static String getAdmobSiteId(Context context, String packageName) {
 		return getSettings(context).getString(ADMOB_SITE_ID + packageName, null);
 	}
 
+	@Deprecated
 	public static void saveAdmobAccount(AdmobActivity context, String siteId, String accountName) {
 		SharedPreferences.Editor editor = getSettings(context).edit();
 		editor.putString(ADMOB_ACCOUNT + siteId, accountName);
 		editor.commit();
 	}
 
+	@Deprecated
 	public static String getAdmobAccount(Context context, String siteId) {
 		return getSettings(context).getString(ADMOB_ACCOUNT + siteId, null);
 	}
@@ -348,17 +344,57 @@ public class Preferences {
 		editor.commit();
 	}
 
+	@Deprecated
 	public static void saveIsHiddenAccount(Context context, String accountName, Boolean hidden) {
 		SharedPreferences.Editor editor = getSettings(context).edit();
 		editor.putBoolean(HIDDEN_ACCOUNT + accountName, hidden);
 		editor.commit();
 	}
 
+	@Deprecated
 	public static boolean getIsHiddenAccount(Context context, String accountName) {
 		return getSettings(context).getBoolean(HIDDEN_ACCOUNT + accountName, false);
 	}
 
 	public static boolean getHideAdmobForUnconfiguredApps(Context context) {
 		return getSettings(context).getBoolean(ADMOB_HIDE_FOR_UNCONFIGURED_APPS, false);
+	}
+
+	@Deprecated
+	public static synchronized long getLastStatsRemoteUpdateTime(Context activity,
+			String accountName) {
+		return getSettings(activity).getLong(LAST_STATS_REMOTE_UPDATE + "." + accountName, 0);
+	}
+
+	@Deprecated
+	public static synchronized void saveLastStatsRemoteUpdateTime(Context activity,
+			String accountName, long timestamp) {
+		getSettings(activity).edit()
+				.putLong(LAST_STATS_REMOTE_UPDATE + "." + accountName, timestamp).commit();
+	}
+
+	/**
+	 * Gets the last time that comments were updated for the given <b>packageName</b>
+	 * @param activity
+	 * @param packageName
+	 * @return
+	 */
+	@Deprecated
+	public static synchronized long getLastCommentsRemoteUpdateTime(Context activity,
+			String packageName) {
+		return getSettings(activity).getLong(LAST_COMMENTS_REMOTE_UPDATE + "." + packageName, 0);
+	}
+	
+	/**
+	 * Sets the time that comments were last updated for the given <b>packageName</b>
+	 * @param activity
+	 * @param packageName
+	 * @param timestamp
+	 */
+	@Deprecated
+	public static synchronized void saveLastCommentsRemoteUpdateTime(Context activity,
+			String packageName, long timestamp) {
+		getSettings(activity).edit()
+				.putLong(LAST_COMMENTS_REMOTE_UPDATE + "." + packageName, timestamp).commit();
 	}
 }

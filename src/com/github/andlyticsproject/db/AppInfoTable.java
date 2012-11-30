@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject.db;
 
 import java.util.HashMap;
@@ -31,13 +30,18 @@ public class AppInfoTable {
 	public static final String KEY_APP_SKIP_NOTIFICATION = "skipnotification";
 	public static final String KEY_APP_VERSION_NAME = "versionname";
 
+	public static final String KEY_APP_ADMOB_ACCOUNT = "admobaccount";
+	public static final String KEY_APP_ADMOB_SITE_ID = "admobsiteid";
+	public static final String KEY_APP_LAST_COMMENTS_UPDATE = "lastcommentsupdate";
+
 	public static final String TABLE_CREATE_APPINFO = "create table " + DATABASE_TABLE_NAME
 			+ " (_id integer primary key autoincrement, " + KEY_APP_PACKAGENAME + " text not null,"
 			+ KEY_APP_ACCOUNT + " text not null," + KEY_APP_LASTUPDATE + " date," + KEY_APP_NAME
 			+ " text," + KEY_APP_ICONURL + " text," + KEY_APP_CATEGORY + " text,"
 			+ KEY_APP_PUBLISHSTATE + " integer," + KEY_APP_GHOST + " integer,"
 			+ KEY_APP_RATINGS_EXPANDED + " integer," + KEY_APP_SKIP_NOTIFICATION + " integer,"
-			+ KEY_APP_VERSION_NAME + " text)";
+			+ KEY_APP_VERSION_NAME + " text, " + KEY_APP_ADMOB_ACCOUNT + " text, "
+			+ KEY_APP_ADMOB_SITE_ID + " text, " + KEY_APP_LAST_COMMENTS_UPDATE + " date)";
 
 	public static HashMap<String, String> PROJECTION_MAP;
 	public static HashMap<String, String> PACKAGE_NAMES_MAP;
@@ -59,6 +63,12 @@ public class AppInfoTable {
 		PROJECTION_MAP.put(AppInfoTable.KEY_APP_SKIP_NOTIFICATION,
 				AppInfoTable.KEY_APP_SKIP_NOTIFICATION);
 		PROJECTION_MAP.put(AppInfoTable.KEY_APP_VERSION_NAME, AppInfoTable.KEY_APP_VERSION_NAME);
+
+		// XXX do we really want to expose these via the CP?
+		PROJECTION_MAP.put(AppInfoTable.KEY_APP_ADMOB_ACCOUNT, AppInfoTable.KEY_APP_ADMOB_ACCOUNT);
+		PROJECTION_MAP.put(AppInfoTable.KEY_APP_ADMOB_SITE_ID, AppInfoTable.KEY_APP_ADMOB_SITE_ID);
+		PROJECTION_MAP.put(AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE,
+				AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE);
 
 		PACKAGE_NAMES_MAP = new HashMap<String, String>();
 		PACKAGE_NAMES_MAP.put(AppInfoTable.KEY_APP_PACKAGENAME, AppInfoTable.KEY_APP_PACKAGENAME);

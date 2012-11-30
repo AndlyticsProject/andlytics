@@ -11,18 +11,19 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.util.Log;
 
+import com.github.andlyticsproject.db.AndlyticsDb;
+
 @ReportsCrashes(formKey = "dHBKcnZqTHMyMHlfLTB0RjhMejZfbkE6MQ", sharedPreferencesMode = Context.MODE_PRIVATE, sharedPreferencesName = Preferences.PREF, mode = ReportingInteractionMode.TOAST)
 public class AndlyticsApp extends Application {
 
 	private static final String TAG = AndlyticsApp.class.getSimpleName();
 
+	// TODO these two should go away
 	private String authToken;
 
 	private String xsrfToken;
 
 	private ContentAdapter db;
-
-	private boolean skipMainReload;
 
 	private String feedbackMessage;
 
@@ -35,6 +36,9 @@ public class AndlyticsApp extends Application {
 		super.onCreate();
 
 		initAcra();
+
+		// get DB instance here to  force schema and preferences migration
+		AndlyticsDb.getInstance(getApplicationContext());
 
 		setDbAdapter(new ContentAdapter(this));
 		sInstance = this;
@@ -79,6 +83,8 @@ public class AndlyticsApp extends Application {
 		return db;
 	}
 
+	// XXX global authToken and xsrfToken are only used by v1 code 
+	// and should be removed at some point
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken;
 	}
@@ -93,14 +99,6 @@ public class AndlyticsApp extends Application {
 
 	public String getXsrfToken() {
 		return xsrfToken;
-	}
-
-	public void setSkipMainReload(boolean skipMainReload) {
-		this.skipMainReload = skipMainReload;
-	}
-
-	public boolean isSkipMainReload() {
-		return skipMainReload;
 	}
 
 	public void setFeedbackMessage(String feedbackMessage) {

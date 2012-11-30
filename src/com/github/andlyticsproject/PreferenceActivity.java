@@ -1,11 +1,7 @@
-
 package com.github.andlyticsproject;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -20,6 +16,7 @@ import android.preference.PreferenceManager;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.sync.AutosyncHandler;
 
 // Suppressing warnings as there is no SherlockPreferenceFragment
@@ -30,7 +27,7 @@ public class PreferenceActivity extends SherlockPreferenceActivity implements
 
 	private PreferenceCategory accountListPrefCat;
 	private ListPreference autosyncPref;
-	private List<String> accountsList;
+	private List<DeveloperAccount> developerAccounts;
 	private AutosyncHandler autosyncHandler = new AutosyncHandler();
 
 	@Override
@@ -41,7 +38,7 @@ public class PreferenceActivity extends SherlockPreferenceActivity implements
 		PreferenceManager prefMgr = getPreferenceManager();
 		prefMgr.setSharedPreferencesName(Preferences.PREF);
 		addPreferencesFromResource(R.xml.preferences);
-		
+
 		// Find the preference category used to list all the accounts
 		accountListPrefCat = (PreferenceCategory) getPreferenceScreen().findPreference(
 				"prefCatAccountSpecific");
@@ -50,13 +47,14 @@ public class PreferenceActivity extends SherlockPreferenceActivity implements
 		buildAccountsList();
 
 		// Find and setup a listener for auto sync as we have had to adjust the sync handler
-		autosyncPref = (ListPreference) getPreferenceScreen().findPreference(Preferences.AUTOSYNC_PERIOD);
+		autosyncPref = (ListPreference) getPreferenceScreen().findPreference(
+				Preferences.AUTOSYNC_PERIOD);
 		autosyncPref.setOnPreferenceChangeListener(this);
-				
+
 		// We have to clear cached date formats when they change
 		getPreferenceScreen().findPreference(Preferences.DATE_FORMAT_LONG)
 				.setOnPreferenceChangeListener(this);
-		
+
 
 		for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
 			initSummary(getPreferenceScreen().getPreference(i));
@@ -64,19 +62,13 @@ public class PreferenceActivity extends SherlockPreferenceActivity implements
 	}
 
 	private void buildAccountsList() {
-		final AccountManager manager = AccountManager.get(this);
-		Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
-		accountsList = new ArrayList<String>();
-		for (Account account : accounts) {
-			if (!Preferences.getIsHiddenAccount(this, account.name)) {
-				// Add all non hidden accounts to the list for use with the auto sync preference
-				accountsList.add(account.name);
-				// Create a preference representing the account and add it to the screen
-				Preference pref = new Preference(this);
-				pref.setTitle(account.name);
-				pref.setOnPreferenceClickListener(accountPrefrenceClickedListener);
-				accountListPrefCat.addPreference(pref);
-			}
+		developerAccounts = DeveloperAccountManager.getInstance(this).getActiveDeveloperAccounts();
+		for (DeveloperAccount account : developerAccounts) {
+			// Create a preference representing the account and add it to the screen
+			Preference pref = new Preference(this);
+			pref.setTitle(account.getName());
+			pref.setOnPreferenceClickListener(accountPrefrenceClickedListener);
+			accountListPrefCat.addPreference(pref);
 		}
 
 	}
@@ -102,11 +94,11 @@ public class PreferenceActivity extends SherlockPreferenceActivity implements
 				Preferences.saveLastNonZeroAutosyncPeriod(PreferenceActivity.this, newPeriod);
 			}
 			int oldPeriod = Preferences.getAutosyncPeriod(PreferenceActivity.this);
-			for (String account : accountsList) {
+			for (DeveloperAccount account : developerAccounts) {
 				// If syncing is currently on, or it used to be app wide off
 				// set the new period (and enable it)
-				if (autosyncHandler.isAutosyncEnabled(account) || oldPeriod == 0) {
-					autosyncHandler.setAutosyncPeriod(account, newPeriod);
+				if (autosyncHandler.isAutosyncEnabled(account.getName()) || oldPeriod == 0) {
+					autosyncHandler.setAutosyncPeriod(account.getName(), newPeriod);
 				}
 			}
 		} else if (key.equals(Preferences.DATE_FORMAT_LONG)) {
@@ -120,13 +112,13 @@ public class PreferenceActivity extends SherlockPreferenceActivity implements
 		super.onResume();
 		// Set up a listener whenever a key changes
 		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-		
+
 
 		// Make sure we are consistent with any system changes/changes in that account
 		// specific sections
 		boolean anyEnabled = false;
-		for (String account : accountsList) {
-			if (autosyncHandler.isAutosyncEnabled(account)) {
+		for (DeveloperAccount account : developerAccounts) {
+			if (autosyncHandler.isAutosyncEnabled(account.getName())) {
 				anyEnabled = true;
 				break;
 			}
@@ -145,11 +137,11 @@ public class PreferenceActivity extends SherlockPreferenceActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		case android.R.id.home:
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 

@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject;
 
 import java.io.IOException;
@@ -15,7 +14,6 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,12 +30,16 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.admob.AdmobRequest.SyncCallback;
-import com.github.andlyticsproject.exception.NetworkException;
+import com.github.andlyticsproject.console.NetworkException;
+import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AdmobList;
+import com.github.andlyticsproject.util.DetachableAsyncTask;
+import com.github.andlyticsproject.util.Utils;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
 
 public class AdmobActivity extends BaseChartActivity {
+
 	public static final String TAG = AdmobActivity.class.getSimpleName();
 
 	protected ContentAdapter db;
@@ -54,19 +56,82 @@ public class AdmobActivity extends BaseChartActivity {
 	protected String admobToken;
 
 	private ViewGroup siteList;
-	private boolean refreshing;
+
+	private static class State {
+		LoadDbEntriesTask loadDbEntries;
+		LoadRemoteEntriesTask loadRemoteEntries;
+		LoadRemoteSiteListTask loadRemoteSiteList;
+
+		State detachAll() {
+			if (loadDbEntries != null) {
+				loadDbEntries.detach();
+			}
+
+			if (loadRemoteEntries != null) {
+				loadRemoteEntries.detach();
+			}
+
+			if (loadRemoteSiteList != null) {
+				loadRemoteSiteList.detach();
+			}
+
+			return this;
+		}
+
+		void attachAll(AdmobActivity activity) {
+			if (loadDbEntries != null) {
+				loadDbEntries.attach(activity);
+			}
+
+			if (loadRemoteEntries != null) {
+				loadRemoteEntries.attach(activity);
+			}
+
+			if (loadRemoteSiteList != null) {
+				loadRemoteSiteList.attach(activity);
+			}
+		}
+
+		void setLoadDbEntries(LoadDbEntriesTask task) {
+			if (loadDbEntries != null) {
+				loadDbEntries.detach();
+			}
+			loadDbEntries = task;
+		}
+
+		void setLoadRemoteEntries(LoadRemoteEntriesTask task) {
+			if (loadRemoteEntries != null) {
+				loadRemoteEntries.detach();
+			}
+			loadRemoteEntries = task;
+		}
+
+		void setLoadRemoteSiteList(LoadRemoteSiteListTask task) {
+			if (loadRemoteSiteList != null) {
+				loadRemoteSiteList.detach();
+			}
+			loadRemoteSiteList = task;
+		}
+	}
+
+	private State state = new State();
 
 	@Override
 	protected void executeLoadData(Timeframe timeFrame) {
-		new LoadDbEntiesTask().execute(new Object[] { false, timeFrame });
+		state.setLoadDbEntries(new LoadDbEntriesTask(this));
+		Utils.execute(state.loadDbEntries, new Object[] { false, timeFrame });
 
 	}
 
 	private void executeLoadDataDefault(boolean executeRemoteCall) {
-		new LoadDbEntiesTask().execute(new Object[] { executeRemoteCall, getCurrentTimeFrame() });
+		state.setLoadDbEntries(new LoadDbEntriesTask(this));
+		Utils.execute(state.loadDbEntries,
+				new Object[] { executeRemoteCall, getCurrentTimeFrame() });
 
 	}
 
+	@SuppressWarnings("deprecation")
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -79,22 +144,29 @@ public class AdmobActivity extends BaseChartActivity {
 
 		setAdapter(admobListAdapter);
 
-		String currentAdmobAccount = null;
-		String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
-		if (currentSiteId != null) {
-			currentAdmobAccount = Preferences.getAdmobAccount(this, currentSiteId);
-		}
-
-		if (currentAdmobAccount == null) {
+		String[] admobDetails = AndlyticsDb.getInstance(this).getAdmobDetails(packageName);
+		if (admobDetails == null) {
 			mainViewSwitcher.swap();
 			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
 				configSwitcher.showPrevious();
 			}
 			showAccountList();
 		} else {
-			executeLoadDataDefault(false);
+			if (getLastNonConfigurationInstance() != null) {
+				state = (State) getLastNonConfigurationInstance();
+				state.attachAll(this);
+				if (state.loadDbEntries.admobStats != null) {
+					showStats(state.loadDbEntries.admobStats);
+				}
+			} else {
+				executeLoadDataDefault(false);
+			}
 		}
+	}
 
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return state.detachAll();
 	}
 
 	@Override
@@ -102,19 +174,16 @@ public class AdmobActivity extends BaseChartActivity {
 		menu.clear();
 		getSupportMenuInflater().inflate(R.menu.admob_menu, menu);
 		super.onCreateOptionsMenu(menu);
-		String currentAdmobAccount = null;
-		String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
-		if (currentSiteId != null) {
-			currentAdmobAccount = Preferences.getAdmobAccount(this, currentSiteId);
-		}
-		if (refreshing) {
-			menu.findItem(R.id.itemAdmobsmenuRefresh).setActionView(
+		String[] admobDetails = AndlyticsDb.getInstance(this).getAdmobDetails(packageName);
+
+		if (isRefreshing()) {
+			menu.findItem(R.id.itemChartsmenuRefresh).setActionView(
 					R.layout.action_bar_indeterminate_progress);
 		}
-		if (currentAdmobAccount == null) {
+		if (admobDetails == null) {
 			menu.findItem(R.id.itemAdmobsmenuRemove).setVisible(false);
 			menu.findItem(R.id.itemChartsmenuTimeframe).setVisible(false);
-			menu.findItem(R.id.itemAdmobsmenuRefresh).setVisible(refreshing);
+			menu.findItem(R.id.itemChartsmenuRefresh).setVisible(isRefreshing());
 		}
 		return true;
 	}
@@ -128,22 +197,27 @@ public class AdmobActivity extends BaseChartActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.itemAdmobsmenuRefresh:
-				setChartIgnoreCallLayouts(true);
-				new LoadRemoteEntiesTask().execute();
-				return true;
-			case R.id.itemAdmobsmenuRemove:
-				Preferences.saveAdmobSiteId(AdmobActivity.this, packageName, null);
-				showAccountList();
-				if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
-					configSwitcher.showPrevious();
-				}
-				mainViewSwitcher.swap();
-				invalidateOptionsMenu();
-				return true;
-			default:
-				return (super.onOptionsItemSelected(item));
+		case R.id.itemChartsmenuRefresh:
+			setChartIgnoreCallLayouts(true);
+			loadRemoteEntries();
+			return true;
+		case R.id.itemAdmobsmenuRemove:
+			AndlyticsDb.getInstance(this).saveAdmobDetails(TAG, null, null);
+			showAccountList();
+			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
+				configSwitcher.showPrevious();
+			}
+			mainViewSwitcher.swap();
+			supportInvalidateOptionsMenu();
+			return true;
+		default:
+			return (super.onOptionsItemSelected(item));
 		}
+	}
+
+	private void loadRemoteEntries() {
+		state.setLoadRemoteEntries(new LoadRemoteEntriesTask(this));
+		Utils.execute(state.loadRemoteEntries);
 	}
 
 	@Override
@@ -174,12 +248,17 @@ public class AdmobActivity extends BaseChartActivity {
 					String currentAdmobAccount = (String) view.getTag();
 
 					configSwitcher.showNext();
-					new LoadRemoteSiteListTask(currentAdmobAccount).execute();
+					loadRemoteSiteList(currentAdmobAccount);
 
 				}
 			});
 			accountList.addView(inflate);
 		}
+	}
+
+	private void loadRemoteSiteList(String currentAdmobAccount) {
+		state.setLoadRemoteSiteList(new LoadRemoteSiteListTask(this, currentAdmobAccount));
+		Utils.execute(state.loadRemoteSiteList);
 	}
 
 	private void addNewAdmobAccount() {
@@ -209,64 +288,120 @@ public class AdmobActivity extends BaseChartActivity {
 				callback, null /* handler */);
 	}
 
-	private class LoadDbEntiesTask extends AsyncTask<Object, Void, Exception> {
+	private static class LoadDbEntriesTask extends
+			DetachableAsyncTask<Object, Void, Exception, AdmobActivity> {
 
 		private List<Admob> admobStats;
 		private Boolean executeRemoteCall = false;
 
+		LoadDbEntriesTask(AdmobActivity activity) {
+			super(activity);
+		}
+
+		@Override
+		protected void onPreExecute() {
+			if (activity == null) {
+				return;
+			}
+
+			activity.refreshStarted();
+		}
+
 		@Override
 		protected Exception doInBackground(Object... params) {
+			if (activity == null) {
+				return null;
+			}
 
-			String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
-			AdmobList admobList = db.getAdmobStats(currentSiteId, (Timeframe) params[1]);
+			String[] admobDetails = AndlyticsDb.getInstance(activity).getAdmobDetails(
+					activity.packageName);
+			if (admobDetails == null) {
+				Log.w(TAG, "Admob account and site ID not founf for " + activity.packageName);
+				return null;
+			}
+
+			String currentSiteId = admobDetails[1];
+			AdmobList admobList = activity.db.getAdmobStats(currentSiteId, (Timeframe) params[1]);
 			admobStats = admobList.getAdmobs();
-			admobListAdapter.setOverallStats(admobList.getOverallStats());
+			activity.admobListAdapter.setOverallStats(admobList.getOverallStats());
 			executeRemoteCall = (Boolean) params[0];
+
 			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Exception result) {
-
-			loadChartData(admobStats);
-			Collections.reverse(admobStats);
-
-			admobListAdapter.setStats(admobStats);
-			// admobListAdapter.setCurrentChart(currentChart);
-			admobListAdapter.notifyDataSetChanged();
-
-			if (executeRemoteCall) {
-				new LoadRemoteEntiesTask().execute();
+		protected void onPostExecute(Exception error) {
+			if (activity == null) {
+				return;
 			}
 
-			refreshing = false;
-			invalidateOptionsMenu();
+			activity.refreshFinished();
 
+			if (error == null && admobStats == null) {
+				return;
+			}
+
+			if (error != null) {
+				activity.handleUserVisibleException(error);
+				return;
+			}
+
+			activity.showStats(admobStats);
+
+			if (executeRemoteCall) {
+				new LoadRemoteEntriesTask(activity).execute();
+			}
 		}
 	};
 
-	private class LoadRemoteEntiesTask extends AsyncTask<Void, Void, Exception> {
+	private void showStats(List<Admob> admobStats) {
+		loadChartData(admobStats);
+		// make shallow copy
+		List<Admob> reversedAdmobStats = new ArrayList<Admob>();
+		reversedAdmobStats.addAll(admobStats);
+		Collections.reverse(reversedAdmobStats);
+
+		admobListAdapter.setStats(reversedAdmobStats);
+		// admobListAdapter.setCurrentChart(currentChart);
+		admobListAdapter.notifyDataSetChanged();
+	}
+
+	private static class LoadRemoteEntriesTask extends
+			DetachableAsyncTask<Void, Void, Exception, AdmobActivity> {
+
+		LoadRemoteEntriesTask(AdmobActivity activity) {
+			super(activity);
+		}
+
 		@Override
 		protected void onPreExecute() {
-			refreshing = true;
-			invalidateOptionsMenu();
+			if (activity == null) {
+				return;
+			}
+
+			activity.refreshStarted();
 		}
 
 		@Override
 		protected Exception doInBackground(Void... lastValueDate) {
-			String currentAdmobAccount = null;
-			String currentSiteId = Preferences.getAdmobSiteId(AdmobActivity.this, packageName);
-			if (currentSiteId != null) {
-				currentAdmobAccount = Preferences
-						.getAdmobAccount(AdmobActivity.this, currentSiteId);
+			if (activity == null) {
+				return null;
 			}
 
-			try {
+			String[] admobDetails = AndlyticsDb.getInstance(activity).getAdmobDetails(
+					activity.packageName);
+			if (admobDetails == null) {
+				Log.w(TAG, "Admob account and site ID not founf for " + activity.packageName);
+				return null;
+			}
 
+			String currentAdmobAccount = admobDetails[0];
+			String currentSiteId = admobDetails[1];
+			try {
 				List<String> siteList = new ArrayList<String>();
 				siteList.add(currentSiteId);
 
-				AdmobRequest.syncSiteStats(currentAdmobAccount, AdmobActivity.this, siteList,
+				AdmobRequest.syncSiteStats(currentAdmobAccount, activity, siteList,
 						new SyncCallback() {
 
 							@Override
@@ -289,96 +424,110 @@ public class AdmobActivity extends BaseChartActivity {
 
 		@Override
 		protected void onProgressUpdate(Void... values) {
-			Toast.makeText(AdmobActivity.this, getString(R.string.admob_initial_import),
+			if (activity == null) {
+				return;
+			}
+			Toast.makeText(activity, activity.getString(R.string.admob_initial_import),
 					Toast.LENGTH_LONG).show();
 		}
 
 		@Override
-		protected void onPostExecute(Exception result) {
-
-			if (result != null) {
-				Log.e(TAG, "admob exception", result);
-				handleUserVisibleException(result);
-			} else {
-				executeLoadDataDefault(false);
+		protected void onPostExecute(Exception error) {
+			if (activity == null) {
+				return;
 			}
 
-			refreshing = false;
-			invalidateOptionsMenu();
+			if (error != null) {
+				Log.e(TAG, "admob exception", error);
+				activity.handleUserVisibleException(error);
+			} else {
+				activity.executeLoadDataDefault(false);
+			}
+
+			activity.refreshFinished();
 		}
 	};
 
-	private class LoadRemoteSiteListTask extends AsyncTask<Void, Void, Exception> {
+	private static class LoadRemoteSiteListTask extends
+			DetachableAsyncTask<Void, Void, Exception, AdmobActivity> {
 
 		private Map<String, String> data;
 		private String currentAdmobAccount;
 
-		public LoadRemoteSiteListTask(String currentAdmobAccount) {
+		public LoadRemoteSiteListTask(AdmobActivity activity, String currentAdmobAccount) {
+			super(activity);
 			this.currentAdmobAccount = currentAdmobAccount;
 		}
 
 		@Override
 		protected void onPreExecute() {
-			refreshing = true;
-			invalidateOptionsMenu();
+			if (activity == null) {
+				return;
+			}
+
+			activity.refreshStarted();
 		}
 
 		@Override
 		protected Exception doInBackground(Void... params) {
+			if (activity == null) {
+				return null;
+			}
 
 			try {
-				data = AdmobRequest.getSiteList(currentAdmobAccount, AdmobActivity.this);
+				data = AdmobRequest.getSiteList(currentAdmobAccount, activity);
 			} catch (Exception e) {
 				return e;
 			}
+
 			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Exception result) {
-
-			if (result != null) {
-				handleUserVisibleException(result);
-			} else {
-
-				if (data.size() > 0) {
-
-					siteList.removeAllViews();
-
-					Set<String> keySet = data.keySet();
-					for (String siteId : keySet) {
-
-						String siteName = data.get(siteId);
-
-						// pull the id from the data
-						View inflate = getLayoutInflater().inflate(
-								R.layout.admob_account_list_item, null);
-						TextView accountName = (TextView) inflate
-								.findViewById(R.id.admob_account_list_item_text);
-						accountName.setText(siteName);
-						inflate.setTag(siteId);
-						inflate.setOnClickListener(new OnClickListener() {
-
-							@Override
-							public void onClick(View view) {
-
-								Preferences.saveAdmobSiteId(AdmobActivity.this, packageName,
-										(String) view.getTag());
-								Preferences.saveAdmobAccount(AdmobActivity.this,
-										(String) view.getTag(), currentAdmobAccount);
-								mainViewSwitcher.swap();
-								executeLoadDataDefault(true);
-								invalidateOptionsMenu();
-							}
-						});
-						siteList.addView(inflate);
-
-					}
-				}
+		protected void onPostExecute(Exception error) {
+			if (activity == null) {
+				return;
 			}
 
-			refreshing = false;
-			invalidateOptionsMenu();
+			activity.refreshFinished();
+
+			if (error != null) {
+				activity.handleUserVisibleException(error);
+				return;
+			}
+
+			if (data != null && data.size() > 0) {
+				activity.siteList.removeAllViews();
+
+				Set<String> keySet = data.keySet();
+				for (String siteId : keySet) {
+
+					String siteName = data.get(siteId);
+
+					// pull the id from the data
+					View inflate = activity.getLayoutInflater().inflate(
+							R.layout.admob_account_list_item, null);
+					TextView accountName = (TextView) inflate
+							.findViewById(R.id.admob_account_list_item_text);
+					accountName.setText(siteName);
+					inflate.setTag(siteId);
+					inflate.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							String admobSiteId = (String) view.getTag();
+							AndlyticsDb.getInstance(activity).saveAdmobDetails(
+									activity.packageName, currentAdmobAccount, admobSiteId);
+
+							activity.mainViewSwitcher.swap();
+							activity.executeLoadDataDefault(true);
+							activity.supportInvalidateOptionsMenu();
+						}
+					});
+					activity.siteList.addView(inflate);
+
+				}
+			}
 		}
 	};
 

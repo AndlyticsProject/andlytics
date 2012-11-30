@@ -2,4 +2,5 @@
     android:accountType="com.github.andlyticsproject.admob"
     android:icon="@drawable/icon"
     android:smallIcon="@drawable/icon"
-    android:label="@string/app_name_admob"/>
+    android:label="@string/app_name_admob" 
+    android:accountPreferences="@xml/admob_account_preferences"/>

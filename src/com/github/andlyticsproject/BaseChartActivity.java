@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject;
 
 import java.util.ArrayList;
@@ -25,7 +24,10 @@ import com.github.andlyticsproject.view.ChartGalleryAdapter;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
 import com.github.andlyticsproject.view.ViewSwitcher3D.ViewSwitcherListener;
 
+@SuppressWarnings("deprecation")
 public abstract class BaseChartActivity extends BaseDetailsActivity implements ViewSwitcherListener {
+
+	static final String SELECTED_CHART_POISTION = "selected_chart_position";
 
 	private ChartGalleryAdapter chartGalleryAdapter;
 	private ChartGallery chartGallery;
@@ -87,6 +89,19 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 		timeframeText = (TextView) findViewById(R.id.base_chart_timeframe);
 	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle state) {
+		super.onSaveInstanceState(state);
+		state.putInt(SELECTED_CHART_POISTION, chartGallery.getSelectedItemPosition());
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle state) {
+		super.onRestoreInstanceState(state);
+		int chartIndex = state.getInt(SELECTED_CHART_POISTION);
+		chartGallery.setSelection(chartIndex);
+	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -94,24 +109,29 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 		getSupportMenuInflater().inflate(R.menu.charts_menu, menu);
 		MenuItem activeTimeFrame = null;
 		switch (currentTimeFrame) {
-			case LAST_SEVEN_DAYS:
-				activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframe7);
-				break;
-			case LAST_THIRTY_DAYS:
-				activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframe30);
-				break;
-			case LAST_NINETY_DAYS:
-				activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframe90);
-				break;
-			case UNLIMITED:
-				activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframeUnlimited);
-				break;
+		case LAST_SEVEN_DAYS:
+			activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframe7);
+			break;
+		case LAST_THIRTY_DAYS:
+			activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframe30);
+			break;
+		case LAST_NINETY_DAYS:
+			activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframe90);
+			break;
+		case UNLIMITED:
+			activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframeUnlimited);
+			break;
 		}
 		activeTimeFrame.setChecked(true);
+
+		if (isRefreshing()) {
+			menu.findItem(R.id.itemChartsmenuRefresh).setActionView(
+					R.layout.action_bar_indeterminate_progress);
+		}
+
 		return true;
 	}
-	
-	
+
 
 	/**
 	 * Called if item in option menu is selected.
@@ -122,36 +142,36 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.itemChartsmenuTimeframe7:
-				currentTimeFrame = Timeframe.LAST_SEVEN_DAYS;
-				executeLoadData(currentTimeFrame);
-				Preferences.saveChartTimeframe(Timeframe.LAST_SEVEN_DAYS,
-						BaseChartActivity.this);
-				item.setChecked(true);
-				return true;
-			case R.id.itemChartsmenuTimeframe30:
-				currentTimeFrame = Timeframe.LAST_THIRTY_DAYS;
-				executeLoadData(currentTimeFrame);
-				Preferences.saveChartTimeframe(Timeframe.LAST_THIRTY_DAYS,
-						BaseChartActivity.this);
-				item.setChecked(true);
-				return true;
-			case R.id.itemChartsmenuTimeframe90:
-				currentTimeFrame = Timeframe.LAST_NINETY_DAYS;
-				executeLoadData(currentTimeFrame);
-				Preferences.saveChartTimeframe(Timeframe.LAST_NINETY_DAYS,
-						BaseChartActivity.this);
-				item.setChecked(true);
-				return true;
-			case R.id.itemChartsmenuTimeframeUnlimited:
-				currentTimeFrame = Timeframe.UNLIMITED;
-				executeLoadData(currentTimeFrame);
-				Preferences.saveChartTimeframe(Timeframe.UNLIMITED,
-						BaseChartActivity.this);
-				item.setChecked(true);
-				return true;
-			default:
-				return (super.onOptionsItemSelected(item));
+		case R.id.itemChartsmenuRefresh:
+			setChartIgnoreCallLayouts(true);
+			executeLoadData(currentTimeFrame);
+			return true;
+		case R.id.itemChartsmenuTimeframe7:
+			currentTimeFrame = Timeframe.LAST_SEVEN_DAYS;
+			executeLoadData(currentTimeFrame);
+			Preferences.saveChartTimeframe(Timeframe.LAST_SEVEN_DAYS, BaseChartActivity.this);
+			item.setChecked(true);
+			return true;
+		case R.id.itemChartsmenuTimeframe30:
+			currentTimeFrame = Timeframe.LAST_THIRTY_DAYS;
+			executeLoadData(currentTimeFrame);
+			Preferences.saveChartTimeframe(Timeframe.LAST_THIRTY_DAYS, BaseChartActivity.this);
+			item.setChecked(true);
+			return true;
+		case R.id.itemChartsmenuTimeframe90:
+			currentTimeFrame = Timeframe.LAST_NINETY_DAYS;
+			executeLoadData(currentTimeFrame);
+			Preferences.saveChartTimeframe(Timeframe.LAST_NINETY_DAYS, BaseChartActivity.this);
+			item.setChecked(true);
+			return true;
+		case R.id.itemChartsmenuTimeframeUnlimited:
+			currentTimeFrame = Timeframe.UNLIMITED;
+			executeLoadData(currentTimeFrame);
+			Preferences.saveChartTimeframe(Timeframe.UNLIMITED, BaseChartActivity.this);
+			item.setChecked(true);
+			return true;
+		default:
+			return (super.onOptionsItemSelected(item));
 		}
 	}
 
@@ -184,7 +204,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 		return null;
 	}
 
-	protected abstract void executeLoadData(Timeframe currentTimeFrame2);
+	protected abstract void executeLoadData(Timeframe currentTimeFrame);
 
 	protected final void setAdapter(BaseChartListAdapter adapter) {
 		myAdapter = adapter;
@@ -234,7 +254,6 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements V
 				 * if(chartView==null) { Log.i(LOG_TAG,"Ignoring chart p="+i+" c="+j+"for class="
 				 * +this.getClass().toString()); continue; }
 				 */
-				@SuppressWarnings("deprecation")
 				Gallery.LayoutParams params = new Gallery.LayoutParams(LayoutParams.FILL_PARENT,
 						LayoutParams.FILL_PARENT);
 				chartView.setLayoutParams(params);

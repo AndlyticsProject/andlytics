@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/itemChartsmenuRefresh"        
+        android:icon="@drawable/icon_refresh"
+        android:showAsAction="ifRoom"
+        android:title="@string/refresh">
+    </item>
+    <item
         android:id="@+id/itemChartsmenuTimeframe"
         android:showAsAction="ifRoom|withText"
         android:title="@string/time_frame"
