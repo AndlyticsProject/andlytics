@@ -6,6 +6,9 @@ This repository contains the source code for the Andlytics Android app.
   <img src="http://www.android.com/images/brand/android_app_on_play_large.png">
 </a>
 
+You can download a preview of the next version which is based on the new Developer Console from our [downloads](https://github.com/AndlyticsProject/andlytics/downloads) page.
+Note: If you want to go back to the version on Google Play, you will need to export your stats, uninstall the app, and then install the version from Google Play and re-import your stats.
+
 ![](https://lh6.ggpht.com/NXU6-yYc3f2I8S3m-m0Ghyy_tVQ8UlIIrznWUjRa1EPTYt1xxnVpKJE2NY0xwPMlU7OE=w705)
 
 Please see the [issues](https://github.com/AndlyticsProject/andlytics/issues) section to
