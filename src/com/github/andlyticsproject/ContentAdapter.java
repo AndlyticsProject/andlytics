@@ -571,7 +571,8 @@ public class ContentAdapter {
 						AppStatsTable.KEY_STATS_CATEGORYRANKING, AppStatsTable.KEY_STATS_5STARS,
 						AppStatsTable.KEY_STATS_4STARS, AppStatsTable.KEY_STATS_3STARS,
 						AppStatsTable.KEY_STATS_2STARS, AppStatsTable.KEY_STATS_1STARS,
-						AppStatsTable.KEY_STATS_REQUESTDATE, AppStatsTable.KEY_STATS_VERSIONCODE },
+						AppStatsTable.KEY_STATS_REQUESTDATE, AppStatsTable.KEY_STATS_VERSIONCODE,
+						AppStatsTable.KEY_STATS_NUM_ERRORS },
 				AppStatsTable.KEY_STATS_PACKAGENAME + "='" + packageName + "'", null,
 				AppStatsTable.KEY_STATS_REQUESTDATE + " desc LIMIT " + limit + ""); // sort
 																					// order
@@ -581,9 +582,7 @@ public class ContentAdapter {
 																					// old
 
 		if (cursor.moveToFirst()) {
-
 			do {
-
 				AppStats info = new AppStats();
 				info.setActiveInstalls(cursor.getInt(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_INSTALLS)));
@@ -605,6 +604,11 @@ public class ContentAdapter {
 						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_3STARS)),
 						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_4STARS)),
 						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_5STARS)));
+
+				int idx = cursor.getColumnIndex(AppStatsTable.KEY_STATS_NUM_ERRORS);
+				if (!cursor.isNull(idx)) {
+					info.setNumberOfErrors(cursor.getInt(idx));
+				}
 				info.init();
 
 				result.add(info);
