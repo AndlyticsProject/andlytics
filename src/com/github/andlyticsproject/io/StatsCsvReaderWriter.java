@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject.io;
 
 import java.io.File;
@@ -18,8 +17,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
@@ -27,13 +28,15 @@ import au.com.bytecode.opencsv.CSVWriter;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.util.Utils;
 
+@SuppressLint("SimpleDateFormat")
 public class StatsCsvReaderWriter {
 
 	private static final String TAG = StatsCsvReaderWriter.class.getSimpleName();
 
 	public static final String[] HEADER_LIST = new String[] { "PACKAGE_NAME", "DATE",
 			"TOTAL_DOWNLOADS", "ACTIVE_INSTALLS", "NUMBER_OF_COMMENTS", "1_STAR_RATINGS",
-			"2_STAR_RATINGS", "3_STAR_RATINGS", "4_STAR_RATINGS", "5_STAR_RATINGS", "VERSION_CODE" };
+			"2_STAR_RATINGS", "3_STAR_RATINGS", "4_STAR_RATINGS", "5_STAR_RATINGS", "VERSION_CODE",
+			"NUM_ERRORS" };
 
 	private static final String EXPORT_DIR = "andlytics/";
 
@@ -42,10 +45,12 @@ public class StatsCsvReaderWriter {
 
 	private static final String CSV_SUFFIX = ".csv";
 
-	static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat(
-			"yyyy-MM-dd'T'HH:mm:ss'Z'");
-	{
-		TIMESTAMP_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+	// create this every time because SDF is not threadsafe
+	private static SimpleDateFormat createTimestampFormat() {
+		SimpleDateFormat result = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		result.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+		return result;
 	}
 
 	public static String getExportDirPath() {
@@ -89,7 +94,7 @@ public class StatsCsvReaderWriter {
 		for (AppStats stat : stats) {
 
 			line[0] = packageName;
-			line[1] = TIMESTAMP_FORMAT.format(stat.getRequestDate());
+			line[1] = createTimestampFormat().format(stat.getRequestDate());
 			line[2] = stat.getTotalDownloads() + "";
 			line[3] = stat.getActiveInstalls() + "";
 			line[4] = stat.getNumberOfComments() + "";
@@ -101,6 +106,8 @@ public class StatsCsvReaderWriter {
 			line[9] = stat.getRating5() + "";
 
 			line[10] = stat.getVersionCode() + "";
+
+			line[11] = stat.getNumberOfErrors() == null ? "" : stat.getNumberOfErrors().toString();
 
 			writer.writeNext(line);
 		}
@@ -201,7 +208,7 @@ public class StatsCsvReaderWriter {
 
 					AppStats stats = new AppStats();
 					stats.setPackageName(nextLine[0]);
-					stats.setRequestDate(TIMESTAMP_FORMAT.parse(nextLine[1]));
+					stats.setRequestDate(createTimestampFormat().parse(nextLine[1]));
 					stats.setTotalDownloads(Integer.parseInt(nextLine[2]));
 					stats.setActiveInstalls(Integer.parseInt(nextLine[3]));
 					stats.setNumberOfComments(Integer.parseInt(nextLine[4]));
@@ -213,6 +220,12 @@ public class StatsCsvReaderWriter {
 
 					if (nextLine.length > 10) {
 						stats.setVersionCode(Integer.parseInt(nextLine[10]));
+					}
+
+					if (nextLine.length > 11) {
+						String numErrorsStr = nextLine[11];
+						stats.setNumberOfErrors(TextUtils.isEmpty(numErrorsStr) ? null : Integer
+								.parseInt(numErrorsStr));
 					}
 
 					appStats.add(stats);
