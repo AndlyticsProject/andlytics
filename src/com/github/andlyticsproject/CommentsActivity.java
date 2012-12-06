@@ -119,7 +119,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 			@Override
 			public void onClick(View v) {
-				loadCommentsData();
+				forceLoadCommentsData();
 			}
 		});
 		footer.setVisibility(View.GONE);
@@ -164,7 +164,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 	 * Called if item in option menu is selected.
 	 * 
 	 * @param item
-	 *            The chosen menu item
+	 * The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
@@ -173,7 +173,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 		case R.id.itemCommentsmenuRefresh:
 			maxAvalibleComments = -1;
 			nextCommentIndex = 0;
-			loadCommentsData(true);
+			forceLoadCommentsData();
 			return true;
 		default:
 			return (super.onOptionsItemSelected(item));
@@ -377,6 +377,10 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 	private void loadCommentsData() {
 		loadCommentsData(false);
+	}
+
+	private void forceLoadCommentsData() {
+		loadCommentsData(true);
 	}
 
 	private void loadCommentsData(boolean forceLoad) {
