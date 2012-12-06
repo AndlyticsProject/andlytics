@@ -42,8 +42,8 @@
     <string name="download_changes">Durch Downloads</string>
     <string name="notification_trigger">Auslöser für Benachrichtigungen</string>
     <string name="notification_signal">Benachrichtigungen</string>
-    <string name="notification_sound">Benachrichtigungston</string>
-    <string name="notification_light">Benachrichtigung Optisch</string>
+    <string name="notification_sound">Akustisch</string>
+    <string name="notification_light">Optisch</string>
     <string name="apps_notification">Apps für Benachrichtigungen</string>
     <string name="select_files_import">Pakete für den Import auswählen</string>
     <string name="data_replaced">Bestehende Daten werden ersetzt</string>
@@ -55,6 +55,8 @@
     <string name="select_files_export">Apps für den Export auswählen</string>
     <string name="export_files_replaced">Bestehende Daten werden ersetzt</string>
     <string name="run_export">Exportieren</string>
+    <string name="comment_no_user_info">Ein Google Nutzer</string>
+    <string name="comment_reply">Entwicklerantwort</string>
     <string name="comments_details_full">Version %1$s auf Gerät: %2$s</string>
     <string name="comments_details_version">Version %s</string>
     <string name="comments_details_device">Auf Gerät: %s</string>
@@ -65,14 +67,16 @@
     <string name="time_frame">Zeitfenster</string>
     <string name="seven_days">Letzte Woche</string>
     <string name="thirty_days">Letzter Monat</string>
+    <string name="ninety_days">Letzte 3 Monate</string>
     <string name="unlimited">Unbegrenzt</string>
     <string name="date_format">Datumsformat</string>
+    <string name="locale_default">Standardsprache</string>
     <string name="ddmmyy">Tag/Monat/Jahr</string>
     <string name="yymmdd">Jahr/Monat/Tag</string>
     <string name="mmddyy">Monat/Tag/Jahr</string>
     <string name="smooth_values">Werte glätten</string>
     <string name="smoothed_values">* geglätteter Wert</string>
-    <string name="info_smooth">Werte der Downloads und aktiven Installationen werden nicht täglich von Google geupdatet. Diese Werte können geglättet werden. Bewertungen sind davon nciht betroffen da sie fast zeitgleich geupdatet werden.</string>
+    <string name="info_smooth">Werte glätten für Schaubilder der Downloads und aktiven Installationen</string>
     <string name="auto_sync_period">Intervall der Synchronization</string>
     <string name="admob_login">ADMOB ACCOUNT LOGIN</string>
     <string name="password">Passwort</string>
@@ -85,7 +89,7 @@
     <string name="admob_required">AdMob Account erforderlich</string>
     <string name="admob_add">AdMob Account hinzufügen</string>
     <string name="admob_info">Bei AdMob Accounts die mit einem Google Account verknüpft sind ist das API Passwort auf der Informationsseite zu finden:</string>
-    <string name="percentage">Prozentwerte</string>
+    <string name="percentage">Prozent</string>
     <string name="daily">Änderung</string>
     <string name="downloads_day">Downloads pro Tag</string>
     <string name="active_installs_percent">Installationen in Prozent</string>
