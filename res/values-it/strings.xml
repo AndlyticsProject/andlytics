@@ -24,7 +24,7 @@
     <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">Commenti</string>
     <string name="num_total_downloads">Download totali</string>
-    <string name="num_active_installs">Active installs</string>
+    <string name="num_active_installs">Install. attive</string>
     <string name="num_average_rating">Media rating</string>
     <string name="num_ratings">Rating</string>
     
@@ -42,7 +42,7 @@
     <string name="download_changes">Andamento download</string>
     <string name="notification_trigger">Trigger notifiche</string>
     <string name="notification_signal">Segnale notifiche</string>
-    <string name="notification_sound">Seleziona suoneria</string>
+    <string name="notification_sound">Suono notifiche</string>
     <string name="notification_light">Luce notifiche</string>
     <string name="apps_notification">App abilitate alle notifiche</string>
     <string name="select_files_import">Seleziona i package da importare</string>
@@ -55,6 +55,8 @@
     <string name="select_files_export">Seleziona le app da esportare</string>
     <string name="export_files_replaced">I file esistenti verranno sostituiti</string>
     <string name="run_export">Esporta dati</string>
+    <string name="comment_no_user_info">Un Utente Google</string>
+    <string name="comment_reply">Risposta dallo sviluppatore</string>
     <string name="comments_details_full">Versione %1$s su dispositivo: %2$s</string>
     <string name="comments_details_version">Versione %s</string>
     <string name="comments_details_device">Su dispositivo: %s</string>
@@ -65,21 +67,22 @@
     <string name="time_frame">Intervallo temporale</string>
     <string name="seven_days">Ultimi 7 giorni</string>
     <string name="thirty_days">Ultimi 30 giorni</string>
+    <string name="ninety_days">Ultimi 90 giorni</string>
     <string name="unlimited">Illimitato</string>
     <string name="date_format">Formato date</string>
+    <string name="locale_default">Locale default</string>
     <string name="ddmmyy">Giorno/Mese/Anno</string>
     <string name="yymmdd">Anno/Mese/Giorno</string>
     <string name="mmddyy">Mese/Giorno/Anno</string>
     <string name="smooth_values">Interpola valori</string>
     <string name="smoothed_values">* valori approssimati</string>
-    <string name="info_smooth">"I valori di download e installazioni attive non sono aggiornate da Google su base giornaliera perciò è possibile interpolare i valori ricevuti. Questa impostazione non si applica ai rating che invece vengono caricati quasi istantaneamente."</string>
+    <string name="info_smooth">Attiva interpolazione dei valori per i grafici di download e installazioni attive</string>
     <string name="auto_sync_period">Intervallo sincronizzazione automatica</string>
     <string name="admob_login">LOGIN ACCOUNT ADMOB</string>
     <string name="password">Password</string>
     <string name="email">E-mail</string>
     <string name="login">Login</string>
     <string name="remove_admob">Elimina associazione AdMob</string>
-    <string name="remove_admob_app">"Elimina dati AdMob dall\'app"</string>
     <string name="loading_site">Caricamento elenco siti&#8230;</string>
     <string name="select_admob_site">Seleziona un sito AdMob da associare a questo account</string>
     <string name="choose_app">Seleziona la tua app</string>
@@ -103,7 +106,6 @@
     <string name="admob__CTR">CTR</string>
     <string name="admob__house_ad_clicks">Click house ad</string>
     <string name="admob__charts_available">Grafici AdMob disponibili</string>
-    <string name="admob__remove_account">Se vuoi rimuovere un account, vai su: Impostazioni di Android -> Account e Sincronizzazione</string>
     <string name="last_update">Ultimo aggiornamento</string>
 
     <string name="changelog_title">Ultime modifiche</string>
@@ -114,8 +116,8 @@
     <string name="import_">Importa</string>
     <string name="import_no_sdcard_or_file">SD-Card non montata o formato del file non valido, impossibile eseguire l\'importazione.</string>
     <string name="import_no_stats_file">File delle statistiche non trovato: %1$s</string>
-    <string name="import_no_app">Nessuna app selezione, non è possibile importare!</string>
-    <string name="importing">Importando…</string>
+    <string name="import_no_app">Nessuna applicazione selezionata, non è possibile effettuare l\'importazione!</string>
+    <string name="importing">Importazione in corso…</string>
     <string name="import_started">Processo di import iniziato.</string>
     <string name="import_finished">Processo di import terminato.</string>
     <string name="imported_apps">%d app sono state importate.</string>
@@ -123,8 +125,8 @@
     <string name="import_confirm_dialog_title">Conferma import</string>
     <string name="import_confirm_dialog_message">Il processo di \'import sovrascriverà le statistiche per %d app. Continuare?</string>
 	<string name="export_">Esporta</string>
-	<string name="export_no_sdcard">SD Card non montata, non è possibile esportare!</string>
-	<string name="export_no_app">Nessuna app selezionata, non è possibile esportare!</string>
+	<string name="export_no_sdcard">Scheda SD non montata, non è possibile effettuare l\'esportazione!</string>
+	<string name="export_no_app">Nessuna applicazione selezionata, non è possibile effettuare l\'esportazione!</string>
 	<string name="export_started">Processo di export iniziato.</string>
     <string name="export_finished">Processo di export terminato.</string>
     <string name="export_failed_to_load_stats">Errore durante l\'aggiornamento delle statistiche.</string>
