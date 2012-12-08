@@ -1026,51 +1026,57 @@ public class ContentAdapter {
 
 		List<Comment> result = new ArrayList<Comment>();
 
-		Cursor mCursor = context.getContentResolver()
-				.query(CommentsTable.CONTENT_URI,
-						new String[] { CommentsTable.KEY_COMMENT_DATE,
-								CommentsTable.KEY_COMMENT_PACKAGENAME,
-								CommentsTable.KEY_COMMENT_RATING, CommentsTable.KEY_COMMENT_TEXT,
-								CommentsTable.KEY_COMMENT_USER, CommentsTable.KEY_COMMENT_DEVICE,
-								CommentsTable.KEY_COMMENT_APP_VERSION,
-								CommentsTable.KEY_COMMENT_REPLY_TEXT,
-								CommentsTable.KEY_COMMENT_REPLY_DATE },
-						AppInfoTable.KEY_APP_PACKAGENAME + "='" + packageName + "'", null,
-						CommentsTable.KEY_ROWID);
-		if (mCursor != null && mCursor.moveToFirst()) {
+		Cursor cursor = null;
+		try {
+			cursor = context.getContentResolver().query(
+					CommentsTable.CONTENT_URI,
+					new String[] { CommentsTable.KEY_COMMENT_DATE,
+							CommentsTable.KEY_COMMENT_PACKAGENAME,
+							CommentsTable.KEY_COMMENT_RATING, CommentsTable.KEY_COMMENT_TEXT,
+							CommentsTable.KEY_COMMENT_USER, CommentsTable.KEY_COMMENT_DEVICE,
+							CommentsTable.KEY_COMMENT_APP_VERSION,
+							CommentsTable.KEY_COMMENT_REPLY_TEXT,
+							CommentsTable.KEY_COMMENT_REPLY_DATE },
+					AppInfoTable.KEY_APP_PACKAGENAME + " = ?", new String[] { packageName },
+					CommentsTable.KEY_COMMENT_DATE + " desc");
+			if (cursor == null) {
+				return result;
+			}
 
-			do {
+			while (cursor.moveToNext()) {
 				Comment comment = new Comment();
-				String dateString = mCursor.getString(mCursor
+				String dateString = cursor.getString(cursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_DATE));
 				comment.setDate(parseDate(dateString));
-				comment.setUser(mCursor.getString(mCursor
+				comment.setUser(cursor.getString(cursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_USER)));
-				comment.setText(mCursor.getString(mCursor
+				comment.setText(cursor.getString(cursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_TEXT)));
-				comment.setDevice(mCursor.getString(mCursor
+				comment.setDevice(cursor.getString(cursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_DEVICE)));
-				comment.setAppVersion(mCursor.getString(mCursor
+				comment.setAppVersion(cursor.getString(cursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_APP_VERSION)));
-				comment.setRating(mCursor.getInt(mCursor
+				comment.setRating(cursor.getInt(cursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_RATING)));
-				String replyText = mCursor.getString(mCursor
+				String replyText = cursor.getString(cursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_REPLY_TEXT));
 				if (replyText != null) {
 					Comment reply = new Comment(true);
 					reply.setText(replyText);
-					reply.setReplyDate(parseDate(mCursor.getString(mCursor
+					reply.setReplyDate(parseDate(cursor.getString(cursor
 							.getColumnIndex(CommentsTable.KEY_COMMENT_REPLY_DATE))));
 					reply.setDate(comment.getDate());
 					comment.setReply(reply);
 				}
 				result.add(comment);
-			} while (mCursor.moveToNext());
+			}
+
+			return result;
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
 		}
-
-		mCursor.close();
-
-		return result;
 	}
 
 	public long setSkipNotification(String packageName, boolean value) {
