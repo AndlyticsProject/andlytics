@@ -64,7 +64,6 @@ public class AppInfoTable {
 				AppInfoTable.KEY_APP_SKIP_NOTIFICATION);
 		PROJECTION_MAP.put(AppInfoTable.KEY_APP_VERSION_NAME, AppInfoTable.KEY_APP_VERSION_NAME);
 
-		// XXX do we really want to expose these via the CP?
 		PROJECTION_MAP.put(AppInfoTable.KEY_APP_ADMOB_ACCOUNT, AppInfoTable.KEY_APP_ADMOB_ACCOUNT);
 		PROJECTION_MAP.put(AppInfoTable.KEY_APP_ADMOB_SITE_ID, AppInfoTable.KEY_APP_ADMOB_SITE_ID);
 		PROJECTION_MAP.put(AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE,
