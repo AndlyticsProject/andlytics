@@ -406,34 +406,44 @@ public class ContentAdapter {
 						AppInfoTable.KEY_APP_PACKAGENAME, AppInfoTable.KEY_APP_LASTUPDATE,
 						AppInfoTable.KEY_APP_NAME, AppInfoTable.KEY_APP_GHOST,
 						AppInfoTable.KEY_APP_SKIP_NOTIFICATION,
-						AppInfoTable.KEY_APP_RATINGS_EXPANDED, AppInfoTable.KEY_APP_ICONURL },
+						AppInfoTable.KEY_APP_RATINGS_EXPANDED, AppInfoTable.KEY_APP_ICONURL,
+						AppInfoTable.KEY_APP_ADMOB_ACCOUNT, AppInfoTable.KEY_APP_ADMOB_SITE_ID,
+						AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE },
 				AppInfoTable.KEY_APP_ACCOUNT + "='" + account + "'", null,
 				AppInfoTable.KEY_APP_NAME + "");
 
-		if (cursor.moveToFirst()) {
-			do {
-				AppInfo appInfo = new AppInfo();
-				appInfo.setAccount(account);
-				appInfo.setLastUpdate(parseDate(cursor.getString(cursor
-						.getColumnIndex(AppInfoTable.KEY_APP_LASTUPDATE))));
-				appInfo.setPackageName(cursor.getString(cursor
-						.getColumnIndex(AppInfoTable.KEY_APP_PACKAGENAME)));
-				appInfo.setName(cursor.getString(cursor.getColumnIndex(AppInfoTable.KEY_APP_NAME)));
-				appInfo.setGhost(cursor.getInt(cursor.getColumnIndex(AppInfoTable.KEY_APP_GHOST)) == 0 ? false
-						: true);
-				appInfo.setSkipNotification(cursor.getInt(cursor
-						.getColumnIndex(AppInfoTable.KEY_APP_SKIP_NOTIFICATION)) == 0 ? false
-						: true);
-				appInfo.setRatingDetailsExpanded(cursor.getInt(cursor
-						.getColumnIndex(AppInfoTable.KEY_APP_RATINGS_EXPANDED)) == 0 ? false : true);
-				appInfo.setIconUrl(cursor.getString(cursor
-						.getColumnIndex(AppInfoTable.KEY_APP_ICONURL)));
-				appInfo.setVersionName(cursor.getString(cursor
-						.getColumnIndex(AppInfoTable.KEY_APP_VERSION_NAME)));
+		while (cursor.moveToNext()) {
+			AppInfo appInfo = new AppInfo();
+			appInfo.setAccount(account);
+			appInfo.setLastUpdate(parseDate(cursor.getString(cursor
+					.getColumnIndex(AppInfoTable.KEY_APP_LASTUPDATE))));
+			appInfo.setPackageName(cursor.getString(cursor
+					.getColumnIndex(AppInfoTable.KEY_APP_PACKAGENAME)));
+			appInfo.setName(cursor.getString(cursor.getColumnIndex(AppInfoTable.KEY_APP_NAME)));
+			appInfo.setGhost(cursor.getInt(cursor.getColumnIndex(AppInfoTable.KEY_APP_GHOST)) == 0 ? false
+					: true);
+			appInfo.setSkipNotification(cursor.getInt(cursor
+					.getColumnIndex(AppInfoTable.KEY_APP_SKIP_NOTIFICATION)) == 0 ? false : true);
+			appInfo.setRatingDetailsExpanded(cursor.getInt(cursor
+					.getColumnIndex(AppInfoTable.KEY_APP_RATINGS_EXPANDED)) == 0 ? false : true);
+			appInfo.setIconUrl(cursor.getString(cursor.getColumnIndex(AppInfoTable.KEY_APP_ICONURL)));
+			appInfo.setVersionName(cursor.getString(cursor
+					.getColumnIndex(AppInfoTable.KEY_APP_VERSION_NAME)));
 
-				appInfos.add(appInfo);
-			} while (cursor.moveToNext());
+			int idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_ACCOUNT);
+			if (!cursor.isNull(idx)) {
+				appInfo.setAdmobAccount(cursor.getString(idx));
+			}
+			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_SITE_ID);
+			if (!cursor.isNull(idx)) {
+				appInfo.setAdmobSiteId(cursor.getString(idx));
+			}
+			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE);
+			if (!cursor.isNull(idx)) {
+				appInfo.setLastCommentsUpdate(new Date(cursor.getLong(idx)));
+			}
 
+			appInfos.add(appInfo);
 		}
 		cursor.close();
 

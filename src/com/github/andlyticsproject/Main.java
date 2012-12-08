@@ -547,10 +547,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 			for (AppInfo appInfo : allStats) {
 				if (!appInfo.isGhost()) {
-					String[] admobDetails = AndlyticsDb.getInstance(activity)
-							.getAdmobDetails(appInfo.getPackageName());
-					if (admobDetails != null) {
-						appInfo.setAdmobSiteId(admobDetails[1]);
+					if (appInfo.getAdmobSiteId() != null) {
 						List<Admob> admobStats = activity.db.getAdmobStats(
 								appInfo.getAdmobSiteId(), Timeframe.LAST_TWO_DAYS).getAdmobs();
 						if (admobStats.size() > 0) {
