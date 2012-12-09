@@ -122,7 +122,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 				forceLoadCommentsData();
 			}
 		});
-		footer.setVisibility(View.GONE);
+		hideFooter();
 
 		db = getDbAdapter();
 
@@ -164,19 +164,19 @@ public class CommentsActivity extends BaseDetailsActivity {
 	 * Called if item in option menu is selected.
 	 * 
 	 * @param item
-	 * The chosen menu item
+	 *            The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.itemCommentsmenuRefresh:
-			maxAvalibleComments = -1;
-			nextCommentIndex = 0;
-			forceLoadCommentsData();
-			return true;
-		default:
-			return (super.onOptionsItemSelected(item));
+			case R.id.itemCommentsmenuRefresh:
+				maxAvalibleComments = -1;
+				nextCommentIndex = 0;
+				forceLoadCommentsData();
+				return true;
+			default:
+				return (super.onOptionsItemSelected(item));
 		}
 	}
 
@@ -193,7 +193,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 				return null;
 			}
 
-			activity.comments = activity.db.getCommentsFromCache(activity.packageName);
+			activity.getCommentsFromCache();
 			activity.rebuildCommentGroups();
 
 			return null;
@@ -206,12 +206,22 @@ public class CommentsActivity extends BaseDetailsActivity {
 			}
 
 			activity.expandCommentGroups();
+			activity.showFooter();
 			activity.loadCommentsData();
 		}
 
 	}
 
+	private void getCommentsFromCache() {
+		comments = db.getCommentsFromCache(packageName);
+		nextCommentIndex = comments.size();
+	}
+
 	protected boolean shouldRemoteUpdateComments() {
+		if (comments == null || comments.isEmpty()) {
+			return true;
+		}
+
 		long now = System.currentTimeMillis();
 		long lastUpdate = AndlyticsDb.getInstance(this)
 				.getLastCommentsRemoteUpdateTime(packageName);
@@ -247,7 +257,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 			}
 
 			activity.refreshStarted();
-			activity.footer.setEnabled(false);
+			activity.disableFooter();
 		}
 
 		@Override
@@ -259,7 +269,6 @@ public class CommentsActivity extends BaseDetailsActivity {
 			Exception exception = null;
 
 			if (activity.maxAvalibleComments == -1) {
-
 				ContentAdapter db = activity.getDbAdapter();
 				AppStats appInfo = db.getLatestForApp(activity.packageName);
 				if (appInfo != null) {
@@ -276,11 +285,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 					List<Comment> result = console.getComments(activity, activity.packageName,
 							activity.nextCommentIndex, MAX_LOAD_COMMENTS);
 
-					// put in cache if index == 0
-					if (activity.nextCommentIndex == 0) {
-						activity.db.updateCommentsCache(result, activity.packageName);
-						activity.comments.clear();
-					}
+					activity.updateCommentsCacheIfNecessary(result);
 					activity.comments.addAll(result);
 
 					activity.rebuildCommentGroups();
@@ -307,17 +312,15 @@ public class CommentsActivity extends BaseDetailsActivity {
 			}
 
 			activity.refreshFinished();
-			activity.footer.setEnabled(true);
+			activity.enableFooter();
 
 			if (exception != null) {
 				Log.e(TAG, "Error fetching comments: " + exception.getMessage(), exception);
 				activity.handleUserVisibleException(exception);
-				activity.footer.setVisibility(View.GONE);
+				activity.hideFooter();
 
 				return;
 			}
-
-			activity.footer.setVisibility(View.VISIBLE);
 
 			if (activity.comments != null && activity.comments.size() > 0) {
 				activity.commentsListAdapter.setCommentGroups(activity.commentGroups);
@@ -329,14 +332,38 @@ public class CommentsActivity extends BaseDetailsActivity {
 				activity.nocomments.setVisibility(View.VISIBLE);
 			}
 
-			if (!activity.hasMoreComments) {
-				activity.footer.setVisibility(View.GONE);
-			}
+			activity.showFooterIfNecessary();
 
 			AndlyticsDb.getInstance(activity).saveLastCommentsRemoteUpdateTime(
 					activity.packageName, System.currentTimeMillis());
 		}
 
+	}
+
+	private void updateCommentsCacheIfNecessary(List<Comment> commentsToCache) {
+		if (commentsToCache == null || commentsToCache.isEmpty()) {
+			return;
+		}
+
+		if (comments == null || comments.isEmpty()) {
+			updateCommentsCache(commentsToCache);
+
+			return;
+		}
+
+		long latestCached = comments.get(0).getDate().getTime();
+		// XXX comments table looses millis, workaround
+		long latestFetched = Utils.timestampWithoutMillis(commentsToCache.get(0).getDate());
+		// this works when loading more as well, because fetched comments are
+		// always older then latest cache
+		if (latestFetched > latestCached) {
+			updateCommentsCache(commentsToCache);
+		}
+	}
+
+	private void updateCommentsCache(List<Comment> commentsToCache) {
+		db.updateCommentsCache(commentsToCache, packageName);
+		comments.clear();
 	}
 
 	public void rebuildCommentGroups() {
@@ -388,6 +415,26 @@ public class CommentsActivity extends BaseDetailsActivity {
 			state.setLoadCommentsData(new LoadCommentsData(this));
 			Utils.execute(state.loadCommentsData);
 		}
+	}
+
+	private void enableFooter() {
+		footer.setEnabled(true);
+	}
+
+	private void disableFooter() {
+		footer.setEnabled(false);
+	}
+
+	private void hideFooter() {
+		footer.setVisibility(View.GONE);
+	}
+
+	private void showFooter() {
+		footer.setVisibility(View.VISIBLE);
+	}
+
+	private void showFooterIfNecessary() {
+		footer.setVisibility(hasMoreComments ? View.VISIBLE : View.GONE);
 	}
 
 	@Override

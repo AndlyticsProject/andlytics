@@ -38,7 +38,7 @@ public class AndlyticsApp extends Application {
 		initAcra();
 
 		// get DB instance here to  force schema and preferences migration
-		AndlyticsDb.getInstance(getApplicationContext());
+		AndlyticsDb.getInstance(getApplicationContext()).getWritableDatabase().close();
 
 		setDbAdapter(new ContentAdapter(this));
 		sInstance = this;

@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject.util;
 
 import java.io.Closeable;
@@ -9,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -33,7 +34,7 @@ public final class Utils {
 
 	/**
 	 * get the code of the actual version.
-	 *
+	 * 
 	 * @param context
 	 *            the context
 	 * @return the code of the actual version
@@ -52,7 +53,7 @@ public final class Utils {
 
 	/**
 	 * get the name of the actual version.
-	 *
+	 * 
 	 * @param context
 	 *            the context
 	 * @return the name of the actual version
@@ -154,6 +155,14 @@ public final class Utils {
 			Log.e(AndlyticsApp.class.getSimpleName(), "unable to read version code", e);
 		}
 		return 0;
+	}
+
+	public static long timestampWithoutMillis(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		return cal.getTimeInMillis();
 	}
 
 }
