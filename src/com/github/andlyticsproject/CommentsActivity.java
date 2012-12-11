@@ -286,8 +286,6 @@ public class CommentsActivity extends BaseDetailsActivity {
 							activity.nextCommentIndex, MAX_LOAD_COMMENTS);
 
 					activity.updateCommentsCacheIfNecessary(result);
-					activity.comments.addAll(result);
-
 					activity.rebuildCommentGroups();
 
 				} catch (Exception e) {
@@ -364,6 +362,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 	private void updateCommentsCache(List<Comment> commentsToCache) {
 		db.updateCommentsCache(commentsToCache, packageName);
 		comments.clear();
+		comments.addAll(commentsToCache);
 	}
 
 	public void rebuildCommentGroups() {
