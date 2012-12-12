@@ -32,7 +32,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 	private View footer;
 
-	private int maxAvalibleComments;
+	private int maxAvailableComments;
 
 	private ArrayList<CommentGroup> commentGroups;
 
@@ -111,7 +111,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 		commentsListAdapter = new CommentsListAdapter(this);
 		list.setAdapter(commentsListAdapter);
 
-		maxAvalibleComments = -1;
+		maxAvailableComments = -1;
 		commentGroups = new ArrayList<CommentGroup>();
 		comments = new ArrayList<Comment>();
 
@@ -119,7 +119,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 			@Override
 			public void onClick(View v) {
-				forceLoadCommentsData();
+				fetchNextComments();
 			}
 		});
 		hideFooter();
@@ -134,7 +134,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 				comments = state.comments;
 				rebuildCommentGroups();
 				expandCommentGroups();
-				loadCommentsData();
+				refreshCommentsIfNecessary();
 			}
 		} else {
 			state.setLoadCommentsCache(new LoadCommentsCache(this));
@@ -154,9 +154,11 @@ public class CommentsActivity extends BaseDetailsActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.clear();
 		getSupportMenuInflater().inflate(R.menu.comments_menu, menu);
-		if (isRefreshing())
+		if (isRefreshing()) {
 			menu.findItem(R.id.itemCommentsmenuRefresh).setActionView(
 					R.layout.action_bar_indeterminate_progress);
+		}
+
 		return true;
 	}
 
@@ -164,19 +166,17 @@ public class CommentsActivity extends BaseDetailsActivity {
 	 * Called if item in option menu is selected.
 	 * 
 	 * @param item
-	 *            The chosen menu item
+	 * The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.itemCommentsmenuRefresh:
-				maxAvalibleComments = -1;
-				nextCommentIndex = 0;
-				forceLoadCommentsData();
-				return true;
-			default:
-				return (super.onOptionsItemSelected(item));
+		case R.id.itemCommentsmenuRefresh:
+			refreshComments();
+			return true;
+		default:
+			return (super.onOptionsItemSelected(item));
 		}
 	}
 
@@ -207,7 +207,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 			activity.expandCommentGroups();
 			activity.showFooter();
-			activity.loadCommentsData();
+			activity.refreshCommentsIfNecessary();
 		}
 
 	}
@@ -267,36 +267,29 @@ public class CommentsActivity extends BaseDetailsActivity {
 			}
 
 			Exception exception = null;
-
-			if (activity.maxAvalibleComments == -1) {
+			if (activity.maxAvailableComments == -1) {
 				ContentAdapter db = activity.getDbAdapter();
 				AppStats appInfo = db.getLatestForApp(activity.packageName);
 				if (appInfo != null) {
-					activity.maxAvalibleComments = appInfo.getNumberOfComments();
+					activity.maxAvailableComments = appInfo.getNumberOfComments();
 				} else {
-					activity.maxAvalibleComments = MAX_LOAD_COMMENTS;
+					activity.maxAvailableComments = MAX_LOAD_COMMENTS;
 				}
 			}
 
-			if (activity.maxAvalibleComments != 0) {
+			if (activity.maxAvailableComments != 0) {
 				DevConsoleV2 console = DevConsoleRegistry.getInstance().get(activity.accountName);
 				try {
 
 					List<Comment> result = console.getComments(activity, activity.packageName,
 							activity.nextCommentIndex, MAX_LOAD_COMMENTS);
-
 					activity.updateCommentsCacheIfNecessary(result);
+
+					activity.incrementNextCommentIndex(result.size());
 					activity.rebuildCommentGroups();
 
 				} catch (Exception e) {
 					exception = e;
-				}
-
-				activity.nextCommentIndex += MAX_LOAD_COMMENTS;
-				if (activity.nextCommentIndex >= activity.maxAvalibleComments) {
-					activity.hasMoreComments = false;
-				} else {
-					activity.hasMoreComments = true;
 				}
 			}
 
@@ -338,31 +331,43 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 	}
 
-	private void updateCommentsCacheIfNecessary(List<Comment> commentsToCache) {
-		if (commentsToCache == null || commentsToCache.isEmpty()) {
+	private void incrementNextCommentIndex(int increment) {
+		nextCommentIndex += increment;
+		if (nextCommentIndex >= maxAvailableComments) {
+			hasMoreComments = false;
+		} else {
+			hasMoreComments = true;
+		}
+	}
+
+	private void resetNextCommentIndex() {
+		maxAvailableComments = -1;
+		nextCommentIndex = 0;
+		hasMoreComments = true;
+	}
+
+	private void updateCommentsCacheIfNecessary(List<Comment> newComments) {
+		if (newComments == null || newComments.isEmpty()) {
 			return;
 		}
 
 		if (comments == null || comments.isEmpty()) {
-			updateCommentsCache(commentsToCache);
+			updateCommentsCache(newComments);
 
 			return;
 		}
 
-		long latestCached = comments.get(0).getDate().getTime();
-		// XXX comments table looses millis, workaround
-		long latestFetched = Utils.timestampWithoutMillis(commentsToCache.get(0).getDate());
-		// this works when loading more as well, because fetched comments are
-		// always older then latest cache
-		if (latestFetched > latestCached) {
-			updateCommentsCache(commentsToCache);
+		// if refreshing, clear and rebuild cache
+		if (nextCommentIndex == 0) {
+			updateCommentsCache(newComments);
 		}
+		// otherwise add to adapter and display
+		comments.addAll(newComments);
 	}
 
 	private void updateCommentsCache(List<Comment> commentsToCache) {
 		db.updateCommentsCache(commentsToCache, packageName);
 		comments.clear();
-		comments.addAll(commentsToCache);
 	}
 
 	public void rebuildCommentGroups() {
@@ -401,19 +406,21 @@ public class CommentsActivity extends BaseDetailsActivity {
 		commentGroups.add(group);
 	}
 
-	private void loadCommentsData() {
-		loadCommentsData(false);
-	}
-
-	private void forceLoadCommentsData() {
-		loadCommentsData(true);
-	}
-
-	private void loadCommentsData(boolean forceLoad) {
-		if (forceLoad || shouldRemoteUpdateComments()) {
-			state.setLoadCommentsData(new LoadCommentsData(this));
-			Utils.execute(state.loadCommentsData);
+	private void refreshCommentsIfNecessary() {
+		if (shouldRemoteUpdateComments()) {
+			resetNextCommentIndex();
+			fetchNextComments();
 		}
+	}
+
+	private void refreshComments() {
+		resetNextCommentIndex();
+		fetchNextComments();
+	}
+
+	private void fetchNextComments() {
+		state.setLoadCommentsData(new LoadCommentsData(this));
+		Utils.execute(state.loadCommentsData);
 	}
 
 	private void enableFooter() {
@@ -441,7 +448,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 		if (requestCode == REQUEST_AUTHENTICATE) {
 			if (resultCode == RESULT_OK) {
 				// user entered credentials, etc, try to get data again
-				loadCommentsData();
+				refreshCommentsIfNecessary();
 			} else {
 				Toast.makeText(this, getString(R.string.auth_error, accountName), Toast.LENGTH_LONG)
 						.show();

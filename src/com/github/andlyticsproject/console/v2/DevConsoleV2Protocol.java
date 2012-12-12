@@ -25,6 +25,9 @@ public class DevConsoleV2Protocol {
 	static final String FETCH_APPS_TEMPLATE = "{\"method\":\"fetch\","
 			+ "\"params\":{\"2\":1,\"3\":7},\"xsrf\":\"%s\"}";
 	// 1$: package name, 2$: XSRF
+	static final String FETCH_APP_TEMPLATE = "{\"method\":\"fetch\","
+			+ "\"params\":{\"1\":[\"%1$s\"],\"3\":0},\"xsrf\":\"%2$s\"}";
+	// 1$: package name, 2$: XSRF
 	static final String GET_RATINGS_TEMPLATE = "{\"method\":\"getRatings\","
 			+ "\"params\":{\"1\":[\"%1$s\"]},\"xsrf\":\"%2$s\"}";
 	// 1$: package name, 2$: start, 3$: num comments to fetch, 4$ XSRF
@@ -84,7 +87,10 @@ public class DevConsoleV2Protocol {
 		post.addHeader("Host", "play.google.com");
 		post.addHeader("Connection", "keep-alive");
 		post.addHeader("Content-Type", "application/json; charset=utf-8");
-		post.addHeader("X-GWT-Permutation", "04C42FD45B1FCD2E3034C8A4DC5145C1");
+		// XXX get this dynamically by fetching and executing the nocache.js file: 
+		// https://play.google.com/apps/publish/v2/gwt/com.google.wireless.android.vending.developer.fox.Fox.nocache.js
+		post.addHeader("X-GWT-Permutation", "C96CABBAF6CC3B517113CC559C9BCF67");
+		post.addHeader("Origin", "https://play.google.com");
 		post.addHeader("X-GWT-Module-Base", "https://play.google.com/apps/publish/v2/gwt/");
 		post.addHeader("Referer", "https://play.google.com/apps/publish/v2/?dev_acc="
 				+ getSessionCredentials().getDeveloperAccountId());
@@ -116,12 +122,19 @@ public class DevConsoleV2Protocol {
 		return String.format(FETCH_APPS_TEMPLATE, sessionCredentials.getXsrfToken());
 	}
 
+
 	List<AppInfo> parseAppInfosResponse(String json, String accountName) {
 		try {
 			return JsonParser.parseAppInfos(json, accountName);
 		} catch (JSONException ex) {
 			throw new DevConsoleProtocolException(json, ex);
 		}
+	}
+
+	String createFetchAppInfoRequest(String packageName) {
+		checkState();
+
+		return String.format(FETCH_APP_TEMPLATE, packageName, sessionCredentials.getXsrfToken());
 	}
 
 	String createFetchStatisticsRequest(String packageName, int statsType) {
