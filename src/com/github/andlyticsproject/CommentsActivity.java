@@ -32,7 +32,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 	private View footer;
 
-	private int maxAvalibleComments;
+	private int maxAvailableComments;
 
 	private ArrayList<CommentGroup> commentGroups;
 
@@ -111,7 +111,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 		commentsListAdapter = new CommentsListAdapter(this);
 		list.setAdapter(commentsListAdapter);
 
-		maxAvalibleComments = -1;
+		maxAvailableComments = -1;
 		commentGroups = new ArrayList<CommentGroup>();
 		comments = new ArrayList<Comment>();
 
@@ -119,10 +119,10 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 			@Override
 			public void onClick(View v) {
-				forceLoadCommentsData();
+				fetchNextComments();
 			}
 		});
-		footer.setVisibility(View.GONE);
+		hideFooter();
 
 		db = getDbAdapter();
 
@@ -134,7 +134,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 				comments = state.comments;
 				rebuildCommentGroups();
 				expandCommentGroups();
-				loadCommentsData();
+				refreshCommentsIfNecessary();
 			}
 		} else {
 			state.setLoadCommentsCache(new LoadCommentsCache(this));
@@ -154,9 +154,11 @@ public class CommentsActivity extends BaseDetailsActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.clear();
 		getSupportMenuInflater().inflate(R.menu.comments_menu, menu);
-		if (isRefreshing())
+		if (isRefreshing()) {
 			menu.findItem(R.id.itemCommentsmenuRefresh).setActionView(
 					R.layout.action_bar_indeterminate_progress);
+		}
+
 		return true;
 	}
 
@@ -171,9 +173,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.itemCommentsmenuRefresh:
-			maxAvalibleComments = -1;
-			nextCommentIndex = 0;
-			forceLoadCommentsData();
+			refreshComments();
 			return true;
 		default:
 			return (super.onOptionsItemSelected(item));
@@ -193,7 +193,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 				return null;
 			}
 
-			activity.comments = activity.db.getCommentsFromCache(activity.packageName);
+			activity.getCommentsFromCache();
 			activity.rebuildCommentGroups();
 
 			return null;
@@ -206,12 +206,22 @@ public class CommentsActivity extends BaseDetailsActivity {
 			}
 
 			activity.expandCommentGroups();
-			activity.loadCommentsData();
+			activity.showFooter();
+			activity.refreshCommentsIfNecessary();
 		}
 
 	}
 
+	private void getCommentsFromCache() {
+		comments = db.getCommentsFromCache(packageName);
+		nextCommentIndex = comments.size();
+	}
+
 	protected boolean shouldRemoteUpdateComments() {
+		if (comments == null || comments.isEmpty()) {
+			return true;
+		}
+
 		long now = System.currentTimeMillis();
 		long lastUpdate = AndlyticsDb.getInstance(this)
 				.getLastCommentsRemoteUpdateTime(packageName);
@@ -247,7 +257,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 			}
 
 			activity.refreshStarted();
-			activity.footer.setEnabled(false);
+			activity.disableFooter();
 		}
 
 		@Override
@@ -257,43 +267,29 @@ public class CommentsActivity extends BaseDetailsActivity {
 			}
 
 			Exception exception = null;
-
-			if (activity.maxAvalibleComments == -1) {
-
+			if (activity.maxAvailableComments == -1) {
 				ContentAdapter db = activity.getDbAdapter();
 				AppStats appInfo = db.getLatestForApp(activity.packageName);
 				if (appInfo != null) {
-					activity.maxAvalibleComments = appInfo.getNumberOfComments();
+					activity.maxAvailableComments = appInfo.getNumberOfComments();
 				} else {
-					activity.maxAvalibleComments = MAX_LOAD_COMMENTS;
+					activity.maxAvailableComments = MAX_LOAD_COMMENTS;
 				}
 			}
 
-			if (activity.maxAvalibleComments != 0) {
+			if (activity.maxAvailableComments != 0) {
 				DevConsoleV2 console = DevConsoleRegistry.getInstance().get(activity.accountName);
 				try {
 
 					List<Comment> result = console.getComments(activity, activity.packageName,
 							activity.nextCommentIndex, MAX_LOAD_COMMENTS);
+					activity.updateCommentsCacheIfNecessary(result);
 
-					// put in cache if index == 0
-					if (activity.nextCommentIndex == 0) {
-						activity.db.updateCommentsCache(result, activity.packageName);
-						activity.comments.clear();
-					}
-					activity.comments.addAll(result);
-
+					activity.incrementNextCommentIndex(result.size());
 					activity.rebuildCommentGroups();
 
 				} catch (Exception e) {
 					exception = e;
-				}
-
-				activity.nextCommentIndex += MAX_LOAD_COMMENTS;
-				if (activity.nextCommentIndex >= activity.maxAvalibleComments) {
-					activity.hasMoreComments = false;
-				} else {
-					activity.hasMoreComments = true;
 				}
 			}
 
@@ -307,17 +303,15 @@ public class CommentsActivity extends BaseDetailsActivity {
 			}
 
 			activity.refreshFinished();
-			activity.footer.setEnabled(true);
+			activity.enableFooter();
 
 			if (exception != null) {
 				Log.e(TAG, "Error fetching comments: " + exception.getMessage(), exception);
 				activity.handleUserVisibleException(exception);
-				activity.footer.setVisibility(View.GONE);
+				activity.hideFooter();
 
 				return;
 			}
-
-			activity.footer.setVisibility(View.VISIBLE);
 
 			if (activity.comments != null && activity.comments.size() > 0) {
 				activity.commentsListAdapter.setCommentGroups(activity.commentGroups);
@@ -329,14 +323,51 @@ public class CommentsActivity extends BaseDetailsActivity {
 				activity.nocomments.setVisibility(View.VISIBLE);
 			}
 
-			if (!activity.hasMoreComments) {
-				activity.footer.setVisibility(View.GONE);
-			}
+			activity.showFooterIfNecessary();
 
 			AndlyticsDb.getInstance(activity).saveLastCommentsRemoteUpdateTime(
 					activity.packageName, System.currentTimeMillis());
 		}
 
+	}
+
+	private void incrementNextCommentIndex(int increment) {
+		nextCommentIndex += increment;
+		if (nextCommentIndex >= maxAvailableComments) {
+			hasMoreComments = false;
+		} else {
+			hasMoreComments = true;
+		}
+	}
+
+	private void resetNextCommentIndex() {
+		maxAvailableComments = -1;
+		nextCommentIndex = 0;
+		hasMoreComments = true;
+	}
+
+	private void updateCommentsCacheIfNecessary(List<Comment> newComments) {
+		if (newComments == null || newComments.isEmpty()) {
+			return;
+		}
+
+		if (comments == null || comments.isEmpty()) {
+			updateCommentsCache(newComments);
+
+			return;
+		}
+
+		// if refreshing, clear and rebuild cache
+		if (nextCommentIndex == 0) {
+			updateCommentsCache(newComments);
+		}
+		// otherwise add to adapter and display
+		comments.addAll(newComments);
+	}
+
+	private void updateCommentsCache(List<Comment> commentsToCache) {
+		db.updateCommentsCache(commentsToCache, packageName);
+		comments.clear();
 	}
 
 	public void rebuildCommentGroups() {
@@ -375,19 +406,41 @@ public class CommentsActivity extends BaseDetailsActivity {
 		commentGroups.add(group);
 	}
 
-	private void loadCommentsData() {
-		loadCommentsData(false);
-	}
-
-	private void forceLoadCommentsData() {
-		loadCommentsData(true);
-	}
-
-	private void loadCommentsData(boolean forceLoad) {
-		if (forceLoad || shouldRemoteUpdateComments()) {
-			state.setLoadCommentsData(new LoadCommentsData(this));
-			Utils.execute(state.loadCommentsData);
+	private void refreshCommentsIfNecessary() {
+		if (shouldRemoteUpdateComments()) {
+			resetNextCommentIndex();
+			fetchNextComments();
 		}
+	}
+
+	private void refreshComments() {
+		resetNextCommentIndex();
+		fetchNextComments();
+	}
+
+	private void fetchNextComments() {
+		state.setLoadCommentsData(new LoadCommentsData(this));
+		Utils.execute(state.loadCommentsData);
+	}
+
+	private void enableFooter() {
+		footer.setEnabled(true);
+	}
+
+	private void disableFooter() {
+		footer.setEnabled(false);
+	}
+
+	private void hideFooter() {
+		footer.setVisibility(View.GONE);
+	}
+
+	private void showFooter() {
+		footer.setVisibility(View.VISIBLE);
+	}
+
+	private void showFooterIfNecessary() {
+		footer.setVisibility(hasMoreComments ? View.VISIBLE : View.GONE);
 	}
 
 	@Override
@@ -395,7 +448,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 		if (requestCode == REQUEST_AUTHENTICATE) {
 			if (resultCode == RESULT_OK) {
 				// user entered credentials, etc, try to get data again
-				loadCommentsData();
+				refreshCommentsIfNecessary();
 			} else {
 				Toast.makeText(this, getString(R.string.auth_error, accountName), Toast.LENGTH_LONG)
 						.show();

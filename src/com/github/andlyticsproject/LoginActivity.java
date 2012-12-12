@@ -62,7 +62,6 @@ public class LoginActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		setSupportProgressBarIndeterminateVisibility(false);
 
 		accountManager = AccountManager.get(this);
 		developerAccountManager = DeveloperAccountManager.getInstance(getApplicationContext());
@@ -85,6 +84,7 @@ public class LoginActivity extends SherlockActivity {
 		selectedAccount = developerAccountManager.getSelectedDeveloperAccount();
 
 		setContentView(R.layout.login);
+		setSupportProgressBarIndeterminateVisibility(false);
 		accountList = (LinearLayout) findViewById(R.id.login_input);
 
 		okButton = findViewById(R.id.login_ok_button);
