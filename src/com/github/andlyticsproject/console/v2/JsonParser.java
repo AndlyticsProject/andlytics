@@ -152,7 +152,7 @@ public class JsonParser {
 			// TODO figure out the rest and add don't just skip, filter, etc. Cf. #223
 			int publishState = jsonAppInfo.getInt(7);
 			if (publishState == 5 || jsonAppInfo.optInt(6) == 0) {
-				break;
+				continue;
 				// Probably a draft app
 			}
 			app.setPublishState(publishState);
