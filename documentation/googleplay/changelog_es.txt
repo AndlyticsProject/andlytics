@@ -1,24 +1,41 @@
-2.2.0
-- Nuevo gestor de cuentas, cambio entre cuentas desde el action bar
-- Nueva barra inferior para las acciones principales
-- Nuevo Importar/Exportar con subida a Dropbox (click en la notificación de exportar) y Importar via Dropbox (mediante la app de Dropbox app procesando ficheros .zip)
-- Notificaciones de JellyBean incluyendo sonidos personalizados
-- Opciones generales y específicas para cada cuenta
-- Se puede ocultar AdMob desde las opciones
-- Mejoras en la interfaz: fluidez, iconos arreglados, indicadores de progreso
-- Nuevos idiomas: Japones, Frances
+2.3.0
+- Basado en la nueva Consola de Desarrollador (el número de comentarios puede ser inferior debido a un cambio en la manera que éstos se informan)
+- El panel de configuración de tablas/gráficas ha sido reemplazado por acciones/preferencias
+- Se han ajustdo las tablas/gráficas para tablets
+- Barras de valoraciones con codigo de colores
+- Se ha añadido una opción global de formato de fecha
+- Muestra las repuestas de los desarrolladores en los comentarios
+- Las estadisticas de AdMob se sincronizan en realizar una sincronización en segundo plano
+- Traducciones actualizadas
+- Librerias actualizadas
+- Más errores solucionados
 
+2.2.2
+- Solucion de error con las notificaciones en Honeycomb
+
+2.2.1
+- Solución de errores menores
+- Soluciónado fallo en la API
+
+2.2.0
+- Nueva gestion de cuentas, canvio de cuenta desde la barra de acción
+- Nueva barra inferior para las principales acciones
+- Nueva importación/expotración con carga en Dropbox (haz click en la notificación de exportación) y importación via Dropbox (a través de la aplicación de Dropbox procesando ficheros .zip)
+- Notificaciones JellyBean incluyendo sonidos personalizados
+- Preferencias generales / especificas por cuenta
+- AdMob se puede esconder via preferencias
+- Mejoras en la UI: respuesta más rápida, mejoras en iconos, indicador de progreso
+- Nuevos idiomas: japonés y francés
 
 2.1.0
-
 - ActionBar compatible con ICS
-- Iconos HD para patnallas grandes
+- Iconos en alta definición para pantallas xlarge
 - Nueva pantalla de configuración
-- Nuevos idiomas: Catalan, Italiano, Ruso
+- Nuevos idiomas: catalan, italiano y ruso
 
 2.0.1
-- Corregida la autenticación
-- Las características Pro son ahora gratuitas
+- Arreglada la autenticación
+- Las características Pro ahora son gratuitas (ya que ahora es de código abierto)
 - Nuevo diseño
-- EPC para AdMob
-- Nuevos idiomas: Español, Alemán, Holandes
+- EPC para Admob
+- Nuevos idiomas: castellano, alemán y holandés
