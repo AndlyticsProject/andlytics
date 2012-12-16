@@ -66,8 +66,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		} else {
 			holder = (ViewHolderChild) convertView.getTag();
 		}
-
-		holder.text.setText(comment.getText());
+		
+		holder.text.setText(comment.getText().replace("\t", "\n"));
 		if (comment.isReply()) {
 			holder.date.setText(formatCommentDate(comment.getReplyDate()));
 		} else {
