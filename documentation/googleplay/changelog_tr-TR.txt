@@ -1,0 +1,41 @@
+2.3.0
+-Yeni geliştirici consolunu baz almıştır (raporlama biçimlerine göre yorum sayısı azalabilir)
+-grafik/tablo ayarları paneli action eleman ve seçenekleri ile değişti
+- Grafik ve tablolar tabletler için ayarlandı
+- Renklendirilmiş puan çubukları
+- Genel bir tarih formatı seçeneği
+- Yorumlara geliştirici cevabını gösterme
+-Admob istatistikleri şimdi arkaplan senkron işlemi ile senkron oluyor
+- Güncellenmiş istatistikler
+- Güncellenmiş kütüphaneler
+- Bir sürü başka düzeltme
+
+2.2.2
+- Honeycomb bildiri hata düzeltmesi
+
+2.2.1
+- Küçük hata düzeltmeleri
+- API düzeltmesi
+
+2.2.0
+-Yeni hesap yönetimi, hesaplar arası geçiş action çubuğu ile
+-Genel işlemler için alt çubuk
+-Dropbox'a yükleyen yeni içe/dışarı aktarım  (dışarı aktarım bildirimini tıkla) ve Dropbox'tan içeri aktarım (Dropbox uygulama işleme .zip dosyaları)
+- Değişik sesler içeren JellyBean bildirimleri
+- genel/hesaba yönelik sçenekler
+- Seçenekler ile admob gizlenebilir
+- UI gelişmeleri: cevap verme, ikon düzeltmesi, ilerleme çubuğu
+- Yeni diller: Japonca, Fransızca
+
+2.1.0
+- ICS uyumlu ActionBar
+- HD ikon xlarge ekranlar için
+- Yeni ayarlar ekranı
+- Yeni diller: Katalan, İtalyanca, Rusça
+
+2.0.1
+- Doğrulama düzeltildi
+- Pro özellikleri şimdi ücretsiz zaten açık kaynak kodlu oldu
+- Yeni tasarım
+-  AdMob için EPC
+- Yeni diller: ispanyolca, almanca, felemenkçe

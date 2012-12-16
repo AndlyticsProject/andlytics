@@ -1,3 +1,15 @@
+2.3.0
+- Nu gebaseerd op de nieuwe Ontwikkelaars Console (aantal opmerkingen kan afnemen door een verandering in de manier van rapporteren)
+- Grafiek/tabel configuratie scherm vervangen door actie elementen/voorkeuren
+- Aangepaste grafieken/tabellen voor tablets
+- Kleurgecodeerde beoordelingsbalken
+- Een globale datumnotatie optie toegevoegd
+- Toon antwoorden van ontwikkelaar op opmerkingen
+- AdMob statistieken worden nu gesynchroniseerd als een achtergrond synchronisatie wordt uitgevoerd
+- Vertalingen bijgewerkt
+- Bibliotheken bijgewerkt
+- Vele andere correcties
+
 2.2.2
 - Honeycomb meldingen bugfix
 

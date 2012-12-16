@@ -1,0 +1,17 @@
+<resources>
+
+    <string-array name="autosync_periods">
+        <item>Devre Dışı</item>
+        <item>1 dakika</item>
+        <item>15 Dakika</item>
+        <item>30 Dakika</item>
+        <item>1 saat</item>
+        <item>2 Saat</item>
+        <item>3 Saat</item>
+        <item>6 saat</item>
+        <item>8 saat</item>
+        <item>12 saat</item>
+        <item>24 saat</item>
+    </string-array>
+
+</resources>

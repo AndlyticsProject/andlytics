@@ -1,3 +1,22 @@
+2.3.0
+- Basat en la nova Consola de Desenvolupador (el número de comentaris pot ser inferior per un canvi en com s'informen)
+- Taules de configuració de la taula/gràfica substituït per objectes d'acció/preferències
+- S'han ajustat les taules/gràfiques per a tablets
+- Barres de valoracions amb codi de colors
+- S'ha afegit una opció global de format de data
+- Mostra les respostes dels desenvolupadors als comentaris
+- Les estadístiques d'AdMob se sincronitzen en realitzar una sincronització en segon pla
+- Traduccions actualitzades
+- Biblioteques actualitzades
+- Molts més errors solucionats
+
+2.2.2
+- Solució d'error de les notificacions amb Honeycomb
+
+2.2.1
+- Solució d'errors menors
+- Solució ràpida de l'API
+
 2.2.0
 - Nova gestió de comptes, canvi de compte amb la barra d'acció
 - Nova barra inferior per a les principals accions
@@ -6,10 +25,9 @@
 - Preferències generals/específiques del compte
 - L'AdMob es pot amagar a les preferències
 - Millores a la IU: responsivitat, millores d'icones, indicador de progrés
-- Nou idioma: japonès
+- Nous idiomes: japonès i francès
 
 2.1.0
-
 - ActionBar compatible amb ICS
 - Icones en alta definició per a les pantalles extragrans
 - Nova pantalla de configuració

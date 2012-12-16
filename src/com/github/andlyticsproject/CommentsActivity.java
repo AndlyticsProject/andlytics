@@ -206,7 +206,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 			}
 
 			activity.expandCommentGroups();
-			activity.showFooter();
+			activity.showFooterIfNecessary();
 			activity.refreshCommentsIfNecessary();
 		}
 
@@ -215,6 +215,13 @@ public class CommentsActivity extends BaseDetailsActivity {
 	private void getCommentsFromCache() {
 		comments = db.getCommentsFromCache(packageName);
 		nextCommentIndex = comments.size();
+		AppStats appInfo = db.getLatestForApp(packageName);
+		if (appInfo != null) {
+			maxAvailableComments = appInfo.getNumberOfComments();
+		} else {
+			maxAvailableComments = comments.size();
+		}
+		hasMoreComments = nextCommentIndex < maxAvailableComments;
 	}
 
 	protected boolean shouldRemoteUpdateComments() {
@@ -433,10 +440,6 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 	private void hideFooter() {
 		footer.setVisibility(View.GONE);
-	}
-
-	private void showFooter() {
-		footer.setVisibility(View.VISIBLE);
 	}
 
 	private void showFooterIfNecessary() {

@@ -20,7 +20,7 @@
     <string name="admob_revenue">Ganancias AdMob</string>
     <string name="admob_requests">Peticiones AdMob</string>
     <string name="average_rating">Puntuación media</string>
-    <string name="ratings">Calificaciones</string>
+    <string name="ratings">Votaciones</string>
     <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">Comentarios</string>
     <string name="num_total_downloads">Descargas totales</string>
@@ -42,7 +42,7 @@
     <string name="download_changes">Cambios en descargas</string>
     <string name="notification_trigger">Notificaciones</string>
     <string name="notification_signal">Configuración notificación</string>
-    <string name="notification_sound">Sonido de notificacion</string>
+    <string name="notification_sound">Sonido notificación</string>
     <string name="notification_light">Led notificación</string>
     <string name="apps_notification">Aplicaciones a notificar cambios</string>
     <string name="select_files_import">Selecciona los paquetes a importar</string>
@@ -55,6 +55,8 @@
     <string name="select_files_export">Selecciona las aplicaciones a exportar</string>
     <string name="export_files_replaced">Los archivos existentes serán reemplazados</string>
     <string name="run_export">Exportar</string>
+    <string name="comment_no_user_info">Un usuario de Google</string>
+    <string name="comment_reply">Respuesta del desarrollador</string>
     <string name="comments_details_full">Versión %1$s en el dispositivo: %2$s</string>
     <string name="comments_details_version">Versión %s</string>
     <string name="comments_details_device">En dispositivo: %s</string>
@@ -65,28 +67,29 @@
     <string name="time_frame">Intervalo de tiempo</string>
     <string name="seven_days">Últimos 7 días</string>
     <string name="thirty_days">Últimos 30 días</string>
+    <string name="ninety_days">Últimos 90 dias</string>
     <string name="unlimited">Ilimitado</string>
     <string name="date_format">Formato de fecha</string>
+    <string name="locale_default">Idioma por defecto</string>
     <string name="ddmmyy">Día/Mes/Año</string>
     <string name="yymmdd">Año/Mes/Día</string>
     <string name="mmddyy">Mes/Día/Año</string>
     <string name="smooth_values">Redondear valores</string>
     <string name="smoothed_values">* valores redondeados</string>
-    <string name="info_smooth">Los valores de descargas e instalaciones no son actualizadas diariamente por Google. Puedes seleccionar que redondee estos valores. Las puntuaciones se actualizan prácticamente al instante.</string>
+    <string name="info_smooth">Redondear valores en la gráfica para las descargas y las instalaciones activas</string>
     <string name="auto_sync_period">Periodo de sincronización</string>
     <string name="admob_login">LOGIN CUENTA DE ADMOB</string>
     <string name="password">Contraseña</string>
     <string name="email">Email</string>
-    <string name="login">Loguearse</string>
-    <string name="remove_admob">Eliminar asociación con AdMob</string>
-    <string name="remove_admob_app">Eliminar valores AdMob de esta aplicación</string>
+    <string name="login">Entrar</string>
+    <string name="remove_admob">Eliminar AdMob</string>
     <string name="loading_site">Cargando lista de aplicaciones&#8230;</string>
     <string name="select_admob_site">Selecciona un sitio de AdMob para asociar a esta aplicación</string>
     <string name="choose_app">Selecciona tu aplicación</string>
     <string name="admob_required">Cuenta AdMob requerida</string>
     <string name="admob_add">Añadir cuenta AdMob</string>
     <string name="admob_info">Para cuentas AdMob enlazadas a una cuenta Google puedes encontrar la contraseña del API en la página de información de tu cuenta de admob:</string>
-    <string name="percentage">Porcentaje</string>
+    <string name="percentage">Porcentajes</string>
     <string name="daily">Cambios diarios</string>
     <string name="downloads_day">Descargas por día</string>
     <string name="active_installs_percent">Porcentaje de instalaciones activas</string>
@@ -95,7 +98,7 @@
     <string name="admob">AdMob</string>
     <string name="admob__revenue">Ganancias</string>
     <string name="admob__epc">epc</string>
-    <string name="admob__requests">Solicitudes</string>
+    <string name="admob__requests">Peticiones</string>
     <string name="admob__clicks">Clics</string>
     <string name="admob__fill_rate">Tasa de relleno</string>
     <string name="admob__eCPM">eCPM</string>
@@ -103,7 +106,6 @@
     <string name="admob__CTR">CTR</string>
     <string name="admob__house_ad_clicks">Clicks en autopublicidad</string>
     <string name="admob__charts_available">gráficas AdMob disponibles</string>
-    <string name="admob__remove_account">Si quieres eliminar un cuenta ve a: Ajustes de Android -> Cuentas y Sincronización</string>
     <string name="last_update">última actualización</string>
 
     <string name="changelog_title">Changelog</string>
@@ -124,7 +126,7 @@
     <string name="import_confirm_dialog_message">Actualmente tienes estadísticas de %d apps. El importar las sobreescribirá. ¿Continuar con la importación?</string>
 	<string name="export_">Exportar</string>
 	<string name="export_no_sdcard">No se encuentra la tarjeta SD, imposible exportar!</string>
-	<string name="export_no_app">No hay seleccionada ninguna aplicación, imposible exportar!</string>
+	<string name="export_no_app">No se ha seleccionado ninguna aplicación, imposible exportar!</string>
 	<string name="export_started">Exportando.</string>
     <string name="export_finished">Exportación finalizada.</string>
     <string name="export_failed_to_load_stats">Error al cargar las estadísticas de la aplicación</string>

@@ -1,14 +1,13 @@
 2.3.0
-- Now based on the new Developer Console (number of comments may go down due to a change in how they are reported)
-- chart/table configuration panel replaced by action items/preferences
-- Adjusted charts/tables for tablets
-- Colour coded Ratings bars
+- Now based on the new Developer Console
+- Statistics and comments are no longer repeatedly synced while actively using the app
+- Removed the chart/table configuration panel and replaced it with action items/preferences
+- Adjusted charts and tables for tablets
+- Ratings are displayed as colour coded progress bars
 - Added a global date format option
-- Show developer replies to comments
-- AdMob stats are now synced when performing a background sync
+- Added support for viewing developer replies to comments
 - Updated translations
-- Updated libraries
-- Lots of other fixes
+- Lots of other fixes and improvements
 
 2.2.2
 - Honeycomb notification bugfix
