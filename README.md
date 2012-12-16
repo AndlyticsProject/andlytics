@@ -17,25 +17,23 @@ report any bugs or feature requests and to see the list of known issues.
 
 # Description
 
-Project imported from last source code released by Timelappse (@andlytics) with fix by Maurizio Pinotti (@wwtwister).
+Andlytics collects statistics from the Google Play Developer Console. It lets you track active installs, total installs, ratings, and comments for all your Android apps that are published on Google Play.
 
-Track your Android app's statistics.
+Andlytics can also collect AdMob statistics, including revenue, requests and impressions. It supports background syncing of stats and notifications for when changes occur.
 
-Andlytics tracks app statistics for ratings, daily downloads, total downloads and active installs. Android Developers can view app comments in all languages and AdMob statistics for revenue, request and impressions.
+Google does not provide a public API for collecting statistics. Therefore, if Google makes a change to the site it may cause Andlytics to stop working. In that case please be patient while we try to catch up.
 
-This is a Android developer tool for app tracking, only useful if you have published applications on the Android Market and access to the Android Market Developer Console.
+Andlytics is open source, please feel free to contribute via GitHub.
 
-Supports auto sync of app stats with your android developer account. Statistics data can be exported to sdcard and you can configure notifications for comments, ratings and downloads. AdMob accounts will be managed by the Android account manager.
+Andlytics is not associated with Google in any way.
 
-Please notice that Google doesn't provide a stable API to get download and rating stats. Therefore Andlytics might not work properly if something changes in the Android Market. In that case please be patient while we try to catch up with the changes.
+"Google Apps for Business" and Multi-connected developer accounts are not supported yet. If you have one of these accounts, contact us via GitHub and help us to add support.
 
-This app is not related to Google in any way.
+On some devices AdMob accounts keep disappearing, moving Andlytics from sdcard to internal storage might fix this.
 
-KNOWN ISSUES
-★★★★★★★★★★★★★★★★★★★
-- "Google Apps for Business" accounts are not supported yet
-- On some devices AdMob accounts keep disappearing, moving Andlytics from sdcard to internal storage might fix this
-- For AdMob accounts that are linked to a Google Account you can find the API password on the Account Information page http://www.admob.com/my_account/account_info.
+For AdMob accounts that are linked to a Google Account you can find the API password on the Account Information page http://www.admob.com/my_account/account_info.
+
+Keywords: Developer console, developer tools, android developers
 
 ## Contributing
 
