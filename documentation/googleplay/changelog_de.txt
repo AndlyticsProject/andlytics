@@ -1,3 +1,15 @@
+2.3.0
+- Basiert jetzt auf der neuen Entwicklerkonsole (Anzahl Kommentare kann nun abweichen, da diese nun auf andere Wiese gemeldet werden)
+- Schaubilder/Tabellen Konfiguration dürch Menü ersetzt
+- Angepasste Schaubilder/Tabellen für Tablets
+- Farbcodierte Ratingbars
+- Globale Datumsformat Option hinzugefügt
+- Anzeige von Entwicklerantworten zu Kommentaren
+- AdMob Statistiken nun Teil der Hintergrund-Sychronisation
+- Sprachen aktualisiert
+- Bibliotheken aktualisiert
+- Weitere Fehlerbehebungen
+
 2.2.2
 - Fehlerbehebung zu Benachrichtigungen unter Honeycomb
 
