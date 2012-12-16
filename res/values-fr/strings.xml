@@ -23,7 +23,7 @@
     <string name="ratings">Notes</string>
     <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">commentaires</string>
-    <string name="num_total_downloads">téléchargements total</string>
+    <string name="num_total_downloads">Téléchargements total</string>
     <string name="num_active_installs">Installations actives</string>
     <string name="num_average_rating">Note moyenne</string>
     <string name="num_ratings">Notes</string>
@@ -78,8 +78,7 @@
     <string name="password">Mot de passe</string>
     <string name="email">Email</string>
     <string name="login">Connexion</string>
-    <string name="remove_admob">Annuler l\'association avec le site AdMob</string>
-    <string name="remove_admob_app">Enlever les valeurs AdMob pour cette application</string>
+    <string name="remove_admob">Annuler AdMob</string>
     <string name="loading_site">Chargement de la liste des sites&#8230;</string>
     <string name="select_admob_site">Sélectionner un site AdMob à associer avec cette application</string>
     <string name="choose_app">Choisissez votre application</string>
@@ -103,7 +102,6 @@
     <string name="admob__CTR">CTR</string>
     <string name="admob__house_ad_clicks">Clics sur des autopromotions</string>
     <string name="admob__charts_available">Graphiques AdMob disponibles</string>
-    <string name="admob__remove_account">Si vous souhaitez supprimer un compte, allez dans : Paramètres Android -> Comptes et synchronisation</string>
     <string name="last_update">Dernière mise à jour</string>
 
     <string name="changelog_title">Modifications récentes</string>
