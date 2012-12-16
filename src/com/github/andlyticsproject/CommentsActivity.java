@@ -96,6 +96,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 		setContentView(R.layout.comments);
 
 		list = (ExpandableListView) findViewById(R.id.comments_list);
+		// TODO Use ListView.setEmptyView
 		nocomments = (View) findViewById(R.id.comments_nocomments);
 
 		// footer
@@ -321,6 +322,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 			}
 
 			if (activity.comments != null && activity.comments.size() > 0) {
+				activity.nocomments.setVisibility(View.GONE);
 				activity.commentsListAdapter.setCommentGroups(activity.commentGroups);
 				for (int i = 0; i < activity.commentGroups.size(); i++) {
 					activity.list.expandGroup(i);
@@ -360,7 +362,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 		if (comments == null || comments.isEmpty()) {
 			updateCommentsCache(newComments);
-
+			comments.addAll(newComments);
 			return;
 		}
 
