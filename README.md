@@ -6,8 +6,6 @@ This repository contains the source code for the Andlytics Android app.
   <img src="http://www.android.com/images/brand/android_app_on_play_large.png">
 </a>
 
-Download a preview of the next version which is based on the new Developer Console, [2.3 Beta 2](https://www.dropbox.com/s/3tvvb4tk9xioqag/Andlytics-2.3-Beta2.apk)
-
 ![](https://lh6.ggpht.com/NXU6-yYc3f2I8S3m-m0Ghyy_tVQ8UlIIrznWUjRa1EPTYt1xxnVpKJE2NY0xwPMlU7OE=w705)
 
 Please see the [issues](https://github.com/AndlyticsProject/andlytics/issues) section to
