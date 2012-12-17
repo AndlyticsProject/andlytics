@@ -6,6 +6,7 @@
 - Ratings are displayed as colour coded progress bars
 - Added a global date format option
 - Added support for viewing developer replies to comments
+- Removed support for Android 2.1
 - Updated translations
 - Lots of other fixes and improvements
 
