@@ -376,7 +376,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 	private void updateCommentsCache(List<Comment> commentsToCache) {
 		db.updateCommentsCache(commentsToCache, packageName);
-		comments.clear();
+		comments = new ArrayList<Comment>();
 	}
 
 	public void rebuildCommentGroups() {
