@@ -27,10 +27,31 @@ import com.github.andlyticsproject.io.MediaScannerWrapper;
  * Utility class for simple helper methods.
  */
 public final class Utils {
+	
+	private static final int MAX_STACKTRACE_CAUSE_DEPTH = 5;
 
 	/** Private constructor. */
 	private Utils() {
 	}
+	
+	public static String stackTraceToString(Throwable e) {
+		return stackTraceToString(e, 0);
+	}
+
+	public static String stackTraceToString(Throwable e, int depth) {
+		StringBuilder sb = new StringBuilder();
+		for (StackTraceElement element : e.getStackTrace()) {
+			sb.append(element.toString());
+			sb.append("\n");
+		}
+		if (depth < MAX_STACKTRACE_CAUSE_DEPTH && e.getCause() != null) {
+			// While there is an underlying cause below the max depth, append it
+			return sb.toString() + stackTraceToString(e.getCause(), ++depth);
+		}
+		return sb.toString();
+	}
+
+
 
 	/**
 	 * get the code of the actual version.
