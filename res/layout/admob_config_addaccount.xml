@@ -73,6 +73,7 @@
                 </LinearLayout>
             </RelativeLayout>
 
+            <!-- TODO Remove this -->
             <RelativeLayout
                 android:id="@+id/admob_accout_desc"
                 android:layout_width="fill_parent"
@@ -88,7 +89,6 @@
                     style="@style/MainTableText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/admob__remove_account"
                     android:visibility="gone" />
             </RelativeLayout>
 

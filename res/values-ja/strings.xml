@@ -54,6 +54,8 @@
     <string name="select_files_export">エクスポートするアプリを選択してください。</string>
     <string name="export_files_replaced">既存のエックスポートファイルを上書きします。</string>
     <string name="run_export">エクスポート開始</string>
+    <string name="comment_no_user_info">Googleユーザー</string>
+    <string name="comment_reply">開発者返答</string>
     <string name="comments_details_full">バージョン: %1$s 端末: %2$s</string>
     <string name="comments_details_version">バージョン: %s</string>
     <string name="comments_details_device">端末: %s</string>
@@ -64,8 +66,10 @@
     <string name="time_frame">時間帯</string>
     <string name="seven_days">1週間分</string>
     <string name="thirty_days">１ヵ月分</string>
+    <string name="ninety_days">3ヵ月分</string>
     <string name="unlimited">制限なし</string>
     <string name="date_format">日付フォーマット</string>
+    <string name="locale_default">システムデフォールト</string>
     <string name="ddmmyy">日/月/年</string>
     <string name="yymmdd">年/月/日</string>
     <string name="mmddyy">月/日/年</string>
@@ -78,7 +82,6 @@
     <string name="email">メールアドレス</string>
     <string name="login">ログイン</string>
     <string name="remove_admob">AdMobサイト紐付けを削除する</string>
-    <string name="remove_admob_app">このアプリのAdMob値を削除する</string>
     <string name="loading_site">サイト一覧読み込み中&#8230;</string>
     <string name="select_admob_site">このアプリに紐付く AdMobサイトを選択してください。</string>
     <string name="choose_app">アプリを選択してください</string>
@@ -102,7 +105,6 @@
     <string name="admob__CTR">CTR</string>
     <string name="admob__house_ad_clicks">House ad クリック数</string>
     <string name="admob__charts_available">表示可能なAdMobチャート</string>
-    <string name="admob__remove_account">アカウントを削除したい場合は、Android　設定->アカウントと同期画面を使ってください。</string>
     <string name="last_update">最終更新日時</string>
 
     <string name="changelog_title">変更履歴</string>

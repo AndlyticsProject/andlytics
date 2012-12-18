@@ -1,0 +1,18 @@
+Andlytics Google Play Geliştirici Konsolundan istatistikleri toplar. Google Play'deki Android uygulamalarınızın aktif yükleme ve toplam yükleme sayısını, değerlendirme puanlarını ve yorumlarını takip etmenizi sağlar.
+
+Andlytics ayrıca Admob istatistiklerini (kazanç, istekler ve izlenimler) toplar. Arkaplanda istatistiklerin senkronize edilmesini sağlar ve istatistiklerde değişiklik olduğunda bildirim verir.
+
+Google istatistikleri toplamak için herkese açık bir arayüz sağlamıyor. Bu yüzden Google sayfada bir değişiklik yaparsa Andlytics'in çalışmasını olumsuz etkileyebilir. Bu durumda biz problemi çözene kadar lütfen sabırlı olunuz.
+
+Andlytics açık kaynak kodlurdur. Github üzerinden destek vermede lütfen rahat olunuz. 
+
+Andlytics herhangi bir şekilde Google ile bir bağlantısı yoktur. 
+
+İşyerileri için Google Uygulamaları ("Google Apps for Business") ve birden fazla bağlantılı geliştirici hesapları henüz desteklenmiyor.  Eğer bu hesaplardan birine sahipseniz bizimle GitHub üzerinden iletişime geçebilir ve bu desteğin eklenmesi için yardım edebilirsiniz. 
+
+Bazı cihazalarda AdMob hesapları ortadan kayboluyor. Andlytics'i sdcard'dan dahili hafızaya taşımanız problemi çözebilir. 
+
+Google hesabına bağlı AdMob hesapları için API şifresine hesap bilgi sayfasından ulaşabilirsiniz.
+http://www.admob.com/my_account/account_info.
+
+Anahtar kelimeler: Geliştiri Konsolu, Geliştirici araçları, android geliştiricileri, Developer console, developer tools, android developers
