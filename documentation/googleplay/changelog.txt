@@ -1,5 +1,5 @@
 2.3.1
-- Only show published apps
+- Only collect statistics on published apps
 
 2.3.0
 - Now based on the new Developer Console
