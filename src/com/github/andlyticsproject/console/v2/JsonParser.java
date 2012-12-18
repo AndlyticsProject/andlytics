@@ -142,7 +142,7 @@ public class JsonParser {
 			// Look for "tmp.7238057230750432756094760456.235728507238057230542"
 			if (packageName == null
 					|| (packageName.startsWith("tmp.") && Character.isDigit(packageName.charAt(4)))) {
-				break;
+				continue;
 				// Draft app
 			}
 			// Check number code and last updated date
