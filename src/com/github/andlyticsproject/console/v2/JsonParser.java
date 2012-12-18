@@ -154,6 +154,9 @@ public class JsonParser {
 			if (publishState == 5 || jsonAppInfo.optInt(6) == 0) {
 				continue;
 				// Probably a draft app
+			} else if (publishState == 2) {
+				// Unpublished app
+				continue;
 			}
 			app.setPublishState(publishState);
 			app.setPackageName(packageName);
