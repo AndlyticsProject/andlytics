@@ -174,7 +174,7 @@ public class JsonParser {
 			 * Unknown
 			 * Last what's new
 			 */
-			JSONArray appDetails = jsonAppInfo.getJSONArray(2).getJSONArray(1).getJSONArray(42);
+			JSONArray appDetails = jsonAppInfo.getJSONArray(2).getJSONArray(1).getJSONArray(0);
 			app.setName(appDetails.getString(2));
 
 			/*
