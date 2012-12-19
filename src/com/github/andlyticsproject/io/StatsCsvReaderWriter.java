@@ -26,7 +26,7 @@ import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import com.github.andlyticsproject.model.AppStats;
-import com.github.andlyticsproject.util.Utils;
+import com.github.andlyticsproject.util.FileUtils;
 
 @SuppressLint("SimpleDateFormat")
 public class StatsCsvReaderWriter {
@@ -175,7 +175,7 @@ public class StatsCsvReaderWriter {
 		} catch (IOException e) {
 			throw new ServiceException(e);
 		} finally {
-			Utils.closeSilently(reader);
+			FileUtils.closeSilently(reader);
 		}
 
 		return false;

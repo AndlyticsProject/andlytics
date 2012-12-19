@@ -1,3 +1,6 @@
+2.3.1
+- Only collect statistics on published apps
+
 2.3.0
 - Now based on the new Developer Console
 - Statistics and comments are no longer repeatedly synced while actively using the app

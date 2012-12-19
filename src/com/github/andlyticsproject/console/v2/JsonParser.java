@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
@@ -20,6 +22,8 @@ import com.github.andlyticsproject.model.Comment;
  * 
  */
 public class JsonParser {
+
+	private static final String TAG = JsonParser.class.getSimpleName();
 
 	private JsonParser() {
 
@@ -70,7 +74,8 @@ public class JsonParser {
 		 * null
 		 * App name
 		 */
-		// For now we just care about todays value, later we may delve into the historical and dimensioned data		
+		// For now we just care about todays value, later we may delve into the historical and
+		// dimensioned data
 		JSONArray historicalData = values.getJSONArray(1).getJSONArray(1);
 		JSONArray latestData = historicalData.getJSONArray(historicalData.length() - 1);
 		/*
@@ -81,14 +86,14 @@ public class JsonParser {
 		int latestValue = latestData.getJSONArray(2).getInt(1);
 
 		switch (statsType) {
-		case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
-			stats.setTotalDownloads(latestValue);
-			break;
-		case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
-			stats.setActiveInstalls(latestValue);
-			break;
-		default:
-			break;
+			case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
+				stats.setTotalDownloads(latestValue);
+				break;
+			case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
+				stats.setActiveInstalls(latestValue);
+				break;
+			default:
+				break;
 		}
 
 	}
@@ -142,18 +147,20 @@ public class JsonParser {
 			// Look for "tmp.7238057230750432756094760456.235728507238057230542"
 			if (packageName == null
 					|| (packageName.startsWith("tmp.") && Character.isDigit(packageName.charAt(4)))) {
-				break;
+				continue;
 				// Draft app
 			}
 			// Check number code and last updated date
 			// Published: 1
 			// Unpublished: 2
 			// Draft: 5
+			// Draft w/ in-app items?: 6
 			// TODO figure out the rest and add don't just skip, filter, etc. Cf. #223
 			int publishState = jsonAppInfo.getInt(7);
-			if (publishState == 5 || jsonAppInfo.optInt(6) == 0) {
+			Log.d(TAG, String.format("%s: publishState=%d", packageName, publishState));
+			if (publishState != 1) {
+				// Not a published app, skipping
 				continue;
-				// Probably a draft app
 			}
 			app.setPublishState(publishState);
 			app.setPackageName(packageName);

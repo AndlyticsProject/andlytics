@@ -11,6 +11,7 @@ import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
+import com.github.andlyticsproject.util.FileUtils;
 
 @SuppressLint("DefaultLocale")
 public class DevConsoleV2Protocol {
@@ -127,8 +128,14 @@ public class DevConsoleV2Protocol {
 		try {
 			return JsonParser.parseAppInfos(json, accountName);
 		} catch (JSONException ex) {
+			saveDebugJson(json);
 			throw new DevConsoleProtocolException(json, ex);
 		}
+	}
+
+	private static void saveDebugJson(String json) {
+		FileUtils.tryWriteToDebugDir(
+				String.format("console_reply_%d.json", System.currentTimeMillis()), json);
 	}
 
 	String createFetchAppInfoRequest(String packageName) {
@@ -150,6 +157,7 @@ public class DevConsoleV2Protocol {
 		try {
 			JsonParser.parseStatistics(json, stats, statsType);
 		} catch (JSONException ex) {
+			saveDebugJson(json);
 			throw new DevConsoleProtocolException(json, ex);
 		}
 	}
@@ -164,6 +172,7 @@ public class DevConsoleV2Protocol {
 		try {
 			JsonParser.parseRatings(json, stats);
 		} catch (JSONException ex) {
+			saveDebugJson(json);
 			throw new DevConsoleProtocolException(json, ex);
 		}
 	}
@@ -179,6 +188,7 @@ public class DevConsoleV2Protocol {
 		try {
 			return JsonParser.parseCommentsCount(json);
 		} catch (JSONException ex) {
+			saveDebugJson(json);
 			throw new DevConsoleProtocolException(json, ex);
 		}
 	}
@@ -187,6 +197,7 @@ public class DevConsoleV2Protocol {
 		try {
 			return JsonParser.parseComments(json);
 		} catch (JSONException ex) {
+			saveDebugJson(json);
 			throw new DevConsoleProtocolException(json, ex);
 		}
 	}

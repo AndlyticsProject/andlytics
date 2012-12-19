@@ -485,6 +485,9 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				Utils.execute(activity.state.loadIconInCache, appDownloadInfos);
 
 			} catch (Exception e) {
+				// These exceptions can contain very long JSON strings
+				// Explicitly print out the root cause first
+				Log.e(TAG, "Error while requesting developer console : " + Utils.stackTraceToString(e));
 				Log.e(TAG, "Error while requesting developer console : " + e.getMessage(), e);
 				exception = e;
 			}
