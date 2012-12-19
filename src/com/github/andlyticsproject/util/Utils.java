@@ -1,8 +1,6 @@
 package com.github.andlyticsproject.util;
 
-import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +19,6 @@ import android.os.Build;
 import android.util.Log;
 
 import com.github.andlyticsproject.AndlyticsApp;
-import com.github.andlyticsproject.io.MediaScannerWrapper;
 
 /**
  * Utility class for simple helper methods.
@@ -106,38 +103,6 @@ public final class Utils {
 
 	public static boolean isFroyo() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
-	}
-
-	public static void scanFile(Context ctx, String filename) {
-		if (isFroyo()) {
-			MediaScannerWrapper.scanFile(ctx, filename);
-		}
-	}
-
-	public static void closeSilently(Closeable c) {
-		if (c != null) {
-			try {
-				c.close();
-			} catch (Exception e) {
-			}
-		}
-	}
-
-	public static String readFileAsString(String filename) {
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream(filename);
-			byte[] data = new byte[in.available()];
-			in.read(data);
-
-			return new String(data, "UTF-8");
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (in != null) {
-				Utils.closeSilently(in);
-			}
-		}
 	}
 
 	public static void getAndSaveToFile(URL url, File file) throws IOException {
