@@ -309,9 +309,15 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 					new String[] { AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE },
 					AppInfoTable.KEY_APP_PACKAGENAME + "=?", new String[] { packageName }, null,
 					null, null);
-			if (c.getCount() != 1 || !c.moveToNext()) {
-				throw new IllegalStateException("Package name not found in AppInfo table: "
-						+ packageName);
+			if (c.getCount() != 1) {
+				Log.w(TAG,
+						String.format("Unexpected package count for %s: %d", packageName,
+								c.getCount()));
+			}
+			if (c.getCount() < 1 || !c.moveToNext()) {
+				throw new IllegalStateException(String.format(
+						"Package name not found in AppInfo table: %s. count=%d", packageName,
+						c.getCount()));
 			}
 
 			int idx = c.getColumnIndex(AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE);
@@ -351,9 +357,15 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			c = db.query(AppInfoTable.DATABASE_TABLE_NAME, new String[] { AppInfoTable.KEY_ROWID },
 					AppInfoTable.KEY_APP_PACKAGENAME + "=?", new String[] { packageName }, null,
 					null, null);
-			if (c.getCount() != 1 || !c.moveToNext()) {
-				throw new IllegalStateException("Package name not found in AppInfo table: "
-						+ packageName);
+			if (c.getCount() != 1) {
+				Log.w(TAG,
+						String.format("Unexpected package count for %s: %d", packageName,
+								c.getCount()));
+			}
+			if (c.getCount() < 1 || !c.moveToNext()) {
+				throw new IllegalStateException(String.format(
+						"Package name not found in AppInfo table: %s. count=%d", packageName,
+						c.getCount()));
 			}
 
 			return c.getLong(c.getColumnIndex(AppInfoTable.KEY_ROWID));
