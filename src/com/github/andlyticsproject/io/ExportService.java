@@ -20,7 +20,7 @@ import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.model.AppStatsList;
-import com.github.andlyticsproject.util.Utils;
+import com.github.andlyticsproject.util.FileUtils;
 
 public class ExportService extends IntentService {
 
@@ -91,7 +91,7 @@ public class ExportService extends IntentService {
 				zip.close();
 			}
 
-			Utils.scanFile(this, zipFile.getAbsolutePath());
+			FileUtils.scanFile(this, zipFile.getAbsolutePath());
 		} catch (IOException e) {
 			Log.e(TAG, "Error zipping CSV files: " + e.getMessage(), e);
 
