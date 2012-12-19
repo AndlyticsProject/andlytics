@@ -192,27 +192,27 @@ public class AdmobActivity extends BaseChartActivity {
 	 * Called if item in option menu is selected.
 	 * 
 	 * @param item
-	 *            The chosen menu item
+	 * The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.itemChartsmenuRefresh:
-				setChartIgnoreCallLayouts(true);
-				loadRemoteEntries();
-				return true;
-			case R.id.itemAdmobsmenuRemove:
-				AndlyticsDb.getInstance(this).saveAdmobDetails(TAG, null, null);
-				showAccountList();
-				if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
-					configSwitcher.showPrevious();
-				}
-				mainViewSwitcher.swap();
-				supportInvalidateOptionsMenu();
-				return true;
-			default:
-				return (super.onOptionsItemSelected(item));
+		case R.id.itemChartsmenuRefresh:
+			setChartIgnoreCallLayouts(true);
+			loadRemoteEntries();
+			return true;
+		case R.id.itemAdmobsmenuRemove:
+			AndlyticsDb.getInstance(this).saveAdmobDetails(packageName, null, null);
+			showAccountList();
+			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
+				configSwitcher.showPrevious();
+			}
+			mainViewSwitcher.swap();
+			supportInvalidateOptionsMenu();
+			return true;
+		default:
+			return (super.onOptionsItemSelected(item));
 		}
 	}
 
