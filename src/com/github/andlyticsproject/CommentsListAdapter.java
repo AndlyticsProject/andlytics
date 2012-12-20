@@ -123,7 +123,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 					i.putExtra("key_text_input", text);
 					i.putExtra("key_text_output", "");
 					i.putExtra("key_language_from", "auto");
-					i.putExtra("key_language_to", "en");
+					i.putExtra("key_language_to", displayLanguage);
 					i.putExtra("key_suggest_translation", "");
 					i.putExtra("key_from_floating_window", false);
 					i.setComponent(
