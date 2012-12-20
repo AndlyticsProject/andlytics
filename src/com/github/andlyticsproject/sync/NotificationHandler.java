@@ -23,6 +23,7 @@ import com.github.andlyticsproject.DeveloperAccountManager;
 import com.github.andlyticsproject.Main;
 import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.R;
+import com.github.andlyticsproject.model.DeveloperAccount;
 
 public class NotificationHandler {
 
@@ -108,8 +109,12 @@ public class NotificationHandler {
 				}
 			}
 
-			String selectedAccountName = DeveloperAccountManager.getInstance(context)
-					.getSelectedDeveloperAccount().getName();
+			String selectedAccountName = null;
+			DeveloperAccount devAccount = DeveloperAccountManager.getInstance(context)
+					.getSelectedDeveloperAccount();
+			if (devAccount != null) {
+				selectedAccountName = devAccount.getName();
+			}
 			if (!AndlyticsApp.getInstance().isAppVisible()
 					|| !accountName.equals(selectedAccountName)
 					|| Preferences.getNotificationPerf(context,
