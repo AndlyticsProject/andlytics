@@ -11,6 +11,7 @@ import java.util.Date;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -24,13 +25,13 @@ import com.github.andlyticsproject.AndlyticsApp;
  * Utility class for simple helper methods.
  */
 public final class Utils {
-	
+
 	private static final int MAX_STACKTRACE_CAUSE_DEPTH = 5;
 
 	/** Private constructor. */
 	private Utils() {
 	}
-	
+
 	public static String stackTraceToString(Throwable e) {
 		return stackTraceToString(e, 0);
 	}
@@ -49,12 +50,11 @@ public final class Utils {
 	}
 
 
-
 	/**
 	 * get the code of the actual version.
 	 * 
 	 * @param context
-	 *            the context
+	 * the context
 	 * @return the code of the actual version
 	 */
 	public static int getActualVersionCode(final Context context) {
@@ -73,7 +73,7 @@ public final class Utils {
 	 * get the name of the actual version.
 	 * 
 	 * @param context
-	 *            the context
+	 * the context
 	 * @return the name of the actual version
 	 */
 	public static String getActualVersionName(final Context context) {
@@ -149,6 +149,17 @@ public final class Utils {
 		cal.set(Calendar.MILLISECOND, 0);
 
 		return cal.getTimeInMillis();
+	}
+
+	public static boolean isPackageInstalled(Context ctx, String packageName) {
+		try {
+			ApplicationInfo info = ctx.getPackageManager().getApplicationInfo(packageName, 0);
+
+			// need this to cover multi-user env (4.2 tablets, etc.)
+			return (info.flags & ApplicationInfo.FLAG_INSTALLED) == ApplicationInfo.FLAG_INSTALLED;
+		} catch (PackageManager.NameNotFoundException e) {
+			return false;
+		}
 	}
 
 }
