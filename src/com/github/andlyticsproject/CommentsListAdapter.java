@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -105,6 +108,32 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			public boolean onLongClick(View v) {
 				String text = comment.getText();
 				String displayLanguage = Locale.getDefault().getLanguage();
+				
+				boolean translateInstalled = false;
+				try{
+				    ApplicationInfo info = context.getPackageManager().
+				            getApplicationInfo("com.google.android.apps.translate", 0 );
+				    translateInstalled =  true;
+				} catch( PackageManager.NameNotFoundException e ){
+					translateInstalled =  false;
+				}
+				if(translateInstalled){
+					Intent i = new Intent();
+					i.setAction(Intent.ACTION_VIEW);
+					i.putExtra("key_text_input", text);
+					i.putExtra("key_text_output", "");
+					i.putExtra("key_language_from", "auto");
+					i.putExtra("key_language_to", displayLanguage);
+					i.putExtra("key_suggest_translation", "");
+					i.putExtra("key_from_floating_window", false);
+					i.setComponent(
+					    new ComponentName(
+					        "com.google.android.apps.translate",
+					        "com.google.android.apps.translate.translation.TranslateActivity"));
+					context.startActivity(i);
+					return true;
+				}
+				
 				String url = "http://translate.google.de/m/translate?hl=<<lang>>&vi=m&text=<<text>>&langpair=auto|<<lang>>";
 
 				try {
