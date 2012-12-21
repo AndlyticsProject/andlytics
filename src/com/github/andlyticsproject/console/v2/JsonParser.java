@@ -25,6 +25,8 @@ public class JsonParser {
 
 	private static final String TAG = JsonParser.class.getSimpleName();
 
+	private static final boolean DEBUG = true;
+
 	private JsonParser() {
 
 	}
@@ -112,6 +114,9 @@ public class JsonParser {
 		List<AppInfo> apps = new ArrayList<AppInfo>();
 		// Extract the base array containing apps
 		JSONArray jsonApps = new JSONObject(json).getJSONArray("result").getJSONArray(1);
+		if (DEBUG) {
+			pp("jsonApps", jsonApps);
+		}
 
 		int numberOfApps = jsonApps.length();
 		for (int i = 0; i < numberOfApps; i++) {
@@ -143,6 +148,9 @@ public class JsonParser {
 			 */
 			JSONArray jsonApp = jsonApps.getJSONArray(i);
 			JSONArray jsonAppInfo = jsonApp.getJSONArray(1);
+			if (DEBUG) {
+				pp("jsonAppInfo", jsonAppInfo);
+			}
 			String packageName = jsonAppInfo.getString(1);
 			// Look for "tmp.7238057230750432756094760456.235728507238057230542"
 			if (packageName == null
@@ -179,6 +187,9 @@ public class JsonParser {
 				continue;
 			}
 			JSONArray appDetails = jsonAppInfo.getJSONArray(2).getJSONArray(1).getJSONArray(0);
+			if (DEBUG) {
+				pp("appDetails", appDetails);
+			}
 			app.setName(appDetails.getString(2));
 
 			/*
@@ -192,11 +203,17 @@ public class JsonParser {
 			 * Array with app icon [null,null,null,icon]
 			 */
 			JSONArray appVersions = jsonAppInfo.optJSONArray(4);
+			if (DEBUG) {
+				pp("appVersions", appVersions);
+			}
 			if (appVersions == null) {
 				continue;
 			}
 			JSONArray lastAppVersionDetails = appVersions.getJSONArray(appVersions.length() - 1)
 					.getJSONArray(2);
+			if (DEBUG) {
+				pp("lastAppVersionDetails", lastAppVersionDetails);
+			}
 			app.setVersionName(lastAppVersionDetails.getString(4));
 			app.setIconUrl(lastAppVersionDetails.getJSONArray(6).getString(3));
 
@@ -209,7 +226,11 @@ public class JsonParser {
 			 * Errors
 			 * Total installs
 			 */
+			// XXX this index might not be correct for all apps
 			JSONArray jsonAppStats = jsonApp.optJSONArray(3);
+			if (DEBUG) {
+				pp("jsonAppStats", jsonAppStats);
+			}
 			if (jsonAppStats == null) {
 				continue;
 			}
@@ -232,6 +253,15 @@ public class JsonParser {
 		}
 
 		return apps;
+	}
+
+	private static void pp(String name, JSONArray jsonArr) {
+		try {
+			Log.d(TAG,
+					String.format("%s: %s", name, jsonArr == null ? "null" : jsonArr.toString(2)));
+		} catch (JSONException e) {
+			Log.w(TAG, "Error printing JSON: " + e.getMessage(), e);
+		}
 	}
 
 	/**
