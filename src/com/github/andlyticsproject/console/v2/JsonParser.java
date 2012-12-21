@@ -25,7 +25,7 @@ public class JsonParser {
 
 	private static final String TAG = JsonParser.class.getSimpleName();
 
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 
 	private JsonParser() {
 
@@ -226,7 +226,7 @@ public class JsonParser {
 			 * Errors
 			 * Total installs
 			 */
-			// XXX this index might not be correct for all apps
+			// XXX this index might not be correct for all apps?
 			JSONArray jsonAppStats = jsonApp.optJSONArray(3);
 			if (DEBUG) {
 				pp("jsonAppStats", jsonAppStats);
