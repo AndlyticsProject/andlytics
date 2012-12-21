@@ -86,14 +86,14 @@ public class JsonParser {
 		int latestValue = latestData.getJSONArray(2).getInt(1);
 
 		switch (statsType) {
-			case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
-				stats.setTotalDownloads(latestValue);
-				break;
-			case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
-				stats.setActiveInstalls(latestValue);
-				break;
-			default:
-				break;
+		case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
+			stats.setTotalDownloads(latestValue);
+			break;
+		case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
+			stats.setActiveInstalls(latestValue);
+			break;
+		default:
+			break;
 		}
 
 	}
@@ -174,6 +174,10 @@ public class JsonParser {
 			 * Unknown
 			 * Last what's new
 			 */
+			if (jsonAppInfo.length() < 5) {
+				// skip if we can't get all the data
+				continue;
+			}
 			JSONArray appDetails = jsonAppInfo.getJSONArray(2).getJSONArray(1).getJSONArray(0);
 			app.setName(appDetails.getString(2));
 
@@ -187,7 +191,10 @@ public class JsonParser {
 			 * null
 			 * Array with app icon [null,null,null,icon]
 			 */
-			JSONArray appVersions = jsonAppInfo.getJSONArray(4);
+			JSONArray appVersions = jsonAppInfo.optJSONArray(4);
+			if (appVersions == null) {
+				continue;
+			}
 			JSONArray lastAppVersionDetails = appVersions.getJSONArray(appVersions.length() - 1)
 					.getJSONArray(2);
 			app.setVersionName(lastAppVersionDetails.getString(4));
@@ -202,16 +209,26 @@ public class JsonParser {
 			 * Errors
 			 * Total installs
 			 */
-			JSONArray jsonAppStats = jsonApp.getJSONArray(3);
+			JSONArray jsonAppStats = jsonApp.optJSONArray(3);
+			if (jsonAppStats == null) {
+				continue;
+			}
 			AppStats stats = new AppStats();
 			stats.setRequestDate(now);
-			stats.setActiveInstalls(jsonAppStats.getInt(1));
-			stats.setTotalDownloads(jsonAppStats.getInt(5));
-			stats.setNumberOfErrors(jsonAppStats.optInt(4));
+			if (jsonAppStats.length() < 6) {
+				// no statistics (yet?) or weird format
+				// TODO do we need differentiate?
+				stats.setActiveInstalls(0);
+				stats.setTotalDownloads(0);
+				stats.setNumberOfErrors(0);
+			} else {
+				stats.setActiveInstalls(jsonAppStats.getInt(1));
+				stats.setTotalDownloads(jsonAppStats.getInt(5));
+				stats.setNumberOfErrors(jsonAppStats.optInt(4));
+			}
 			app.setLatestStats(stats);
 
 			apps.add(app);
-
 		}
 
 		return apps;

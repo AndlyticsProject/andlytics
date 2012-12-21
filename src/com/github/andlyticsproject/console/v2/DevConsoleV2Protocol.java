@@ -126,8 +126,6 @@ public class DevConsoleV2Protocol {
 
 	List<AppInfo> parseAppInfosResponse(String json, String accountName) {
 		try {
-			// XXX
-			json = FileUtils.readFileAsString("/sdcard/andlytics/debug/appinfos1.json");
 			return JsonParser.parseAppInfos(json, accountName);
 		} catch (JSONException ex) {
 			saveDebugJson(json);
