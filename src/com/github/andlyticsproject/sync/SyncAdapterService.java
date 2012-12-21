@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.AppStatsDiff;
 import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.DeveloperAccountManager;
@@ -102,7 +103,7 @@ public class SyncAdapterService extends Service {
 				List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
 				Map<String, List<String>> admobAccountSiteMap = new HashMap<String, List<String>>();
 
-				db = new ContentAdapter(context);
+				db = ContentAdapter.getInstance(AndlyticsApp.getInstance());
 				for (AppInfo appDownloadInfo : appDownloadInfos) {
 					// update in database
 					diffs.add(db.insertOrUpdateStats(appDownloadInfo));

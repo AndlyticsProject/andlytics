@@ -46,8 +46,6 @@ public class ImportActivity extends SherlockFragmentActivity {
 
 	private String accountName;
 
-	private ContentAdapter db;
-
 	private ListView listView;
 
 	private LoadImportDialogTask loadTask;
@@ -63,7 +61,6 @@ public class ImportActivity extends SherlockFragmentActivity {
 		setProgressBarIndeterminateVisibility(false);
 
 		layoutInflater = getLayoutInflater();
-		db = ((AndlyticsApp) getApplication()).getDbAdapter();
 
 		accountName = getAccountName();
 		getSupportActionBar().setSubtitle(accountName);
@@ -87,7 +84,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 				loadTask.attach(this);
 				setFilenames(loadTask.getFilenames());
 			} else {
-				loadTask = new LoadImportDialogTask(this);
+				loadTask = new LoadImportDialogTask(this, accountName);
 				Utils.execute(loadTask, data.getPath());
 			}
 		} else {
@@ -135,10 +132,6 @@ public class ImportActivity extends SherlockFragmentActivity {
 		listView.addHeaderView(layoutInflater.inflate(R.layout.import_list_header, null), null,
 				false);
 		setFilenames(new ArrayList<String>());
-	}
-
-	List<String> getPackagesForAccount() {
-		return db.getPackagesForAccount(accountName);
 	}
 
 	void setFilenames(List<String> filenames) {
@@ -207,8 +200,13 @@ public class ImportActivity extends SherlockFragmentActivity {
 	private static class LoadImportDialogTask extends
 			DetachableAsyncTask<String, Void, Boolean, ImportActivity> {
 
-		LoadImportDialogTask(ImportActivity parent) {
+		ContentAdapter db;
+		String accountName;
+
+		LoadImportDialogTask(ImportActivity parent, String accountName) {
 			super(parent);
+			this.accountName = accountName;
+			db = ContentAdapter.getInstance(parent.getApplication());
 		}
 
 		private List<String> filenames = new ArrayList<String>();
@@ -226,7 +224,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 			}
 
 			zipFilename = params[0];
-			List<String> pacakgeNames = activity.getPackagesForAccount();
+			List<String> pacakgeNames = db.getPackagesForAccount(accountName);
 			try {
 				filenames = StatsCsvReaderWriter.getImportFileNamesFromZip(
 						activity.getAccountName(), pacakgeNames, zipFilename);

@@ -25,7 +25,6 @@ public class ChartActivity extends BaseChartActivity {
 	private static String TAG = ChartActivity.class.getSimpleName();
 	private static final boolean DEBUG = false;
 
-	private ContentAdapter db;
 	private ListView historyList;
 	private ChartListAdapter historyListAdapter;
 	private TextView historyListFooter;
@@ -104,7 +103,6 @@ public class ChartActivity extends BaseChartActivity {
 			getSupportActionBar().setTitle(R.string.downloads);
 		}
 
-		db = getDbAdapter();
 		// chartFrame = (ViewSwitcher) ;
 
 		oneEntryHint = (View) findViewById(R.id.base_chart_one_entry_hint);
@@ -161,8 +159,11 @@ public class ChartActivity extends BaseChartActivity {
 	private static class LoadChartData extends
 			DetachableAsyncTask<Timeframe, Void, Boolean, ChartActivity> {
 
+		private ContentAdapter db;
+
 		LoadChartData(ChartActivity activity) {
 			super(activity);
+			db = ContentAdapter.getInstance(activity.getApplication());
 		}
 
 		private AppStatsList statsForApp;
@@ -186,9 +187,9 @@ public class ChartActivity extends BaseChartActivity {
 			if (activity.dataUpdateRequested
 					|| activity.historyListAdapter.getDownloadInfos() == null
 					|| activity.historyListAdapter.isEmpty()) {
-				statsForApp = activity.db.getStatsForApp(activity.packageName, params[0],
+				statsForApp = db.getStatsForApp(activity.packageName, params[0],
 						activity.smoothEnabled);
-				versionUpdateDates = activity.db.getVersionUpdateDates(activity.packageName);
+				versionUpdateDates = db.getVersionUpdateDates(activity.packageName);
 
 				if (DEBUG) {
 					Log.d(TAG,
