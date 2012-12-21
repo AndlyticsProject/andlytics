@@ -148,6 +148,8 @@
     <string name="pref_disable_acra">Automatic error reports</string>
     <string name="pref_acra_disabled">Reporting disabled</string>
     <string name="pref_acra_enabled">Reporting enabled</string>
+    <string name="use_google_translate_app">Use Google Translate app</string>
+    <string name="use_google_translate_app_summary">Use the Google Translate app for translating comments, when available.</string>
     
     <!-- Errors -->
     <string name="network_error">A network error has occurred. Please try again later</string>
