@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
+import com.github.andlyticsproject.util.Utils;
 
 public class CommentsListAdapter extends BaseExpandableListAdapter {
 
@@ -66,13 +68,13 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		} else {
 			holder = (ViewHolderChild) convertView.getTag();
 		}
-		
+
 		holder.text.setText(comment.getText().replace("\t", "\n"));
 		if (comment.isReply()) {
 			holder.date.setText(formatCommentDate(comment.getReplyDate()));
 		} else {
-			holder.user.setText(comment.getUser() == null ?
-					context.getString(R.string.comment_no_user_info) : comment.getUser());
+			holder.user.setText(comment.getUser() == null ? context
+					.getString(R.string.comment_no_user_info) : comment.getUser());
 			String version = comment.getAppVersion();
 			String device = comment.getDevice();
 			String deviceText = "";
@@ -105,6 +107,12 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			public boolean onLongClick(View v) {
 				String text = comment.getText();
 				String displayLanguage = Locale.getDefault().getLanguage();
+
+				if (Preferences.isUseGoogleTranslateApp(context) && isGoogleTranslateInstalled()) {
+					sendToGoogleTranslate(text, displayLanguage);
+					return true;
+				}
+
 				String url = "http://translate.google.de/m/translate?hl=<<lang>>&vi=m&text=<<text>>&langpair=auto|<<lang>>";
 
 				try {
@@ -123,6 +131,24 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			}
 		});
 		return convertView;
+	}
+
+	private boolean isGoogleTranslateInstalled() {
+		return Utils.isPackageInstalled(context, "com.google.android.apps.translate");
+	}
+
+	private void sendToGoogleTranslate(String text, String displayLanguage) {
+		Intent i = new Intent();
+		i.setAction(Intent.ACTION_VIEW);
+		i.putExtra("key_text_input", text);
+		i.putExtra("key_text_output", "");
+		i.putExtra("key_language_from", "auto");
+		i.putExtra("key_language_to", displayLanguage);
+		i.putExtra("key_suggest_translation", "");
+		i.putExtra("key_from_floating_window", false);
+		i.setComponent(new ComponentName("com.google.android.apps.translate",
+				"com.google.android.apps.translate.translation.TranslateActivity"));
+		context.startActivity(i);
 	}
 
 	@Override

@@ -42,7 +42,6 @@ public class AdmobActivity extends BaseChartActivity {
 
 	public static final String TAG = AdmobActivity.class.getSimpleName();
 
-	protected ContentAdapter db;
 	private AdmobListAdapter admobListAdapter;
 	public Integer heighestRatingChange;
 	public Integer lowestRatingChange;
@@ -134,8 +133,6 @@ public class AdmobActivity extends BaseChartActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		db = getDbAdapter();
 
 		mainViewSwitcher = new ViewSwitcher3D((ViewGroup) findViewById(R.id.base_chart_main_frame));
 		mainViewSwitcher.setListener(this);
@@ -294,9 +291,11 @@ public class AdmobActivity extends BaseChartActivity {
 
 		private AdmobList admobList;
 		private Boolean executeRemoteCall = false;
+		private ContentAdapter db;
 
 		LoadDbEntriesTask(AdmobActivity activity) {
 			super(activity);
+			db = ContentAdapter.getInstance(AndlyticsApp.getInstance());
 		}
 
 		@Override
@@ -322,7 +321,7 @@ public class AdmobActivity extends BaseChartActivity {
 			}
 
 			String currentSiteId = admobDetails[1];
-			admobList = activity.getAdmobStats(currentSiteId, (Timeframe) params[1]);
+			admobList = db.getAdmobStats(currentSiteId, (Timeframe) params[1]);
 			executeRemoteCall = (Boolean) params[0];
 
 			return null;
@@ -352,10 +351,6 @@ public class AdmobActivity extends BaseChartActivity {
 			}
 		}
 	};
-
-	private AdmobList getAdmobStats(String currentSiteId, Timeframe timeframe) {
-		return db.getAdmobStats(currentSiteId, timeframe);
-	}
 
 	private void showStats(AdmobList admobList) {
 		admobListAdapter.setOverallStats(admobList.getOverallStats());

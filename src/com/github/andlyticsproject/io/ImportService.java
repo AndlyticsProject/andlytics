@@ -78,8 +78,7 @@ public class ImportService extends IntentService {
 		String message = getApplicationContext().getString(R.string.import_started);
 		sendNotification(message);
 
-		ContentAdapter db = new ContentAdapter(ImportService.this);
-
+		ContentAdapter db = ContentAdapter.getInstance(getApplication());
 		try {
 			StatsCsvReaderWriter statsWriter = new StatsCsvReaderWriter(ImportService.this);
 

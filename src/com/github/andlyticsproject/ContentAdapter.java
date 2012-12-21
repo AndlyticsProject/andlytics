@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.app.backup.BackupManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -37,11 +38,21 @@ public class ContentAdapter {
 	@SuppressLint("SimpleDateFormat")
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+	private static ContentAdapter instance;
+
 	private BackupManager backupManager;
 
-	public ContentAdapter(Context ctx) {
+	private ContentAdapter(Context ctx) {
 		this.context = ctx;
 		this.backupManager = new BackupManager(ctx);
+	}
+
+	public static synchronized ContentAdapter getInstance(Application appCtx) {
+		if (instance == null) {
+			instance = new ContentAdapter(appCtx);
+		}
+
+		return instance;
 	}
 
 	public AdmobList getAdmobStats(String siteId, Timeframe currentTimeFrame) {

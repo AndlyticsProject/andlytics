@@ -77,7 +77,7 @@ public class ExportService extends IntentService {
 			File zipFile = StatsCsvReaderWriter.getExportFileForAccount(accountName);
 			ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(zipFile));
 			StatsCsvReaderWriter statsWriter = new StatsCsvReaderWriter(this);
-			ContentAdapter db = new ContentAdapter(this);
+			ContentAdapter db = ContentAdapter.getInstance(getApplication());
 			try {
 				for (int i = 0; i < packageNames.length; i++) {
 					AppStatsList statsForApp = db.getStatsForApp(packageNames[i],
