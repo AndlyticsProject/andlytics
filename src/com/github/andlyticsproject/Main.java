@@ -62,7 +62,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 	private boolean cancelRequested;
 	private ListView mainListView;
-	private ContentAdapter db;
 	private TextView statusText;
 	private ViewSwitcher mainViewSwitcher;
 	private MainListAdapter adapter;
@@ -143,7 +142,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		db = getDbAdapter();
 		LayoutInflater layoutInflater = getLayoutInflater();
 
 		// BaseActivity has already selected the account
@@ -156,7 +154,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		footer = layoutInflater.inflate(R.layout.main_list_footer, null);
 		footer.setVisibility(View.INVISIBLE);
 		mainListView.addFooterView(footer, null, false);
-		adapter = new MainListAdapter(this, accountName, db, currentStatsMode);
+		adapter = new MainListAdapter(this, accountName, currentStatsMode);
 		mainListView.setAdapter(adapter);
 		mainViewSwitcher = (ViewSwitcher) findViewById(R.id.main_viewswitcher);
 
@@ -229,60 +227,59 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	 * Called if item in option menu is selected.
 	 * 
 	 * @param item
-	 *            The chosen menu item
+	 * The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent i = null;
 		switch (item.getItemId()) {
-			case R.id.itemMainmenuRefresh:
-				loadRemoteEntries();
-				break;
-			case R.id.itemMainmenuImport:
-				File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
-				if (!fileToImport.exists()) {
-					Toast.makeText(
-							this,
-							getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
-							Toast.LENGTH_LONG).show();
-					return true;
-				}
+		case R.id.itemMainmenuRefresh:
+			loadRemoteEntries();
+			break;
+		case R.id.itemMainmenuImport:
+			File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
+			if (!fileToImport.exists()) {
+				Toast.makeText(this,
+						getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
+						Toast.LENGTH_LONG).show();
+				return true;
+			}
 
-				Intent importIntent = new Intent(this, ImportActivity.class);
-				importIntent.setAction(Intent.ACTION_VIEW);
-				importIntent.setData(Uri.fromFile(fileToImport));
-				startActivity(importIntent);
-				break;
-			case R.id.itemMainmenuExport:
-				Intent exportIntent = new Intent(this, ExportActivity.class);
-				exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
-				startActivity(exportIntent);
-				break;
-			case R.id.itemMainmenuFeedback:
-				startActivity(new Intent(Intent.ACTION_VIEW,
-						Uri.parse(getString(R.string.github_issues_url))));
-				break;
-			case R.id.itemMainmenuPreferences:
-				i = new Intent(this, PreferenceActivity.class);
-				i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
-				startActivity(i);
-				break;
-			case R.id.itemMainmenuStatsMode:
-				if (currentStatsMode.equals(StatsMode.PERCENT)) {
-					currentStatsMode = StatsMode.DAY_CHANGES;
-				} else {
-					currentStatsMode = StatsMode.PERCENT;
-				}
-				updateStatsMode();
-				break;
-			case R.id.itemMainmenuAccounts:
-				i = new Intent(this, LoginActivity.class);
-				i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
-				startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
-				break;
-			default:
-				return false;
+			Intent importIntent = new Intent(this, ImportActivity.class);
+			importIntent.setAction(Intent.ACTION_VIEW);
+			importIntent.setData(Uri.fromFile(fileToImport));
+			startActivity(importIntent);
+			break;
+		case R.id.itemMainmenuExport:
+			Intent exportIntent = new Intent(this, ExportActivity.class);
+			exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
+			startActivity(exportIntent);
+			break;
+		case R.id.itemMainmenuFeedback:
+			startActivity(new Intent(Intent.ACTION_VIEW,
+					Uri.parse(getString(R.string.github_issues_url))));
+			break;
+		case R.id.itemMainmenuPreferences:
+			i = new Intent(this, PreferenceActivity.class);
+			i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+			startActivity(i);
+			break;
+		case R.id.itemMainmenuStatsMode:
+			if (currentStatsMode.equals(StatsMode.PERCENT)) {
+				currentStatsMode = StatsMode.DAY_CHANGES;
+			} else {
+				currentStatsMode = StatsMode.PERCENT;
+			}
+			updateStatsMode();
+			break;
+		case R.id.itemMainmenuAccounts:
+			i = new Intent(this, LoginActivity.class);
+			i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
+			startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
+			break;
+		default:
+			return false;
 		}
 		return true;
 	}
@@ -413,8 +410,11 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private static class LoadRemoteEntries extends
 			DetachableAsyncTask<String, Integer, Exception, Main> {
 
+		private ContentAdapter db;
+
 		public LoadRemoteEntries(Main activity) {
 			super(activity);
+			db = ContentAdapter.getInstance(activity.getApplication());
 		}
 
 		@Override
@@ -453,7 +453,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 				for (AppInfo appDownloadInfo : appDownloadInfos) {
 					// update in database and check for diffs
-					diffs.add(activity.db.insertOrUpdateStats(appDownloadInfo));
+					diffs.add(db.insertOrUpdateStats(appDownloadInfo));
 					String[] admobDetails = AndlyticsDb.getInstance(activity).getAdmobDetails(
 							appDownloadInfo.getPackageName());
 					if (admobDetails != null) {
@@ -487,7 +487,8 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			} catch (Exception e) {
 				// These exceptions can contain very long JSON strings
 				// Explicitly print out the root cause first
-				Log.e(TAG, "Error while requesting developer console : " + Utils.stackTraceToString(e));
+				Log.e(TAG,
+						"Error while requesting developer console : " + Utils.stackTraceToString(e));
 				Log.e(TAG, "Error while requesting developer console : " + e.getMessage(), e);
 				exception = e;
 			}
@@ -531,8 +532,11 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 	private static class LoadDbEntries extends DetachableAsyncTask<Boolean, Void, Boolean, Main> {
 
+		private ContentAdapter db;
+
 		LoadDbEntries(Main activity) {
 			super(activity);
+			db = ContentAdapter.getInstance(activity.getApplication());
 		}
 
 		private List<AppInfo> allStats = new ArrayList<AppInfo>();
@@ -546,12 +550,12 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				return null;
 			}
 
-			allStats = activity.db.getAllAppsLatestStats(activity.accountName);
+			allStats = db.getAllAppsLatestStats(activity.accountName);
 
 			for (AppInfo appInfo : allStats) {
 				if (!appInfo.isGhost()) {
 					if (appInfo.getAdmobSiteId() != null) {
-						List<Admob> admobStats = activity.db.getAdmobStats(
+						List<Admob> admobStats = db.getAdmobStats(
 								appInfo.getAdmobSiteId(), Timeframe.LAST_TWO_DAYS).getAdmobs();
 						if (admobStats.size() > 0) {
 							Admob admob = admobStats.get(admobStats.size() - 1);
@@ -646,18 +650,18 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private void updateStatsMode() {
 		if (statsModeMenuItem != null) {
 			switch (currentStatsMode) {
-				case PERCENT:
-					statsModeMenuItem.setTitle(R.string.daily);
-					statsModeMenuItem.setIcon(R.drawable.icon_plusminus);
-					break;
+			case PERCENT:
+				statsModeMenuItem.setTitle(R.string.daily);
+				statsModeMenuItem.setIcon(R.drawable.icon_plusminus);
+				break;
 
-				case DAY_CHANGES:
-					statsModeMenuItem.setTitle(R.string.percentage);
-					statsModeMenuItem.setIcon(R.drawable.icon_percent);
-					break;
+			case DAY_CHANGES:
+				statsModeMenuItem.setTitle(R.string.percentage);
+				statsModeMenuItem.setIcon(R.drawable.icon_percent);
+				break;
 
-				default:
-					break;
+			default:
+				break;
 			}
 		}
 		adapter.setStatsMode(currentStatsMode);
@@ -674,7 +678,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	 * checks if the app is started for the first time (after an update).
 	 * 
 	 * @return <code>true</code> if this is the first start (after an update)
-	 *         else <code>false</code>
+	 * else <code>false</code>
 	 */
 	private boolean isUpdate() {
 		// Get the versionCode of the Package, which must be different

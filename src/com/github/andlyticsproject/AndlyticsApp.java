@@ -42,7 +42,7 @@ public class AndlyticsApp extends Application {
 		// close here
 		AndlyticsDb.getInstance(getApplicationContext()).getWritableDatabase();
 
-		setDbAdapter(new ContentAdapter(this));
+		setDbAdapter(ContentAdapter.getInstance(this));
 		sInstance = this;
 	}
 

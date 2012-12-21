@@ -49,8 +49,6 @@ public class ExportActivity extends SherlockFragmentActivity {
 
 	private LayoutInflater layoutInflater;
 
-	private ContentAdapter db;
-
 	private AppIconInMemoryCache inMemoryCache;
 
 	private File cacheDir;
@@ -75,7 +73,6 @@ public class ExportActivity extends SherlockFragmentActivity {
 		setProgressBarIndeterminateVisibility(false);
 
 		layoutInflater = getLayoutInflater();
-		db = ((AndlyticsApp) getApplication()).getDbAdapter();
 
 		accountName = getIntent().getExtras().getString(EXTRA_ACCOUNT_NAME);
 		getSupportActionBar().setSubtitle(accountName);
@@ -164,10 +161,6 @@ public class ExportActivity extends SherlockFragmentActivity {
 		return loadTask == null ? null : loadTask.detach();
 	}
 
-	ContentAdapter getDb() {
-		return db;
-	}
-
 	String getAccountName() {
 		return accountName;
 	}
@@ -211,10 +204,12 @@ public class ExportActivity extends SherlockFragmentActivity {
 	private static class LoadExportTask extends
 			DetachableAsyncTask<Void, Void, List<AppInfo>, ExportActivity> {
 
+		ContentAdapter db;
 		List<AppInfo> appInfos = new ArrayList<AppInfo>();
 
 		LoadExportTask(ExportActivity parent) {
 			super(parent);
+			db = ContentAdapter.getInstance(parent.getApplication());
 		}
 
 		@Override
@@ -229,7 +224,7 @@ public class ExportActivity extends SherlockFragmentActivity {
 			}
 
 			try {
-				appInfos = activity.getDb().getAllAppsLatestStats(activity.getAccountName());
+				appInfos = db.getAllAppsLatestStats(activity.getAccountName());
 
 				return appInfos;
 			} catch (Exception e) {

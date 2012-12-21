@@ -1,9 +1,4 @@
-
 package com.github.andlyticsproject.admob;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -31,6 +26,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.util.Log;
+
+import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.console.NetworkException;
@@ -68,7 +68,7 @@ public class AdmobRequest {
 
 	@SuppressLint("SimpleDateFormat")
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	
+
 	private static final boolean DEBUG = false;
 
 	//base access url to admob api
@@ -95,7 +95,8 @@ public class AdmobRequest {
 
 		try {
 			//try to login
-			if (DEBUG) Log.d(TAG, email + " admob login request");
+			if (DEBUG)
+				Log.d(TAG, email + " admob login request");
 			JSONArray data = getResponse("auth", "login", params, true, true);
 
 			//decode the json response and assign token for future use in this session
@@ -189,7 +190,8 @@ public class AdmobRequest {
 				out.close();
 
 			} else {
-				if (DEBUG) Log.d(TAG, subUrl);
+				if (DEBUG)
+					Log.d(TAG, subUrl);
 				con = (HttpsURLConnection) new URL(subUrl + "?" + urlParameters).openConnection();
 				con.setHostnameVerifier(new AllowAllHostnameVerifier());
 				//System.out.println("admob request: " + subUrl + "?" + urlParameters);
@@ -319,7 +321,8 @@ public class AdmobRequest {
 			AdmobAccountRemovedException, NetworkException, AdmobInvalidTokenException,
 			AdmobGenericException, AdmobAskForPasswordException, AdmobInvalidRequestException {
 
-		if (DEBUG) Log.d(TAG, "admob site sync request for " + siteList.size() + " sites");
+		if (DEBUG)
+			Log.d(TAG, "admob site sync request for " + siteList.size() + " sites");
 
 		String token = authenticateAdmobAccount(account, context);
 
@@ -336,7 +339,7 @@ public class AdmobRequest {
 			Date endDate = calendar.getTime();
 
 			// read db for required sync period
-			ContentAdapter contentAdapter = new ContentAdapter(context);
+			ContentAdapter contentAdapter = ContentAdapter.getInstance(AndlyticsApp.getInstance());
 			List<Admob> admobStats = contentAdapter.getAdmobStats(admobSiteId,
 					Timeframe.LATEST_VALUE).getAdmobs();
 
@@ -460,7 +463,8 @@ public class AdmobRequest {
 	}
 
 	private static void invalidateAdmobToken(String accountName, String token, Context context) {
-		if (DEBUG) Log.d(TAG, "invalidate admob token for " + accountName);
+		if (DEBUG)
+			Log.d(TAG, "invalidate admob token for " + accountName);
 		AdmobAuthenticationUtilities.invalidateToken(token, context);
 	}
 
