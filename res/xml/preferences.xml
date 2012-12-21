@@ -45,6 +45,11 @@
             android:summary="@string/hide_admob_for_unconfigured_apps"
             android:title="@string/admob" />
         
+        <CheckBoxPreference android:key="use.google.translate.app"
+            android:title="@string/use_google_translate_app"
+            android:summary="@string/use_google_translate_app_summary"
+            android:defaultValue="true"/>
+        
         <CheckBoxPreference android:key="acra.enable"
             android:title="@string/pref_disable_acra"
             android:summaryOn="@string/pref_acra_enabled"

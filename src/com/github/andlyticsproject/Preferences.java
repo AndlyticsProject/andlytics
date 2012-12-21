@@ -65,6 +65,8 @@ public class Preferences {
 	// make it shorter for comments 5 minutes in millis
 	public static final long COMMENTS_REMOTE_UPDATE_INTERVAL = 5 * 60 * 1000L;
 
+	public static final String USE_GOOGLE_TRANSLATE_APP = "use.google.translate.app";
+
 	public enum Timeframe {
 		LAST_NINETY_DAYS, LAST_THIRTY_DAYS, UNLIMITED, LAST_TWO_DAYS, LATEST_VALUE, LAST_SEVEN_DAYS
 	}
@@ -375,6 +377,7 @@ public class Preferences {
 
 	/**
 	 * Gets the last time that comments were updated for the given <b>packageName</b>
+	 * 
 	 * @param activity
 	 * @param packageName
 	 * @return
@@ -384,9 +387,10 @@ public class Preferences {
 			String packageName) {
 		return getSettings(activity).getLong(LAST_COMMENTS_REMOTE_UPDATE + "." + packageName, 0);
 	}
-	
+
 	/**
 	 * Sets the time that comments were last updated for the given <b>packageName</b>
+	 * 
 	 * @param activity
 	 * @param packageName
 	 * @param timestamp
@@ -396,5 +400,13 @@ public class Preferences {
 			String packageName, long timestamp) {
 		getSettings(activity).edit()
 				.putLong(LAST_COMMENTS_REMOTE_UPDATE + "." + packageName, timestamp).commit();
+	}
+
+	public static boolean isUseGoogleTranslateApp(Context context) {
+		return getSettings(context).getBoolean(USE_GOOGLE_TRANSLATE_APP, true);
+	}
+
+	public static void saveUseGoogleTranslateApp(Context context, boolean value) {
+		getSettings(context).edit().putBoolean(USE_GOOGLE_TRANSLATE_APP, value).commit();
 	}
 }

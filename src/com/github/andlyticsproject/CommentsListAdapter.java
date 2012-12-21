@@ -108,7 +108,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 				String text = comment.getText();
 				String displayLanguage = Locale.getDefault().getLanguage();
 
-				if (isGoogleTranslateInstalled()) {
+				if (Preferences.isUseGoogleTranslateApp(context) && isGoogleTranslateInstalled()) {
 					sendToGoogleTranslate(text, displayLanguage);
 					return true;
 				}
