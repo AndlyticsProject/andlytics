@@ -40,6 +40,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
+import com.github.andlyticsproject.about.MainAboutDialogCreator;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
@@ -59,6 +60,9 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private static final String LAST_VERSION_CODE_KEY = "last_version_code";
 
 	public static final String TAG = Main.class.getSimpleName();
+	
+    /** Dialog constant. **/
+    public static final int DIALOG_ABOUT_ID = 1;
 
 	private boolean cancelRequested;
 	private ListView mainListView;
@@ -256,9 +260,9 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
 			startActivity(exportIntent);
 			break;
-		case R.id.itemMainmenuFeedback:
-			startActivity(new Intent(Intent.ACTION_VIEW,
-					Uri.parse(getString(R.string.github_issues_url))));
+		case R.id.itemMainmenuAbout:
+			// launch about activity			
+			showDialog(DIALOG_ABOUT_ID);
 			break;
 		case R.id.itemMainmenuPreferences:
 			i = new Intent(this, PreferenceActivity.class);
@@ -282,6 +286,25 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Creates the dialogs.
+	 * 
+	 * @param id
+	 *            ID of the dialog.
+	 * @return Dialog
+	 */
+	protected Dialog onCreateDialog(int id) {
+		Dialog dialog = null;
+		switch (id) {		
+		case DIALOG_ABOUT_ID:
+			dialog = MainAboutDialogCreator.createMainAboutDialog(this);
+			break;
+		default:
+			dialog = null;
+		}
+		return dialog;
 	}
 
 	@Override
@@ -528,6 +551,26 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private void loadDbEntries(boolean triggerRemoteCall) {
 		state.setLoadDbEntries(new LoadDbEntries(this));
 		Utils.execute(state.loadDbEntries, triggerRemoteCall);
+	}
+	
+	public void onOpenGoogleplusClick(View view) {
+		openBrowser(this.getString(R.string.googleplus_url));
+	}
+
+	public void onOpenGithubClick(View view) {
+		openBrowser(this.getString(R.string.github_url));
+	}
+	
+	public void onOpenFacebookClick(View view) {
+		openBrowser(this.getString(R.string.facebook_url));
+	}
+
+	public void onOpenTwitterClick(View view) {
+		openBrowser(this.getString(R.string.twitter_url));
+	}
+	
+	private void openBrowser(String url) {
+		startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)));
 	}
 
 	private static class LoadDbEntries extends DetachableAsyncTask<Boolean, Void, Boolean, Main> {
