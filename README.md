@@ -6,7 +6,7 @@ This repository contains the source code for the Andlytics Android app.
   <img src="http://www.android.com/images/brand/android_app_on_play_large.png">
 </a>
 
-![](https://lh6.ggpht.com/NXU6-yYc3f2I8S3m-m0Ghyy_tVQ8UlIIrznWUjRa1EPTYt1xxnVpKJE2NY0xwPMlU7OE=w705)
+![](https://lh5.ggpht.com/Le2h-4yU5MEdbQ3gxjeJtHFhnLjtnjwhdfvp2S0TMhse4rgy0jr5ksMjEYIaRTBeYYs=w705)
 
 Please see the [issues](https://github.com/AndlyticsProject/andlytics/issues) section to
 report any bugs or feature requests and to see the list of known issues.
