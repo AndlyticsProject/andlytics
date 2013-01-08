@@ -106,7 +106,11 @@
             android:name=".ExportActivity"
             android:label="@string/statistics_export" >
         </activity>
-
+        <activity
+            android:name=".about.AboutActivity"
+            android:label="@string/about_title" >
+        </activity>
+        
         <service
             android:name=".sync.SyncAdapterService"
             android:exported="false" >
