@@ -40,6 +40,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
+import com.github.andlyticsproject.about.AboutActivity;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
@@ -59,6 +60,9 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private static final String LAST_VERSION_CODE_KEY = "last_version_code";
 
 	public static final String TAG = Main.class.getSimpleName();
+	
+    /** Dialog constant. **/
+    public static final int DIALOG_ABOUT_ID = 1;
 
 	private boolean cancelRequested;
 	private ListView mainListView;
@@ -256,9 +260,11 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
 			startActivity(exportIntent);
 			break;
-		case R.id.itemMainmenuFeedback:
-			startActivity(new Intent(Intent.ACTION_VIEW,
-					Uri.parse(getString(R.string.github_issues_url))));
+		case R.id.itemMainmenuAbout:
+			// launch about activity				
+			Intent aboutIntent = new Intent(this, AboutActivity.class);
+			startActivity(aboutIntent);
+			//showDialog(DIALOG_ABOUT_ID);
 			break;
 		case R.id.itemMainmenuPreferences:
 			i = new Intent(this, PreferenceActivity.class);

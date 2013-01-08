@@ -175,4 +175,9 @@
 	<string name="multiple_dev_accounts_title">Multiple Developer Accounts</string>
 	<string name="update_button">Update</string>
 	<string name="send_report_button">Send report</string>
+	
+	<string name="about_title">About Andlytics</string>
+    <string name="about_credits">Credits</string>
+	<string name="about_text">Andlytics is open source, please feel free to contribute via GitHub. This app is not associated with Google in any way.\n\nVisit us on:</string>
+	<string name="about_thirdsparty_credits_title">Used 3rd party libraries:</string>
 </resources>
