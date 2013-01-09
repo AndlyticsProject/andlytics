@@ -10,6 +10,7 @@ import android.view.View;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.R;
 
 public class AboutActivity extends SherlockFragmentActivity implements
@@ -19,7 +20,8 @@ public class AboutActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		setContentView(R.layout.about_navigation);
 
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -51,7 +53,7 @@ public class AboutActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction transaction) {
-		Log.w("Tab Reselected", tab.getText().toString());
+		Log.i("Tab Reselected", tab.getText().toString());
 	}
 
 	@Override
@@ -67,7 +69,18 @@ public class AboutActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction transaction) {
-		Log.w("Tab Unselected", tab.getText().toString());
+		Log.i("Tab Unselected", tab.getText().toString());
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	public void onOpenGoogleplusClick(View view) {
