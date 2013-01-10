@@ -5,5 +5,7 @@
     <color name="andActionbarBackground">#454545</color>
     <color name="blackText">#555555</color>
     <color name="lightBlue">#33B5E5</color>
+    <color name="rowOdd">#F7FBF5</color>
+    <color name="rowEven">#F3F4F5</color>
 
 </resources>

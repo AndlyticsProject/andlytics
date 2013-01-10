@@ -116,8 +116,8 @@ public abstract class AbstractChart {
 		
 
 		renderer.setApplyBackgroundColor(true);
-		renderer.setBackgroundColor(Color.parseColor("#eeeeee"));
-		renderer.setMarginsColor(Color.parseColor("#eeeeee"));
+		renderer.setBackgroundColor( Color.parseColor("#F7FBF5"));
+		renderer.setMarginsColor(Color.parseColor("#F7FBF5"));
 		renderer.setPanEnabled(false, false);
 		renderer.setZoomEnabled(false, false);
 	}
