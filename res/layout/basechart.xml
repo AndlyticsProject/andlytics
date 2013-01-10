@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="@color/andBackground" >
 
     <LinearLayout
         android:id="@+id/base_chart_main_frame"
@@ -95,13 +96,11 @@
                             android:id="@+id/base_chart_list"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:background="#eeeeee"
+                            android:background="@color/andBackground"
                             android:cacheColorHint="#00000000"
                             android:divider="#dadada"
                             android:dividerHeight="1dp"
-                            android:paddingLeft="5dp"
-                            android:paddingRight="5dp"
-                            android:paddingTop="5dp" />
+                            android:padding="5dp" />
 
                         <ScrollView
                             android:id="@+id/base_chart_one_entry_hint"
