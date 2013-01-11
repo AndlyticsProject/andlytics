@@ -37,7 +37,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:textStyle="bold" />
-    
+
     <TextView
         android:id="@+id/comments_list_item_text"
         style="@style/MainTableText"
@@ -47,30 +47,55 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp" />
 
-    <TextView
-        android:id="@+id/comments_list_item_device"
-        style="@style/MainTableText"
+    <LinearLayout
+        android:id="@+id/comments_list_item_device_container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/comments_list_item_text"
+        android:layout_marginTop="5dp"
         android:background="@drawable/row_background_inner_dark"
+        android:orientation="horizontal"
         android:paddingBottom="5dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingTop="5dp"
-        android:layout_marginTop="5dp"
-        android:text="@string/comments_details_full"
-        android:textColor="#8F9698" />
+        android:paddingTop="5dp" >
+
+        <ImageView
+            android:id="@+id/comments_list_icon_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_version" />
+
+        <TextView
+            android:id="@+id/comments_list_item_version"
+            style="@style/MainTableText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#8F9698"
+            android:paddingRight="3dp" />
+        
+        <ImageView
+            android:id="@+id/comments_list_icon_device"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_device" />
+        
+        <TextView
+            android:id="@+id/comments_list_item_device"
+            style="@style/MainTableText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#8F9698" />
+    </LinearLayout>
 
     <View
         android:id="@+id/comments_list_item_shadow"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:paddingTop="1dp"
-        
+        android:layout_below="@+id/comments_list_item_device_container"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="@color/andBackgroundDarkHighlight"
-        android:layout_below="@+id/comments_list_item_device" />
+        android:paddingTop="1dp" />
 
 </RelativeLayout>
