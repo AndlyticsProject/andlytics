@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -43,7 +45,6 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		this.context = activity;
 	}
 
-
 	@Override
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
 			View convertView, ViewGroup parent) {
@@ -58,41 +59,66 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 			holder = new ViewHolderChild();
 			holder.text = (TextView) convertView.findViewById(R.id.comments_list_item_text);
+			holder.title = (TextView) convertView.findViewById(R.id.comments_list_item_title);
 			holder.user = (TextView) convertView.findViewById(R.id.comments_list_item_username);
 			holder.date = (TextView) convertView.findViewById(R.id.comments_list_item_date);
 			holder.device = (TextView) convertView.findViewById(R.id.comments_list_item_device);
+			holder.version = (TextView) convertView.findViewById(R.id.comments_list_item_version);
 			holder.rating = (RatingBar) convertView
 					.findViewById(R.id.comments_list_item_app_ratingbar);
+			holder.deviceVersionContainer = (LinearLayout) convertView
+					.findViewById(R.id.comments_list_item_device_container);
+			holder.deviceIcon = (ImageView) convertView
+					.findViewById(R.id.comments_list_icon_device);
+			holder.versionIcon = (ImageView) convertView
+					.findViewById(R.id.comments_list_icon_version);
 
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolderChild) convertView.getTag();
 		}
-
-		holder.text.setText(comment.getText().replace("\t", "\n"));
+		
 		if (comment.isReply()) {
 			holder.date.setText(formatCommentDate(comment.getReplyDate()));
+			holder.text.setText(comment.getText());
 		} else {
+			String[] commentContent = comment.getText().split("\t");
+			if (commentContent != null && commentContent.length > 1) {
+				holder.title.setText(commentContent[0]);
+				holder.text.setText(commentContent[1]);
+				holder.text.setVisibility(View.VISIBLE);
+			} else if(commentContent != null && commentContent.length == 1) {
+				holder.title.setText(commentContent[0]);
+				holder.text.setVisibility(View.GONE);		
+			}
 			holder.user.setText(comment.getUser() == null ? context
 					.getString(R.string.comment_no_user_info) : comment.getUser());
 			String version = comment.getAppVersion();
 			String device = comment.getDevice();
-			String deviceText = "";
-			// building string: version X on device: XYZ
+			holder.deviceIcon.setVisibility(View.GONE);
+			holder.versionIcon.setVisibility(View.GONE);
+			holder.version.setVisibility(View.GONE);
+			holder.device.setVisibility(View.GONE);
+			boolean showInfoBox = false;
+			
+			// building version/device
 			if (isNotEmptyOrNull(version)) {
-				if (isNotEmptyOrNull(device)) {
-					deviceText = context.getString(R.string.comments_details_full, version, device);
-				} else {
-					deviceText = context.getString(R.string.comments_details_version, version);
-				}
-			} else if (isNotEmptyOrNull(device)) {
-				deviceText = context.getString(R.string.comments_details_device, device);
-			}
-			if (isNotEmptyOrNull(deviceText)) {
+				holder.version.setText(version);
+				holder.versionIcon.setVisibility(View.VISIBLE);
+				holder.version.setVisibility(View.VISIBLE);
+				showInfoBox = true;
+			} 
+			if (isNotEmptyOrNull(device)) {
+				holder.device.setText(device);
+				holder.deviceIcon.setVisibility(View.VISIBLE);
 				holder.device.setVisibility(View.VISIBLE);
-				holder.device.setText(deviceText);
+				showInfoBox = true;
+			}
+			
+			if (showInfoBox) {
+				holder.deviceVersionContainer.setVisibility(View.VISIBLE);
 			} else {
-				holder.device.setVisibility(View.GONE);
+				holder.deviceVersionContainer.setVisibility(View.GONE);
 			}
 
 			int rating = comment.getRating();
@@ -192,11 +218,16 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	}
 
 	static class ViewHolderChild {
-		TextView text;
 		RatingBar rating;
+		TextView text;
+		TextView title;		
 		TextView user;
 		TextView date;
+		LinearLayout deviceVersionContainer;
+		ImageView deviceIcon;
+		ImageView versionIcon;
 		TextView device;
+		TextView version;
 	}
 
 	@Override

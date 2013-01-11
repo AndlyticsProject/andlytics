@@ -4,12 +4,12 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:shape="line">
 	<solid
-		android:color="#eeeeee" />		
+		android:color="@color/andBackgroundLight" />		
 	<stroke
 		android:width="1dp"
 		android:dashWidth="1dp"
 		android:dashGap="1dp"
-		android:color="#dadada" />
+		android:color="@color/andBorder" />
 
 
 </shape>

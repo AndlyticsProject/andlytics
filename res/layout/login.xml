@@ -45,7 +45,7 @@
                 android:layout_height="2dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:background="#dadada"
+                android:background="@color/andBorder"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp" />
 
