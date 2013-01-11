@@ -58,6 +58,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 			holder = new ViewHolderChild();
 			holder.text = (TextView) convertView.findViewById(R.id.comments_list_item_text);
+			holder.title = (TextView) convertView.findViewById(R.id.comments_list_item_title);
 			holder.user = (TextView) convertView.findViewById(R.id.comments_list_item_username);
 			holder.date = (TextView) convertView.findViewById(R.id.comments_list_item_date);
 			holder.device = (TextView) convertView.findViewById(R.id.comments_list_item_device);
@@ -69,7 +70,17 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			holder = (ViewHolderChild) convertView.getTag();
 		}
 
-		holder.text.setText(comment.getText().replace("\t", "\n"));
+		
+		String[] commentContent = comment.getText().split("\t");
+		if (commentContent != null && commentContent.length > 1) {
+			holder.title.setText(commentContent[0]);
+			holder.text.setText(commentContent[1]);
+			holder.text.setVisibility(View.VISIBLE);
+		} else if(commentContent != null && commentContent.length == 1) {
+			holder.title.setText(commentContent[0]);
+			holder.text.setVisibility(View.GONE);		
+		}
+		
 		if (comment.isReply()) {
 			holder.date.setText(formatCommentDate(comment.getReplyDate()));
 		} else {
@@ -193,6 +204,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 	static class ViewHolderChild {
 		TextView text;
+		TextView title;
 		RatingBar rating;
 		TextView user;
 		TextView date;

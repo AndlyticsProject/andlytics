@@ -151,12 +151,12 @@
 
 		<View
 			android:layout_width="fill_parent"
-			android:background="#dadada" android:layout_height="1dp"/>
+			android:background="@color/andBorder" android:layout_height="1dp"/>
 
 		<View
 			android:layout_below="@+id/crash_dialog_title"
 			android:layout_width="fill_parent"
-			android:background="#dadada" android:layout_height="1dp"/>
+			android:background="@color/andBorder" android:layout_height="1dp"/>
 
 
 

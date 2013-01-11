@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="andBackground">#F7FBF5</color>
+    <color name="andBackground">#EDEEF1</color>
     <color name="andActionbarBackground">#454545</color>
     <color name="blackText">#555555</color>
     <color name="lightBlue">#33B5E5</color>
-    <color name="rowOdd">#F7FBF5</color>
-    <color name="rowEven">#F3F4F5</color>
-
+    <color name="rowLight">#F7FBF5</color>
+    <color name="rowDark">#F3F4F5</color>
+	<color name="andBackgroundLight">#F7FBF5</color>
+    <color name="andBackgroundDark">#F3F4F5</color>
+    <color name="andBackgroundDarkHighlight">#DCE1E2</color>
+    <color name="andBorder">#CFD2DA</color>
+    <color name="andDivider">#E0E3E9</color>
 </resources>

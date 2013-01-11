@@ -36,7 +36,7 @@
 				android:id="@+id/admob_config_2_buttonbarSpacer"
 				android:layout_width="fill_parent"
 				android:layout_height="2dp"
-				android:background="#dadada"
+				android:background="@color/andBorder"
 				android:paddingLeft="5dp"
 				android:paddingRight="5dp"
 				android:layout_marginTop="10dp"

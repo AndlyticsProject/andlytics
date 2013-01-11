@@ -94,8 +94,8 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		currentPage = 0;
 		currentColumn = 1;
 		
-		colorOdd = activity.getResources().getColor(R.color.rowOdd);
-		colorEven = activity.getResources().getColor(R.color.rowEven);
+		colorOdd = activity.getResources().getColor(R.color.rowLight);
+		colorEven = activity.getResources().getColor(R.color.rowDark);
 
 		columnClickListener = new OnClickListener() {
 

@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text=""
-            android:textColor="#dadada"
+            android:textColor="@color/andBorder"
             android:textSize="20sp" />
 
         <ListView
