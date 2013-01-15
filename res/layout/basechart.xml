@@ -31,9 +31,10 @@
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="0.5" >
+                android:layout_weight="0.5"
+                android:background="@color/andBackgroundLight"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" >
 
                 <com.github.andlyticsproject.view.ChartGallery
                     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -100,7 +101,7 @@
                             android:cacheColorHint="#00000000"
                             android:divider="@color/andDivider"
                             android:dividerHeight="1dp"
-                            android:padding="5dp" />
+                            android:padding="0dp" />
 
                         <ScrollView
                             android:id="@+id/base_chart_one_entry_hint"

@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="15dp"
         android:paddingTop="5dp"
+        android:paddingLeft="10dp"
         android:text="@string/smoothed_values"
         android:visibility="invisible" />
 
