@@ -3,7 +3,7 @@
 - Minor UI changes
 - Google Translate app integrated (see preferences)
 - Toggle data/graph in actionbar
-- Seperate about screen (credits/changelog)
+- Separate about screen (credits/changelog)
 
 2.3.1
 - Only collect statistics on published apps
