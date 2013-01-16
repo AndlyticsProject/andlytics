@@ -156,7 +156,7 @@
 	<string name="admob_invalid_token_error">Errore nell\'autenticazione dell\'account AdMob. Riprova più tardi.</string>
 	<string name="admob_generic_error">Impossibile caricare i dati da AdMob, riprova più tardi.</string>
 	<string name="admob_linked_accounts_error">Google non permette l\'accesso API agli account AdMob che sono legati ad un account Google. Stanno lavorando ad una nuova versione delle API che supporta OAuth.</string>
-	<string name="remote_interface_changed_error">Si è verificato un errore, probabilmente perchè l\'\interfaccia remota è cambiata\n\nSi prega di riportare l\'errore in modo che possa essere corretto. Per meglio identificare il problema verranno inviate informazioni sull\'errore (stacktrace) e sul tuo dispositivo come il nome del produttore, del modello, la versione del sistema operativo ecc.\n\nGrazie!</string>
+	<string name="remote_interface_changed_error">Si è verificato un errore, probabilmente perché l\'\interfaccia remota è cambiata\n\nSi prega di riportare l\'errore in modo che possa essere corretto. Per meglio identificare il problema verranno inviate informazioni sull\'errore (stacktrace) e sul tuo dispositivo come il nome del produttore, del modello, la versione del sistema operativo ecc.\n\nGrazie!</string>
 	<string name="multiple_dev_accounts_error">Il tuo account è collegato a più console sviluppatore. Questa funzionalità non è supportata da Andlytics.\n\nPuoi scollegare gli account addizionali o richiedere a Google una API pubblica per le statistiche delle app al seguente indirizzo:  \n\nhttp://support.google.com/googleplay\n\nCi dispiace :(</string>
 	<string name="stats_file_not_specified_error">File delle statistiche non valido.</string>
 	

@@ -133,7 +133,7 @@
     
     <string name="manage_accounts">Hesapları yönet</string>
     <string name="preferences">Tercihler</string>
-    <string name="loading_app_list">Uygulama listesi yükleniyor...</string>
+    <string name="loading_app_list">Uygulama listesi yükleniyor&#8230;</string>
     <string name="no_published_apps">Yayınlanmış uygulama bulunamadı</string>
     
     <string name="general_preferences">Genel Tercihler</string>
