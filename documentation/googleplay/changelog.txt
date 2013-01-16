@@ -1,3 +1,10 @@
+2.4.0
+- Minor bugfixes
+- Minor UI changes
+- Google Translate app integrated (see preferences)
+- Toggle data/graph in actionbar
+- seperate about screen (creadits/changelog)
+
 2.3.1
 - Only collect statistics on published apps
 
