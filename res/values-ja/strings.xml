@@ -56,9 +56,6 @@
     <string name="run_export">エクスポート開始</string>
     <string name="comment_no_user_info">Googleユーザー</string>
     <string name="comment_reply">開発者返答</string>
-    <string name="comments_details_full">バージョン: %1$s 端末: %2$s</string>
-    <string name="comments_details_version">バージョン: %s</string>
-    <string name="comments_details_device">端末: %s</string>
     <string name="long_click_translate">コメントを長押しすると、翻訳を表示します。</string>
     <string name="load_more_comments">残りのコメントをロードする</string>
     <string name="info_comments">取り消し・変更されたコメントのため、メイン画面で表示するコメント数は、ここに表示するコメント数より多い場合があります。</string>

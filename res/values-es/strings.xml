@@ -57,9 +57,6 @@
     <string name="run_export">Exportar</string>
     <string name="comment_no_user_info">Un usuario de Google</string>
     <string name="comment_reply">Respuesta del desarrollador</string>
-    <string name="comments_details_full">Versión %1$s en el dispositivo: %2$s</string>
-    <string name="comments_details_version">Versión %s</string>
-    <string name="comments_details_device">En dispositivo: %s</string>
     <string name="long_click_translate">Mantenga pulsado un comentario para traducirlo</string>
     <string name="load_more_comments">Cargar más comentarios</string>
     <string name="info_comments">El número de comentarios reportados en la pantalla principal puede ser mayor a los que aparecen aquí a causa de los comentarios modificados.</string>
@@ -67,7 +64,7 @@
     <string name="time_frame">Intervalo de tiempo</string>
     <string name="seven_days">Últimos 7 días</string>
     <string name="thirty_days">Últimos 30 días</string>
-    <string name="ninety_days">Últimos 90 dias</string>
+    <string name="ninety_days">Últimos 90 días</string>
     <string name="unlimited">Ilimitado</string>
     <string name="date_format">Formato de fecha</string>
     <string name="locale_default">Idioma por defecto</string>
