@@ -74,6 +74,7 @@
                 android:background="@color/lightBlue" />
 
             <RelativeLayout
+                android:id="@+id/base_chart_datacontainer"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="0.5" >

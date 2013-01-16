@@ -29,6 +29,7 @@
             android:orientation="vertical" >
 
             <RelativeLayout
+                android:id="@+id/base_chart_chartframe"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="0.5"
@@ -68,6 +69,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/base_chart_datacontainer"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="0.5"
@@ -135,7 +137,8 @@
                     android:id="@+id/base_chart_listSpacer"
                     android:layout_width="fill_parent"
                     android:layout_height="2dp"
-                    android:background="@color/lightBlue" />
+                    android:background="@color/lightBlue"
+                    android:visibility="gone" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

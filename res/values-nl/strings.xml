@@ -57,9 +57,6 @@
     <string name="run_export">Start exporteren</string>
     <string name="comment_no_user_info">Een Google Gebruiker</string>
     <string name="comment_reply">Antwoord van ontwikkelaar</string>
-    <string name="comments_details_full">Versie %1$s op apparaat: %2$s</string>
-    <string name="comments_details_version">Versie %s</string>
-    <string name="comments_details_device">Op apparaat: %s</string>
     <string name="long_click_translate">Lange klik op opmerking voor de vertaling</string>
     <string name="load_more_comments">Laad meer opmerkingen</string>
     <string name="info_comments">Het gemelde aantal opmerking op het hoofdscherm kan hoger uitvallen dan het aantal opmerkingen getoond hier, doordat opmerkingen zijn teruggetrokken of veranderd.</string>

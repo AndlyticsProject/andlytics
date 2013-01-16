@@ -57,9 +57,6 @@
     <string name="run_export">Executa l\'exportació</string>
     <string name="comment_no_user_info">Un usuari de Google</string>
     <string name="comment_reply">Resposta del desenvolupador</string>
-    <string name="comments_details_full">Versió %1$s al dispositiu: %2$s</string>
-    <string name="comments_details_version">Versió %s</string>
-    <string name="comments_details_device">Al dispositiu: %s</string>
     <string name="long_click_translate">Fes un clic llarg al comentari per veure\'n la traducció</string>
     <string name="load_more_comments">Carrega més comentaris</string>
     <string name="info_comments">El nombre de comentaris informat a la pantalla principal pot ser més elevat que el nombre de comentaris mostrat aquí per culpa dels comentaris eliminats o modificats.</string>

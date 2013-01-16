@@ -56,9 +56,6 @@
     <string name="run_export">Dışa aktarmayı başlat</string>
     <string name="comment_no_user_info">Bir Google Kullanıcısı</string>
     <string name="comment_reply">Geliştirici cevabı</string>
-    <string name="comments_details_full">%2$s cihazındaki versiyon %1$s</string>
-    <string name="comments_details_version">Versiyon %s</string>
-    <string name="comments_details_device">Cihaz: %s</string>
     <string name="long_click_translate">Çeviri için yoruma uzun basınız</string>
     <string name="load_more_comments">Daha fazla yorum yükle</string>
     <string name="info_comments">Anasayfadaki yorum sayısı buradaki yorum sayısından fazla olabilir çünkü bazı yorumlar değiştirilmiş ya da silinmiş olabilir.</string>

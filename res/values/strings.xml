@@ -56,10 +56,7 @@
     <string name="export_files_replaced">Existing export files will be replaced</string>
     <string name="run_export">Run export</string>
     <string name="comment_no_user_info">A Google User</string>
-    <string name="comment_reply">Developer reply</string>
-    <string name="comments_details_full">Version %1$s on device: %2$s</string>
-    <string name="comments_details_version">Version %s</string>
-    <string name="comments_details_device">On device: %s</string>
+    <string name="comment_reply">Developer reply</string>    
     <string name="long_click_translate">Long click on comment for translation</string>
     <string name="load_more_comments">Load more comments</string>
     <string name="info_comments">The number of comments reported on the main screen may be higher than the number of comments shown here because of withdrawn / changed comments.</string>

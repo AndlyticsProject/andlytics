@@ -57,9 +57,6 @@
     <string name="run_export">Exportieren</string>
     <string name="comment_no_user_info">Ein Google Nutzer</string>
     <string name="comment_reply">Entwicklerantwort</string>
-    <string name="comments_details_full">Version %1$s auf Gerät: %2$s</string>
-    <string name="comments_details_version">Version %s</string>
-    <string name="comments_details_device">Auf Gerät: %s</string>
     <string name="long_click_translate">Lange auf Kommentaren halten für eine Übersetzung.</string>
     <string name="load_more_comments">Mehr Kommentare laden</string>
     <string name="info_comments">Die Anzahl der auf der Hauptseite angezeigten Kommentare kann wegen zurückgezogener/geänderter Kommentaren abweichen.</string>
