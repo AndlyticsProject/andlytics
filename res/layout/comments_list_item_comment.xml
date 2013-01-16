@@ -70,21 +70,23 @@
             android:id="@+id/comments_list_item_version"
             style="@style/MainTableText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#8F9698"
-            android:paddingRight="3dp" />
-        
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:paddingRight="3dp"
+            android:textColor="#8F9698" />
+
         <ImageView
             android:id="@+id/comments_list_icon_device"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_device" />
-        
+
         <TextView
             android:id="@+id/comments_list_item_device"
             style="@style/MainTableText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center"
             android:textColor="#8F9698" />
     </LinearLayout>
 
