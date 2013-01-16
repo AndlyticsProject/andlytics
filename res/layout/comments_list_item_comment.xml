@@ -45,7 +45,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/comments_list_item_title"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp" />
+        android:paddingRight="20dp"
+        android:textColor="#676767" />
 
     <LinearLayout
         android:id="@+id/comments_list_item_device_container"
