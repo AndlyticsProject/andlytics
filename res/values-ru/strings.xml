@@ -148,6 +148,8 @@
     <string name="pref_disable_acra">Автоматические отчеты об ошибках</string>
     <string name="pref_acra_disabled">Отправка отчетов выключена</string>
     <string name="pref_acra_enabled">Отправка отчетов включена</string>
+    <string name="use_google_translate_app">Использовать приложение Переводчик Google</string>
+    <string name="use_google_translate_app_summary">Использовать приложение Переводчик Google для перевода комментариев, если оно установлено</string>
     
     <!-- Errors -->
     <string name="network_error">Произошла сетевая ошибка. Попробуйте позже</string>
@@ -173,4 +175,9 @@
 	<string name="multiple_dev_accounts_title">Несколько аккаунтов разработчика</string>
 	<string name="update_button">Обновить</string>
 	<string name="send_report_button">Отправить отчёт</string>
+	
+	<string name="about_title">О Andlytics</string>
+    <string name="about_credits">Об авторах</string>
+	<string name="about_text">Andlytics - приложение с открытым исходным кодом, вы можете помочь его развитию на Github. Приложение никак не связано с компанией Google.\n\nПосетите нас:</string>
+	<string name="about_thirdsparty_credits_title">Используемые сторонние библиотеки:</string>
 </resources>

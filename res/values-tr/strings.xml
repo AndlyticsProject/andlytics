@@ -147,6 +147,8 @@
     <string name="pref_disable_acra">Otomatik hata raporları</string>
     <string name="pref_acra_disabled">Raporlama devre dışı</string>
     <string name="pref_acra_enabled">Raporlama devrede</string>
+    <string name="use_google_translate_app">Google Çevirici uygulamasını kullan</string>
+    <string name="use_google_translate_app_summary">Yorumları çevirmek için uygun olduğunda Google Çevirici uygulamasını kullan</string>
     
     <!-- Errors -->
     <string name="network_error">Network hatası oluştu.Lütfen daha sonra tekrar deneyin.</string>
@@ -172,4 +174,9 @@
 	<string name="multiple_dev_accounts_title">Birden fazla geliştirici hesabı</string>
 	<string name="update_button">Güncelle</string>
 	<string name="send_report_button">Rapor Gönder</string>
+	
+	<string name="about_title">Andlytics Hakkında</string>
+    <string name="about_credits">Emeği Geçenler</string>
+	<string name="about_text">Andlytics açık kaynak kodlu,GitHub ile istediğiniz zaman katkıda bulunabilirsiniz. Bu uygulamanın Google ile hiç bir ilişkisi yoktur.\n\nŞu adresten bizi ziyaret ediniz:</string>
+	<string name="about_thirdsparty_credits_title">3. Parti kullanılan kütüphaneler:</string>
 </resources>

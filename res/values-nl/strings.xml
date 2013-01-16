@@ -148,6 +148,8 @@
     <string name="pref_disable_acra">Automatische fout rapportage</string>
     <string name="pref_acra_disabled">Rapportage uitgeschakeld</string>
     <string name="pref_acra_enabled">Rapportage ingeschakeld</string>
+    <string name="use_google_translate_app">Gebruik de Vertalen app van Google</string>
+    <string name="use_google_translate_app_summary">Gebruik de Vertalen app van Google voor vertalen van opmerkingen, indien beschikbaar</string>
     
     <!-- Errors -->
     <string name="network_error">Een netwerkfout is opgetreden. Probeer het later nog eens.</string>
@@ -173,4 +175,9 @@
 	<string name="multiple_dev_accounts_title">Meerdere Ontwikkelaarsaccounts</string>
 	<string name="update_button">Bijwerken</string>
 	<string name="send_report_button">Verstuur rapport</string>
+	
+	<string name="about_title">Over Andlytics</string>
+    <string name="about_credits">Met dank aan</string>
+	<string name="about_text">Andlytics is open source; zelf bijdragen kan via GitHub. Deze app is op geen enkele manier geassocieerd met Google.\n\nBezoek ons op:</string>
+	<string name="about_thirdsparty_credits_title">Gebruikte bibliotheken van derden:</string>
 </resources>

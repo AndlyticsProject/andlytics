@@ -82,7 +82,7 @@
     <string name="password">Passwort</string>
     <string name="email">E-Mail</string>
     <string name="login">Einloggen</string>
-    <string name="remove_admob">AdMob Verknüpfung entfernen</string>
+    <string name="remove_admob">AdMob entfernen</string>
     <string name="loading_site">Lade Seiten&#8230;</string>
     <string name="select_admob_site">Die mit dieser App zu verknüpfende AdMob Seite auswählen</string>
     <string name="choose_app">App auswählen</string>
@@ -148,6 +148,8 @@
     <string name="pref_disable_acra">Automatische Fehler-Reports</string>
     <string name="pref_acra_disabled">Reporting deaktiviert</string>
     <string name="pref_acra_enabled">Reporting aktiviert</string>
+    <string name="use_google_translate_app">Google Translate App verwenden</string>
+    <string name="use_google_translate_app_summary">Google Translate App für Übersetzungen verwenden, sofern vorhanden</string>
     
     <!-- Errors -->
     <string name="network_error">Ein Verbindungsfehler ist aufgetreten. Bitte versuchen Sie es später noch einmal.</string>
@@ -173,4 +175,9 @@
 	<string name="multiple_dev_accounts_title">Mehrfach verwendete Entwickler-Konten</string>
 	<string name="update_button">Aktualisieren</string>
 	<string name="send_report_button">Report senden</string>
+	
+	<string name="about_title">Über Andlytics</string>
+    <string name="about_credits">Mitwirkende</string>
+	<string name="about_text">Andlytics ist ein Open Source Projekt, welches durch die Community gepflegt wird. Diese App steht nicht in Verbindung mit Google.\n\nBesucht uns auf:</string>
+	<string name="about_thirdsparty_credits_title">Verwendete Bibliotheken:</string>
 </resources>
