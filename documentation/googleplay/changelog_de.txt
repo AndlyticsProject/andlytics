@@ -1,3 +1,13 @@
+2.4.0
+- Kleinere Fehlerbehebungen
+- Kleinere UI Änderungen
+- Google Translate App integriert (siehe Einstellungen)
+- Wechsel zwischen Daten/Graph in der Actionbar
+- Eigenes Über-Fenster (Mitwirkende/Änderungen)
+
+2.3.1
+- Sammle nur Statistikdaten von publizierten Apps
+
 2.3.0
 - Basiert jetzt auf der neuen Entwicklerkonsole (Anzahl Kommentare kann nun abweichen, da diese nun auf andere Wiese gemeldet werden)
 - Schaubilder/Tabellen Konfiguration dürch Menü ersetzt

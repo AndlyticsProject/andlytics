@@ -1,23 +1,17 @@
-★★★ Aquesta és la nova versió OFICIAL de l'aplicació ★★★
+L'Andlytics recol·lecta les estadístiques de la Consola de desenvolupador de Google Play. Et permet fer un seguiment de les instal·lacions actives, instal·lacions totals, valoracions i comentaris per a totes les teves aplicacions d'Android publicades a Google Play.
 
-Segueix les estadístiques de les teves aplicacions Android.
+L'Andlytics també pot recol·lectar estadístiques d'AdMob, incloent-hi guanys, peticions i impressions. Suporta sincronització en segon pla de les estadístiques i notificacions per quan hi ha canvis.
 
-Andlytics fa un seguiment de les estadístiques de les aplicacions pel que fa a valoracions, descàrregues diàries, descàrregues totals i instal·lacions actives. Els desenvolupadors Android poden veure els comentaris de les aplicacions en tots els idiomes i les estadístiques d'AdMob de guanys, peticions i impressions.
+Google no proporciona una API pública per recol·lectar estadístiques. Per tant, si Google fa un canvi al lloc web pot causar que l'Andlytics deixi de funcionar. En aquest cas, tingues paciència mentre ens hi adaptem.
 
-Aquesta és una eina per a desenvolupadors Android per a fer un seguiment de les aplicacions, només és útil si tens aplicacions publicades a l'Android Market i pots accedir a la Consola de desenvolupadors de l'Android Market.
+L'Andlytics és de codi obert, ets lliure de contribuir-hi a GitHub.
 
-Suporta la sincronització automàtica de les estadístiques de les aplicacions amb el teu compte de desenvolupador Android. Les dades de les estadístiques es poden exportar a la targeta SD i pots configurar notificaciones per a comentaris, valoracions o descàrregues noves. Els comptes d'AdMob els administrarà el gestor de comptes d'Android.
+L'Andlytics no està associat amb Google de cap manera.
 
-Tingues en compte que Google no proporciona una API estable per obtenir les estadístiques de descàrregues i valoracions. Per tant, és possible que l'Andlytics no funcioni correctament si canvia alguna cosa a l'Android Market. En aquest cas, sigues pacient fins que ens adaptem als canvis.
-
-Aquesta aplicació no està relacionada de cap manera amb Google.
-
-PROBLEMES CONEGUTS ★★★★★★★★★★★★★★★★★★★
-
-Els comptes de "Google Apps for Business" encara no estan suportats
-
-Els comptes de desenvolupadors multiconnexió encara no estan suportats
+Els comptes de "Google Apps for Business" i els comptes de desenvolupadors multiconnexió encara no estan suportats. Si tens un d'aquests comptes, contacta'ns mitjançant GitHub i ajuda'ns a afegir-hi suport.
 
 En alguns dispositius, els comptes d'AdMob desapareixen, moure l'Andlytics de la targeta SD a l'emmagatzematge intern pot arreglar-ho.
 
-Per als comptes d'AdMob que estan enllaçats a un compte Google, pots trobar-ne la contrasenya per a l'API a la pàgina d'Informació del compte http://www.admob.com/my_account/account_info.
+Per als comptes d'AdMob que estan enllaçats a un compte de Google, pots trobar-ne la contrasenya per a l'API a la pàgina d'Informació del compte http://www.admob.com/my_account/account_info.
+
+Paraules clau: Consola de desenvolupador, eines de desenvolupador, desenvolupadors d'Android

@@ -145,6 +145,8 @@
     <string name="pref_disable_acra">Informes d\'errors automàtics</string>
     <string name="pref_acra_disabled">Informes desactivats</string>
     <string name="pref_acra_enabled">Informes activats</string>
+    <string name="use_google_translate_app">Utilitza l\'aplicació Google Traductor</string>
+    <string name="use_google_translate_app_summary">Utilitza l\'aplicació Google Traductor per traduir els comentaris, si està disponible.</string>
     
     <!-- Errors -->
     <string name="network_error">S\'ha produït un error de xarxa. Torna-ho a provar més tard.</string>
@@ -170,4 +172,9 @@
 	<string name="multiple_dev_accounts_title">Múltiples comptes de desenvolupador</string>
 	<string name="update_button">Actualitza</string>
 	<string name="send_report_button">Envia un informe</string>
+	
+	<string name="about_title">Quant a l\'Andlytics</string>
+    <string name="about_credits">Crèdits</string>
+	<string name="about_text">L\'Andlytics és de codi obert, ets lliure de contribuir-hi mitjançant GitHub. Aquesta aplicació no està associada amb Google de cap manera.\n\nVisita\'ns a:</string>
+	<string name="about_thirdsparty_credits_title">Biblioteques de tercers utilitzades:</string>
 </resources>
