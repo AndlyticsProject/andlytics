@@ -1,41 +1,51 @@
+2.4.0
+- Minor bugfixes
+- Minor UI changes
+- Google Translate app integrated (see preferences)
+- Toggle data/graph in actionbar
+- Separate about screen (credits/changelog)
+
+2.3.1
+- Only collect statistics on published apps
+
 2.3.0
--Yeni geliştirici consolunu baz almıştır (raporlama biçimlerine göre yorum sayısı azalabilir)
--grafik/tablo ayarları paneli action eleman ve seçenekleri ile değişti
-- Grafik ve tablolar tabletler için ayarlandı
-- Renklendirilmiş puan çubukları
-- Genel bir tarih formatı seçeneği
-- Yorumlara geliştirici cevabını gösterme
--Admob istatistikleri şimdi arkaplan senkron işlemi ile senkron oluyor
-- Güncellenmiş istatistikler
-- Güncellenmiş kütüphaneler
-- Bir sürü başka düzeltme
+-Yeni gelistirici consolunu baz almistir (raporlama bi�imlerine g�re yorum sayisi azalabilir)
+-grafik/tablo ayarlari paneli action eleman ve se�enekleri ile degisti
+- Grafik ve tablolar tabletler i�in ayarlandi
+- Renklendirilmis puan �ubuklari
+- Genel bir tarih formati se�enegi
+- Yorumlara gelistirici cevabini g�sterme
+-Admob istatistikleri simdi arkaplan senkron islemi ile senkron oluyor
+- G�ncellenmis istatistikler
+- G�ncellenmis k�t�phaneler
+- Bir s�r� baska d�zeltme
 
 2.2.2
-- Honeycomb bildiri hata düzeltmesi
+- Honeycomb bildiri hata d�zeltmesi
 
 2.2.1
-- Küçük hata düzeltmeleri
-- API düzeltmesi
+- K���k hata d�zeltmeleri
+- API d�zeltmesi
 
 2.2.0
--Yeni hesap yönetimi, hesaplar arası geçiş action çubuğu ile
--Genel işlemler için alt çubuk
--Dropbox'a yükleyen yeni içe/dışarı aktarım  (dışarı aktarım bildirimini tıkla) ve Dropbox'tan içeri aktarım (Dropbox uygulama işleme .zip dosyaları)
-- Değişik sesler içeren JellyBean bildirimleri
-- genel/hesaba yönelik sçenekler
-- Seçenekler ile admob gizlenebilir
-- UI gelişmeleri: cevap verme, ikon düzeltmesi, ilerleme çubuğu
-- Yeni diller: Japonca, Fransızca
+-Yeni hesap y�netimi, hesaplar arasi ge�is action �ubugu ile
+-Genel islemler i�in alt �ubuk
+-Dropbox'a y�kleyen yeni i�e/disari aktarim  (disari aktarim bildirimini tikla) ve Dropbox'tan i�eri aktarim (Dropbox uygulama isleme .zip dosyalari)
+- Degisik sesler i�eren JellyBean bildirimleri
+- genel/hesaba y�nelik s�enekler
+- Se�enekler ile admob gizlenebilir
+- UI gelismeleri: cevap verme, ikon d�zeltmesi, ilerleme �ubugu
+- Yeni diller: Japonca, Fransizca
 
 2.1.0
 - ICS uyumlu ActionBar
-- HD ikon xlarge ekranlar için
-- Yeni ayarlar ekranı
-- Yeni diller: Katalan, İtalyanca, Rusça
+- HD ikon xlarge ekranlar i�in
+- Yeni ayarlar ekrani
+- Yeni diller: Katalan, Italyanca, Rus�a
 
 2.0.1
-- Doğrulama düzeltildi
-- Pro özellikleri şimdi ücretsiz zaten açık kaynak kodlu oldu
-- Yeni tasarım
--  AdMob için EPC
-- Yeni diller: ispanyolca, almanca, felemenkçe
+- Dogrulama d�zeltildi
+- Pro �zellikleri simdi �cretsiz zaten a�ik kaynak kodlu oldu
+- Yeni tasarim
+-  AdMob i�in EPC
+- Yeni diller: ispanyolca, almanca, felemenk�e

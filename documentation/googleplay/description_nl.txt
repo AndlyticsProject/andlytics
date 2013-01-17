@@ -1,23 +1,17 @@
-★★★ Dit is de nieuwe OFFICIELE release van deze app ★★★
+Andlytics verzamelt statistieken van de Google Play Developer Console. Hiermee kunt u actieve installaties, het totaal aantal installeeries, beoordelingen en opmerkingen bijhouden voor al uw Android-apps die zijn gepubliceerd op Google Play.
 
-Volg de statistieken van uw Android apps.
+Andlytics kan ook AdMob statistieken verzamelen, met inbegrip van de inkomsten, verzoeken en indrukken. Het ondersteunt achtergrondsynchroniseren van statistieken en meldingen voor als wijzigingen optreden.
 
-Andlytics volgt app statistieken voor beoordelingen, dagelijkse downloads, totale downloads, en aktieve installaties. Android ontwikkelaars kunnen app opmerkingen zien in alle talen en AdbMob statistieken voor opbrengst, verzoeken, en impressies. 
+Google geeft geen openbare API voor het verzamelen van statistische gegevens. Daarom zou het kunnen dat Analytics niet meer werkt als Google een wijziging aanbrengt in de site. In dat geval vragen we enig geduld terwijl we proberen zo snel mogelijk de boel weer op de rit te krijgen.
 
-Dit is een tool voor Android ontwikkelaars voor het volgen van apps en is alleen te gebruiken als u applicaties in Google Play hebt gepubliceerd en toegang heeft tot de Google Play Android Ontwikkelaar Console.
+Andlytics is open source; u kunt een aanvulling leveren via GitHub.
 
-Automatisch synchroniseren van de app statistieken met uw Android ontwikkelaar account wordt ondersteund. Data van de statistieken kan worden weggeschreven naar sdkaart en het is mogelijk om notificaties in te stellen voor veranderingen in opmerkingen, beoordelingen en downloads. AdMob accounts worden beheerd door de Android account beheerder.
+Andlytics is op geen enkele wijze geassocieerd met Google.
 
-Let op:  Google verschaft geen stabiele API voor de statistieken van downloads en beoordelingen. Het kan dus dat Andlytics niet naar behoren werkt als er iets veranderd in Google Play. Als dat het geval is proberen we zo snel mogelijk de veranderingen door te voeren, maar er kan enige vertraging zijn.
+"Google Apps for Business" en Multi-connected developer accounts worden nog niet ondersteund. Als u zo'n account heeft, neem dan contact met ons op via GitHub en helpen ons om ondersteuning toe te voegen.
 
-Deze app heeft geen enkele affiliatie met Google.
+Op sommige apparaten blijven AdMob accounts verdwijnen; het verplaatsen van Andlytics van sdcard naar interne opslag kan dit oplossen.
 
-BEKENDE PROBLEMEN ★★★★★★★★★★★★★★★★★★★
+Voor AdMob accounts die zijn gekoppeld aan een Google-account kunt u het API wachtwoord vinden op de Accountinformatie pagina http://www.admob.com/my_account/account_info.
 
-"Google Apps for Business" accounts worden nog niet ondersteund
-
-Multi-connected ontwikkelaaraccounts worden nog niet ondersteund
-
-Op sommige toestellen verdwijnen de AdMob accounts steeds; het verplaatsen van Andlytics van de sdkaart naar interne opslag zou dat kunnen verhelpen
-
-U kunt het API wachtwoord van AdMob accounts die zijn gekoppeld aan een Google account vinden op de Account Information pagina http://www.admob.com/my_account/account_info.
+Trefwoorden: Ontwikkelaarconsole, developer tools, Android-ontwikkelaars
