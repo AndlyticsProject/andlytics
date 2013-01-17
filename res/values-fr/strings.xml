@@ -55,6 +55,8 @@
     <string name="select_files_export">Sélectionner les applis à exporter</string>
     <string name="export_files_replaced">Les fichiers d\'export existants seront remplacés</string>
     <string name="run_export">Exporter</string>
+    <string name="comment_no_user_info">Un utilisateur de google</string>
+    <string name="comment_reply">Réponse du développeur</string>    
     <string name="long_click_translate">Long clic sur le commentaire pour le traduire</string>
     <string name="load_more_comments">Charger plus de commentaires</string>
     <string name="info_comments">Le nombre de commentaires affiché dans l\'écran principal peut être plus important que le nombre de commentaires montré ici à cause de ceux modifiés ou retirés</string>
@@ -62,8 +64,10 @@
     <string name="time_frame">Délai</string>
     <string name="seven_days">Les 7 derniers jours</string>
     <string name="thirty_days">Derniers 30 jours</string>
+    <string name="ninety_days">Les 90 derniers jours</string>
     <string name="unlimited">Sans limites</string>
     <string name="date_format">Format de date</string>
+    <string name="locale_default">Langue par défaut</string>
     <string name="ddmmyy">Jour/Mois/Année</string>
     <string name="yymmdd">Année/Mois/Jour</string>
     <string name="mmddyy">Mois/Jour/Année</string>
@@ -141,6 +145,8 @@
     <string name="pref_disable_acra">Envoi automatique de rapports d\'erreurs</string>
     <string name="pref_acra_disabled">Rapports désactivés</string>
     <string name="pref_acra_enabled">Rapports activés</string>
+    <string name="use_google_translate_app">Utiliser Google Traduction</string>
+    <string name="use_google_translate_app_summary">Utiliser l\'app Google Traduction pour traduire les commentaires, si disponible.</string>
     
     <!-- Errors -->
     <string name="network_error">Une erreur réseau est survenue. Veuillez réessayer plus tard.</string>
@@ -166,4 +172,9 @@
 	<string name="multiple_dev_accounts_title">Multiples Comptes Développeur</string>
 	<string name="update_button">Mise à jour</string>
 	<string name="send_report_button">Envoyer un rapport</string>
+	
+	<string name="about_title">A propos d\'Andlytics</string>
+    <string name="about_credits">Crédits</string>
+	<string name="about_text">Andlytics est un logiciel libre, vous pouvez y contribuer via Github. Cette app n\'est pas affiliée à Google.\n\nPlus d\'infos sur :</string>
+	<string name="about_thirdsparty_credits_title">Librairies tierces utilisées:</string>
 </resources>

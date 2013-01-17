@@ -1,22 +1,18 @@
-★★★ Esta es la nueva version OFICIAL de ésta aplicación  ★★★
+Andlytics muestra estadísticas de la consola de desarrollador de Google Play. Podrás hacer el seguimiento de instalaciones activas, totales, valoraciones y comentarios de todas tus aplicaciones publicadas en Google Play.
 
-Controla las estadisticas de tus aplicaciones Android.
-Andlytics controla las estadisticas de tus aplicaciones para puntuaciones, descargas diarias, descargas totales e instalaciones activas. Permite visualizar los comentarios en todos los idiomas y las estadisticas de AdMob para ganancias, peticiones e impresiones.
+Andlytics también puede mostrar estadísticas de AdMob, incluidos los ingresos, peticiones e impresiones. Soporta sincronización en segundo plano de las estadísticas y notifica cuando hay cambios.
 
-Esta es una herramienta para desarrolladores Android destinada al seguimiento de aplicaciones, util solamente si tiene aplicaciones publicadas en Google Play.
+Google no proporciona una API pública para obtener estos datos. Por lo tanto, cuando Google hace algún cambio en la web, puede causar que Andlytics deje de funcionar. En este caso, por favor, se paciente mientras lo solucionamos.
 
-Soporta autosincronización de las estadisticas de la aplicacion con su cuenta de desarrollador. Los datos de estadisticas pueden ser exportados a la SD externa y puede configurar notificaciones para los comentarios, puntuaciones y descargas. Las cuentas de AdMob serán gestionadas por el gestor de cuentas Android.
+Andlytics es open source, puedes contribuir libremente a través de GitHub.
 
-Tenga en cuenta que Google no facilita una API estable para obtener estadisticas de descargas y puntuaciones. Por tanto Andlytics puede no funcionar correctamente si hay cambios en Google Play. En tal caso sea paciente mientras intentamos corregir éstos cambios.
+Andlytics no está asociado con Google de ninguna forma.
 
-Esta aplicación no está relacionada con Google de ninguna manera.
+Las cuentas "Google Apps para Empresas" y cuentas de desarrollador multi-conectadas no están soportadas todavía. Si tienes una de estas cuentas, contáctenos vía GitHub y ayúdenos a añadir soporte.
 
-PROBLEMAS CONOCIDOS ★★★★★★★★★★★★★★★★★★★
+En algunos dispositivos las cuentas de AdMob desaparecen, moviendo Andlytics de la tarjeta sd a la memoria interna soluciona el problema.
 
-"Google Apps for Business" no son soportadas todavía
+Para cuentas de AdMob ligadas a la cuenta de Google puedes encontrar la contraseña del API en la página de Información de Cuenta:
+http://www.admob.com/my_account/account_info.
 
-Cuentas de desarrollador multi conectadas no son soportadas todavía.
-
-En algunos dispositivos las cuentas AdMob siguen desapareciendo, mover Andlytics de la SD esterna a la memoria interna puede solucionarlo.
-
-Para las cuentas AdMob que estan vinculadas a Cuentas Google puede encontrar la password del API en Informacion de cuenta en la página http://www.admob.com/my_account/account_info.
+Palabras clave: Consola de desarrollador, herramientas de desarrollo, desarrolladores android

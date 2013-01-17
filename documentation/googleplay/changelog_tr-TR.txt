@@ -1,41 +1,51 @@
+2.4.0
+- Minor bugfixes
+- Minor UI changes
+- Google Translate app integrated (see preferences)
+- Toggle data/graph in actionbar
+- Separate about screen (credits/changelog)
+
+2.3.1
+- Only collect statistics on published apps
+
 2.3.0
--Yeni geliştirici consolunu baz almıştır (raporlama biçimlerine göre yorum sayısı azalabilir)
--grafik/tablo ayarları paneli action eleman ve seçenekleri ile değişti
-- Grafik ve tablolar tabletler için ayarlandı
-- Renklendirilmiş puan çubukları
-- Genel bir tarih formatı seçeneği
-- Yorumlara geliştirici cevabını gösterme
--Admob istatistikleri şimdi arkaplan senkron işlemi ile senkron oluyor
-- Güncellenmiş istatistikler
-- Güncellenmiş kütüphaneler
-- Bir sürü başka düzeltme
+- Now based on the new Developer Console
+- Statistics and comments are no longer repeatedly synced while actively using the app
+- Removed the chart/table configuration panel and replaced it with action items/preferences
+- Adjusted charts and tables for tablets
+- Ratings are displayed as colour coded progress bars
+- Added a global date format option
+- Added support for viewing developer replies to comments
+- Removed support for Android 2.1
+- Updated translations
+- Lots of other fixes and improvements
 
 2.2.2
-- Honeycomb bildiri hata düzeltmesi
+- Honeycomb notification bugfix
 
 2.2.1
-- Küçük hata düzeltmeleri
-- API düzeltmesi
+- Minor bugfixes
+- API hotfix
 
 2.2.0
--Yeni hesap yönetimi, hesaplar arası geçiş action çubuğu ile
--Genel işlemler için alt çubuk
--Dropbox'a yükleyen yeni içe/dışarı aktarım  (dışarı aktarım bildirimini tıkla) ve Dropbox'tan içeri aktarım (Dropbox uygulama işleme .zip dosyaları)
-- Değişik sesler içeren JellyBean bildirimleri
-- genel/hesaba yönelik sçenekler
-- Seçenekler ile admob gizlenebilir
-- UI gelişmeleri: cevap verme, ikon düzeltmesi, ilerleme çubuğu
-- Yeni diller: Japonca, Fransızca
+- New account management, switching account via action bar
+- New bottom bar for the main actions
+- New Import/Export with Upload to Dropbox (click the export notification) and Import via Dropbox (via Dropbox app processing .zip files)
+- JellyBean Notifications including custom sounds
+- general/account specific preferences
+- AdMob can be hidden via preferences
+- UI improvements: responsiveness, icon fixes, progress indicator
+- New language: Japanese, French
 
 2.1.0
-- ICS uyumlu ActionBar
-- HD ikon xlarge ekranlar için
-- Yeni ayarlar ekranı
-- Yeni diller: Katalan, İtalyanca, Rusça
+- ICS compatible ActionBar
+- HD icons for xlarge screens
+- New settings screen
+- New languages: Catalan, Italian, Russian
 
 2.0.1
-- Doğrulama düzeltildi
-- Pro özellikleri şimdi ücretsiz zaten açık kaynak kodlu oldu
-- Yeni tasarım
--  AdMob için EPC
-- Yeni diller: ispanyolca, almanca, felemenkçe
+- Fixed Authentication
+- Pro features are now free (since it is open source now)
+- New design
+- EPC for AdMob
+- New languages: Spanish, German, Dutch
