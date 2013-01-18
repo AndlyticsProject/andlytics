@@ -156,7 +156,7 @@ public final class Utils {
 			ApplicationInfo info = ctx.getPackageManager().getApplicationInfo(packageName, 0);
 
 			// need this to cover multi-user env (4.2 tablets, etc.)
-			return (info.flags & ApplicationInfo.FLAG_INSTALLED) == ApplicationInfo.FLAG_INSTALLED;
+			return (info.flags & ApplicationInfo.FLAG_INSTALLED) == 0;
 		} catch (PackageManager.NameNotFoundException e) {
 			return false;
 		}
