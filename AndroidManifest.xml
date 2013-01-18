@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.github.andlyticsproject"
     android:installLocation="auto"
-    android:versionCode="222"
-    android:versionName="2.3.1" >
+    android:versionCode="223"
+    android:versionName="2.4.0" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -110,7 +110,7 @@
             android:name=".about.AboutActivity"
             android:label="@string/about_title" >
         </activity>
-        
+
         <service
             android:name=".sync.SyncAdapterService"
             android:exported="false" >
@@ -122,9 +122,7 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/sync" />
         </service>
-        
-        <service android:name=".sync.SyncDeveloperAccountsService"/>
-        
+        <service android:name=".sync.SyncDeveloperAccountsService" />
         <service
             android:name=".admob.AdmobAccountAuthenticator"
             android:exported="false" >
@@ -152,7 +150,7 @@
             android:authorities="com.github.andlyticsproject.db.AndlyticsContentProvider"
             android:exported="false" />
 
-        <receiver android:name="com.github.andlyticsproject.sync.AccountsChangedReceiver">
+        <receiver android:name="com.github.andlyticsproject.sync.AccountsChangedReceiver" >
             <intent-filter>
                 <action android:name="android.accounts.LOGIN_ACCOUNTS_CHANGED" />
             </intent-filter>
