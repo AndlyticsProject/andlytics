@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="@color/andBackground" >
 
     <LinearLayout
         android:id="@+id/base_chart_main_frame"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/base_chart_buttonbarSpacer"
-        android:background="#eeeeee"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -29,11 +29,13 @@
             android:orientation="vertical" >
 
             <RelativeLayout
+                android:id="@+id/base_chart_chartframe"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="0.5" >
+                android:layout_weight="0.5"
+                android:background="@color/andBackgroundLight"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" >
 
                 <TextView
                     android:id="@+id/base_chart_timeframe"
@@ -52,7 +54,7 @@
                     android:id="@+id/base_chart_gallery"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:layout_marginTop="25dp"
+                    android:layout_marginTop="20dp"
                     android:clickable="true"
                     android:clipChildren="true"
                     android:clipToPadding="true"
@@ -67,6 +69,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/base_chart_datacontainer"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="0.5"
@@ -98,13 +101,11 @@
                             android:id="@+id/base_chart_list"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:background="#eeeeee"
+                            android:background="@color/andBackground"
                             android:cacheColorHint="#00000000"
-                            android:divider="#dadada"
+                            android:divider="@color/andDivider"
                             android:dividerHeight="1dp"
-                            android:paddingLeft="5dp"
-                            android:paddingRight="5dp"
-                            android:paddingTop="5dp" />
+                            android:padding="0dp" />
 
                         <ScrollView
                             android:id="@+id/base_chart_one_entry_hint"
@@ -136,7 +137,8 @@
                     android:id="@+id/base_chart_listSpacer"
                     android:layout_width="fill_parent"
                     android:layout_height="2dp"
-                    android:background="@color/lightBlue" />
+                    android:background="@color/lightBlue"
+                    android:visibility="gone" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

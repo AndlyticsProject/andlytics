@@ -57,9 +57,6 @@
     <string name="run_export">Executa l\'exportació</string>
     <string name="comment_no_user_info">Un usuari de Google</string>
     <string name="comment_reply">Resposta del desenvolupador</string>
-    <string name="comments_details_full">Versió %1$s al dispositiu: %2$s</string>
-    <string name="comments_details_version">Versió %s</string>
-    <string name="comments_details_device">Al dispositiu: %s</string>
     <string name="long_click_translate">Fes un clic llarg al comentari per veure\'n la traducció</string>
     <string name="load_more_comments">Carrega més comentaris</string>
     <string name="info_comments">El nombre de comentaris informat a la pantalla principal pot ser més elevat que el nombre de comentaris mostrat aquí per culpa dels comentaris eliminats o modificats.</string>
@@ -148,6 +145,8 @@
     <string name="pref_disable_acra">Informes d\'errors automàtics</string>
     <string name="pref_acra_disabled">Informes desactivats</string>
     <string name="pref_acra_enabled">Informes activats</string>
+    <string name="use_google_translate_app">Utilitza l\'aplicació Google Traductor</string>
+    <string name="use_google_translate_app_summary">Utilitza l\'aplicació Google Traductor per traduir els comentaris, si està disponible.</string>
     
     <!-- Errors -->
     <string name="network_error">S\'ha produït un error de xarxa. Torna-ho a provar més tard.</string>
@@ -173,4 +172,9 @@
 	<string name="multiple_dev_accounts_title">Múltiples comptes de desenvolupador</string>
 	<string name="update_button">Actualitza</string>
 	<string name="send_report_button">Envia un informe</string>
+	
+	<string name="about_title">Quant a l\'Andlytics</string>
+    <string name="about_credits">Crèdits</string>
+	<string name="about_text">L\'Andlytics és de codi obert, ets lliure de contribuir-hi mitjançant GitHub. Aquesta aplicació no està associada amb Google de cap manera.\n\nVisita\'ns a:</string>
+	<string name="about_thirdsparty_credits_title">Biblioteques de tercers utilitzades:</string>
 </resources>

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
@@ -15,11 +16,14 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
+import com.github.andlyticsproject.util.Utils;
 
 public class CommentsListAdapter extends BaseExpandableListAdapter {
 
@@ -41,7 +45,6 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		this.context = activity;
 	}
 
-
 	@Override
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
 			View convertView, ViewGroup parent) {
@@ -56,41 +59,66 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 			holder = new ViewHolderChild();
 			holder.text = (TextView) convertView.findViewById(R.id.comments_list_item_text);
+			holder.title = (TextView) convertView.findViewById(R.id.comments_list_item_title);
 			holder.user = (TextView) convertView.findViewById(R.id.comments_list_item_username);
 			holder.date = (TextView) convertView.findViewById(R.id.comments_list_item_date);
 			holder.device = (TextView) convertView.findViewById(R.id.comments_list_item_device);
+			holder.version = (TextView) convertView.findViewById(R.id.comments_list_item_version);
 			holder.rating = (RatingBar) convertView
 					.findViewById(R.id.comments_list_item_app_ratingbar);
+			holder.deviceVersionContainer = (LinearLayout) convertView
+					.findViewById(R.id.comments_list_item_device_container);
+			holder.deviceIcon = (ImageView) convertView
+					.findViewById(R.id.comments_list_icon_device);
+			holder.versionIcon = (ImageView) convertView
+					.findViewById(R.id.comments_list_icon_version);
 
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolderChild) convertView.getTag();
 		}
 		
-		holder.text.setText(comment.getText().replace("\t", "\n"));
 		if (comment.isReply()) {
 			holder.date.setText(formatCommentDate(comment.getReplyDate()));
+			holder.text.setText(comment.getText());
 		} else {
-			holder.user.setText(comment.getUser() == null ?
-					context.getString(R.string.comment_no_user_info) : comment.getUser());
+			String[] commentContent = comment.getText().split("\t");
+			if (commentContent != null && commentContent.length > 1) {
+				holder.title.setText(commentContent[0]);
+				holder.text.setText(commentContent[1]);
+				holder.text.setVisibility(View.VISIBLE);
+			} else if(commentContent != null && commentContent.length == 1) {
+				holder.title.setText(commentContent[0]);
+				holder.text.setVisibility(View.GONE);		
+			}
+			holder.user.setText(comment.getUser() == null ? context
+					.getString(R.string.comment_no_user_info) : comment.getUser());
 			String version = comment.getAppVersion();
 			String device = comment.getDevice();
-			String deviceText = "";
-			// building string: version X on device: XYZ
+			holder.deviceIcon.setVisibility(View.GONE);
+			holder.versionIcon.setVisibility(View.GONE);
+			holder.version.setVisibility(View.GONE);
+			holder.device.setVisibility(View.GONE);
+			boolean showInfoBox = false;
+			
+			// building version/device
 			if (isNotEmptyOrNull(version)) {
-				if (isNotEmptyOrNull(device)) {
-					deviceText = context.getString(R.string.comments_details_full, version, device);
-				} else {
-					deviceText = context.getString(R.string.comments_details_version, version);
-				}
-			} else if (isNotEmptyOrNull(device)) {
-				deviceText = context.getString(R.string.comments_details_device, device);
-			}
-			if (isNotEmptyOrNull(deviceText)) {
+				holder.version.setText(version);
+				holder.versionIcon.setVisibility(View.VISIBLE);
+				holder.version.setVisibility(View.VISIBLE);
+				showInfoBox = true;
+			} 
+			if (isNotEmptyOrNull(device)) {
+				holder.device.setText(device);
+				holder.deviceIcon.setVisibility(View.VISIBLE);
 				holder.device.setVisibility(View.VISIBLE);
-				holder.device.setText(deviceText);
+				showInfoBox = true;
+			}
+			
+			if (showInfoBox) {
+				holder.deviceVersionContainer.setVisibility(View.VISIBLE);
 			} else {
-				holder.device.setVisibility(View.GONE);
+				holder.deviceVersionContainer.setVisibility(View.GONE);
 			}
 
 			int rating = comment.getRating();
@@ -105,6 +133,12 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			public boolean onLongClick(View v) {
 				String text = comment.getText();
 				String displayLanguage = Locale.getDefault().getLanguage();
+
+				if (Preferences.isUseGoogleTranslateApp(context) && isGoogleTranslateInstalled()) {
+					sendToGoogleTranslate(text, displayLanguage);
+					return true;
+				}
+
 				String url = "http://translate.google.de/m/translate?hl=<<lang>>&vi=m&text=<<text>>&langpair=auto|<<lang>>";
 
 				try {
@@ -123,6 +157,24 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			}
 		});
 		return convertView;
+	}
+
+	private boolean isGoogleTranslateInstalled() {
+		return Utils.isPackageInstalled(context, "com.google.android.apps.translate");
+	}
+
+	private void sendToGoogleTranslate(String text, String displayLanguage) {
+		Intent i = new Intent();
+		i.setAction(Intent.ACTION_VIEW);
+		i.putExtra("key_text_input", text);
+		i.putExtra("key_text_output", "");
+		i.putExtra("key_language_from", "auto");
+		i.putExtra("key_language_to", displayLanguage);
+		i.putExtra("key_suggest_translation", "");
+		i.putExtra("key_from_floating_window", false);
+		i.setComponent(new ComponentName("com.google.android.apps.translate",
+				"com.google.android.apps.translate.translation.TranslateActivity"));
+		context.startActivity(i);
 	}
 
 	@Override
@@ -166,11 +218,16 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	}
 
 	static class ViewHolderChild {
-		TextView text;
 		RatingBar rating;
+		TextView text;
+		TextView title;		
 		TextView user;
 		TextView date;
+		LinearLayout deviceVersionContainer;
+		ImageView deviceIcon;
+		ImageView versionIcon;
 		TextView device;
+		TextView version;
 	}
 
 	@Override

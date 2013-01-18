@@ -56,9 +56,6 @@
     <string name="run_export">エクスポート開始</string>
     <string name="comment_no_user_info">Googleユーザー</string>
     <string name="comment_reply">開発者返答</string>
-    <string name="comments_details_full">バージョン: %1$s 端末: %2$s</string>
-    <string name="comments_details_version">バージョン: %s</string>
-    <string name="comments_details_device">端末: %s</string>
     <string name="long_click_translate">コメントを長押しすると、翻訳を表示します。</string>
     <string name="load_more_comments">残りのコメントをロードする</string>
     <string name="info_comments">取り消し・変更されたコメントのため、メイン画面で表示するコメント数は、ここに表示するコメント数より多い場合があります。</string>
@@ -147,6 +144,8 @@
     <string name="pref_disable_acra">自動エラー報告</string>
     <string name="pref_acra_disabled">エラー報告は無効</string>
     <string name="pref_acra_enabled">エラー報告は有効</string>
+    <string name="use_google_translate_app">Google Translate アプリを使用</string>
+    <string name="use_google_translate_app_summary">コメント翻訳にGoogle Translateアプリを使用します(インストール済みの場合)。</string>
     
     <!-- Errors -->
     <string name="network_error">ネットワークエラーが発生しました。再試行してください。</string>
@@ -173,4 +172,9 @@
 	<string name="multiple_dev_accounts_title">複数の開発者アカウント</string>
 	<string name="update_button">更新</string>
 	<string name="send_report_button">レポートを送信する</string>
+	
+	<string name="about_title">Andlyticsについて</string>
+    <string name="about_credits">謝辞</string>
+	<string name="about_text">Andlytics は、オープンソースソフトウエアです。GitHubで開発・翻訳などにご参加ください。Andlytics は、Google社と何の関係はありません。\n\nソーシャルメディアページ:</string>
+	<string name="about_thirdsparty_credits_title">使用しているライブラリ:</string>
 </resources>

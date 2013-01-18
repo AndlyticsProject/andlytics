@@ -85,8 +85,6 @@ public class MainListAdapter extends BaseAdapter {
 
 	private int expandMargin;
 
-	private ContentAdapter db;
-
 	private AccelerateInterpolator upInterpolator;
 
 	private BounceInterpolator downInterpolator;
@@ -95,8 +93,7 @@ public class MainListAdapter extends BaseAdapter {
 
 	private int expandViewHeightAdmob;
 
-	public MainListAdapter(Activity activity, String accountname, ContentAdapter db,
-			StatsMode statsMode) {
+	public MainListAdapter(Activity activity, String accountname, StatsMode statsMode) {
 		BLACK_TEXT = activity.getResources().getColor(R.color.blackText);
 		BLUE_TEXT = activity.getResources().getColor(R.color.lightBlue);
 		this.setAppInfos(new ArrayList<AppInfo>());
@@ -117,7 +114,6 @@ public class MainListAdapter extends BaseAdapter {
 		this.expandMargin = Math.round(metrics.scaledDensity * 5);
 		this.iconDown = activity.getResources().getDrawable(R.drawable.icon_down);
 		this.iconUp = activity.getResources().getDrawable(R.drawable.icon_up);
-		this.db = db;
 
 		this.setStatsMode(statsMode);
 	}
@@ -182,12 +178,17 @@ public class MainListAdapter extends BaseAdapter {
 			holder.ratingtext3 = (TextView) convertView.findViewById(R.id.main_app_rating_3_text);
 			holder.ratingtext4 = (TextView) convertView.findViewById(R.id.main_app_rating_4_text);
 			holder.ratingtext5 = (TextView) convertView.findViewById(R.id.main_app_rating_5_text);
-			
-			holder.ratings1 = (ProgressBar) convertView.findViewById(R.id.main_app_rating_1_rating_progressbar);
-			holder.ratings2 = (ProgressBar) convertView.findViewById(R.id.main_app_rating_2_rating_progressbar);
-			holder.ratings3 = (ProgressBar) convertView.findViewById(R.id.main_app_rating_3_rating_progressbar);
-			holder.ratings4 = (ProgressBar) convertView.findViewById(R.id.main_app_rating_4_rating_progressbar);
-			holder.ratings5 = (ProgressBar) convertView.findViewById(R.id.main_app_rating_5_rating_progressbar);
+
+			holder.ratings1 = (ProgressBar) convertView
+					.findViewById(R.id.main_app_rating_1_rating_progressbar);
+			holder.ratings2 = (ProgressBar) convertView
+					.findViewById(R.id.main_app_rating_2_rating_progressbar);
+			holder.ratings3 = (ProgressBar) convertView
+					.findViewById(R.id.main_app_rating_3_rating_progressbar);
+			holder.ratings4 = (ProgressBar) convertView
+					.findViewById(R.id.main_app_rating_4_rating_progressbar);
+			holder.ratings5 = (ProgressBar) convertView
+					.findViewById(R.id.main_app_rating_5_rating_progressbar);
 
 			holder.ratingpercent1 = (TextView) convertView
 					.findViewById(R.id.main_app_rating_1_percent);
@@ -239,7 +240,7 @@ public class MainListAdapter extends BaseAdapter {
 		holder.ratingtext3.setText(appStats.getRating3().toString());
 		holder.ratingtext4.setText(appStats.getRating4().toString());
 		holder.ratingtext5.setText(appStats.getRating5().toString());
-		
+
 		int numRatings = appStats.getRatingCount();
 		holder.ratings1.setMax(numRatings);
 		holder.ratings1.setProgress(appStats.getRating1());
@@ -434,6 +435,7 @@ public class MainListAdapter extends BaseAdapter {
 					animationList.add(position);
 
 					boolean isExpanded = (Boolean) holder.ratingFrame.getTag(TAG_IS_EXPANDED);
+					ContentAdapter db = ContentAdapter.getInstance(AndlyticsApp.getInstance());
 					db.setRatingExpanded(accountname, packageName, !isExpanded);
 					appDownloadInfo.setRatingDetailsExpanded(!isExpanded);
 

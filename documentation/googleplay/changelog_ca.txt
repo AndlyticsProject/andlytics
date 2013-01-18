@@ -1,3 +1,13 @@
+2.4.0
+- Solució d'errors menors
+- Canvis menors a la IU
+- Aplicació Google Traductor integrada (mira a les preferències)
+- Canvia entre dades/gràfic a la barra d'acció
+- Pantalla "Quant a" separada (crèdits / registre de canvis)
+
+2.3.1
+- Recol·lecta només estadístiques de les aplicacions publicades
+
 2.3.0
 - Basat en la nova Consola de Desenvolupador (el número de comentaris pot ser inferior per un canvi en com s'informen)
 - Taules de configuració de la taula/gràfica substituït per objectes d'acció/preferències

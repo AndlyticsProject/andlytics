@@ -42,7 +42,6 @@ public class AdmobActivity extends BaseChartActivity {
 
 	public static final String TAG = AdmobActivity.class.getSimpleName();
 
-	protected ContentAdapter db;
 	private AdmobListAdapter admobListAdapter;
 	public Integer heighestRatingChange;
 	public Integer lowestRatingChange;
@@ -135,8 +134,6 @@ public class AdmobActivity extends BaseChartActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		db = getDbAdapter();
-
 		mainViewSwitcher = new ViewSwitcher3D((ViewGroup) findViewById(R.id.base_chart_main_frame));
 		mainViewSwitcher.setListener(this);
 
@@ -192,27 +189,27 @@ public class AdmobActivity extends BaseChartActivity {
 	 * Called if item in option menu is selected.
 	 * 
 	 * @param item
-	 *            The chosen menu item
+	 * The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.itemChartsmenuRefresh:
-				setChartIgnoreCallLayouts(true);
-				loadRemoteEntries();
-				return true;
-			case R.id.itemAdmobsmenuRemove:
-				AndlyticsDb.getInstance(this).saveAdmobDetails(TAG, null, null);
-				showAccountList();
-				if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
-					configSwitcher.showPrevious();
-				}
-				mainViewSwitcher.swap();
-				supportInvalidateOptionsMenu();
-				return true;
-			default:
-				return (super.onOptionsItemSelected(item));
+		case R.id.itemChartsmenuRefresh:
+			setChartIgnoreCallLayouts(true);
+			loadRemoteEntries();
+			return true;
+		case R.id.itemAdmobsmenuRemove:
+			AndlyticsDb.getInstance(this).saveAdmobDetails(packageName, null, null);
+			showAccountList();
+			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
+				configSwitcher.showPrevious();
+			}
+			mainViewSwitcher.swap();
+			supportInvalidateOptionsMenu();
+			return true;
+		default:
+			return (super.onOptionsItemSelected(item));
 		}
 	}
 
@@ -294,9 +291,11 @@ public class AdmobActivity extends BaseChartActivity {
 
 		private AdmobList admobList;
 		private Boolean executeRemoteCall = false;
+		private ContentAdapter db;
 
 		LoadDbEntriesTask(AdmobActivity activity) {
 			super(activity);
+			db = ContentAdapter.getInstance(AndlyticsApp.getInstance());
 		}
 
 		@Override
@@ -322,7 +321,7 @@ public class AdmobActivity extends BaseChartActivity {
 			}
 
 			String currentSiteId = admobDetails[1];
-			admobList = activity.getAdmobStats(currentSiteId, (Timeframe) params[1]);
+			admobList = db.getAdmobStats(currentSiteId, (Timeframe) params[1]);
 			executeRemoteCall = (Boolean) params[0];
 
 			return null;
@@ -352,10 +351,6 @@ public class AdmobActivity extends BaseChartActivity {
 			}
 		}
 	};
-
-	private AdmobList getAdmobStats(String currentSiteId, Timeframe timeframe) {
-		return db.getAdmobStats(currentSiteId, timeframe);
-	}
 
 	private void showStats(AdmobList admobList) {
 		admobListAdapter.setOverallStats(admobList.getOverallStats());

@@ -6,14 +6,27 @@ This repository contains the source code for the Andlytics Android app.
   <img src="http://www.android.com/images/brand/android_app_on_play_large.png">
 </a>
 
-![](https://lh6.ggpht.com/NXU6-yYc3f2I8S3m-m0Ghyy_tVQ8UlIIrznWUjRa1EPTYt1xxnVpKJE2NY0xwPMlU7OE=w705)
+![](https://lh5.ggpht.com/Le2h-4yU5MEdbQ3gxjeJtHFhnLjtnjwhdfvp2S0TMhse4rgy0jr5ksMjEYIaRTBeYYs=w705)
 
 Please see the [issues](https://github.com/AndlyticsProject/andlytics/issues) section to
 report any bugs or feature requests and to see the list of known issues.
 
 ## License
 
-* [Apache Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
+     Copyright 2012 Timelappse
+     Copyright 2012 Andlytics Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
 
 # Description
 
@@ -34,6 +47,12 @@ On some devices AdMob accounts keep disappearing, moving Andlytics from sdcard t
 For AdMob accounts that are linked to a Google Account you can find the API password on the Account Information page http://www.admob.com/my_account/account_info.
 
 Keywords: Developer console, developer tools, android developers
+
+## Nightly builds
+
+* http://andlytics.schoentoon.com/andlytics.apk
+
+You can check which commit it's build from at http://andlytics.schoentoon.com/latest_version and it'll get updated everynight just past midnight (GMT +1)
 
 ## Contributing
 

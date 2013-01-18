@@ -32,6 +32,9 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 	private final boolean usesSmooth;
 	private final OnClickListener columnClickListener;
 	private final int listItemTextSize;
+	private final int colorOdd;
+	private final int colorEven;
+	
 
 	public abstract int getNumPages();
 
@@ -90,6 +93,9 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		listItemTextSize = activity.getResources().getDimensionPixelSize(R.dimen.chart_list_item_text_size);
 		currentPage = 0;
 		currentColumn = 1;
+		
+		colorOdd = activity.getResources().getColor(R.color.rowLight);
+		colorEven = activity.getResources().getColor(R.color.rowDark);
 
 		columnClickListener = new OnClickListener() {
 
@@ -136,9 +142,16 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 			convertView.setTag(holder);
 
 		} else {
-
 			holder = (ViewHolder) convertView.getTag();
 		}
+		
+		// coloring table rows
+		if (1 == position % 2) {			
+			convertView.setBackgroundColor(colorOdd);
+		} else {
+			convertView.setBackgroundColor(colorEven);
+		}
+		
 		// First field always will be the date
 		Typeface typeface = holder.fields[0].getTypeface();
 		for (i = 0; i < maxColumns; i++)

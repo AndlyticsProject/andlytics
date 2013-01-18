@@ -56,10 +56,7 @@
     <string name="export_files_replaced">Existing export files will be replaced</string>
     <string name="run_export">Run export</string>
     <string name="comment_no_user_info">A Google User</string>
-    <string name="comment_reply">Developer reply</string>
-    <string name="comments_details_full">Version %1$s on device: %2$s</string>
-    <string name="comments_details_version">Version %s</string>
-    <string name="comments_details_device">On device: %s</string>
+    <string name="comment_reply">Developer reply</string>    
     <string name="long_click_translate">Long click on comment for translation</string>
     <string name="load_more_comments">Load more comments</string>
     <string name="info_comments">The number of comments reported on the main screen may be higher than the number of comments shown here because of withdrawn / changed comments.</string>
@@ -148,6 +145,8 @@
     <string name="pref_disable_acra">Automatic error reports</string>
     <string name="pref_acra_disabled">Reporting disabled</string>
     <string name="pref_acra_enabled">Reporting enabled</string>
+    <string name="use_google_translate_app">Use Google Translate app</string>
+    <string name="use_google_translate_app_summary">Use the Google Translate app for translating comments, when available.</string>
     
     <!-- Errors -->
     <string name="network_error">A network error has occurred. Please try again later</string>
@@ -173,4 +172,9 @@
 	<string name="multiple_dev_accounts_title">Multiple Developer Accounts</string>
 	<string name="update_button">Update</string>
 	<string name="send_report_button">Send report</string>
+	
+	<string name="about_title">About Andlytics</string>
+    <string name="about_credits">Credits</string>
+	<string name="about_text">Andlytics is open source, please feel free to contribute via GitHub. This app is not associated with Google in any way.\n\nVisit us on:</string>
+	<string name="about_thirdsparty_credits_title">Used 3rd party libraries:</string>
 </resources>

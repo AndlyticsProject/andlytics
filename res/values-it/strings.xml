@@ -57,9 +57,6 @@
     <string name="run_export">Esporta dati</string>
     <string name="comment_no_user_info">Un Utente Google</string>
     <string name="comment_reply">Risposta dallo sviluppatore</string>
-    <string name="comments_details_full">Versione %1$s su dispositivo: %2$s</string>
-    <string name="comments_details_version">Versione %s</string>
-    <string name="comments_details_device">Su dispositivo: %s</string>
     <string name="long_click_translate">Tieni premuto su un commento per tradurlo</string>
     <string name="load_more_comments">Carica altri commenti</string>
     <string name="info_comments">Il numero dei commenti potrebbe essere maggiore dei commenti visualizzati qui a causa dei commenti ritirati o modificati.</string>
@@ -148,6 +145,8 @@
     <string name="pref_disable_acra">Invio automatico report errori</string>
     <string name="pref_acra_disabled">Invio automatico disabilitato</string>
     <string name="pref_acra_enabled">Invio automatico abilitato</string>
+    <string name="use_google_translate_app">Usa app Google Translate</string>
+    <string name="use_google_translate_app_summary">Usa app Google Translate per tradurre i commenti, se disponibile</string>
     
     <!-- Errors -->
     <string name="network_error">Errore di rete. Riprova più tardi.</string>
@@ -159,7 +158,7 @@
 	<string name="admob_invalid_token_error">Errore nell\'autenticazione dell\'account AdMob. Riprova più tardi.</string>
 	<string name="admob_generic_error">Impossibile caricare i dati da AdMob, riprova più tardi.</string>
 	<string name="admob_linked_accounts_error">Google non permette l\'accesso API agli account AdMob che sono legati ad un account Google. Stanno lavorando ad una nuova versione delle API che supporta OAuth.</string>
-	<string name="remote_interface_changed_error">Si è verificato un errore, probabilmente perchè l\'\interfaccia remota è cambiata\n\nSi prega di riportare l\'errore in modo che possa essere corretto. Per meglio identificare il problema verranno inviate informazioni sull\'errore (stacktrace) e sul tuo dispositivo come il nome del produttore, del modello, la versione del sistema operativo ecc.\n\nGrazie!</string>
+	<string name="remote_interface_changed_error">Si è verificato un errore, probabilmente perché l\'\interfaccia remota è cambiata\n\nSi prega di riportare l\'errore in modo che possa essere corretto. Per meglio identificare il problema verranno inviate informazioni sull\'errore (stacktrace) e sul tuo dispositivo come il nome del produttore, del modello, la versione del sistema operativo ecc.\n\nGrazie!</string>
 	<string name="multiple_dev_accounts_error">Il tuo account è collegato a più console sviluppatore. Questa funzionalità non è supportata da Andlytics.\n\nPuoi scollegare gli account addizionali o richiedere a Google una API pubblica per le statistiche delle app al seguente indirizzo:  \n\nhttp://support.google.com/googleplay\n\nCi dispiace :(</string>
 	<string name="stats_file_not_specified_error">File delle statistiche non valido.</string>
 	
@@ -173,4 +172,9 @@
 	<string name="multiple_dev_accounts_title">Account Sviluppatore Multipli</string>
 	<string name="update_button">Aggiorna</string>
 	<string name="send_report_button">Invia rapporto</string>
+	
+	<string name="about_title">Informazioni su Andlytics</string>
+    <string name="about_credits">Crediti</string>
+	<string name="about_text">Andlytics è open source, per favore sentiti liberod i contribuire via GitHub. Questa app non è associata con Google in alcun modo.\n\nVisita il nostro sito all\'indirizzo:</string>
+	<string name="about_thirdsparty_credits_title">Librerie di terze parti utilizzate:</string>
 </resources>

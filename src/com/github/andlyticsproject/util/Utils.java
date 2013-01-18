@@ -1,8 +1,6 @@
 package com.github.andlyticsproject.util;
 
-import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +11,7 @@ import java.util.Date;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -21,19 +20,18 @@ import android.os.Build;
 import android.util.Log;
 
 import com.github.andlyticsproject.AndlyticsApp;
-import com.github.andlyticsproject.io.MediaScannerWrapper;
 
 /**
  * Utility class for simple helper methods.
  */
 public final class Utils {
-	
+
 	private static final int MAX_STACKTRACE_CAUSE_DEPTH = 5;
 
 	/** Private constructor. */
 	private Utils() {
 	}
-	
+
 	public static String stackTraceToString(Throwable e) {
 		return stackTraceToString(e, 0);
 	}
@@ -52,12 +50,11 @@ public final class Utils {
 	}
 
 
-
 	/**
 	 * get the code of the actual version.
 	 * 
 	 * @param context
-	 *            the context
+	 * the context
 	 * @return the code of the actual version
 	 */
 	public static int getActualVersionCode(final Context context) {
@@ -76,7 +73,7 @@ public final class Utils {
 	 * get the name of the actual version.
 	 * 
 	 * @param context
-	 *            the context
+	 * the context
 	 * @return the name of the actual version
 	 */
 	public static String getActualVersionName(final Context context) {
@@ -106,38 +103,6 @@ public final class Utils {
 
 	public static boolean isFroyo() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
-	}
-
-	public static void scanFile(Context ctx, String filename) {
-		if (isFroyo()) {
-			MediaScannerWrapper.scanFile(ctx, filename);
-		}
-	}
-
-	public static void closeSilently(Closeable c) {
-		if (c != null) {
-			try {
-				c.close();
-			} catch (Exception e) {
-			}
-		}
-	}
-
-	public static String readFileAsString(String filename) {
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream(filename);
-			byte[] data = new byte[in.available()];
-			in.read(data);
-
-			return new String(data, "UTF-8");
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (in != null) {
-				Utils.closeSilently(in);
-			}
-		}
 	}
 
 	public static void getAndSaveToFile(URL url, File file) throws IOException {
@@ -184,6 +149,17 @@ public final class Utils {
 		cal.set(Calendar.MILLISECOND, 0);
 
 		return cal.getTimeInMillis();
+	}
+
+	public static boolean isPackageInstalled(Context ctx, String packageName) {
+		try {
+			ApplicationInfo info = ctx.getPackageManager().getApplicationInfo(packageName, 0);
+
+			// need this to cover multi-user env (4.2 tablets, etc.)
+			return (info.flags & ApplicationInfo.FLAG_INSTALLED) == ApplicationInfo.FLAG_INSTALLED;
+		} catch (PackageManager.NameNotFoundException e) {
+			return false;
+		}
 	}
 
 }

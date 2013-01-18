@@ -56,10 +56,7 @@
     <string name="export_files_replaced">Los archivos existentes serán reemplazados</string>
     <string name="run_export">Exportar</string>
     <string name="comment_no_user_info">Un usuario de Google</string>
-    <string name="comment_reply">Respuesta del desarrollador</string>
-    <string name="comments_details_full">Versión %1$s en el dispositivo: %2$s</string>
-    <string name="comments_details_version">Versión %s</string>
-    <string name="comments_details_device">En dispositivo: %s</string>
+    <string name="comment_reply">Respuesta del desarrollador</string>    
     <string name="long_click_translate">Mantenga pulsado un comentario para traducirlo</string>
     <string name="load_more_comments">Cargar más comentarios</string>
     <string name="info_comments">El número de comentarios reportados en la pantalla principal puede ser mayor a los que aparecen aquí a causa de los comentarios modificados.</string>
@@ -67,7 +64,7 @@
     <string name="time_frame">Intervalo de tiempo</string>
     <string name="seven_days">Últimos 7 días</string>
     <string name="thirty_days">Últimos 30 días</string>
-    <string name="ninety_days">Últimos 90 dias</string>
+    <string name="ninety_days">Últimos 90 días</string>
     <string name="unlimited">Ilimitado</string>
     <string name="date_format">Formato de fecha</string>
     <string name="locale_default">Idioma por defecto</string>
@@ -99,7 +96,7 @@
     <string name="admob__revenue">Ganancias</string>
     <string name="admob__epc">epc</string>
     <string name="admob__requests">Peticiones</string>
-    <string name="admob__clicks">Clics</string>
+    <string name="admob__clicks">Clicks</string>
     <string name="admob__fill_rate">Tasa de relleno</string>
     <string name="admob__eCPM">eCPM</string>
     <string name="admob__impressions">Impresiones</string>
@@ -148,6 +145,8 @@
     <string name="pref_disable_acra">Envío automático de errores</string>
     <string name="pref_acra_disabled">Envío deshabilitado</string>
     <string name="pref_acra_enabled">Envío habilitado</string>
+    <string name="use_google_translate_app">Utilizar la app de Google Translate</string>
+    <string name="use_google_translate_app_summary">Utilizar la aplicación Google Translate, cuando esté disponible, para traducir los comentarios.</string>
     
     <!-- Errors -->
     <string name="network_error">Ha ocurrido un problema de red. Por favor, inténtalo más tarde</string>
@@ -173,4 +172,9 @@
 	<string name="multiple_dev_accounts_title">Multiples Cuentas de Desarrollador</string>
 	<string name="update_button">Actualización</string>
 	<string name="send_report_button">Enviar informe</string>
+	
+	<string name="about_title">Acerca de Andlytics</string>
+    <string name="about_credits">Créditos</string>
+	<string name="about_text">Andlytics es open source, puedes contribuir libremente vía GitHub. Esta aplicación no está asociada con Google de ninguna forma.\n\nVisítanos en:</string>
+	<string name="about_thirdsparty_credits_title">Librerías de terceros utilizadas:</string>
 </resources>

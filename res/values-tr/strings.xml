@@ -56,9 +56,6 @@
     <string name="run_export">Dışa aktarmayı başlat</string>
     <string name="comment_no_user_info">Bir Google Kullanıcısı</string>
     <string name="comment_reply">Geliştirici cevabı</string>
-    <string name="comments_details_full">%2$s cihazındaki versiyon %1$s</string>
-    <string name="comments_details_version">Versiyon %s</string>
-    <string name="comments_details_device">Cihaz: %s</string>
     <string name="long_click_translate">Çeviri için yoruma uzun basınız</string>
     <string name="load_more_comments">Daha fazla yorum yükle</string>
     <string name="info_comments">Anasayfadaki yorum sayısı buradaki yorum sayısından fazla olabilir çünkü bazı yorumlar değiştirilmiş ya da silinmiş olabilir.</string>
@@ -136,7 +133,7 @@
     
     <string name="manage_accounts">Hesapları yönet</string>
     <string name="preferences">Tercihler</string>
-    <string name="loading_app_list">Uygulama listesi yükleniyor...</string>
+    <string name="loading_app_list">Uygulama listesi yükleniyor&#8230;</string>
     <string name="no_published_apps">Yayınlanmış uygulama bulunamadı</string>
     
     <string name="general_preferences">Genel Tercihler</string>
@@ -147,6 +144,8 @@
     <string name="pref_disable_acra">Otomatik hata raporları</string>
     <string name="pref_acra_disabled">Raporlama devre dışı</string>
     <string name="pref_acra_enabled">Raporlama devrede</string>
+    <string name="use_google_translate_app">Google Çevirici uygulamasını kullan</string>
+    <string name="use_google_translate_app_summary">Yorumları çevirmek için uygun olduğunda Google Çevirici uygulamasını kullan</string>
     
     <!-- Errors -->
     <string name="network_error">Network hatası oluştu.Lütfen daha sonra tekrar deneyin.</string>
@@ -172,4 +171,9 @@
 	<string name="multiple_dev_accounts_title">Birden fazla geliştirici hesabı</string>
 	<string name="update_button">Güncelle</string>
 	<string name="send_report_button">Rapor Gönder</string>
+	
+	<string name="about_title">Andlytics Hakkında</string>
+    <string name="about_credits">Emeği Geçenler</string>
+	<string name="about_text">Andlytics açık kaynak kodlu,GitHub ile istediğiniz zaman katkıda bulunabilirsiniz. Bu uygulamanın Google ile hiç bir ilişkisi yoktur.\n\nŞu adresten bizi ziyaret ediniz:</string>
+	<string name="about_thirdsparty_credits_title">3. Parti kullanılan kütüphaneler:</string>
 </resources>

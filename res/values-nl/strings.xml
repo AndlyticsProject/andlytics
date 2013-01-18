@@ -57,9 +57,6 @@
     <string name="run_export">Start exporteren</string>
     <string name="comment_no_user_info">Een Google Gebruiker</string>
     <string name="comment_reply">Antwoord van ontwikkelaar</string>
-    <string name="comments_details_full">Versie %1$s op apparaat: %2$s</string>
-    <string name="comments_details_version">Versie %s</string>
-    <string name="comments_details_device">Op apparaat: %s</string>
     <string name="long_click_translate">Lange klik op opmerking voor de vertaling</string>
     <string name="load_more_comments">Laad meer opmerkingen</string>
     <string name="info_comments">Het gemelde aantal opmerking op het hoofdscherm kan hoger uitvallen dan het aantal opmerkingen getoond hier, doordat opmerkingen zijn teruggetrokken of veranderd.</string>
@@ -148,6 +145,8 @@
     <string name="pref_disable_acra">Automatische fout rapportage</string>
     <string name="pref_acra_disabled">Rapportage uitgeschakeld</string>
     <string name="pref_acra_enabled">Rapportage ingeschakeld</string>
+    <string name="use_google_translate_app">Gebruik de Vertalen app van Google</string>
+    <string name="use_google_translate_app_summary">Gebruik de Vertalen app van Google voor vertalen van opmerkingen, indien beschikbaar</string>
     
     <!-- Errors -->
     <string name="network_error">Een netwerkfout is opgetreden. Probeer het later nog eens.</string>
@@ -173,4 +172,9 @@
 	<string name="multiple_dev_accounts_title">Meerdere Ontwikkelaarsaccounts</string>
 	<string name="update_button">Bijwerken</string>
 	<string name="send_report_button">Verstuur rapport</string>
+	
+	<string name="about_title">Over Andlytics</string>
+    <string name="about_credits">Met dank aan</string>
+	<string name="about_text">Andlytics is open source; zelf bijdragen kan via GitHub. Deze app is op geen enkele manier geassocieerd met Google.\n\nBezoek ons op:</string>
+	<string name="about_thirdsparty_credits_title">Gebruikte bibliotheken van derden:</string>
 </resources>
