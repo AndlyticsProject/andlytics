@@ -145,6 +145,8 @@
     <string name="pref_disable_acra">Invio automatico report errori</string>
     <string name="pref_acra_disabled">Invio automatico disabilitato</string>
     <string name="pref_acra_enabled">Invio automatico abilitato</string>
+    <string name="use_google_translate_app">Usa app Google Translate</string>
+    <string name="use_google_translate_app_summary">Usa app Google Translate per tradurre i commenti, se disponibile</string>
     
     <!-- Errors -->
     <string name="network_error">Errore di rete. Riprova più tardi.</string>
@@ -170,4 +172,9 @@
 	<string name="multiple_dev_accounts_title">Account Sviluppatore Multipli</string>
 	<string name="update_button">Aggiorna</string>
 	<string name="send_report_button">Invia rapporto</string>
+	
+	<string name="about_title">Informazioni su Andlytics</string>
+    <string name="about_credits">Crediti</string>
+	<string name="about_text">Andlytics è open source, per favore sentiti liberod i contribuire via GitHub. Questa app non è associata con Google in alcun modo.\n\nVisita il nostro sito all\'indirizzo:</string>
+	<string name="about_thirdsparty_credits_title">Librerie di terze parti utilizzate:</string>
 </resources>
