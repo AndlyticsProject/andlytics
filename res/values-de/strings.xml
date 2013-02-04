@@ -139,7 +139,7 @@
     
     <string name="general_preferences">Allgemeine Einstellungen</string>
     <string name="account_specific_preferences">Kontospezifische Einstellungen</string>
-    <string name="notification_when_account_visible">Fall App sichtbar ist</string>
+    <string name="notification_when_account_visible">Falls App sichtbar ist</string>
     <string name="notification_when_account_visible_summary">Benachrichtigungen anzeigen für das aktuelle Konto, auch wenn die Anwendung gerade angezeigt wird</string>
     <string name="hide_admob_for_unconfigured_apps">AdMob Reiter für nicht konfigurierte Apps verstecken</string>
     <string name="pref_disable_acra">Automatische Fehler-Reports</string>
