@@ -9,9 +9,9 @@ import org.apache.http.cookie.Cookie;
 public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 
 	protected static final Pattern DEV_ACC_PATTERN = Pattern
-				.compile("\"DeveloperConsoleAccounts\":\"\\[null,\\[\\[null,\\\\\\\"(\\d{20})\\\\\\\",\\\\\\\"(.+?)\\\\\\\",\\d]");
+			.compile("\"DeveloperConsoleAccounts\":\"\\{\\\\\"1\\\\\":\\[\\{\\\\\"1\\\\\":\\\\\"(\\d{20})\\\\\"");
 	protected static final Pattern XSRF_TOKEN_PATTERN = Pattern
-				.compile("\"XsrfToken\":\"\\[null,\\\\\"(\\S+)\\\\\"\\]");
+			.compile("\"XsrfToken\":\"\\{\\\\\"1\\\\\":\\\\\"(\\S+)\\\\\"\\}\"");
 
 	protected String accountName;
 
@@ -41,7 +41,7 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 		if (m.find()) {
 			return m.group(1);
 		}
-	
+
 		return null;
 	}
 
