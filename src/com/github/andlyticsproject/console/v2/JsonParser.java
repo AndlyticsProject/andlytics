@@ -114,11 +114,7 @@ public class JsonParser {
 		Date now = new Date();
 		List<AppInfo> apps = new ArrayList<AppInfo>();
 		// Extract the base array containing apps
-		JSONObject j = new JSONObject(json);
-		if (DEBUG) {
-			pp("AppInfo JSON", j);
-		}
-		JSONObject result = j.getJSONObject("result");
+		JSONObject result = new JSONObject(json).getJSONObject("result");
 		if (DEBUG) {
 			pp("result", result);
 		}
@@ -136,15 +132,15 @@ public class JsonParser {
 			// 1 : { 1: package name, 
 			//       2 : { 1: [{1 : lang, 2: name, 3: description, 4: ??, 5: what's new}], 2 : ?? }, 
 			//       3 : ??, 
-			//       4 : update history?, 
+			//       4 : update history, 
 			//       5 : price, 
-			//       6 : update date?, 
+			//       6 : update date, 
 			//       7 : state? 
 			//     }
 			// 2 : {}
 			// 3 : { 1: active dnd, 2: # ratings, 3: avg rating, 4: ???, 5: total dnd }   
 
-			//XXX
+			// arrays have changed to objects, with the index as the key
 			/*
 			 * Per app:
 			 * null
@@ -251,7 +247,7 @@ public class JsonParser {
 			 * Total installs
 			 */
 			// XXX this index might not be correct for all apps?
-			//3 : { 1: active dnd, 2: # ratings, 3: avg rating, 4: #errors?, 5: total dnd }   
+			// 3 : { 1: active dnd, 2: # ratings, 3: avg rating, 4: #errors?, 5: total dnd }   
 			JSONObject jsonAppStats = jsonApp.optJSONObject("3");
 			if (DEBUG) {
 				pp("jsonAppStats", jsonAppStats);
