@@ -13,6 +13,7 @@ import android.util.Log;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
+import com.github.andlyticsproject.util.FileUtils;
 
 /**
  * This class contains static methods used to parse JSON from {@link DevConsoleV2}
@@ -41,12 +42,12 @@ public class JsonParser {
 	 */
 	static void parseRatings(String json, AppStats stats) throws JSONException {
 		// Extract just the array with the values
-		JSONArray values = new JSONObject(json).getJSONArray("result").getJSONArray(1)
-				.getJSONArray(0);
+		JSONObject values = new JSONObject(json).getJSONObject("result").getJSONArray("1")
+				.getJSONObject(0);
 
 		// Ratings are at index 2 - 6
-		stats.setRating(values.getInt(2), values.getInt(3), values.getInt(4), values.getInt(5),
-				values.getInt(6));
+		stats.setRating(values.getInt("2"), values.getInt("3"), values.getInt("4"),
+				values.getInt("5"), values.getInt("6"));
 
 	}
 
@@ -63,7 +64,7 @@ public class JsonParser {
 	 */
 	static void parseStatistics(String json, AppStats stats, int statsType) throws JSONException {
 		// Extract the top level values array
-		JSONArray values = new JSONObject(json).getJSONArray("result").getJSONArray(1);
+		JSONObject values = new JSONObject(json).getJSONObject("result").getJSONObject("1");
 		/*
 		 * null
 		 * Nested array [null, [null, Array containing historical data]]
@@ -78,14 +79,14 @@ public class JsonParser {
 		 */
 		// For now we just care about todays value, later we may delve into the historical and
 		// dimensioned data
-		JSONArray historicalData = values.getJSONArray(1).getJSONArray(1);
-		JSONArray latestData = historicalData.getJSONArray(historicalData.length() - 1);
+		JSONArray historicalData = values.getJSONObject("1").getJSONArray("1");
+		JSONObject latestData = historicalData.getJSONObject(historicalData.length() - 1);
 		/*
 		 * null
 		 * Date
 		 * [null, value]
 		 */
-		int latestValue = latestData.getJSONArray(2).getInt(1);
+		int latestValue = latestData.getJSONObject("2").getInt("1");
 
 		switch (statsType) {
 		case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
@@ -113,7 +114,11 @@ public class JsonParser {
 		Date now = new Date();
 		List<AppInfo> apps = new ArrayList<AppInfo>();
 		// Extract the base array containing apps
-		JSONArray jsonApps = new JSONObject(json).getJSONArray("result").getJSONArray(1);
+		JSONObject result = new JSONObject(json).getJSONObject("result");
+		if (DEBUG) {
+			pp("result", result);
+		}
+		JSONArray jsonApps = result.getJSONArray("1");
 		if (DEBUG) {
 			pp("jsonApps", jsonApps);
 		}
@@ -123,6 +128,19 @@ public class JsonParser {
 			AppInfo app = new AppInfo();
 			app.setAccount(accountName);
 			app.setLastUpdate(now);
+			// Per app:
+			// 1 : { 1: package name, 
+			//       2 : { 1: [{1 : lang, 2: name, 3: description, 4: ??, 5: what's new}], 2 : ?? }, 
+			//       3 : ??, 
+			//       4 : update history, 
+			//       5 : price, 
+			//       6 : update date, 
+			//       7 : state? 
+			//     }
+			// 2 : {}
+			// 3 : { 1: active dnd, 2: # ratings, 3: avg rating, 4: ???, 5: total dnd }   
+
+			// arrays have changed to objects, with the index as the key
 			/*
 			 * Per app:
 			 * null
@@ -146,12 +164,12 @@ public class JsonParser {
 			 * * Total installs
 			 * ]
 			 */
-			JSONArray jsonApp = jsonApps.getJSONArray(i);
-			JSONArray jsonAppInfo = jsonApp.getJSONArray(1);
+			JSONObject jsonApp = jsonApps.getJSONObject(i);
+			JSONObject jsonAppInfo = jsonApp.getJSONObject("1");
 			if (DEBUG) {
 				pp("jsonAppInfo", jsonAppInfo);
 			}
-			String packageName = jsonAppInfo.getString(1);
+			String packageName = jsonAppInfo.getString("1");
 			// Look for "tmp.7238057230750432756094760456.235728507238057230542"
 			if (packageName == null
 					|| (packageName.startsWith("tmp.") && Character.isDigit(packageName.charAt(4)))) {
@@ -164,7 +182,7 @@ public class JsonParser {
 			// Draft: 5
 			// Draft w/ in-app items?: 6
 			// TODO figure out the rest and add don't just skip, filter, etc. Cf. #223
-			int publishState = jsonAppInfo.getInt(7);
+			int publishState = jsonAppInfo.getInt("7");
 			Log.d(TAG, String.format("%s: publishState=%d", packageName, publishState));
 			if (publishState != 1) {
 				// Not a published app, skipping
@@ -186,11 +204,12 @@ public class JsonParser {
 				// skip if we can't get all the data
 				continue;
 			}
-			JSONArray appDetails = jsonAppInfo.getJSONArray(2).getJSONArray(1).getJSONArray(0);
+			JSONObject appDetails = jsonAppInfo.getJSONObject("2").getJSONArray("1")
+					.getJSONObject(0);
 			if (DEBUG) {
 				pp("appDetails", appDetails);
 			}
-			app.setName(appDetails.getString(2));
+			app.setName(appDetails.getString("2"));
 
 			/*
 			 * Per app version details:
@@ -202,20 +221,21 @@ public class JsonParser {
 			 * null
 			 * Array with app icon [null,null,null,icon]
 			 */
-			JSONArray appVersions = jsonAppInfo.optJSONArray(4);
+			// XXX
+			JSONArray appVersions = jsonAppInfo.optJSONArray("4");
 			if (DEBUG) {
 				pp("appVersions", appVersions);
 			}
 			if (appVersions == null) {
 				continue;
 			}
-			JSONArray lastAppVersionDetails = appVersions.getJSONArray(appVersions.length() - 1)
-					.getJSONArray(2);
+			JSONObject lastAppVersionDetails = appVersions.getJSONObject(appVersions.length() - 1)
+					.getJSONObject("2");
 			if (DEBUG) {
 				pp("lastAppVersionDetails", lastAppVersionDetails);
 			}
-			app.setVersionName(lastAppVersionDetails.getString(4));
-			app.setIconUrl(lastAppVersionDetails.getJSONArray(6).getString(3));
+			app.setVersionName(lastAppVersionDetails.getString("4"));
+			app.setIconUrl(lastAppVersionDetails.getJSONObject("6").getString("3"));
 
 			// App stats
 			/*
@@ -227,7 +247,8 @@ public class JsonParser {
 			 * Total installs
 			 */
 			// XXX this index might not be correct for all apps?
-			JSONArray jsonAppStats = jsonApp.optJSONArray(3);
+			// 3 : { 1: active dnd, 2: # ratings, 3: avg rating, 4: #errors?, 5: total dnd }   
+			JSONObject jsonAppStats = jsonApp.optJSONObject("3");
 			if (DEBUG) {
 				pp("jsonAppStats", jsonAppStats);
 			}
@@ -236,16 +257,16 @@ public class JsonParser {
 			}
 			AppStats stats = new AppStats();
 			stats.setRequestDate(now);
-			if (jsonAppStats.length() < 6) {
+			if (jsonAppStats.length() < 4) {
 				// no statistics (yet?) or weird format
 				// TODO do we need differentiate?
 				stats.setActiveInstalls(0);
 				stats.setTotalDownloads(0);
 				stats.setNumberOfErrors(0);
 			} else {
-				stats.setActiveInstalls(jsonAppStats.getInt(1));
-				stats.setTotalDownloads(jsonAppStats.getInt(5));
-				stats.setNumberOfErrors(jsonAppStats.optInt(4));
+				stats.setActiveInstalls(jsonAppStats.getInt("1"));
+				stats.setTotalDownloads(jsonAppStats.getInt("5"));
+				stats.setNumberOfErrors(jsonAppStats.optInt("4"));
 			}
 			app.setLatestStats(stats);
 
@@ -257,8 +278,19 @@ public class JsonParser {
 
 	private static void pp(String name, JSONArray jsonArr) {
 		try {
-			Log.d(TAG,
-					String.format("%s: %s", name, jsonArr == null ? "null" : jsonArr.toString(2)));
+			String pp = jsonArr == null ? "null" : jsonArr.toString(2);
+			Log.d(TAG, String.format("%s: %s", name, pp));
+			FileUtils.writeToDebugDir(name + "-pp.json", pp);
+		} catch (JSONException e) {
+			Log.w(TAG, "Error printing JSON: " + e.getMessage(), e);
+		}
+	}
+
+	private static void pp(String name, JSONObject jsonObj) {
+		try {
+			String pp = jsonObj == null ? "null" : jsonObj.toString(2);
+			Log.d(TAG, String.format("%s: %s", name, pp));
+			FileUtils.writeToDebugDir(name + "-pp.json", pp);
 		} catch (JSONException e) {
 			Log.w(TAG, "Error printing JSON: " + e.getMessage(), e);
 		}
@@ -278,7 +310,7 @@ public class JsonParser {
 		 * Array containing arrays of comments
 		 * numberOfComments
 		 */
-		return new JSONObject(json).getJSONArray("result").getInt(2);
+		return new JSONObject(json).getJSONObject("result").getInt("2");
 	}
 
 	/**
@@ -295,11 +327,11 @@ public class JsonParser {
 		 * Array containing arrays of comments
 		 * numberOfComments
 		 */
-		JSONArray jsonComments = new JSONObject(json).getJSONArray("result").getJSONArray(1);
+		JSONArray jsonComments = new JSONObject(json).getJSONObject("result").getJSONArray("1");
 		int count = jsonComments.length();
 		for (int i = 0; i < count; i++) {
 			Comment comment = new Comment();
-			JSONArray jsonComment = jsonComments.getJSONArray(i);
+			JSONObject jsonComment = jsonComments.getJSONObject(i);
 			/*
 			 * null
 			 * "gaia:17919762185957048423:1:vm:11887109942373535891", -- ID?
@@ -348,28 +380,28 @@ public class JsonParser {
 			 * 1
 			 * ]
 			 */
-			String user = jsonComment.getString(2);
-			if (user != null && !"null".equals(user)) {
+			String user = jsonComment.optString("2");
+			if (user != null && !"".equals(user) && !"null".equals(user)) {
 				comment.setUser(user);
 			}
-			comment.setDate(parseDate(jsonComment.getLong(3)));
-			comment.setRating(jsonComment.getInt(4));
-			String version = jsonComment.getString(8);
-			if (version != null && !version.equals("null")) {
+			comment.setDate(parseDate(jsonComment.getLong("3")));
+			comment.setRating(jsonComment.getInt("4"));
+			String version = jsonComment.optString("8");
+			if (version != null && !"".equals(version) && !version.equals("null")) {
 				comment.setAppVersion(version);
 			}
-			comment.setText(jsonComment.getString(6));
-			JSONArray jsonDevice = jsonComment.optJSONArray(9);
+			comment.setText(jsonComment.getString("6"));
+			JSONObject jsonDevice = jsonComment.optJSONObject("9");
 			if (jsonDevice != null) {
-				String device = jsonDevice.optString(3);
-				JSONArray extraInfo = jsonDevice.optJSONArray(2);
+				String device = jsonDevice.optString("3");
+				JSONObject extraInfo = jsonDevice.optJSONObject("2");
 				if (extraInfo != null) {
-					device += " " + extraInfo.optString(0);
+					device += " " + extraInfo.optString("0");
 				}
 				comment.setDevice(device.trim());
 			}
 
-			JSONArray jsonReply = jsonComment.optJSONArray(11);
+			JSONArray jsonReply = jsonComment.optJSONArray("11");
 			if (jsonReply != null) {
 				Comment reply = new Comment(true);
 				reply.setText(jsonReply.getString(1));
