@@ -68,7 +68,7 @@ public class Preferences {
 	public static final String USE_GOOGLE_TRANSLATE_APP = "use.google.translate.app";
 
 	public enum Timeframe {
-		LAST_NINETY_DAYS, LAST_THIRTY_DAYS, UNLIMITED, LAST_TWO_DAYS, LATEST_VALUE, LAST_SEVEN_DAYS
+		LAST_NINETY_DAYS, LAST_THIRTY_DAYS, UNLIMITED, LAST_TWO_DAYS, LATEST_VALUE, LAST_SEVEN_DAYS, MONTH_TO_DATE
 	}
 
 	public enum StatsMode {

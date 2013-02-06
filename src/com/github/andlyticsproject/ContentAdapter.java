@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -74,6 +75,8 @@ public class ContentAdapter {
 			limit = 2;
 		} else if (currentTimeFrame.equals(Timeframe.LATEST_VALUE)) {
 			limit = 1;
+		} else if (currentTimeFrame.equals(Timeframe.MONTH_TO_DATE)) {
+			limit = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		}
 
 		Cursor cursor = context.getContentResolver().query(
@@ -582,6 +585,8 @@ public class ContentAdapter {
 			limit = 2;
 		} else if (currentTimeFrame.equals(Timeframe.LATEST_VALUE)) {
 			limit = 1;
+		} else if (currentTimeFrame.equals(Timeframe.MONTH_TO_DATE)) {
+			limit = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		}
 
 		Cursor cursor = context.getContentResolver().query(

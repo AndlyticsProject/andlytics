@@ -26,6 +26,9 @@
                 <item
                     android:id="@+id/itemChartsmenuTimeframeUnlimited"
                     android:title="@string/unlimited"/>
+                <item
+                    android:id="@+id/itemChartsmenuTimeframeMonthToDate"
+                    android:title="@string/month_to_date"/>
             </group>
         </menu>
     </item>
