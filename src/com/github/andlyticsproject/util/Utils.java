@@ -151,11 +151,17 @@ public final class Utils {
 		return cal.getTimeInMillis();
 	}
 
+	@SuppressLint("InlinedApi")
 	public static boolean isPackageInstalled(Context ctx, String packageName) {
 		try {
 			ApplicationInfo info = ctx.getPackageManager().getApplicationInfo(packageName, 0);
 
 			// need this to cover multi-user env (4.2 tablets, etc.)
+			// previous version don't set FLAG_INSTALLED
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+				return true;
+			}
+
 			return (info.flags & ApplicationInfo.FLAG_INSTALLED) == ApplicationInfo.FLAG_INSTALLED;
 		} catch (PackageManager.NameNotFoundException e) {
 			return false;

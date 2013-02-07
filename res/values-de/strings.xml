@@ -10,7 +10,7 @@
     <string name="crash_dont_show_again">Nicht mehr anzeigen</string>
     <string name="newversion_desc"><b>Ein unvorhergesehener Fehler ist aufgetreten, wahrscheinlich weil es Änderungen im Play Store gab.</b>\n\nDie gute Nachricht: Es gibt bereits eine neue Version von Andlytics.\n\nBitte updaten Sie bevor Sie diesen Fehler melden.\n\nDanke!\n\n\n</string>
     <string name="account_required">Bitte wählen Sie die Konten aus, die von Andlytics verwendet werden sollen.</string>
-    <string name="account_choose">Konten müssen als Android Entwickler Konten registriert sein, mit veröffentlichten Apps auf Google Play (\'Google Apps for Business\' und Konten die für mehrere Entwickler-Konsolen verwendet werden, werden aktuell noch nicht unterstützt).</string>
+    <string name="account_choose">Konten müssen als Android Entwickler Konten registriert sein, mit veröffentlichten Apps auf Google Play (\'Google Apps for Business\' und Konten die für mehrere Entwicklerkonsolen verwendet werden, werden aktuell noch nicht unterstützt).</string>
     <string name="account_add">Android Developer Account hinzufügen</string>
     <string name="logout">Abmelden</string>
     <string name="refresh">Aktualisieren</string>
@@ -142,11 +142,11 @@
     <string name="notification_when_account_visible">Falls App sichtbar ist</string>
     <string name="notification_when_account_visible_summary">Benachrichtigungen anzeigen für das aktuelle Konto, auch wenn die Anwendung gerade angezeigt wird</string>
     <string name="hide_admob_for_unconfigured_apps">AdMob Reiter für nicht konfigurierte Apps verstecken</string>
-    <string name="pref_disable_acra">Automatische Fehler-Reports</string>
+    <string name="pref_disable_acra">Automatische Fehlerreports</string>
     <string name="pref_acra_disabled">Reporting deaktiviert</string>
     <string name="pref_acra_enabled">Reporting aktiviert</string>
-    <string name="use_google_translate_app">Google Translate App verwenden</string>
-    <string name="use_google_translate_app_summary">Google Translate App für Übersetzungen verwenden, sofern vorhanden</string>
+    <string name="use_google_translate_app">Google Translate verwenden</string>
+    <string name="use_google_translate_app_summary">Die App \'Google Übersetzer\' für Übersetzungen verwenden, sofern vorhanden</string>
     
     <!-- Errors -->
     <string name="network_error">Ein Verbindungsfehler ist aufgetreten. Bitte versuchen Sie es später noch einmal.</string>
@@ -158,8 +158,8 @@
 	<string name="admob_invalid_token_error">Fehler beim Authentifizieren des AdMob Kontos. Bitte versuchen Sie es später noch einmal</string>
 	<string name="admob_generic_error">AdMob Daten konnten nicht geladen werden. Bitte veruschen Sie es später noch einmal</string>
 	<string name="admob_linked_accounts_error">AdMob Konten die mit Google Konten verknüpft sind wurde von Google der API Zugriff gesperrt. Google arbeitet an einer neuen Version der API, die OAuth unterstützt.</string>
-	<string name="remote_interface_changed_error">Updates sind momentan nicht möglich, höchstwahrscheinlich da Google ihre Schnittstellen verändert hat.\n\nBitte sendet den Fehler-Report, um uns bei der Behebung zu unterstützen. Informationen zum Fehler (Stacktrace) und zum Gerät, wie der Herstellername, Modelnummer, Android-Version, etc. werden uns dann geschickt und helfen und das Problem zu finden.\n\nVielen Dank!</string>
-	<string name="multiple_dev_accounts_error">Dieses Konto ist mit mehreren Entwickler-Konsolen verbunden. Dies wird aktuell von Andlytics noch nicht unterstützt.\n\nSie können die Konten von der Entwickler-Konsole entfernen oder bei Google eine öffentliche Schnittstelle hierfür fordern unter: \n\nhttp://support.google.com/googleplay\n\nSorry :(</string>
+	<string name="remote_interface_changed_error">Updates sind momentan nicht möglich, höchstwahrscheinlich da Google ihre Schnittstellen verändert hat.\n\nBitte sendet den Fehlerreport, um uns bei der Behebung zu unterstützen. Informationen zum Fehler (Stacktrace) und zum Gerät, wie der Herstellername, Modelnummer, Android-Version, etc. werden uns dann geschickt und helfen und das Problem zu finden.\n\nVielen Dank!</string>
+	<string name="multiple_dev_accounts_error">Dieses Konto ist mit mehreren Entwicklerkonsolen verbunden. Dies wird aktuell von Andlytics noch nicht unterstützt.\n\nSie können die Konten von der Entwicklerkonsole entfernen oder bei Google eine öffentliche Schnittstelle hierfür fordern unter: \n\nhttp://support.google.com/googleplay\n\nSorry :(</string>
 	<string name="stats_file_not_specified_error">Statistikdatei ist nicht als Dateneingabe festgelegt</string>
 	
 	<string name="admob_initial_import">Initialer AdMob Import, bitte haben Sie Geduld&#8230;</string>
@@ -169,7 +169,7 @@
 	<string name="admob_auth_failed">Fehler: Authentifizierung fehlgeschlagen</string>
 	<string name="admob_wrong_password">Fehler: Falsches Passwort</string>
 	<string name="update_required_title">Verzeihung, Aktualisierung notwendig</string>
-	<string name="multiple_dev_accounts_title">Mehrfach verwendete Entwickler-Konten</string>
+	<string name="multiple_dev_accounts_title">Mehrfach verwendete Entwicklerkonten</string>
 	<string name="update_button">Aktualisieren</string>
 	<string name="send_report_button">Report senden</string>
 	

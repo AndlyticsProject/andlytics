@@ -90,7 +90,7 @@ public class DevConsoleV2Protocol {
 		post.addHeader("Content-Type", "application/json; charset=utf-8");
 		// XXX get this dynamically by fetching and executing the nocache.js file: 
 		// https://play.google.com/apps/publish/v2/gwt/com.google.wireless.android.vending.developer.fox.Fox.nocache.js
-		post.addHeader("X-GWT-Permutation", "C96CABBAF6CC3B517113CC559C9BCF67");
+		post.addHeader("X-GWT-Permutation", "EC203CA4CDFF1F0285B065B554E0D784");
 		post.addHeader("Origin", "https://play.google.com");
 		post.addHeader("X-GWT-Module-Base", "https://play.google.com/apps/publish/v2/gwt/");
 		post.addHeader("Referer", "https://play.google.com/apps/publish/v2/?dev_acc="
