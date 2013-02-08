@@ -127,6 +127,10 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements
 			activeTimeFrame = menu
 					.findItem(R.id.itemChartsmenuTimeframeUnlimited);
 			break;
+		case MONTH_TO_DATE:
+			activeTimeFrame = menu
+					.findItem(R.id.itemChartsmenuTimeframeMonthToDate);
+			break;
 		}
 		activeTimeFrame.setChecked(true);
 
@@ -180,6 +184,13 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements
 			currentTimeFrame = Timeframe.UNLIMITED;
 			executeLoadData(currentTimeFrame);
 			Preferences.saveChartTimeframe(Timeframe.UNLIMITED,
+					BaseChartActivity.this);
+			item.setChecked(true);
+			return true;
+		case R.id.itemChartsmenuTimeframeMonthToDate:
+			currentTimeFrame = Timeframe.MONTH_TO_DATE;
+			executeLoadData(currentTimeFrame);
+			Preferences.saveChartTimeframe(Timeframe.MONTH_TO_DATE,
 					BaseChartActivity.this);
 			item.setChecked(true);
 			return true;
