@@ -1,0 +1,17 @@
+Andlytics samlar statistik från Google Paly Developer Console. Appen låter dig följa aktiva installationer, antal installationer, betyg och kommentarer för alla dina androidappar på Google Play.
+
+Andlytics kan även samla in statistik från AdMob, inklusive intäkter, förfrågningar och visningar. Appen stödjer bakgrundssynkning av statistik och notifikationer vid förändringar.
+
+Google har inget API för statistikhantering. Av den anledningar kan Andlytics sluta fungera om Google gör förändringar på hemsidan. Händer detta ber vi dig om tålamod tills vi hunnit ikapp med uppdateringen.
+
+Andlytics är open source, bidra gärna via GitHub.
+
+Andlytics är inte officiellt kopplat till Google på något sätt.
+
+"Google Apps for Business" och flerkopplade utvecklarkonton stöds inte i nuläget.. Om du har ett  sådant konto, kontakta oss via GitHub och hjälp oss skapa stöd för detta.
+
+På vissa enheter försvinner AdMob-konton, att flytta Andlytics från SD-kortet till den interna lagringen kan hjälpa.
+
+För AdMob-konton länkade till ett Googlekonto, hittar du API-lösenordet på Kontoinformation http://www.admob.com/my_account/account_info.
+
+Taggar: Developer console, developer tools, android developers, androidutvecklare, utvecklarverktyg
