@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="EstadoNoCargado">No Cargado</string>
+    <string name="EstadoRechazado">Rechazado</string>
+    <string name="EstadoSemiCargado">Semi Cargado</string>
+    <string name="EstadoCargado">Cargado</string>
+    <string name="EstadoCargadoNoEnviado">Cargado / No Enviado</string>
+    <string name="EstadoCancelado">Cancelado</string>
+</resources>

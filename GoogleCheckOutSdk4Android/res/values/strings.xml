@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="EstadoNoCargado">Not Charged</string>
+    <string name="EstadoRechazado">Refused</string>
+    <string name="EstadoSemiCargado">Semi-Charged</string>
+    <string name="EstadoCargado">Charged</string>
+    <string name="EstadoCargadoNoEnviado">Charged / Not Send</string>
+    <string name="EstadoCancelado">Cancelled</string>
+</resources>
