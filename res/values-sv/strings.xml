@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="one_entry_hint_desc">Andlytics samlar data över tid. För att se meningsfulla grafer, kom tillbaka när mer data är tillgänglig.
+\n\nVanligtvis uppdateras nedladdningsstatistik var 24:e&#8211;48:e timme</string>
+
+    <string name="crash_dialog_title">Ledsen&#8230;</string>
+    <string name="crash_desc">Ett oväntat fel inträffade.\n\nHjälp oss ordna detta genom att skicka feldata. Information om felet (stacktrace) och enhetsinformation såsom tillverkare, modellnummer, operativsystem m.m. kommer skickas till oss för att lättare kunna identifiera problemet.\n\nTack!\n\n</string>
+    <string name="crash_toast">Ett oväntat fel inträffade.\n\nHjälp oss ordna detta genom att skicka feldata. Information om felet (stacktrace) och enhetsinformation såsom tillverkare, modellnummer, operativsystem m.m. kommer skickas till oss för att lättare kunna identifiera problemet.\n\nTack!\n\n</string>
+    <string name="crash_dont_show_again">Visa inte detta igen</string>
+    <string name="newversion_desc"><b>Ett oväntat fel inträffade, troligtvis beror detta på en uppdatering på servern.</b>\n\nMen den goda nyheten är att en ny version av Andlytics finns tillgänglig på Google Play.\n\nLadda ner uppdateringen innan du rapporterar ett eventuellt fel.\n\nTack!\n\n</string>
+    <string name="account_required">Välj de konton du vill koppla till Andlytics</string>
+    <string name="account_choose">Konton måste vara registrerade Developer Accounts med appar publiserade på Google Play (\'Google Apps for Business\' och konton länkade till flera Developer Consoles stöds inte ännu).</string>
+    <string name="account_add">Lägg till android utvecklarkonto</string>
+    <string name="logout">Logga ut</string>
+    <string name="refresh">Uppdatera</string>
+    <string name="comments">Kommentarer</string>
+    <string name="total_downloads">Totala nedladdningar</string>
+    <string name="active_installs">Aktiva installationer</string>
+    <string name="admob_revenue">AdMob-intäkter</string>
+    <string name="admob_requests">AdMob-förfrågningar</string>
+    <string name="average_rating">Medelbetyg</string>
+    <string name="ratings">Betyg</string>
+    <!-- Lower case versions for main screen e.g. X comments -->
+    <string name="num_comments">kommentarer</string>
+    <string name="num_total_downloads">totala nedladdningar</string>
+    <string name="num_active_installs">aktiva installationer</string>
+    <string name="num_average_rating">medelbetyg</string>
+    <string name="num_ratings">betyg</string>
+    
+    <string name="auto_sync">Autosynkronisering</string>
+    <string name="notifications">Notifikationer</string>
+    <string name="statistics_export">Statistikdataexport</string>
+    <string name="statistics_import">Statistikdataimport</string>
+    <string name="apps_hide">Välj appar att dölja</string>
+    <string name="feedback">Skicka feedback</string>
+    <string name="settings">Inställningar</string>
+    <string name="downloads">Nedladdningar</string>
+    <string name="close">Stäng</string>
+    <string name="rating_changes">Betygsförändringar</string>
+    <string name="comment_changes">Kommentarsförändringar</string>
+    <string name="download_changes">Nedladdningsförändringar</string>
+    <string name="notification_trigger">Notifikationstrigger</string>
+    <string name="notification_signal">Notifikationsljud</string>
+    <string name="notification_sound">Notifikationsljud</string>
+    <string name="notification_light">Notifikationsljus</string>
+    <string name="apps_notification">Appar för förändringsnotifikation</string>
+    <string name="select_files_import">Välj paket att importera</string>
+    <string name="data_replaced">Sparad information kommer att ersättas</string>
+    <string name="run_import">Kör import</string>
+    <string name="cancel">Avbryt</string>
+    <string name="ok">Ok</string>
+    <string name="title">Titel</string>
+    <string name="text">Text</string>
+    <string name="select_files_export">Välj appar att exportera</string>
+    <string name="export_files_replaced">Sparad information kommer att ersättas</string>
+    <string name="run_export">Kör export</string>
+    <string name="comment_no_user_info">En Google-användare</string>
+    <string name="comment_reply">Utvecklarsvar</string>    
+    <string name="long_click_translate">Långklicka på kommentaren för översättning</string>
+    <string name="load_more_comments">Ladda fler kommentarer</string>
+    <string name="info_comments">Antal kommentarer som visas på startsidan kan vara fler än antalet kommentarer som visas här pga. att kommentarer tagits bort eller ändrats.</string>
+    <string name="no_comments_found">Inga kommentarer funna</string>
+    <string name="time_frame">Tidsintervall</string>
+    <string name="seven_days">Senaste 7 dagarna</string>
+    <string name="thirty_days">Senaste 30 dagarna</string>
+    <string name="ninety_days">Senaste 90 dagarna</string>
+    <string name="unlimited">Obegränsad</string>
+    <string name="date_format">Datumformat</string>
+    <string name="locale_default">Standard locale</string>
+    <string name="ddmmyy">Dag/Månad/År</string>
+    <string name="yymmdd">År/Månad/Dag</string>
+    <string name="mmddyy">Månad/Dag/År</string>
+    <string name="smooth_values">Anpassat värde</string>
+    <string name="smoothed_values">*utjämnande värden</string>
+    <string name="info_smooth">Anpassat värde till graf för nerladdningar och aktiva installationer</string>
+    <string name="auto_sync_period">Autosynkroniseringsperiod</string>
+    <string name="admob_login">ADMOB ACCOUNT LOGIN</string>
+    <string name="password">Lösenord</string>
+    <string name="email">E-post</string>
+    <string name="login">Inloggning</string>
+    <string name="remove_admob">Ta bort AdMob</string>
+    <string name="loading_site">Laddar site-lista&#8230;</string>
+    <string name="select_admob_site">Välj AdMob-site att associera med denna app.</string>
+    <string name="choose_app">Välj din app</string>
+    <string name="admob_required">AdMob-konto krävs</string>
+    <string name="admob_add">Lägg till AdMob-konto</string>
+    <string name="admob_info">För AdMod-konton som är länkade till ett Googlekonto kan API-lösenordet hittas på AdMobs kontoinformation:</string>
+    <string name="percentage">Andel</string>
+    <string name="daily">Dagliga förändringar</string>
+    <string name="downloads_day">Nedladdningar per dag</string>
+    <string name="active_installs_percent">Aktiva installationer i procent</string>
+    <string name="swipe">Swajpa för att se nästa graf -></string>
+
+    <string name="admob">AdMob</string>
+    <string name="admob__revenue">Intäkt</string>
+    <string name="admob__epc">epc</string>
+    <string name="admob__requests">Förfrågningar</string>
+    <string name="admob__clicks">Klick</string>
+    <string name="admob__fill_rate">Fyllnadsgrad</string>
+    <string name="admob__eCPM">eCPM</string>
+    <string name="admob__impressions">Visningar</string>
+    <string name="admob__CTR">CTR</string>
+    <string name="admob__house_ad_clicks">House ad klick</string>
+    <string name="admob__charts_available">AdMob-grafer tillgängliga</string>
+    <string name="last_update">Senast uppdaterad</string>
+
+    <string name="changelog_title">Versionshistorik</string>
+    <string name="changelog_thanks">Tack för att du installerat Andlytics!</string>
+
+    <string name="notification_title">Andlyticsförändring upptäckt</string>
+
+    <string name="import_">Importera</string>
+    <string name="import_no_sdcard_or_file">SD-kortet är inte monterat eller fel filformat, kan inte importera!</string>
+    <string name="import_no_stats_file">Statistikfilen hittades inte: %1$s</string>
+    <string name="import_no_app">Ingen app vald, kan inte importera!</string>
+    <string name="importing">Importerar</string>
+    <string name="import_started">Import startad</string>
+    <string name="import_finished">Import slutförd.</string>
+    <string name="imported_apps">Iporterade %d appar.</string>
+    <string name="import_error">Fel under import.</string>
+    <string name="import_confirm_dialog_title">Bekräfta import</string>
+    <string name="import_confirm_dialog_message">Du har redan statistik för %d appar. En import kommer att skriva över. Forsätta med import?</string>
+	<string name="export_">Exportera</string>
+	<string name="export_no_sdcard">SD-kort är inte monterat, kan inte exportera!</string>
+	<string name="export_no_app">Ingen app vald, kan inte exportera.</string>
+	<string name="export_started">Export startad.</string>
+    <string name="export_finished">Export slutförd.</string>
+    <string name="export_failed_to_load_stats">Mysslyckades att ladda app-statistik.</string>
+    <string name="export_saved_to">Sparad till</string>
+    <string name="export_confirm_dialog_title">Bekräfta export</string>
+    <string name="export_confirm_dialog_message">En exportfil \'%s\' finns redan. En export av appstatistik kommer att skriva över. Forsätta med export?</string>
+    <string name="share">Dela</string>
+    
+    <string name="manage_accounts">Hantera konton</string>
+    <string name="preferences">Inställningar</string>
+    <string name="loading_app_list">Laddar app-lista...</string>
+    <string name="no_published_apps">Inga publicerade appar funna</string>
+    
+    <string name="general_preferences">Allmänna inställningar</string>
+    <string name="account_specific_preferences">Konto-specifika inställningar</string>
+    <string name="notification_when_account_visible">När app är synlig</string>
+    <string name="notification_when_account_visible_summary">Ge notifikation för detta konto även om appen är synlig</string>
+    <string name="hide_admob_for_unconfigured_apps">Dölj AdMob-tabben för okonfigurerade appar</string>
+    <string name="pref_disable_acra">Automatiska felrapporter</string>
+    <string name="pref_acra_disabled">Rapportering inaktiverad</string>
+    <string name="pref_acra_enabled">Rapportering aktiverad</string>
+    <string name="use_google_translate_app">Använd Google Translate</string>
+    <string name="use_google_translate_app_summary">Använd Google Translate för att översätta kommentarer, när det är tillgängligt</string>
+    
+    <!-- Errors -->
+    <string name="network_error">Ett nätverksfel har uppstått. Försök senare.</string>
+    <string name="signup_error">%1$s är inte ett android developer-konto, skaffa ett:\n\n %2$s</string>
+    <string name="auth_error">Autentisering misslyckades för: %1$s</string>
+    <string name="admob_ratelimit_error">Kan inte ladda AdMob-data eftersom AdMob har begränsat antalet förfrågningar för denna app. Försök igen senare.</string>
+    <string name="admob_missing_error">AdMob-kontot %1$s saknas. Om detta händer vid flera tillfällen, prova att flytta Andlytics från SD-kortet till telefonens interna lagring.</string>    
+	<string name="admob_invalid_request_error">Fel under Ad-Mob API-förfrågan</string>
+	<string name="admob_invalid_token_error">Fel vid autentisering av AdMob-konto. Försök igen senare.</string>
+	<string name="admob_generic_error">Kan inte ladda AdMob-data, försök senare.</string>
+	<string name="admob_linked_accounts_error">AdMob-konton som är länkade till Google-konton är inaktiverade att använda API av Goggle. Dom arbetar på en ny version av API:t som stödjer OAuth.</string>
+	<string name="remote_interface_changed_error">Ett oväntat fel inträffade.\n\nHjälp oss ordna detta genom att skicka feldata. Information om felet (stacktrace) och enhetsinformation såsom tillverkare, modellnummer, operativsystem m.m. kommer skickas till oss för att lättare kunna identifiera problemet.\n\nTack!\n\n</string>
+	<string name="multiple_dev_accounts_error">Ditt konto är länkat till flera developer consoles. Denna funktion stöds inte av Andlytics.\n\nDu kan ta bort länkning av flera konto eller ansöka hos Google om ett publikt statistik API på:\n\nhttp://support.google.com/googleplay\n\nSorry :(</string>
+	<string name="stats_file_not_specified_error">Statistikfilen är inte specificerad som data</string>
+	
+	<string name="admob_initial_import">Initial AdMob-import, detta kan ta lite tid&#8230;</string>
+	<string name="admob_data_prompt">Skriv in din email och ditt lösenord</string>
+	<string name="admob_password_prompt">Skriv in ditt lösenord</string>
+	<string name="admob_authenticating">Autentisierar&#8230;</string>
+	<string name="admob_auth_failed">Fel: Autentisering misslyckades</string>
+	<string name="admob_wrong_password">Fel: Fel lösenord</string>
+	<string name="update_required_title">Ledsen, uppdatering krävs</string>
+	<string name="multiple_dev_accounts_title">Flera Developer Accounts</string>
+	<string name="update_button">Uppdatera</string>
+	<string name="send_report_button">Skicka rapport</string>
+	
+	<string name="about_title">Om Andlytics</string>
+    <string name="about_credits">Tack till</string>
+	<string name="about_text">Andlytics är open source, bidra gärna via GitHub. Denna app är inte kopplad till Google på något sätt.\n\nBesök oss på:</string>
+	<string name="about_thirdsparty_credits_title">Använda tredjepartsbibliotek:</string>
+</resources>
