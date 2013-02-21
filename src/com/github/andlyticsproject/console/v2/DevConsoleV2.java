@@ -1,9 +1,15 @@
 package com.github.andlyticsproject.console.v2;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.util.Log;
+import com.github.andlyticsproject.console.AuthenticationException;
+import com.github.andlyticsproject.console.DevConsole;
+import com.github.andlyticsproject.console.DevConsoleException;
+import com.github.andlyticsproject.console.NetworkException;
+import com.github.andlyticsproject.model.AppInfo;
+import com.github.andlyticsproject.model.AppStats;
+import com.github.andlyticsproject.model.Comment;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpResponseException;
@@ -13,33 +19,25 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.util.Log;
-
-import com.github.andlyticsproject.console.AuthenticationException;
-import com.github.andlyticsproject.console.DevConsole;
-import com.github.andlyticsproject.console.DevConsoleException;
-import com.github.andlyticsproject.console.NetworkException;
-import com.github.andlyticsproject.model.AppInfo;
-import com.github.andlyticsproject.model.AppStats;
-import com.github.andlyticsproject.model.Comment;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is a WIP class representing the new v2 version of the developer console.
  * The aim is to build it from scratch to make it a light weight and as well
  * documented at the end as possible. Once it is done and available to all
  * users, we will rip out the old code and replace it with this.
- * 
+ *
  * Once v2 is available to all users, there is scope for better utilising the
  * available statistics data, so keep that in mind when developing this class.
  * For now though, keep it simple and get it working.
- * 
+ *
  * See https://github.com/AndlyticsProject/andlytics/wiki/Developer-Console-v2
  * for some more documentation
- * 
+ *
  * This class fetches the data, which is then passed using {@link JsonParser}
- * 
+ *
  */
 @SuppressLint("DefaultLocale")
 public class DevConsoleV2 implements DevConsole {
@@ -83,7 +81,7 @@ public class DevConsoleV2 implements DevConsole {
 
 	/**
 	 * Gets a list of available apps for the given account
-	 * 
+	 *
 	 * @param activity
 	 * @return
 	 * @throws DevConsoleException
@@ -114,8 +112,8 @@ public class DevConsoleV2 implements DevConsole {
 			// Latest stats object, and active/total installs is fetched
 			// in fetchAppInfos
 			AppStats stats = app.getLatestStats();
-			fetchRatings(app.getPackageName(), stats);
-			stats.setNumberOfComments(fetchCommentsCount(app.getPackageName()));
+			fetchRatings(app, stats);
+			stats.setNumberOfComments(fetchCommentsCount(app));
 		}
 
 		return apps;
@@ -124,7 +122,7 @@ public class DevConsoleV2 implements DevConsole {
 	/**
 	 * Gets a list of comments for the given app based on the startIndex and
 	 * count
-	 * 
+	 *
 	 * @param accountName
 	 * @param packageName
 	 * @param startIndex
@@ -133,105 +131,130 @@ public class DevConsoleV2 implements DevConsole {
 	 * @throws DevConsoleException
 	 */
 	public synchronized List<Comment> getComments(Activity activity, String packageName,
-			int startIndex, int count) throws DevConsoleException {
+			int whichDevAccount, int startIndex, int count) throws DevConsoleException {
 		try {
 			if (!authenticateWithCachedCredentialas(activity)) {
 				return new ArrayList<Comment>();
 			}
 
-			return fetchComments(packageName, startIndex, count);
+			return fetchComments(packageName, whichDevAccount, startIndex, count);
 		} catch (AuthenticationException ex) {
 			if (!authenticateFromScratch(activity)) {
 				return new ArrayList<Comment>();
 			}
 
-			return fetchComments(packageName, startIndex, count);
+			return fetchComments(packageName, whichDevAccount, startIndex, count);
 		}
 	}
 
 	/**
 	 * Fetches a list of apps for the given account
-	 * 
+	 *
 	 * @param accountName
 	 * @return
 	 * @throws DevConsoleException
 	 */
 	private List<AppInfo> fetchAppInfos() throws DevConsoleException {
-		String response = post(protocol.createFetchAppsUrl(), protocol.createFetchAppInfosRequest());
-
-		return protocol.parseAppInfosResponse(response, accountName);
+        List<AppInfo> appInfos = new ArrayList<AppInfo>();
+        for(int i=0;i<protocol.getSessionCredentials().getDeveloperAccountIds().length; i++) {
+            String response = post(protocol.createFetchAppsUrl(i), protocol.createFetchAppInfosRequest(i), i);
+            List<AppInfo> currentAppInfos = protocol.parseAppInfosResponse(response,  accountName);
+            for(AppInfo appInfo : currentAppInfos) {
+                appInfo.whichDevAccount = i;
+            }
+            appInfos.addAll(currentAppInfos);
+        }
+        return appInfos;
 	}
 
 	/**
 	 * Fetches statistics for the given packageName of the given statsType and
 	 * adds them to the given {@link AppStats} object
-	 * 
+	 *
 	 * This is not used as statistics can be fetched via fetchAppInfos Can use
 	 * it later to get historical etc data
-	 * 
+	 *
 	 * @param packageName
 	 * @param stats
 	 * @param statsType
 	 * @throws DevConsoleException
 	 */
 	@SuppressWarnings("unused")
-	private void fetchStatistics(String packageName, AppStats stats, int statsType)
+	private void fetchStatistics(AppInfo appInfo, AppStats stats, int statsType)
 			throws DevConsoleException {
-		String response = post(protocol.createFetchStatisticsUrl(),
-				protocol.createFetchStatisticsRequest(packageName, statsType));
-		protocol.parseStatisticsResponse(response, stats, statsType);
+        for(int i=0;i<protocol.getSessionCredentials().getDeveloperAccountIds().length;i++) {
+            if(appInfo.whichDevAccount == i) {
+                String response = post(protocol.createFetchStatisticsUrl(i), protocol.createFetchStatisticsRequest
+                        (appInfo.getPackageName(),  statsType), i);
+                protocol.parseStatisticsResponse(response, stats, statsType);
+            }
+        }
 	}
 
 	/**
 	 * Fetches ratings for the given packageName and adds them to the given
 	 * {@link AppStats} object
-	 * 
+	 *
 	 * @param packageName
 	 *            The app to fetch ratings for
 	 * @param stats
 	 *            The AppStats object to add them to
 	 * @throws DevConsoleException
 	 */
-	private void fetchRatings(String packageName, AppStats stats) throws DevConsoleException {
-		String response = post(protocol.createFetchCommentsUrl(),
-				protocol.createFetchRatingsRequest(packageName));
-		protocol.parseRatingsResponse(response, stats);
+	private void fetchRatings(AppInfo appInfo, AppStats stats) throws DevConsoleException {
+        for(int i=0;i<protocol.getSessionCredentials().getDeveloperAccountIds().length;i++) {
+            if(appInfo.whichDevAccount == i) {
+                String response = post(protocol.createFetchCommentsUrl(i), protocol.createFetchRatingsRequest
+                        (appInfo.getPackageName()), i);
+                protocol.parseRatingsResponse(response, stats);
+            }
+        }
 	}
 
 	/**
 	 * Fetches the number of comments for the given packageName
-	 * 
+	 *
 	 * @param packageName
 	 * @return
 	 * @throws DevConsoleException
 	 */
-	private int fetchCommentsCount(String packageName) throws DevConsoleException {
+	private int fetchCommentsCount(AppInfo appInfo) throws DevConsoleException {
 		// TODO -- this doesn't always produce correct results
 		// emulate the console: fetch first 50, get approx num. comments,
 		// fetch last 50 (or so) to get exact number.
-		int pageSize = 50;
+        int finalNumComments = 0;
+        for(int i=0;i<protocol.getSessionCredentials().getDeveloperAccountIds().length;i++) {
+            if(appInfo.whichDevAccount == i) {
+                int pageSize = 50;
 
-		String response = post(protocol.createFetchCommentsUrl(),
-				protocol.createFetchCommentsRequest(packageName, 0, pageSize));
-		int approxNumComments = protocol.extractCommentsCount(response);
-		if (approxNumComments <= pageSize) {
-			// this has a good chance of being exact
-			return approxNumComments;
-		}
+                String response = post(protocol.createFetchCommentsUrl(i),
+                        protocol.createFetchCommentsRequest(appInfo.getPackageName(), 0, pageSize), i);
+                int approxNumComments = protocol.extractCommentsCount(response);
+                if (approxNumComments <= pageSize) {
+                    // this has a good chance of being exact
+                    return approxNumComments;
+                }
 
-		response = post(protocol.createFetchCommentsUrl(), protocol.createFetchCommentsRequest(
-				packageName, approxNumComments - pageSize, pageSize));
-		int finalNumComments = protocol.extractCommentsCount(response);
+                response = post(protocol.createFetchCommentsUrl(i), protocol.createFetchCommentsRequest(
+                        appInfo.getPackageName(), approxNumComments - pageSize, pageSize), i);
+                finalNumComments += protocol.extractCommentsCount(response);
+            }
+        }
 
 		return finalNumComments;
 	}
 
-	private List<Comment> fetchComments(String packageName, int startIndex, int count)
+	private List<Comment> fetchComments(String packageName, int whichDevAccount, int startIndex, int count)
 			throws DevConsoleException {
-		String response = post(protocol.createFetchCommentsUrl(),
-				protocol.createFetchCommentsRequest(packageName, startIndex, count));
-
-		return protocol.parseCommentsResponse(response);
+        List<Comment> comments = new ArrayList<Comment>();
+        for(int i=0;i<protocol.getSessionCredentials().getDeveloperAccountIds().length;i++) {
+            if(whichDevAccount == i) {
+                String response = post(protocol.createFetchCommentsUrl(i),
+                        protocol.createFetchCommentsRequest(packageName, startIndex, count), i);
+                comments.addAll(protocol.parseCommentsResponse(response));
+            }
+        }
+		return comments;
 	}
 
 	private boolean authenticateWithCachedCredentialas(Activity activity) {
@@ -244,7 +267,7 @@ public class DevConsoleV2 implements DevConsole {
 
 	/**
 	 * Logs into the Android Developer Console
-	 * 
+	 *
 	 * @param reuseAuthentication
 	 * @throws DevConsoleException
 	 */
@@ -267,10 +290,10 @@ public class DevConsoleV2 implements DevConsole {
 		return protocol.hasSessionCredentials();
 	}
 
-	private String post(String url, String postData) {
+	private String post(String url, String postData, int whichDevAccount) {
 		try {
 			HttpPost post = new HttpPost(url);
-			protocol.addHeaders(post);
+			protocol.addHeaders(post, whichDevAccount);
 			post.setEntity(new StringEntity(postData, "UTF-8"));
 
 			if (DEBUG) {

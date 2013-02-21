@@ -40,6 +40,8 @@ public class AppInfo {
 
 	private Date lastCommentsUpdate;
 
+    public int whichDevAccount;
+
 	public String getAccount() {
 		return account;
 	}
