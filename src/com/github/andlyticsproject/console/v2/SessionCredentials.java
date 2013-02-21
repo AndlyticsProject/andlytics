@@ -1,30 +1,30 @@
 package com.github.andlyticsproject.console.v2;
 
+import org.apache.http.cookie.Cookie;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.http.cookie.Cookie;
 
 public class SessionCredentials {
 
 	private String xsrfToken;
 	// 20 digit developer account ID
-	private String developerAccountId;
+	private String[] developerAccountIds;
 	// authentication session cookies, including AD
 	private List<Cookie> cookies = new ArrayList<Cookie>();
 
-	public SessionCredentials(String xsrfToken, String developerAccountId) {
+	public SessionCredentials(String xsrfToken, String[] developerAccountIds) {
 		this.xsrfToken = xsrfToken;
-		this.developerAccountId = developerAccountId;
+		this.developerAccountIds = developerAccountIds;
 	}
 
 	public String getXsrfToken() {
 		return xsrfToken;
 	}
 
-	public String getDeveloperAccountId() {
-		return developerAccountId;
+	public String[] getDeveloperAccountIds() {
+		return developerAccountIds;
 	}
 
 	public void addCookie(Cookie c) {
