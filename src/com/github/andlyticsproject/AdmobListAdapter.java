@@ -114,7 +114,9 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 			case 0:
 				return 6;
 			case 1:
-				return 5;
+			// XXX Workaround for #306 -- don't show House ad click graph
+			//				return 5;
+			return 4;
 			default:
 				throw new IndexOutOfBoundsException("page=" + page);
 		}
