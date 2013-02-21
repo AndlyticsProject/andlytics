@@ -29,6 +29,9 @@
                 <item
                     android:id="@+id/itemChartsmenuTimeframe90"
                     android:title="@string/ninety_days"/>
+                 <item
+                    android:id="@+id/itemChartsmenuTimeframeMonthToDate"
+                    android:title="@string/month_to_date"/>
                 <item
                     android:id="@+id/itemChartsmenuTimeframeUnlimited"
                     android:title="@string/unlimited"/>

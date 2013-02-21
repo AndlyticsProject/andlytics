@@ -3,6 +3,7 @@ package com.github.andlyticsproject.chart;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -153,12 +154,14 @@ public class Chart extends AbstractChart {
 
 		for (int i = 0; i < statsForApp.size(); i++) {
 			Object appInfo = statsForApp.get(i);
-			Date date = handler.getDate(appInfo);
-			dates.add(date);
+			Calendar calendar = Calendar.getInstance(); 
+			calendar.setTime(handler.getDate(appInfo));
+			calendar.set(Calendar.HOUR_OF_DAY, 0);			
+			dates.add(calendar.getTime());
 			if (i > 0) {
 				boolean highlight = handler.isHeilightValue(appInfo, statsForApp.get(i - 1));
 				if (highlight) {
-					highlightDates.add(date);
+					highlightDates.add(calendar.getTime());
 				}
 			}
 		}
