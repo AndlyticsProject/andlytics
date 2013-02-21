@@ -182,7 +182,7 @@ public class JsonParser {
 			// Draft: 5
 			// Draft w/ in-app items?: 6
 			// TODO figure out the rest and add don't just skip, filter, etc. Cf. #223
-			int publishState = jsonAppInfo.getInt("7");
+			int publishState = jsonAppInfo.optInt("8");
 			Log.d(TAG, String.format("%s: publishState=%d", packageName, publishState));
 			if (publishState != 1) {
 				// Not a published app, skipping
@@ -222,7 +222,7 @@ public class JsonParser {
 			 * Array with app icon [null,null,null,icon]
 			 */
 			// XXX
-			JSONArray appVersions = jsonAppInfo.optJSONArray("4");
+			JSONArray appVersions = jsonAppInfo.optJSONArray("5");
 			if (DEBUG) {
 				pp("appVersions", appVersions);
 			}
