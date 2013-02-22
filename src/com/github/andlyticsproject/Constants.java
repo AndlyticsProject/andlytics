@@ -6,7 +6,7 @@ public interface Constants {
 	public static final String AUTH_TOKEN_PARCEL = "com.github.andlyticsproject.authtoken";
 	public static final String AUTH_ACCOUNT_NAME = "com.github.andlyticsproject.accontname";
 	public static final String PACKAGE_NAME_PARCEL = "com.github.andlyticsproject.packagename";
-    public static final String WHICH_DEV_ACCOUNT_PARCEL = "com.github.andlyticsproject.whichdevaccount";
+	public static final String DEVELOPER_ID_PARCEL = "com.github.andlyticsproject.developerid";
 	public static final String ICON_FILE_PARCEL = "com.github.andlyticsproject.iconfile";
 	public static final String ACCOUNT_TYPE_GOOGLE = "com.google";
 	public static final String ACCOUNT_AUTHORITY = "com.github.andlyticsproject";

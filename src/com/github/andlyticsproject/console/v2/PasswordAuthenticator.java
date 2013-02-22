@@ -1,8 +1,9 @@
 package com.github.andlyticsproject.console.v2;
 
-import android.app.Activity;
-import android.util.Log;
-import com.github.andlyticsproject.console.AuthenticationException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -16,9 +17,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import android.app.Activity;
+import android.util.Log;
+
+import com.github.andlyticsproject.console.AuthenticationException;
 
 public class PasswordAuthenticator extends BaseAuthenticator {
 
@@ -52,7 +54,8 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 	}
 
 	@Override
-	public SessionCredentials authenticateSilently(boolean invalidate) throws AuthenticationException {
+	public SessionCredentials authenticateSilently(boolean invalidate)
+			throws AuthenticationException {
 		return authenticate();
 	}
 
@@ -109,7 +112,8 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException("Couldn't get XSRF token.");
 			}
 
-			SessionCredentials result = new SessionCredentials(xsrfToken, developerAccountIds);
+			SessionCredentials result = new SessionCredentials(accountName, xsrfToken,
+					developerAccountIds);
 			result.addCookies(cookies);
 
 			return result;

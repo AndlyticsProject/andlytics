@@ -1,15 +1,17 @@
 package com.github.andlyticsproject.console.v2;
 
+import java.util.List;
+
+import org.apache.http.client.methods.HttpPost;
+import org.json.JSONException;
+
 import android.annotation.SuppressLint;
+
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.util.FileUtils;
-import org.apache.http.client.methods.HttpPost;
-import org.json.JSONException;
-
-import java.util.List;
 
 @SuppressLint("DefaultLocale")
 public class DevConsoleV2Protocol {
@@ -80,7 +82,7 @@ public class DevConsoleV2Protocol {
 		}
 	}
 
-	void addHeaders(HttpPost post, int whichDevAccount) {
+	void addHeaders(HttpPost post, String developerId) {
 		checkState();
 
 		post.addHeader("Host", "play.google.com");
@@ -91,29 +93,28 @@ public class DevConsoleV2Protocol {
 		post.addHeader("X-GWT-Permutation", "EC203CA4CDFF1F0285B065B554E0D784");
 		post.addHeader("Origin", "https://play.google.com");
 		post.addHeader("X-GWT-Module-Base", "https://play.google.com/apps/publish/v2/gwt/");
-		post.addHeader("Referer", "https://play.google.com/apps/publish/v2/?dev_acc="
-				+ getSessionCredentials().getDeveloperAccountIds()[whichDevAccount]);
+		post.addHeader("Referer", "https://play.google.com/apps/publish/v2/?dev_acc=" + developerId);
 	}
 
-	String createDeveloperUrl(String baseUrl, int whichDevAccount) {
+	String createDeveloperUrl(String baseUrl, String developerId) {
 		checkState();
 
-		return String.format("%s?dev_acc=%s", baseUrl, sessionCredentials.getDeveloperAccountIds()[whichDevAccount]);
+		return String.format("%s?dev_acc=%s", baseUrl, developerId);
 	}
 
-	String createFetchAppsUrl(int whichDevAccount) {
-		return createDeveloperUrl(URL_APPS, whichDevAccount);
+	String createFetchAppsUrl(String developerId) {
+		return createDeveloperUrl(URL_APPS, developerId);
 	}
 
-	String createFetchStatisticsUrl(int whichDevAccount) {
-		return createDeveloperUrl(URL_STATISTICS, whichDevAccount);
+	String createFetchStatisticsUrl(String developerId) {
+		return createDeveloperUrl(URL_STATISTICS, developerId);
 	}
 
-	String createFetchCommentsUrl(int whichDevAccount) {
-		return createDeveloperUrl(URL_REVIEWS, whichDevAccount);
+	String createFetchCommentsUrl(String developerId) {
+		return createDeveloperUrl(URL_REVIEWS, developerId);
 	}
 
-	String createFetchAppInfosRequest(int which) {
+	String createFetchAppInfosRequest() {
 		checkState();
 
 		// TODO Check the remaining possible parameters to see if they are

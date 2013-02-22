@@ -40,7 +40,7 @@ public class AppInfo {
 
 	private Date lastCommentsUpdate;
 
-    public int whichDevAccount;
+	private String developerId;
 
 	public String getAccount() {
 		return account;
@@ -112,99 +112,6 @@ public class AppInfo {
 
 	public AppStats getLatestStats() {
 		return latestStats;
-	}
-
-	// XXX -- do we need to compare everything? 
-	// an app should be uniquely identified by the package name alone
-	// (this is enforced by the Play Store)
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((account == null) ? 0 : account.hashCode());
-		result = prime * result + ((history == null) ? 0 : history.hashCode());
-		result = prime * result + ((iconUrl == null) ? 0 : iconUrl.hashCode());
-		result = prime * result + ((lastUpdate == null) ? 0 : lastUpdate.hashCode());
-		result = prime * result + ((latestStats == null) ? 0 : latestStats.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((packageName == null) ? 0 : packageName.hashCode());
-		result = prime * result + ((admobAccount == null) ? 0 : admobAccount.hashCode());
-		result = prime * result + ((admobSiteId == null) ? 0 : admobSiteId.hashCode());
-		result = prime * result
-				+ ((lastCommentsUpdate == null) ? 0 : lastCommentsUpdate.hashCode());
-		return result;
-	}
-
-	// XXX -- do we need to compare everything? 
-	// an app should be uniquely identified by the package name alone
-	// (this is enforced by the Play Store)
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AppInfo other = (AppInfo) obj;
-		if (account == null) {
-			if (other.account != null)
-				return false;
-		} else if (!account.equals(other.account))
-			return false;
-		if (history == null) {
-			if (other.history != null)
-				return false;
-		} else if (!history.equals(other.history))
-			return false;
-		if (iconUrl == null) {
-			if (other.iconUrl != null)
-				return false;
-		} else if (!iconUrl.equals(other.iconUrl))
-			return false;
-		if (lastUpdate == null) {
-			if (other.lastUpdate != null)
-				return false;
-		} else if (!lastUpdate.equals(other.lastUpdate))
-			return false;
-		if (latestStats == null) {
-			if (other.latestStats != null)
-				return false;
-		} else if (!latestStats.equals(other.latestStats))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (packageName == null) {
-			if (other.packageName != null)
-				return false;
-		} else if (!packageName.equals(other.packageName))
-			return false;
-		if (admobAccount == null) {
-			if (other.admobAccount != null) {
-				return false;
-			}
-		} else if (!admobAccount.equals(other.admobAccount)) {
-			return false;
-		}
-		if (admobSiteId == null) {
-			if (other.admobSiteId != null) {
-				return false;
-			}
-		} else if (!admobSiteId.equals(other.admobSiteId)) {
-			return false;
-		}
-		if (lastCommentsUpdate == null) {
-			if (other.lastCommentsUpdate != null) {
-				return false;
-			}
-		} else if (!lastCommentsUpdate.equals(other.lastCommentsUpdate)) {
-			return false;
-		}
-
-		return true;
 	}
 
 	public void setDraftOnly(boolean isDraftOnly) {
@@ -287,4 +194,119 @@ public class AppInfo {
 		this.lastCommentsUpdate = lastCommentsUpdate == null ? null : (Date) lastCommentsUpdate
 				.clone();
 	}
+
+	public String getDeveloperId() {
+		return developerId;
+	}
+
+	public void setDeveloperId(String developerId) {
+		this.developerId = developerId;
+	}
+
+	// XXX -- do we need to compare everything? 
+	// an app should be uniquely identified by the package name alone
+	// (this is enforced by the Play Store)
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((account == null) ? 0 : account.hashCode());
+		result = prime * result + ((developerId == null) ? 0 : account.hashCode());
+		result = prime * result + ((history == null) ? 0 : history.hashCode());
+		result = prime * result + ((iconUrl == null) ? 0 : iconUrl.hashCode());
+		result = prime * result + ((lastUpdate == null) ? 0 : lastUpdate.hashCode());
+		result = prime * result + ((latestStats == null) ? 0 : latestStats.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((packageName == null) ? 0 : packageName.hashCode());
+		result = prime * result + ((admobAccount == null) ? 0 : admobAccount.hashCode());
+		result = prime * result + ((admobSiteId == null) ? 0 : admobSiteId.hashCode());
+		result = prime * result
+				+ ((lastCommentsUpdate == null) ? 0 : lastCommentsUpdate.hashCode());
+		return result;
+	}
+
+	// XXX -- do we need to compare everything? 
+	// an app should be uniquely identified by the package name alone
+	// (this is enforced by the Play Store)
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AppInfo other = (AppInfo) obj;
+		if (account == null) {
+			if (other.account != null)
+				return false;
+		} else if (!account.equals(other.account))
+			return false;
+		if (developerId == null) {
+			if (other.developerId != null)
+				return false;
+		} else if (!developerId.equals(other.developerId))
+			return false;
+		if (history == null) {
+			if (other.history != null)
+				return false;
+		} else if (!history.equals(other.history))
+			return false;
+		if (iconUrl == null) {
+			if (other.iconUrl != null)
+				return false;
+		} else if (!iconUrl.equals(other.iconUrl))
+			return false;
+		if (lastUpdate == null) {
+			if (other.lastUpdate != null)
+				return false;
+		} else if (!lastUpdate.equals(other.lastUpdate))
+			return false;
+		if (latestStats == null) {
+			if (other.latestStats != null)
+				return false;
+		} else if (!latestStats.equals(other.latestStats))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (packageName == null) {
+			if (other.packageName != null)
+				return false;
+		} else if (!packageName.equals(other.packageName))
+			return false;
+		if (admobAccount == null) {
+			if (other.admobAccount != null) {
+				return false;
+			}
+		} else if (!admobAccount.equals(other.admobAccount)) {
+			return false;
+		}
+		if (admobSiteId == null) {
+			if (other.admobSiteId != null) {
+				return false;
+			}
+		} else if (!admobSiteId.equals(other.admobSiteId)) {
+			return false;
+		}
+		if (lastCommentsUpdate == null) {
+			if (other.lastCommentsUpdate != null) {
+				return false;
+			}
+		} else if (!lastCommentsUpdate.equals(other.lastCommentsUpdate)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("AppInfo [account=%s, developerId=%s, packageName=%s]", account,
+				developerId, packageName);
+	}
+
+
 }

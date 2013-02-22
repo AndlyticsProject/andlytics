@@ -21,7 +21,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 
 	private static final String TAG = AndlyticsDb.class.getSimpleName();
 
-	private static final int DATABASE_VERSION = 19;
+	private static final int DATABASE_VERSION = 20;
 
 	private static final String DATABASE_NAME = "andlytics";
 
@@ -133,6 +133,15 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			Log.d(TAG, "Old version < 19 - adding new appstats columns");
 			db.execSQL("ALTER table " + AppStatsTable.DATABASE_TABLE_NAME + " add "
 					+ AppStatsTable.KEY_STATS_NUM_ERRORS + " integer");
+		}
+
+		if (oldVersion < 20) {
+			Log.d(TAG, "Old version < 19 - adding new appinfo columns");
+			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
+					+ AppInfoTable.KEY_APP_DEVELOPER_ID + " text");
+			// XXX
+			//			db.execSQL("ALTER table " + DeveloperAccountsTable.DATABASE_TABLE_NAME + " add "
+			//					+ DeveloperAccountsTable.DEVELOPER_ID + " text");
 		}
 
 	}
@@ -249,6 +258,8 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		long updateTime = account.getLastStatsUpdate() == null ? 0 : account.getLastStatsUpdate()
 				.getTime();
 		result.put(DeveloperAccountsTable.LAST_STATS_UPDATE, updateTime);
+		// XXX
+		//		result.put(DeveloperAccountsTable.DEVELOPER_ID, account.getDeveloperId());
 
 		return result;
 	}
