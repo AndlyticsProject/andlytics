@@ -1,5 +1,8 @@
 package com.github.andlyticsproject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
@@ -17,9 +21,6 @@ import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CommentsActivity extends BaseDetailsActivity {
 
@@ -289,7 +290,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 				try {
 
 					List<Comment> result = console.getComments(activity, activity.packageName,
-							activity.whichDevAccount, activity.nextCommentIndex, MAX_LOAD_COMMENTS);
+							activity.developerId, activity.nextCommentIndex, MAX_LOAD_COMMENTS);
 					activity.updateCommentsCacheIfNecessary(result);
 
 					activity.incrementNextCommentIndex(result.size());

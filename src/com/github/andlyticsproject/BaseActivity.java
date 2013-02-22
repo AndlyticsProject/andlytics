@@ -1,5 +1,7 @@
 package com.github.andlyticsproject;
 
+import org.acra.ACRA;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,8 +13,14 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+
 import com.actionbarsherlock.app.SherlockActivity;
-import com.github.andlyticsproject.admob.*;
+import com.github.andlyticsproject.admob.AdmobAccountRemovedException;
+import com.github.andlyticsproject.admob.AdmobAskForPasswordException;
+import com.github.andlyticsproject.admob.AdmobGenericException;
+import com.github.andlyticsproject.admob.AdmobInvalidRequestException;
+import com.github.andlyticsproject.admob.AdmobInvalidTokenException;
+import com.github.andlyticsproject.admob.AdmobRateLimitExceededException;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
@@ -21,7 +29,6 @@ import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.dialog.CrashDialog;
 import com.github.andlyticsproject.dialog.CrashDialog.CrashDialogBuilder;
 import com.github.andlyticsproject.util.Utils;
-import org.acra.ACRA;
 
 public class BaseActivity extends SherlockActivity {
 
@@ -30,7 +37,7 @@ public class BaseActivity extends SherlockActivity {
 	protected static final int REQUEST_AUTHENTICATE = 42;
 
 	protected String packageName;
-    protected int whichDevAccount;
+	protected String developerId;
 	protected String iconFilePath;
 	protected String accountName;
 
@@ -53,7 +60,7 @@ public class BaseActivity extends SherlockActivity {
 			// Will this effect startActivity etc with regard to null behaviour?
 			// Might be best to leave them here
 			packageName = b.getString(Constants.PACKAGE_NAME_PARCEL);
-            whichDevAccount = b.getInt(Constants.WHICH_DEV_ACCOUNT_PARCEL);
+			developerId = b.getString(Constants.DEVELOPER_ID_PARCEL);
 			iconFilePath = b.getString(Constants.ICON_FILE_PARCEL);
 			accountName = b.getString(Constants.AUTH_ACCOUNT_NAME);
 			developerAccountManager.selectDeveloperAccount(accountName);
@@ -64,7 +71,7 @@ public class BaseActivity extends SherlockActivity {
 	public void startActivity(Class<?> clazz, boolean disableAnimation, boolean skipDataReload) {
 		Intent intent = new Intent(BaseActivity.this, clazz);
 		intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
-        intent.putExtra(Constants.WHICH_DEV_ACCOUNT_PARCEL, whichDevAccount);
+		intent.putExtra(Constants.DEVELOPER_ID_PARCEL, developerId);
 		intent.putExtra(Constants.ICON_FILE_PARCEL, iconFilePath);
 		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
 		if (clazz.equals(Main.class)) {
@@ -89,7 +96,7 @@ public class BaseActivity extends SherlockActivity {
 	public void startChartActivity(ChartSet set) {
 		Intent intent = new Intent(BaseActivity.this, ChartActivity.class);
 		intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
-        intent.putExtra(Constants.WHICH_DEV_ACCOUNT_PARCEL, whichDevAccount);
+		intent.putExtra(Constants.DEVELOPER_ID_PARCEL, developerId);
 		intent.putExtra(Constants.ICON_FILE_PARCEL, iconFilePath);
 		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
