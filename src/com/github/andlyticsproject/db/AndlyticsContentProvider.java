@@ -24,6 +24,7 @@ public class AndlyticsContentProvider extends ContentProvider {
 	private static final int ID_TABLE_ADMOB = 3;
 	private static final int ID_APP_VERSION_CHANGE = 4;
 	private static final int ID_UNIQUE_PACKAGES = 5;
+	private static final int ID_TABLE_LINKS = 6;
 
 	public static final String AUTHORITY = "com.github.andlyticsproject.db.AndlyticsContentProvider";
 
@@ -50,6 +51,9 @@ public class AndlyticsContentProvider extends ContentProvider {
 		case ID_TABLE_ADMOB:
 			count = db.delete(AdmobTable.DATABASE_TABLE_NAME, where, whereArgs);
 			break;
+		case ID_TABLE_LINKS:
+			count = db.delete(LinksTable.DATABASE_TABLE_NAME, where, whereArgs);
+			break;
 
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -72,6 +76,8 @@ public class AndlyticsContentProvider extends ContentProvider {
 			return AdmobTable.CONTENT_TYPE;
 		case ID_APP_VERSION_CHANGE:
 			return APP_VERSION_CHANGE;
+		case ID_TABLE_LINKS:
+			return LinksTable.CONTENT_TYPE;
 
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -156,6 +162,16 @@ public class AndlyticsContentProvider extends ContentProvider {
 				getContext().getContentResolver().notifyChange(noteUri, null);
 				return noteUri;
 			}
+		
+		case ID_TABLE_LINKS:
+
+			rowId = db.insert(LinksTable.DATABASE_TABLE_NAME, null, values);
+			if (rowId > 0) {
+				Uri noteUri = ContentUris.withAppendedId(LinksTable.CONTENT_URI, rowId);
+				getContext().getContentResolver().notifyChange(noteUri, null);
+				return noteUri;
+			}
+			
 		}
 
 		throw new SQLException("Failed to insert row into " + uri);
@@ -188,6 +204,10 @@ public class AndlyticsContentProvider extends ContentProvider {
 		case ID_TABLE_COMMENTS:
 			qb.setTables(CommentsTable.DATABASE_TABLE_NAME);
 			qb.setProjectionMap(CommentsTable.PROJECTION_MAP);
+			break;
+		case ID_TABLE_LINKS:
+			qb.setTables(LinksTable.DATABASE_TABLE_NAME);
+			qb.setProjectionMap(LinksTable.PROJECTION_MAP);
 			break;
 		case ID_TABLE_ADMOB:
 			qb.setTables(AdmobTable.DATABASE_TABLE_NAME);
@@ -247,6 +267,9 @@ public class AndlyticsContentProvider extends ContentProvider {
 		case ID_TABLE_COMMENTS:
 			count = db.update(CommentsTable.DATABASE_TABLE_NAME, values, where, whereArgs);
 			break;
+		case ID_TABLE_LINKS:
+			count = db.update(LinksTable.DATABASE_TABLE_NAME, values, where, whereArgs);
+			break;
 		case ID_TABLE_ADMOB:
 			count = db.update(AdmobTable.DATABASE_TABLE_NAME, values, where, whereArgs);
 			break;
@@ -265,6 +288,7 @@ public class AndlyticsContentProvider extends ContentProvider {
 		sUriMatcher.addURI(AUTHORITY, AppInfoTable.DATABASE_TABLE_NAME, ID_TABLE_APPINFO);
 		sUriMatcher.addURI(AUTHORITY, AppInfoTable.UNIQUE_PACKAGE_NAMES, ID_UNIQUE_PACKAGES);
 		sUriMatcher.addURI(AUTHORITY, CommentsTable.DATABASE_TABLE_NAME, ID_TABLE_COMMENTS);
+		sUriMatcher.addURI(AUTHORITY, LinksTable.DATABASE_TABLE_NAME, ID_TABLE_LINKS);
 		sUriMatcher.addURI(AUTHORITY, AdmobTable.DATABASE_TABLE_NAME, ID_TABLE_ADMOB);
 		sUriMatcher.addURI(AUTHORITY, APP_VERSION_CHANGE, ID_APP_VERSION_CHANGE);
 

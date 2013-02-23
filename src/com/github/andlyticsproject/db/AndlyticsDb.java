@@ -21,7 +21,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 
 	private static final String TAG = AndlyticsDb.class.getSimpleName();
 
-	private static final int DATABASE_VERSION = 19;
+	private static final int DATABASE_VERSION = 20;
 
 	private static final String DATABASE_NAME = "andlytics";
 
@@ -50,6 +50,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		db.execSQL(CommentsTable.TABLE_CREATE_COMMENTS);
 		db.execSQL(AdmobTable.TABLE_CREATE_ADMOB);
 		db.execSQL(DeveloperAccountsTable.TABLE_CREATE_DEVELOPER_ACCOUNT);
+		db.execSQL(LinksTable.TABLE_CREATE_LINKS);
 	}
 
 	@Override
@@ -133,6 +134,13 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			Log.d(TAG, "Old version < 19 - adding new appstats columns");
 			db.execSQL("ALTER table " + AppStatsTable.DATABASE_TABLE_NAME + " add "
 					+ AppStatsTable.KEY_STATS_NUM_ERRORS + " integer");
+		}
+		
+		if (oldVersion < 20) {
+			Log.w(TAG, "Old version < 20 - adding links table");
+			
+			db.execSQL("DROP TABLE IF EXISTS " + LinksTable.DATABASE_TABLE_NAME);
+			db.execSQL(LinksTable.TABLE_CREATE_LINKS);
 		}
 
 	}

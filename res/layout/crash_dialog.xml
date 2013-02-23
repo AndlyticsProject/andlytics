@@ -10,7 +10,6 @@
 
 	<LinearLayout
 		android:layout_height="0dp"
-		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:orientation="vertical"
 		android:gravity="center"
 		android:layout_width="fill_parent"

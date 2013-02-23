@@ -26,12 +26,14 @@ import com.github.andlyticsproject.db.AndlyticsContentProvider;
 import com.github.andlyticsproject.db.AppInfoTable;
 import com.github.andlyticsproject.db.AppStatsTable;
 import com.github.andlyticsproject.db.CommentsTable;
+import com.github.andlyticsproject.db.LinksTable;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AdmobList;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.AppStatsList;
 import com.github.andlyticsproject.model.Comment;
+import com.github.andlyticsproject.model.Link;
 
 public class ContentAdapter {
 
@@ -1198,4 +1200,69 @@ public class ContentAdapter {
 		return result;
 	}
 
+
+	public ArrayList<Link> getLinksByPackageName(String packageName) {
+		ArrayList<Link> result = new ArrayList<Link>();
+
+		Cursor cursor = null;
+		try {
+			cursor = context.getContentResolver()
+					.query(LinksTable.CONTENT_URI,
+							new String[] { LinksTable.KEY_ROWID,
+									LinksTable.KEY_LINK_NAME,
+									LinksTable.KEY_LINK_URL },
+							AppInfoTable.KEY_APP_PACKAGENAME + " = ?",
+							new String[] { packageName },
+							LinksTable.KEY_LINK_NAME);
+			if (cursor == null) {
+				return result;
+			}
+
+			while (cursor.moveToNext()) {
+				Link link = new Link();
+				link.setId(cursor.getLong(cursor
+						.getColumnIndex(LinksTable.KEY_ROWID)));
+				link.setName(cursor.getString(cursor
+						.getColumnIndex(LinksTable.KEY_LINK_NAME)));
+				link.setURL(cursor.getString(cursor
+						.getColumnIndex(LinksTable.KEY_LINK_URL)));
+
+				result.add(link);
+			}
+
+			return result;
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+	}
+
+	public void deleteLink(long id) {
+		context.getContentResolver().delete(LinksTable.CONTENT_URI,
+				LinksTable.KEY_ROWID + "=" + id + "", null);
+		
+		backupManager.dataChanged();
+	}
+
+	public void addLink(String packageName, String url, String name) {
+		ContentValues values = new ContentValues();
+		values.put(LinksTable.KEY_LINK_PACKAGENAME, packageName);
+		values.put(LinksTable.KEY_LINK_URL, url);
+		values.put(LinksTable.KEY_LINK_NAME, name);
+		context.getContentResolver().insert(LinksTable.CONTENT_URI, values);
+		
+		backupManager.dataChanged();
+	}
+
+	public void editLink(Long id, String url, String name) {
+		ContentValues values = new ContentValues();
+		values.put(LinksTable.KEY_LINK_URL, url);
+		values.put(LinksTable.KEY_LINK_NAME, name);
+
+		context.getContentResolver().update(LinksTable.CONTENT_URI, values,
+				LinksTable.KEY_ROWID + " = " + id, null);
+		
+		backupManager.dataChanged();
+	}
 }
