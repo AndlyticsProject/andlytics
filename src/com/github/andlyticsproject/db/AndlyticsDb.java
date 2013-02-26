@@ -135,12 +135,18 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			db.execSQL("ALTER table " + AppStatsTable.DATABASE_TABLE_NAME + " add "
 					+ AppStatsTable.KEY_STATS_NUM_ERRORS + " integer");
 		}
-		
+
 		if (oldVersion < 20) {
 			Log.w(TAG, "Old version < 20 - adding links table");
-			
+
 			db.execSQL("DROP TABLE IF EXISTS " + LinksTable.DATABASE_TABLE_NAME);
 			db.execSQL(LinksTable.TABLE_CREATE_LINKS);
+
+			Log.d(TAG, "Old version < 20 - adding new appinfo columns");
+			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
+					+ AppInfoTable.KEY_APP_DESCRIPTION + " text");
+			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
+					+ AppInfoTable.KEY_APP_CHANGELOG + " text");
 		}
 
 	}

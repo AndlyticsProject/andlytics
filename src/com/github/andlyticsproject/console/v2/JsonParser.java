@@ -198,12 +198,11 @@ public class JsonParser {
 
 			/*
 			 * Per app details:
-			 * null
-			 * Country code
-			 * App Name
-			 * Description
-			 * Unknown
-			 * Last what's new
+			 * 1: Country code
+			 * 2: App Name
+			 * 3: Description
+			 * 4: Promo text
+			 * 5: Last what's new
 			 */
 			// skip if we can't get all the data
 			// XXX should we just let this crash so we know there is a problem?
@@ -227,6 +226,8 @@ public class JsonParser {
 				pp("appDetails", appDetails);
 			}
 			app.setName(appDetails.getString("2"));
+			app.setDescription(appDetails.getString("3"));
+			app.setChangelog(appDetails.getString("5"));
 
 			/*
 			 * Per app version details:

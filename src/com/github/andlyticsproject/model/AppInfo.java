@@ -10,6 +10,10 @@ public class AppInfo {
 
 	private String packageName;
 
+	private String description;
+
+	private String changelog;
+
 	private Date lastUpdate;
 
 	private String name;
@@ -54,6 +58,22 @@ public class AppInfo {
 
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getChangelog() {
+		return changelog;
+	}
+
+	public void setChangelog(String changelog) {
+		this.changelog = changelog;
 	}
 
 	public Date getLastUpdate() {
@@ -126,6 +146,8 @@ public class AppInfo {
 		result = prime * result + ((latestStats == null) ? 0 : latestStats.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((packageName == null) ? 0 : packageName.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((changelog == null) ? 0 : changelog.hashCode());
 		result = prime * result + ((admobAccount == null) ? 0 : admobAccount.hashCode());
 		result = prime * result + ((admobSiteId == null) ? 0 : admobSiteId.hashCode());
 		result = prime * result
@@ -179,6 +201,16 @@ public class AppInfo {
 			if (other.packageName != null)
 				return false;
 		} else if (!packageName.equals(other.packageName))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (changelog == null) {
+			if (other.changelog != null)
+				return false;
+		} else if (!changelog.equals(other.changelog))
 			return false;
 		if (admobAccount == null) {
 			if (other.admobAccount != null) {
