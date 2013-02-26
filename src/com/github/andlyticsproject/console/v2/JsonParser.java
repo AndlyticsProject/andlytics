@@ -178,6 +178,9 @@ public class JsonParser {
 				continue;
 				// Draft app
 			}
+			// XXX save me somewhere!
+			Long lastPlayStoreUpdate = jsonAppInfo.optLong("7");
+			String last = new Date(lastPlayStoreUpdate).toString();
 			// Check number code and last updated date
 			// Published: 1
 			// Unpublished: 2
