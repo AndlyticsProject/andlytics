@@ -24,6 +24,7 @@ public class AndlyticsContentProvider extends ContentProvider {
 	private static final int ID_TABLE_ADMOB = 3;
 	private static final int ID_APP_VERSION_CHANGE = 4;
 	private static final int ID_UNIQUE_PACKAGES = 5;
+	private static final int ID_TABLE_LINKS = 6;
 
 	public static final String AUTHORITY = "com.github.andlyticsproject.db.AndlyticsContentProvider";
 
@@ -49,6 +50,9 @@ public class AndlyticsContentProvider extends ContentProvider {
 			break;
 		case ID_TABLE_ADMOB:
 			count = db.delete(AdmobTable.DATABASE_TABLE_NAME, where, whereArgs);
+			break;
+		case ID_TABLE_LINKS:
+			count = db.delete(LinksTable.DATABASE_TABLE_NAME, where, whereArgs);
 			break;
 
 		default:
@@ -247,6 +251,9 @@ public class AndlyticsContentProvider extends ContentProvider {
 		case ID_TABLE_COMMENTS:
 			count = db.update(CommentsTable.DATABASE_TABLE_NAME, values, where, whereArgs);
 			break;
+		case ID_TABLE_LINKS:
+			count = db.update(LinksTable.DATABASE_TABLE_NAME, values, where, whereArgs);
+			break;
 		case ID_TABLE_ADMOB:
 			count = db.update(AdmobTable.DATABASE_TABLE_NAME, values, where, whereArgs);
 			break;
@@ -265,6 +272,7 @@ public class AndlyticsContentProvider extends ContentProvider {
 		sUriMatcher.addURI(AUTHORITY, AppInfoTable.DATABASE_TABLE_NAME, ID_TABLE_APPINFO);
 		sUriMatcher.addURI(AUTHORITY, AppInfoTable.UNIQUE_PACKAGE_NAMES, ID_UNIQUE_PACKAGES);
 		sUriMatcher.addURI(AUTHORITY, CommentsTable.DATABASE_TABLE_NAME, ID_TABLE_COMMENTS);
+		sUriMatcher.addURI(AUTHORITY, LinksTable.DATABASE_TABLE_NAME, ID_TABLE_LINKS);
 		sUriMatcher.addURI(AUTHORITY, AdmobTable.DATABASE_TABLE_NAME, ID_TABLE_ADMOB);
 		sUriMatcher.addURI(AUTHORITY, APP_VERSION_CHANGE, ID_APP_VERSION_CHANGE);
 

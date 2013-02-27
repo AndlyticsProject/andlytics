@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.github.andlyticsproject.model.AppDetails;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
@@ -124,6 +125,7 @@ public class JsonParser {
 		}
 
 		int numberOfApps = jsonApps.length();
+		Log.d(TAG, String.format("Found %d apps in JSON", numberOfApps));
 		for (int i = 0; i < numberOfApps; i++) {
 			AppInfo app = new AppInfo();
 			app.setAccount(accountName);
@@ -173,9 +175,11 @@ public class JsonParser {
 			// Look for "tmp.7238057230750432756094760456.235728507238057230542"
 			if (packageName == null
 					|| (packageName.startsWith("tmp.") && Character.isDigit(packageName.charAt(4)))) {
+				Log.d(TAG, String.format("Skipping draft app %d, package name=%s", i, packageName));
 				continue;
 				// Draft app
 			}
+
 			// Check number code and last updated date
 			// Published: 1
 			// Unpublished: 2
@@ -186,6 +190,9 @@ public class JsonParser {
 			Log.d(TAG, String.format("%s: publishState=%d", packageName, publishState));
 			if (publishState != 1) {
 				// Not a published app, skipping
+				Log.d(TAG, String.format(
+						"Skipping app %d with state != 1: package name=%s: state=%d", i,
+						packageName, publishState));
 				continue;
 			}
 			app.setPublishState(publishState);
@@ -193,23 +200,40 @@ public class JsonParser {
 
 			/*
 			 * Per app details:
-			 * null
-			 * Country code
-			 * App Name
-			 * Description
-			 * Unknown
-			 * Last what's new
+			 * 1: Country code
+			 * 2: App Name
+			 * 3: Description
+			 * 4: Promo text
+			 * 5: Last what's new
 			 */
-			if (jsonAppInfo.length() < 5) {
-				// skip if we can't get all the data
+			// skip if we can't get all the data
+			// XXX should we just let this crash so we know there is a problem?
+			if (!jsonAppInfo.has("2")) {
+				Log.d(TAG, String.format(
+						"Skipping app %d because no app details found: package name=%s", i,
+						packageName));
 				continue;
 			}
+			if (!jsonAppInfo.has("5")) {
+				Log.d(TAG, String.format(
+						"Skipping app %d because no versions info found: package name=%s", i,
+						packageName));
+				continue;
+			}
+
+
 			JSONObject appDetails = jsonAppInfo.getJSONObject("2").getJSONArray("1")
 					.getJSONObject(0);
 			if (DEBUG) {
 				pp("appDetails", appDetails);
 			}
 			app.setName(appDetails.getString("2"));
+
+			String description = appDetails.getString("3");
+			String changelog = appDetails.optString("5");
+			Long lastPlayStoreUpdate = jsonAppInfo.optLong("7");
+			AppDetails details = new AppDetails(description, changelog, lastPlayStoreUpdate);
+			app.setDetails(details);
 
 			/*
 			 * Per app version details:
@@ -227,6 +251,9 @@ public class JsonParser {
 				pp("appVersions", appVersions);
 			}
 			if (appVersions == null) {
+				Log.d(TAG, String.format(
+						"Skipping app %d because no versions info found: package name=%s", i,
+						packageName));
 				continue;
 			}
 			JSONObject lastAppVersionDetails = appVersions.getJSONObject(appVersions.length() - 1)
@@ -253,6 +280,8 @@ public class JsonParser {
 				pp("jsonAppStats", jsonAppStats);
 			}
 			if (jsonAppStats == null) {
+				Log.d(TAG, String.format("Skipping app %d because no stats found: package name=%s",
+						i, packageName));
 				continue;
 			}
 			AppStats stats = new AppStats();

@@ -15,13 +15,17 @@ import android.util.Log;
 
 import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.Preferences;
+import com.github.andlyticsproject.model.AppDetails;
+import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.DeveloperAccount;
+import com.github.andlyticsproject.model.Link;
+import com.github.andlyticsproject.util.Utils;
 
 public class AndlyticsDb extends SQLiteOpenHelper {
 
 	private static final String TAG = AndlyticsDb.class.getSimpleName();
 
-	private static final int DATABASE_VERSION = 19;
+	private static final int DATABASE_VERSION = 20;
 
 	private static final String DATABASE_NAME = "andlytics";
 
@@ -50,6 +54,8 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		db.execSQL(CommentsTable.TABLE_CREATE_COMMENTS);
 		db.execSQL(AdmobTable.TABLE_CREATE_ADMOB);
 		db.execSQL(DeveloperAccountsTable.TABLE_CREATE_DEVELOPER_ACCOUNT);
+		db.execSQL(LinksTable.TABLE_CREATE_LINKS);
+		db.execSQL(AppDetailsTable.TABLE_CREATE_APP_DETAILS);
 	}
 
 	@Override
@@ -133,6 +139,17 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			Log.d(TAG, "Old version < 19 - adding new appstats columns");
 			db.execSQL("ALTER table " + AppStatsTable.DATABASE_TABLE_NAME + " add "
 					+ AppStatsTable.KEY_STATS_NUM_ERRORS + " integer");
+		}
+
+		if (oldVersion < 20) {
+			Log.w(TAG, "Old version < 20 - adding links table");
+
+			db.execSQL("DROP TABLE IF EXISTS " + LinksTable.DATABASE_TABLE_NAME);
+			db.execSQL(LinksTable.TABLE_CREATE_LINKS);
+
+			Log.d(TAG, "Old version < 20 - adding new app_details table");
+			db.execSQL("DROP TABLE IF EXISTS " + AppDetailsTable.DATABASE_TABLE_NAME);
+			db.execSQL(AppDetailsTable.TABLE_CREATE_APP_DETAILS);
 		}
 
 	}
@@ -375,4 +392,215 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			}
 		}
 	}
+
+	public synchronized AppInfo findAppByPackageName(String packageName) {
+		SQLiteDatabase db = getReadableDatabase();
+
+		Cursor cursor = null;
+		try {
+			cursor = db.query(AppInfoTable.DATABASE_TABLE_NAME, new String[] {
+					AppInfoTable.KEY_ROWID, AppInfoTable.KEY_APP_VERSION_NAME,
+					AppInfoTable.KEY_APP_PACKAGENAME, AppInfoTable.KEY_APP_LASTUPDATE,
+					AppInfoTable.KEY_APP_NAME, AppInfoTable.KEY_APP_GHOST,
+					AppInfoTable.KEY_APP_SKIP_NOTIFICATION, AppInfoTable.KEY_APP_RATINGS_EXPANDED,
+					AppInfoTable.KEY_APP_ICONURL, AppInfoTable.KEY_APP_ADMOB_ACCOUNT,
+					AppInfoTable.KEY_APP_ADMOB_SITE_ID, AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE,
+					AppInfoTable.KEY_APP_ACCOUNT }, AppInfoTable.KEY_APP_PACKAGENAME + "=?",
+					new String[] { packageName }, null, null, null);
+
+			if (cursor.getCount() < 1 || !cursor.moveToNext()) {
+				return null;
+			}
+
+			AppInfo appInfo = new AppInfo();
+			appInfo.setId(cursor.getLong(cursor.getColumnIndex(AppInfoTable.KEY_ROWID)));
+			appInfo.setAccount(cursor.getString(cursor.getColumnIndex(AppInfoTable.KEY_APP_ACCOUNT)));
+			appInfo.setLastUpdate(Utils.parseDbDate(cursor.getString(cursor
+					.getColumnIndex(AppInfoTable.KEY_APP_LASTUPDATE))));
+			appInfo.setPackageName(cursor.getString(cursor
+					.getColumnIndex(AppInfoTable.KEY_APP_PACKAGENAME)));
+			appInfo.setName(cursor.getString(cursor.getColumnIndex(AppInfoTable.KEY_APP_NAME)));
+			appInfo.setGhost(cursor.getInt(cursor.getColumnIndex(AppInfoTable.KEY_APP_GHOST)) == 0 ? false
+					: true);
+			appInfo.setSkipNotification(cursor.getInt(cursor
+					.getColumnIndex(AppInfoTable.KEY_APP_SKIP_NOTIFICATION)) == 0 ? false : true);
+			appInfo.setRatingDetailsExpanded(cursor.getInt(cursor
+					.getColumnIndex(AppInfoTable.KEY_APP_RATINGS_EXPANDED)) == 0 ? false : true);
+			appInfo.setIconUrl(cursor.getString(cursor.getColumnIndex(AppInfoTable.KEY_APP_ICONURL)));
+			appInfo.setVersionName(cursor.getString(cursor
+					.getColumnIndex(AppInfoTable.KEY_APP_VERSION_NAME)));
+
+			int idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_ACCOUNT);
+			if (!cursor.isNull(idx)) {
+				appInfo.setAdmobAccount(cursor.getString(idx));
+			}
+			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_SITE_ID);
+			if (!cursor.isNull(idx)) {
+				appInfo.setAdmobSiteId(cursor.getString(idx));
+			}
+			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE);
+			if (!cursor.isNull(idx)) {
+				appInfo.setLastCommentsUpdate(new Date(cursor.getLong(idx)));
+			}
+
+			fetchAppDetails(appInfo);
+
+			return appInfo;
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+	}
+
+	public synchronized void fetchAppDetails(AppInfo appInfo) {
+		if (appInfo.getId() == null) {
+			// not persistent
+			return;
+		}
+
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = null;
+		try {
+			c = db.query(AppDetailsTable.DATABASE_TABLE_NAME, AppDetailsTable.ALL_COLUMNS,
+					AppDetailsTable.APPINFO_ID + "=?",
+					new String[] { Long.toString(appInfo.getId()) }, null, null, null);
+			if (c.getCount() < 1 || !c.moveToNext()) {
+				return;
+			}
+
+			Long id = c.getLong(c.getColumnIndex(AppDetailsTable.ROWID));
+			String description = c.getString(c.getColumnIndex(AppDetailsTable.DESCRIPTION));
+			AppDetails details = new AppDetails(description);
+			details.setId(id);
+			int idx = c.getColumnIndex(AppDetailsTable.CHANGELOG);
+			if (!c.isNull(idx)) {
+				details.setChangelog(c.getString(idx));
+			}
+			idx = c.getColumnIndex(AppDetailsTable.LAST_STORE_UPDATE);
+			if (!c.isNull(idx)) {
+				details.setLastStoreUpdate(new Date(c.getLong(idx)));
+			}
+			List<Link> links = getLinksForApp(id);
+			details.setLinks(links);
+
+			appInfo.setDetails(details);
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+		}
+	}
+
+	private long saveAppDetails(SQLiteDatabase db, AppInfo appInfo) {
+		ContentValues values = toValues(appInfo);
+
+		return db.insertOrThrow(AppDetailsTable.DATABASE_TABLE_NAME, null, values);
+	}
+
+	public synchronized long saveAppDetails(AppInfo appInfo) {
+		return saveAppDetails(getWritableDatabase(), appInfo);
+	}
+
+	public synchronized void updateAppDetails(AppDetails details) {
+		ContentValues values = new ContentValues();
+		values.put(AppDetailsTable.DESCRIPTION, details.getDescription());
+		values.put(AppDetailsTable.CHANGELOG, details.getChangelog());
+		long updateTime = details.getLastStoreUpdate() == null ? 0 : details.getLastStoreUpdate()
+				.getTime();
+		values.put(AppDetailsTable.LAST_STORE_UPDATE, updateTime);
+
+		getWritableDatabase().update(AppDetailsTable.DATABASE_TABLE_NAME, values, "_id = ?",
+				new String[] { Long.toString(details.getId()) });
+	}
+
+	public synchronized void insertOrUpdateAppDetails(AppInfo appInfo) {
+		SQLiteDatabase db = getWritableDatabase();
+
+		Cursor c = null;
+		try {
+			c = db.query(AppDetailsTable.DATABASE_TABLE_NAME,
+					new String[] { AppDetailsTable.ROWID }, AppDetailsTable.APPINFO_ID + "=?",
+					new String[] { Long.toString(appInfo.getId()) }, null, null, null);
+			if (c.getCount() < 1 || !c.moveToNext()) {
+				saveAppDetails(appInfo);
+			} else {
+				long id = saveAppDetails(db, appInfo);
+				appInfo.getDetails().setId(id);
+				updateAppDetails(appInfo.getDetails());
+			}
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+		}
+	}
+
+	public static ContentValues toValues(AppInfo appInfo) {
+		AppDetails details = appInfo.getDetails();
+
+		ContentValues result = new ContentValues();
+		result.put(AppDetailsTable.DESCRIPTION, details.getDescription());
+		result.put(AppDetailsTable.CHANGELOG, details.getChangelog());
+		long updateTime = details.getLastStoreUpdate() == null ? 0 : details.getLastStoreUpdate()
+				.getTime();
+		result.put(AppDetailsTable.LAST_STORE_UPDATE, updateTime);
+		result.put(AppDetailsTable.APPINFO_ID, appInfo.getId());
+
+		return result;
+	}
+
+	public synchronized ArrayList<Link> getLinksForApp(long appDetailsId) {
+		SQLiteDatabase db = getReadableDatabase();
+
+		ArrayList<Link> result = new ArrayList<Link>();
+
+		Cursor cursor = null;
+		try {
+			cursor = db.query(LinksTable.DATABASE_TABLE_NAME, LinksTable.ALL_COLUMNS,
+					LinksTable.APP_DETAILS_ID + " = ?",
+					new String[] { Long.toString(appDetailsId) }, null, null, LinksTable.ROWID);
+			if (cursor == null) {
+				return result;
+			}
+
+			while (cursor.moveToNext()) {
+				Link link = new Link();
+				link.setId(cursor.getLong(cursor.getColumnIndex(LinksTable.ROWID)));
+				link.setName(cursor.getString(cursor.getColumnIndex(LinksTable.LINK_NAME)));
+				link.setURL(cursor.getString(cursor.getColumnIndex(LinksTable.LINK_URL)));
+
+				result.add(link);
+			}
+
+			return result;
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+	}
+
+	public synchronized void deleteLink(long id) {
+		getWritableDatabase().delete(LinksTable.DATABASE_TABLE_NAME, LinksTable.ROWID + "=?",
+				new String[] { Long.toString(id) });
+	}
+
+	public synchronized void addLink(AppDetails appDetails, String url, String name) {
+		ContentValues values = new ContentValues();
+		values.put(LinksTable.APP_DETAILS_ID, appDetails.getId());
+		values.put(LinksTable.LINK_URL, url);
+		values.put(LinksTable.LINK_NAME, name);
+		getWritableDatabase().insertOrThrow(LinksTable.DATABASE_TABLE_NAME, null, values);
+	}
+
+	public synchronized void editLink(Long id, String url, String name) {
+		ContentValues values = new ContentValues();
+		values.put(LinksTable.LINK_URL, url);
+		values.put(LinksTable.LINK_NAME, name);
+
+		getWritableDatabase().update(LinksTable.DATABASE_TABLE_NAME, values,
+				LinksTable.ROWID + " = ?", new String[] { Long.toString(id) });
+	}
+
 }
