@@ -76,8 +76,6 @@ public class AndlyticsContentProvider extends ContentProvider {
 			return AdmobTable.CONTENT_TYPE;
 		case ID_APP_VERSION_CHANGE:
 			return APP_VERSION_CHANGE;
-		case ID_TABLE_LINKS:
-			return LinksTable.CONTENT_TYPE;
 
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -162,16 +160,6 @@ public class AndlyticsContentProvider extends ContentProvider {
 				getContext().getContentResolver().notifyChange(noteUri, null);
 				return noteUri;
 			}
-		
-		case ID_TABLE_LINKS:
-
-			rowId = db.insert(LinksTable.DATABASE_TABLE_NAME, null, values);
-			if (rowId > 0) {
-				Uri noteUri = ContentUris.withAppendedId(LinksTable.CONTENT_URI, rowId);
-				getContext().getContentResolver().notifyChange(noteUri, null);
-				return noteUri;
-			}
-			
 		}
 
 		throw new SQLException("Failed to insert row into " + uri);
@@ -204,10 +192,6 @@ public class AndlyticsContentProvider extends ContentProvider {
 		case ID_TABLE_COMMENTS:
 			qb.setTables(CommentsTable.DATABASE_TABLE_NAME);
 			qb.setProjectionMap(CommentsTable.PROJECTION_MAP);
-			break;
-		case ID_TABLE_LINKS:
-			qb.setTables(LinksTable.DATABASE_TABLE_NAME);
-			qb.setProjectionMap(LinksTable.PROJECTION_MAP);
 			break;
 		case ID_TABLE_ADMOB:
 			qb.setTables(AdmobTable.DATABASE_TABLE_NAME);

@@ -1,6 +1,7 @@
 package com.github.andlyticsproject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,7 @@ public class LinksListAdapter extends BaseAdapter {
 
 	private LayoutInflater layoutInflater;
 
-	private ArrayList<Link> links;
+	private List<Link> links;
 
 	public LinksListAdapter(LinksActivity activity) {
 		this.layoutInflater = activity.getLayoutInflater();
@@ -50,7 +51,7 @@ public class LinksListAdapter extends BaseAdapter {
 		TextView url;
 	}
 	
-	public void setLinks(ArrayList<Link> links) {
+	public void setLinks(List<Link> links) {
 		this.links = links;
 	}
 

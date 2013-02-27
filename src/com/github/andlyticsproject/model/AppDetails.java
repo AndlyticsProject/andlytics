@@ -1,6 +1,7 @@
 package com.github.andlyticsproject.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class AppDetails {
 	private String changelog;
 	private Date lastStoreUpdate;
 
-	private List<String> links = new ArrayList<String>();
+	private List<Link> links = new ArrayList<Link>();
 
 	public AppDetails(String description, String changelog, Date lastStoreUpdate) {
 		this.description = description;
@@ -62,12 +63,16 @@ public class AppDetails {
 		this.lastStoreUpdate = lastStoreUpdate == null ? null : (Date) lastStoreUpdate.clone();
 	}
 
-	public List<String> getLinks() {
-		return links;
+	public List<Link> getLinks() {
+		return Collections.unmodifiableList(links);
 	}
 
-	public void setLinks(List<String> links) {
+	public void setLinks(List<Link> links) {
 		this.links = links;
+	}
+
+	public void addLink(Link link) {
+		links.add(link);
 	}
 
 }

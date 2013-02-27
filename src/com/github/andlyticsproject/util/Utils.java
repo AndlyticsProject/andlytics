@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -166,6 +168,22 @@ public final class Utils {
 		} catch (PackageManager.NameNotFoundException e) {
 			return false;
 		}
+	}
+
+	@SuppressLint("SimpleDateFormat")
+	private static final SimpleDateFormat DB_DATE_FORMAT = new SimpleDateFormat(
+			"yyyy-MM-dd HH:mm:ss");
+
+	public static synchronized Date parseDbDate(String string) {
+		try {
+			return DB_DATE_FORMAT.parse(string);
+		} catch (ParseException e) {
+			return null;
+		}
+	}
+
+	public static synchronized String formatDbDate(Date date) {
+		return DB_DATE_FORMAT.format(date);
 	}
 
 }

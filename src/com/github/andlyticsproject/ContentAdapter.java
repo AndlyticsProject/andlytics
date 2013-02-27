@@ -26,20 +26,17 @@ import com.github.andlyticsproject.db.AndlyticsContentProvider;
 import com.github.andlyticsproject.db.AppInfoTable;
 import com.github.andlyticsproject.db.AppStatsTable;
 import com.github.andlyticsproject.db.CommentsTable;
-import com.github.andlyticsproject.db.LinksTable;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AdmobList;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.AppStatsList;
 import com.github.andlyticsproject.model.Comment;
-import com.github.andlyticsproject.model.Link;
+import com.github.andlyticsproject.util.Utils;
 
 public class ContentAdapter {
 
 	private final Context context;
-	@SuppressLint("SimpleDateFormat")
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	private static ContentAdapter instance;
 
@@ -134,7 +131,7 @@ public class ContentAdapter {
 				admob.setRequests(cursor.getInt(cursor.getColumnIndex(AdmobTable.KEY_REQUESTS)));
 				admob.setRevenue(cursor.getFloat(cursor.getColumnIndex(AdmobTable.KEY_REVENUE)));
 				String dateString = cursor.getString(cursor.getColumnIndex(AdmobTable.KEY_DATE));
-				admob.setDate(parseDate(dateString.substring(0, 10) + " 12:00:00"));
+				admob.setDate(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
 
 				overall.setClicks(overall.getClicks() + admob.getClicks());
 				overall.setCpcRevenue(overall.getCpcRevenue() + admob.getCpcRevenue());
@@ -241,7 +238,7 @@ public class ContentAdapter {
 		values.put(AdmobTable.KEY_CPC_REVENUE, admob.getCpcRevenue());
 		values.put(AdmobTable.KEY_CPM_REVENUE, admob.getCpmRevenue());
 		values.put(AdmobTable.KEY_CTR, admob.getCtr());
-		values.put(AdmobTable.KEY_DATE, formatDate(admob.getDate()));
+		values.put(AdmobTable.KEY_DATE, Utils.formatDbDate(admob.getDate()));
 		values.put(AdmobTable.KEY_ECPM, admob.getEcpm());
 		values.put(AdmobTable.KEY_EXCHANGE_DOWNLOADS, admob.getExchangeDownloads());
 		values.put(AdmobTable.KEY_FILL_RATE, admob.getFillRate());
@@ -287,7 +284,8 @@ public class ContentAdapter {
 
 		ContentValues values = new ContentValues();
 
-		values.put(AppStatsTable.KEY_STATS_REQUESTDATE, formatDate(downloadInfo.getRequestDate()));
+		values.put(AppStatsTable.KEY_STATS_REQUESTDATE,
+				Utils.formatDbDate(downloadInfo.getRequestDate()));
 		values.put(AppStatsTable.KEY_STATS_PACKAGENAME, packageName);
 		values.put(AppStatsTable.KEY_STATS_DOWNLOADS, downloadInfo.getTotalDownloads());
 		values.put(AppStatsTable.KEY_STATS_INSTALLS, downloadInfo.getActiveInstalls());
@@ -348,7 +346,8 @@ public class ContentAdapter {
 		}
 
 		ContentValues initialValues = new ContentValues();
-		initialValues.put(AppInfoTable.KEY_APP_LASTUPDATE, formatDate(appInfo.getLastUpdate()));
+		initialValues.put(AppInfoTable.KEY_APP_LASTUPDATE,
+				Utils.formatDbDate(appInfo.getLastUpdate()));
 		initialValues.put(AppInfoTable.KEY_APP_PACKAGENAME, appInfo.getPackageName());
 		initialValues.put(AppInfoTable.KEY_APP_ACCOUNT, appInfo.getAccount());
 		initialValues.put(AppInfoTable.KEY_APP_NAME, appInfo.getName());
@@ -362,18 +361,6 @@ public class ContentAdapter {
 		appInfo.setId(id);
 
 		backupManager.dataChanged();
-	}
-
-	public String formatDate(Date date) {
-		return dateFormat.format(date);
-	}
-
-	private Date parseDate(String string) {
-		try {
-			return dateFormat.parse(string);
-		} catch (ParseException e) {
-			return null;
-		}
 	}
 
 	public String getAppName(String packageName) {
@@ -426,8 +413,7 @@ public class ContentAdapter {
 						AppInfoTable.KEY_APP_SKIP_NOTIFICATION,
 						AppInfoTable.KEY_APP_RATINGS_EXPANDED, AppInfoTable.KEY_APP_ICONURL,
 						AppInfoTable.KEY_APP_ADMOB_ACCOUNT, AppInfoTable.KEY_APP_ADMOB_SITE_ID,
-						AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE,
-						AppInfoTable.KEY_APP_DESCRIPTION, AppInfoTable.KEY_APP_CHANGELOG },
+						AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE },
 				AppInfoTable.KEY_APP_ACCOUNT + "='" + account + "'", null,
 				AppInfoTable.KEY_APP_NAME + "");
 
@@ -435,7 +421,7 @@ public class ContentAdapter {
 			AppInfo appInfo = new AppInfo();
 			appInfo.setId(cursor.getLong(cursor.getColumnIndex(AppInfoTable.KEY_ROWID)));
 			appInfo.setAccount(account);
-			appInfo.setLastUpdate(parseDate(cursor.getString(cursor
+			appInfo.setLastUpdate(Utils.parseDbDate(cursor.getString(cursor
 					.getColumnIndex(AppInfoTable.KEY_APP_LASTUPDATE))));
 			appInfo.setPackageName(cursor.getString(cursor
 					.getColumnIndex(AppInfoTable.KEY_APP_PACKAGENAME)));
@@ -622,7 +608,7 @@ public class ContentAdapter {
 
 				String dateString = cursor.getString(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE));
-				info.setRequestDate(parseDate(dateString.substring(0, 10) + " 12:00:00"));
+				info.setRequestDate(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
 
 				info.setNumberOfComments(cursor.getInt(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_COMMENTS)));
@@ -891,7 +877,7 @@ public class ContentAdapter {
 						.getColumnIndex(AppStatsTable.KEY_STATS_INSTALLS)));
 				info.setTotalDownloads(cursor.getInt(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_DOWNLOADS)));
-				info.setRequestDate(parseDate(cursor.getString(cursor
+				info.setRequestDate(Utils.parseDbDate(cursor.getString(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE))));
 				info.setNumberOfComments(cursor.getInt(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_COMMENTS)));
@@ -986,7 +972,7 @@ public class ContentAdapter {
 
 				String dateString = cursor.getString(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE));
-				Date date = parseDate(dateString.substring(0, 10) + " 00:00:00");
+				Date date = Utils.parseDbDate(dateString.substring(0, 10) + " 00:00:00");
 
 				result.put(date, ratings);
 
@@ -1020,7 +1006,8 @@ public class ContentAdapter {
 		for (Comment comment : comments) {
 			ContentValues initialValues = new ContentValues();
 			initialValues.put(CommentsTable.KEY_COMMENT_PACKAGENAME, packageName);
-			initialValues.put(CommentsTable.KEY_COMMENT_DATE, formatDate(comment.getDate()));
+			initialValues
+					.put(CommentsTable.KEY_COMMENT_DATE, Utils.formatDbDate(comment.getDate()));
 			initialValues.put(CommentsTable.KEY_COMMENT_RATING, comment.getRating());
 			initialValues.put(CommentsTable.KEY_COMMENT_TEXT, comment.getText());
 			initialValues.put(CommentsTable.KEY_COMMENT_USER, comment.getUser());
@@ -1031,7 +1018,7 @@ public class ContentAdapter {
 			String replyDate = null;
 			if (reply != null) {
 				replyText = reply.getText();
-				replyDate = formatDate(reply.getDate());
+				replyDate = Utils.formatDbDate(reply.getDate());
 			}
 			initialValues.put(CommentsTable.KEY_COMMENT_REPLY_TEXT, replyText);
 			initialValues.put(CommentsTable.KEY_COMMENT_REPLY_DATE, replyDate);
@@ -1068,7 +1055,7 @@ public class ContentAdapter {
 				Comment comment = new Comment();
 				String dateString = cursor.getString(cursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_DATE));
-				comment.setDate(parseDate(dateString));
+				comment.setDate(Utils.parseDbDate(dateString));
 				comment.setUser(cursor.getString(cursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_USER)));
 				comment.setText(cursor.getString(cursor
@@ -1084,7 +1071,7 @@ public class ContentAdapter {
 				if (replyText != null) {
 					Comment reply = new Comment(true);
 					reply.setText(replyText);
-					reply.setReplyDate(parseDate(cursor.getString(cursor
+					reply.setReplyDate(Utils.parseDbDate(cursor.getString(cursor
 							.getColumnIndex(CommentsTable.KEY_COMMENT_REPLY_DATE))));
 					reply.setDate(comment.getDate());
 					comment.setReply(reply);
@@ -1150,7 +1137,7 @@ public class ContentAdapter {
 				AppStats info = new AppStats();
 				String dateString = cursor.getString(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE));
-				info.setRequestDate(parseDate(dateString.substring(0, 10) + " 12:00:00"));
+				info.setRequestDate(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
 
 				info.setNumberOfComments(cursor.getInt(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_COMMENTS)));
@@ -1188,7 +1175,7 @@ public class ContentAdapter {
 				do {
 					String dateString = cursor.getString(cursor
 							.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE));
-					result.add(parseDate(dateString.substring(0, 10) + " 12:00:00"));
+					result.add(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
 				} while (cursor.moveToNext());
 			}
 
@@ -1203,63 +1190,4 @@ public class ContentAdapter {
 		return result;
 	}
 
-
-	public ArrayList<Link> getLinksByPackageName(String packageName) {
-		ArrayList<Link> result = new ArrayList<Link>();
-
-		Cursor cursor = null;
-		try {
-			cursor = context.getContentResolver().query(
-					LinksTable.CONTENT_URI,
-					new String[] { LinksTable.KEY_ROWID, LinksTable.KEY_LINK_NAME,
-							LinksTable.KEY_LINK_URL }, AppInfoTable.KEY_APP_PACKAGENAME + " = ?",
-					new String[] { packageName }, LinksTable.KEY_LINK_NAME);
-			if (cursor == null) {
-				return result;
-			}
-
-			while (cursor.moveToNext()) {
-				Link link = new Link();
-				link.setId(cursor.getLong(cursor.getColumnIndex(LinksTable.KEY_ROWID)));
-				link.setName(cursor.getString(cursor.getColumnIndex(LinksTable.KEY_LINK_NAME)));
-				link.setURL(cursor.getString(cursor.getColumnIndex(LinksTable.KEY_LINK_URL)));
-
-				result.add(link);
-			}
-
-			return result;
-		} finally {
-			if (cursor != null) {
-				cursor.close();
-			}
-		}
-	}
-
-	public void deleteLink(long id) {
-		context.getContentResolver().delete(LinksTable.CONTENT_URI,
-				LinksTable.KEY_ROWID + "=" + id + "", null);
-
-		backupManager.dataChanged();
-	}
-
-	public void addLink(String packageName, String url, String name) {
-		ContentValues values = new ContentValues();
-		values.put(LinksTable.KEY_LINK_PACKAGENAME, packageName);
-		values.put(LinksTable.KEY_LINK_URL, url);
-		values.put(LinksTable.KEY_LINK_NAME, name);
-		context.getContentResolver().insert(LinksTable.CONTENT_URI, values);
-
-		backupManager.dataChanged();
-	}
-
-	public void editLink(Long id, String url, String name) {
-		ContentValues values = new ContentValues();
-		values.put(LinksTable.KEY_LINK_URL, url);
-		values.put(LinksTable.KEY_LINK_NAME, name);
-
-		context.getContentResolver().update(LinksTable.CONTENT_URI, values,
-				LinksTable.KEY_ROWID + " = " + id, null);
-
-		backupManager.dataChanged();
-	}
 }

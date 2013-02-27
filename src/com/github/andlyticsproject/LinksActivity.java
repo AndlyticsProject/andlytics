@@ -1,6 +1,7 @@
 package com.github.andlyticsproject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,7 +17,9 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.dialog.AddEditLinkDialog;
+import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.Link;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
@@ -30,13 +33,14 @@ public class LinksActivity extends SherlockFragmentActivity implements
 
 	private LoadLinksDb loadLinksDb;
 
-	private ArrayList<Link> links;
+	private AppInfo appInfo;
+	private List<Link> links;
 
 	private ListView list;
 
 	private View nolinks;
 
-	private ContentAdapter db;
+	private AndlyticsDb db;
 
 	private static final int EDIT = 1;
 	private static final int DELETE = 2;
@@ -80,7 +84,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 		linksListAdapter.setLinks(links);
 		linksListAdapter.notifyDataSetChanged();
 
-		db = getDbAdapter();
+		db = AndlyticsDb.getInstance(this);
 
 		loadLinksDb = new LoadLinksDb(this);
 		Utils.execute(loadLinksDb);
@@ -89,8 +93,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.add(0, EDIT, 0, R.string.edit);
 		menu.add(0, DELETE, 0, R.string.delete);
@@ -109,8 +112,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 			showAddEditLinkDialog(link);
 			return true;
 		case DELETE:
-			menuInfo = (android.widget.AdapterView.AdapterContextMenuInfo) item
-					.getMenuInfo();
+			menuInfo = (android.widget.AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
 			position = menuInfo.position;
 			link = links.get(position);
@@ -137,7 +139,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 	 * Called if item in option menu is selected.
 	 * 
 	 * @param item
-	 *            The chosen menu item
+	 * The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
@@ -145,8 +147,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			overridePendingTransition(R.anim.activity_prev_in,
-					R.anim.activity_prev_out);
+			overridePendingTransition(R.anim.activity_prev_in, R.anim.activity_prev_out);
 			return true;
 		case R.id.itemLinksmenuAdd:
 			showAddEditLinkDialog(null);
@@ -161,7 +162,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 		finish();
 		overridePendingTransition(R.anim.activity_prev_in, R.anim.activity_prev_out);
 	}
-	
+
 	public ContentAdapter getDbAdapter() {
 		return getAndlyticsApplication().getDbAdapter();
 	}
@@ -170,8 +171,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 		return (AndlyticsApp) getApplication();
 	}
 
-	private static class LoadLinksDb extends
-			DetachableAsyncTask<Void, Void, Void, LinksActivity> {
+	private static class LoadLinksDb extends DetachableAsyncTask<Void, Void, Void, LinksActivity> {
 
 		LoadLinksDb(LinksActivity activity) {
 			super(activity);
@@ -200,18 +200,24 @@ public class LinksActivity extends SherlockFragmentActivity implements
 	}
 
 	private void getLinksFromDb() {
-		links = db.getLinksByPackageName(packageName);
+		appInfo = db.findAppByPackageName(packageName);
+		links = appInfo.getDetails().getLinks();
 	}
 
 	private void refreshLinks() {
 		linksListAdapter.setLinks(links);
 		linksListAdapter.notifyDataSetChanged();
+
+		// TODO display these somehow
+		System.out.println(appInfo.getDetails().getDescription());
+		System.out.println(appInfo.getDetails().getChangelog());
+		System.out.println(appInfo.getDetails().getLastStoreUpdate());
 	}
 
 	@Override
 	public void onFinishAddEditLink(String url, String name, Long id) {
 		if (id == null) {
-			db.addLink(packageName, url, name);
+			db.addLink(appInfo.getDetails(), url, name);
 		} else {
 			db.editLink(id, url, name);
 		}
@@ -222,8 +228,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 
 	private void showAddEditLinkDialog(Link link) {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		Fragment prev = getSupportFragmentManager().findFragmentByTag(
-				"fragment_addedit_link");
+		Fragment prev = getSupportFragmentManager().findFragmentByTag("fragment_addedit_link");
 		if (prev != null) {
 			ft.remove(prev);
 		}
@@ -236,13 +241,13 @@ public class LinksActivity extends SherlockFragmentActivity implements
 			arguments.putString("name", link.getName());
 			arguments.putString("url", link.getURL());
 		}
-		
+
 		arguments.putString("packageName", packageName);
 
 		addEditLinkDialog.setArguments(arguments);
 
 		addEditLinkDialog.setOnFinishAddEditLinkDialogListener(this);
-		
+
 		addEditLinkDialog.show(ft, "fragment_addedit_link");
 	}
 }
