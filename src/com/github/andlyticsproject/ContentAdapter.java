@@ -356,10 +356,10 @@ public class ContentAdapter {
 		initialValues.put(AppInfoTable.KEY_APP_PUBLISHSTATE, appInfo.getPublishState());
 		initialValues.put(AppInfoTable.KEY_APP_CATEGORY, -1);
 		initialValues.put(AppInfoTable.KEY_APP_VERSION_NAME, appInfo.getVersionName());
-		initialValues.put(AppInfoTable.KEY_APP_DESCRIPTION, appInfo.getDescription());
-		initialValues.put(AppInfoTable.KEY_APP_CHANGELOG, appInfo.getChangelog());
 
-		context.getContentResolver().insert(AppInfoTable.CONTENT_URI, initialValues);
+		Uri uri = context.getContentResolver().insert(AppInfoTable.CONTENT_URI, initialValues);
+		long id = Long.parseLong(uri.getPathSegments().get(1));
+		appInfo.setId(id);
 
 		backupManager.dataChanged();
 	}
@@ -433,6 +433,7 @@ public class ContentAdapter {
 
 		while (cursor.moveToNext()) {
 			AppInfo appInfo = new AppInfo();
+			appInfo.setId(cursor.getLong(cursor.getColumnIndex(AppInfoTable.KEY_ROWID)));
 			appInfo.setAccount(account);
 			appInfo.setLastUpdate(parseDate(cursor.getString(cursor
 					.getColumnIndex(AppInfoTable.KEY_APP_LASTUPDATE))));
@@ -461,14 +462,6 @@ public class ContentAdapter {
 			if (!cursor.isNull(idx)) {
 				appInfo.setLastCommentsUpdate(new Date(cursor.getLong(idx)));
 			}
-			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_DESCRIPTION);
-			if (!cursor.isNull(idx)) {
-				appInfo.setDescription(cursor.getString(idx));
-			}
-			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_CHANGELOG);
-			if (!cursor.isNull(idx)) {
-				appInfo.setChangelog(cursor.getString(idx));
-			}
 
 			appInfos.add(appInfo);
 		}
@@ -495,7 +488,6 @@ public class ContentAdapter {
 			stats.init();
 
 			appInfo.setLatestStats(stats);
-
 		}
 
 		return appInfos;
@@ -1217,26 +1209,20 @@ public class ContentAdapter {
 
 		Cursor cursor = null;
 		try {
-			cursor = context.getContentResolver()
-					.query(LinksTable.CONTENT_URI,
-							new String[] { LinksTable.KEY_ROWID,
-									LinksTable.KEY_LINK_NAME,
-									LinksTable.KEY_LINK_URL },
-							AppInfoTable.KEY_APP_PACKAGENAME + " = ?",
-							new String[] { packageName },
-							LinksTable.KEY_LINK_NAME);
+			cursor = context.getContentResolver().query(
+					LinksTable.CONTENT_URI,
+					new String[] { LinksTable.KEY_ROWID, LinksTable.KEY_LINK_NAME,
+							LinksTable.KEY_LINK_URL }, AppInfoTable.KEY_APP_PACKAGENAME + " = ?",
+					new String[] { packageName }, LinksTable.KEY_LINK_NAME);
 			if (cursor == null) {
 				return result;
 			}
 
 			while (cursor.moveToNext()) {
 				Link link = new Link();
-				link.setId(cursor.getLong(cursor
-						.getColumnIndex(LinksTable.KEY_ROWID)));
-				link.setName(cursor.getString(cursor
-						.getColumnIndex(LinksTable.KEY_LINK_NAME)));
-				link.setURL(cursor.getString(cursor
-						.getColumnIndex(LinksTable.KEY_LINK_URL)));
+				link.setId(cursor.getLong(cursor.getColumnIndex(LinksTable.KEY_ROWID)));
+				link.setName(cursor.getString(cursor.getColumnIndex(LinksTable.KEY_LINK_NAME)));
+				link.setURL(cursor.getString(cursor.getColumnIndex(LinksTable.KEY_LINK_URL)));
 
 				result.add(link);
 			}
@@ -1252,7 +1238,7 @@ public class ContentAdapter {
 	public void deleteLink(long id) {
 		context.getContentResolver().delete(LinksTable.CONTENT_URI,
 				LinksTable.KEY_ROWID + "=" + id + "", null);
-		
+
 		backupManager.dataChanged();
 	}
 
@@ -1262,7 +1248,7 @@ public class ContentAdapter {
 		values.put(LinksTable.KEY_LINK_URL, url);
 		values.put(LinksTable.KEY_LINK_NAME, name);
 		context.getContentResolver().insert(LinksTable.CONTENT_URI, values);
-		
+
 		backupManager.dataChanged();
 	}
 
@@ -1273,7 +1259,7 @@ public class ContentAdapter {
 
 		context.getContentResolver().update(LinksTable.CONTENT_URI, values,
 				LinksTable.KEY_ROWID + " = " + id, null);
-		
+
 		backupManager.dataChanged();
 	}
 }

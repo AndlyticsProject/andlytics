@@ -15,6 +15,8 @@ import android.util.Log;
 
 import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.Preferences;
+import com.github.andlyticsproject.model.AppDetails;
+import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.DeveloperAccount;
 
 public class AndlyticsDb extends SQLiteOpenHelper {
@@ -51,6 +53,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		db.execSQL(AdmobTable.TABLE_CREATE_ADMOB);
 		db.execSQL(DeveloperAccountsTable.TABLE_CREATE_DEVELOPER_ACCOUNT);
 		db.execSQL(LinksTable.TABLE_CREATE_LINKS);
+		db.execSQL(AppDetailsTable.TABLE_CREATE_APP_DETAILS);
 	}
 
 	@Override
@@ -142,11 +145,9 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			db.execSQL("DROP TABLE IF EXISTS " + LinksTable.DATABASE_TABLE_NAME);
 			db.execSQL(LinksTable.TABLE_CREATE_LINKS);
 
-			Log.d(TAG, "Old version < 20 - adding new appinfo columns");
-			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
-					+ AppInfoTable.KEY_APP_DESCRIPTION + " text");
-			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
-					+ AppInfoTable.KEY_APP_CHANGELOG + " text");
+			Log.d(TAG, "Old version < 20 - adding new app_details table");
+			db.execSQL("DROP TABLE IF EXISTS " + AppDetailsTable.DATABASE_TABLE_NAME);
+			db.execSQL(AppDetailsTable.TABLE_CREATE_APP_DETAILS);
 		}
 
 	}
@@ -388,5 +389,100 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 				c.close();
 			}
 		}
+	}
+
+	public synchronized void fetchAppDetails(AppInfo appInfo) {
+		if (appInfo.getId() == null) {
+			// not persistent
+			return;
+		}
+
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = null;
+		try {
+			c = db.query(AppDetailsTable.DATABASE_TABLE_NAME, AppDetailsTable.ALL_COLUMNS,
+					AppDetailsTable.APPINFO_ID + "=?",
+					new String[] { Long.toString(appInfo.getId()) }, null, null, null);
+			if (c.getCount() < 1 || !c.moveToNext()) {
+				return;
+			}
+
+			Long id = c.getLong(c.getColumnIndex(AppDetailsTable.ROWID));
+			String description = c.getString(c.getColumnIndex(AppDetailsTable.DESCRIPTION));
+			AppDetails details = new AppDetails(description);
+			details.setId(id);
+			int idx = c.getColumnIndex(AppDetailsTable.CHANGELOG);
+			if (!c.isNull(idx)) {
+				details.setChangelog(c.getString(idx));
+			}
+			idx = c.getColumnIndex(AppDetailsTable.LAST_STORE_UPDATE);
+			if (!c.isNull(idx)) {
+				details.setLastStoreUpdate(new Date(c.getLong(idx)));
+			}
+
+			appInfo.setDetails(details);
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+		}
+	}
+
+	private long saveAppDetails(SQLiteDatabase db, AppInfo appInfo) {
+		ContentValues values = toValues(appInfo);
+
+		return db.insertOrThrow(AppDetailsTable.DATABASE_TABLE_NAME, null, values);
+	}
+
+	public synchronized long saveAppDetails(AppInfo appInfo) {
+		return saveAppDetails(getWritableDatabase(), appInfo);
+	}
+
+	public synchronized void updateAppDetails(AppDetails details) {
+		ContentValues values = new ContentValues();
+		values.put(AppDetailsTable.DESCRIPTION, details.getDescription());
+		values.put(AppDetailsTable.CHANGELOG, details.getChangelog());
+		long updateTime = details.getLastStoreUpdate() == null ? 0 : details.getLastStoreUpdate()
+				.getTime();
+		values.put(AppDetailsTable.LAST_STORE_UPDATE, updateTime);
+
+		getWritableDatabase().update(AppDetailsTable.DATABASE_TABLE_NAME, values, "_id = ?",
+				new String[] { Long.toString(details.getId()) });
+	}
+
+	public synchronized void insertOrUpdateAppDetails(AppInfo appInfo) {
+		SQLiteDatabase db = getWritableDatabase();
+
+		Cursor c = null;
+		try {
+			c = db.query(AppDetailsTable.DATABASE_TABLE_NAME,
+					new String[] { AppDetailsTable.ROWID }, AppDetailsTable.APPINFO_ID + "=?",
+					new String[] { Long.toString(appInfo.getId()) }, null, null, null);
+			if (c.getCount() < 1 || !c.moveToNext()) {
+				saveAppDetails(appInfo);
+			} else {
+				long id = saveAppDetails(db, appInfo);
+				appInfo.getDetails().setId(id);
+				updateAppDetails(appInfo.getDetails());
+			}
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+		}
+	}
+
+	public static ContentValues toValues(AppInfo appInfo) {
+		AppDetails details = appInfo.getDetails();
+
+		ContentValues result = new ContentValues();
+		result.put(AppDetailsTable.DESCRIPTION, details.getDescription());
+		result.put(AppDetailsTable.CHANGELOG, details.getChangelog());
+		long updateTime = details.getLastStoreUpdate() == null ? 0 : details.getLastStoreUpdate()
+				.getTime();
+		result.put(AppDetailsTable.LAST_STORE_UPDATE, updateTime);
+		result.put(AppDetailsTable.APPINFO_ID, appInfo.getId());
+
+		return result;
 	}
 }
