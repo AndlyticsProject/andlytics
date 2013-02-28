@@ -23,7 +23,6 @@ public class AddEditLinkDialog extends SherlockDialogFragment {
 	private Long id = null;
 	private String name = null;
 	private String url = null;
-	private String packageName = null;
 
 	private OnFinishAddEditLinkDialogListener onFinishAddEditLinkDialogListener;
 
@@ -47,8 +46,6 @@ public class AddEditLinkDialog extends SherlockDialogFragment {
 			name = arguments.getString("name");
 			url = arguments.getString("url");
 		}
-
-		packageName = arguments.getString("packageName");
 
 		if (id != null) {
 			TextView title = (TextView) view
@@ -102,18 +99,6 @@ public class AddEditLinkDialog extends SherlockDialogFragment {
 				.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						dismiss();
-					}
-				});
-
-		view.findViewById(R.id.links_addedit_dialog_url_marketbutton)
-				.setOnClickListener(new OnClickListener() {
-					public void onClick(View v) {
-						/**
-						 * market:// links can't be made automatically
-						 * clickable. This was the easier solution.
-						 */
-						urlInput.setText("http://play.google.com/store/apps/details?id="
-								+ packageName);
 					}
 				});
 

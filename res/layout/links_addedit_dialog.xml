@@ -48,13 +48,6 @@
                 android:paddingTop="10dp"
                 android:text="@string/links_addedit_dialog_text" />
 
-            <Button
-                android:id="@+id/links_addedit_dialog_url_marketbutton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/links_addedit_dialog_url_marketbutton" >
-            </Button>
-
             <TextView
                 style="@style/MainTableText"
                 android:layout_width="wrap_content"

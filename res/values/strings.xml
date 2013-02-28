@@ -188,8 +188,14 @@
 	<string name="links_addedit_dialog_title_edit">EDIT LINK</string>
 	<string name="links_addedit_dialog_text">This form accepts any http or https URL. market:// links are not supported.</string>
 	<string name="links_addedit_dialog_url_label">URL</string>
-	<string name="links_addedit_dialog_url_marketbutton">Use your market link</string>
 	<string name="links_addedit_dialog_name_label">Name</string>
 	<string name="links_addedit_dialog_name_hint">Leave blank to use a default value</string>
 	<string name="links_addedit_dialog_not_url">Your URL does not parse as a URL.</string>
+	<string name="links_package_name_label">Package name</string>
+	<string name="links_last_store_update_label">Last store update</string>
+	<string name="links_version_label">Version</string>
+	<string name="links_description_label">Description</string>
+	<string name="links_changelog_label">Change log</string>
+	<string name="links_playstore_button">View in the Play Store</string>
+	<string name="links_addlink_button">Add a link</string>
 </resources>
