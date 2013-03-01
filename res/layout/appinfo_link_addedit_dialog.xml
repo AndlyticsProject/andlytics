@@ -20,7 +20,7 @@
             android:paddingTop="5dip" >
 
             <TextView
-                android:id="@+id/links_addedit_dialog_title"
+                android:id="@+id/appinfo_link_addedit_dialog_title"
                 style="@style/MainTableHeadline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="@string/links_addedit_dialog_title_add"
+                android:text="@string/appinfo_link_addedit_dialog_title_add"
                 android:textSize="18dp"
                 android:textStyle="bold" />
 
@@ -38,7 +38,7 @@
                 android:background="@color/andBorder" />
 
             <TextView
-                android:id="@+id/links_addedit_dialog_text"
+                android:id="@+id/appinfo_link_addedit_dialog_text"
                 style="@style/MainTableText"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -46,17 +46,17 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="10dp"
-                android:text="@string/links_addedit_dialog_text" />
+                android:text="@string/appinfo_link_addedit_dialog_text" />
 
             <TextView
                 style="@style/MainTableText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/links_addedit_dialog_url_label"
+                android:text="@string/appinfo_link_addedit_dialog_url_label"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <EditText
-                android:id="@+id/links_addedit_dialog_url_input"
+                android:id="@+id/appinfo_link_addedit_dialog_url_input"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textUri"
@@ -72,11 +72,11 @@
                 style="@style/MainTableText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/links_addedit_dialog_name_label"
+                android:text="@string/appinfo_link_addedit_dialog_name_label"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <EditText
-                android:id="@+id/links_addedit_dialog_name_input"
+                android:id="@+id/appinfo_link_addedit_dialog_name_input"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:minWidth="250dip"
@@ -88,13 +88,13 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/links_addedit_dialog_button_frame"
+        android:id="@+id/appinfo_link_addedit_dialog_button_frame"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
         <RelativeLayout
-            android:id="@+id/links_addedit_dialog_positive_button"
+            android:id="@+id/appinfo_link_addedit_dialog_positive_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -117,7 +117,7 @@
                 android:orientation="horizontal" >
 
                 <TextView
-                    android:id="@+id/links_addedit_dialog_positive_button_text"
+                    android:id="@+id/appinfo_link_addedit_dialog_positive_button_text"
                     style="@style/MainTableText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/links_addedit_dialog_negative_button"
+            android:id="@+id/appinfo_link_addedit_dialog_negative_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -152,7 +152,7 @@
                 android:orientation="horizontal" >
 
                 <TextView
-                    android:id="@+id/links_addedit_dialog_negative_button_text"
+                    android:id="@+id/appinfo_link_addedit_dialog_negative_button_text"
                     style="@style/MainTableText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

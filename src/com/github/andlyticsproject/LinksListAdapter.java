@@ -17,7 +17,7 @@ public class LinksListAdapter extends BaseAdapter {
 
 	private List<Link> links;
 
-	public LinksListAdapter(LinksActivity activity) {
+	public LinksListAdapter(AppInfoActivity activity) {
 		this.layoutInflater = activity.getLayoutInflater();
 		this.links = new ArrayList<Link>();
 	}
@@ -29,17 +29,20 @@ public class LinksListAdapter extends BaseAdapter {
 		ViewHolderChild holder;
 
 		if (convertView == null) {
-			convertView = layoutInflater.inflate(R.layout.links_list_item, null);
+			convertView = layoutInflater.inflate(
+					R.layout.appinfo_links_list_item, null);
 
 			holder = new ViewHolderChild();
-			holder.name = (TextView) convertView.findViewById(R.id.links_list_item_name);
-			holder.url = (TextView) convertView.findViewById(R.id.links_list_item_url);
+			holder.name = (TextView) convertView
+					.findViewById(R.id.appinfo_link_list_item_name);
+			holder.url = (TextView) convertView
+					.findViewById(R.id.appinfo_link_list_item_url);
 
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolderChild) convertView.getTag();
 		}
-		
+
 		holder.name.setText(link.getName());
 		holder.url.setText(link.getURL());
 
@@ -50,7 +53,7 @@ public class LinksListAdapter extends BaseAdapter {
 		TextView name;
 		TextView url;
 	}
-	
+
 	public void setLinks(List<Link> links) {
 		this.links = links;
 	}

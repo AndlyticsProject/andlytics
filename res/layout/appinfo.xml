@@ -7,7 +7,7 @@
     android:outAnimation="@anim/view_switcher_fade_out" >
 
     <ListView
-        android:id="@+id/links_list"
+        android:id="@+id/appinfo_links_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@color/andBackground"

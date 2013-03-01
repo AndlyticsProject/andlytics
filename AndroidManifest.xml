@@ -47,8 +47,8 @@
             android:label="@string/comments" >
         </activity>
         <activity
-            android:name=".LinksActivity"
-            android:label="@string/links" >
+            android:name=".AppInfoActivity"
+            android:label="@string/appinfo" >
         </activity>
         <activity
             android:name=".ChartActivity"

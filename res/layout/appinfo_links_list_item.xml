@@ -1,42 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/links_list_item_app_row"
+    android:id="@+id/appinfo_link_list_item_app_row"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/row_background"  android:descendantFocusability="blocksDescendants" >
+    android:background="@drawable/row_background"
+    android:descendantFocusability="blocksDescendants" >
 
     <RelativeLayout
-        android:id="@+id/links_list_item_link_container"
+        android:id="@+id/appinfo_link_list_item_container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="5dp">
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" >
 
         <TextView
-            android:id="@+id/links_list_item_name"
+            android:id="@+id/appinfo_link_list_item_name"
             style="@style/MainTableText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="15dp"
             android:paddingRight="10dp"
-            android:paddingTop="10dp" />
+            android:paddingTop="10dp"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/links_list_item_url"
+            android:id="@+id/appinfo_link_list_item_url"
             style="@style/MainTableText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/links_list_item_name"
+            android:layout_below="@+id/appinfo_link_list_item_name"
             android:autoLink="all"
             android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:textStyle="bold" />
+            android:paddingRight="15dp" />
     </RelativeLayout>
 
     <View
-        android:id="@+id/links_list_item_shadow"
+        android:id="@+id/appinfo_link_list_item_shadow"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/links_list_item_link_container"
+        android:layout_below="@+id/appinfo_link_list_item_container"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="@color/andBackgroundDarkHighlight"

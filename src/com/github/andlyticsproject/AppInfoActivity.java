@@ -31,7 +31,7 @@ import com.github.andlyticsproject.model.Link;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
-public class LinksActivity extends SherlockFragmentActivity implements
+public class AppInfoActivity extends SherlockFragmentActivity implements
 		AddEditLinkDialog.OnFinishAddEditLinkDialogListener {
 
 	public static final String TAG = Main.class.getSimpleName();
@@ -56,7 +56,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.links);
+		setContentView(R.layout.appinfo);
 
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
@@ -79,15 +79,15 @@ public class LinksActivity extends SherlockFragmentActivity implements
 
 		LayoutInflater layoutInflater = getLayoutInflater();
 
-		list = (ListView) findViewById(R.id.links_list);
+		list = (ListView) findViewById(R.id.appinfo_links_list);
 
 		list.addHeaderView(
-				layoutInflater.inflate(R.layout.links_list_header, null), null,
+				layoutInflater.inflate(R.layout.appinfo_header, null), null,
 				false);
 
 		list.addFooterView(
-				layoutInflater.inflate(R.layout.links_list_empty, null), null,
-				false);
+				layoutInflater.inflate(R.layout.appinfo_links_list_empty, null),
+				null, false);
 
 		links = new ArrayList<Link>();
 
@@ -97,7 +97,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 		linksListAdapter.setLinks(links);
 		linksListAdapter.notifyDataSetChanged();
 
-		View playStoreButton = findViewById(R.id.links_playstore);
+		View playStoreButton = findViewById(R.id.appinfo_playstore);
 
 		playStoreButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -108,27 +108,27 @@ public class LinksActivity extends SherlockFragmentActivity implements
 			}
 		});
 
-		View descriptionView = findViewById(R.id.links_description);
+		View descriptionView = findViewById(R.id.appinfo_description);
 
 		descriptionView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				showLongTextDialog(R.string.links_description_label,
+				showLongTextDialog(R.string.appinfo_description_label,
 						((TextView) v).getText().toString());
 			}
 		});
 
-		View changelogView = findViewById(R.id.links_changelog);
+		View changelogView = findViewById(R.id.appinfo_changelog);
 
 		changelogView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				showLongTextDialog(R.string.links_changelog_label,
+				showLongTextDialog(R.string.appinfo_changelog_label,
 						((TextView) v).getText().toString());
 			}
 		});
 
-		View addLinkView = findViewById(R.id.links_addlink);
+		View addLinkView = findViewById(R.id.appinfo_addlink);
 
 		addLinkView.setOnClickListener(new OnClickListener() {
 			@Override
@@ -218,9 +218,9 @@ public class LinksActivity extends SherlockFragmentActivity implements
 	}
 
 	private static class LoadLinksDb extends
-			DetachableAsyncTask<Void, Void, Void, LinksActivity> {
+			DetachableAsyncTask<Void, Void, Void, AppInfoActivity> {
 
-		LoadLinksDb(LinksActivity activity) {
+		LoadLinksDb(AppInfoActivity activity) {
 			super(activity);
 		}
 
@@ -255,7 +255,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 		linksListAdapter.setLinks(links);
 		linksListAdapter.notifyDataSetChanged();
 
-		linksListEmpty = findViewById(R.id.links_list_empty);
+		linksListEmpty = findViewById(R.id.appinfo_links_list_empty);
 
 		if (links.size() == 0) {
 			linksListEmpty.setVisibility(View.VISIBLE);
@@ -263,20 +263,20 @@ public class LinksActivity extends SherlockFragmentActivity implements
 			linksListEmpty.setVisibility(View.GONE);
 		}
 
-		TextView packageNameView = (TextView) findViewById(R.id.links_package_name);
+		TextView packageNameView = (TextView) findViewById(R.id.appinfo_package_name);
 		packageNameView.setText(packageName);
 
-		TextView versionNameView = (TextView) findViewById(R.id.links_version_name);
+		TextView versionNameView = (TextView) findViewById(R.id.appinfo_version_name);
 		versionNameView.setText(appInfo.getVersionName());
 
-		TextView lastStoreUpdateView = (TextView) findViewById(R.id.links_last_store_update);
+		TextView lastStoreUpdateView = (TextView) findViewById(R.id.appinfo_last_store_update);
 		lastStoreUpdateView.setText(DateFormat.getDateInstance().format(
 				appInfo.getDetails().getLastStoreUpdate()));
 
-		TextView descriptionView = (TextView) findViewById(R.id.links_description);
+		TextView descriptionView = (TextView) findViewById(R.id.appinfo_description);
 		descriptionView.setText(appInfo.getDetails().getDescription());
 
-		TextView changelogView = (TextView) findViewById(R.id.links_changelog);
+		TextView changelogView = (TextView) findViewById(R.id.appinfo_changelog);
 		changelogView.setText(appInfo.getDetails().getChangelog());
 	}
 

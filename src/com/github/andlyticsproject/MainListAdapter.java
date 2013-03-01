@@ -333,7 +333,7 @@ public class MainListAdapter extends BaseAdapter {
 		holder.name.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(activity, LinksActivity.class);
+				Intent intent = new Intent(activity, AppInfoActivity.class);
 				intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
 				if (iconFile.exists()) {
 					intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());

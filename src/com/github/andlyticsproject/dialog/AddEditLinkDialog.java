@@ -39,7 +39,8 @@ public class AddEditLinkDialog extends SherlockDialogFragment {
 			Bundle savedInstanceState) {
 		Bundle arguments = getArguments();
 
-		View view = inflater.inflate(R.layout.links_addedit_dialog, container);
+		View view = inflater.inflate(R.layout.appinfo_link_addedit_dialog,
+				container);
 
 		if (arguments.containsKey("id")) {
 			id = Long.valueOf(arguments.getLong("id"));
@@ -49,14 +50,14 @@ public class AddEditLinkDialog extends SherlockDialogFragment {
 
 		if (id != null) {
 			TextView title = (TextView) view
-					.findViewById(R.id.links_addedit_dialog_title);
-			title.setText(R.string.links_addedit_dialog_title_edit);
+					.findViewById(R.id.appinfo_link_addedit_dialog_title);
+			title.setText(R.string.appinfo_link_addedit_dialog_title_edit);
 		}
 
 		urlInput = (EditText) view
-				.findViewById(R.id.links_addedit_dialog_url_input);
+				.findViewById(R.id.appinfo_link_addedit_dialog_url_input);
 		nameInput = (EditText) view
-				.findViewById(R.id.links_addedit_dialog_name_input);
+				.findViewById(R.id.appinfo_link_addedit_dialog_name_input);
 
 		if (url != null) {
 			urlInput.setText(url);
@@ -66,7 +67,7 @@ public class AddEditLinkDialog extends SherlockDialogFragment {
 			nameInput.setText(name);
 		}
 
-		view.findViewById(R.id.links_addedit_dialog_positive_button)
+		view.findViewById(R.id.appinfo_link_addedit_dialog_positive_button)
 				.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						String urlString = urlInput.getText().toString();
@@ -89,13 +90,13 @@ public class AddEditLinkDialog extends SherlockDialogFragment {
 						} catch (MalformedURLException e) {
 							Toast.makeText(
 									AddEditLinkDialog.this.getActivity(),
-									getString(R.string.links_addedit_dialog_not_url),
+									getString(R.string.appinfo_link_addedit_dialog_not_url),
 									Toast.LENGTH_LONG).show();
 						}
 					}
 				});
 
-		view.findViewById(R.id.links_addedit_dialog_negative_button)
+		view.findViewById(R.id.appinfo_link_addedit_dialog_negative_button)
 				.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						dismiss();
