@@ -1,30 +1,37 @@
 package com.github.andlyticsproject;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.dialog.AddEditLinkDialog;
+import com.github.andlyticsproject.dialog.LongTextDialog;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.Link;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
-public class LinksActivity extends SherlockFragmentActivity implements
+public class AppInfoActivity extends SherlockFragmentActivity implements
 		AddEditLinkDialog.OnFinishAddEditLinkDialogListener {
 
 	public static final String TAG = Main.class.getSimpleName();
@@ -37,8 +44,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 	private List<Link> links;
 
 	private ListView list;
-
-	private View nolinks;
+	private View linksListEmpty;
 
 	private AndlyticsDb db;
 
@@ -50,7 +56,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.links);
+		setContentView(R.layout.appinfo);
 
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
@@ -71,10 +77,17 @@ public class LinksActivity extends SherlockFragmentActivity implements
 			getSupportActionBar().setIcon(icon);
 		}
 
-		list = (ListView) findViewById(R.id.links_list);
+		LayoutInflater layoutInflater = getLayoutInflater();
 
-		nolinks = findViewById(R.id.links_nolinks);
-		list.setEmptyView(nolinks);
+		list = (ListView) findViewById(R.id.appinfo_links_list);
+
+		list.addHeaderView(
+				layoutInflater.inflate(R.layout.appinfo_header, null), null,
+				false);
+
+		list.addFooterView(
+				layoutInflater.inflate(R.layout.appinfo_links_list_empty, null),
+				null, false);
 
 		links = new ArrayList<Link>();
 
@@ -83,6 +96,46 @@ public class LinksActivity extends SherlockFragmentActivity implements
 
 		linksListAdapter.setLinks(links);
 		linksListAdapter.notifyDataSetChanged();
+
+		View playStoreButton = findViewById(R.id.appinfo_playstore);
+
+		playStoreButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				intent.setData(Uri.parse("market://details?id=" + packageName));
+				startActivity(intent);
+			}
+		});
+
+		View descriptionView = findViewById(R.id.appinfo_description);
+
+		descriptionView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showLongTextDialog(R.string.appinfo_description_label,
+						((TextView) v).getText().toString());
+			}
+		});
+
+		View changelogView = findViewById(R.id.appinfo_changelog);
+
+		changelogView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showLongTextDialog(R.string.appinfo_changelog_label,
+						((TextView) v).getText().toString());
+			}
+		});
+
+		View addLinkView = findViewById(R.id.appinfo_addlink);
+
+		addLinkView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showAddEditLinkDialog(null);
+			}
+		});
 
 		db = AndlyticsDb.getInstance(this);
 
@@ -93,7 +146,8 @@ public class LinksActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.add(0, EDIT, 0, R.string.edit);
 		menu.add(0, DELETE, 0, R.string.delete);
@@ -106,15 +160,16 @@ public class LinksActivity extends SherlockFragmentActivity implements
 			android.widget.AdapterView.AdapterContextMenuInfo menuInfo = (android.widget.AdapterView.AdapterContextMenuInfo) item
 					.getMenuInfo();
 
-			int position = menuInfo.position;
+			int position = menuInfo.position - 1; // Subtract one for the header
 			Link link = links.get(position);
 
 			showAddEditLinkDialog(link);
 			return true;
 		case DELETE:
-			menuInfo = (android.widget.AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+			menuInfo = (android.widget.AdapterView.AdapterContextMenuInfo) item
+					.getMenuInfo();
 
-			position = menuInfo.position;
+			position = menuInfo.position - 1; // Subtract one for the header
 			link = links.get(position);
 
 			db.deleteLink(link.getId().longValue());
@@ -127,19 +182,11 @@ public class LinksActivity extends SherlockFragmentActivity implements
 		return super.onContextItemSelected(item);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.clear();
-		getSupportMenuInflater().inflate(R.menu.links_menu, menu);
-
-		return true;
-	}
-
 	/**
 	 * Called if item in option menu is selected.
 	 * 
 	 * @param item
-	 * The chosen menu item
+	 *            The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
@@ -147,10 +194,8 @@ public class LinksActivity extends SherlockFragmentActivity implements
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			overridePendingTransition(R.anim.activity_prev_in, R.anim.activity_prev_out);
-			return true;
-		case R.id.itemLinksmenuAdd:
-			showAddEditLinkDialog(null);
+			overridePendingTransition(R.anim.activity_prev_in,
+					R.anim.activity_prev_out);
 			return true;
 		default:
 			return (super.onOptionsItemSelected(item));
@@ -160,7 +205,8 @@ public class LinksActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onBackPressed() {
 		finish();
-		overridePendingTransition(R.anim.activity_prev_in, R.anim.activity_prev_out);
+		overridePendingTransition(R.anim.activity_prev_in,
+				R.anim.activity_prev_out);
 	}
 
 	public ContentAdapter getDbAdapter() {
@@ -171,9 +217,10 @@ public class LinksActivity extends SherlockFragmentActivity implements
 		return (AndlyticsApp) getApplication();
 	}
 
-	private static class LoadLinksDb extends DetachableAsyncTask<Void, Void, Void, LinksActivity> {
+	private static class LoadLinksDb extends
+			DetachableAsyncTask<Void, Void, Void, AppInfoActivity> {
 
-		LoadLinksDb(LinksActivity activity) {
+		LoadLinksDb(AppInfoActivity activity) {
 			super(activity);
 		}
 
@@ -208,10 +255,29 @@ public class LinksActivity extends SherlockFragmentActivity implements
 		linksListAdapter.setLinks(links);
 		linksListAdapter.notifyDataSetChanged();
 
-		// TODO display these somehow
-		System.out.println(appInfo.getDetails().getDescription());
-		System.out.println(appInfo.getDetails().getChangelog());
-		System.out.println(appInfo.getDetails().getLastStoreUpdate());
+		linksListEmpty = findViewById(R.id.appinfo_links_list_empty);
+
+		if (links.size() == 0) {
+			linksListEmpty.setVisibility(View.VISIBLE);
+		} else {
+			linksListEmpty.setVisibility(View.GONE);
+		}
+
+		TextView packageNameView = (TextView) findViewById(R.id.appinfo_package_name);
+		packageNameView.setText(packageName);
+
+		TextView versionNameView = (TextView) findViewById(R.id.appinfo_version_name);
+		versionNameView.setText(appInfo.getVersionName());
+
+		TextView lastStoreUpdateView = (TextView) findViewById(R.id.appinfo_last_store_update);
+		lastStoreUpdateView.setText(DateFormat.getDateInstance().format(
+				appInfo.getDetails().getLastStoreUpdate()));
+
+		TextView descriptionView = (TextView) findViewById(R.id.appinfo_description);
+		descriptionView.setText(appInfo.getDetails().getDescription());
+
+		TextView changelogView = (TextView) findViewById(R.id.appinfo_changelog);
+		changelogView.setText(appInfo.getDetails().getChangelog());
 	}
 
 	@Override
@@ -228,11 +294,13 @@ public class LinksActivity extends SherlockFragmentActivity implements
 
 	private void showAddEditLinkDialog(Link link) {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		Fragment prev = getSupportFragmentManager().findFragmentByTag("fragment_addedit_link");
+		Fragment prev = getSupportFragmentManager().findFragmentByTag(
+				"fragment_addedit_link");
 		if (prev != null) {
 			ft.remove(prev);
 		}
 		ft.addToBackStack(null);
+
 		AddEditLinkDialog addEditLinkDialog = new AddEditLinkDialog();
 
 		Bundle arguments = new Bundle();
@@ -242,12 +310,30 @@ public class LinksActivity extends SherlockFragmentActivity implements
 			arguments.putString("url", link.getURL());
 		}
 
-		arguments.putString("packageName", packageName);
-
 		addEditLinkDialog.setArguments(arguments);
 
 		addEditLinkDialog.setOnFinishAddEditLinkDialogListener(this);
 
 		addEditLinkDialog.show(ft, "fragment_addedit_link");
+	}
+
+	private void showLongTextDialog(int title, String longText) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag(
+				"fragment_longtext");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		LongTextDialog longTextDialog = new LongTextDialog();
+
+		Bundle arguments = new Bundle();
+		arguments.putInt("title", title);
+		arguments.putString("longText", longText);
+
+		longTextDialog.setArguments(arguments);
+
+		longTextDialog.show(ft, "fragment_longtext");
 	}
 }
