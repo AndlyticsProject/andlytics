@@ -193,7 +193,7 @@
 	<string name="links_addedit_dialog_not_url">Your URL does not parse as a URL.</string>
 	<string name="links_package_name_label">Package name</string>
 	<string name="links_last_store_update_label">Last store update</string>
-	<string name="links_version_label">Version</string>
+	<string name="links_version_name_label">Version</string>
 	<string name="links_description_label">Description</string>
 	<string name="links_changelog_label">Change log</string>
 	<string name="links_playstore_button">View in the Play Store</string>

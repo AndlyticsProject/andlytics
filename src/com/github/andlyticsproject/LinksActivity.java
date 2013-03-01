@@ -14,10 +14,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -42,8 +44,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 	private List<Link> links;
 
 	private ListView list;
-
-	private View nolinks;
+	private View linksListEmpty;
 
 	private AndlyticsDb db;
 
@@ -76,10 +77,17 @@ public class LinksActivity extends SherlockFragmentActivity implements
 			getSupportActionBar().setIcon(icon);
 		}
 
+		LayoutInflater layoutInflater = getLayoutInflater();
+
 		list = (ListView) findViewById(R.id.links_list);
 
-		nolinks = findViewById(R.id.links_nolinks);
-		list.setEmptyView(nolinks);
+		list.addHeaderView(
+				layoutInflater.inflate(R.layout.links_list_header, null), null,
+				false);
+
+		list.addFooterView(
+				layoutInflater.inflate(R.layout.links_list_empty, null), null,
+				false);
 
 		links = new ArrayList<Link>();
 
@@ -152,7 +160,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 			android.widget.AdapterView.AdapterContextMenuInfo menuInfo = (android.widget.AdapterView.AdapterContextMenuInfo) item
 					.getMenuInfo();
 
-			int position = menuInfo.position;
+			int position = menuInfo.position - 1; // Subtract one for the header
 			Link link = links.get(position);
 
 			showAddEditLinkDialog(link);
@@ -161,7 +169,7 @@ public class LinksActivity extends SherlockFragmentActivity implements
 			menuInfo = (android.widget.AdapterView.AdapterContextMenuInfo) item
 					.getMenuInfo();
 
-			position = menuInfo.position;
+			position = menuInfo.position - 1; // Subtract one for the header
 			link = links.get(position);
 
 			db.deleteLink(link.getId().longValue());
@@ -246,6 +254,14 @@ public class LinksActivity extends SherlockFragmentActivity implements
 	private void refreshLinks() {
 		linksListAdapter.setLinks(links);
 		linksListAdapter.notifyDataSetChanged();
+
+		linksListEmpty = findViewById(R.id.links_list_empty);
+
+		if (links.size() == 0) {
+			linksListEmpty.setVisibility(View.VISIBLE);
+		} else {
+			linksListEmpty.setVisibility(View.GONE);
+		}
 
 		TextView packageNameView = (TextView) findViewById(R.id.links_package_name);
 		packageNameView.setText(packageName);
