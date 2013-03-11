@@ -332,6 +332,7 @@ public class JsonParser {
 		for (int i = 0; i < count; i++) {
 			Comment comment = new Comment();
 			JSONObject jsonComment = jsonComments.getJSONObject(i);
+			// TODO These examples are out of date and need updating
 			/*
 			 * null
 			 * "gaia:17919762185957048423:1:vm:11887109942373535891", -- ID?
@@ -386,12 +387,12 @@ public class JsonParser {
 			}
 			comment.setDate(parseDate(jsonComment.getLong("3")));
 			comment.setRating(jsonComment.getInt("4"));
-			String version = jsonComment.optString("8");
+			String version = jsonComment.optString("7");
 			if (version != null && !"".equals(version) && !version.equals("null")) {
 				comment.setAppVersion(version);
 			}
-			comment.setText(jsonComment.getString("6"));
-			JSONObject jsonDevice = jsonComment.optJSONObject("9");
+			comment.setText(jsonComment.optJSONObject("5").getString("3"));
+			JSONObject jsonDevice = jsonComment.optJSONObject("8");
 			if (jsonDevice != null) {
 				String device = jsonDevice.optString("3");
 				JSONObject extraInfo = jsonDevice.optJSONObject("2");
