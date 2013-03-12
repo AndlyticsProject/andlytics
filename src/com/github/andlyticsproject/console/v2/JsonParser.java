@@ -402,11 +402,11 @@ public class JsonParser {
 				comment.setDevice(device.trim());
 			}
 
-			JSONArray jsonReply = jsonComment.optJSONArray("11");
+			JSONObject jsonReply = jsonComment.optJSONObject("9");
 			if (jsonReply != null) {
 				Comment reply = new Comment(true);
-				reply.setText(jsonReply.getString(1));
-				reply.setReplyDate(parseDate(jsonReply.getLong(3)));
+				reply.setText(jsonReply.getString("1"));
+				reply.setReplyDate(parseDate(jsonReply.getLong("3")));
 				reply.setDate(comment.getDate());
 				comment.setReply(reply);
 			}
