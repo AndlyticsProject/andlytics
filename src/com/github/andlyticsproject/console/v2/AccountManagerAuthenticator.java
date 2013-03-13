@@ -21,6 +21,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
@@ -137,6 +138,38 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 			}
 			if (DEBUG) {
 				Log.d(TAG, "Weblogin URL: " + webloginUrl);
+			}
+
+			if (!webloginUrl.contains("MergeSession")) {
+				Log.d(TAG, "Most probably additional verification is required, "
+						+ "opening browser");
+
+				Intent viewInBrowser = new Intent(Intent.ACTION_VIEW);
+				viewInBrowser.setData(Uri.parse(webloginUrl));
+				if (activity == null) {
+					Context ctx = AndlyticsApp.getInstance();
+					Builder builder = new NotificationCompat.Builder(ctx);
+					builder.setSmallIcon(R.drawable.statusbar_andlytics);
+					builder.setContentTitle(ctx.getResources().getString(R.string.auth_error,
+							accountName));
+					builder.setContentText(ctx.getResources().getString(
+							R.string.auth_error_open_browser,
+							accountName));
+					builder.setAutoCancel(true);
+					PendingIntent contentIntent = PendingIntent.getActivity(ctx,
+							accountName.hashCode(), viewInBrowser,
+							PendingIntent.FLAG_UPDATE_CURRENT);
+					builder.setContentIntent(contentIntent);
+
+					NotificationManager nm = (NotificationManager) ctx
+							.getSystemService(Context.NOTIFICATION_SERVICE);
+					nm.notify(accountName.hashCode(), builder.build());
+				} else {
+					activity.startActivity(viewInBrowser);
+				}
+
+				throw new AuthenticationException("Sign in via the browser, then "
+						+ "get back to Andlytics");
 			}
 
 			HttpGet getConsole = new HttpGet(webloginUrl);
