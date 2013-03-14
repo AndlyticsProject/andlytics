@@ -25,6 +25,9 @@ public class DevConsoleV2Protocol {
 	// Templates for payloads used in POST requests
 	static final String FETCH_APPS_TEMPLATE = "{\"method\":\"fetch\","
 			+ "\"params\":{\"2\":1,\"3\":7},\"xsrf\":\"%s\"}";
+	// 1$: comma separated list of package names
+	static final String FETCH_APPS_BY_PACKAGES_TEMPLATE = "{\"method\":\"fetch\","
+			+ "\"params\":{\"1\":[%1$s],\"3\":1},\"xsrf\":\"%2$s\"}";
 	// 1$: package name, 2$: XSRF
 	static final String FETCH_APP_TEMPLATE = "{\"method\":\"fetch\","
 			+ "\"params\":{\"1\":[\"%1$s\"],\"3\":0},\"xsrf\":\"%2$s\"}";
@@ -123,10 +126,27 @@ public class DevConsoleV2Protocol {
 		return String.format(FETCH_APPS_TEMPLATE, sessionCredentials.getXsrfToken());
 	}
 
+	String createFetchAppInfosRequest(List<String> packages) {
+		checkState();
 
-	List<AppInfo> parseAppInfosResponse(String json, String accountName) {
+		StringBuilder buff = new StringBuilder();
+		for (int i = 0; i < packages.size(); i++) {
+			String packageName = packages.get(i);
+			buff.append(packageName);
+			if (i != packages.size() - 1) {
+				buff.append(",");
+			}
+		}
+		String packageList = buff.toString();
+
+		return String.format(FETCH_APPS_BY_PACKAGES_TEMPLATE, packageList,
+				sessionCredentials.getXsrfToken());
+	}
+
+
+	List<AppInfo> parseAppInfosResponse(String json, String accountName, boolean skipIncomplete) {
 		try {
-			return JsonParser.parseAppInfos(json, accountName);
+			return JsonParser.parseAppInfos(json, accountName, skipIncomplete);
 		} catch (JSONException ex) {
 			saveDebugJson(json);
 			throw new DevConsoleProtocolException(json, ex);

@@ -285,4 +285,8 @@ public class AppInfo {
 		this.lastCommentsUpdate = lastCommentsUpdate == null ? null : (Date) lastCommentsUpdate
 				.clone();
 	}
+
+	public boolean isIncomplete() {
+		return name == null || versionName == null || iconUrl == null;
+	}
 }
