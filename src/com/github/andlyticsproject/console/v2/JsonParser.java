@@ -106,10 +106,12 @@ public class JsonParser {
 	 * 
 	 * @param json
 	 * @param accountName
+	 * @param skipIncomplete
 	 * @return List of apps
 	 * @throws JSONException
 	 */
-	static List<AppInfo> parseAppInfos(String json, String accountName) throws JSONException {
+	static List<AppInfo> parseAppInfos(String json, String accountName, boolean skipIncomplete)
+			throws JSONException {
 
 		Date now = new Date();
 		List<AppInfo> apps = new ArrayList<AppInfo>();
@@ -208,16 +210,20 @@ public class JsonParser {
 			// skip if we can't get all the data
 			// XXX should we just let this crash so we know there is a problem?
 			if (!jsonAppInfo.has("2")) {
-				Log.d(TAG, String.format(
-						"Skipping app %d because no app details found: package name=%s", i,
-						packageName));
-				continue;
+				if (skipIncomplete) {
+					Log.d(TAG, String.format(
+							"Skipping app %d because no app details found: package name=%s", i,
+							packageName));
+					continue;
+				}
 			}
 			if (!jsonAppInfo.has("5")) {
-				Log.d(TAG, String.format(
-						"Skipping app %d because no versions info found: package name=%s", i,
-						packageName));
-				continue;
+				if (skipIncomplete) {
+					Log.d(TAG, String.format(
+							"Skipping app %d because no versions info found: package name=%s", i,
+							packageName));
+					continue;
+				}
 			}
 
 
@@ -244,10 +250,12 @@ public class JsonParser {
 				pp("appVersions", appVersions);
 			}
 			if (appVersions == null) {
-				Log.d(TAG, String.format(
-						"Skipping app %d because no versions info found: package name=%s", i,
-						packageName));
-				continue;
+				if (skipIncomplete) {
+					Log.d(TAG, String.format(
+							"Skipping app %d because no versions info found: package name=%s", i,
+							packageName));
+					continue;
+				}
 			}
 			JSONObject lastAppVersionDetails = appVersions.getJSONObject(appVersions.length() - 1)
 					.getJSONObject("2");
@@ -273,9 +281,12 @@ public class JsonParser {
 				pp("jsonAppStats", jsonAppStats);
 			}
 			if (jsonAppStats == null) {
-				Log.d(TAG, String.format("Skipping app %d because no stats found: package name=%s",
-						i, packageName));
-				continue;
+				if (skipIncomplete) {
+					Log.d(TAG, String.format(
+							"Skipping app %d because no stats found: package name=%s", i,
+							packageName));
+					continue;
+				}
 			}
 			AppStats stats = new AppStats();
 			stats.setRequestDate(now);
