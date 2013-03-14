@@ -1094,7 +1094,6 @@ public class ContentAdapter {
 			if (cursor != null) {
 				cursor.close();
 			}
-			return result;
 		}
 	}
 
