@@ -159,7 +159,32 @@ public class DevConsoleV2 implements DevConsole {
 	private List<AppInfo> fetchAppInfos() throws DevConsoleException {
 		String response = post(protocol.createFetchAppsUrl(), protocol.createFetchAppInfosRequest());
 
-		return protocol.parseAppInfosResponse(response, accountName);
+		// don't skip incomplete apps, so we can get the package list
+		List<AppInfo> apps = protocol.parseAppInfosResponse(response, accountName, false);
+		if (apps.isEmpty()) {
+			return apps;
+		}
+
+		List<AppInfo> result = new ArrayList<AppInfo>(apps);
+		List<String> incompletePackages = new ArrayList<String>();
+		for (AppInfo app : apps) {
+			if (app.isIncomplete()) {
+				result.remove(app);
+				incompletePackages.add(app.getPackageName());
+			}
+		}
+
+		if (incompletePackages.isEmpty()) {
+			return result;
+		}
+
+		response = post(protocol.createFetchAppsUrl(),
+				protocol.createFetchAppInfosRequest(incompletePackages));
+		// if info is not here, not much to do, skip
+		List<AppInfo> extraApps = protocol.parseAppInfosResponse(response, accountName, true);
+		result.addAll(extraApps);
+
+		return result;
 	}
 
 	/**
@@ -183,13 +208,12 @@ public class DevConsoleV2 implements DevConsole {
 	}
 
 	/**
-	 * Fetches ratings for the given packageName and adds them to the given
-	 * {@link AppStats} object
+	 * Fetches ratings for the given packageName and adds them to the given {@link AppStats} object
 	 * 
 	 * @param packageName
-	 *            The app to fetch ratings for
+	 * The app to fetch ratings for
 	 * @param stats
-	 *            The AppStats object to add them to
+	 * The AppStats object to add them to
 	 * @throws DevConsoleException
 	 */
 	private void fetchRatings(String packageName, AppStats stats) throws DevConsoleException {
