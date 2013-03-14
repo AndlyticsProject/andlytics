@@ -79,7 +79,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		}
 		
 		if (comment.isReply()) {
-			holder.date.setText(formatCommentDate(comment.getReplyDate()));
+			holder.date.setText(formatCommentDate(comment.getDate()));
 			holder.text.setText(comment.getText());
 		} else {
 			String[] commentContent = comment.getText().split("\t");

@@ -386,7 +386,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 			if (prevComment != null) {
 
 				CommentGroup group = new CommentGroup();
-				group.setDate(comment.getDate());
+				group.setDate(comment.isReply() ? comment.getOriginalCommentDate() : comment.getDate());
 
 				if (commentGroups.contains(group)) {
 

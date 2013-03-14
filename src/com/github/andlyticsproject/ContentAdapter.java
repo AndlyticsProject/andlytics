@@ -1079,19 +1079,22 @@ public class ContentAdapter {
 				if (replyText != null) {
 					Comment reply = new Comment(true);
 					reply.setText(replyText);
-					reply.setReplyDate(parseDate(cursor.getString(cursor
+					reply.setDate(parseDate(cursor.getString(cursor
 							.getColumnIndex(CommentsTable.KEY_COMMENT_REPLY_DATE))));
-					reply.setDate(comment.getDate());
+					reply.setOriginalCommentDate(comment.getDate());
 					comment.setReply(reply);
 				}
 				result.add(comment);
 			}
-
+			if (cursor != null) {
+				cursor.close();
+			}
 			return result;
 		} finally {
 			if (cursor != null) {
 				cursor.close();
 			}
+			return result;
 		}
 	}
 
