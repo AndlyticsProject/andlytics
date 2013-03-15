@@ -214,16 +214,20 @@ public class JsonParser {
 					Log.d(TAG, String.format(
 							"Skipping app %d because no app details found: package name=%s", i,
 							packageName));
-					continue;
+				} else {
+					apps.add(app);
 				}
+				continue;
 			}
 			if (!jsonAppInfo.has("5")) {
 				if (skipIncomplete) {
 					Log.d(TAG, String.format(
 							"Skipping app %d because no versions info found: package name=%s", i,
 							packageName));
-					continue;
+				} else {
+					apps.add(app);
 				}
+				continue;
 			}
 
 
@@ -254,8 +258,10 @@ public class JsonParser {
 					Log.d(TAG, String.format(
 							"Skipping app %d because no versions info found: package name=%s", i,
 							packageName));
-					continue;
+				} else {
+					apps.add(app);
 				}
+				continue;
 			}
 			JSONObject lastAppVersionDetails = appVersions.getJSONObject(appVersions.length() - 1)
 					.getJSONObject("2");
@@ -285,8 +291,10 @@ public class JsonParser {
 					Log.d(TAG, String.format(
 							"Skipping app %d because no stats found: package name=%s", i,
 							packageName));
-					continue;
+				} else {
+					apps.add(app);
 				}
+				continue;
 			}
 			AppStats stats = new AppStats();
 			stats.setRequestDate(now);
