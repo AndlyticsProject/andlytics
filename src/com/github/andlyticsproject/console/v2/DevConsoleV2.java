@@ -178,10 +178,14 @@ public class DevConsoleV2 implements DevConsole {
 			return result;
 		}
 
+		Log.d(TAG,
+				String.format("Got %d incomplete apps, issuing details request",
+						incompletePackages.size()));
 		response = post(protocol.createFetchAppsUrl(),
 				protocol.createFetchAppInfosRequest(incompletePackages));
 		// if info is not here, not much to do, skip
 		List<AppInfo> extraApps = protocol.parseAppInfosResponse(response, accountName, true);
+		Log.d(TAG, String.format("Got %d extra apps from details request", extraApps.size()));
 		result.addAll(extraApps);
 
 		return result;

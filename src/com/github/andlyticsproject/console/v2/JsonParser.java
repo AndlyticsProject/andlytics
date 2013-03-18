@@ -26,7 +26,7 @@ public class JsonParser {
 
 	private static final String TAG = JsonParser.class.getSimpleName();
 
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 
 	private JsonParser() {
 
@@ -215,6 +215,7 @@ public class JsonParser {
 							"Skipping app %d because no app details found: package name=%s", i,
 							packageName));
 				} else {
+					Log.d(TAG, "Adding incomplete app: " + packageName);
 					apps.add(app);
 				}
 				continue;
@@ -225,6 +226,7 @@ public class JsonParser {
 							"Skipping app %d because no versions info found: package name=%s", i,
 							packageName));
 				} else {
+					Log.d(TAG, "Adding incomplete app: " + packageName);
 					apps.add(app);
 				}
 				continue;
@@ -259,6 +261,7 @@ public class JsonParser {
 							"Skipping app %d because no versions info found: package name=%s", i,
 							packageName));
 				} else {
+					Log.d(TAG, "Adding incomplete app: " + packageName);
 					apps.add(app);
 				}
 				continue;
@@ -292,6 +295,7 @@ public class JsonParser {
 							"Skipping app %d because no stats found: package name=%s", i,
 							packageName));
 				} else {
+					Log.d(TAG, "Adding incomplete app: " + packageName);
 					apps.add(app);
 				}
 				continue;
