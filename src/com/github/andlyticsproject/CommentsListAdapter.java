@@ -77,19 +77,26 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		} else {
 			holder = (ViewHolderChild) convertView.getTag();
 		}
-		
+
 		if (comment.isReply()) {
 			holder.date.setText(formatCommentDate(comment.getDate()));
 			holder.text.setText(comment.getText());
 		} else {
-			String[] commentContent = comment.getText().split("\t");
+			String[] commentContent = comment.getText().split("\\t");
 			if (commentContent != null && commentContent.length > 1) {
 				holder.title.setText(commentContent[0]);
-				holder.text.setText(commentContent[1]);
+				// TODO better UI, persist language
+				holder.text.setText(commentContent[1]
+						+ (comment.getLanguage() == null ? "" : String.format(" [%s]",
+								comment.getLanguage())));
 				holder.text.setVisibility(View.VISIBLE);
-			} else if(commentContent != null && commentContent.length == 1) {
-				holder.title.setText(commentContent[0]);
-				holder.text.setVisibility(View.GONE);		
+			} else if (commentContent != null && commentContent.length == 1) {
+				// TODO better UI, persist language
+				holder.text.setText(commentContent[0]
+						+ (comment.getLanguage() == null ? "" : String.format(" [%s]",
+								comment.getLanguage())));
+				holder.title.setText(null);
+				holder.title.setVisibility(View.GONE);
 			}
 			holder.user.setText(comment.getUser() == null ? context
 					.getString(R.string.comment_no_user_info) : comment.getUser());
@@ -100,21 +107,21 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			holder.version.setVisibility(View.GONE);
 			holder.device.setVisibility(View.GONE);
 			boolean showInfoBox = false;
-			
+
 			// building version/device
 			if (isNotEmptyOrNull(version)) {
 				holder.version.setText(version);
 				holder.versionIcon.setVisibility(View.VISIBLE);
 				holder.version.setVisibility(View.VISIBLE);
 				showInfoBox = true;
-			} 
+			}
 			if (isNotEmptyOrNull(device)) {
 				holder.device.setText(device);
 				holder.deviceIcon.setVisibility(View.VISIBLE);
 				holder.device.setVisibility(View.VISIBLE);
 				showInfoBox = true;
 			}
-			
+
 			if (showInfoBox) {
 				holder.deviceVersionContainer.setVisibility(View.VISIBLE);
 			} else {
@@ -220,7 +227,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	static class ViewHolderChild {
 		RatingBar rating;
 		TextView text;
-		TextView title;		
+		TextView title;
 		TextView user;
 		TextView date;
 		LinearLayout deviceVersionContainer;

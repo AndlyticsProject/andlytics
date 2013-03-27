@@ -34,9 +34,9 @@ public class DevConsoleV2Protocol {
 	// 1$: package name, 2$: XSRF
 	static final String GET_RATINGS_TEMPLATE = "{\"method\":\"getRatings\","
 			+ "\"params\":{\"1\":[\"%1$s\"]},\"xsrf\":\"%2$s\"}";
-	// 1$: package name, 2$: start, 3$: num comments to fetch, 4$ XSRF
+	// 1$: package name, 2$: start, 3$: num comments to fetch, 4$: display locale, 5$ XSRF
 	static final String GET_REVIEWS_TEMPLATE = "{\"method\":\"getReviews\","
-			+ "\"params\":{\"1\":\"%1$s\",\"2\":%2$d,\"3\":%3$d},\"xsrf\":\"%4$s\"}";
+			+ "\"params\":{\"1\":\"%1$s\",\"2\":%2$d,\"3\":%3$d,\"8\":%4$s},\"xsrf\":\"%5$s\"}";
 	// 1$: package name, 2$: stats type, 3$: stats by, 4$: XSRF
 	static final String GET_COMBINED_STATS_TEMPLATE = "{\"method\":\"getCombinedStats\","
 			+ "\"params\":{\"1\":\"%1$s\",\"2\":1,\"3\":%2$d,\"4\":[%3$d]},\"xsrf\":\"%4$s\"}";
@@ -197,10 +197,11 @@ public class DevConsoleV2Protocol {
 		}
 	}
 
-	String createFetchCommentsRequest(String packageName, int start, int pageSize) {
+	String createFetchCommentsRequest(String packageName, int start, int pageSize,
+			String displayLocale) {
 		checkState();
 
-		return String.format(GET_REVIEWS_TEMPLATE, packageName, start, pageSize,
+		return String.format(GET_REVIEWS_TEMPLATE, packageName, start, pageSize, displayLocale,
 				sessionCredentials.getXsrfToken());
 	}
 

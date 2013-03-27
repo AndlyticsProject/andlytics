@@ -24,6 +24,7 @@ import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
+import com.github.andlyticsproject.util.Utils;
 
 /**
  * This is a WIP class representing the new v2 version of the developer console.
@@ -115,7 +116,8 @@ public class DevConsoleV2 implements DevConsole {
 			// in fetchAppInfos
 			AppStats stats = app.getLatestStats();
 			fetchRatings(app.getPackageName(), stats);
-			stats.setNumberOfComments(fetchCommentsCount(app.getPackageName()));
+			stats.setNumberOfComments(fetchCommentsCount(app.getPackageName(),
+					Utils.getDisplayLocale()));
 		}
 
 		return apps;
@@ -133,19 +135,19 @@ public class DevConsoleV2 implements DevConsole {
 	 * @throws DevConsoleException
 	 */
 	public synchronized List<Comment> getComments(Activity activity, String packageName,
-			int startIndex, int count) throws DevConsoleException {
+			int startIndex, int count, String displayLocale) throws DevConsoleException {
 		try {
 			if (!authenticateWithCachedCredentialas(activity)) {
 				return new ArrayList<Comment>();
 			}
 
-			return fetchComments(packageName, startIndex, count);
+			return fetchComments(packageName, startIndex, count, displayLocale);
 		} catch (AuthenticationException ex) {
 			if (!authenticateFromScratch(activity)) {
 				return new ArrayList<Comment>();
 			}
 
-			return fetchComments(packageName, startIndex, count);
+			return fetchComments(packageName, startIndex, count, displayLocale);
 		}
 	}
 
@@ -233,14 +235,15 @@ public class DevConsoleV2 implements DevConsole {
 	 * @return
 	 * @throws DevConsoleException
 	 */
-	private int fetchCommentsCount(String packageName) throws DevConsoleException {
+	private int fetchCommentsCount(String packageName, String displayLocale)
+			throws DevConsoleException {
 		// TODO -- this doesn't always produce correct results
 		// emulate the console: fetch first 50, get approx num. comments,
 		// fetch last 50 (or so) to get exact number.
 		int pageSize = 50;
 
 		String response = post(protocol.createFetchCommentsUrl(),
-				protocol.createFetchCommentsRequest(packageName, 0, pageSize));
+				protocol.createFetchCommentsRequest(packageName, 0, pageSize, displayLocale));
 		int approxNumComments = protocol.extractCommentsCount(response);
 		if (approxNumComments <= pageSize) {
 			// this has a good chance of being exact
@@ -248,16 +251,16 @@ public class DevConsoleV2 implements DevConsole {
 		}
 
 		response = post(protocol.createFetchCommentsUrl(), protocol.createFetchCommentsRequest(
-				packageName, approxNumComments - pageSize, pageSize));
+				packageName, approxNumComments - pageSize, pageSize, displayLocale));
 		int finalNumComments = protocol.extractCommentsCount(response);
 
 		return finalNumComments;
 	}
 
-	private List<Comment> fetchComments(String packageName, int startIndex, int count)
-			throws DevConsoleException {
+	private List<Comment> fetchComments(String packageName, int startIndex, int count,
+			String displayLocale) throws DevConsoleException {
 		String response = post(protocol.createFetchCommentsUrl(),
-				protocol.createFetchCommentsRequest(packageName, startIndex, count));
+				protocol.createFetchCommentsRequest(packageName, startIndex, count, displayLocale));
 
 		return protocol.parseCommentsResponse(response);
 	}

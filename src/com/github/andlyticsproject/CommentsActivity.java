@@ -288,9 +288,8 @@ public class CommentsActivity extends BaseDetailsActivity {
 			if (activity.maxAvailableComments != 0) {
 				DevConsoleV2 console = DevConsoleRegistry.getInstance().get(activity.accountName);
 				try {
-
 					List<Comment> result = console.getComments(activity, activity.packageName,
-							activity.nextCommentIndex, MAX_LOAD_COMMENTS);
+							activity.nextCommentIndex, MAX_LOAD_COMMENTS, Utils.getDisplayLocale());
 					activity.updateCommentsCacheIfNecessary(result);
 
 					activity.incrementNextCommentIndex(result.size());
@@ -386,7 +385,8 @@ public class CommentsActivity extends BaseDetailsActivity {
 			if (prevComment != null) {
 
 				CommentGroup group = new CommentGroup();
-				group.setDate(comment.isReply() ? comment.getOriginalCommentDate() : comment.getDate());
+				group.setDate(comment.isReply() ? comment.getOriginalCommentDate() : comment
+						.getDate());
 
 				if (commentGroups.contains(group)) {
 
