@@ -1030,6 +1030,8 @@ public class ContentAdapter {
 			}
 			initialValues.put(CommentsTable.KEY_COMMENT_REPLY_TEXT, replyText);
 			initialValues.put(CommentsTable.KEY_COMMENT_REPLY_DATE, replyDate);
+			initialValues.put(CommentsTable.KEY_COMMENT_LANGUAGE, comment.getLanguage());
+			initialValues.put(CommentsTable.KEY_COMMENT_ORIGINAL_TEXT, comment.getOriginalText());
 
 			context.getContentResolver().insert(CommentsTable.CONTENT_URI, initialValues);
 
@@ -1052,7 +1054,9 @@ public class ContentAdapter {
 							CommentsTable.KEY_COMMENT_USER, CommentsTable.KEY_COMMENT_DEVICE,
 							CommentsTable.KEY_COMMENT_APP_VERSION,
 							CommentsTable.KEY_COMMENT_REPLY_TEXT,
-							CommentsTable.KEY_COMMENT_REPLY_DATE },
+							CommentsTable.KEY_COMMENT_REPLY_DATE,
+							CommentsTable.KEY_COMMENT_LANGUAGE,
+							CommentsTable.KEY_COMMENT_ORIGINAL_TEXT },
 					AppInfoTable.KEY_APP_PACKAGENAME + " = ?", new String[] { packageName },
 					CommentsTable.KEY_COMMENT_DATE + " desc");
 			if (cursor == null) {
@@ -1084,6 +1088,15 @@ public class ContentAdapter {
 					reply.setOriginalCommentDate(comment.getDate());
 					comment.setReply(reply);
 				}
+				int idx = cursor.getColumnIndex(CommentsTable.KEY_COMMENT_LANGUAGE);
+				if (!cursor.isNull(idx)) {
+					comment.setLanguage(cursor.getString(idx));
+				}
+				idx = cursor.getColumnIndex(CommentsTable.KEY_COMMENT_ORIGINAL_TEXT);
+				if (!cursor.isNull(idx)) {
+					comment.setOriginalText(cursor.getString(idx));
+				}
+
 				result.add(comment);
 			}
 			if (cursor != null) {

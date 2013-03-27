@@ -9,13 +9,14 @@ public class Comment {
 	
 	private boolean isReply = false;
 
-	// this is the translated text
+	// this is either the translated text, or the same as originalText, 
+	// depending on display language (current locale)
 	private String text;
 
-	// no persisted for now
+	// text in original language
 	private String originalText;
 
-	// language of the orignal comment
+	// language of the original comment
 	private String language;
 
 	private Date date;

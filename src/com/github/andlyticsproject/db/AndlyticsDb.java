@@ -21,7 +21,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 
 	private static final String TAG = AndlyticsDb.class.getSimpleName();
 
-	private static final int DATABASE_VERSION = 19;
+	private static final int DATABASE_VERSION = 20;
 
 	private static final String DATABASE_NAME = "andlytics";
 
@@ -133,6 +133,14 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			Log.d(TAG, "Old version < 19 - adding new appstats columns");
 			db.execSQL("ALTER table " + AppStatsTable.DATABASE_TABLE_NAME + " add "
 					+ AppStatsTable.KEY_STATS_NUM_ERRORS + " integer");
+		}
+
+		if (oldVersion < 20) {
+			Log.w(TAG, "Old version < 16 - add new comments colums");
+			db.execSQL("ALTER table " + CommentsTable.DATABASE_TABLE_NAME + " add "
+					+ CommentsTable.KEY_COMMENT_LANGUAGE + " text");
+			db.execSQL("ALTER table " + CommentsTable.DATABASE_TABLE_NAME + " add "
+					+ CommentsTable.KEY_COMMENT_ORIGINAL_TEXT + " text");
 		}
 
 	}
