@@ -94,6 +94,15 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:gravity="center"
+            android:paddingRight="3dp"
+            android:textColor="#8F9698" />
+        
+        <TextView
+            android:id="@+id/comments_list_item_language"
+            style="@style/MainTableText"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center"
             android:textColor="#8F9698" />
     </LinearLayout>
 

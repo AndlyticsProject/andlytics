@@ -72,6 +72,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 					.findViewById(R.id.comments_list_icon_device);
 			holder.versionIcon = (ImageView) convertView
 					.findViewById(R.id.comments_list_icon_version);
+			holder.language = (TextView) convertView.findViewById(R.id.comments_list_item_language);
 
 			convertView.setTag(holder);
 		} else {
@@ -85,27 +86,24 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			String[] commentContent = comment.getText().split("\\t");
 			if (commentContent != null && commentContent.length > 1) {
 				holder.title.setText(commentContent[0]);
-				// TODO better UI, persist language
-				holder.text.setText(commentContent[1]
-						+ (comment.getLanguage() == null ? "" : String.format(" [%s]",
-								comment.getLanguage())));
+				holder.text.setText(commentContent[1]);
 				holder.text.setVisibility(View.VISIBLE);
 			} else if (commentContent != null && commentContent.length == 1) {
-				// TODO better UI, persist language
-				holder.text.setText(commentContent[0]
-						+ (comment.getLanguage() == null ? "" : String.format(" [%s]",
-								comment.getLanguage())));
+				holder.text.setText(commentContent[0]);
 				holder.title.setText(null);
 				holder.title.setVisibility(View.GONE);
 			}
+
 			holder.user.setText(comment.getUser() == null ? context
 					.getString(R.string.comment_no_user_info) : comment.getUser());
 			String version = comment.getAppVersion();
 			String device = comment.getDevice();
+			String language = comment.getLanguage();
 			holder.deviceIcon.setVisibility(View.GONE);
 			holder.versionIcon.setVisibility(View.GONE);
 			holder.version.setVisibility(View.GONE);
 			holder.device.setVisibility(View.GONE);
+			holder.language.setVisibility(View.GONE);
 			boolean showInfoBox = false;
 
 			// building version/device
@@ -119,6 +117,12 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 				holder.device.setText(device);
 				holder.deviceIcon.setVisibility(View.VISIBLE);
 				holder.device.setVisibility(View.VISIBLE);
+				showInfoBox = true;
+			}
+			// TODO better UI for language, option to show original text?
+			if (isNotEmptyOrNull(language)) {
+				holder.language.setText(String.format(" [%s]", comment.getLanguage()));
+				holder.language.setVisibility(View.VISIBLE);
 				showInfoBox = true;
 			}
 
@@ -235,6 +239,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		ImageView versionIcon;
 		TextView device;
 		TextView version;
+		TextView language;
 	}
 
 	@Override
