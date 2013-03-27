@@ -83,7 +83,13 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			holder.date.setText(formatCommentDate(comment.getDate()));
 			holder.text.setText(comment.getText());
 		} else {
-			String[] commentContent = comment.getText().split("\\t");
+			String commentText = comment.getText();
+			if (!Preferences.isShowCommentAutoTranslations(context)
+					&& comment.getOriginalText() != null) {
+				commentText = comment.getOriginalText();
+			}
+
+			String[] commentContent = commentText.split("\\t");
 			if (commentContent != null && commentContent.length > 1) {
 				holder.title.setText(commentContent[0]);
 				holder.text.setText(commentContent[1]);

@@ -66,6 +66,7 @@ public class Preferences {
 	public static final long COMMENTS_REMOTE_UPDATE_INTERVAL = 5 * 60 * 1000L;
 
 	public static final String USE_GOOGLE_TRANSLATE_APP = "use.google.translate.app";
+	public static final String SHOW_COMMENT_AUTO_TRANSLATIONS = "show.comment.auto.translations";
 
 	public enum Timeframe {
 		LAST_NINETY_DAYS, LAST_THIRTY_DAYS, UNLIMITED, LAST_TWO_DAYS, LATEST_VALUE, LAST_SEVEN_DAYS, MONTH_TO_DATE
@@ -402,11 +403,19 @@ public class Preferences {
 				.putLong(LAST_COMMENTS_REMOTE_UPDATE + "." + packageName, timestamp).commit();
 	}
 
-	public static boolean isUseGoogleTranslateApp(Context context) {
+	public static synchronized boolean isUseGoogleTranslateApp(Context context) {
 		return getSettings(context).getBoolean(USE_GOOGLE_TRANSLATE_APP, true);
 	}
 
-	public static void saveUseGoogleTranslateApp(Context context, boolean value) {
+	public static synchronized void saveUseGoogleTranslateApp(Context context, boolean value) {
 		getSettings(context).edit().putBoolean(USE_GOOGLE_TRANSLATE_APP, value).commit();
+	}
+
+	public static synchronized boolean isShowCommentAutoTranslations(Context context) {
+		return getSettings(context).getBoolean(SHOW_COMMENT_AUTO_TRANSLATIONS, true);
+	}
+
+	public static synchronized void saveShowCommentAutoTranslations(Context context, boolean value) {
+		getSettings(context).edit().putBoolean(SHOW_COMMENT_AUTO_TRANSLATIONS, value).commit();
 	}
 }
