@@ -9,7 +9,14 @@ public class Comment {
 	
 	private boolean isReply = false;
 
+	// this is the translated text
 	private String text;
+
+	// no persisted for now
+	private String originalText;
+
+	// language of the orignal comment
+	private String language;
 
 	private Date date;
 	
@@ -39,6 +46,22 @@ public class Comment {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public String getOriginalText() {
+		return originalText;
+	}
+
+	public void setOriginalText(String originalText) {
+		this.originalText = originalText;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	/**

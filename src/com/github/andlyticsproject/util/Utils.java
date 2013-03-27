@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -166,6 +167,12 @@ public final class Utils {
 		} catch (PackageManager.NameNotFoundException e) {
 			return false;
 		}
+	}
+
+	// the console uses the 'en-US' format
+	public static String getDisplayLocale() {
+		return String.format("%s-%s", Locale.getDefault().getLanguage(), Locale.getDefault()
+				.getCountry());
 	}
 
 }

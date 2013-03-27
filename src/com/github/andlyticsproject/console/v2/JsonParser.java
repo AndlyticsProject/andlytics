@@ -3,6 +3,7 @@ package com.github.andlyticsproject.console.v2;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -436,7 +437,24 @@ public class JsonParser {
 			if (version != null && !"".equals(version) && !version.equals("null")) {
 				comment.setAppVersion(version);
 			}
-			comment.setText(jsonComment.optJSONObject("5").getString("3"));
+
+			String commentLang = jsonComment.optJSONObject("5").getString("1");
+			String commentText = jsonComment.optJSONObject("5").getString("3");
+			comment.setLanguage(commentLang);
+			comment.setOriginalText(commentText);
+			// overwritten if translation is available
+			comment.setText(commentText);
+
+			JSONObject translation = jsonComment.optJSONObject("11");
+			if (translation != null) {
+				String displayLanguage = Locale.getDefault().getLanguage();
+				String translationLang = translation.getString("1");
+				String translationText = translation.getString("3");
+				if (translationLang.contains(displayLanguage)) {
+					comment.setText(translationText);
+				}
+			}
+
 			JSONObject jsonDevice = jsonComment.optJSONObject("8");
 			if (jsonDevice != null) {
 				String device = jsonDevice.optString("3");
