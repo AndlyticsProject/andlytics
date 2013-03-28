@@ -28,7 +28,7 @@ public class JsonParser {
 
 	private static final String TAG = JsonParser.class.getSimpleName();
 
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 
 	private JsonParser() {
 
