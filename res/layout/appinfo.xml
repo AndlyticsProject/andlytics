@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/andBackground"
+    android:inAnimation="@anim/view_switcher_fade_in"
+    android:outAnimation="@anim/view_switcher_fade_out" >
+
+    <ListView
+        android:id="@+id/appinfo_links_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/andBackground"
+        android:cacheColorHint="#00000000"
+        android:divider="@color/andBackground"
+        android:dividerHeight="1dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="10dp" />
+
+</RelativeLayout>

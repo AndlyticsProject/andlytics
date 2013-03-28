@@ -1,8 +1,6 @@
-
 package com.github.andlyticsproject;
 
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceCategory;
@@ -10,14 +8,15 @@ import android.preference.PreferenceManager;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.andlyticsproject.util.UiUtils;
 
 // See PreferenceActivity for warning suppression justification
 @SuppressWarnings("deprecation")
 public class NotificationPreferenceActivity extends SherlockPreferenceActivity {
 
-	private CheckBoxPreference downloadsPref;
-	private CheckBoxPreference ratingsPref;
-	private CheckBoxPreference commentsPref;
+	private Preference downloadsPref;
+	private Preference ratingsPref;
+	private Preference commentsPref;
 	private PreferenceCategory notificationSignalPrefCat;
 
 	@Override
@@ -32,37 +31,36 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity {
 		// Get a reference to the notification triggers so that we can visually disable the other
 		// notification preferences when all the triggers are disabled
 		// TODO: Can we do this all using one generic listener?
-		ratingsPref = (CheckBoxPreference) getPreferenceScreen().findPreference(
-				Preferences.NOTIFICATION_CHANGES_RATING);
+		ratingsPref = getPreferenceScreen().findPreference(Preferences.NOTIFICATION_CHANGES_RATING);
 		ratingsPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				Boolean notificationsEnabled = (Boolean) newValue || commentsPref.isChecked()
-						|| downloadsPref.isChecked();
+				Boolean notificationsEnabled = (Boolean) newValue
+						|| UiUtils.isChecked(commentsPref) || UiUtils.isChecked(downloadsPref);
 				notificationSignalPrefCat.setEnabled(notificationsEnabled);
 				return true;
 			}
 		});
 
-		commentsPref = (CheckBoxPreference) getPreferenceScreen().findPreference(
+		commentsPref = getPreferenceScreen().findPreference(
 				Preferences.NOTIFICATION_CHANGES_COMMENTS);
 		commentsPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				Boolean notificationsEnabled = (Boolean) newValue || ratingsPref.isChecked()
-						|| downloadsPref.isChecked();
+				Boolean notificationsEnabled = (Boolean) newValue || UiUtils.isChecked(ratingsPref)
+						|| UiUtils.isChecked(downloadsPref);
 				notificationSignalPrefCat.setEnabled(notificationsEnabled);
 				return true;
 			}
 		});
 
-		downloadsPref = (CheckBoxPreference) getPreferenceScreen().findPreference(
+		downloadsPref = getPreferenceScreen().findPreference(
 				Preferences.NOTIFICATION_CHANGES_DOWNLOADS);
 		downloadsPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				Boolean notificationsEnabled = (Boolean) newValue || ratingsPref.isChecked()
-						|| commentsPref.isChecked();
+				Boolean notificationsEnabled = (Boolean) newValue || UiUtils.isChecked(ratingsPref)
+						|| UiUtils.isChecked(commentsPref);
 				notificationSignalPrefCat.setEnabled(notificationsEnabled);
 				return true;
 			}
@@ -72,19 +70,20 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity {
 		notificationSignalPrefCat = (PreferenceCategory) getPreferenceScreen().findPreference(
 				"prefCatNotificationSignal");
 		// Set initial enabled state based on the triggers
-		Boolean notificationsEnabled = commentsPref.isChecked() || ratingsPref.isChecked()
-				|| downloadsPref.isChecked();
+		Boolean notificationsEnabled = UiUtils.isChecked(commentsPref)
+				|| UiUtils.isChecked(ratingsPref) || UiUtils.isChecked(downloadsPref);
 		notificationSignalPrefCat.setEnabled(notificationsEnabled);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		case android.R.id.home:
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
+
 }

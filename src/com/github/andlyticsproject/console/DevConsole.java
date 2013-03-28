@@ -14,7 +14,7 @@ public interface DevConsole {
 	// pass null when calling from a service
 	List<AppInfo> getAppInfo(Activity activity) throws DevConsoleException;
 
-	List<Comment> getComments(Activity activity, String packageName, int startIndex, int count)
-			throws DevConsoleException;
+	List<Comment> getComments(Activity activity, String packageName, String developerId,
+			int startIndex, int count, String displayLocale) throws DevConsoleException;
 
 }

@@ -8,23 +8,29 @@ import org.apache.http.cookie.Cookie;
 
 public class SessionCredentials {
 
+	private String accountName;
 	private String xsrfToken;
 	// 20 digit developer account ID
-	private String developerAccountId;
+	private String[] developerAccountIds;
 	// authentication session cookies, including AD
 	private List<Cookie> cookies = new ArrayList<Cookie>();
 
-	public SessionCredentials(String xsrfToken, String developerAccountId) {
+	public SessionCredentials(String accountName, String xsrfToken, String[] developerAccountIds) {
+		this.accountName = accountName;
 		this.xsrfToken = xsrfToken;
-		this.developerAccountId = developerAccountId;
+		this.developerAccountIds = developerAccountIds.clone();
+	}
+
+	public String getAccountName() {
+		return accountName;
 	}
 
 	public String getXsrfToken() {
 		return xsrfToken;
 	}
 
-	public String getDeveloperAccountId() {
-		return developerAccountId;
+	public String[] getDeveloperAccountIds() {
+		return developerAccountIds.clone();
 	}
 
 	public void addCookie(Cookie c) {

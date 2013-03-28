@@ -25,15 +25,18 @@ public class DevConsoleV2Protocol {
 	// Templates for payloads used in POST requests
 	static final String FETCH_APPS_TEMPLATE = "{\"method\":\"fetch\","
 			+ "\"params\":{\"2\":1,\"3\":7},\"xsrf\":\"%s\"}";
+	// 1$: comma separated list of package names
+	static final String FETCH_APPS_BY_PACKAGES_TEMPLATE = "{\"method\":\"fetch\","
+			+ "\"params\":{\"1\":[%1$s],\"3\":1},\"xsrf\":\"%2$s\"}";
 	// 1$: package name, 2$: XSRF
 	static final String FETCH_APP_TEMPLATE = "{\"method\":\"fetch\","
 			+ "\"params\":{\"1\":[\"%1$s\"],\"3\":0},\"xsrf\":\"%2$s\"}";
 	// 1$: package name, 2$: XSRF
 	static final String GET_RATINGS_TEMPLATE = "{\"method\":\"getRatings\","
 			+ "\"params\":{\"1\":[\"%1$s\"]},\"xsrf\":\"%2$s\"}";
-	// 1$: package name, 2$: start, 3$: num comments to fetch, 4$ XSRF
+	// 1$: package name, 2$: start, 3$: num comments to fetch, 4$: display locale, 5$ XSRF
 	static final String GET_REVIEWS_TEMPLATE = "{\"method\":\"getReviews\","
-			+ "\"params\":{\"1\":\"%1$s\",\"2\":%2$d,\"3\":%3$d},\"xsrf\":\"%4$s\"}";
+			+ "\"params\":{\"1\":\"%1$s\",\"2\":%2$d,\"3\":%3$d,\"8\":%4$s},\"xsrf\":\"%5$s\"}";
 	// 1$: package name, 2$: stats type, 3$: stats by, 4$: XSRF
 	static final String GET_COMBINED_STATS_TEMPLATE = "{\"method\":\"getCombinedStats\","
 			+ "\"params\":{\"1\":\"%1$s\",\"2\":1,\"3\":%2$d,\"4\":[%3$d]},\"xsrf\":\"%4$s\"}";
@@ -82,7 +85,7 @@ public class DevConsoleV2Protocol {
 		}
 	}
 
-	void addHeaders(HttpPost post) {
+	void addHeaders(HttpPost post, String developerId) {
 		checkState();
 
 		post.addHeader("Host", "play.google.com");
@@ -93,26 +96,25 @@ public class DevConsoleV2Protocol {
 		post.addHeader("X-GWT-Permutation", "EC203CA4CDFF1F0285B065B554E0D784");
 		post.addHeader("Origin", "https://play.google.com");
 		post.addHeader("X-GWT-Module-Base", "https://play.google.com/apps/publish/v2/gwt/");
-		post.addHeader("Referer", "https://play.google.com/apps/publish/v2/?dev_acc="
-				+ getSessionCredentials().getDeveloperAccountId());
+		post.addHeader("Referer", "https://play.google.com/apps/publish/v2/?dev_acc=" + developerId);
 	}
 
-	String createDeveloperUrl(String baseUrl) {
+	String createDeveloperUrl(String baseUrl, String developerId) {
 		checkState();
 
-		return String.format("%s?dev_acc=%s", baseUrl, sessionCredentials.getDeveloperAccountId());
+		return String.format("%s?dev_acc=%s", baseUrl, developerId);
 	}
 
-	String createFetchAppsUrl() {
-		return createDeveloperUrl(URL_APPS);
+	String createFetchAppsUrl(String developerId) {
+		return createDeveloperUrl(URL_APPS, developerId);
 	}
 
-	String createFetchStatisticsUrl() {
-		return createDeveloperUrl(URL_STATISTICS);
+	String createFetchStatisticsUrl(String developerId) {
+		return createDeveloperUrl(URL_STATISTICS, developerId);
 	}
 
-	String createFetchCommentsUrl() {
-		return createDeveloperUrl(URL_REVIEWS);
+	String createFetchCommentsUrl(String developerId) {
+		return createDeveloperUrl(URL_REVIEWS, developerId);
 	}
 
 	String createFetchAppInfosRequest() {
@@ -123,10 +125,27 @@ public class DevConsoleV2Protocol {
 		return String.format(FETCH_APPS_TEMPLATE, sessionCredentials.getXsrfToken());
 	}
 
+	String createFetchAppInfosRequest(List<String> packages) {
+		checkState();
 
-	List<AppInfo> parseAppInfosResponse(String json, String accountName) {
+		StringBuilder buff = new StringBuilder();
+		for (int i = 0; i < packages.size(); i++) {
+			String packageName = packages.get(i);
+			buff.append(packageName);
+			if (i != packages.size() - 1) {
+				buff.append(",");
+			}
+		}
+		String packageList = buff.toString();
+
+		return String.format(FETCH_APPS_BY_PACKAGES_TEMPLATE, packageList,
+				sessionCredentials.getXsrfToken());
+	}
+
+
+	List<AppInfo> parseAppInfosResponse(String json, String accountName, boolean skipIncomplete) {
 		try {
-			return JsonParser.parseAppInfos(json, accountName);
+			return JsonParser.parseAppInfos(json, accountName, skipIncomplete);
 		} catch (JSONException ex) {
 			saveDebugJson(json);
 			throw new DevConsoleProtocolException(json, ex);
@@ -177,10 +196,11 @@ public class DevConsoleV2Protocol {
 		}
 	}
 
-	String createFetchCommentsRequest(String packageName, int start, int pageSize) {
+	String createFetchCommentsRequest(String packageName, int start, int pageSize,
+			String displayLocale) {
 		checkState();
 
-		return String.format(GET_REVIEWS_TEMPLATE, packageName, start, pageSize,
+		return String.format(GET_REVIEWS_TEMPLATE, packageName, start, pageSize, displayLocale,
 				sessionCredentials.getXsrfToken());
 	}
 

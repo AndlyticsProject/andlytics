@@ -113,12 +113,13 @@ public class LoginActivity extends SherlockActivity {
 						okButton.setEnabled(true);
 
 						if (selectedAccount != null) {
-							redirectToMain(selectedAccount.getName());
+							redirectToMain(selectedAccount.getName(),
+									selectedAccount.getDeveloperId());
 						} else {
 							// Go to the first non hidden account
 							for (DeveloperAccount account : developerAccounts) {
 								if (account.isVisible()) {
-									redirectToMain(account.getName());
+									redirectToMain(account.getName(), account.getDeveloperId());
 									break;
 								}
 							}
@@ -136,7 +137,7 @@ public class LoginActivity extends SherlockActivity {
 		boolean skipAutologin = Preferences.getSkipAutologin(this);
 
 		if (!manageAccountsMode & !skipAutologin & selectedAccount != null) {
-			redirectToMain(selectedAccount.getName());
+			redirectToMain(selectedAccount.getName(), selectedAccount.getDeveloperId());
 		} else {
 			showAccountList();
 		}
@@ -294,10 +295,11 @@ public class LoginActivity extends SherlockActivity {
 				LoginActivity.this, callback, null /* handler */);
 	}
 
-	private void redirectToMain(String selectedAccount) {
+	private void redirectToMain(String selectedAccount, String developerId) {
 		Preferences.saveSkipAutoLogin(this, false);
 		Intent intent = new Intent(LoginActivity.this, Main.class);
 		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, selectedAccount);
+		intent.putExtra(Constants.DEVELOPER_ID_PARCEL, developerId);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 		overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);

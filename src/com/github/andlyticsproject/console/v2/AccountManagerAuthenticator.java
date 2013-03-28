@@ -203,8 +203,8 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 			if (DEBUG) {
 				Log.d(TAG, "Response: " + responseStr);
 			}
-			String developerAccountId = findDeveloperAccountId(responseStr);
-			if (developerAccountId == null) {
+			String[] developerAccountIds = findDeveloperAccountIds(responseStr);
+			if (developerAccountIds == null) {
 				throw new AuthenticationException("Couldn't get developer account ID.");
 			}
 
@@ -213,7 +213,8 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException("Couldn't get XSRF token.");
 			}
 
-			SessionCredentials result = new SessionCredentials(xsrfToken, developerAccountId);
+			SessionCredentials result = new SessionCredentials(accountName, xsrfToken,
+					developerAccountIds);
 			result.addCookies(cookies);
 
 			return result;

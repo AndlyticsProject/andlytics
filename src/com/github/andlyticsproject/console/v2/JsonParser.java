@@ -3,6 +3,7 @@ package com.github.andlyticsproject.console.v2;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,6 +11,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.github.andlyticsproject.model.AppDetails;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
@@ -106,10 +108,12 @@ public class JsonParser {
 	 * 
 	 * @param json
 	 * @param accountName
+	 * @param skipIncomplete
 	 * @return List of apps
 	 * @throws JSONException
 	 */
-	static List<AppInfo> parseAppInfos(String json, String accountName) throws JSONException {
+	static List<AppInfo> parseAppInfos(String json, String accountName, boolean skipIncomplete)
+			throws JSONException {
 
 		Date now = new Date();
 		List<AppInfo> apps = new ArrayList<AppInfo>();
@@ -178,6 +182,7 @@ public class JsonParser {
 				continue;
 				// Draft app
 			}
+
 			// Check number code and last updated date
 			// Published: 1
 			// Unpublished: 2
@@ -198,25 +203,34 @@ public class JsonParser {
 
 			/*
 			 * Per app details:
-			 * null
-			 * Country code
-			 * App Name
-			 * Description
-			 * Unknown
-			 * Last what's new
+			 * 1: Country code
+			 * 2: App Name
+			 * 3: Description
+			 * 4: Promo text
+			 * 5: Last what's new
 			 */
 			// skip if we can't get all the data
 			// XXX should we just let this crash so we know there is a problem?
 			if (!jsonAppInfo.has("2")) {
-				Log.d(TAG, String.format(
-						"Skipping app %d because no app details found: package name=%s", i,
-						packageName));
+				if (skipIncomplete) {
+					Log.d(TAG, String.format(
+							"Skipping app %d because no app details found: package name=%s", i,
+							packageName));
+				} else {
+					Log.d(TAG, "Adding incomplete app: " + packageName);
+					apps.add(app);
+				}
 				continue;
 			}
 			if (!jsonAppInfo.has("5")) {
-				Log.d(TAG, String.format(
-						"Skipping app %d because no versions info found: package name=%s", i,
-						packageName));
+				if (skipIncomplete) {
+					Log.d(TAG, String.format(
+							"Skipping app %d because no versions info found: package name=%s", i,
+							packageName));
+				} else {
+					Log.d(TAG, "Adding incomplete app: " + packageName);
+					apps.add(app);
+				}
 				continue;
 			}
 
@@ -227,6 +241,12 @@ public class JsonParser {
 				pp("appDetails", appDetails);
 			}
 			app.setName(appDetails.getString("2"));
+
+			String description = appDetails.getString("3");
+			String changelog = appDetails.optString("5");
+			Long lastPlayStoreUpdate = jsonAppInfo.optLong("7");
+			AppDetails details = new AppDetails(description, changelog, lastPlayStoreUpdate);
+			app.setDetails(details);
 
 			/*
 			 * Per app version details:
@@ -244,9 +264,14 @@ public class JsonParser {
 				pp("appVersions", appVersions);
 			}
 			if (appVersions == null) {
-				Log.d(TAG, String.format(
-						"Skipping app %d because no versions info found: package name=%s", i,
-						packageName));
+				if (skipIncomplete) {
+					Log.d(TAG, String.format(
+							"Skipping app %d because no versions info found: package name=%s", i,
+							packageName));
+				} else {
+					Log.d(TAG, "Adding incomplete app: " + packageName);
+					apps.add(app);
+				}
 				continue;
 			}
 			JSONObject lastAppVersionDetails = appVersions.getJSONObject(appVersions.length() - 1)
@@ -273,8 +298,14 @@ public class JsonParser {
 				pp("jsonAppStats", jsonAppStats);
 			}
 			if (jsonAppStats == null) {
-				Log.d(TAG, String.format("Skipping app %d because no stats found: package name=%s",
-						i, packageName));
+				if (skipIncomplete) {
+					Log.d(TAG, String.format(
+							"Skipping app %d because no stats found: package name=%s", i,
+							packageName));
+				} else {
+					Log.d(TAG, "Adding incomplete app: " + packageName);
+					apps.add(app);
+				}
 				continue;
 			}
 			AppStats stats = new AppStats();
@@ -413,7 +444,24 @@ public class JsonParser {
 			if (version != null && !"".equals(version) && !version.equals("null")) {
 				comment.setAppVersion(version);
 			}
-			comment.setText(jsonComment.optJSONObject("5").getString("3"));
+
+			String commentLang = jsonComment.optJSONObject("5").getString("1");
+			String commentText = jsonComment.optJSONObject("5").getString("3");
+			comment.setLanguage(commentLang);
+			comment.setOriginalText(commentText);
+			// overwritten if translation is available
+			comment.setText(commentText);
+
+			JSONObject translation = jsonComment.optJSONObject("11");
+			if (translation != null) {
+				String displayLanguage = Locale.getDefault().getLanguage();
+				String translationLang = translation.getString("1");
+				String translationText = translation.getString("3");
+				if (translationLang.contains(displayLanguage)) {
+					comment.setText(translationText);
+				}
+			}
+
 			JSONObject jsonDevice = jsonComment.optJSONObject("8");
 			if (jsonDevice != null) {
 				String device = jsonDevice.optString("3");
@@ -428,8 +476,8 @@ public class JsonParser {
 			if (jsonReply != null) {
 				Comment reply = new Comment(true);
 				reply.setText(jsonReply.getString("1"));
-				reply.setReplyDate(parseDate(jsonReply.getLong("3")));
-				reply.setDate(comment.getDate());
+				reply.setDate(parseDate(jsonReply.getLong("3")));
+				reply.setOriginalCommentDate(comment.getDate());
 				comment.setReply(reply);
 			}
 

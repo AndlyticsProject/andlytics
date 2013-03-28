@@ -9,11 +9,19 @@ public class Comment {
 	
 	private boolean isReply = false;
 
+	// this is either the translated text, or the same as originalText, 
+	// depending on display language (current locale)
 	private String text;
+
+	// text in original language
+	private String originalText;
+
+	// language of the original comment
+	private String language;
 
 	private Date date;
 	
-	private Date replyDate;
+	private Date originalCommentDate;
 
 	private int rating;
 
@@ -41,10 +49,24 @@ public class Comment {
 		this.text = text;
 	}
 
+	public String getOriginalText() {
+		return originalText;
+	}
+
+	public void setOriginalText(String originalText) {
+		this.originalText = originalText;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
 	/**
-	 * Date or the comment
-	 * In the case of a reply, this is the date or the original comment
-	 *  - used for displaying comments correctly in the groups
+	 * Date or the comment (or the date of the reply)
 	 * @return
 	 */
 	public Date getDate() {
@@ -56,15 +78,16 @@ public class Comment {
 	}
 	
 	/**
-	 * Date of the reply
+	 * Date of the original comment that this reply refers to
+	 * Only valid for replies
 	 * @return
 	 */
-	public Date getReplyDate() {
-		return replyDate;
+	public Date getOriginalCommentDate() {
+		return originalCommentDate;
 	}
 	
-	public void setReplyDate(Date date) {
-		this.replyDate = date;
+	public void setOriginalCommentDate(Date date) {
+		this.originalCommentDate = date;
 	}
 
 	public int getRating() {
