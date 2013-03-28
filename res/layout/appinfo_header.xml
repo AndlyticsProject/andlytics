@@ -24,14 +24,30 @@
             android:paddingRight="10dp"
             android:paddingTop="5dp" >
 
+            <RelativeLayout
+                android:id="@+id/appinfo_app_icon_frame"
+                android:layout_width="47dp"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/appinfo_app_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/default_app_icon" >
+                </ImageView>
+            </RelativeLayout>
+
             <TextView
-                android:id="@+id/appinfo_package_name_label"
+                android:id="@+id/appinfo_app_name"
                 style="@style/MainTableText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="15dp"
-                android:paddingRight="10dp"
-                android:text="@string/appinfo_package_name_label"
+                android:layout_toRightOf="@+id/appinfo_app_icon_frame"
+                android:maxLines="1"
+                android:textIsSelectable="true"
                 android:textStyle="bold" />
 
             <TextView
@@ -39,9 +55,9 @@
                 style="@style/MainTableText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/appinfo_package_name_label"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
+                android:layout_below="@id/appinfo_app_name"
+                android:layout_toRightOf="@id/appinfo_app_icon_frame"
+                android:maxLines="1"
                 android:textIsSelectable="true" />
 
             <View
@@ -71,6 +87,19 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:textIsSelectable="true" />
+
+            <ImageButton
+                android:id="@+id/appinfo_playstore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/appinfo_package_name_spacer"
+                android:layout_gravity="center"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/image_button"
+                android:padding="1dp"
+                android:src="@drawable/app_on_play_store" />
 
             <View
                 android:id="@+id/appinfo_last_store_update_spacer"
@@ -127,7 +156,8 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:paddingLeft="15dp"
-                android:paddingRight="15dp" />
+                android:paddingRight="15dp"
+                android:textIsSelectable="true" />
 
             <View
                 android:id="@+id/appinfo_description_spacer"
@@ -156,65 +186,19 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:paddingLeft="15dp"
-                android:paddingRight="15dp" />
+                android:paddingRight="15dp"
+                android:textIsSelectable="true" />
         </RelativeLayout>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/appinfo_buttons"
-        android:layout_width="fill_parent"
+    <TextView
+        android:id="@+id/appinfo_links_label"
+        style="@style/MainTableText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/row_background" >
-
-        <RelativeLayout
-            android:id="@+id/appinfo_buttons_frame"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="15dp" >
-
-            <LinearLayout
-                android:id="@+id/appinfo_playstore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@drawable/image_button"
-                android:padding="5dp" >
-
-                <TextView
-                    android:id="@+id/appinfo_playstore_button"
-                    style="@style/MainTableText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/appinfo_playstore_button"
-                    android:textColor="#fff"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/appinfo_addlink"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_toRightOf="@+id/appinfo_playstore"
-                android:background="@drawable/image_button"
-                android:padding="5dp" >
-
-                <TextView
-                    android:id="@+id/appinfo_addlink_button"
-                    style="@style/MainTableText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/appinfo_addlink_button"
-                    android:textColor="#fff"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </RelativeLayout>
-    </RelativeLayout>
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="App links"
+        android:textStyle="bold" />
 
 </LinearLayout>
