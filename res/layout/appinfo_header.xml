@@ -27,7 +27,8 @@
             <RelativeLayout
                 android:id="@+id/appinfo_app_icon_frame"
                 android:layout_width="47dp"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:paddingTop="7dp" >
 
                 <ImageView
                     android:id="@+id/appinfo_app_icon"
@@ -48,7 +49,8 @@
                 android:layout_toRightOf="@+id/appinfo_app_icon_frame"
                 android:maxLines="1"
                 android:textIsSelectable="true"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:paddingTop="7dp" />
 
             <TextView
                 android:id="@+id/appinfo_package_name"
@@ -58,7 +60,8 @@
                 android:layout_below="@id/appinfo_app_name"
                 android:layout_toRightOf="@id/appinfo_app_icon_frame"
                 android:maxLines="1"
-                android:textIsSelectable="true" />
+                android:textIsSelectable="true"
+                android:paddingBottom="3dp" />
 
             <View
                 android:id="@+id/appinfo_package_name_spacer"
@@ -75,6 +78,7 @@
                 android:layout_below="@+id/appinfo_package_name_spacer"
                 android:paddingLeft="15dp"
                 android:paddingRight="10dp"
+                android:paddingTop="3dp"
                 android:text="@string/appinfo_last_store_update_label"
                 android:textStyle="bold" />
 
@@ -86,6 +90,7 @@
                 android:layout_below="@+id/appinfo_last_store_update_label"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
+                android:paddingBottom="3dp"
                 android:textIsSelectable="true" />
 
             <ImageButton
@@ -95,11 +100,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/appinfo_package_name_spacer"
                 android:layout_gravity="center"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/image_button"
-                android:padding="1dp"
-                android:src="@drawable/app_on_play_store" />
+                android:layout_margin="7dp"
+                android:src="@drawable/app_on_play_store"
+                android:background="@drawable/row_background" />
 
             <View
                 android:id="@+id/appinfo_last_store_update_spacer"
@@ -116,6 +119,7 @@
                 android:layout_below="@+id/appinfo_last_store_update_spacer"
                 android:paddingLeft="15dp"
                 android:paddingRight="10dp"
+                android:paddingTop="3dp"
                 android:text="@string/appinfo_version_name_label"
                 android:textStyle="bold" />
 
@@ -127,6 +131,7 @@
                 android:layout_below="@+id/appinfo_version_name_label"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
+                android:paddingBottom="3dp"
                 android:textIsSelectable="true" />
 
             <View
@@ -144,6 +149,7 @@
                 android:layout_below="@+id/appinfo_version_name_spacer"
                 android:paddingLeft="15dp"
                 android:paddingRight="10dp"
+                android:paddingTop="3dp"
                 android:text="@string/appinfo_description_label"
                 android:textStyle="bold" />
 
@@ -157,6 +163,7 @@
                 android:maxLines="2"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
+                android:paddingBottom="3dp"
                 android:textIsSelectable="true" />
 
             <View
@@ -174,6 +181,7 @@
                 android:layout_below="@+id/appinfo_description_spacer"
                 android:paddingLeft="15dp"
                 android:paddingRight="10dp"
+                android:paddingTop="3dp"
                 android:text="@string/appinfo_changelog_label"
                 android:textStyle="bold" />
 
@@ -187,6 +195,7 @@
                 android:maxLines="2"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
+                android:paddingBottom="3dp"
                 android:textIsSelectable="true" />
         </RelativeLayout>
     </RelativeLayout>
@@ -198,7 +207,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="App links"
+        android:paddingTop="9dp"
+        android:text="@string/appinfo_app_links"
         android:textStyle="bold" />
 
 </LinearLayout>

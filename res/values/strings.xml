@@ -202,4 +202,5 @@
 	<string name="appinfo_changelog_label">Change log</string>
 	<string name="appinfo_playstore_button">View in the Play Store</string>
 	<string name="appinfo_addlink_button">Add a link</string>
+	<string name="appinfo_app_links">App links"</string>
 </resources>
