@@ -2,8 +2,6 @@ package com.github.andlyticsproject;
 
 import java.util.List;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -20,7 +18,6 @@ import com.github.andlyticsproject.util.UiUtils;
 import com.github.andlyticsproject.util.Utils;
 
 // See PreferenceActivity for warning suppression justification
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 @SuppressWarnings("deprecation")
 public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivity implements
 		LoadAppListTaskCompleteListener {
