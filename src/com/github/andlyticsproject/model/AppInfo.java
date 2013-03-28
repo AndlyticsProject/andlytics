@@ -6,6 +6,8 @@ import java.util.List;
 
 public class AppInfo {
 
+	private Long id;
+
 	private String account;
 
 	private String packageName;
@@ -39,6 +41,16 @@ public class AppInfo {
 	private String admobSiteId;
 
 	private Date lastCommentsUpdate;
+
+	private AppDetails details;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getAccount() {
 		return account;
@@ -110,6 +122,95 @@ public class AppInfo {
 
 	public AppStats getLatestStats() {
 		return latestStats;
+	}
+
+	public void setDraftOnly(boolean isDraftOnly) {
+		this.isDraftOnly = isDraftOnly;
+	}
+
+	public boolean isDraftOnly() {
+		return isDraftOnly;
+	}
+
+	public int getPublishState() {
+		return publishState;
+	}
+
+	public void setPublishState(int publishState) {
+		this.publishState = publishState;
+	}
+
+	public void setGhost(boolean ghost) {
+		this.ghost = ghost;
+	}
+
+	public boolean isGhost() {
+		return ghost;
+	}
+
+	public void setRatingDetailsExpanded(boolean ratingDetailsExpanded) {
+		this.ratingDetailsExpanded = ratingDetailsExpanded;
+	}
+
+	public boolean isRatingDetailsExpanded() {
+		return ratingDetailsExpanded;
+	}
+
+	public void setSkipNotification(boolean skipNotification) {
+		this.skipNotification = skipNotification;
+	}
+
+	public boolean isSkipNotification() {
+		return skipNotification;
+	}
+
+	public void setVersionName(String versionName) {
+		this.versionName = versionName;
+	}
+
+	public String getVersionName() {
+		return versionName;
+	}
+
+	public void setAdmobStats(Admob admobStats) {
+		this.admobStats = admobStats;
+	}
+
+	public Admob getAdmobStats() {
+		return admobStats;
+	}
+
+	public String getAdmobAccount() {
+		return admobAccount;
+	}
+
+	public void setAdmobAccount(String admobAccount) {
+		this.admobAccount = admobAccount;
+	}
+
+	public String getAdmobSiteId() {
+		return admobSiteId;
+	}
+
+	public void setAdmobSiteId(String admobSiteId) {
+		this.admobSiteId = admobSiteId;
+	}
+
+	public Date getLastCommentsUpdate() {
+		return lastCommentsUpdate == null ? null : (Date) lastCommentsUpdate.clone();
+	}
+
+	public void setLastCommentsUpdate(Date lastCommentsUpdate) {
+		this.lastCommentsUpdate = lastCommentsUpdate == null ? null : (Date) lastCommentsUpdate
+				.clone();
+	}
+
+	public AppDetails getDetails() {
+		return details;
+	}
+
+	public void setDetails(AppDetails details) {
+		this.details = details;
 	}
 
 	// XXX -- do we need to compare everything? 
@@ -205,88 +306,13 @@ public class AppInfo {
 		return true;
 	}
 
-	public void setDraftOnly(boolean isDraftOnly) {
-		this.isDraftOnly = isDraftOnly;
-	}
-
-	public boolean isDraftOnly() {
-		return isDraftOnly;
-	}
-
-	public int getPublishState() {
-		return publishState;
-	}
-
-	public void setPublishState(int publishState) {
-		this.publishState = publishState;
-	}
-
-	public void setGhost(boolean ghost) {
-		this.ghost = ghost;
-	}
-
-	public boolean isGhost() {
-		return ghost;
-	}
-
-	public void setRatingDetailsExpanded(boolean ratingDetailsExpanded) {
-		this.ratingDetailsExpanded = ratingDetailsExpanded;
-	}
-
-	public boolean isRatingDetailsExpanded() {
-		return ratingDetailsExpanded;
-	}
-
-	public void setSkipNotification(boolean skipNotification) {
-		this.skipNotification = skipNotification;
-	}
-
-	public boolean isSkipNotification() {
-		return skipNotification;
-	}
-
-	public void setVersionName(String versionName) {
-		this.versionName = versionName;
-	}
-
-	public String getVersionName() {
-		return versionName;
-	}
-
-	public void setAdmobStats(Admob admobStats) {
-		this.admobStats = admobStats;
-	}
-
-	public Admob getAdmobStats() {
-		return admobStats;
-	}
-
-	public String getAdmobAccount() {
-		return admobAccount;
-	}
-
-	public void setAdmobAccount(String admobAccount) {
-		this.admobAccount = admobAccount;
-	}
-
-	public String getAdmobSiteId() {
-		return admobSiteId;
-	}
-
-	public void setAdmobSiteId(String admobSiteId) {
-		this.admobSiteId = admobSiteId;
-	}
-
-	public Date getLastCommentsUpdate() {
-		return lastCommentsUpdate == null ? null : (Date) lastCommentsUpdate.clone();
-	}
-
-	public void setLastCommentsUpdate(Date lastCommentsUpdate) {
-		this.lastCommentsUpdate = lastCommentsUpdate == null ? null : (Date) lastCommentsUpdate
-				.clone();
+	@Override
+	public String toString() {
+		return String.format("AppInfo [account=%s, packageName=%s]", account, packageName);
 	}
 
 	public boolean isIncomplete() {
 		return name == null || versionName == null || iconUrl == null;
 	}
+	
 }

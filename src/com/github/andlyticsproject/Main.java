@@ -459,6 +459,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 				for (AppInfo appDownloadInfo : appDownloadInfos) {
 					// update in database and check for diffs
+					// sets DB ID of ApInfo
 					diffs.add(db.insertOrUpdateStats(appDownloadInfo));
 					String[] admobDetails = AndlyticsDb.getInstance(activity).getAdmobDetails(
 							appDownloadInfo.getPackageName());
@@ -474,6 +475,8 @@ public class Main extends BaseActivity implements OnNavigationListener {
 							admobAccountSiteMap.put(admobAccount, siteList);
 						}
 					}
+					// update app details
+					AndlyticsDb.getInstance(activity).insertOrUpdateAppDetails(appDownloadInfo);
 				}
 
 				// check for notifications
