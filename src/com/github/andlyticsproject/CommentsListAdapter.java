@@ -101,7 +101,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			String originalText[] = comment.getOriginalText().split("\\t");
 			if (originalText != null && originalText.length > 1) {
 				holder.title.setText(originalText[0]);
-				if (!Preferences.isShowCommentAutoTranslations(context)) {
+				if (Preferences.isShowCommentAutoTranslations(context)) {
 					holder.text.setText(commentText);
 				} else {
 					holder.text.setText(originalText[1]);
