@@ -142,13 +142,14 @@
     <string name="account_specific_preferences">Account specific preferences</string>
     <string name="notification_when_account_visible">When app is visible</string>
     <string name="notification_when_account_visible_summary">Show notifications for the current account even when the app is visible</string>
+    <string name="hide_admob">Hide AdMob</string>
     <string name="hide_admob_for_unconfigured_apps">Hide the AdMob tab for unconfigured apps</string>
     <string name="pref_disable_acra">Automatic error reports</string>
     <string name="pref_acra_disabled">Reporting disabled</string>
     <string name="pref_acra_enabled">Reporting enabled</string>
-    <string name="use_google_translate_app">Use Google Translate app</string>
+    <string name="use_google_translate_app">Use Google Translate</string>
     <string name="use_google_translate_app_summary">Use the Google Translate app for translating comments, when available.</string>
-    <string name="show_comment_auto_translations">Show comment auto translations</string>
+    <string name="show_comment_auto_translations">Auto translate comments</string>
     <string name="show_comment_auto_translations_summary">Show automatic translations from Google Play</string>
     
     <!-- Errors -->
