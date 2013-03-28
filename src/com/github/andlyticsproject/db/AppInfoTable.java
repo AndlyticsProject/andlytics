@@ -35,6 +35,7 @@ public class AppInfoTable {
 	public static final String KEY_APP_LAST_COMMENTS_UPDATE = "lastcommentsupdate";
 
 	public static final String KEY_APP_DEVELOPER_ID = "developerid";
+	public static final String KEY_APP_DEVELOPER_NAME = "developername";
 
 	public static final String TABLE_CREATE_APPINFO = "create table " + DATABASE_TABLE_NAME
 			+ " (_id integer primary key autoincrement, " + KEY_APP_PACKAGENAME + " text not null,"
@@ -44,7 +45,7 @@ public class AppInfoTable {
 			+ KEY_APP_RATINGS_EXPANDED + " integer," + KEY_APP_SKIP_NOTIFICATION + " integer,"
 			+ KEY_APP_VERSION_NAME + " text, " + KEY_APP_ADMOB_ACCOUNT + " text, "
 			+ KEY_APP_ADMOB_SITE_ID + " text, " + KEY_APP_LAST_COMMENTS_UPDATE + " date, "
-			+ KEY_APP_DEVELOPER_ID + " text)";
+			+ KEY_APP_DEVELOPER_ID + " text, " + KEY_APP_DEVELOPER_NAME + " text)";
 
 	public static HashMap<String, String> PROJECTION_MAP;
 	public static HashMap<String, String> PACKAGE_NAMES_MAP;
@@ -73,6 +74,8 @@ public class AppInfoTable {
 				AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE);
 		
 		PROJECTION_MAP.put(AppInfoTable.KEY_APP_DEVELOPER_ID, AppInfoTable.KEY_APP_DEVELOPER_ID);
+		PROJECTION_MAP
+				.put(AppInfoTable.KEY_APP_DEVELOPER_NAME, AppInfoTable.KEY_APP_DEVELOPER_NAME);
 
 		PACKAGE_NAMES_MAP = new HashMap<String, String>();
 		PACKAGE_NAMES_MAP.put(AppInfoTable.KEY_APP_PACKAGENAME, AppInfoTable.KEY_APP_PACKAGENAME);

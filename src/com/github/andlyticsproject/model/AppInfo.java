@@ -45,6 +45,7 @@ public class AppInfo {
 	private AppDetails details;
 
 	private String developerId;
+	private String developerName;
 
 	public Long getId() {
 		return id;
@@ -221,6 +222,14 @@ public class AppInfo {
 
 	public void setDeveloperId(String developerId) {
 		this.developerId = developerId;
+	}
+
+	public String getDeveloperName() {
+		return developerName;
+	}
+
+	public void setDeveloperName(String developerName) {
+		this.developerName = developerName;
 	}
 
 	// XXX -- do we need to compare everything? 

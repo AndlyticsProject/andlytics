@@ -159,6 +159,8 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			Log.d(TAG, "Old version < 20 - adding new appinfo columns");
 			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
 					+ AppInfoTable.KEY_APP_DEVELOPER_ID + " text");
+			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
+					+ AppInfoTable.KEY_APP_DEVELOPER_NAME + " text");
 			// XXX
 			//			db.execSQL("ALTER table " + DeveloperAccountsTable.DATABASE_TABLE_NAME + " add "
 			//					+ DeveloperAccountsTable.DEVELOPER_ID + " text");
