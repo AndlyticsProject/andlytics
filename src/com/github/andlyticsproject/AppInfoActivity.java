@@ -17,12 +17,14 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.andlyticsproject.cache.AppIconInMemoryCache;
 import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.dialog.AddEditLinkDialog;
 import com.github.andlyticsproject.dialog.LongTextDialog;
@@ -257,6 +259,16 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 		} else {
 			linksListEmpty.setVisibility(View.GONE);
 		}
+
+		ImageView iconView = (ImageView) findViewById(R.id.appinfo_app_icon);
+		String packageName = appInfo.getPackageName();
+		// XXX hack? should be cached on main screen, so don't bother trying to load
+		//		if (inMemoryCache.contains(packageName)) {
+		iconView.setImageBitmap(AppIconInMemoryCache.getInstance().get(packageName));
+		iconView.clearAnimation();
+
+		TextView appNameView = (TextView) findViewById(R.id.appinfo_app_name);
+		appNameView.setText(appInfo.getName());
 
 		TextView packageNameView = (TextView) findViewById(R.id.appinfo_package_name);
 		packageNameView.setText(packageName);
