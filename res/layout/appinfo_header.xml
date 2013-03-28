@@ -195,25 +195,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/appinfo_addlink"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_toRightOf="@+id/appinfo_playstore"
-                android:background="@drawable/image_button"
-                android:padding="5dp" >
-
-                <TextView
-                    android:id="@+id/appinfo_addlink_button"
-                    style="@style/MainTableText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/appinfo_addlink_button"
-                    android:textColor="#fff"
-                    android:textStyle="bold" />
-            </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
 
