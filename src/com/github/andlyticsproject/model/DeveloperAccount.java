@@ -12,6 +12,7 @@ public class DeveloperAccount {
 	private String name;
 	private State state;
 	private Date lastStatsUpdate;
+	private String developerId;
 
 	public static DeveloperAccount createActive(String name) {
 		return new DeveloperAccount(name, State.ACTIVE);
@@ -57,6 +58,14 @@ public class DeveloperAccount {
 		this.lastStatsUpdate = lastStatsUpdate == null ? null : (Date) lastStatsUpdate.clone();
 	}
 
+	public synchronized String getDeveloperId() {
+		return developerId;
+	}
+
+	public synchronized void setDeveloperId(String developerId) {
+		this.developerId = developerId;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof DeveloperAccount)) {
@@ -64,17 +73,30 @@ public class DeveloperAccount {
 		}
 		DeveloperAccount rhs = (DeveloperAccount) o;
 
-		return name.equals(rhs.name);
+		if (!name.equals(rhs.name)) {
+			return false;
+		}
+
+		if (developerId == null) {
+			return developerId == rhs.developerId;
+		}
+
+		return developerId.equals(rhs.developerId);
 	}
 
 	@Override
 	public int hashCode() {
-		return name.hashCode();
+		int result = 17;
+		result = 31 * result + name.hashCode();
+		result = 31 * result + developerId == null ? 0 : developerId.hashCode();
+
+		return result;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("DeveloperAccount [name=%s, state=%s]", name, state);
+		return String.format("DeveloperAccount [name=%s, developerId=%s, state=%s]", name,
+				developerId, state);
 	}
 
 	public boolean isHidden() {

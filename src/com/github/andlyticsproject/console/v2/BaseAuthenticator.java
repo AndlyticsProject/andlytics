@@ -1,15 +1,19 @@
 package com.github.andlyticsproject.console.v2;
 
+import org.apache.http.cookie.Cookie;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.http.cookie.Cookie;
 
 public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 
 	protected static final Pattern DEV_ACC_PATTERN = Pattern
 			.compile("\"DeveloperConsoleAccounts\":\"\\{\\\\\"1\\\\\":\\[\\{\\\\\"1\\\\\":\\\\\"(\\d{20})\\\\\"");
+    protected static final Pattern DEV_ACCS_PATTERN = Pattern.compile(
+             "\\\\\"1\\\\\":\\\\\"(\\d{20})\\\\\",\\\\\"2\\\\\":"
+    )       ;
 	protected static final Pattern XSRF_TOKEN_PATTERN = Pattern
 			.compile("\"XsrfToken\":\"\\{\\\\\"1\\\\\":\\\\\"(\\S+)\\\\\"\\}\"");
 
@@ -36,13 +40,13 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 		return null;
 	}
 
-	protected String findDeveloperAccountId(String responseStr) {
-		Matcher m = DEV_ACC_PATTERN.matcher(responseStr);
-		if (m.find()) {
-			return m.group(1);
+	protected String[] findDeveloperAccountIds(String responseStr) {
+        List<String> devAccounts = new ArrayList<String>();
+		Matcher m = DEV_ACCS_PATTERN.matcher(responseStr);
+		while (m.find()) {
+			devAccounts.add(m.group(1));
 		}
-
-		return null;
+        return devAccounts.isEmpty() ? null : devAccounts.toArray(new String[devAccounts.size()]);
 	}
 
 	public String getAccountName() {
