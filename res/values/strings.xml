@@ -21,6 +21,7 @@
     <string name="admob_requests">AdMob requests</string>
     <string name="average_rating">Average rating</string>
     <string name="ratings">Ratings</string>
+    <string name="appinfo">App Info</string>
     <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">comments</string>
     <string name="num_total_downloads">total downloads</string>
@@ -50,6 +51,9 @@
     <string name="run_import">Run import</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
     <string name="title">Title</string>
     <string name="text">Text</string>
     <string name="select_files_export">Select apps to export</string>
@@ -61,6 +65,7 @@
     <string name="load_more_comments">Load more comments</string>
     <string name="info_comments">The number of comments reported on the main screen may be higher than the number of comments shown here because of withdrawn / changed comments.</string>
     <string name="no_comments_found">No comments found</string>
+    <string name="no_links_found">No links found</string>
     <string name="time_frame">Time frame</string>
     <string name="seven_days">Last 7 days</string>
     <string name="thirty_days">Last 30 days</string>
@@ -182,4 +187,19 @@
     <string name="about_credits">Credits</string>
 	<string name="about_text">Andlytics is open source, please feel free to contribute via GitHub. This app is not associated with Google in any way.\n\nVisit us on:</string>
 	<string name="about_thirdsparty_credits_title">Used 3rd party libraries:</string>
+	
+	<string name="appinfo_link_addedit_dialog_title_add">ADD LINK</string>
+	<string name="appinfo_link_addedit_dialog_title_edit">EDIT LINK</string>
+	<string name="appinfo_link_addedit_dialog_text">This form accepts any http or https URL. market:// links are not supported.</string>
+	<string name="appinfo_link_addedit_dialog_url_label">URL</string>
+	<string name="appinfo_link_addedit_dialog_name_label">Name</string>
+	<string name="appinfo_link_addedit_dialog_name_hint">Leave blank to use a default value</string>
+	<string name="appinfo_link_addedit_dialog_not_url">Your URL does not parse as a URL.</string>
+	<string name="appinfo_package_name_label">Package name</string>
+	<string name="appinfo_last_store_update_label">Last store update</string>
+	<string name="appinfo_version_name_label">Version</string>
+	<string name="appinfo_description_label">Description</string>
+	<string name="appinfo_changelog_label">Change log</string>
+	<string name="appinfo_playstore_button">View in the Play Store</string>
+	<string name="appinfo_addlink_button">Add a link</string>
 </resources>

@@ -16,6 +16,8 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -223,7 +225,6 @@ public class MainListAdapter extends BaseAdapter {
 
 		holder.activeInstalls.setText(ai + "");
 		holder.downloadsCount.setText(td + "");
-		holder.name.setText(appDownloadInfo.getName());
 
 		String packageNameText = appDownloadInfo.getPackageName();
 		//        if(appStats.getVersionCode() != null) {
@@ -323,6 +324,27 @@ public class MainListAdapter extends BaseAdapter {
 		}
 
 		holder.icon.setTag(TAG_IMAGE_REF, packageName);
+		
+		// Make the name look like a ilnk
+		SpannableString name = new SpannableString(appDownloadInfo.getName());
+		name.setSpan(new UnderlineSpan(), 0, name.length(), 0);
+		holder.name.setText(name);
+		
+		holder.name.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(activity, AppInfoActivity.class);
+				intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
+				if (iconFile.exists()) {
+					intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
+				}
+				
+				activity.startActivity(intent);
+				activity.overridePendingTransition(R.anim.activity_next_in,
+						R.anim.activity_next_out);
+			}
+		});
+		
 		holder.row.setOnClickListener(new OnClickListener() {
 
 			@Override

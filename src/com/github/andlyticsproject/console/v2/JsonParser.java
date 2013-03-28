@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.github.andlyticsproject.model.AppDetails;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
@@ -27,7 +28,7 @@ public class JsonParser {
 
 	private static final String TAG = JsonParser.class.getSimpleName();
 
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 
 	private JsonParser() {
 
@@ -181,6 +182,7 @@ public class JsonParser {
 				continue;
 				// Draft app
 			}
+
 			// Check number code and last updated date
 			// Published: 1
 			// Unpublished: 2
@@ -201,12 +203,11 @@ public class JsonParser {
 
 			/*
 			 * Per app details:
-			 * null
-			 * Country code
-			 * App Name
-			 * Description
-			 * Unknown
-			 * Last what's new
+			 * 1: Country code
+			 * 2: App Name
+			 * 3: Description
+			 * 4: Promo text
+			 * 5: Last what's new
 			 */
 			// skip if we can't get all the data
 			// XXX should we just let this crash so we know there is a problem?
@@ -240,6 +241,12 @@ public class JsonParser {
 				pp("appDetails", appDetails);
 			}
 			app.setName(appDetails.getString("2"));
+
+			String description = appDetails.getString("3");
+			String changelog = appDetails.optString("5");
+			Long lastPlayStoreUpdate = jsonAppInfo.optLong("7");
+			AppDetails details = new AppDetails(description, changelog, lastPlayStoreUpdate);
+			app.setDetails(details);
 
 			/*
 			 * Per app version details:
