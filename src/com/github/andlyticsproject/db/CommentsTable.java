@@ -1,9 +1,9 @@
 
 package com.github.andlyticsproject.db;
 
-import android.net.Uri;
-
 import java.util.HashMap;
+
+import android.net.Uri;
 
 public class CommentsTable {
 
@@ -25,13 +25,16 @@ public class CommentsTable {
 	public static final String KEY_COMMENT_APP_VERSION = "app_version";
 	public static final String KEY_COMMENT_REPLY_TEXT = "reply_text";
 	public static final String KEY_COMMENT_REPLY_DATE = "reply_date";
+	public static final String KEY_COMMENT_LANGUAGE = "language";
+	public static final String KEY_COMMENT_ORIGINAL_TEXT = "original_text";
 
 	public static final String TABLE_CREATE_COMMENTS = "create table " + DATABASE_TABLE_NAME
 			+ " (_id integer primary key autoincrement, " + KEY_COMMENT_PACKAGENAME
 			+ " text not null," + KEY_COMMENT_DATE + " text not null," + KEY_COMMENT_USER
 			+ " text," + KEY_COMMENT_DEVICE + " text," + KEY_COMMENT_APP_VERSION + " text,"
 			+ KEY_COMMENT_TEXT + " text not null," + KEY_COMMENT_RATING + " integer,"
-			+ KEY_COMMENT_REPLY_TEXT + " text," + KEY_COMMENT_REPLY_DATE + " text)";
+			+ KEY_COMMENT_REPLY_TEXT + " text," + KEY_COMMENT_REPLY_DATE + " text, "
+			+ KEY_COMMENT_LANGUAGE + " text," + KEY_COMMENT_ORIGINAL_TEXT + " text)";
 
 	public static HashMap<String, String> PROJECTION_MAP;
 
@@ -50,6 +53,9 @@ public class CommentsTable {
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_DEVICE, CommentsTable.KEY_COMMENT_DEVICE);
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_REPLY_TEXT, CommentsTable.KEY_COMMENT_REPLY_TEXT);
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_REPLY_DATE, CommentsTable.KEY_COMMENT_REPLY_DATE);
+		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_LANGUAGE, CommentsTable.KEY_COMMENT_LANGUAGE);
+		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_ORIGINAL_TEXT,
+				CommentsTable.KEY_COMMENT_ORIGINAL_TEXT);
 
 	}
 

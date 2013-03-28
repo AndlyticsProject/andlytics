@@ -54,7 +54,8 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 	}
 
 	@Override
-	public SessionCredentials authenticateSilently(boolean invalidate) throws AuthenticationException {
+	public SessionCredentials authenticateSilently(boolean invalidate)
+			throws AuthenticationException {
 		return authenticate();
 	}
 
@@ -101,8 +102,8 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 			if (DEBUG) {
 				Log.d(TAG, "Response: " + responseStr);
 			}
-			String developerAccountId = findDeveloperAccountId(responseStr);
-			if (developerAccountId == null) {
+			String[] developerAccountIds = findDeveloperAccountIds(responseStr);
+			if (developerAccountIds == null) {
 				throw new AuthenticationException("Couldn't get developer account ID.");
 			}
 
@@ -111,7 +112,8 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException("Couldn't get XSRF token.");
 			}
 
-			SessionCredentials result = new SessionCredentials(xsrfToken, developerAccountId);
+			SessionCredentials result = new SessionCredentials(accountName, xsrfToken,
+					developerAccountIds);
 			result.addCookies(cookies);
 
 			return result;

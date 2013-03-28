@@ -292,14 +292,14 @@ public class GwtParser {
 						if (!"0".equals(valueIndex)) {
 							reply = new Comment(true);
 							comment.setReply(reply);
-							reply.setDate(comment.getDate());
+							reply.setOriginalCommentDate(comment.getDate());
 							reply.setText(getStringForIndex(valueIndex));
 						}
 						break;
 					case 13:
 						if (reply != null) {
 							long time = decodeLong(indexList.get(commentIndex + 2 + commentNumber));
-							reply.setReplyDate(new Date(time));
+							reply.setDate(new Date(time));
 						}
 						break;
 					case 14:

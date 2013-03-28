@@ -33,29 +33,29 @@
             android:key="dateformat.long"
             android:title="@string/date_format"/>        
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="true"
             android:key="chart.smooth"
             android:summary="@string/info_smooth"
             android:title="@string/smooth_values" />
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="admob.hide_for_unconfigured_apps"
             android:summary="@string/hide_admob_for_unconfigured_apps"
-            android:title="@string/admob" />
+            android:title="@string/hide_admob" />
         
-        <CheckBoxPreference android:key="use.google.translate.app"
+        <SwitchPreference android:key="use.google.translate.app"
             android:title="@string/use_google_translate_app"
             android:summary="@string/use_google_translate_app_summary"
             android:defaultValue="true"/>
         
-        <CheckBoxPreference android:key="show.comment.auto.translations"
+        <SwitchPreference android:key="show.comment.auto.translations"
             android:title="@string/show_comment_auto_translations"
             android:summary="@string/show_comment_auto_translations_summary"
             android:defaultValue="true"/>
         
-        <CheckBoxPreference android:key="acra.enable"
+        <SwitchPreference android:key="acra.enable"
             android:title="@string/pref_disable_acra"
             android:summaryOn="@string/pref_acra_enabled"
             android:summaryOff="@string/pref_acra_disabled"

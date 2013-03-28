@@ -121,6 +121,8 @@ public class SyncAdapterService extends Service {
 							admobAccountSiteMap.put(admobAccount, siteList);
 						}
 					}
+					// update app details
+					AndlyticsDb.getInstance(context).insertOrUpdateAppDetails(appDownloadInfo);
 				}
 				Log.d(TAG, "sucessfully synced andlytics");
 

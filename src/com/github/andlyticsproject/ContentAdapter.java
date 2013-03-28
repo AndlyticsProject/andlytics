@@ -32,12 +32,11 @@ import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.AppStatsList;
 import com.github.andlyticsproject.model.Comment;
+import com.github.andlyticsproject.util.Utils;
 
 public class ContentAdapter {
 
 	private final Context context;
-	@SuppressLint("SimpleDateFormat")
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	private static ContentAdapter instance;
 
@@ -132,7 +131,7 @@ public class ContentAdapter {
 				admob.setRequests(cursor.getInt(cursor.getColumnIndex(AdmobTable.KEY_REQUESTS)));
 				admob.setRevenue(cursor.getFloat(cursor.getColumnIndex(AdmobTable.KEY_REVENUE)));
 				String dateString = cursor.getString(cursor.getColumnIndex(AdmobTable.KEY_DATE));
-				admob.setDate(parseDate(dateString.substring(0, 10) + " 12:00:00"));
+				admob.setDate(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
 
 				overall.setClicks(overall.getClicks() + admob.getClicks());
 				overall.setCpcRevenue(overall.getCpcRevenue() + admob.getCpcRevenue());
@@ -239,7 +238,7 @@ public class ContentAdapter {
 		values.put(AdmobTable.KEY_CPC_REVENUE, admob.getCpcRevenue());
 		values.put(AdmobTable.KEY_CPM_REVENUE, admob.getCpmRevenue());
 		values.put(AdmobTable.KEY_CTR, admob.getCtr());
-		values.put(AdmobTable.KEY_DATE, formatDate(admob.getDate()));
+		values.put(AdmobTable.KEY_DATE, Utils.formatDbDate(admob.getDate()));
 		values.put(AdmobTable.KEY_ECPM, admob.getEcpm());
 		values.put(AdmobTable.KEY_EXCHANGE_DOWNLOADS, admob.getExchangeDownloads());
 		values.put(AdmobTable.KEY_FILL_RATE, admob.getFillRate());
@@ -285,7 +284,8 @@ public class ContentAdapter {
 
 		ContentValues values = new ContentValues();
 
-		values.put(AppStatsTable.KEY_STATS_REQUESTDATE, formatDate(downloadInfo.getRequestDate()));
+		values.put(AppStatsTable.KEY_STATS_REQUESTDATE,
+				Utils.formatDbDate(downloadInfo.getRequestDate()));
 		values.put(AppStatsTable.KEY_STATS_PACKAGENAME, packageName);
 		values.put(AppStatsTable.KEY_STATS_DOWNLOADS, downloadInfo.getTotalDownloads());
 		values.put(AppStatsTable.KEY_STATS_INSTALLS, downloadInfo.getActiveInstalls());
@@ -346,30 +346,22 @@ public class ContentAdapter {
 		}
 
 		ContentValues initialValues = new ContentValues();
-		initialValues.put(AppInfoTable.KEY_APP_LASTUPDATE, formatDate(appInfo.getLastUpdate()));
+		initialValues.put(AppInfoTable.KEY_APP_LASTUPDATE,
+				Utils.formatDbDate(appInfo.getLastUpdate()));
 		initialValues.put(AppInfoTable.KEY_APP_PACKAGENAME, appInfo.getPackageName());
 		initialValues.put(AppInfoTable.KEY_APP_ACCOUNT, appInfo.getAccount());
+		initialValues.put(AppInfoTable.KEY_APP_DEVELOPER_ID, appInfo.getDeveloperId());
 		initialValues.put(AppInfoTable.KEY_APP_NAME, appInfo.getName());
 		initialValues.put(AppInfoTable.KEY_APP_ICONURL, appInfo.getIconUrl());
 		initialValues.put(AppInfoTable.KEY_APP_PUBLISHSTATE, appInfo.getPublishState());
 		initialValues.put(AppInfoTable.KEY_APP_CATEGORY, -1);
 		initialValues.put(AppInfoTable.KEY_APP_VERSION_NAME, appInfo.getVersionName());
 
-		context.getContentResolver().insert(AppInfoTable.CONTENT_URI, initialValues);
+		Uri uri = context.getContentResolver().insert(AppInfoTable.CONTENT_URI, initialValues);
+		long id = Long.parseLong(uri.getPathSegments().get(1));
+		appInfo.setId(id);
 
 		backupManager.dataChanged();
-	}
-
-	public String formatDate(Date date) {
-		return dateFormat.format(date);
-	}
-
-	private Date parseDate(String string) {
-		try {
-			return dateFormat.parse(string);
-		} catch (ParseException e) {
-			return null;
-		}
 	}
 
 	public String getAppName(String packageName) {
@@ -390,6 +382,7 @@ public class ContentAdapter {
 		return appName;
 	}
 
+	// XXX add dev ID filter
 	public List<String> getPackagesForAccount(String account) {
 		List<String> result = new ArrayList<String>();
 		Cursor cursor = null;
@@ -410,6 +403,7 @@ public class ContentAdapter {
 		return result;
 	}
 
+	// XXX filter by dev ID
 	public List<AppInfo> getAllAppsLatestStats(String account) {
 
 		List<AppInfo> appInfos = new ArrayList<AppInfo>();
@@ -422,14 +416,16 @@ public class ContentAdapter {
 						AppInfoTable.KEY_APP_SKIP_NOTIFICATION,
 						AppInfoTable.KEY_APP_RATINGS_EXPANDED, AppInfoTable.KEY_APP_ICONURL,
 						AppInfoTable.KEY_APP_ADMOB_ACCOUNT, AppInfoTable.KEY_APP_ADMOB_SITE_ID,
-						AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE },
+						AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE,
+						AppInfoTable.KEY_APP_DEVELOPER_ID },
 				AppInfoTable.KEY_APP_ACCOUNT + "='" + account + "'", null,
 				AppInfoTable.KEY_APP_NAME + "");
 
 		while (cursor.moveToNext()) {
 			AppInfo appInfo = new AppInfo();
+			appInfo.setId(cursor.getLong(cursor.getColumnIndex(AppInfoTable.KEY_ROWID)));
 			appInfo.setAccount(account);
-			appInfo.setLastUpdate(parseDate(cursor.getString(cursor
+			appInfo.setLastUpdate(Utils.parseDbDate(cursor.getString(cursor
 					.getColumnIndex(AppInfoTable.KEY_APP_LASTUPDATE))));
 			appInfo.setPackageName(cursor.getString(cursor
 					.getColumnIndex(AppInfoTable.KEY_APP_PACKAGENAME)));
@@ -455,6 +451,10 @@ public class ContentAdapter {
 			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE);
 			if (!cursor.isNull(idx)) {
 				appInfo.setLastCommentsUpdate(new Date(cursor.getLong(idx)));
+			}
+			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_DEVELOPER_ID);
+			if (!cursor.isNull(idx)) {
+				appInfo.setDeveloperId(cursor.getString(idx));
 			}
 
 			appInfos.add(appInfo);
@@ -482,7 +482,6 @@ public class ContentAdapter {
 			stats.init();
 
 			appInfo.setLatestStats(stats);
-
 		}
 
 		return appInfos;
@@ -617,7 +616,7 @@ public class ContentAdapter {
 
 				String dateString = cursor.getString(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE));
-				info.setRequestDate(parseDate(dateString.substring(0, 10) + " 12:00:00"));
+				info.setRequestDate(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
 
 				info.setNumberOfComments(cursor.getInt(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_COMMENTS)));
@@ -886,7 +885,7 @@ public class ContentAdapter {
 						.getColumnIndex(AppStatsTable.KEY_STATS_INSTALLS)));
 				info.setTotalDownloads(cursor.getInt(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_DOWNLOADS)));
-				info.setRequestDate(parseDate(cursor.getString(cursor
+				info.setRequestDate(Utils.parseDbDate(cursor.getString(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE))));
 				info.setNumberOfComments(cursor.getInt(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_COMMENTS)));
@@ -981,7 +980,7 @@ public class ContentAdapter {
 
 				String dateString = cursor.getString(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE));
-				Date date = parseDate(dateString.substring(0, 10) + " 00:00:00");
+				Date date = Utils.parseDbDate(dateString.substring(0, 10) + " 00:00:00");
 
 				result.put(date, ratings);
 
@@ -1015,7 +1014,8 @@ public class ContentAdapter {
 		for (Comment comment : comments) {
 			ContentValues initialValues = new ContentValues();
 			initialValues.put(CommentsTable.KEY_COMMENT_PACKAGENAME, packageName);
-			initialValues.put(CommentsTable.KEY_COMMENT_DATE, formatDate(comment.getDate()));
+			initialValues
+					.put(CommentsTable.KEY_COMMENT_DATE, Utils.formatDbDate(comment.getDate()));
 			initialValues.put(CommentsTable.KEY_COMMENT_RATING, comment.getRating());
 			initialValues.put(CommentsTable.KEY_COMMENT_TEXT, comment.getText());
 			initialValues.put(CommentsTable.KEY_COMMENT_USER, comment.getUser());
@@ -1026,10 +1026,12 @@ public class ContentAdapter {
 			String replyDate = null;
 			if (reply != null) {
 				replyText = reply.getText();
-				replyDate = formatDate(reply.getDate());
+				replyDate = Utils.formatDbDate(reply.getDate());
 			}
 			initialValues.put(CommentsTable.KEY_COMMENT_REPLY_TEXT, replyText);
 			initialValues.put(CommentsTable.KEY_COMMENT_REPLY_DATE, replyDate);
+			initialValues.put(CommentsTable.KEY_COMMENT_LANGUAGE, comment.getLanguage());
+			initialValues.put(CommentsTable.KEY_COMMENT_ORIGINAL_TEXT, comment.getOriginalText());
 
 			context.getContentResolver().insert(CommentsTable.CONTENT_URI, initialValues);
 
@@ -1052,7 +1054,9 @@ public class ContentAdapter {
 							CommentsTable.KEY_COMMENT_USER, CommentsTable.KEY_COMMENT_DEVICE,
 							CommentsTable.KEY_COMMENT_APP_VERSION,
 							CommentsTable.KEY_COMMENT_REPLY_TEXT,
-							CommentsTable.KEY_COMMENT_REPLY_DATE },
+							CommentsTable.KEY_COMMENT_REPLY_DATE,
+							CommentsTable.KEY_COMMENT_LANGUAGE,
+							CommentsTable.KEY_COMMENT_ORIGINAL_TEXT },
 					AppInfoTable.KEY_APP_PACKAGENAME + " = ?", new String[] { packageName },
 					CommentsTable.KEY_COMMENT_DATE + " desc");
 			if (cursor == null) {
@@ -1063,7 +1067,7 @@ public class ContentAdapter {
 				Comment comment = new Comment();
 				String dateString = cursor.getString(cursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_DATE));
-				comment.setDate(parseDate(dateString));
+				comment.setDate(Utils.parseDbDate(dateString));
 				comment.setUser(cursor.getString(cursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_USER)));
 				comment.setText(cursor.getString(cursor
@@ -1079,14 +1083,25 @@ public class ContentAdapter {
 				if (replyText != null) {
 					Comment reply = new Comment(true);
 					reply.setText(replyText);
-					reply.setReplyDate(parseDate(cursor.getString(cursor
+					reply.setDate(Utils.parseDbDate(cursor.getString(cursor
 							.getColumnIndex(CommentsTable.KEY_COMMENT_REPLY_DATE))));
-					reply.setDate(comment.getDate());
+					reply.setOriginalCommentDate(comment.getDate());
 					comment.setReply(reply);
 				}
+				int idx = cursor.getColumnIndex(CommentsTable.KEY_COMMENT_LANGUAGE);
+				if (!cursor.isNull(idx)) {
+					comment.setLanguage(cursor.getString(idx));
+				}
+				idx = cursor.getColumnIndex(CommentsTable.KEY_COMMENT_ORIGINAL_TEXT);
+				if (!cursor.isNull(idx)) {
+					comment.setOriginalText(cursor.getString(idx));
+				}
+
 				result.add(comment);
 			}
-
+			if (cursor != null) {
+				cursor.close();
+			}
 			return result;
 		} finally {
 			if (cursor != null) {
@@ -1145,7 +1160,7 @@ public class ContentAdapter {
 				AppStats info = new AppStats();
 				String dateString = cursor.getString(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE));
-				info.setRequestDate(parseDate(dateString.substring(0, 10) + " 12:00:00"));
+				info.setRequestDate(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
 
 				info.setNumberOfComments(cursor.getInt(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_COMMENTS)));
@@ -1183,7 +1198,7 @@ public class ContentAdapter {
 				do {
 					String dateString = cursor.getString(cursor
 							.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE));
-					result.add(parseDate(dateString.substring(0, 10) + " 12:00:00"));
+					result.add(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
 				} while (cursor.moveToNext());
 			}
 
