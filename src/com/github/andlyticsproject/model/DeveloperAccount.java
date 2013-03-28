@@ -12,6 +12,7 @@ public class DeveloperAccount {
 	private String name;
 	private State state;
 	private Date lastStatsUpdate;
+	// XXX revise this! Link to DeveloperConsoleAccount?
 	private String developerId;
 
 	public static DeveloperAccount createActive(String name) {
@@ -58,11 +59,11 @@ public class DeveloperAccount {
 		this.lastStatsUpdate = lastStatsUpdate == null ? null : (Date) lastStatsUpdate.clone();
 	}
 
-	public synchronized String getDeveloperId() {
+	public String getDeveloperId() {
 		return developerId;
 	}
 
-	public synchronized void setDeveloperId(String developerId) {
+	public void setDeveloperId(String developerId) {
 		this.developerId = developerId;
 	}
 

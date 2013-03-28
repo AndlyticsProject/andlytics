@@ -31,6 +31,7 @@ import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.NetworkException;
+import com.github.andlyticsproject.model.DeveloperConsoleAccount;
 
 public class AccountManagerAuthenticator extends BaseAuthenticator {
 
@@ -203,8 +204,8 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 			if (DEBUG) {
 				Log.d(TAG, "Response: " + responseStr);
 			}
-			String[] developerAccountIds = findDeveloperAccountIds(responseStr);
-			if (developerAccountIds == null) {
+			DeveloperConsoleAccount[] developerAccounts = findDeveloperAccounts(responseStr);
+			if (developerAccounts == null) {
 				throw new AuthenticationException("Couldn't get developer account ID.");
 			}
 
@@ -214,7 +215,7 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 			}
 
 			SessionCredentials result = new SessionCredentials(accountName, xsrfToken,
-					developerAccountIds);
+					developerAccounts);
 			result.addCookies(cookies);
 
 			return result;

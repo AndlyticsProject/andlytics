@@ -66,13 +66,41 @@
                 android:layout_height="2dp"
                 android:layout_below="@+id/appinfo_package_name"
                 android:background="@drawable/row_dash" />
+            
+             <TextView
+                android:id="@+id/appinfo_developer_label"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/appinfo_package_name_spacer"
+                android:paddingLeft="15dp"
+                android:paddingRight="10dp"
+                android:text="@string/appinfo_developer"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/appinfo_developer"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/appinfo_developer_label"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:textIsSelectable="true" />
+
+            <View
+                android:id="@+id/appinfo_developer_spacer"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:layout_below="@+id/appinfo_developer"
+                android:background="@drawable/row_dash" />
 
             <TextView
                 android:id="@+id/appinfo_last_store_update_label"
                 style="@style/MainTableText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/appinfo_package_name_spacer"
+                android:layout_below="@+id/appinfo_developer_spacer"
                 android:paddingLeft="15dp"
                 android:paddingRight="10dp"
                 android:text="@string/appinfo_last_store_update_label"
@@ -93,7 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_below="@id/appinfo_package_name_spacer"
+                android:layout_below="@id/appinfo_developer_spacer"
                 android:layout_gravity="center"
                 android:layout_marginRight="4dp"
                 android:layout_marginTop="5dp"

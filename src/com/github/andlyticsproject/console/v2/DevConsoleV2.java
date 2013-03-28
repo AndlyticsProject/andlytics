@@ -24,6 +24,7 @@ import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
+import com.github.andlyticsproject.model.DeveloperConsoleAccount;
 import com.github.andlyticsproject.util.Utils;
 
 /**
@@ -160,7 +161,9 @@ public class DevConsoleV2 implements DevConsole {
 	 */
 	private List<AppInfo> fetchAppInfos() throws DevConsoleException {
 		List<AppInfo> result = new ArrayList<AppInfo>();
-		for (String developerId : protocol.getSessionCredentials().getDeveloperAccountIds()) {
+		for (DeveloperConsoleAccount consoleAccount : protocol.getSessionCredentials()
+				.getDeveloperConsoleAccounts()) {
+			String developerId = consoleAccount.getDeveloperId();
 			String response = post(protocol.createFetchAppsUrl(developerId),
 					protocol.createFetchAppInfosRequest(), developerId);
 
@@ -172,6 +175,7 @@ public class DevConsoleV2 implements DevConsole {
 
 			for (AppInfo appInfo : apps) {
 				appInfo.setDeveloperId(developerId);
+				appInfo.setDeveloperName(consoleAccount.getName());
 			}
 
 			result.addAll(apps);
@@ -196,6 +200,7 @@ public class DevConsoleV2 implements DevConsole {
 			Log.d(TAG, String.format("Got %d extra apps from details request", extraApps.size()));
 			for (AppInfo appInfo : extraApps) {
 				appInfo.setDeveloperId(developerId);
+				appInfo.setDeveloperName(consoleAccount.getName());
 			}
 			result.addAll(extraApps);
 		}

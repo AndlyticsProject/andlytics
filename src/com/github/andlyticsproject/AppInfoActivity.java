@@ -273,6 +273,10 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 		TextView packageNameView = (TextView) findViewById(R.id.appinfo_package_name);
 		packageNameView.setText(packageName);
 
+		TextView developerView = (TextView) findViewById(R.id.appinfo_developer);
+		developerView.setText(String.format("%s / %s", appInfo.getDeveloperName(),
+				appInfo.getDeveloperId()));
+
 		TextView versionNameView = (TextView) findViewById(R.id.appinfo_version_name);
 		versionNameView.setText(appInfo.getVersionName());
 

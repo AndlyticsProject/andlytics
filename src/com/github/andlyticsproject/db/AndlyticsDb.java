@@ -159,6 +159,8 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			Log.d(TAG, "Old version < 20 - adding new appinfo columns");
 			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
 					+ AppInfoTable.KEY_APP_DEVELOPER_ID + " text");
+			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
+					+ AppInfoTable.KEY_APP_DEVELOPER_NAME + " text");
 			// XXX
 			//			db.execSQL("ALTER table " + DeveloperAccountsTable.DATABASE_TABLE_NAME + " add "
 			//					+ DeveloperAccountsTable.DEVELOPER_ID + " text");
@@ -419,7 +421,8 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 					AppInfoTable.KEY_APP_SKIP_NOTIFICATION, AppInfoTable.KEY_APP_RATINGS_EXPANDED,
 					AppInfoTable.KEY_APP_ICONURL, AppInfoTable.KEY_APP_ADMOB_ACCOUNT,
 					AppInfoTable.KEY_APP_ADMOB_SITE_ID, AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE,
-					AppInfoTable.KEY_APP_ACCOUNT }, AppInfoTable.KEY_APP_PACKAGENAME + "=?",
+					AppInfoTable.KEY_APP_ACCOUNT, AppInfoTable.KEY_APP_DEVELOPER_ID,
+					AppInfoTable.KEY_APP_DEVELOPER_NAME }, AppInfoTable.KEY_APP_PACKAGENAME + "=?",
 					new String[] { packageName }, null, null, null);
 
 			if (cursor.getCount() < 1 || !cursor.moveToNext()) {
@@ -455,6 +458,14 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE);
 			if (!cursor.isNull(idx)) {
 				appInfo.setLastCommentsUpdate(new Date(cursor.getLong(idx)));
+			}
+			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_DEVELOPER_ID);
+			if (!cursor.isNull(idx)) {
+				appInfo.setDeveloperId(cursor.getString(idx));
+			}
+			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_DEVELOPER_NAME);
+			if (!cursor.isNull(idx)) {
+				appInfo.setDeveloperName(cursor.getString(idx));
 			}
 
 			fetchAppDetails(appInfo);

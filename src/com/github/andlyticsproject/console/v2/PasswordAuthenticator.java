@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.github.andlyticsproject.console.AuthenticationException;
+import com.github.andlyticsproject.model.DeveloperConsoleAccount;
 
 public class PasswordAuthenticator extends BaseAuthenticator {
 
@@ -102,8 +103,8 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 			if (DEBUG) {
 				Log.d(TAG, "Response: " + responseStr);
 			}
-			String[] developerAccountIds = findDeveloperAccountIds(responseStr);
-			if (developerAccountIds == null) {
+			DeveloperConsoleAccount[] developerAccounts = findDeveloperAccounts(responseStr);
+			if (developerAccounts == null) {
 				throw new AuthenticationException("Couldn't get developer account ID.");
 			}
 
@@ -113,7 +114,7 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 			}
 
 			SessionCredentials result = new SessionCredentials(accountName, xsrfToken,
-					developerAccountIds);
+					developerAccounts);
 			result.addCookies(cookies);
 
 			return result;

@@ -351,6 +351,7 @@ public class ContentAdapter {
 		initialValues.put(AppInfoTable.KEY_APP_PACKAGENAME, appInfo.getPackageName());
 		initialValues.put(AppInfoTable.KEY_APP_ACCOUNT, appInfo.getAccount());
 		initialValues.put(AppInfoTable.KEY_APP_DEVELOPER_ID, appInfo.getDeveloperId());
+		initialValues.put(AppInfoTable.KEY_APP_DEVELOPER_NAME, appInfo.getDeveloperName());
 		initialValues.put(AppInfoTable.KEY_APP_NAME, appInfo.getName());
 		initialValues.put(AppInfoTable.KEY_APP_ICONURL, appInfo.getIconUrl());
 		initialValues.put(AppInfoTable.KEY_APP_PUBLISHSTATE, appInfo.getPublishState());
@@ -417,7 +418,7 @@ public class ContentAdapter {
 						AppInfoTable.KEY_APP_RATINGS_EXPANDED, AppInfoTable.KEY_APP_ICONURL,
 						AppInfoTable.KEY_APP_ADMOB_ACCOUNT, AppInfoTable.KEY_APP_ADMOB_SITE_ID,
 						AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE,
-						AppInfoTable.KEY_APP_DEVELOPER_ID },
+						AppInfoTable.KEY_APP_DEVELOPER_ID, AppInfoTable.KEY_APP_DEVELOPER_NAME },
 				AppInfoTable.KEY_APP_ACCOUNT + "='" + account + "'", null,
 				AppInfoTable.KEY_APP_NAME + "");
 
@@ -455,6 +456,10 @@ public class ContentAdapter {
 			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_DEVELOPER_ID);
 			if (!cursor.isNull(idx)) {
 				appInfo.setDeveloperId(cursor.getString(idx));
+			}
+			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_DEVELOPER_NAME);
+			if (!cursor.isNull(idx)) {
+				appInfo.setDeveloperName(cursor.getString(idx));
 			}
 
 			appInfos.add(appInfo);
