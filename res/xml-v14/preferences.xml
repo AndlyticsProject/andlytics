@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/preferences" >
+
+    <!--
+    If we add more preferences, it would probably be best to move general preferences
+	to a new activity
+	-->
+
+    <PreferenceCategory android:title="@string/general_preferences" >
+        <ListPreference
+            android:defaultValue="180"
+            android:dialogTitle="@string/auto_sync_period"
+            android:entries="@array/autosync_periods"
+            android:entryValues="@array/autosync_periods_values"
+            android:key="autosync.period"
+            android:title="@string/auto_sync" />
+        
+        <Preference
+            android:icon="@drawable/icon_notification"
+            android:title="@string/notifications" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="com.github.andlyticsproject.NotificationPreferenceActivity"
+                android:targetPackage="com.github.andlyticsproject" />
+        </Preference>
+        
+        <ListPreference 
+            android:defaultValue="DEFAULT"
+            android:dialogTitle="@string/date_format"
+            android:entries="@array/date_formats"
+            android:entryValues="@array/date_format_values"
+            android:key="dateformat.long"
+            android:title="@string/date_format"/>        
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="chart.smooth"
+            android:summary="@string/info_smooth"
+            android:title="@string/smooth_values" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="admob.hide_for_unconfigured_apps"
+            android:summary="@string/hide_admob_for_unconfigured_apps"
+            android:title="@string/hide_admob" />
+        
+        <SwitchPreference android:key="use.google.translate.app"
+            android:title="@string/use_google_translate_app"
+            android:summary="@string/use_google_translate_app_summary"
+            android:defaultValue="true"/>
+        
+        <SwitchPreference android:key="show.comment.auto.translations"
+            android:title="@string/show_comment_auto_translations"
+            android:summary="@string/show_comment_auto_translations_summary"
+            android:defaultValue="true"/>
+        
+        <SwitchPreference android:key="acra.enable"
+            android:title="@string/pref_disable_acra"
+            android:summaryOn="@string/pref_acra_enabled"
+            android:summaryOff="@string/pref_acra_disabled"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="prefCatAccountSpecific"
+        android:title="@string/account_specific_preferences" >
+    </PreferenceCategory>
+
+</PreferenceScreen>
