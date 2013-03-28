@@ -85,7 +85,7 @@ public class DevConsoleV2Protocol {
 		}
 	}
 
-	void addHeaders(HttpPost post) {
+	void addHeaders(HttpPost post, String developerId) {
 		checkState();
 
 		post.addHeader("Host", "play.google.com");
@@ -96,26 +96,25 @@ public class DevConsoleV2Protocol {
 		post.addHeader("X-GWT-Permutation", "EC203CA4CDFF1F0285B065B554E0D784");
 		post.addHeader("Origin", "https://play.google.com");
 		post.addHeader("X-GWT-Module-Base", "https://play.google.com/apps/publish/v2/gwt/");
-		post.addHeader("Referer", "https://play.google.com/apps/publish/v2/?dev_acc="
-				+ getSessionCredentials().getDeveloperAccountId());
+		post.addHeader("Referer", "https://play.google.com/apps/publish/v2/?dev_acc=" + developerId);
 	}
 
-	String createDeveloperUrl(String baseUrl) {
+	String createDeveloperUrl(String baseUrl, String developerId) {
 		checkState();
 
-		return String.format("%s?dev_acc=%s", baseUrl, sessionCredentials.getDeveloperAccountId());
+		return String.format("%s?dev_acc=%s", baseUrl, developerId);
 	}
 
-	String createFetchAppsUrl() {
-		return createDeveloperUrl(URL_APPS);
+	String createFetchAppsUrl(String developerId) {
+		return createDeveloperUrl(URL_APPS, developerId);
 	}
 
-	String createFetchStatisticsUrl() {
-		return createDeveloperUrl(URL_STATISTICS);
+	String createFetchStatisticsUrl(String developerId) {
+		return createDeveloperUrl(URL_STATISTICS, developerId);
 	}
 
-	String createFetchCommentsUrl() {
-		return createDeveloperUrl(URL_REVIEWS);
+	String createFetchCommentsUrl(String developerId) {
+		return createDeveloperUrl(URL_REVIEWS, developerId);
 	}
 
 	String createFetchAppInfosRequest() {

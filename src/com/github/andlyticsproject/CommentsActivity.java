@@ -289,7 +289,8 @@ public class CommentsActivity extends BaseDetailsActivity {
 				DevConsoleV2 console = DevConsoleRegistry.getInstance().get(activity.accountName);
 				try {
 					List<Comment> result = console.getComments(activity, activity.packageName,
-							activity.nextCommentIndex, MAX_LOAD_COMMENTS, Utils.getDisplayLocale());
+							activity.developerId, activity.nextCommentIndex, MAX_LOAD_COMMENTS,
+							Utils.getDisplayLocale());
 					activity.updateCommentsCacheIfNecessary(result);
 
 					activity.incrementNextCommentIndex(result.size());

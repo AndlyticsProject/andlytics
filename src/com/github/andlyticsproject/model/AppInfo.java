@@ -44,6 +44,8 @@ public class AppInfo {
 
 	private AppDetails details;
 
+	private String developerId;
+
 	public Long getId() {
 		return id;
 	}
@@ -213,6 +215,14 @@ public class AppInfo {
 		this.details = details;
 	}
 
+	public String getDeveloperId() {
+		return developerId;
+	}
+
+	public void setDeveloperId(String developerId) {
+		this.developerId = developerId;
+	}
+
 	// XXX -- do we need to compare everything? 
 	// an app should be uniquely identified by the package name alone
 	// (this is enforced by the Play Store)
@@ -221,6 +231,7 @@ public class AppInfo {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((account == null) ? 0 : account.hashCode());
+		result = prime * result + ((developerId == null) ? 0 : account.hashCode());
 		result = prime * result + ((history == null) ? 0 : history.hashCode());
 		result = prime * result + ((iconUrl == null) ? 0 : iconUrl.hashCode());
 		result = prime * result + ((lastUpdate == null) ? 0 : lastUpdate.hashCode());
@@ -250,6 +261,11 @@ public class AppInfo {
 			if (other.account != null)
 				return false;
 		} else if (!account.equals(other.account))
+			return false;
+		if (developerId == null) {
+			if (other.developerId != null)
+				return false;
+		} else if (!developerId.equals(other.developerId))
 			return false;
 		if (history == null) {
 			if (other.history != null)
@@ -308,11 +324,12 @@ public class AppInfo {
 
 	@Override
 	public String toString() {
-		return String.format("AppInfo [account=%s, packageName=%s]", account, packageName);
+		return String.format("AppInfo [account=%s, developerId=%s, packageName=%s]", account,
+				developerId, packageName);
 	}
 
 	public boolean isIncomplete() {
 		return name == null || versionName == null || iconUrl == null;
 	}
-	
+
 }

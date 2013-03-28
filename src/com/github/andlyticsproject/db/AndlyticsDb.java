@@ -155,6 +155,13 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			Log.d(TAG, "Old version < 20 - adding new app_details table");
 			db.execSQL("DROP TABLE IF EXISTS " + AppDetailsTable.DATABASE_TABLE_NAME);
 			db.execSQL(AppDetailsTable.TABLE_CREATE_APP_DETAILS);
+
+			Log.d(TAG, "Old version < 20 - adding new appinfo columns");
+			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
+					+ AppInfoTable.KEY_APP_DEVELOPER_ID + " text");
+			// XXX
+			//			db.execSQL("ALTER table " + DeveloperAccountsTable.DATABASE_TABLE_NAME + " add "
+			//					+ DeveloperAccountsTable.DEVELOPER_ID + " text");
 		}
 
 	}
@@ -271,6 +278,8 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		long updateTime = account.getLastStatsUpdate() == null ? 0 : account.getLastStatsUpdate()
 				.getTime();
 		result.put(DeveloperAccountsTable.LAST_STATS_UPDATE, updateTime);
+		// XXX
+		//		result.put(DeveloperAccountsTable.DEVELOPER_ID, account.getDeveloperId());
 
 		return result;
 	}
