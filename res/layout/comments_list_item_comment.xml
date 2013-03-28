@@ -97,6 +97,12 @@
             android:paddingRight="3dp"
             android:textColor="#8F9698" />
         
+        <ImageView
+            android:id="@+id/comments_list_icon_language"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_language" />
+        
         <TextView
             android:id="@+id/comments_list_item_language"
             style="@style/MainTableText"
