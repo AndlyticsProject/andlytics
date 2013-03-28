@@ -36,8 +36,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 	private CommentsActivity context;
 
-	private DateFormat commentDateFormat = DateFormat.getDateInstance(DateFormat.FULL);
-
+	private DateFormat commentDateFormat = DateFormat
+			.getDateInstance(DateFormat.FULL);
 
 	public CommentsListAdapter(CommentsActivity activity) {
 		this.setCommentGroups(new ArrayList<CommentGroup>());
@@ -46,8 +46,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	}
 
 	@Override
-	public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
-			View convertView, ViewGroup parent) {
+	public View getChildView(int groupPosition, int childPosition,
+			boolean isLastChild, View convertView, ViewGroup parent) {
 
 		final Comment comment = getChild(groupPosition, childPosition);
 		ViewHolderChild holder;
@@ -58,12 +58,18 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 							: R.layout.comments_list_item_comment, null);
 
 			holder = new ViewHolderChild();
-			holder.text = (TextView) convertView.findViewById(R.id.comments_list_item_text);
-			holder.title = (TextView) convertView.findViewById(R.id.comments_list_item_title);
-			holder.user = (TextView) convertView.findViewById(R.id.comments_list_item_username);
-			holder.date = (TextView) convertView.findViewById(R.id.comments_list_item_date);
-			holder.device = (TextView) convertView.findViewById(R.id.comments_list_item_device);
-			holder.version = (TextView) convertView.findViewById(R.id.comments_list_item_version);
+			holder.text = (TextView) convertView
+					.findViewById(R.id.comments_list_item_text);
+			holder.title = (TextView) convertView
+					.findViewById(R.id.comments_list_item_title);
+			holder.user = (TextView) convertView
+					.findViewById(R.id.comments_list_item_username);
+			holder.date = (TextView) convertView
+					.findViewById(R.id.comments_list_item_date);
+			holder.device = (TextView) convertView
+					.findViewById(R.id.comments_list_item_device);
+			holder.version = (TextView) convertView
+					.findViewById(R.id.comments_list_item_version);
 			holder.rating = (RatingBar) convertView
 					.findViewById(R.id.comments_list_item_app_ratingbar);
 			holder.deviceVersionContainer = (LinearLayout) convertView
@@ -72,7 +78,10 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 					.findViewById(R.id.comments_list_icon_device);
 			holder.versionIcon = (ImageView) convertView
 					.findViewById(R.id.comments_list_icon_version);
-			holder.language = (TextView) convertView.findViewById(R.id.comments_list_item_language);
+			holder.language = (TextView) convertView
+					.findViewById(R.id.comments_list_item_language);
+			holder.languageIcon = (ImageView) convertView
+					.findViewById(R.id.comments_list_icon_language);
 
 			convertView.setTag(holder);
 		} else {
@@ -101,7 +110,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			}
 
 			holder.user.setText(comment.getUser() == null ? context
-					.getString(R.string.comment_no_user_info) : comment.getUser());
+					.getString(R.string.comment_no_user_info) : comment
+					.getUser());
 			String version = comment.getAppVersion();
 			String device = comment.getDevice();
 			String language = comment.getLanguage();
@@ -110,6 +120,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			holder.version.setVisibility(View.GONE);
 			holder.device.setVisibility(View.GONE);
 			holder.language.setVisibility(View.GONE);
+			holder.languageIcon.setVisibility(View.GONE);
 			boolean showInfoBox = false;
 
 			// building version/device
@@ -127,8 +138,10 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			}
 			// TODO better UI for language, option to show original text?
 			if (isNotEmptyOrNull(language)) {
-				holder.language.setText(String.format(" [%s]", comment.getLanguage()));
+				holder.language.setText(formatLanguageString(comment
+						.getLanguage()));
 				holder.language.setVisibility(View.VISIBLE);
+				holder.languageIcon.setVisibility(View.VISIBLE);
 				showInfoBox = true;
 			}
 
@@ -151,7 +164,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 				String text = comment.getText();
 				String displayLanguage = Locale.getDefault().getLanguage();
 
-				if (Preferences.isUseGoogleTranslateApp(context) && isGoogleTranslateInstalled()) {
+				if (Preferences.isUseGoogleTranslateApp(context)
+						&& isGoogleTranslateInstalled()) {
 					sendToGoogleTranslate(text, displayLanguage);
 					return true;
 				}
@@ -159,9 +173,12 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 				String url = "http://translate.google.de/m/translate?hl=<<lang>>&vi=m&text=<<text>>&langpair=auto|<<lang>>";
 
 				try {
-					url = url.replaceAll("<<lang>>", URLEncoder.encode(displayLanguage, "UTF-8"));
-					url = url.replaceAll("<<text>>", URLEncoder.encode(text, "UTF-8"));
-					Log.d("CommentsTranslate", "lang: " + displayLanguage + " url: " + url);
+					url = url.replaceAll("<<lang>>",
+							URLEncoder.encode(displayLanguage, "UTF-8"));
+					url = url.replaceAll("<<text>>",
+							URLEncoder.encode(text, "UTF-8"));
+					Log.d("CommentsTranslate", "lang: " + displayLanguage
+							+ " url: " + url);
 
 					Intent i = new Intent(Intent.ACTION_VIEW);
 					i.setData(Uri.parse(url));
@@ -177,7 +194,23 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	}
 
 	private boolean isGoogleTranslateInstalled() {
-		return Utils.isPackageInstalled(context, "com.google.android.apps.translate");
+		return Utils.isPackageInstalled(context,
+				"com.google.android.apps.translate");
+	}
+
+	private String formatLanguageString(String language) {
+		if (language != null && language.indexOf("_") > 0) {
+			String[] parts = language.split("_");
+			if (parts.length > 1
+					&& parts[0].toUpperCase(Locale.ENGLISH).equals(
+							parts[1].toUpperCase(Locale.ENGLISH))) {
+				return parts[1].toUpperCase(Locale.ENGLISH);
+			} else {
+				return language.replaceAll("_", "/");
+			}
+		} else {
+			return language;
+		}
 	}
 
 	private void sendToGoogleTranslate(String text, String displayLanguage) {
@@ -196,9 +229,9 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public int getChildType(int groupPosition, int childPosition) {
-		return getChild(groupPosition, childPosition).isReply() ? TYPE_REPLY : TYPE_COMMENT;
+		return getChild(groupPosition, childPosition).isReply() ? TYPE_REPLY
+				: TYPE_COMMENT;
 	}
-
 
 	@Override
 	public int getChildTypeCount() {
@@ -206,15 +239,17 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	}
 
 	@Override
-	public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
-			ViewGroup parent) {
+	public View getGroupView(int groupPosition, boolean isExpanded,
+			View convertView, ViewGroup parent) {
 
 		ViewHolderGroup holder;
 
 		if (convertView == null) {
-			convertView = layoutInflater.inflate(R.layout.comments_list_item_group_header, null);
+			convertView = layoutInflater.inflate(
+					R.layout.comments_list_item_group_header, null);
 			holder = new ViewHolderGroup();
-			holder.date = (TextView) convertView.findViewById(R.id.comments_list_item_date);
+			holder.date = (TextView) convertView
+					.findViewById(R.id.comments_list_item_date);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolderGroup) convertView.getTag();
@@ -246,6 +281,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		TextView device;
 		TextView version;
 		TextView language;
+		ImageView languageIcon;
 	}
 
 	@Override
@@ -265,7 +301,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public Comment getChild(int groupPosition, int childPosition) {
-		return getCommentGroups().get(groupPosition).getComments().get(childPosition);
+		return getCommentGroups().get(groupPosition).getComments()
+				.get(childPosition);
 	}
 
 	@Override
