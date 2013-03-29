@@ -106,7 +106,8 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(Intent.ACTION_VIEW);
-				intent.setData(Uri.parse("market://details?id=" + packageName));
+				intent.setData(Uri.parse("https://play.google.com/store/apps/details?id="
+						+ packageName));
 				startActivity(intent);
 			}
 		});
