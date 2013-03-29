@@ -3,6 +3,7 @@ package com.github.andlyticsproject;
 import java.util.List;
 
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceCategory;
@@ -14,7 +15,6 @@ import com.github.andlyticsproject.AsyncTasks.LoadAppListTask;
 import com.github.andlyticsproject.AsyncTasks.LoadAppListTaskCompleteListener;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.sync.AutosyncHandler;
-import com.github.andlyticsproject.util.UiUtils;
 import com.github.andlyticsproject.util.Utils;
 
 // See PreferenceActivity for warning suppression justification
@@ -24,7 +24,7 @@ public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivit
 
 	private String accountName;
 	private Preference dummyApp;
-	private Preference autosyncPref;
+	private CheckBoxPreference autosyncPref;
 	private PreferenceCategory notificationAppList;
 	private PreferenceCategory hiddenAppList;
 	private LoadAppListTask task;
@@ -46,9 +46,9 @@ public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivit
 		// Setup auto sync option
 		PreferenceCategory autoSyncCat = (PreferenceCategory) getPreferenceScreen().findPreference(
 				"prefCatAutoSync");
-		autosyncPref = UiUtils.createTwoStatePreference(this);
+		autosyncPref = new CheckBoxPreference(this);
 		autosyncPref.setPersistent(false);
-		UiUtils.setChecked(autosyncPref, autosyncHandler.isAutosyncEnabled(accountName));
+		autosyncPref.setChecked(autosyncHandler.isAutosyncEnabled(accountName));
 		autosyncPref.setTitle(R.string.auto_sync);
 		autosyncPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -98,7 +98,7 @@ public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivit
 
 	@Override
 	protected void onResume() {
-		UiUtils.setChecked(autosyncPref, autosyncHandler.isAutosyncEnabled(accountName));
+		autosyncPref.setChecked(autosyncHandler.isAutosyncEnabled(accountName));
 		super.onResume();
 	}
 
@@ -120,18 +120,18 @@ public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivit
 			hiddenAppList.removePreference(dummyApp);
 			for (AppInfo app : apps) {
 				// Add the notification preference
-				Preference pref = UiUtils.createTwoStatePreference(this);
+				CheckBoxPreference pref = new CheckBoxPreference(this);
 				pref.setTitle(app.getName());
 				pref.setSummary(app.getPackageName());
-				UiUtils.setChecked(pref, !app.isSkipNotification());
+				pref.setChecked(!app.isSkipNotification());
 				pref.setOnPreferenceChangeListener(notificationAppPrefChangedListener);
 				notificationAppList.addPreference(pref);
 
 				// Add the hidden app preference
-				pref = UiUtils.createTwoStatePreference(this);
+				pref = new CheckBoxPreference(this);
 				pref.setTitle(app.getName());
 				pref.setSummary(app.getPackageName());
-				UiUtils.setChecked(pref, app.isGhost());
+				pref.setChecked(app.isGhost());
 				pref.setOnPreferenceChangeListener(hiddenAppPrefChangedListener);
 				hiddenAppList.addPreference(pref);
 			}
