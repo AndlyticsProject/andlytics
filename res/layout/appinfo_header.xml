@@ -188,11 +188,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/appinfo_description_label"
                 android:ellipsize="end"
-                android:maxLines="2"
+                android:maxLines="4"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingBottom="3dp"
-                android:textIsSelectable="true" />
+                android:textIsSelectable="false" />
 
             <View
                 android:id="@+id/appinfo_description_spacer"
@@ -220,11 +220,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/appinfo_changelog_label"
                 android:ellipsize="end"
-                android:maxLines="2"
+                android:maxLines="4"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingBottom="3dp"
-                android:textIsSelectable="true" />
+                android:textIsSelectable="false" />
         </RelativeLayout>
     </RelativeLayout>
 

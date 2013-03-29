@@ -146,6 +146,11 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 			return false;
 		}
 
+		// skip header
+		if (position == 0) {
+			return false;
+		}
+
 		currentActionMode = startActionMode(new ContextCallback(position));
 		list.setItemChecked(position, true);
 
