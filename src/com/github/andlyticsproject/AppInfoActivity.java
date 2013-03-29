@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,17 +13,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.cache.AppIconInMemoryCache;
 import com.github.andlyticsproject.db.AndlyticsDb;
@@ -34,7 +37,7 @@ import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
 public class AppInfoActivity extends SherlockFragmentActivity implements
-		AddEditLinkDialog.OnFinishAddEditLinkDialogListener {
+		AddEditLinkDialog.OnFinishAddEditLinkDialogListener, OnItemLongClickListener {
 
 	public static final String TAG = Main.class.getSimpleName();
 
@@ -50,11 +53,10 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 
 	private AndlyticsDb db;
 
-	private static final int EDIT = 1;
-	private static final int DELETE = 2;
-
 	private String packageName;
 	private String iconFilePath;
+
+	private ActionMode currentActionMode;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -93,6 +95,7 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 
 		linksListAdapter = new LinksListAdapter(this);
 		list.setAdapter(linksListAdapter);
+		list.setOnItemLongClickListener(this);
 
 		linksListAdapter.setLinks(links);
 		linksListAdapter.notifyDataSetChanged();
@@ -137,39 +140,65 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(0, EDIT, 0, R.string.edit);
-		menu.add(0, DELETE, 0, R.string.delete);
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		if (currentActionMode != null) {
+			return false;
+		}
+
+		currentActionMode = startActionMode(new ContextCallback(position));
+		list.setItemChecked(position, true);
+
+		return true;
 	}
 
-	@Override
-	public boolean onContextItemSelected(android.view.MenuItem item) {
-		switch (item.getItemId()) {
-		case EDIT:
-			android.widget.AdapterView.AdapterContextMenuInfo menuInfo = (android.widget.AdapterView.AdapterContextMenuInfo) item
-					.getMenuInfo();
+	@SuppressLint("NewApi")
+	class ContextCallback implements ActionMode.Callback {
 
-			int position = menuInfo.position - 1; // Subtract one for the header
-			Link link = links.get(position);
+		private int position;
 
-			showAddEditLinkDialog(link);
-			return true;
-		case DELETE:
-			menuInfo = (android.widget.AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+		ContextCallback(int position) {
+			this.position = position;
+		}
 
-			position = menuInfo.position - 1; // Subtract one for the header
-			link = links.get(position);
-
-			db.deleteLink(link.getId().longValue());
-
-			loadLinksDb = new LoadLinksDb(this);
-			Utils.execute(loadLinksDb);
-
+		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+			MenuInflater inflater = getSupportMenuInflater();
+			inflater.inflate(R.menu.links_context_menu, menu);
 			return true;
 		}
-		return super.onContextItemSelected(item);
-	}
+
+		public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+			return false;
+		}
+
+		public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+
+			if (menuItem.getItemId() == R.id.itemLinksmenuEdit) {
+				int pos = position - 1; // Subtract one for the header
+				Link link = links.get(pos);
+
+				showAddEditLinkDialog(link);
+				actionMode.finish();
+				return true;
+			} else if (menuItem.getItemId() == R.id.itemLinksmenuDelete) {
+				int pos = position - 1; // Subtract one for the header
+				Link link = links.get(pos);
+
+				db.deleteLink(link.getId().longValue());
+
+				loadLinksDb = new LoadLinksDb(AppInfoActivity.this);
+				Utils.execute(loadLinksDb);
+				actionMode.finish();
+				return true;
+			}
+
+			return false;
+		}
+
+		public void onDestroyActionMode(ActionMode actionMode) {
+			list.setItemChecked(position, false);
+			currentActionMode = null;
+		}
+	};
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
