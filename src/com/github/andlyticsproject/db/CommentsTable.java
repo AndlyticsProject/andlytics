@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject.db;
 
 import java.util.HashMap;
@@ -27,6 +26,7 @@ public class CommentsTable {
 	public static final String KEY_COMMENT_REPLY_DATE = "reply_date";
 	public static final String KEY_COMMENT_LANGUAGE = "language";
 	public static final String KEY_COMMENT_ORIGINAL_TEXT = "original_text";
+	public static final String KEY_COMMENT_UNIQUE_ID = "unique_id";
 
 	public static final String TABLE_CREATE_COMMENTS = "create table " + DATABASE_TABLE_NAME
 			+ " (_id integer primary key autoincrement, " + KEY_COMMENT_PACKAGENAME
@@ -34,7 +34,8 @@ public class CommentsTable {
 			+ " text," + KEY_COMMENT_DEVICE + " text," + KEY_COMMENT_APP_VERSION + " text,"
 			+ KEY_COMMENT_TEXT + " text not null," + KEY_COMMENT_RATING + " integer,"
 			+ KEY_COMMENT_REPLY_TEXT + " text," + KEY_COMMENT_REPLY_DATE + " text, "
-			+ KEY_COMMENT_LANGUAGE + " text," + KEY_COMMENT_ORIGINAL_TEXT + " text)";
+			+ KEY_COMMENT_LANGUAGE + " text," + KEY_COMMENT_ORIGINAL_TEXT + " text, "
+			+ KEY_COMMENT_UNIQUE_ID + " text)";
 
 	public static HashMap<String, String> PROJECTION_MAP;
 
@@ -51,11 +52,15 @@ public class CommentsTable {
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_APP_VERSION,
 				CommentsTable.KEY_COMMENT_APP_VERSION);
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_DEVICE, CommentsTable.KEY_COMMENT_DEVICE);
-		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_REPLY_TEXT, CommentsTable.KEY_COMMENT_REPLY_TEXT);
-		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_REPLY_DATE, CommentsTable.KEY_COMMENT_REPLY_DATE);
+		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_REPLY_TEXT,
+				CommentsTable.KEY_COMMENT_REPLY_TEXT);
+		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_REPLY_DATE,
+				CommentsTable.KEY_COMMENT_REPLY_DATE);
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_LANGUAGE, CommentsTable.KEY_COMMENT_LANGUAGE);
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_ORIGINAL_TEXT,
 				CommentsTable.KEY_COMMENT_ORIGINAL_TEXT);
+		PROJECTION_MAP
+				.put(CommentsTable.KEY_COMMENT_UNIQUE_ID, CommentsTable.KEY_COMMENT_UNIQUE_ID);
 
 	}
 

@@ -17,4 +17,7 @@ public interface DevConsole {
 	List<Comment> getComments(Activity activity, String packageName, String developerId,
 			int startIndex, int count, String displayLocale) throws DevConsoleException;
 
+	Comment replyToComment(Activity activity, String packageName, String developerId,
+			String commentUniqueId, String reply);
+
 }

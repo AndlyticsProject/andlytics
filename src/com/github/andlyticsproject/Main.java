@@ -60,9 +60,9 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private static final String LAST_VERSION_CODE_KEY = "last_version_code";
 
 	public static final String TAG = Main.class.getSimpleName();
-	
-    /** Dialog constant. **/
-    public static final int DIALOG_ABOUT_ID = 1;
+
+	/** Dialog constant. **/
+	public static final int DIALOG_ABOUT_ID = 1;
 
 	private boolean cancelRequested;
 	private ListView mainListView;
@@ -169,7 +169,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		currentStatsMode = Preferences.getStatsMode(this);
 		updateStatsMode();
 
-		State lastState = (State) getLastNonConfigurationInstance();
+		State lastState = (State) getLastCustomNonConfigurationInstance();
 		if (lastState != null) {
 			state = lastState;
 			state.attachAll(this);
@@ -322,7 +322,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	}
 
 	@Override
-	public Object onRetainNonConfigurationInstance() {
+	public Object onRetainCustomNonConfigurationInstance() {
 		state.lastAppList = adapter.getAppInfos();
 		state.detachAll();
 
@@ -564,8 +564,8 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			for (AppInfo appInfo : allStats) {
 				if (!appInfo.isGhost()) {
 					if (appInfo.getAdmobSiteId() != null) {
-						List<Admob> admobStats = db.getAdmobStats(
-								appInfo.getAdmobSiteId(), Timeframe.LAST_TWO_DAYS).getAdmobs();
+						List<Admob> admobStats = db.getAdmobStats(appInfo.getAdmobSiteId(),
+								Timeframe.LAST_TWO_DAYS).getAdmobs();
 						if (admobStats.size() > 0) {
 							Admob admob = admobStats.get(admobStats.size() - 1);
 							appInfo.setAdmobStats(admob);

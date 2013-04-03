@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -74,6 +75,17 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			holder.language = (TextView) convertView.findViewById(R.id.comments_list_item_language);
 			holder.languageIcon = (ImageView) convertView
 					.findViewById(R.id.comments_list_icon_language);
+			holder.replyIcon = (ImageView) convertView.findViewById(R.id.comments_list_icon_reply);
+			if (holder.replyIcon != null) {
+				holder.replyIcon.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// XXX
+						context.showReplyDialog(comment);
+					}
+				});
+			}
 
 			convertView.setTag(holder);
 		} else {
@@ -277,6 +289,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		TextView version;
 		TextView language;
 		ImageView languageIcon;
+		ImageView replyIcon;
 	}
 
 	@Override

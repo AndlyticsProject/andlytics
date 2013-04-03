@@ -9,6 +9,10 @@ public class Comment {
 	
 	private boolean isReply = false;
 
+	// used for replies
+	// looks like this: 'gp:AOqpTOGnebkY.....'
+	private String uniqueId;
+
 	// this is either the translated text, or the same as originalText, 
 	// depending on display language (current locale)
 	private String text;
@@ -39,6 +43,14 @@ public class Comment {
 	
 	public Comment(boolean isReply) {
 		this.isReply = isReply;
+	}
+
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
 	}
 
 	public String getText() {

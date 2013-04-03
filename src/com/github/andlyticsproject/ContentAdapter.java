@@ -1037,6 +1037,7 @@ public class ContentAdapter {
 			initialValues.put(CommentsTable.KEY_COMMENT_REPLY_DATE, replyDate);
 			initialValues.put(CommentsTable.KEY_COMMENT_LANGUAGE, comment.getLanguage());
 			initialValues.put(CommentsTable.KEY_COMMENT_ORIGINAL_TEXT, comment.getOriginalText());
+			initialValues.put(CommentsTable.KEY_COMMENT_UNIQUE_ID, comment.getUniqueId());
 
 			context.getContentResolver().insert(CommentsTable.CONTENT_URI, initialValues);
 
@@ -1061,7 +1062,8 @@ public class ContentAdapter {
 							CommentsTable.KEY_COMMENT_REPLY_TEXT,
 							CommentsTable.KEY_COMMENT_REPLY_DATE,
 							CommentsTable.KEY_COMMENT_LANGUAGE,
-							CommentsTable.KEY_COMMENT_ORIGINAL_TEXT },
+							CommentsTable.KEY_COMMENT_ORIGINAL_TEXT,
+							CommentsTable.KEY_COMMENT_UNIQUE_ID },
 					AppInfoTable.KEY_APP_PACKAGENAME + " = ?", new String[] { packageName },
 					CommentsTable.KEY_COMMENT_DATE + " desc");
 			if (cursor == null) {
@@ -1100,6 +1102,10 @@ public class ContentAdapter {
 				idx = cursor.getColumnIndex(CommentsTable.KEY_COMMENT_ORIGINAL_TEXT);
 				if (!cursor.isNull(idx)) {
 					comment.setOriginalText(cursor.getString(idx));
+				}
+				idx = cursor.getColumnIndex(CommentsTable.KEY_COMMENT_UNIQUE_ID);
+				if (!cursor.isNull(idx)) {
+					comment.setUniqueId(cursor.getString(idx));
 				}
 
 				result.add(comment);

@@ -152,6 +152,32 @@ public class DevConsoleV2 implements DevConsole {
 		}
 	}
 
+	public synchronized Comment replyToComment(Activity activity, String packageName,
+			String developerId, String commentUniqueId, String reply) {
+		try {
+			if (!authenticateWithCachedCredentialas(activity)) {
+				return null;
+			}
+
+			return replyToComment(packageName, developerId, commentUniqueId, reply);
+		} catch (AuthenticationException ex) {
+			if (!authenticateFromScratch(activity)) {
+				return null;
+			}
+
+			return replyToComment(packageName, developerId, commentUniqueId, reply);
+		}
+	}
+
+	private Comment replyToComment(String packageName, String developerId, String commentUiqueId,
+			String reply) {
+		String response = post(protocol.createCommentsUrl(developerId),
+				protocol.createReplyToCommentRequest(packageName, commentUiqueId, reply),
+				developerId);
+
+		return protocol.parseCommentReplyResponse(response);
+	}
+
 	/**
 	 * Fetches a list of apps for the given account
 	 * 
@@ -241,7 +267,7 @@ public class DevConsoleV2 implements DevConsole {
 	 */
 	private void fetchRatings(AppInfo appInfo, AppStats stats) throws DevConsoleException {
 		String developerId = appInfo.getDeveloperId();
-		String response = post(protocol.createFetchCommentsUrl(developerId),
+		String response = post(protocol.createCommentsUrl(developerId),
 				protocol.createFetchRatingsRequest(appInfo.getPackageName()), developerId);
 		protocol.parseRatingsResponse(response, stats);
 	}
@@ -262,7 +288,7 @@ public class DevConsoleV2 implements DevConsole {
 		int pageSize = 50;
 
 		String developerId = appInfo.getDeveloperId();
-		String response = post(protocol.createFetchCommentsUrl(developerId),
+		String response = post(protocol.createCommentsUrl(developerId),
 				protocol.createFetchCommentsRequest(appInfo.getPackageName(), 0, pageSize,
 						displayLocale), developerId);
 		int approxNumComments = protocol.extractCommentsCount(response);
@@ -272,7 +298,7 @@ public class DevConsoleV2 implements DevConsole {
 		}
 
 		response = post(
-				protocol.createFetchCommentsUrl(developerId),
+				protocol.createCommentsUrl(developerId),
 				protocol.createFetchCommentsRequest(appInfo.getPackageName(), approxNumComments
 						- pageSize, pageSize, displayLocale), developerId);
 		finalNumComments += protocol.extractCommentsCount(response);
@@ -283,7 +309,7 @@ public class DevConsoleV2 implements DevConsole {
 	private List<Comment> fetchComments(String packageName, String developerId, int startIndex,
 			int count, String displayLocale) throws DevConsoleException {
 		List<Comment> comments = new ArrayList<Comment>();
-		String response = post(protocol.createFetchCommentsUrl(developerId),
+		String response = post(protocol.createCommentsUrl(developerId),
 				protocol.createFetchCommentsRequest(packageName, startIndex, count, displayLocale),
 				developerId);
 		comments.addAll(protocol.parseCommentsResponse(response));
