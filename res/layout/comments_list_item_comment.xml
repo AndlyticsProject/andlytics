@@ -96,22 +96,29 @@
             android:gravity="center"
             android:paddingRight="4dp"
             android:textColor="#8F9698" />
-        
-        <ImageView
-            android:id="@+id/comments_list_icon_language"
+
+        <LinearLayout
+            android:id="@+id/comments_list_item_language_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_language" />
-        
-        <TextView
-            android:id="@+id/comments_list_item_language"
-            style="@style/MainTableText"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:gravity="center"
-            android:textColor="#8F9698" 
-            android:textIsSelectable="false"/>
-        
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/comments_list_icon_language"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_language" />
+
+            <TextView
+                android:id="@+id/comments_list_item_language"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:textColor="#8F9698"
+                android:textIsSelectable="false" />
+        </LinearLayout>
+
         <ImageView
             android:id="@+id/comments_list_icon_reply"
             android:layout_width="wrap_content"

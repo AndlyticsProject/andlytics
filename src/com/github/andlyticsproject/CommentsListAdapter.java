@@ -75,13 +75,37 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			holder.language = (TextView) convertView.findViewById(R.id.comments_list_item_language);
 			holder.languageIcon = (ImageView) convertView
 					.findViewById(R.id.comments_list_icon_language);
+			View languageContainer = convertView
+					.findViewById(R.id.comments_list_item_language_container);
+
+			if (languageContainer != null) {
+				final TextView commentText = holder.text;
+				languageContainer.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						boolean showTranslations = Preferences
+								.isShowCommentAutoTranslations(context);
+						if (!showTranslations || !comment.isTranslated()) {
+							return;
+						}
+
+						if (comment.getText().equals(commentText.getText().toString())) {
+							commentText.setText(comment.getOriginalText());
+							commentText.setTextAppearance(context, R.style.normalText);
+						} else {
+							commentText.setText(comment.getText());
+							commentText.setTextAppearance(context, R.style.italicText);
+						}
+					}
+				});
+			}
 			holder.replyIcon = (ImageView) convertView.findViewById(R.id.comments_list_icon_reply);
 			if (holder.replyIcon != null) {
 				holder.replyIcon.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
-						// XXX
 						context.showReplyDialog(comment);
 					}
 				});
@@ -120,8 +144,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 				holder.title.setVisibility(View.GONE);
 			}
 			// italic for translated text
-			boolean translated = showTranslations && comment.getLanguage() != null
-					&& !comment.getLanguage().contains(Locale.getDefault().getLanguage());
+			boolean translated = showTranslations && comment.isTranslated();
 			holder.text.setTextAppearance(context, translated ? R.style.italicText
 					: R.style.normalText);
 
