@@ -5,12 +5,21 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
@@ -24,7 +33,10 @@ import com.github.andlyticsproject.util.Utils;
 
 public class CommentsActivity extends BaseDetailsActivity {
 
-	public static final String TAG = Main.class.getSimpleName();
+	private static final String TAG = Main.class.getSimpleName();
+
+	private static final String REPLY_DIALOG_FRAGMENT = "reply_dialog_fragment";
+
 
 	private CommentsListAdapter commentsListAdapter;
 
@@ -90,7 +102,6 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 	private State state = new State();
 
-	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.comments);
@@ -127,7 +138,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 		db = getDbAdapter();
 
-		State lastState = (State) getLastNonConfigurationInstance();
+		State lastState = (State) getLastCustomNonConfigurationInstance();
 		if (lastState != null) {
 			state = lastState;
 			state.attachAll(this);
@@ -144,12 +155,13 @@ public class CommentsActivity extends BaseDetailsActivity {
 	}
 
 	@Override
-	public Object onRetainNonConfigurationInstance() {
+	public Object onRetainCustomNonConfigurationInstance() {
 		state.comments = comments;
 		state.detachAll();
 
 		return state;
 	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -461,6 +473,148 @@ public class CommentsActivity extends BaseDetailsActivity {
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	public static class ReplyDialog extends SherlockDialogFragment {
+
+		String commentUniqueId;
+
+		public ReplyDialog() {
+			setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog);
+		}
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View view = inflater.inflate(R.layout.comment_reply_dialog, container);
+
+			final EditText replyText = (EditText) view.findViewById(R.id.comment_reply_dialog_text);
+			replyText.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+				@Override
+				public void onFocusChange(View v, boolean hasFocus) {
+					if (hasFocus) {
+						showKeyboard();
+					}
+				}
+			});
+
+			Bundle args = getArguments();
+			if (args.containsKey("uniqueId")) {
+				commentUniqueId = args.getString("uniqueId");
+			}
+			if (args.containsKey("reply")) {
+				replyText.setText(args.getString("reply"));
+			}
+
+			view.findViewById(R.id.comment_reply_dialog_negative_button).setOnClickListener(
+					new OnClickListener() {
+						public void onClick(View v) {
+							dismiss();
+						}
+					});
+			view.findViewById(R.id.comment_reply_dialog_positive_button).setOnClickListener(
+					new OnClickListener() {
+						public void onClick(View v) {
+							String reply = replyText.getText().toString();
+							CommentsActivity activity = (CommentsActivity) getActivity();
+							if (activity != null) {
+								activity.replyToComment(commentUniqueId, reply);
+							}
+							dismiss();
+						}
+					});
+
+			replyText.requestFocus();
+			showKeyboard();
+
+			return view;
+		}
+
+		@Override
+		public void onViewCreated(View view, Bundle savedInstanceState) {
+			getDialog().getWindow().setSoftInputMode(
+					WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+			super.onViewCreated(view, savedInstanceState);
+		}
+
+		private void showKeyboard() {
+			getDialog().getWindow().setSoftInputMode(
+					WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
+							| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+		}
+	}
+
+	void showReplyDialog(Comment comment) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag(REPLY_DIALOG_FRAGMENT);
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		ReplyDialog replyDialog = new ReplyDialog();
+
+		Bundle args = new Bundle();
+		args.putString("uniqueId", comment.getUniqueId());
+		args.putString("reply", comment.getReply() == null ? "" : comment.getReply().getText());
+
+		replyDialog.setArguments(args);
+
+		replyDialog.show(ft, REPLY_DIALOG_FRAGMENT);
+	}
+
+	void hideReplyDialog() {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment dialog = getSupportFragmentManager().findFragmentByTag(REPLY_DIALOG_FRAGMENT);
+		if (dialog != null) {
+			ft.remove(dialog);
+			ft.commit();
+		}
+	}
+
+	public void replyToComment(final String commentUniqueId, final String replyText) {
+		Utils.execute(new DetachableAsyncTask<Void, Void, Comment, CommentsActivity>(this) {
+
+			Exception error;
+
+			@Override
+			protected Comment doInBackground(Void... arg0) {
+				if (activity == null) {
+					return null;
+				}
+
+				activity.refreshStarted();
+				try {
+					DevConsoleV2 console = DevConsoleRegistry.getInstance().get(accountName);
+
+					return console.replyToComment(CommentsActivity.this, packageName, developerId,
+							commentUniqueId, replyText);
+				} catch (Exception e) {
+					error = e;
+					return null;
+				}
+			}
+
+			@Override
+			protected void onPostExecute(Comment reply) {
+				if (activity == null) {
+					return;
+				}
+
+				activity.refreshFinished();
+
+				if (error != null) {
+					Log.e(TAG, "Error replying to comment: " + error.getMessage(), error);
+					activity.hideReplyDialog();
+					activity.handleUserVisibleException(error);
+
+					return;
+				}
+
+				refreshComments();
+			}
+		});
 	}
 
 }

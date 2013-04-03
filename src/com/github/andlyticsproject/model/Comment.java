@@ -1,13 +1,17 @@
-
 package com.github.andlyticsproject.model;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Comment {
-	
+
 	private boolean isReply = false;
+
+	// used for replies
+	// looks like this: 'gp:AOqpTOGnebkY.....'
+	private String uniqueId;
 
 	// this is either the translated text, or the same as originalText, 
 	// depending on display language (current locale)
@@ -20,7 +24,7 @@ public class Comment {
 	private String language;
 
 	private Date date;
-	
+
 	private Date originalCommentDate;
 
 	private int rating;
@@ -32,13 +36,21 @@ public class Comment {
 	private String device;
 
 	private Comment reply;
-	
-	public Comment(){
-		
+
+	public Comment() {
+
 	}
-	
+
 	public Comment(boolean isReply) {
 		this.isReply = isReply;
+	}
+
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
 	}
 
 	public String getText() {
@@ -67,6 +79,7 @@ public class Comment {
 
 	/**
 	 * Date or the comment (or the date of the reply)
+	 * 
 	 * @return
 	 */
 	public Date getDate() {
@@ -76,16 +89,17 @@ public class Comment {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	
+
 	/**
 	 * Date of the original comment that this reply refers to
 	 * Only valid for replies
+	 * 
 	 * @return
 	 */
 	public Date getOriginalCommentDate() {
 		return originalCommentDate;
 	}
-	
+
 	public void setOriginalCommentDate(Date date) {
 		this.originalCommentDate = date;
 	}
@@ -129,7 +143,7 @@ public class Comment {
 	public void setReply(Comment reply) {
 		this.reply = reply;
 	}
-	
+
 	public boolean isReply() {
 		return isReply;
 	}
@@ -142,8 +156,12 @@ public class Comment {
 				withReplies.add(comment.getReply());
 			}
 		}
-	
+
 		return withReplies;
+	}
+
+	public boolean isTranslated() {
+		return language != null && !language.contains(Locale.getDefault().getLanguage());
 	}
 
 }

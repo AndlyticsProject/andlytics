@@ -147,6 +147,8 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 					+ CommentsTable.KEY_COMMENT_LANGUAGE + " text");
 			db.execSQL("ALTER table " + CommentsTable.DATABASE_TABLE_NAME + " add "
 					+ CommentsTable.KEY_COMMENT_ORIGINAL_TEXT + " text");
+			db.execSQL("ALTER table " + CommentsTable.DATABASE_TABLE_NAME + " add "
+					+ CommentsTable.KEY_COMMENT_UNIQUE_ID + " text");
 
 			Log.w(TAG, "Old version < 20 - adding links table");
 			db.execSQL("DROP TABLE IF EXISTS " + LinksTable.DATABASE_TABLE_NAME);

@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -74,6 +75,41 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			holder.language = (TextView) convertView.findViewById(R.id.comments_list_item_language);
 			holder.languageIcon = (ImageView) convertView
 					.findViewById(R.id.comments_list_icon_language);
+			View languageContainer = convertView
+					.findViewById(R.id.comments_list_item_language_container);
+
+			if (languageContainer != null) {
+				final TextView commentText = holder.text;
+				languageContainer.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						boolean showTranslations = Preferences
+								.isShowCommentAutoTranslations(context);
+						if (!showTranslations || !comment.isTranslated()) {
+							return;
+						}
+
+						if (comment.getText().equals(commentText.getText().toString())) {
+							commentText.setText(comment.getOriginalText());
+							commentText.setTextAppearance(context, R.style.normalText);
+						} else {
+							commentText.setText(comment.getText());
+							commentText.setTextAppearance(context, R.style.italicText);
+						}
+					}
+				});
+			}
+			holder.replyIcon = (ImageView) convertView.findViewById(R.id.comments_list_icon_reply);
+			if (holder.replyIcon != null) {
+				holder.replyIcon.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						context.showReplyDialog(comment);
+					}
+				});
+			}
 
 			convertView.setTag(holder);
 		} else {
@@ -108,8 +144,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 				holder.title.setVisibility(View.GONE);
 			}
 			// italic for translated text
-			boolean translated = showTranslations && comment.getLanguage() != null
-					&& !comment.getLanguage().contains(Locale.getDefault().getLanguage());
+			boolean translated = showTranslations && comment.isTranslated();
 			holder.text.setTextAppearance(context, translated ? R.style.italicText
 					: R.style.normalText);
 
@@ -277,6 +312,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		TextView version;
 		TextView language;
 		ImageView languageIcon;
+		ImageView replyIcon;
 	}
 
 	@Override

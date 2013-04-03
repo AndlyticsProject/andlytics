@@ -40,6 +40,9 @@ public class DevConsoleV2Protocol {
 	// 1$: package name, 2$: stats type, 3$: stats by, 4$: XSRF
 	static final String GET_COMBINED_STATS_TEMPLATE = "{\"method\":\"getCombinedStats\","
 			+ "\"params\":{\"1\":\"%1$s\",\"2\":1,\"3\":%2$d,\"4\":[%3$d]},\"xsrf\":\"%4$s\"}";
+	// %1$s: package name, %2$s: comment ID, %3$s: reply text, %4$s: XSRF
+	static final String REPLY_TO_COMMENT_TEMPLATE = "{\"method\":\"sendReply\","
+			+ "\"params\":{\"1\":\"%1$s\",\"2\":\"%2$s\",\"3\":\"%3$s\"},\"xsrf\":\"%4$s\"}";
 
 	// Represents the different ways to break down statistics by e.g. by android
 	// version
@@ -113,7 +116,7 @@ public class DevConsoleV2Protocol {
 		return createDeveloperUrl(URL_STATISTICS, developerId);
 	}
 
-	String createFetchCommentsUrl(String developerId) {
+	String createCommentsUrl(String developerId) {
 		return createDeveloperUrl(URL_REVIEWS, developerId);
 	}
 
@@ -204,6 +207,13 @@ public class DevConsoleV2Protocol {
 				sessionCredentials.getXsrfToken());
 	}
 
+	String createReplyToCommentRequest(String packageName, String commentId, String reply) {
+		checkState();
+
+		return String.format(REPLY_TO_COMMENT_TEMPLATE, packageName, commentId, reply,
+				sessionCredentials.getXsrfToken());
+	}
+
 	int extractCommentsCount(String json) {
 		try {
 			return JsonParser.parseCommentsCount(json);
@@ -216,6 +226,15 @@ public class DevConsoleV2Protocol {
 	List<Comment> parseCommentsResponse(String json) {
 		try {
 			return JsonParser.parseComments(json);
+		} catch (JSONException ex) {
+			saveDebugJson(json);
+			throw new DevConsoleProtocolException(json, ex);
+		}
+	}
+
+	Comment parseCommentReplyResponse(String json) {
+		try {
+			return JsonParser.parseCommentReplyResponse(json);
 		} catch (JSONException ex) {
 			saveDebugJson(json);
 			throw new DevConsoleProtocolException(json, ex);

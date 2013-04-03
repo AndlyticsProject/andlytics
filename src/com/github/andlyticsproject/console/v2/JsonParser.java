@@ -434,6 +434,8 @@ public class JsonParser {
 			 * 1
 			 * ]
 			 */
+			String uniqueId = jsonComment.getString("1");
+			comment.setUniqueId(uniqueId);
 			String user = jsonComment.optString("2");
 			if (user != null && !"".equals(user) && !"null".equals(user)) {
 				comment.setUser(user);
@@ -485,6 +487,17 @@ public class JsonParser {
 		}
 
 		return comments;
+	}
+
+	static Comment parseCommentReplyResponse(String json) throws JSONException {
+		//{"result":{"1":{"1":"REPLY","3":"TIME_STAMP"},"2":true},"xsrf":"XSRF_TOKEN"}
+		JSONObject replyObj = new JSONObject(json).getJSONObject("result").getJSONObject("1");
+
+		Comment result = new Comment(true);
+		result.setText(replyObj.getString("1"));
+		result.setDate(parseDate(Long.parseLong(replyObj.getString("3"))));
+
+		return result;
 	}
 
 	/**

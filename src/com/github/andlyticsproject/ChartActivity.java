@@ -118,8 +118,8 @@ public class ChartActivity extends BaseChartActivity {
 		historyListAdapter.setCurrentChart(currentChartSet.ordinal(), 1);
 		setAllowChangePageSliding(false);
 
-		if (getLastNonConfigurationInstance() != null) {
-			loadChartData = (LoadChartData) getLastNonConfigurationInstance();
+		if (getLastCustomNonConfigurationInstance() != null) {
+			loadChartData = (LoadChartData) getLastCustomNonConfigurationInstance();
 			loadChartData.attach(this);
 			if (loadChartData.statsForApp != null && loadChartData.versionUpdateDates != null) {
 				updateView(loadChartData.statsForApp, loadChartData.versionUpdateDates);
@@ -130,7 +130,7 @@ public class ChartActivity extends BaseChartActivity {
 	}
 
 	@Override
-	public Object onRetainNonConfigurationInstance() {
+	public Object onRetainCustomNonConfigurationInstance() {
 		return loadChartData == null ? null : loadChartData.detach();
 	}
 

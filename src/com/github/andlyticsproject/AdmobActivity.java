@@ -149,8 +149,8 @@ public class AdmobActivity extends BaseChartActivity {
 			}
 			showAccountList();
 		} else {
-			if (getLastNonConfigurationInstance() != null) {
-				state = (State) getLastNonConfigurationInstance();
+			if (getLastCustomNonConfigurationInstance() != null) {
+				state = (State) getLastCustomNonConfigurationInstance();
 				state.attachAll(this);
 				if (state.loadDbEntries.admobList != null) {
 					showStats(state.loadDbEntries.admobList);
@@ -162,7 +162,7 @@ public class AdmobActivity extends BaseChartActivity {
 	}
 
 	@Override
-	public Object onRetainNonConfigurationInstance() {
+	public Object onRetainCustomNonConfigurationInstance() {
 		return state.detachAll();
 	}
 
