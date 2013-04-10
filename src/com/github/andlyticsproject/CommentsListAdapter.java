@@ -68,10 +68,6 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 					.findViewById(R.id.comments_list_item_app_ratingbar);
 			holder.deviceVersionContainer = (LinearLayout) convertView
 					.findViewById(R.id.comments_list_item_device_container);
-			holder.deviceIcon = (ImageView) convertView
-					.findViewById(R.id.comments_list_icon_device);
-			holder.versionIcon = (ImageView) convertView
-					.findViewById(R.id.comments_list_icon_version);
 			holder.language = (TextView) convertView.findViewById(R.id.comments_list_item_language);
 
 			if (holder.language != null) {
@@ -149,8 +145,6 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			String version = comment.getAppVersion();
 			String device = comment.getDevice();
 			String language = comment.getLanguage();
-			holder.deviceIcon.setVisibility(View.GONE);
-			holder.versionIcon.setVisibility(View.GONE);
 			holder.version.setVisibility(View.GONE);
 			holder.device.setVisibility(View.GONE);
 			holder.language.setVisibility(View.GONE);
@@ -159,13 +153,11 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			// building version/device
 			if (isNotEmptyOrNull(version)) {
 				holder.version.setText(version);
-				holder.versionIcon.setVisibility(View.VISIBLE);
 				holder.version.setVisibility(View.VISIBLE);
 				showInfoBox = true;
 			}
 			if (isNotEmptyOrNull(device)) {
 				holder.device.setText(device);
-				holder.deviceIcon.setVisibility(View.VISIBLE);
 				holder.device.setVisibility(View.VISIBLE);
 				showInfoBox = true;
 			}
@@ -300,8 +292,6 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		TextView user;
 		TextView date;
 		LinearLayout deviceVersionContainer;
-		ImageView deviceIcon;
-		ImageView versionIcon;
 		TextView device;
 		TextView version;
 		TextView language;
