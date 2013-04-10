@@ -68,19 +68,11 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 					.findViewById(R.id.comments_list_item_app_ratingbar);
 			holder.deviceVersionContainer = (LinearLayout) convertView
 					.findViewById(R.id.comments_list_item_device_container);
-			holder.deviceIcon = (ImageView) convertView
-					.findViewById(R.id.comments_list_icon_device);
-			holder.versionIcon = (ImageView) convertView
-					.findViewById(R.id.comments_list_icon_version);
 			holder.language = (TextView) convertView.findViewById(R.id.comments_list_item_language);
-			holder.languageIcon = (ImageView) convertView
-					.findViewById(R.id.comments_list_icon_language);
-			View languageContainer = convertView
-					.findViewById(R.id.comments_list_item_language_container);
 
-			if (languageContainer != null) {
+			if (holder.language != null) {
 				final TextView commentText = holder.text;
-				languageContainer.setOnClickListener(new OnClickListener() {
+				holder.language.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
@@ -153,24 +145,19 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			String version = comment.getAppVersion();
 			String device = comment.getDevice();
 			String language = comment.getLanguage();
-			holder.deviceIcon.setVisibility(View.GONE);
-			holder.versionIcon.setVisibility(View.GONE);
 			holder.version.setVisibility(View.GONE);
 			holder.device.setVisibility(View.GONE);
 			holder.language.setVisibility(View.GONE);
-			holder.languageIcon.setVisibility(View.GONE);
 			boolean showInfoBox = false;
 
 			// building version/device
 			if (isNotEmptyOrNull(version)) {
 				holder.version.setText(version);
-				holder.versionIcon.setVisibility(View.VISIBLE);
 				holder.version.setVisibility(View.VISIBLE);
 				showInfoBox = true;
 			}
 			if (isNotEmptyOrNull(device)) {
 				holder.device.setText(device);
-				holder.deviceIcon.setVisibility(View.VISIBLE);
 				holder.device.setVisibility(View.VISIBLE);
 				showInfoBox = true;
 			}
@@ -178,7 +165,6 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			if (isNotEmptyOrNull(language)) {
 				holder.language.setText(formatLanguageString(comment.getLanguage()));
 				holder.language.setVisibility(View.VISIBLE);
-				holder.languageIcon.setVisibility(View.VISIBLE);
 				showInfoBox = true;
 			}
 
@@ -306,12 +292,9 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		TextView user;
 		TextView date;
 		LinearLayout deviceVersionContainer;
-		ImageView deviceIcon;
-		ImageView versionIcon;
 		TextView device;
 		TextView version;
 		TextView language;
-		ImageView languageIcon;
 		ImageView replyIcon;
 	}
 
