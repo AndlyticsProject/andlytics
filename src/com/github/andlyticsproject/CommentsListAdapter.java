@@ -73,14 +73,10 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			holder.versionIcon = (ImageView) convertView
 					.findViewById(R.id.comments_list_icon_version);
 			holder.language = (TextView) convertView.findViewById(R.id.comments_list_item_language);
-			holder.languageIcon = (ImageView) convertView
-					.findViewById(R.id.comments_list_icon_language);
-			View languageContainer = convertView
-					.findViewById(R.id.comments_list_item_language_container);
 
-			if (languageContainer != null) {
+			if (holder.language != null) {
 				final TextView commentText = holder.text;
-				languageContainer.setOnClickListener(new OnClickListener() {
+				holder.language.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
@@ -158,7 +154,6 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			holder.version.setVisibility(View.GONE);
 			holder.device.setVisibility(View.GONE);
 			holder.language.setVisibility(View.GONE);
-			holder.languageIcon.setVisibility(View.GONE);
 			boolean showInfoBox = false;
 
 			// building version/device
@@ -178,7 +173,6 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			if (isNotEmptyOrNull(language)) {
 				holder.language.setText(formatLanguageString(comment.getLanguage()));
 				holder.language.setVisibility(View.VISIBLE);
-				holder.languageIcon.setVisibility(View.VISIBLE);
 				showInfoBox = true;
 			}
 
@@ -311,7 +305,6 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		TextView device;
 		TextView version;
 		TextView language;
-		ImageView languageIcon;
 		ImageView replyIcon;
 	}
 
