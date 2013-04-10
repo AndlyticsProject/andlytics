@@ -70,42 +70,41 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 					.findViewById(R.id.comments_list_item_device_container);
 			holder.language = (TextView) convertView.findViewById(R.id.comments_list_item_language);
 
-			if (holder.language != null) {
-				final TextView commentText = holder.text;
-				holder.language.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						boolean showTranslations = Preferences
-								.isShowCommentAutoTranslations(context);
-						if (!showTranslations || !comment.isTranslated()) {
-							return;
-						}
-
-						if (comment.getText().equals(commentText.getText().toString())) {
-							commentText.setText(comment.getOriginalText());
-							commentText.setTextAppearance(context, R.style.normalText);
-						} else {
-							commentText.setText(comment.getText());
-							commentText.setTextAppearance(context, R.style.italicText);
-						}
-					}
-				});
-			}
-			holder.replyIcon = (ImageView) convertView.findViewById(R.id.comments_list_icon_reply);
-			if (holder.replyIcon != null) {
-				holder.replyIcon.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						context.showReplyDialog(comment);
-					}
-				});
-			}
-
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolderChild) convertView.getTag();
+		}
+
+		if (holder.language != null) {
+			final TextView commentText = holder.text;
+			holder.language.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					boolean showTranslations = Preferences.isShowCommentAutoTranslations(context);
+					if (!showTranslations || !comment.isTranslated()) {
+						return;
+					}
+
+					if (comment.getText().equals(commentText.getText().toString())) {
+						commentText.setText(comment.getOriginalText());
+						commentText.setTextAppearance(context, R.style.normalText);
+					} else {
+						commentText.setText(comment.getText());
+						commentText.setTextAppearance(context, R.style.italicText);
+					}
+				}
+			});
+		}
+		holder.replyIcon = (ImageView) convertView.findViewById(R.id.comments_list_icon_reply);
+		if (holder.replyIcon != null) {
+			holder.replyIcon.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					context.showReplyDialog(comment);
+				}
+			});
 		}
 
 		if (comment.isReply()) {
