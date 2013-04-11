@@ -220,21 +220,25 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 	}
 
 	private void openAuthUrlInBrowser(Activity activity) {
+		if (webloginUrl == null) {
+			Log.d(TAG, "Null webloginUrl?");
+			return;
+		}
+
+		Log.d(TAG, "Opening login URL in browser: " + webloginUrl);
+
 		Intent viewInBrowser = new Intent(Intent.ACTION_VIEW);
 		viewInBrowser.setData(Uri.parse(webloginUrl));
 		if (activity == null) {
 			Context ctx = AndlyticsApp.getInstance();
 			Builder builder = new NotificationCompat.Builder(ctx);
 			builder.setSmallIcon(R.drawable.statusbar_andlytics);
-			builder.setContentTitle(ctx.getResources().getString(R.string.auth_error,
-					accountName));
-			builder.setContentText(ctx.getResources().getString(
-					R.string.auth_error_open_browser,
+			builder.setContentTitle(ctx.getResources().getString(R.string.auth_error, accountName));
+			builder.setContentText(ctx.getResources().getString(R.string.auth_error_open_browser,
 					accountName));
 			builder.setAutoCancel(true);
-			PendingIntent contentIntent = PendingIntent.getActivity(ctx,
-					accountName.hashCode(), viewInBrowser,
-					PendingIntent.FLAG_UPDATE_CURRENT);
+			PendingIntent contentIntent = PendingIntent.getActivity(ctx, accountName.hashCode(),
+					viewInBrowser, PendingIntent.FLAG_UPDATE_CURRENT);
 			builder.setContentIntent(contentIntent);
 
 			NotificationManager nm = (NotificationManager) ctx
