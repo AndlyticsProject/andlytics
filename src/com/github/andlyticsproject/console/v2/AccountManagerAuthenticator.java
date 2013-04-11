@@ -32,6 +32,7 @@ import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.model.DeveloperConsoleAccount;
+import com.github.andlyticsproject.util.FileUtils;
 
 public class AccountManagerAuthenticator extends BaseAuthenticator {
 
@@ -145,29 +146,7 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				Log.d(TAG, "Most probably additional verification is required, "
 						+ "opening browser");
 
-				Intent viewInBrowser = new Intent(Intent.ACTION_VIEW);
-				viewInBrowser.setData(Uri.parse(webloginUrl));
-				if (activity == null) {
-					Context ctx = AndlyticsApp.getInstance();
-					Builder builder = new NotificationCompat.Builder(ctx);
-					builder.setSmallIcon(R.drawable.statusbar_andlytics);
-					builder.setContentTitle(ctx.getResources().getString(R.string.auth_error,
-							accountName));
-					builder.setContentText(ctx.getResources().getString(
-							R.string.auth_error_open_browser,
-							accountName));
-					builder.setAutoCancel(true);
-					PendingIntent contentIntent = PendingIntent.getActivity(ctx,
-							accountName.hashCode(), viewInBrowser,
-							PendingIntent.FLAG_UPDATE_CURRENT);
-					builder.setContentIntent(contentIntent);
-
-					NotificationManager nm = (NotificationManager) ctx
-							.getSystemService(Context.NOTIFICATION_SERVICE);
-					nm.notify(accountName.hashCode(), builder.build());
-				} else {
-					activity.startActivity(viewInBrowser);
-				}
+				openAuthUrlInBrowser(activity);
 
 				throw new AuthenticationException("Sign in via the browser, then "
 						+ "get back to Andlytics");
@@ -189,6 +168,11 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException("Authentication error: null result?");
 			}
 
+			String responseStr = EntityUtils.toString(entity, "UTF-8");
+			if (DEBUG) {
+				Log.d(TAG, "Response: " + responseStr);
+			}
+
 			CookieStore cookieStore = httpClient.getCookieStore();
 			List<Cookie> cookies = cookieStore.getCookies();
 			cookies = cookieStore.getCookies();
@@ -197,20 +181,22 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				Log.d(TAG, "AD cookie " + adCookie);
 			}
 			if (adCookie == null) {
+				debugAuthFailure(activity, responseStr);
+
 				throw new AuthenticationException("Couldn't get AD cookie.");
 			}
 
-			String responseStr = EntityUtils.toString(entity, "UTF-8");
-			if (DEBUG) {
-				Log.d(TAG, "Response: " + responseStr);
-			}
 			DeveloperConsoleAccount[] developerAccounts = findDeveloperAccounts(responseStr);
 			if (developerAccounts == null) {
+				debugAuthFailure(activity, responseStr);
+
 				throw new AuthenticationException("Couldn't get developer account ID.");
 			}
 
 			String xsrfToken = findXsrfToken(responseStr);
 			if (xsrfToken == null) {
+				debugAuthFailure(activity, responseStr);
+
 				throw new AuthenticationException("Couldn't get XSRF token.");
 			}
 
@@ -225,6 +211,41 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 			throw new AuthenticationException(e);
 		} catch (AuthenticatorException e) {
 			throw new AuthenticationException(e);
+		}
+	}
+
+	private void debugAuthFailure(Activity activity, String responseStr) {
+		FileUtils.writeToAndlyticsDir("console-response.html", responseStr);
+		openAuthUrlInBrowser(activity);
+	}
+
+	private void openAuthUrlInBrowser(Activity activity) {
+		if (webloginUrl == null) {
+			Log.d(TAG, "Null webloginUrl?");
+			return;
+		}
+
+		Log.d(TAG, "Opening login URL in browser: " + webloginUrl);
+
+		Intent viewInBrowser = new Intent(Intent.ACTION_VIEW);
+		viewInBrowser.setData(Uri.parse(webloginUrl));
+		if (activity == null) {
+			Context ctx = AndlyticsApp.getInstance();
+			Builder builder = new NotificationCompat.Builder(ctx);
+			builder.setSmallIcon(R.drawable.statusbar_andlytics);
+			builder.setContentTitle(ctx.getResources().getString(R.string.auth_error, accountName));
+			builder.setContentText(ctx.getResources().getString(R.string.auth_error_open_browser,
+					accountName));
+			builder.setAutoCancel(true);
+			PendingIntent contentIntent = PendingIntent.getActivity(ctx, accountName.hashCode(),
+					viewInBrowser, PendingIntent.FLAG_UPDATE_CURRENT);
+			builder.setContentIntent(contentIntent);
+
+			NotificationManager nm = (NotificationManager) ctx
+					.getSystemService(Context.NOTIFICATION_SERVICE);
+			nm.notify(accountName.hashCode(), builder.build());
+		} else {
+			activity.startActivity(viewInBrowser);
 		}
 	}
 }
