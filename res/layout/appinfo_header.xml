@@ -19,7 +19,7 @@
             android:id="@+id/appinfo_frame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
+            android:paddingBottom="3dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp" >
@@ -89,6 +89,7 @@
                 android:layout_below="@+id/appinfo_developer_label"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
+                android:paddingBottom="3dp"
                 android:textIsSelectable="true" />
 
             <View
