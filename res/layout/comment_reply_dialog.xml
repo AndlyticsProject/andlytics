@@ -48,13 +48,15 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="10dp"
+            android:layout_margin="5dp"
             android:textIsSelectable="true" />
 
         <LinearLayout
             android:id="@+id/comment_reply_dialog_button_frame"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:baselineAligned="false" >
 
             <RelativeLayout
                 android:id="@+id/comment_reply_dialog_positive_button"

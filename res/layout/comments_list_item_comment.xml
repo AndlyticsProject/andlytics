@@ -40,9 +40,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:paddingRight="10dp"
+            android:paddingRight="16dp"
             android:paddingTop="10dp"
-            android:src="@android:drawable/ic_menu_send" />
+            android:src="@drawable/icon_reply" />
 
         <TextView
             android:id="@+id/comments_list_item_title"
