@@ -1,3 +1,10 @@
+v2.5.0
+- [beta] Multi-linked account support
+- App Info page (click on the app name)
+- Auto translation for comments (click on the globe to toggle)
+- Developer replies to comments
+- Redirect to browser if Goolge/play requires data confirmations like cellphone number
+
 2.4.0
 - Minor bugfixes
 - Minor UI changes
