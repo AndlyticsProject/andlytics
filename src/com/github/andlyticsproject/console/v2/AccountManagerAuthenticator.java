@@ -229,23 +229,29 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 
 		Intent viewInBrowser = new Intent(Intent.ACTION_VIEW);
 		viewInBrowser.setData(Uri.parse(webloginUrl));
-		if (activity == null) {
-			Context ctx = AndlyticsApp.getInstance();
-			Builder builder = new NotificationCompat.Builder(ctx);
-			builder.setSmallIcon(R.drawable.statusbar_andlytics);
-			builder.setContentTitle(ctx.getResources().getString(R.string.auth_error, accountName));
-			builder.setContentText(ctx.getResources().getString(R.string.auth_error_open_browser,
-					accountName));
-			builder.setAutoCancel(true);
-			PendingIntent contentIntent = PendingIntent.getActivity(ctx, accountName.hashCode(),
-					viewInBrowser, PendingIntent.FLAG_UPDATE_CURRENT);
-			builder.setContentIntent(contentIntent);
+		
+		// Always show the notification
+		// When this occurs, it can often occur in batches, e.g. if a the user also clicks to view
+		// comments which results in multiple dev consoles opening in their browser without an
+		// explanation. This is even worse if they have multiple accounts and/or are currently
+		// signed in via a different account
+//		if (activity == null) {
+		Context ctx = AndlyticsApp.getInstance();
+		Builder builder = new NotificationCompat.Builder(ctx);
+		builder.setSmallIcon(R.drawable.statusbar_andlytics);
+		builder.setContentTitle(ctx.getResources().getString(R.string.auth_error, accountName));
+		builder.setContentText(ctx.getResources().getString(R.string.auth_error_open_browser,
+				accountName));
+		builder.setAutoCancel(true);
+		PendingIntent contentIntent = PendingIntent.getActivity(ctx, accountName.hashCode(),
+				viewInBrowser, PendingIntent.FLAG_UPDATE_CURRENT);
+		builder.setContentIntent(contentIntent);
 
-			NotificationManager nm = (NotificationManager) ctx
-					.getSystemService(Context.NOTIFICATION_SERVICE);
-			nm.notify(accountName.hashCode(), builder.build());
-		} else {
-			activity.startActivity(viewInBrowser);
-		}
+		NotificationManager nm = (NotificationManager) ctx
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		nm.notify(accountName.hashCode(), builder.build());
+//		} else {
+//			activity.startActivity(viewInBrowser);
+//		}
 	}
 }
