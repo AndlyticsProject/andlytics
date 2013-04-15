@@ -3,7 +3,7 @@ v2.5.0
 - App Info page (click on the app name)
 - Auto translation for comments (click on the globe to toggle)
 - Developer replies to comments
-- Redirect to browser if Goolge/play requires data confirmations like cellphone number
+- Redirect to browser if Google or Play requires data confirmations like cellphone number
 
 2.4.0
 - Minor bugfixes
