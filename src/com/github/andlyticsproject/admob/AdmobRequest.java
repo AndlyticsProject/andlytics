@@ -21,7 +21,7 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.BrowserCompatHostnameVerifier;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -179,7 +179,7 @@ public class AdmobRequest {
 			if (sendPost) {
 
 				con = (HttpsURLConnection) new URL(subUrl).openConnection();
-				con.setHostnameVerifier(new AllowAllHostnameVerifier());
+				con.setHostnameVerifier(new BrowserCompatHostnameVerifier());
 				// create a connection
 				con.setDoOutput(true);// allow for posting data to the connection
 
@@ -193,7 +193,7 @@ public class AdmobRequest {
 				if (DEBUG)
 					Log.d(TAG, subUrl);
 				con = (HttpsURLConnection) new URL(subUrl + "?" + urlParameters).openConnection();
-				con.setHostnameVerifier(new AllowAllHostnameVerifier());
+				con.setHostnameVerifier(new BrowserCompatHostnameVerifier());
 				//System.out.println("admob request: " + subUrl + "?" + urlParameters);
 				//open the link and post everything to it
 
