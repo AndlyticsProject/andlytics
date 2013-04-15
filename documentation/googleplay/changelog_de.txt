@@ -3,7 +3,7 @@ v2.5.0
 - App Info Seite (auf den App Namen klicken)
 - Autoübersetzung fürKommentare (Auf den Globus klicken)
 - Entwicklerantworten für Kommentare
-- Redirect zum Browser falls Goolge/play weitere Daten verlangt wie die Handynummer
+- Redirect zum Browser falls Google/Play weitere Daten verlangt wie die Handynummer
 
 2.4.0
 - Kleinere Fehlerbehebungen
