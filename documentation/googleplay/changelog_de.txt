@@ -1,3 +1,10 @@
+v2.5.0
+- [Beta] Multi-linked Account Unterstützung
+- App Info Seite (auf den App Namen klicken)
+- Autoübersetzung fürKommentare (Auf den Globus klicken)
+- Entwicklerantworten für Kommentare
+- Redirect zum Browser falls Goolge/play weitere Daten verlangt wie die Handynummer
+
 2.4.0
 - Kleinere Fehlerbehebungen
 - Kleinere UI Änderungen
