@@ -67,4 +67,4 @@ When submitting code, please try to be consistent with the code around you. As a
 
 Any contributions, large or small, major features, bug fixes, unit/integration tests are welcomed and appreciated, but will be thoroughly reviewed and discussed.
 
-Translations should be done via [GetLocalization](http://www.getlocalization.com/andlyticsproject/).
+Translations should be done via [crowdin.net](http://crowdin.net/project/andlytics).
