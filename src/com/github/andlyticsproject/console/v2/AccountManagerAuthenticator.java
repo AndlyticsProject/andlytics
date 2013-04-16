@@ -175,7 +175,6 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 
 			CookieStore cookieStore = httpClient.getCookieStore();
 			List<Cookie> cookies = cookieStore.getCookies();
-			cookies = cookieStore.getCookies();
 			String adCookie = findAdCookie(cookies);
 			if (DEBUG) {
 				Log.d(TAG, "AD cookie " + adCookie);
@@ -238,7 +237,6 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 		// comments which results in multiple dev consoles opening in their browser without an
 		// explanation. This is even worse if they have multiple accounts and/or are currently
 		// signed in via a different account
-		//		if (activity == null) {
 		Context ctx = AndlyticsApp.getInstance();
 		Builder builder = new NotificationCompat.Builder(ctx);
 		builder.setSmallIcon(R.drawable.statusbar_andlytics);
@@ -253,8 +251,5 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 		NotificationManager nm = (NotificationManager) ctx
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.notify(accountName.hashCode(), builder.build());
-		//		} else {
-		//			activity.startActivity(viewInBrowser);
-		//		}
 	}
 }
