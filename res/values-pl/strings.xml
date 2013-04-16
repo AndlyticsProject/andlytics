@@ -24,7 +24,7 @@
   <string name="num_total_downloads">wszystkich pobrań</string>
   <string name="num_active_installs">aktywnych instalacji</string>
   <string name="num_average_rating">średnia ocena</string>
-  <string name="num_ratings">oceny</string>
+  <string name="num_ratings">ocen(y)</string>
   <string name="auto_sync">Automatyczna synchronizacja</string>
   <string name="notifications">Powiadomienia</string>
   <string name="statistics_export">Eksport danych statystyk</string>

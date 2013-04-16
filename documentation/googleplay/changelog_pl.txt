@@ -1,0 +1,58 @@
+v2.5.0
+-obsługa wielu kont [beta]
+- Strona informacyjna aplikacji (kliknij na nazwie aplikacji)
+- Automatyczne tłumaczenie komentarzy (kliknij na ikonie globu, aby zmienić)
+- Deweloperzy mogą odpowiadać na komentarzy
+- Przekierowanie do przeglądarki jeśli Google będzie potrzebowało potwierdzenia danych takich jak numer telefonu
+
+2.4.0
+-Drobne poprawki
+-Drobne zmiany interfejsu użytkownika
+- Integracja Google Translate (zobacz preferencje)
+- Możliwość przełączania wykresów/danych z poziomu ActionBar
+- Oddzielny ekran o programie (dziennik zmian, creditsy)
+
+2.3.1
+- Pobieraj tylko statystyki z opublikowanych aplikacji
+
+2.3.0
+- Od tej wersji korzystamy z nowej konsoli dla deweloperów
+- Statystyki i komentarze nie są za każdym razem pobierane podczas intensywnego korzystania z aplikacji
+- Usunięto panel z konfiguracją i zastąpiono go widokiem preferencji
+- Dostosowanie wykresów i tabel dla tabletów
+- Oceny wyświetlane są jako kolorowe paski postępu
+- Dodano jako opcję format globalnej daty
+- Dodano wsparcie dla wyświetlania autora odpowiedzi w komentarzach
+- Usunięto wsparcie dla Androida 2.1
+- Zaktualizowano tłumaczenia
+- Wiele innych poprawek i usprawnień
+
+2.2.2
+- Honeycomb: poprawiono błąd w powiadomieniach
+
+2.2.1
+-Drobne poprawki
+- Szybka poprawka związana ze zmianą API
+
+2.2.0
+-Nowe zarządzanie kontem, przełączanie konta za pomocą paska ActionBar
+- Nowy dolny panel dla głównych akcji
+- Nowy Import/Export z możliwością wysłania do Dropboxa (kliknij na powiadomieniu) oraz import za pomocą konta Dropbox
+- Powiadomienia dla JellyBean  włącznie z własnymi dźwiękami
+- ogólne preferencje dla konta
+- AdMob może być ukryty w ustawieniach
+- Poprawki w interfejsie użytkownika
+- Nowe języki: japoński i francuski
+
+2.1.0
+- ActionBar kompatybilny z urządzeniami z ICS
+- Ikony HD dla dużych ekranów
+- Nowe ustawienia ekranu
+- Nowe języki: kataloński, włoski, rosyjski
+
+2.0.1
+- Poprawki w uwierzytelnieniu
+- Funkcje PRO są od tej chwili darmowe (aplikacja staje się open source)
+- Nowy wygląd
+- EPC dla AdMod
+- Nowe języki: hiszpański, niemiecki, holenderski
