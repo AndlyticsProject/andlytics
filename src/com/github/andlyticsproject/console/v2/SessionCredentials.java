@@ -17,6 +17,10 @@ public class SessionCredentials {
 	// authentication session cookies, including AD
 	private List<Cookie> cookies = new ArrayList<Cookie>();
 
+	// XXX this doesn't really belong here...
+	// Or maybe the class should be just called Session?
+	private List<String> whitelistedFeatures = new ArrayList<String>();
+
 	public SessionCredentials(String accountName, String xsrfToken,
 			DeveloperConsoleAccount[] consoleAccounts) {
 		this.accountName = accountName;
@@ -46,6 +50,18 @@ public class SessionCredentials {
 
 	public List<Cookie> getCookies() {
 		return Collections.unmodifiableList(cookies);
+	}
+
+	public List<String> getWhitelistedFeatures() {
+		return Collections.unmodifiableList(whitelistedFeatures);
+	}
+
+	public void addWhitelistedFeatures(List<String> features) {
+		whitelistedFeatures.addAll(features);
+	}
+
+	public boolean hasFeature(String feature) {
+		return whitelistedFeatures.contains(feature);
 	}
 
 }

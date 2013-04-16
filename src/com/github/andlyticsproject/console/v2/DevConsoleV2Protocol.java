@@ -44,6 +44,8 @@ public class DevConsoleV2Protocol {
 	static final String REPLY_TO_COMMENT_TEMPLATE = "{\"method\":\"sendReply\","
 			+ "\"params\":{\"1\":\"%1$s\",\"2\":\"%2$s\",\"3\":\"%3$s\"},\"xsrf\":\"%4$s\"}";
 
+	static final String REPLY_TO_COMMENTS_FEATURE = "REPLY_TO_COMMENTS";
+
 	// Represents the different ways to break down statistics by e.g. by android
 	// version
 	static final int STATS_BY_ANDROID_VERSION = 1;
@@ -210,8 +212,23 @@ public class DevConsoleV2Protocol {
 	String createReplyToCommentRequest(String packageName, String commentId, String reply) {
 		checkState();
 
+		if (!canReplyToComments()) {
+			throw new IllegalStateException(
+					"Reply to comments feature not available for this account");
+		}
+
 		return String.format(REPLY_TO_COMMENT_TEMPLATE, packageName, commentId, reply,
 				sessionCredentials.getXsrfToken());
+	}
+
+	boolean hasFeature(String feature) {
+		checkState();
+
+		return sessionCredentials.hasFeature(feature);
+	}
+
+	boolean canReplyToComments() {
+		return hasFeature(REPLY_TO_COMMENTS_FEATURE);
 	}
 
 	int extractCommentsCount(String json) {
