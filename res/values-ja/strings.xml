@@ -20,6 +20,7 @@
     <string name="admob_requests">AdMob リクエスト数</string>
     <string name="average_rating">平均評価</string>
     <string name="ratings">評価数</string>
+    <string name="appinfo">アプリ情報</string>
     <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">コメント</string>
     <string name="num_total_downloads">インストール合計数</string>
@@ -49,6 +50,9 @@
     <string name="run_import">インポート開始</string>
     <string name="cancel">キャンセル</string>
     <string name="ok">OK</string>
+    <string name="add">追加</string>
+    <string name="edit">編集</string>
+    <string name="delete">削除</string>
     <string name="title">タイトル</string>
     <string name="text">テキスト</string>
     <string name="select_files_export">エクスポートするアプリを選択してください。</string>
@@ -56,15 +60,18 @@
     <string name="run_export">エクスポート開始</string>
     <string name="comment_no_user_info">Googleユーザー</string>
     <string name="comment_reply">開発者返答</string>
+    <string name="reply_to_comment">このレビューに返信</string>    
     <string name="long_click_translate">コメントを長押しすると、翻訳を表示します。</string>
     <string name="load_more_comments">残りのコメントをロードする</string>
     <string name="info_comments">取り消し・変更されたコメントのため、メイン画面で表示するコメント数は、ここに表示するコメント数より多い場合があります。</string>
     <string name="no_comments_found">コメントはありません。</string>
+    <string name="no_links_found">リンクはありません。</string>
     <string name="time_frame">時間帯</string>
     <string name="seven_days">1週間分</string>
     <string name="thirty_days">１ヵ月分</string>
     <string name="ninety_days">3ヵ月分</string>
     <string name="unlimited">制限なし</string>
+    <string name="month_to_date">今月分</string>
     <string name="date_format">日付フォーマット</string>
     <string name="locale_default">システムデフォールト</string>
     <string name="ddmmyy">日/月/年</string>
@@ -140,17 +147,21 @@
     <string name="account_specific_preferences">アカウント別設定</string>
     <string name="notification_when_account_visible">アプリが表示されている時</string>
     <string name="notification_when_account_visible_summary">アプリが表示されている時でも、現在選択されているアカウントのアプリ通知を表示します。</string>
+    <string name="hide_admob">AdMob 非表示</string>
     <string name="hide_admob_for_unconfigured_apps">AdMob アカウントが設定されてないアプリのAdMob タブを表示しない。</string>
     <string name="pref_disable_acra">自動エラー報告</string>
     <string name="pref_acra_disabled">エラー報告は無効</string>
     <string name="pref_acra_enabled">エラー報告は有効</string>
     <string name="use_google_translate_app">Google Translate アプリを使用</string>
     <string name="use_google_translate_app_summary">コメント翻訳にGoogle Translateアプリを使用します(インストール済みの場合)。</string>
+    <string name="show_comment_auto_translations">レビュー自動翻訳</string>
+    <string name="show_comment_auto_translations_summary">Google Playの自動レビュー翻訳を表示します。</string>
     
     <!-- Errors -->
     <string name="network_error">ネットワークエラーが発生しました。再試行してください。</string>
     <string name="signup_error">%1$s は Android開発者アカウントではありません。以下のページで開発者アカウントを登録できます。\n\n %2$s</string>
     <string name="auth_error">%1$s アカウントの認証は失敗しました。</string>
+    <string name="auth_error_open_browser">認証が必要です。タップしてブラウズを表示します。</string>
     <string name="admob_ratelimit_error">このアプリによる最大Admob リクエスト数に達成しましたので、Admob情報を読み込みできません。しばらくしてから、再試行してください。</string>
     <string name="admob_missing_error">%1$s　アカウントは見つかりません。この問題は頻繁に発生する場合は、アプリをSDカードから内部ストレージに移動してください。</string>    
 	<string name="admob_invalid_request_error">AdMod API接続エラー。</string>
@@ -177,4 +188,21 @@
     <string name="about_credits">謝辞</string>
 	<string name="about_text">Andlytics は、オープンソースソフトウエアです。GitHubで開発・翻訳などにご参加ください。Andlytics は、Google社と何の関係はありません。\n\nソーシャルメディアページ:</string>
 	<string name="about_thirdsparty_credits_title">使用しているライブラリ:</string>
+	
+	<string name="appinfo_link_addedit_dialog_title_add">リンク追加</string>
+	<string name="appinfo_link_addedit_dialog_title_edit">リンク表示</string>
+	<string name="appinfo_link_addedit_dialog_text">http:// と https:// リンクのみを追加できます。market://　リンクは使えません。</string>
+	<string name="appinfo_link_addedit_dialog_url_label">URL</string>
+	<string name="appinfo_link_addedit_dialog_name_label">リンク名</string>
+	<string name="appinfo_link_addedit_dialog_name_hint">デフォールト値を使うには、未入力にしてください。</string>
+	<string name="appinfo_link_addedit_dialog_not_url">不正なURLです。</string>
+	<string name="appinfo_package_name_label">パッケージ名</string>
+    <string name="appinfo_developer">開発者</string>
+	<string name="appinfo_last_store_update_label">最終更新日時</string>
+	<string name="appinfo_version_name_label">バージョン</string>
+	<string name="appinfo_description_label">説明</string>
+	<string name="appinfo_changelog_label">最近の変更点</string>
+	<string name="appinfo_playstore_button">Play Storeで表示</string>
+	<string name="appinfo_addlink_button">リンク追加</string>
+	<string name="appinfo_app_links">アプリリンク</string>
 </resources>

@@ -21,6 +21,7 @@
     <string name="admob_requests">AdMob verzoeken</string>
     <string name="average_rating">Gemiddelde beoordeling</string>
     <string name="ratings">Beoordelingen</string>
+    <string name="appinfo">App info</string>
     <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">Opmerkingen</string>
     <string name="num_total_downloads">Downloads in totaal</string>
@@ -50,6 +51,9 @@
     <string name="run_import">Start importeren</string>
     <string name="cancel">Annuleren</string>
     <string name="ok">OK</string>
+    <string name="add">Toevoegen</string>
+    <string name="edit">Wijzigen</string>
+    <string name="delete">Verwijderen</string>
     <string name="title">Titel</string>
     <string name="text">Tekst</string>
     <string name="select_files_export">Selecteer pakketten om te exporteren</string>
@@ -57,15 +61,18 @@
     <string name="run_export">Start exporteren</string>
     <string name="comment_no_user_info">Een Google Gebruiker</string>
     <string name="comment_reply">Antwoord van ontwikkelaar</string>
+    <string name="reply_to_comment">Antwoorden</string>    
     <string name="long_click_translate">Lange klik op opmerking voor de vertaling</string>
     <string name="load_more_comments">Laad meer opmerkingen</string>
     <string name="info_comments">Het gemelde aantal opmerking op het hoofdscherm kan hoger uitvallen dan het aantal opmerkingen getoond hier, doordat opmerkingen zijn teruggetrokken of veranderd.</string>
     <string name="no_comments_found">Geen opmerkingen gevonden</string>
+    <string name="no_links_found">Geen link gevonden</string>
     <string name="time_frame">Tijdspanne</string>
     <string name="seven_days">Afgelopen 7 dagen</string>
     <string name="thirty_days">Afgelopen 30 dagen</string>
     <string name="ninety_days">Afgelopen 90 dagen</string>
     <string name="unlimited">Ongelimiteerd</string>
+    <string name="month_to_date">Huidige maand</string>
     <string name="date_format">datumnotatie</string>
     <string name="locale_default">Lokale standaard</string>
     <string name="ddmmyy">Dag/Maand/Jaar</string>
@@ -141,17 +148,21 @@
     <string name="account_specific_preferences">Account specifieke voorkeuren</string>
     <string name="notification_when_account_visible">Als app zichtbaar is</string>
     <string name="notification_when_account_visible_summary">Toon meldingen voor huidige account, zelfs als de app zichtbaar is</string>
+    <string name="hide_admob">Verberg AdMob</string>
     <string name="hide_admob_for_unconfigured_apps">Verberg het AdMob tabblad voor niet-geconfigureerde apps</string>
     <string name="pref_disable_acra">Automatische fout rapportage</string>
     <string name="pref_acra_disabled">Rapportage uitgeschakeld</string>
     <string name="pref_acra_enabled">Rapportage ingeschakeld</string>
-    <string name="use_google_translate_app">Gebruik de Vertalen app van Google</string>
+    <string name="use_google_translate_app">Gebruik Google Translate</string>
     <string name="use_google_translate_app_summary">Gebruik de Vertalen app van Google voor vertalen van opmerkingen, indien beschikbaar</string>
+    <string name="show_comment_auto_translations">Vertaal commentaren automatisch</string>
+    <string name="show_comment_auto_translations_summary">Toon automatische vertalingen van Google Play</string>
     
     <!-- Errors -->
     <string name="network_error">Een netwerkfout is opgetreden. Probeer het later nog eens.</string>
     <string name="signup_error">%1$s is geen android ontwikkelaars account, meld u hier aan:\n\n %2$s</string>
     <string name="auth_error">Authenticatie mislukt voor: %1$s</string>
+    <string name="auth_error_open_browser">Extra authenticatie vereist. Click om in te loggen met de browser</string>
     <string name="admob_ratelimit_error">Kan Admob informatie niet lezen, Admob heeft het aantal verzoeken van deze app gelimiteerd. Probeer later.</string>
     <string name="admob_missing_error">Admob account %1$s ontbreekt. Als dit vaker gebeurt, probeer dan Andlytics op de SD kaart te zetten</string>    
 	<string name="admob_invalid_request_error">Fout bij opvragen Admob API</string>
@@ -177,4 +188,21 @@
     <string name="about_credits">Met dank aan</string>
 	<string name="about_text">Andlytics is open source; zelf bijdragen kan via GitHub. Deze app is op geen enkele manier geassocieerd met Google.\n\nBezoek ons op:</string>
 	<string name="about_thirdsparty_credits_title">Gebruikte bibliotheken van derden:</string>
+	
+	<string name="appinfo_link_addedit_dialog_title_add">LINK TOEVOEGEN</string>
+	<string name="appinfo_link_addedit_dialog_title_edit">LINK WIJZIGEN</string>
+	<string name="appinfo_link_addedit_dialog_text">Dit formulier accepteert iedere http of https URL. market:// links worden niet ondersteund.</string>
+	<string name="appinfo_link_addedit_dialog_url_label">URL</string>
+	<string name="appinfo_link_addedit_dialog_name_label">Naam</string>
+	<string name="appinfo_link_addedit_dialog_name_hint">Leeg laten voor standaard waarde</string>
+	<string name="appinfo_link_addedit_dialog_not_url">Uw URL kan niet als URL gevalideerd worden.</string>
+	<string name="appinfo_package_name_label">Pakket naam</string>
+    <string name="appinfo_developer">Ontwikkelaar</string>
+	<string name="appinfo_last_store_update_label">Bijgewerkt op</string>
+	<string name="appinfo_version_name_label">Versie</string>
+	<string name="appinfo_description_label">Omschrijving</string>
+	<string name="appinfo_changelog_label">Wijziginslogboek</string>
+	<string name="appinfo_playstore_button">Bekijk in de Play Store</string>
+	<string name="appinfo_addlink_button">Link toevoegen</string>
+	<string name="appinfo_app_links">App links</string>
 </resources>

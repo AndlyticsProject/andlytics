@@ -1,3 +1,10 @@
+v2.5.0
+- [beta] Suport per a comptes multienllaçats
+- Pàgina d'informació de l'aplicació (fes clic al nom de l'aplicació)
+- Traducció automàtica dels comentaris (fes clic al globus per activar o desactivar)
+- Respostes dels desenvolupadors als comentaris
+- Redirigeix al navegador si Google/Plau demana confirmació de dades com ara el número de telèfon
+
 2.4.0
 - Solució d'errors menors
 - Canvis menors a la IU

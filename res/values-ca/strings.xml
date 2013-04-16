@@ -21,6 +21,7 @@
     <string name="admob_requests">Peticions d\'AdMob</string>
     <string name="average_rating">Valoració mitjana</string>
     <string name="ratings">Valoracions</string>
+    <string name="appinfo">Informació de l\'aplicació</string>
     <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">comentaris</string>
     <string name="num_total_downloads">descàrregues totals</string>
@@ -50,6 +51,9 @@
     <string name="run_import">Executa la importació</string>
     <string name="cancel">Cancel·la</string>
     <string name="ok">D\'acord</string>
+    <string name="add">Afegeix</string>
+    <string name="edit">Edita</string>
+    <string name="delete">Suprimeix</string>
     <string name="title">Títol</string>
     <string name="text">Text</string>
     <string name="select_files_export">Selecciona les aplicacions a exportar</string>
@@ -57,15 +61,18 @@
     <string name="run_export">Executa l\'exportació</string>
     <string name="comment_no_user_info">Un usuari de Google</string>
     <string name="comment_reply">Resposta del desenvolupador</string>
+    <string name="reply_to_comment">Respon al comentari</string>    
     <string name="long_click_translate">Fes un clic llarg al comentari per veure\'n la traducció</string>
     <string name="load_more_comments">Carrega més comentaris</string>
     <string name="info_comments">El nombre de comentaris informat a la pantalla principal pot ser més elevat que el nombre de comentaris mostrat aquí per culpa dels comentaris eliminats o modificats.</string>
     <string name="no_comments_found">No s\'han trobat comentaris</string>
+    <string name="no_links_found">No s\'ha trobat cap enllaç</string>
     <string name="time_frame">Rang de temps</string>
     <string name="seven_days">Últims 7 dies</string>
     <string name="thirty_days">Últims 30 dies</string>
     <string name="ninety_days">Últims 90 dies</string>
     <string name="unlimited">Il·limitat</string>
+    <string name="month_to_date">De principi de mes fins ara</string>
     <string name="date_format">Format de la data</string>
     <string name="locale_default">Predeterminat per l\'idioma</string>
     <string name="ddmmyy">Dia/Mes/Any</string>
@@ -141,17 +148,21 @@
     <string name="account_specific_preferences">Preferències específiques del compte</string>
     <string name="notification_when_account_visible">Quan l\'aplicació sigui visible</string>
     <string name="notification_when_account_visible_summary">Mostra les notificacions del compte actual encara que l\'aplicació sigui visible</string>
+    <string name="hide_admob">Amaba l\'AdMob</string>
     <string name="hide_admob_for_unconfigured_apps">Amaga la pestanya d\'AdMob per a les aplicacions no configurades</string>
     <string name="pref_disable_acra">Informes d\'errors automàtics</string>
     <string name="pref_acra_disabled">Informes desactivats</string>
     <string name="pref_acra_enabled">Informes activats</string>
-    <string name="use_google_translate_app">Utilitza l\'aplicació Google Traductor</string>
+    <string name="use_google_translate_app">Utilitza Google Traductor</string>
     <string name="use_google_translate_app_summary">Utilitza l\'aplicació Google Traductor per traduir els comentaris, si està disponible.</string>
+    <string name="show_comment_auto_translations">Tradueix automàticament els comentaris</string>
+    <string name="show_comment_auto_translations_summary">Mostra les traduccions automàtiques del Google Play</string>
     
     <!-- Errors -->
     <string name="network_error">S\'ha produït un error de xarxa. Torna-ho a provar més tard.</string>
     <string name="signup_error">%1$s no és un compte de desenvolupador android, registra\'t a:\n\n %2$s</string>
     <string name="auth_error">Ha fallat l\'autenticació per a: %1$s</string>
+    <string name="auth_error_open_browser">Es necessita identificació addicional. Prem per iniciar la sessió amb el navegador.</string>
     <string name="admob_ratelimit_error">No s\'han pogut carregar les dades d\'Admob perquè Admob ha restringit el nombre de peticions d\'aquesta aplicació, torna-ho a provar més tard.</string>
     <string name="admob_missing_error">Manca el compte d\'AdMob %1$s. Si això passa repetidament, prova de moure l\'Andlytics des de la targeta SD a l\'emmagatzematge intern.</string>    
 	<string name="admob_invalid_request_error">S\'ha produït un error en demanar l\'API d\'AdMob</string>
@@ -177,4 +188,21 @@
     <string name="about_credits">Crèdits</string>
 	<string name="about_text">L\'Andlytics és de codi obert, ets lliure de contribuir-hi mitjançant GitHub. Aquesta aplicació no està associada amb Google de cap manera.\n\nVisita\'ns a:</string>
 	<string name="about_thirdsparty_credits_title">Biblioteques de tercers utilitzades:</string>
+	
+	<string name="appinfo_link_addedit_dialog_title_add">AFEGEIX UN ENLLAÇ</string>
+	<string name="appinfo_link_addedit_dialog_title_edit">EDITA L\'ENLLAÇ</string>
+	<string name="appinfo_link_addedit_dialog_text">Aquest formulari accepta qualsevol URL http o https. Els enllaços market:// no estan suportats.</string>
+	<string name="appinfo_link_addedit_dialog_url_label">URL</string>
+	<string name="appinfo_link_addedit_dialog_name_label">Nom</string>
+	<string name="appinfo_link_addedit_dialog_name_hint">Deixa-ho en blanc per utilitzar el valor per defecte</string>
+	<string name="appinfo_link_addedit_dialog_not_url">La teva URL no té format d\'URL.</string>
+	<string name="appinfo_package_name_label">Nom del paquet</string>
+    <string name="appinfo_developer">Desenvolupador</string>
+	<string name="appinfo_last_store_update_label">Última actualització</string>
+	<string name="appinfo_version_name_label">Versió</string>
+	<string name="appinfo_description_label">Descripció</string>
+	<string name="appinfo_changelog_label">Registre de canvis</string>
+	<string name="appinfo_playstore_button">Mostra al Play Store</string>
+	<string name="appinfo_addlink_button">Afegeix un enllaç</string>
+	<string name="appinfo_app_links">Enllaços de l\'aplicació</string>
 </resources>

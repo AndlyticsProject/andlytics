@@ -21,6 +21,7 @@
     <string name="admob_requests">AdMob-förfrågningar</string>
     <string name="average_rating">Medelbetyg</string>
     <string name="ratings">Betyg</string>
+    <string name="appinfo">Appinformation</string>
     <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">kommentarer</string>
     <string name="num_total_downloads">totala nedladdningar</string>
@@ -50,22 +51,28 @@
     <string name="run_import">Kör import</string>
     <string name="cancel">Avbryt</string>
     <string name="ok">Ok</string>
+    <string name="add">Lägg till</string>
+    <string name="edit">Redigera</string>
+    <string name="delete">Ta bort</string>
     <string name="title">Titel</string>
     <string name="text">Text</string>
     <string name="select_files_export">Välj appar att exportera</string>
     <string name="export_files_replaced">Sparad information kommer att ersättas</string>
     <string name="run_export">Kör export</string>
     <string name="comment_no_user_info">En Google-användare</string>
-    <string name="comment_reply">Utvecklarsvar</string>    
+    <string name="comment_reply">Utvecklarsvar</string>
+    <string name="reply_to_comment">Svara på kommentar</string>    
     <string name="long_click_translate">Långklicka på kommentaren för översättning</string>
     <string name="load_more_comments">Ladda fler kommentarer</string>
     <string name="info_comments">Antal kommentarer som visas på startsidan kan vara fler än antalet kommentarer som visas här pga. att kommentarer tagits bort eller ändrats.</string>
     <string name="no_comments_found">Inga kommentarer funna</string>
+    <string name="no_links_found">Inga länkar funna</string>
     <string name="time_frame">Tidsintervall</string>
     <string name="seven_days">Senaste 7 dagarna</string>
     <string name="thirty_days">Senaste 30 dagarna</string>
     <string name="ninety_days">Senaste 90 dagarna</string>
     <string name="unlimited">Obegränsad</string>
+    <string name="month_to_date">Månad till datum</string>
     <string name="date_format">Datumformat</string>
     <string name="locale_default">Standard locale</string>
     <string name="ddmmyy">Dag/Månad/År</string>
@@ -141,17 +148,21 @@
     <string name="account_specific_preferences">Konto-specifika inställningar</string>
     <string name="notification_when_account_visible">När app är synlig</string>
     <string name="notification_when_account_visible_summary">Ge notifikation för detta konto även om appen är synlig</string>
+    <string name="hide_admob">Dölj AdMob</string>
     <string name="hide_admob_for_unconfigured_apps">Dölj AdMob-tabben för okonfigurerade appar</string>
     <string name="pref_disable_acra">Automatiska felrapporter</string>
     <string name="pref_acra_disabled">Rapportering inaktiverad</string>
     <string name="pref_acra_enabled">Rapportering aktiverad</string>
     <string name="use_google_translate_app">Använd Google Translate</string>
     <string name="use_google_translate_app_summary">Använd Google Translate för att översätta kommentarer, när det är tillgängligt</string>
+    <string name="show_comment_auto_translations">Översätt kommentarer automatiskt</string>
+    <string name="show_comment_auto_translations_summary">Visa automatiska översättningar från Google Play</string>
     
     <!-- Errors -->
     <string name="network_error">Ett nätverksfel har uppstått. Försök senare.</string>
     <string name="signup_error">%1$s är inte ett android developer-konto, skaffa ett:\n\n %2$s</string>
     <string name="auth_error">Autentisering misslyckades för: %1$s</string>
+    <string name="auth_error_open_browser">Ytterligare autentisering krävs. Klicka för att logga in via webläsare.</string>
     <string name="admob_ratelimit_error">Kan inte ladda AdMob-data eftersom AdMob har begränsat antalet förfrågningar för denna app. Försök igen senare.</string>
     <string name="admob_missing_error">AdMob-kontot %1$s saknas. Om detta händer vid flera tillfällen, prova att flytta Andlytics från SD-kortet till telefonens interna lagring.</string>    
 	<string name="admob_invalid_request_error">Fel under Ad-Mob API-förfrågan</string>
@@ -177,4 +188,21 @@
     <string name="about_credits">Tack till</string>
 	<string name="about_text">Andlytics är open source, bidra gärna via GitHub. Denna app är inte kopplad till Google på något sätt.\n\nBesök oss på:</string>
 	<string name="about_thirdsparty_credits_title">Använda tredjepartsbibliotek:</string>
+	
+	<string name="appinfo_link_addedit_dialog_title_add">LÄGG TILL LÄNK</string>
+	<string name="appinfo_link_addedit_dialog_title_edit">ÄNDRA LÄNK</string>
+	<string name="appinfo_link_addedit_dialog_text">Detta formulär accepterar http eller https-URLer. market://-länkar stöds inte</string>
+	<string name="appinfo_link_addedit_dialog_url_label">URL</string>
+	<string name="appinfo_link_addedit_dialog_name_label">Namn</string>
+	<string name="appinfo_link_addedit_dialog_name_hint">Lämna tomt för att använda standardvärde</string>
+	<string name="appinfo_link_addedit_dialog_not_url">Din URL känns inte igen som URL</string>
+	<string name="appinfo_package_name_label">Package namn</string>
+    <string name="appinfo_developer">Utvecklare</string>
+	<string name="appinfo_last_store_update_label">Senaste uppdatering</string>
+	<string name="appinfo_version_name_label">Version</string>
+	<string name="appinfo_description_label">Beskrivning</string>
+	<string name="appinfo_changelog_label">Ändringslogg</string>
+	<string name="appinfo_playstore_button">Visa i Play Store</string>
+	<string name="appinfo_addlink_button">Lägg till en länk</string>
+	<string name="appinfo_app_links">App links</string>
 </resources>

@@ -21,6 +21,7 @@
     <string name="admob_requests">Запросы AdMob</string>
     <string name="average_rating">Средний рейтинг</string>
     <string name="ratings">Рейтинги</string>
+    <string name="appinfo">Информация о приложении</string>
     <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">комментарии</string>
     <string name="num_total_downloads">общее число загрузок</string>
@@ -50,6 +51,9 @@
     <string name="run_import">Запустить импорт</string>
     <string name="cancel">Отмена</string>
     <string name="ok">OK</string>
+    <string name="add">Добавить</string>
+    <string name="edit">Изменить</string>
+    <string name="delete">Удалить</string>
     <string name="title">Название</string>
     <string name="text">Текст</string>
     <string name="select_files_export">Выберите приложения для экспорта</string>
@@ -57,15 +61,18 @@
     <string name="run_export">Запустить экспорт</string>
     <string name="comment_no_user_info">Пользователь Google</string>
     <string name="comment_reply">Ответ разработчика</string>
+    <string name="reply_to_comment">Ответить на комментарий</string>    
     <string name="long_click_translate">Длинный клик на комментарий для перевода</string>
     <string name="load_more_comments">Загрузить еще комментарии</string>
     <string name="info_comments">Число комментариев на главном экране может быть больше числа, отображенного здесь, из-за отмененных/изменненых комментариев.</string>
     <string name="no_comments_found">Комментариев не найдено</string>
+    <string name="no_links_found">Ссылки не найдены</string>
     <string name="time_frame">Временной отрезок</string>
     <string name="seven_days">Последние 7 дней</string>
     <string name="thirty_days">Последние 30 дней</string>
     <string name="ninety_days">Последние 90 дней</string>
     <string name="unlimited">Неограниченный</string>
+    <string name="month_to_date">Месяц до даты</string>
     <string name="date_format">Формат даты</string>
     <string name="locale_default">Локаль по умолчанию</string>
     <string name="ddmmyy">День/Месяц/Год</string>
@@ -141,17 +148,21 @@
     <string name="account_specific_preferences">Настройки аккаунтов</string>
     <string name="notification_when_account_visible">Когда приложение видимо</string>
     <string name="notification_when_account_visible_summary">Показывать уведомления для текущего аккаунта, если приложение видимо</string>
+    <string name="hide_admob">Спрятать AdMob</string>
     <string name="hide_admob_for_unconfigured_apps">Спрятать вкладку AdMob для ненастроенных приложений</string>
     <string name="pref_disable_acra">Автоматические отчеты об ошибках</string>
     <string name="pref_acra_disabled">Отправка отчетов выключена</string>
     <string name="pref_acra_enabled">Отправка отчетов включена</string>
-    <string name="use_google_translate_app">Использовать приложение Переводчик Google</string>
+    <string name="use_google_translate_app">Использовать Переводчик Google</string>
     <string name="use_google_translate_app_summary">Использовать приложение Переводчик Google для перевода комментариев, если оно установлено</string>
+    <string name="show_comment_auto_translations">Автоматически переводить комментарии</string>
+    <string name="show_comment_auto_translations_summary">Показывать автоматически переведенные комментарии из Google Play</string>
     
     <!-- Errors -->
     <string name="network_error">Произошла сетевая ошибка. Попробуйте позже</string>
     <string name="signup_error">%1$s не является аккаунтом Android-разработчика, зарегистрируйтесь на:\n\n %2$s</string>
     <string name="auth_error">Аутентификация не удалась для : %1$s</string>
+    <string name="auth_error_open_browser">Нужна дополнительная аутентификация. Нажмите для входа через браузер.</string>
     <string name="admob_ratelimit_error">Не получается загрузить данные Admob, так как разрешено ограниченное число запросов к Admob из одного приложения, попробуйте позже</string>
     <string name="admob_missing_error">Не найден аккаунт AdMob %1$s. Если это происходит повторно, попробуйте переместить Andlytics с SD-карты на внутреннюю память</string>    
 	<string name="admob_invalid_request_error">Ошибка при запросе к Admob API</string>
@@ -177,4 +188,21 @@
     <string name="about_credits">Об авторах</string>
 	<string name="about_text">Andlytics - приложение с открытым исходным кодом, вы можете помочь его развитию на Github. Приложение никак не связано с компанией Google.\n\nПосетите нас:</string>
 	<string name="about_thirdsparty_credits_title">Используемые сторонние библиотеки:</string>
+	
+	<string name="appinfo_link_addedit_dialog_title_add">ДОБАВИТЬ ССЫЛКУ</string>
+	<string name="appinfo_link_addedit_dialog_title_edit">ИЗМЕНИТЬ ССЫЛКУ</string>
+	<string name="appinfo_link_addedit_dialog_text">Эта форма предназначена для http или https URL. Ссылки вида market:// не поддерживаются.</string>
+	<string name="appinfo_link_addedit_dialog_url_label">Ссылка</string>
+	<string name="appinfo_link_addedit_dialog_name_label">Имя</string>
+	<string name="appinfo_link_addedit_dialog_name_hint">Оставьте пустым для использования значения по-умолчанию</string>
+	<string name="appinfo_link_addedit_dialog_not_url">Ваша ссылка не распознана.</string>
+	<string name="appinfo_package_name_label">Имя пакета</string>
+    <string name="appinfo_developer">Разработчик</string>
+	<string name="appinfo_last_store_update_label">Последнее обновление в магазине</string>
+	<string name="appinfo_version_name_label">Версия</string>
+	<string name="appinfo_description_label">Описание</string>
+	<string name="appinfo_changelog_label">Изменения</string>
+	<string name="appinfo_playstore_button">Просмотр в Play Store</string>
+	<string name="appinfo_addlink_button">Добавить ссылку</string>
+	<string name="appinfo_app_links">Ссылки приложения</string>
 </resources>
