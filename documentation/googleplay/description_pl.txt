@@ -1,0 +1,17 @@
+Andlytics zbiera statystyki z konta deweloperskiego Google Play (Google Play Developer Console). Pozwala na śledzenie aktywnych instalacji, pobrań, ocen oraz komentarzy z aplikacji dla Androida opublikowanych w sklepie Google Play.
+
+Andlytics potrafi także zbierać statystyki z konta AdMod, wliczając dochody, wyświetlenia i żądania. Wspiera synchronizację w tle oraz powiadamia w momencie wystąpienia zmian.
+
+Google nie udostępnia oficjalnego API do zbierania tych statystyk. W związku z tym jeśli Google dokona zmiany na swojej stronie aplikacja Andlytics może przestać działać. W takim przypadku prosimy o cierpliwość, sprawdzamy wtedy zmiany, dokonujemy poprawek i publikujemy nową, poprawioną wersję aplikacji.
+
+Andlytics jest projektem "open source". Jeśli chcielibyście pomóc w jego rozwoju zachęcamy do wnoszenia poprawek do oficjalnego repozytorium GitHub.
+
+Aplikacja Andlytics nie jest w żaden sposób związana z firmą Google.
+
+"Google Apps for Business" oraz obsługa wielu kont deweloperskich jednocześnie jest jeszcze wspierana. Jeśli masz takie konto, skontaktuj się z nami poprzez GitHub i pomóż nam w dodaniu tych opcji.
+
+Na niektórych urządzeniach konta AdMob znikają. Przeniesienie programu z karty do SD do głównej pamięci urządzenia może rozwiązać takie problemy.
+
+Dla kont AdMob, które są powiązane z kontami Google hasło do API znajdziecie w zakładce "Account Information" http://www.admob.com/my_account/account_info.
+
+Słowa kluczowe: Developer console, developer tools, android developers, konsola deweloperów, konsola programisty, statystyki aplikacji
