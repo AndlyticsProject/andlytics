@@ -39,6 +39,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 	private DateFormat commentDateFormat = DateFormat.getDateInstance(DateFormat.FULL);
 
+	private boolean canReplyToComments;
+
 	public CommentsListAdapter(CommentsActivity activity) {
 		this.setCommentGroups(new ArrayList<CommentGroup>());
 		this.layoutInflater = activity.getLayoutInflater();
@@ -98,6 +100,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		}
 		holder.replyIcon = (ImageView) convertView.findViewById(R.id.comments_list_icon_reply);
 		if (holder.replyIcon != null) {
+			holder.replyIcon.setVisibility(canReplyToComments ? View.VISIBLE : View.INVISIBLE);
 			holder.replyIcon.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -347,6 +350,14 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 	private String formatCommentDate(Date date) {
 		return commentDateFormat.format(date);
+	}
+
+	public boolean isCanReplyToComments() {
+		return canReplyToComments;
+	}
+
+	public void setCanReplyToComments(boolean canReplyToComments) {
+		this.canReplyToComments = canReplyToComments;
 	}
 
 }

@@ -37,6 +37,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 	private static final String REPLY_DIALOG_FRAGMENT = "reply_dialog_fragment";
 
+	private static final int MAX_LOAD_COMMENTS = 20;
 
 	private CommentsListAdapter commentsListAdapter;
 
@@ -58,7 +59,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 	private ContentAdapter db;
 
-	private static final int MAX_LOAD_COMMENTS = 20;
+	private DevConsoleV2 devConsole;
 
 	private static class State {
 		LoadCommentsCache loadCommentsCache;
@@ -120,7 +121,11 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 		list.setGroupIndicator(null);
 
+		devConsole = DevConsoleRegistry.getInstance().get(accountName);
 		commentsListAdapter = new CommentsListAdapter(this);
+		if (devConsole.hasSessionCredentials()) {
+			commentsListAdapter.setCanReplyToComments(devConsole.canReplyToComments());
+		}
 		list.setAdapter(commentsListAdapter);
 
 		maxAvailableComments = -1;
@@ -305,6 +310,11 @@ public class CommentsActivity extends BaseDetailsActivity {
 							Utils.getDisplayLocale());
 					activity.updateCommentsCacheIfNecessary(result);
 
+					// we can only do this after we authenticate at least once, 
+					// which may not happen before refreshing if we are loading 
+					// from cache
+					activity.commentsListAdapter
+							.setCanReplyToComments(console.canReplyToComments());
 					activity.incrementNextCommentIndex(result.size());
 					activity.rebuildCommentGroups();
 
@@ -586,10 +596,8 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 				activity.refreshStarted();
 				try {
-					DevConsoleV2 console = DevConsoleRegistry.getInstance().get(accountName);
-
-					return console.replyToComment(CommentsActivity.this, packageName, developerId,
-							commentUniqueId, replyText);
+					return devConsole.replyToComment(CommentsActivity.this, packageName,
+							developerId, commentUniqueId, replyText);
 				} catch (Exception e) {
 					error = e;
 					return null;

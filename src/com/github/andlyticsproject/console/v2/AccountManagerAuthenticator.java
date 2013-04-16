@@ -200,9 +200,12 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException("Couldn't get XSRF token.");
 			}
 
+			List<String> whitelistedFeatures = findWhitelistedFeatures(responseStr);
+
 			SessionCredentials result = new SessionCredentials(accountName, xsrfToken,
 					developerAccounts);
 			result.addCookies(cookies);
+			result.addWhitelistedFeatures(whitelistedFeatures);
 
 			return result;
 		} catch (IOException e) {
@@ -229,13 +232,13 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 
 		Intent viewInBrowser = new Intent(Intent.ACTION_VIEW);
 		viewInBrowser.setData(Uri.parse(webloginUrl));
-		
+
 		// Always show the notification
 		// When this occurs, it can often occur in batches, e.g. if a the user also clicks to view
 		// comments which results in multiple dev consoles opening in their browser without an
 		// explanation. This is even worse if they have multiple accounts and/or are currently
 		// signed in via a different account
-//		if (activity == null) {
+		//		if (activity == null) {
 		Context ctx = AndlyticsApp.getInstance();
 		Builder builder = new NotificationCompat.Builder(ctx);
 		builder.setSmallIcon(R.drawable.statusbar_andlytics);
@@ -250,8 +253,8 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 		NotificationManager nm = (NotificationManager) ctx
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.notify(accountName.hashCode(), builder.build());
-//		} else {
-//			activity.startActivity(viewInBrowser);
-//		}
+		//		} else {
+		//			activity.startActivity(viewInBrowser);
+		//		}
 	}
 }

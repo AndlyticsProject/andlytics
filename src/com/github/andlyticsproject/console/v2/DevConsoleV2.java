@@ -377,4 +377,12 @@ public class DevConsoleV2 implements DevConsole {
 
 	}
 
+	public boolean canReplyToComments() {
+		return protocol.canReplyToComments();
+	}
+
+	public boolean hasSessionCredentials() {
+		return protocol.hasSessionCredentials();
+	}
+
 }

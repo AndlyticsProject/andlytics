@@ -1,6 +1,7 @@
 package com.github.andlyticsproject.console.v2;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,6 +18,9 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 			.compile("\\\\\"1\\\\\":\\\\\"(\\d{20})\\\\\",\\\\\"2\\\\\":\\\\\"([\\p{Alnum}\\p{Space}]+)\\\\\",");
 	protected static final Pattern XSRF_TOKEN_PATTERN = Pattern
 			.compile("\"XsrfToken\":\"\\{\\\\\"1\\\\\":\\\\\"(\\S+)\\\\\"\\}\"");
+
+	protected static final Pattern WHITELISTED_FEATURES_PATTERN = Pattern
+			.compile("\"WhitelistedFeatures\":\"\\{\\\\\"1\\\\\":\\[(\\S+?)\\]\\}");
 
 	protected String accountName;
 
@@ -42,12 +46,27 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 	}
 
 	protected DeveloperConsoleAccount[] findDeveloperAccounts(String responseStr) {
-        List<DeveloperConsoleAccount> devAccounts = new ArrayList<DeveloperConsoleAccount>();
+		List<DeveloperConsoleAccount> devAccounts = new ArrayList<DeveloperConsoleAccount>();
 		Matcher m = DEV_ACCS_PATTERN.matcher(responseStr);
 		while (m.find()) {
 			devAccounts.add(new DeveloperConsoleAccount(m.group(1), m.group(2)));
 		}
-        return devAccounts.isEmpty() ? null : devAccounts.toArray(new DeveloperConsoleAccount[devAccounts.size()]);
+		return devAccounts.isEmpty() ? null : devAccounts
+				.toArray(new DeveloperConsoleAccount[devAccounts.size()]);
+	}
+
+	protected List<String> findWhitelistedFeatures(String responseStr) {
+		List<String> result = new ArrayList<String>();
+		Matcher m = WHITELISTED_FEATURES_PATTERN.matcher(responseStr);
+		if (m.find()) {
+			String featuresStr = m.group(1);
+			String[] features = featuresStr.split(",");
+			for (String feature : features) {
+				result.add(feature.replaceAll("\\\\\"", ""));
+			}
+		}
+
+		return Collections.unmodifiableList(result);
 	}
 
 	public String getAccountName() {

@@ -113,9 +113,12 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException("Couldn't get XSRF token.");
 			}
 
+			List<String> whitelistedFeatures = findWhitelistedFeatures(responseStr);
+
 			SessionCredentials result = new SessionCredentials(accountName, xsrfToken,
 					developerAccounts);
 			result.addCookies(cookies);
+			result.addWhitelistedFeatures(whitelistedFeatures);
 
 			return result;
 		} catch (ClientProtocolException e) {
