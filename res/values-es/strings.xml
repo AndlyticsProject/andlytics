@@ -21,6 +21,7 @@
     <string name="admob_requests">Peticiones AdMob</string>
     <string name="average_rating">Puntuación media</string>
     <string name="ratings">Votaciones</string>
+    <string name="appinfo">Información de aplicación</string>
     <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">Comentarios</string>
     <string name="num_total_downloads">Descargas totales</string>
@@ -40,7 +41,7 @@
     <string name="rating_changes">Cambios en votaciones</string>
     <string name="comment_changes">Cambios en comentarios</string>
     <string name="download_changes">Cambios en descargas</string>
-    <string name="notification_trigger">Notificaciones</string>
+    <string name="notification_trigger">Notificaciónes</string>
     <string name="notification_signal">Configuración notificación</string>
     <string name="notification_sound">Sonido notificación</string>
     <string name="notification_light">Led notificación</string>
@@ -50,22 +51,28 @@
     <string name="run_import">Importar</string>
     <string name="cancel">Cancelar</string>
     <string name="ok">OK</string>
+    <string name="add">Añadir</string>
+    <string name="edit">Editar</string>
+    <string name="delete">Eliminar</string>
     <string name="title">Título</string>
     <string name="text">Texto</string>
     <string name="select_files_export">Selecciona las aplicaciones a exportar</string>
     <string name="export_files_replaced">Los archivos existentes serán reemplazados</string>
     <string name="run_export">Exportar</string>
     <string name="comment_no_user_info">Un usuario de Google</string>
-    <string name="comment_reply">Respuesta del desarrollador</string>    
+    <string name="comment_reply">Respuesta del desarrollador</string>
+    <string name="reply_to_comment">Responder comentario</string>    
     <string name="long_click_translate">Mantenga pulsado un comentario para traducirlo</string>
     <string name="load_more_comments">Cargar más comentarios</string>
     <string name="info_comments">El número de comentarios reportados en la pantalla principal puede ser mayor a los que aparecen aquí a causa de los comentarios modificados.</string>
     <string name="no_comments_found">No se han encontrado comentarios</string>
+    <string name="no_links_found">No se han encontrado enlaces</string>
     <string name="time_frame">Intervalo de tiempo</string>
     <string name="seven_days">Últimos 7 días</string>
     <string name="thirty_days">Últimos 30 días</string>
     <string name="ninety_days">Últimos 90 días</string>
     <string name="unlimited">Ilimitado</string>
+    <string name="month_to_date">Mes hasta la fecha</string>
     <string name="date_format">Formato de fecha</string>
     <string name="locale_default">Idioma por defecto</string>
     <string name="ddmmyy">Día/Mes/Año</string>
@@ -141,17 +148,21 @@
     <string name="account_specific_preferences">Opciones especificas de la cuenta</string>
     <string name="notification_when_account_visible">Cuando es visible la app</string>
     <string name="notification_when_account_visible_summary">Mostrar notificaciones para la cuenta actual incluso cuando la app es visible</string>
+    <string name="hide_admob">Ocultar AdMob</string>
     <string name="hide_admob_for_unconfigured_apps">Ocultar la pestaña AdMob para cuentas no configuradas</string>
     <string name="pref_disable_acra">Envío automático de errores</string>
     <string name="pref_acra_disabled">Envío deshabilitado</string>
     <string name="pref_acra_enabled">Envío habilitado</string>
-    <string name="use_google_translate_app">Utilizar la app de Google Translate</string>
+    <string name="use_google_translate_app">Utilizar Google Translate</string>
     <string name="use_google_translate_app_summary">Utilizar la aplicación Google Translate, cuando esté disponible, para traducir los comentarios.</string>
+    <string name="show_comment_auto_translations">Auto traducir comentarios</string>
+    <string name="show_comment_auto_translations_summary">Mostrar traducciones automáticas desde Google Play</string>
     
     <!-- Errors -->
     <string name="network_error">Ha ocurrido un problema de red. Por favor, inténtalo más tarde</string>
     <string name="signup_error">%1$s no es una cuenta de desarrollador android, date de alta en:\n\n %2$s</string>
     <string name="auth_error">Ha fallado la autenticación para: %1$s</string>
+    <string name="auth_error_open_browser">Identificación adicional requerida. Pincha para identificarte usando el navegador.</string>
     <string name="admob_ratelimit_error">No se pueden cargar los datos de Admob porque están limitadas las peticiones para esta aplicación, inténtalo más tarde</string>
     <string name="admob_missing_error">La cuenta AdMob %1$s no se encuentra. Si esto ocurre repetidamente prueba a mover Andlytics de la tarjeta SD a la memoria interna</string>    
 	<string name="admob_invalid_request_error">Error accediendo a la API de AdMob</string>
@@ -177,4 +188,21 @@
     <string name="about_credits">Créditos</string>
 	<string name="about_text">Andlytics es open source, puedes contribuir libremente vía GitHub. Esta aplicación no está asociada con Google de ninguna forma.\n\nVisítanos en:</string>
 	<string name="about_thirdsparty_credits_title">Librerías de terceros utilizadas:</string>
+	
+	<string name="appinfo_link_addedit_dialog_title_add">AÑADIR ENLACE</string>
+	<string name="appinfo_link_addedit_dialog_title_edit">EDITAR ENLACE</string>
+	<string name="appinfo_link_addedit_dialog_text">Este formulario acepta cualquier URL http o https. Los enlaces market:// no están soportados.</string>
+	<string name="appinfo_link_addedit_dialog_url_label">URL</string>
+	<string name="appinfo_link_addedit_dialog_name_label">Nombre</string>
+	<string name="appinfo_link_addedit_dialog_name_hint">Dejar en blanco para usar el valor por defecto</string>
+	<string name="appinfo_link_addedit_dialog_not_url">La URL no es válida</string>
+	<string name="appinfo_package_name_label">Nombre del paquete</string>
+    <string name="appinfo_developer">Desarrollador</string>
+	<string name="appinfo_last_store_update_label">Última actualización de la tienda</string>
+	<string name="appinfo_version_name_label">Versión</string>
+	<string name="appinfo_description_label">Descripción</string>
+	<string name="appinfo_changelog_label">Cambios</string>
+	<string name="appinfo_playstore_button">Ver en el Play Store</string>
+	<string name="appinfo_addlink_button">Añadir un enlace</string>
+	<string name="appinfo_app_links">Enlaces de la aplicación</string>
 </resources>

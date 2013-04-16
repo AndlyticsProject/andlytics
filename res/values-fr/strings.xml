@@ -21,6 +21,7 @@
     <string name="admob_requests">Demandes AdMob</string>
     <string name="average_rating">Note moyenne</string>
     <string name="ratings">Notes</string>
+    <string name="appinfo">Informations sur l\'application</string>
     <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">commentaires</string>
     <string name="num_total_downloads">Téléchargements total</string>
@@ -50,22 +51,28 @@
     <string name="run_import">Importer</string>
     <string name="cancel">Annuler</string>
     <string name="ok">OK</string>
+    <string name="add">Ajouter</string>
+    <string name="edit">Modifier</string>
+    <string name="delete">Supprimer</string>
     <string name="title">Titre</string>
     <string name="text">Texte</string>
     <string name="select_files_export">Sélectionner les applis à exporter</string>
     <string name="export_files_replaced">Les fichiers d\'export existants seront remplacés</string>
     <string name="run_export">Exporter</string>
     <string name="comment_no_user_info">Un utilisateur de google</string>
-    <string name="comment_reply">Réponse du développeur</string>    
+    <string name="comment_reply">Réponse du développeur</string>
+    <string name="reply_to_comment">Répondre au commentaire</string>    
     <string name="long_click_translate">Long clic sur le commentaire pour le traduire</string>
     <string name="load_more_comments">Charger plus de commentaires</string>
     <string name="info_comments">Le nombre de commentaires affiché dans l\'écran principal peut être plus important que le nombre de commentaires montré ici à cause de ceux modifiés ou retirés</string>
     <string name="no_comments_found">Aucun commentaire trouvé</string>
+    <string name="no_links_found">Aucun lien trouvé</string>
     <string name="time_frame">Délai</string>
     <string name="seven_days">Les 7 derniers jours</string>
     <string name="thirty_days">Derniers 30 jours</string>
     <string name="ninety_days">Les 90 derniers jours</string>
     <string name="unlimited">Sans limites</string>
+    <string name="month_to_date">Ce mois-ci</string>
     <string name="date_format">Format de date</string>
     <string name="locale_default">Langue par défaut</string>
     <string name="ddmmyy">Jour/Mois/Année</string>
@@ -83,7 +90,7 @@
     <string name="loading_site">Chargement de la liste des sites&#8230;</string>
     <string name="select_admob_site">Sélectionner un site AdMob à associer avec cette application</string>
     <string name="choose_app">Choisissez votre application</string>
-    <string name="admob_required">Authentification AdMob requise</string>
+    <string name="admob_required">Un compte AdMob est requis</string>
     <string name="admob_add">Ajouter un compte AdMob</string>
     <string name="admob_info">Pour les comptes AdMob qui sont liés à un compte Google, vous pouvez trouver le mot de passe API sur la page d\'informations du compte admob :</string>
     <string name="percentage">Pourcentage</string>
@@ -141,17 +148,21 @@
     <string name="account_specific_preferences">Préférences spécifiques à un compte</string>
     <string name="notification_when_account_visible">Quand l\'appli est visible</string>
     <string name="notification_when_account_visible_summary">Afficher les notifications pour le compte en cours même si l\'appli est visible</string>
+    <string name="hide_admob">Cacher Admob</string>
     <string name="hide_admob_for_unconfigured_apps">Cacher l\'onglet AdMob pour les applis non configurées</string>
     <string name="pref_disable_acra">Envoi automatique de rapports d\'erreurs</string>
     <string name="pref_acra_disabled">Rapports désactivés</string>
     <string name="pref_acra_enabled">Rapports activés</string>
     <string name="use_google_translate_app">Utiliser Google Traduction</string>
-    <string name="use_google_translate_app_summary">Utiliser l\'app Google Traduction pour traduire les commentaires, si disponible.</string>
+    <string name="use_google_translate_app_summary">Utiliser Google Traduction pour traduire les commentaires, si disponible.</string>
+    <string name="show_comment_auto_translations">Traduction automatique des commentaires</string>
+    <string name="show_comment_auto_translations_summary">Montrer les traductions automatiques de Google Play</string>
     
     <!-- Errors -->
     <string name="network_error">Une erreur réseau est survenue. Veuillez réessayer plus tard.</string>
     <string name="signup_error">%1$s n\'est pas un compte développeur Android, inscrivez-vous à :\n\n %2$s</string>
     <string name="auth_error">Authentification impossible pour : %1$s</string>
+    <string name="auth_error_open_browser">Connexion supplémentaire requise. Cliquer pour se connecter à partir du navigateur.</string>
     <string name="admob_ratelimit_error">Impossible de charger les données AdMob car AdMob a restreint le nombre de requêtes pour cette appli, réessayez plus tard</string>
     <string name="admob_missing_error">Le compte AdMob %1$s est manquant. Si cela arrive à répétition, essayez de déplacer Andlytics depuis la carte SD vers le stockage interne.</string>    
 	<string name="admob_invalid_request_error">Erreur lors d\'une requête avec l\'API AdMob</string>
@@ -177,4 +188,21 @@
     <string name="about_credits">Crédits</string>
 	<string name="about_text">Andlytics est un logiciel libre, vous pouvez y contribuer via Github. Cette app n\'est pas affiliée à Google.\n\nPlus d\'infos sur :</string>
 	<string name="about_thirdsparty_credits_title">Librairies tierces utilisées:</string>
+	
+	<string name="appinfo_link_addedit_dialog_title_add">Ajouter un lien</string>
+	<string name="appinfo_link_addedit_dialog_title_edit">Modifier un lien</string>
+	<string name="appinfo_link_addedit_dialog_text">Ce formulaire accepte les liens http ou https. Les liens market:// ne sont pas supportés.</string>
+	<string name="appinfo_link_addedit_dialog_url_label">URL</string>
+	<string name="appinfo_link_addedit_dialog_name_label">Nom</string>
+	<string name="appinfo_link_addedit_dialog_name_hint">Laisser vide pour utiliser la valeur par défaut</string>
+	<string name="appinfo_link_addedit_dialog_not_url">L\'URL saisie n\'est pas valide.</string>
+	<string name="appinfo_package_name_label">Nom du package</string>
+    <string name="appinfo_developer">Développeur</string>
+	<string name="appinfo_last_store_update_label">Dernière modification sur Google Play</string>
+	<string name="appinfo_version_name_label">Version</string>
+	<string name="appinfo_description_label">Description</string>
+	<string name="appinfo_changelog_label">Journal des modifications</string>
+	<string name="appinfo_playstore_button">Afficher dans Google Play</string>
+	<string name="appinfo_addlink_button">Ajouter un lien</string>
+	<string name="appinfo_app_links">Liens de l\'application</string>
 </resources>
