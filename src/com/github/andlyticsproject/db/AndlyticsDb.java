@@ -525,7 +525,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			if (c.getCount() < 1 || !c.moveToNext()) {
 				saveAppDetails(appInfo);
 			} else {
-				long id = saveAppDetails(db, appInfo);
+				long id = c.getLong(c.getColumnIndex(AppDetailsTable.ROWID));
 				appInfo.getDetails().setId(id);
 				updateAppDetails(appInfo.getDetails());
 			}
