@@ -21,6 +21,7 @@
     <string name="admob_requests">Richieste AdMob</string>
     <string name="average_rating">Media rating</string>
     <string name="ratings">Rating</string>
+    <string name="appinfo">Info applicazione</string>
     <!-- Lower case versions for main screen e.g. X comments -->
     <string name="num_comments">Commenti</string>
     <string name="num_total_downloads">Download totali</string>
@@ -50,6 +51,9 @@
     <string name="run_import">Importa dati</string>
     <string name="cancel">Annulla</string>
     <string name="ok">OK</string>
+    <string name="add">Aggiungi</string>
+    <string name="edit">Modifica</string>
+    <string name="delete">Elimina</string>
     <string name="title">Titolo</string>
     <string name="text">Testo</string>
     <string name="select_files_export">Seleziona le app da esportare</string>
@@ -57,15 +61,18 @@
     <string name="run_export">Esporta dati</string>
     <string name="comment_no_user_info">Un Utente Google</string>
     <string name="comment_reply">Risposta dallo sviluppatore</string>
+    <string name="reply_to_comment">Rispondi al commento</string>    
     <string name="long_click_translate">Tieni premuto su un commento per tradurlo</string>
     <string name="load_more_comments">Carica altri commenti</string>
     <string name="info_comments">Il numero dei commenti potrebbe essere maggiore dei commenti visualizzati qui a causa dei commenti ritirati o modificati.</string>
     <string name="no_comments_found">Nessun commento trovato</string>
+    <string name="no_links_found">Nessun link trovato</string>
     <string name="time_frame">Intervallo temporale</string>
     <string name="seven_days">Ultimi 7 giorni</string>
     <string name="thirty_days">Ultimi 30 giorni</string>
     <string name="ninety_days">Ultimi 90 giorni</string>
     <string name="unlimited">Illimitato</string>
+    <string name="month_to_date">Dall\'inizio del mese</string>
     <string name="date_format">Formato date</string>
     <string name="locale_default">Locale default</string>
     <string name="ddmmyy">Giorno/Mese/Anno</string>
@@ -141,24 +148,28 @@
     <string name="account_specific_preferences">Impostazioni account</string>
     <string name="notification_when_account_visible">Anche se app visibile</string>
     <string name="notification_when_account_visible_summary">Mostra notifica per l\'account in uso anche se l\'app è visibile</string>
+    <string name="hide_admob">Nascondi AdMob</string>
     <string name="hide_admob_for_unconfigured_apps">Nascondi sezione AdMob per le app in cui non è configurato</string>
     <string name="pref_disable_acra">Invio automatico report errori</string>
     <string name="pref_acra_disabled">Invio automatico disabilitato</string>
     <string name="pref_acra_enabled">Invio automatico abilitato</string>
-    <string name="use_google_translate_app">Usa app Google Translate</string>
+    <string name="use_google_translate_app">Usa Google Translate</string>
     <string name="use_google_translate_app_summary">Usa app Google Translate per tradurre i commenti, se disponibile</string>
+    <string name="show_comment_auto_translations">Traduci automaticamente i commenti</string>
+    <string name="show_comment_auto_translations_summary">Mostra traduzioni automatiche da Google Play</string>
     
     <!-- Errors -->
     <string name="network_error">Errore di rete. Riprova più tardi.</string>
     <string name="signup_error">%1$s non è un account sviluppatore Android, registrati su:\n\n %2$s</string>
     <string name="auth_error">Autenticazione fallita per: %1$s</string>
+    <string name="auth_error_open_browser">Autenticazione aggiuntiva richiesta. Tocca per fare il login via browser.</string>
     <string name="admob_ratelimit_error">Impossibile caricare i dati di AdMob, in quanto AdMob ha limitato il numero di richieste da questa app, riprova più tardi.</string>
     <string name="admob_missing_error">L\'account AdMob %1$s non è stato trovato. Se succede ancora, prova a spostare Andlytics dalla SD-Card alla memoria interna.</string>    
 	<string name="admob_invalid_request_error">Errore nella richiesta API di AdMob.</string>
 	<string name="admob_invalid_token_error">Errore nell\'autenticazione dell\'account AdMob. Riprova più tardi.</string>
 	<string name="admob_generic_error">Impossibile caricare i dati da AdMob, riprova più tardi.</string>
 	<string name="admob_linked_accounts_error">Google non permette l\'accesso API agli account AdMob che sono legati ad un account Google. Stanno lavorando ad una nuova versione delle API che supporta OAuth.</string>
-	<string name="remote_interface_changed_error">Si è verificato un errore, probabilmente perché l\'\interfaccia remota è cambiata\n\nSi prega di riportare l\'errore in modo che possa essere corretto. Per meglio identificare il problema verranno inviate informazioni sull\'errore (stacktrace) e sul tuo dispositivo come il nome del produttore, del modello, la versione del sistema operativo ecc.\n\nGrazie!</string>
+	<string name="remote_interface_changed_error">Si è verificato un errore, probabilmente perchè l\'\interfaccia remota è cambiata\n\nSi prega di riportare l\'errore in modo che possa essere corretto. Per meglio identificare il problema verranno inviate informazioni sull\'errore (stacktrace) e sul tuo dispositivo come il nome del produttore, del modello, la versione del sistema operativo ecc.\n\nGrazie!</string>
 	<string name="multiple_dev_accounts_error">Il tuo account è collegato a più console sviluppatore. Questa funzionalità non è supportata da Andlytics.\n\nPuoi scollegare gli account addizionali o richiedere a Google una API pubblica per le statistiche delle app al seguente indirizzo:  \n\nhttp://support.google.com/googleplay\n\nCi dispiace :(</string>
 	<string name="stats_file_not_specified_error">File delle statistiche non valido.</string>
 	
@@ -177,4 +188,21 @@
     <string name="about_credits">Crediti</string>
 	<string name="about_text">Andlytics è open source, per favore sentiti liberod i contribuire via GitHub. Questa app non è associata con Google in alcun modo.\n\nVisita il nostro sito all\'indirizzo:</string>
 	<string name="about_thirdsparty_credits_title">Librerie di terze parti utilizzate:</string>
+	
+	<string name="appinfo_link_addedit_dialog_title_add">AGGIUNGI LINK</string>
+	<string name="appinfo_link_addedit_dialog_title_edit">MODIFICA LINK</string>
+	<string name="appinfo_link_addedit_dialog_text">Questo modulo accetta qualsiasi URL http o https. I link market:// non sono supportati.</string>
+	<string name="appinfo_link_addedit_dialog_url_label">URL</string>
+	<string name="appinfo_link_addedit_dialog_name_label">Nome</string>
+	<string name="appinfo_link_addedit_dialog_name_hint">Lascia vuoto per usare il valore di default</string>
+	<string name="appinfo_link_addedit_dialog_not_url">L\'URL inserito non è stato riconosciuto come un URL valido.</string>
+	<string name="appinfo_package_name_label">Nome pacchetto</string>
+    <string name="appinfo_developer">Sviluppatore</string>
+	<string name="appinfo_last_store_update_label">Ultimo aggiornamento dello store</string>
+	<string name="appinfo_version_name_label">Versione</string>
+	<string name="appinfo_description_label">Descrizione</string>
+	<string name="appinfo_changelog_label">Aggiornamenti</string>
+	<string name="appinfo_playstore_button">Visualizza nel Play Store</string>
+	<string name="appinfo_addlink_button">Aggiungi un link</string>
+	<string name="appinfo_app_links">Link applicazione</string>
 </resources>
