@@ -1,3 +1,20 @@
+2.5.0
+- [beta] Soporte a múltiples cuentas enlazadas
+- Página de información de la aplicación (clic en el nombre de la aplicación)
+- Traducción automática para comentarios (clic en el globo para activar o desactivar)
+- Respuesta de los desarrolladores a los comentarios
+- Redirige al navegador si Google Play requiere confirmaciones de datos como el número de teléfono móvil
+
+2.4.0
+- Correcciones menores
+- Pequeños cambios de la interfaz de usuario
+- Aplicación del Traductor de Google integrada (consulte preferencias)
+- Cambiar entre datos y gráficos desde la barra de acción
+- Pantalla "Acerca de" separada (créditos/control de cambios)
+
+2.3.1
+- Sólo se recopilan estadísticas de las aplicaciones publicadas
+
 2.3.0
 - Basado en la nueva Consola de Desarrollador (el número de comentarios puede ser inferior debido a un cambio en la manera que éstos se informan)
 - El panel de configuración de tablas/gráficas ha sido reemplazado por acciones/preferencias
