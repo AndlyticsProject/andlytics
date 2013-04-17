@@ -292,13 +292,28 @@ public class ContentAdapter {
 		values.put(AppStatsTable.KEY_STATS_COMMENTS, downloadInfo.getNumberOfComments());
 		values.put(AppStatsTable.KEY_STATS_MARKETERANKING, -1);
 		values.put(AppStatsTable.KEY_STATS_CATEGORYRANKING, -1);
-		values.put(AppStatsTable.KEY_STATS_5STARS, downloadInfo.getRating5());
-		values.put(AppStatsTable.KEY_STATS_4STARS, downloadInfo.getRating4());
-		values.put(AppStatsTable.KEY_STATS_3STARS, downloadInfo.getRating3());
-		values.put(AppStatsTable.KEY_STATS_2STARS, downloadInfo.getRating2());
-		values.put(AppStatsTable.KEY_STATS_1STARS, downloadInfo.getRating1());
-		values.put(AppStatsTable.KEY_STATS_VERSIONCODE, downloadInfo.getVersionCode());
-		values.put(AppStatsTable.KEY_STATS_NUM_ERRORS, downloadInfo.getNumberOfErrors());
+
+		if (downloadInfo.getRating5() != null) {
+			values.put(AppStatsTable.KEY_STATS_5STARS, downloadInfo.getRating5());
+		}
+		if (downloadInfo.getRating4() != null) {
+			values.put(AppStatsTable.KEY_STATS_4STARS, downloadInfo.getRating4());
+		}
+		if (downloadInfo.getRating3() != null) {
+			values.put(AppStatsTable.KEY_STATS_3STARS, downloadInfo.getRating3());
+		}
+		if (downloadInfo.getRating2() != null) {
+			values.put(AppStatsTable.KEY_STATS_2STARS, downloadInfo.getRating2());
+		}
+		if (downloadInfo.getRating1() != null) {
+			values.put(AppStatsTable.KEY_STATS_1STARS, downloadInfo.getRating1());
+		}
+		if (downloadInfo.getVersionCode() != null) {
+			values.put(AppStatsTable.KEY_STATS_VERSIONCODE, downloadInfo.getVersionCode());
+		}
+		if (downloadInfo.getNumberOfErrors() != null) {
+			values.put(AppStatsTable.KEY_STATS_NUM_ERRORS, downloadInfo.getNumberOfErrors());
+		}
 
 		context.getContentResolver().insert(AppStatsTable.CONTENT_URI, values);
 
