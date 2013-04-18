@@ -1,5 +1,23 @@
+2.5.0
+- [beta] Ondersteuning voor Multi-link account
+- App Informatie pagina (klik op de app naam)
+- Automatisch vertalen van commentaren (klik op de wereldbol voor aan-uit)
+- Ontwikkelaar kan antwoorden op commentaren
+- Doorsturen naar de browser als Google/play bevestiging nodig heeft, zoals bv. tel. nummer
+
+2.4.0
+-Kleine bugfixes
+-Onmondige UI veranderingen
+- Google-Vertalen geintegreerd (zie instellingen)
+- Toggelen tabel/grafiek in actionbar
+- Apart About scherm (credits/changelog)
+
+2.3.1
+-Alleen het verzamelen van statistieken op gepubliceerde apps
+
 2.3.0
 - Nu gebaseerd op de nieuwe Ontwikkelaars Console (aantal opmerkingen kan afnemen door een verandering in de manier van rapporteren)
+- Statistieken en opmerkingen worden niet meer herhaaldelijk gesynchroniseerd tijdens het actief gebruik van de app
 - Grafiek/tabel configuratie scherm vervangen door actie elementen/voorkeuren
 - Aangepaste grafieken/tabellen voor tablets
 - Kleurgecodeerde beoordelingsbalken
@@ -7,7 +25,6 @@
 - Toon antwoorden van ontwikkelaar op opmerkingen
 - AdMob statistieken worden nu gesynchroniseerd als een achtergrond synchronisatie wordt uitgevoerd
 - Vertalingen bijgewerkt
-- Bibliotheken bijgewerkt
 - Vele andere correcties
 
 2.2.2
