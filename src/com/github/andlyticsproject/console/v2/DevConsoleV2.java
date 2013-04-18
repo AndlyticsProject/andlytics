@@ -179,10 +179,9 @@ public class DevConsoleV2 implements DevConsole {
 	}
 
 	/**
-	 * Fetches a list of apps for the given account
+	 * Fetches a combined list of apps for all avaiable console accounts
 	 * 
-	 * @param accountName
-	 * @return
+	 * @return combined list of apps
 	 * @throws DevConsoleException
 	 */
 	private List<AppInfo> fetchAppInfos() throws DevConsoleException {
@@ -190,6 +189,7 @@ public class DevConsoleV2 implements DevConsole {
 		for (DeveloperConsoleAccount consoleAccount : protocol.getSessionCredentials()
 				.getDeveloperConsoleAccounts()) {
 			String developerId = consoleAccount.getDeveloperId();
+			Log.d(TAG, "Getting apps for " + developerId);
 			String response = post(protocol.createFetchAppsUrl(developerId),
 					protocol.createFetchAppInfosRequest(), developerId);
 
@@ -212,6 +212,8 @@ public class DevConsoleV2 implements DevConsole {
 					incompletePackages.add(app.getPackageName());
 				}
 			}
+			Log.d(TAG, String.format("Found %d apps for %s", apps.size(), developerId));
+			Log.d(TAG, String.format("Incomplete packages: %d", incompletePackages.size()));
 
 			if (incompletePackages.isEmpty()) {
 				continue;
@@ -260,9 +262,9 @@ public class DevConsoleV2 implements DevConsole {
 	 * Fetches ratings for the given packageName and adds them to the given {@link AppStats} object
 	 * 
 	 * @param packageName
-	 * The app to fetch ratings for
+	 *            The app to fetch ratings for
 	 * @param stats
-	 * The AppStats object to add them to
+	 *            The AppStats object to add them to
 	 * @throws DevConsoleException
 	 */
 	private void fetchRatings(AppInfo appInfo, AppStats stats) throws DevConsoleException {
