@@ -122,9 +122,14 @@ public class JsonParser {
 		if (DEBUG) {
 			pp("result", result);
 		}
-		JSONArray jsonApps = result.getJSONArray("1");
+
+		JSONArray jsonApps = result.optJSONArray("1");
 		if (DEBUG) {
 			pp("jsonApps", jsonApps);
+		}
+		if (jsonApps == null) {
+			// no apps yet?
+			return apps;
 		}
 
 		int numberOfApps = jsonApps.length();
