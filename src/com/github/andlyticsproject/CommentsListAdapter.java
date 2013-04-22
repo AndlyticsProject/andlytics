@@ -120,11 +120,12 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 				commentText = comment.getOriginalText();
 			}
 
-			// XXX translations replace the tab delimiter with space, so 
-			// no way to separate the title. Show title in original language 
+			// XXX translations replace the tab delimiter with space, so
+			// no way to separate the title. Show title in original language
 			// for now
-			String originalTitleAndComment[] = comment.getOriginalText().split("\\t");
-			if (originalTitleAndComment.length > 1) {
+			String originalTitleAndComment[] = comment.getOriginalText() == null ? null : comment
+					.getOriginalText().split("\\t");
+			if (originalTitleAndComment != null && originalTitleAndComment.length > 1) {
 				holder.title.setText(originalTitleAndComment[0]);
 				if (showTranslations) {
 					holder.text.setText(commentText);
