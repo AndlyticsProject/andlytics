@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.github.andlyticsproject.console.DevConsoleException;
 import com.github.andlyticsproject.model.AppDetails;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
@@ -91,14 +92,14 @@ public class JsonParser {
 		int latestValue = latestData.getJSONObject("2").getInt("1");
 
 		switch (statsType) {
-		case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
-			stats.setTotalDownloads(latestValue);
-			break;
-		case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
-			stats.setActiveInstalls(latestValue);
-			break;
-		default:
-			break;
+			case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
+				stats.setTotalDownloads(latestValue);
+				break;
+			case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
+				stats.setActiveInstalls(latestValue);
+				break;
+			default:
+				break;
 		}
 
 	}
@@ -139,16 +140,16 @@ public class JsonParser {
 			app.setAccount(accountName);
 			app.setLastUpdate(now);
 			// Per app:
-			// 1 : { 1: package name, 
-			//       2 : { 1: [{1 : lang, 2: name, 3: description, 4: ??, 5: what's new}], 2 : ?? }, 
-			//       3 : ??, 
-			//       4 : update history, 
-			//       5 : price, 
-			//       6 : update date, 
-			//       7 : state? 
-			//     }
+			// 1 : { 1: package name,
+			// 2 : { 1: [{1 : lang, 2: name, 3: description, 4: ??, 5: what's new}], 2 : ?? },
+			// 3 : ??,
+			// 4 : update history,
+			// 5 : price,
+			// 6 : update date,
+			// 7 : state?
+			// }
 			// 2 : {}
-			// 3 : { 1: active dnd, 2: # ratings, 3: avg rating, 4: ???, 5: total dnd }   
+			// 3 : { 1: active dnd, 2: # ratings, 3: avg rating, 4: ???, 5: total dnd }
 
 			// arrays have changed to objects, with the index as the key
 			/*
@@ -239,7 +240,6 @@ public class JsonParser {
 				continue;
 			}
 
-
 			JSONObject appDetails = jsonAppInfo.getJSONObject("2").getJSONArray("1")
 					.getJSONObject(0);
 			if (DEBUG) {
@@ -297,7 +297,7 @@ public class JsonParser {
 			 * Total installs
 			 */
 			// XXX this index might not be correct for all apps?
-			// 3 : { 1: active dnd, 2: # ratings, 3: avg rating, 4: #errors?, 5: total dnd }   
+			// 3 : { 1: active dnd, 2: # ratings, 3: avg rating, 4: #errors?, 5: total dnd }
 			JSONObject jsonAppStats = jsonApp.optJSONObject("3");
 			if (DEBUG) {
 				pp("jsonAppStats", jsonAppStats);
@@ -495,8 +495,18 @@ public class JsonParser {
 	}
 
 	static Comment parseCommentReplyResponse(String json) throws JSONException {
-		//{"result":{"1":{"1":"REPLY","3":"TIME_STAMP"},"2":true},"xsrf":"XSRF_TOKEN"}
-		JSONObject replyObj = new JSONObject(json).getJSONObject("result").getJSONObject("1");
+		// {"result":{"1":{"1":"REPLY","3":"TIME_STAMP"},"2":true},"xsrf":"XSRF_TOKEN"}
+		// or
+		// {"error":{"data":{"1":ERROR_CODE},"code":ERROR_CODE}}
+		JSONObject jsonObj = new JSONObject(json);
+		if (jsonObj.has("error")) {
+			JSONObject errorObj = jsonObj.getJSONObject("error");
+			String data = errorObj.getJSONObject("data").optString("1");
+			String errorCode = errorObj.optString("code");
+			throw new DevConsoleException(String.format(
+					"Error replying to comment: %s, errorCode=%s", data, errorCode));
+		}
+		JSONObject replyObj = jsonObj.getJSONObject("result").getJSONObject("1");
 
 		Comment result = new Comment(true);
 		result.setText(replyObj.getString("1"));

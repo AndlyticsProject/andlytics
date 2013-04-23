@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.cookie.Cookie;
 
 import com.github.andlyticsproject.model.DeveloperConsoleAccount;
@@ -15,7 +16,7 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 	protected static final Pattern DEV_ACC_PATTERN = Pattern
 			.compile("\"DeveloperConsoleAccounts\":\"\\{\\\\\"1\\\\\":\\[\\{\\\\\"1\\\\\":\\\\\"(\\d{20})\\\\\"");
 	protected static final Pattern DEV_ACCS_PATTERN = Pattern
-			.compile("\\\\\"1\\\\\":\\\\\"(\\d{20})\\\\\",\\\\\"2\\\\\":\\\\\"([\\p{Alnum}\\p{Space}]+)\\\\\",");
+			.compile("\\\\\"1\\\\\":\\\\\"(\\d{20})\\\\\",\\\\\"2\\\\\":\\\\\"(.+?)\\\\\",");
 	protected static final Pattern XSRF_TOKEN_PATTERN = Pattern
 			.compile("\"XsrfToken\":\"\\{\\\\\"1\\\\\":\\\\\"(\\S+)\\\\\"\\}\"");
 
@@ -49,7 +50,13 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 		List<DeveloperConsoleAccount> devAccounts = new ArrayList<DeveloperConsoleAccount>();
 		Matcher m = DEV_ACCS_PATTERN.matcher(responseStr);
 		while (m.find()) {
-			devAccounts.add(new DeveloperConsoleAccount(m.group(1), m.group(2)));
+			String developerId = m.group(1);
+			String developerName = m.group(2);
+			if (developerName.contains("\\\\u")) {
+				developerName = developerName.replace("\\\\u", "\\u");
+				developerName = StringEscapeUtils.unescapeJava(developerName);
+			}
+			devAccounts.add(new DeveloperConsoleAccount(developerId, developerName));
 		}
 		return devAccounts.isEmpty() ? null : devAccounts
 				.toArray(new DeveloperConsoleAccount[devAccounts.size()]);
