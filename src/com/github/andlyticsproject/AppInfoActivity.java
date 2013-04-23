@@ -280,7 +280,7 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 
 	private void getLinksFromDb() {
 		appInfo = db.findAppByPackageName(packageName);
-		links = appInfo.getDetails().getLinks();
+		links = appInfo == null ? new ArrayList<Link>() : appInfo.getDetails().getLinks();
 	}
 
 	private void refreshLinks() {

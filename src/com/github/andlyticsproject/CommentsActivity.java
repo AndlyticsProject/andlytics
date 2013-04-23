@@ -589,12 +589,20 @@ public class CommentsActivity extends BaseDetailsActivity {
 			Exception error;
 
 			@Override
+			protected void onPreExecute() {
+				if (activity == null) {
+					return;
+				}
+
+				activity.refreshStarted();
+			}
+
+			@Override
 			protected Comment doInBackground(Void... arg0) {
 				if (activity == null) {
 					return null;
 				}
 
-				activity.refreshStarted();
 				try {
 					return devConsole.replyToComment(CommentsActivity.this, packageName,
 							developerId, commentUniqueId, replyText);
