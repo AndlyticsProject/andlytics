@@ -59,6 +59,8 @@ public class DevConsoleV2Protocol {
 	static final int STATS_TYPE_ACTIVE_DEVICE_INSTALLS = 1;
 	static final int STATS_TYPE_TOTAL_USER_INSTALLS = 8;
 
+	static final int COMMENT_REPLY_MAX_LENGTH = 350;
+
 	private SessionCredentials sessionCredentials;
 
 	DevConsoleV2Protocol() {
@@ -96,7 +98,7 @@ public class DevConsoleV2Protocol {
 		post.addHeader("Host", "play.google.com");
 		post.addHeader("Connection", "keep-alive");
 		post.addHeader("Content-Type", "application/json; charset=utf-8");
-		// XXX get this dynamically by fetching and executing the nocache.js file: 
+		// XXX get this dynamically by fetching and executing the nocache.js file:
 		// https://play.google.com/apps/publish/v2/gwt/com.google.wireless.android.vending.developer.fox.Fox.nocache.js
 		post.addHeader("X-GWT-Permutation", "EC203CA4CDFF1F0285B065B554E0D784");
 		post.addHeader("Origin", "https://play.google.com");
@@ -146,7 +148,6 @@ public class DevConsoleV2Protocol {
 		return String.format(FETCH_APPS_BY_PACKAGES_TEMPLATE, packageList,
 				sessionCredentials.getXsrfToken());
 	}
-
 
 	List<AppInfo> parseAppInfosResponse(String json, String accountName, boolean skipIncomplete) {
 		try {
@@ -215,6 +216,11 @@ public class DevConsoleV2Protocol {
 		if (!canReplyToComments()) {
 			throw new IllegalStateException(
 					"Reply to comments feature not available for this account");
+		}
+
+		// XXX we can probably do better, truncate for now
+		if (reply.length() > COMMENT_REPLY_MAX_LENGTH) {
+			reply = reply.substring(0, COMMENT_REPLY_MAX_LENGTH);
 		}
 
 		return String.format(REPLY_TO_COMMENT_TEMPLATE, packageName, commentId, reply,
