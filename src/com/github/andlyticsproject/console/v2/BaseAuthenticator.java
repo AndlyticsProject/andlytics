@@ -55,6 +55,8 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 			if (developerName.contains("\\\\u")) {
 				developerName = developerName.replace("\\\\u", "\\u");
 				developerName = StringEscapeUtils.unescapeJava(developerName);
+			} else if (developerName.contains("\\u")) {
+				developerName = StringEscapeUtils.unescapeJava(developerName);
 			}
 			devAccounts.add(new DeveloperConsoleAccount(developerId, developerName));
 		}
