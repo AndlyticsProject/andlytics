@@ -17,7 +17,7 @@ import com.github.andlyticsproject.util.FileUtils;
 public class DevConsoleV2Protocol {
 
 	// Base urls
-	static final String URL_DEVELOPER_CONSOLE = "https://play.google.com/apps/publish/v2";
+	static final String URL_DEVELOPER_CONSOLE = "https://play.google.com/apps/publish";
 	static final String URL_APPS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/androidapps";
 	static final String URL_STATISTICS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/statistics";
 	static final String URL_REVIEWS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/reviews";
@@ -100,10 +100,10 @@ public class DevConsoleV2Protocol {
 		post.addHeader("Content-Type", "application/json; charset=utf-8");
 		// XXX get this dynamically by fetching and executing the nocache.js file:
 		// https://play.google.com/apps/publish/v2/gwt/com.google.wireless.android.vending.developer.fox.Fox.nocache.js
-		post.addHeader("X-GWT-Permutation", "EC203CA4CDFF1F0285B065B554E0D784");
+		post.addHeader("X-GWT-Permutation", "6957AF5C5433DA24CD27DBA9210BDD27");
 		post.addHeader("Origin", "https://play.google.com");
-		post.addHeader("X-GWT-Module-Base", "https://play.google.com/apps/publish/v2/gwt/");
-		post.addHeader("Referer", "https://play.google.com/apps/publish/v2/?dev_acc=" + developerId);
+		post.addHeader("X-GWT-Module-Base", "https://play.google.com/apps/publish/gwt/");
+		post.addHeader("Referer", "https://play.google.com/apps/publish/?dev_acc=" + developerId);
 	}
 
 	String createDeveloperUrl(String baseUrl, String developerId) {
