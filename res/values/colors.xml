@@ -4,6 +4,7 @@
     <color name="andBackground">#EDEEF1</color>
     <color name="andActionbarBackground">#454545</color>
     <color name="blackText">#555555</color>
+    <color name="greyText">#A9A9A9</color>
     <color name="lightBlue">#33B5E5</color>
     <color name="rowLight">#F7FBF5</color>
     <color name="rowDark">#F3F4F5</color>

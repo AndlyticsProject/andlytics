@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
@@ -112,11 +116,13 @@ public class CommentsActivity extends BaseDetailsActivity {
 		nocomments = (View) findViewById(R.id.comments_nocomments);
 
 		// footer
-		View inflate = getLayoutInflater().inflate(R.layout.comments_list_footer, null);
+		View inflate = getLayoutInflater().inflate(
+				R.layout.comments_list_footer, null);
 		footer = (View) inflate.findViewById(R.id.comments_list_footer);
 		list.addFooterView(inflate, null, false);
 
-		View header = getLayoutInflater().inflate(R.layout.comments_list_header, null);
+		View header = getLayoutInflater().inflate(
+				R.layout.comments_list_header, null);
 		list.addHeaderView(header, null, false);
 
 		list.setGroupIndicator(null);
@@ -124,7 +130,8 @@ public class CommentsActivity extends BaseDetailsActivity {
 		devConsole = DevConsoleRegistry.getInstance().get(accountName);
 		commentsListAdapter = new CommentsListAdapter(this);
 		if (devConsole.hasSessionCredentials()) {
-			commentsListAdapter.setCanReplyToComments(devConsole.canReplyToComments());
+			commentsListAdapter.setCanReplyToComments(devConsole
+					.canReplyToComments());
 		}
 		list.setAdapter(commentsListAdapter);
 
@@ -167,7 +174,6 @@ public class CommentsActivity extends BaseDetailsActivity {
 		return state;
 	}
 
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.clear();
@@ -184,7 +190,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 	 * Called if item in option menu is selected.
 	 * 
 	 * @param item
-	 * The chosen menu item
+	 *            The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
@@ -296,25 +302,28 @@ public class CommentsActivity extends BaseDetailsActivity {
 				ContentAdapter db = activity.getDbAdapter();
 				AppStats appInfo = db.getLatestForApp(activity.packageName);
 				if (appInfo != null) {
-					activity.maxAvailableComments = appInfo.getNumberOfComments();
+					activity.maxAvailableComments = appInfo
+							.getNumberOfComments();
 				} else {
 					activity.maxAvailableComments = MAX_LOAD_COMMENTS;
 				}
 			}
 
 			if (activity.maxAvailableComments != 0) {
-				DevConsoleV2 console = DevConsoleRegistry.getInstance().get(activity.accountName);
+				DevConsoleV2 console = DevConsoleRegistry.getInstance().get(
+						activity.accountName);
 				try {
-					List<Comment> result = console.getComments(activity, activity.packageName,
-							activity.developerId, activity.nextCommentIndex, MAX_LOAD_COMMENTS,
+					List<Comment> result = console.getComments(activity,
+							activity.packageName, activity.developerId,
+							activity.nextCommentIndex, MAX_LOAD_COMMENTS,
 							Utils.getDisplayLocale());
 					activity.updateCommentsCacheIfNecessary(result);
 
-					// we can only do this after we authenticate at least once, 
-					// which may not happen before refreshing if we are loading 
+					// we can only do this after we authenticate at least once,
+					// which may not happen before refreshing if we are loading
 					// from cache
-					activity.commentsListAdapter
-							.setCanReplyToComments(console.canReplyToComments());
+					activity.commentsListAdapter.setCanReplyToComments(console
+							.canReplyToComments());
 					activity.incrementNextCommentIndex(result.size());
 					activity.rebuildCommentGroups();
 
@@ -336,7 +345,9 @@ public class CommentsActivity extends BaseDetailsActivity {
 			activity.enableFooter();
 
 			if (exception != null) {
-				Log.e(TAG, "Error fetching comments: " + exception.getMessage(), exception);
+				Log.e(TAG,
+						"Error fetching comments: " + exception.getMessage(),
+						exception);
 				activity.handleUserVisibleException(exception);
 				activity.hideFooter();
 
@@ -345,7 +356,8 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 			if (activity.comments != null && activity.comments.size() > 0) {
 				activity.nocomments.setVisibility(View.GONE);
-				activity.commentsListAdapter.setCommentGroups(activity.commentGroups);
+				activity.commentsListAdapter
+						.setCommentGroups(activity.commentGroups);
 				for (int i = 0; i < activity.commentGroups.size(); i++) {
 					activity.list.expandGroup(i);
 				}
@@ -408,8 +420,8 @@ public class CommentsActivity extends BaseDetailsActivity {
 			if (prevComment != null) {
 
 				CommentGroup group = new CommentGroup();
-				group.setDate(comment.isReply() ? comment.getOriginalCommentDate() : comment
-						.getDate());
+				group.setDate(comment.isReply() ? comment
+						.getOriginalCommentDate() : comment.getDate());
 
 				if (commentGroups.contains(group)) {
 
@@ -478,8 +490,9 @@ public class CommentsActivity extends BaseDetailsActivity {
 				// user entered credentials, etc, try to get data again
 				refreshCommentsIfNecessary();
 			} else {
-				Toast.makeText(this, getString(R.string.auth_error, accountName), Toast.LENGTH_LONG)
-						.show();
+				Toast.makeText(this,
+						getString(R.string.auth_error, accountName),
+						Toast.LENGTH_LONG).show();
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
@@ -488,6 +501,7 @@ public class CommentsActivity extends BaseDetailsActivity {
 	public static class ReplyDialog extends SherlockDialogFragment {
 
 		String commentUniqueId;
+		public static final int DEVELOPER_REPLY_MAX_CHARACTERS = 350;
 
 		public ReplyDialog() {
 			setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog);
@@ -496,16 +510,62 @@ public class CommentsActivity extends BaseDetailsActivity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View view = inflater.inflate(R.layout.comment_reply_dialog, container);
+			View view = inflater.inflate(R.layout.comment_reply_dialog,
+					container);
 
-			final EditText replyText = (EditText) view.findViewById(R.id.comment_reply_dialog_text);
+			final EditText replyText = (EditText) view
+					.findViewById(R.id.comment_reply_dialog_text);
+			final TextView comment_reply_dialog_counter = (TextView) view
+					.findViewById(R.id.comment_reply_dialog_counter);
+			final TextView comment_reply_dialog_max_characters = (TextView) view
+					.findViewById(R.id.comment_reply_dialog_max_characters);
+
+			final View okButton = view
+					.findViewById(R.id.comment_reply_dialog_positive_button);
+
+			// show keyboard
 			replyText.setOnFocusChangeListener(new OnFocusChangeListener() {
-
 				@Override
 				public void onFocusChange(View v, boolean hasFocus) {
 					if (hasFocus) {
 						showKeyboard();
 					}
+				}
+			});
+
+			// live count comment reply characters
+			replyText.addTextChangedListener(new TextWatcher() {
+				public void beforeTextChanged(CharSequence reply, int start,
+						int count, int after) {
+				}
+
+				public void onTextChanged(CharSequence reply, int start,
+						int before, int count) {
+					// set counter view to current comment length
+					comment_reply_dialog_counter.setText(String.valueOf(reply
+							.length()));
+
+					// enable/disable button and add color-coding
+					if (ReplyDialog.DEVELOPER_REPLY_MAX_CHARACTERS < reply
+							.length()) {
+						okButton.setEnabled(false);
+						comment_reply_dialog_counter.setTextColor(Color.RED);
+						comment_reply_dialog_max_characters
+								.setTextColor(Color.RED);
+					} else if (1 > reply.length()) {
+						okButton.setEnabled(false);
+					} else {
+						okButton.setEnabled(true);
+						comment_reply_dialog_counter
+								.setTextColor(getResources().getColor(
+										R.color.greyText));
+						comment_reply_dialog_max_characters
+								.setTextColor(getResources().getColor(
+										R.color.greyText));
+					}
+				}
+
+				public void afterTextChanged(Editable e) {
 				}
 			});
 
@@ -517,14 +577,14 @@ public class CommentsActivity extends BaseDetailsActivity {
 				replyText.setText(args.getString("reply"));
 			}
 
-			view.findViewById(R.id.comment_reply_dialog_negative_button).setOnClickListener(
-					new OnClickListener() {
+			view.findViewById(R.id.comment_reply_dialog_negative_button)
+					.setOnClickListener(new OnClickListener() {
 						public void onClick(View v) {
 							dismiss();
 						}
 					});
-			view.findViewById(R.id.comment_reply_dialog_positive_button).setOnClickListener(
-					new OnClickListener() {
+			view.findViewById(R.id.comment_reply_dialog_positive_button)
+					.setOnClickListener(new OnClickListener() {
 						public void onClick(View v) {
 							String reply = replyText.getText().toString();
 							CommentsActivity activity = (CommentsActivity) getActivity();
@@ -549,15 +609,18 @@ public class CommentsActivity extends BaseDetailsActivity {
 		}
 
 		private void showKeyboard() {
-			getDialog().getWindow().setSoftInputMode(
-					WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
-							| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+			getDialog()
+					.getWindow()
+					.setSoftInputMode(
+							WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
+									| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 		}
 	}
 
 	void showReplyDialog(Comment comment) {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		Fragment prev = getSupportFragmentManager().findFragmentByTag(REPLY_DIALOG_FRAGMENT);
+		Fragment prev = getSupportFragmentManager().findFragmentByTag(
+				REPLY_DIALOG_FRAGMENT);
 		if (prev != null) {
 			ft.remove(prev);
 		}
@@ -567,7 +630,8 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 		Bundle args = new Bundle();
 		args.putString("uniqueId", comment.getUniqueId());
-		args.putString("reply", comment.getReply() == null ? "" : comment.getReply().getText());
+		args.putString("reply", comment.getReply() == null ? "" : comment
+				.getReply().getText());
 
 		replyDialog.setArguments(args);
 
@@ -576,15 +640,18 @@ public class CommentsActivity extends BaseDetailsActivity {
 
 	void hideReplyDialog() {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		Fragment dialog = getSupportFragmentManager().findFragmentByTag(REPLY_DIALOG_FRAGMENT);
+		Fragment dialog = getSupportFragmentManager().findFragmentByTag(
+				REPLY_DIALOG_FRAGMENT);
 		if (dialog != null) {
 			ft.remove(dialog);
 			ft.commit();
 		}
 	}
 
-	public void replyToComment(final String commentUniqueId, final String replyText) {
-		Utils.execute(new DetachableAsyncTask<Void, Void, Comment, CommentsActivity>(this) {
+	public void replyToComment(final String commentUniqueId,
+			final String replyText) {
+		Utils.execute(new DetachableAsyncTask<Void, Void, Comment, CommentsActivity>(
+				this) {
 
 			Exception error;
 
@@ -604,8 +671,9 @@ public class CommentsActivity extends BaseDetailsActivity {
 				}
 
 				try {
-					return devConsole.replyToComment(CommentsActivity.this, packageName,
-							developerId, commentUniqueId, replyText);
+					return devConsole.replyToComment(CommentsActivity.this,
+							packageName, developerId, commentUniqueId,
+							replyText);
 				} catch (Exception e) {
 					error = e;
 					return null;
@@ -621,7 +689,9 @@ public class CommentsActivity extends BaseDetailsActivity {
 				activity.refreshFinished();
 
 				if (error != null) {
-					Log.e(TAG, "Error replying to comment: " + error.getMessage(), error);
+					Log.e(TAG,
+							"Error replying to comment: " + error.getMessage(),
+							error);
 					activity.hideReplyDialog();
 					activity.handleUserVisibleException(error);
 
