@@ -228,7 +228,7 @@ public class JsonParser {
 				}
 				continue;
 			}
-			if (!jsonAppInfo.has("5")) {
+			if (!jsonAppInfo.has("4")) {
 				if (skipIncomplete) {
 					Log.d(TAG, String.format(
 							"Skipping app %d because no versions info found: package name=%s", i,
@@ -264,7 +264,7 @@ public class JsonParser {
 			 * Array with app icon [null,null,null,icon]
 			 */
 			// XXX
-			JSONArray appVersions = jsonAppInfo.optJSONArray("5");
+			JSONArray appVersions = jsonAppInfo.optJSONObject("4").optJSONArray("1");
 			if (DEBUG) {
 				pp("appVersions", appVersions);
 			}
