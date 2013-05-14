@@ -4,7 +4,7 @@ import org.acra.ACRA;
 import org.acra.ACRAConfiguration;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
-import org.acra.sender.HttpPostSender;
+import org.acra.sender.HttpSender;
 
 import android.app.Application;
 import android.content.Context;
@@ -54,7 +54,9 @@ public class AndlyticsApp extends Application {
 			ACRA.setConfig(config);
 			ACRA.init(this);
 			String bugsenseUrl = getResources().getString(R.string.bugsense_url);
-			ACRA.getErrorReporter().addReportSender(new HttpPostSender(bugsenseUrl, null));
+			HttpSender bugSenseSender = new HttpSender(HttpSender.Method.POST,
+					HttpSender.Type.FORM, bugsenseUrl, null);
+			ACRA.getErrorReporter().addReportSender(bugSenseSender);
 		} catch (IllegalStateException e) {
 			Log.w(TAG, "ACRA.init() called more than once?: " + e.getMessage(), e);
 		}
