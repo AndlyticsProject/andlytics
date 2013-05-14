@@ -18,14 +18,7 @@ public class AndlyticsApp extends Application {
 
 	private static final String TAG = AndlyticsApp.class.getSimpleName();
 
-	// TODO these two should go away
-	private String authToken;
-
-	private String xsrfToken;
-
 	private ContentAdapter db;
-
-	private String feedbackMessage;
 
 	private static AndlyticsApp sInstance;
 
@@ -85,32 +78,6 @@ public class AndlyticsApp extends Application {
 
 	public ContentAdapter getDbAdapter() {
 		return db;
-	}
-
-	// XXX global authToken and xsrfToken are only used by v1 code 
-	// and should be removed at some point
-	public void setAuthToken(String authToken) {
-		this.authToken = authToken;
-	}
-
-	public String getAuthToken() {
-		return authToken;
-	}
-
-	public void setXsrfToken(String xsrfToken) {
-		this.xsrfToken = xsrfToken;
-	}
-
-	public String getXsrfToken() {
-		return xsrfToken;
-	}
-
-	public void setFeedbackMessage(String feedbackMessage) {
-		this.feedbackMessage = feedbackMessage;
-	}
-
-	public String getFeedbackMessage() {
-		return feedbackMessage;
 	}
 
 }
