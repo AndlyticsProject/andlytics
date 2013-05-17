@@ -207,8 +207,8 @@
 	<string name="appinfo_addlink_button">Add a link</string>
 	<string name="appinfo_app_links">App links</string>
   
-    <string name="revenue_total">Revenue total (1/7d)</string>
+    <string name="revenue_total">%s total revenue</string>
     <string name="revenue_last_day">Revenue last day</string>
     <string name="revenue_last_7days">Revenue last 7 days</string>
-    <string name="revenue_last_30days">Revenue last 30 days</string>
+    <string name="revenue_last_30days">%s 30 days revenue</string>
 </resources>

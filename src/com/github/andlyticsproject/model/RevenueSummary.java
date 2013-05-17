@@ -14,29 +14,31 @@ public class RevenueSummary {
 	private double lastDay;
 	private double last7Days;
 	private double last30Days;
+	private double overall;
 
 	public static RevenueSummary createTotal(String currency, double lastDay, double last7Days,
-			double last30Days) {
-		return new RevenueSummary(Type.TOTAL, currency, lastDay, last7Days, last30Days);
+			double last30Days, double overall) {
+		return new RevenueSummary(Type.TOTAL, currency, lastDay, last7Days, last30Days, overall);
 	}
 
 	public static RevenueSummary createSales(String currency, double lastDay, double last7Days,
-			double last30Days) {
-		return new RevenueSummary(Type.SALES, currency, lastDay, last7Days, last30Days);
+			double last30Days, double overall) {
+		return new RevenueSummary(Type.SALES, currency, lastDay, last7Days, last30Days, overall);
 	}
 
 	public static RevenueSummary createInApp(String currency, double lastDay, double last7Days,
-			double last30Days) {
-		return new RevenueSummary(Type.IN_APP, currency, lastDay, last7Days, last30Days);
+			double last30Days, double overall) {
+		return new RevenueSummary(Type.IN_APP, currency, lastDay, last7Days, last30Days, overall);
 	}
 
 	public RevenueSummary(Type type, String currency, double lastDay, double last7Days,
-			double last30Days) {
+			double last30Days, double overall) {
 		this.type = type;
 		this.currency = currency;
 		this.lastDay = lastDay;
 		this.last7Days = last7Days;
 		this.last30Days = last30Days;
+		this.overall = overall;
 	}
 
 	public Long getId() {
@@ -66,8 +68,12 @@ public class RevenueSummary {
 	public double getLast30Days() {
 		return last30Days;
 	}
+	
+	public double getOverall() {
+		return overall;
+	}
 
 	public boolean hasRevenue() {
-		return last30Days > 0;
+		return overall > 0;
 	}
 }

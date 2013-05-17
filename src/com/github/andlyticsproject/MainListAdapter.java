@@ -159,6 +159,13 @@ public class MainListAdapter extends BaseAdapter {
 			holder.revenueFrame = (View) convertView.findViewById(R.id.main_app_revenue_frame);
 			holder.totalRevenue = (TextView) convertView
 					.findViewById(R.id.main_app_revenue_total_text);
+			holder.totalRevenueLabel = (TextView) convertView
+					.findViewById(R.id.main_app_admob_revenue_total_label);
+
+			holder.last30DaysRevenue = (TextView) convertView
+					.findViewById(R.id.main_app_revenue_last_30days_text);
+			holder.last30DaysRevenueLabel = (TextView) convertView
+					.findViewById(R.id.main_app_admob_revenue_last_30days_label);
 
 			holder.admobFrame = (View) convertView.findViewById(R.id.main_app_admob_frame);
 			holder.admobRequests = (TextView) convertView
@@ -300,12 +307,17 @@ public class MainListAdapter extends BaseAdapter {
 		int height = expandViewHeight;
 		RevenueSummary revenue = appDownloadInfo.getTotalRevenueSummary();
 		if (revenue != null && revenue.hasRevenue()) {
-			// 30dp for revenue section?
-			height = Math.round(height + 30 * displayMetrics.scaledDensity);
+			// 55dp for revenue section?
+			height = Math.round(height + 55 * displayMetrics.scaledDensity);
 			holder.revenueFrame.setVisibility(View.VISIBLE);
-			String template = revenue.getCurrency() + " %.2f/%.2f";
-			holder.totalRevenue.setText(String.format(template, revenue.getLastDay(),
-					revenue.getLast7Days()));
+			double overall = revenue.getOverall();
+			holder.totalRevenue.setText(String.format(overall < 1000 ? "%.2f" : "%.0f", overall));
+			holder.totalRevenueLabel.setText(activity.getString(R.string.revenue_total, revenue.getCurrency()));
+			double last30Days = revenue.getLast30Days();
+			holder.last30DaysRevenue.setText(String.format(last30Days < 1000 ? "%.2f" : "%.0f", last30Days));
+			holder.last30DaysRevenueLabel.setText(activity.getString(R.string.revenue_last_30days, revenue.getCurrency()));
+			
+			// TODO Setup daily diffs for the total to be shown to the right of the total
 		} else {
 			holder.revenueFrame.setVisibility(View.GONE);
 		}
@@ -632,6 +644,9 @@ public class MainListAdapter extends BaseAdapter {
 
 		public View revenueFrame;
 		public TextView totalRevenue;
+		public TextView totalRevenueLabel;
+		public TextView last30DaysRevenueLabel;
+		public TextView last30DaysRevenue;
 	}
 
 	private class GetCachedImageTask extends AsyncTask<File, Void, Bitmap> {

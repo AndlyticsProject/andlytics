@@ -243,6 +243,28 @@
                 android:layout_alignBaseline="@+id/main_app_revenue_total_text"
                 android:layout_toRightOf="@+id/main_app_revenue_total_text"
                 android:text="@string/revenue_total" />
+                    
+
+            <TextView
+                android:id="@+id/main_app_revenue_last_30days_text"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/main_app_revenue_total_text"
+                android:gravity="right"
+                android:minWidth="70dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="3dp" />
+
+            <TextView
+                android:id="@+id/main_app_admob_revenue_last_30days_label"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_revenue_last_30days_text"
+                android:layout_toRightOf="@+id/main_app_revenue_last_30days_text"
+                android:text="@string/revenue_last_30days" />
         </RelativeLayout>
 
         <RelativeLayout

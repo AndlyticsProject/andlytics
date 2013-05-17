@@ -391,6 +391,7 @@ public class ContentAdapter {
 			values.put(RevenueSummaryTable.LAST_DAY_TOTAL, revenue.getLastDay());
 			values.put(RevenueSummaryTable.LAST_7DAYS_TOTAL, revenue.getLast7Days());
 			values.put(RevenueSummaryTable.LAST_30DAYS_TOTAL, revenue.getLast30Days());
+			values.put(RevenueSummaryTable.OVERALL_TOTAL, revenue.getOverall());
 			values.put(RevenueSummaryTable.APPINFO_ID, appInfo.getId());
 
 			if (revenue.getId() == null) {
@@ -994,9 +995,11 @@ public class ContentAdapter {
 					.getColumnIndex(RevenueSummaryTable.LAST_7DAYS_TOTAL));
 			double last30Days = cursor.getDouble(cursor
 					.getColumnIndex(RevenueSummaryTable.LAST_30DAYS_TOTAL));
+			double overall = cursor.getDouble(cursor
+					.getColumnIndex(RevenueSummaryTable.OVERALL_TOTAL));
 			RevenueSummary.Type type = RevenueSummary.Type.values()[typeIdx];
 			RevenueSummary result = new RevenueSummary(type, currency, lastDay, last7Days,
-					last30Days);
+					last30Days, overall);
 
 			return result;
 		} finally {

@@ -57,6 +57,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		db.execSQL(DeveloperAccountsTable.TABLE_CREATE_DEVELOPER_ACCOUNT);
 		db.execSQL(LinksTable.TABLE_CREATE_LINKS);
 		db.execSQL(AppDetailsTable.TABLE_CREATE_APP_DETAILS);
+		db.execSQL(RevenueSummaryTable.TABLE_CREATE_REVENUE_SUMMARY);
 	}
 
 	@Override
@@ -663,10 +664,12 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 					.getColumnIndex(RevenueSummaryTable.LAST_7DAYS_TOTAL));
 			double last30DaysTotal = c.getDouble(c
 					.getColumnIndex(RevenueSummaryTable.LAST_30DAYS_TOTAL));
+			double overallTotal = c.getDouble(c
+					.getColumnIndex(RevenueSummaryTable.OVERALL_TOTAL));
 
 			RevenueSummary.Type type = RevenueSummary.Type.values()[typeIdx];
 			RevenueSummary revenue = new RevenueSummary(type, currency, lastDayTotal,
-					last7DaysTotal, last30DaysTotal);
+					last7DaysTotal, last30DaysTotal, overallTotal);
 			revenue.setId(id);
 
 			appInfo.setTotalRevenueSummary(revenue);
