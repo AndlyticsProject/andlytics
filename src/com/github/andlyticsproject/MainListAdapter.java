@@ -160,12 +160,12 @@ public class MainListAdapter extends BaseAdapter {
 			holder.totalRevenue = (TextView) convertView
 					.findViewById(R.id.main_app_revenue_total_text);
 			holder.totalRevenueLabel = (TextView) convertView
-					.findViewById(R.id.main_app_admob_revenue_total_label);
+					.findViewById(R.id.main_app_revenue_total_label);
 
 			holder.last30DaysRevenue = (TextView) convertView
 					.findViewById(R.id.main_app_revenue_last_30days_text);
 			holder.last30DaysRevenueLabel = (TextView) convertView
-					.findViewById(R.id.main_app_admob_revenue_last_30days_label);
+					.findViewById(R.id.main_app_revenue_last_30days_label);
 
 			holder.admobFrame = (View) convertView.findViewById(R.id.main_app_admob_frame);
 			holder.admobRequests = (TextView) convertView
