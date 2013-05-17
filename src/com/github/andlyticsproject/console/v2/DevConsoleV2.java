@@ -327,23 +327,11 @@ public class DevConsoleV2 implements DevConsole {
 	}
 
 	private RevenueSummary fetchRevenueSummary(AppInfo appInfo) throws DevConsoleException {
-		try {
-			String developerId = appInfo.getDeveloperId();
-			String response = post(protocol.createRevenueUrl(developerId),
-					protocol.createFetchRevenueSummaryRequest(appInfo.getPackageName()),
-					developerId);
+		String developerId = appInfo.getDeveloperId();
+		String response = post(protocol.createRevenueUrl(developerId),
+				protocol.createFetchRevenueSummaryRequest(appInfo.getPackageName()), developerId);
 
-			return protocol.parseRevenueResponse(response);
-		} catch (NetworkException e) {
-			// XXX not pretty, maybe use a dedicated exception?
-			// if we don't have 'view financial info' permission for an app 
-			// getting revenue returns 403. 
-			if (e.getStatusCode() == HttpStatus.SC_FORBIDDEN) {
-				return null;
-			}
-
-			throw e;
-		}
+		return protocol.parseRevenueResponse(response);
 	}
 
 	private boolean authenticateWithCachedCredentialas(Activity activity) {
@@ -399,7 +387,7 @@ public class DevConsoleV2 implements DevConsole {
 				throw new AuthenticationException(e);
 			}
 
-			throw new NetworkException(e, e.getStatusCode());
+			throw new NetworkException(e);
 		} catch (IOException e) {
 			throw new NetworkException(e);
 		}
