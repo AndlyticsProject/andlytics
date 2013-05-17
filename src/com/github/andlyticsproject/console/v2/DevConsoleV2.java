@@ -25,6 +25,7 @@ import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.DeveloperConsoleAccount;
+import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.Utils;
 
 /**
@@ -118,6 +119,12 @@ public class DevConsoleV2 implements DevConsole {
 			AppStats stats = app.getLatestStats();
 			fetchRatings(app, stats);
 			stats.setNumberOfComments(fetchCommentsCount(app, Utils.getDisplayLocale()));
+
+			RevenueSummary revenue = fetchRevenueSummary(app);
+			app.setTotalRevenueSummary(revenue);
+			if (revenue != null) {
+				stats.setTotalRevenue(revenue.getLastDay());
+			}
 		}
 
 		return apps;
@@ -262,9 +269,9 @@ public class DevConsoleV2 implements DevConsole {
 	 * Fetches ratings for the given packageName and adds them to the given {@link AppStats} object
 	 * 
 	 * @param packageName
-	 *            The app to fetch ratings for
+	 * The app to fetch ratings for
 	 * @param stats
-	 *            The AppStats object to add them to
+	 * The AppStats object to add them to
 	 * @throws DevConsoleException
 	 */
 	private void fetchRatings(AppInfo appInfo, AppStats stats) throws DevConsoleException {
@@ -317,6 +324,26 @@ public class DevConsoleV2 implements DevConsole {
 		comments.addAll(protocol.parseCommentsResponse(response));
 
 		return comments;
+	}
+
+	private RevenueSummary fetchRevenueSummary(AppInfo appInfo) throws DevConsoleException {
+		try {
+			String developerId = appInfo.getDeveloperId();
+			String response = post(protocol.createRevenueUrl(developerId),
+					protocol.createFetchRevenueSummaryRequest(appInfo.getPackageName()),
+					developerId);
+
+			return protocol.parseRevenueResponse(response);
+		} catch (NetworkException e) {
+			// XXX not pretty, maybe use a dedicated exception?
+			// if we don't have 'view financial info' permission for an app 
+			// getting revenue returns 403. 
+			if (e.getStatusCode() == HttpStatus.SC_FORBIDDEN) {
+				return null;
+			}
+
+			throw e;
+		}
 	}
 
 	private boolean authenticateWithCachedCredentialas(Activity activity) {
@@ -372,7 +399,7 @@ public class DevConsoleV2 implements DevConsole {
 				throw new AuthenticationException(e);
 			}
 
-			throw new NetworkException(e);
+			throw new NetworkException(e, e.getStatusCode());
 		} catch (IOException e) {
 			throw new NetworkException(e);
 		}

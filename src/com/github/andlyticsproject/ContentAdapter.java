@@ -26,12 +26,14 @@ import com.github.andlyticsproject.db.AndlyticsContentProvider;
 import com.github.andlyticsproject.db.AppInfoTable;
 import com.github.andlyticsproject.db.AppStatsTable;
 import com.github.andlyticsproject.db.CommentsTable;
+import com.github.andlyticsproject.db.RevenueSummaryTable;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AdmobList;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.AppStatsList;
 import com.github.andlyticsproject.model.Comment;
+import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.Utils;
 
 public class ContentAdapter {
@@ -280,39 +282,42 @@ public class ContentAdapter {
 		return createAppStatsDiff(downloadInfo, previousStats, appInfo);
 	}
 
-	public void insertOrUpdateAppStats(AppStats downloadInfo, String packageName) {
+	public void insertOrUpdateAppStats(AppStats appStats, String packageName) {
 
 		ContentValues values = new ContentValues();
 
 		values.put(AppStatsTable.KEY_STATS_REQUESTDATE,
-				Utils.formatDbDate(downloadInfo.getRequestDate()));
+				Utils.formatDbDate(appStats.getRequestDate()));
 		values.put(AppStatsTable.KEY_STATS_PACKAGENAME, packageName);
-		values.put(AppStatsTable.KEY_STATS_DOWNLOADS, downloadInfo.getTotalDownloads());
-		values.put(AppStatsTable.KEY_STATS_INSTALLS, downloadInfo.getActiveInstalls());
-		values.put(AppStatsTable.KEY_STATS_COMMENTS, downloadInfo.getNumberOfComments());
+		values.put(AppStatsTable.KEY_STATS_DOWNLOADS, appStats.getTotalDownloads());
+		values.put(AppStatsTable.KEY_STATS_INSTALLS, appStats.getActiveInstalls());
+		values.put(AppStatsTable.KEY_STATS_COMMENTS, appStats.getNumberOfComments());
 		values.put(AppStatsTable.KEY_STATS_MARKETERANKING, -1);
 		values.put(AppStatsTable.KEY_STATS_CATEGORYRANKING, -1);
 
-		if (downloadInfo.getRating5() != null) {
-			values.put(AppStatsTable.KEY_STATS_5STARS, downloadInfo.getRating5());
+		if (appStats.getRating5() != null) {
+			values.put(AppStatsTable.KEY_STATS_5STARS, appStats.getRating5());
 		}
-		if (downloadInfo.getRating4() != null) {
-			values.put(AppStatsTable.KEY_STATS_4STARS, downloadInfo.getRating4());
+		if (appStats.getRating4() != null) {
+			values.put(AppStatsTable.KEY_STATS_4STARS, appStats.getRating4());
 		}
-		if (downloadInfo.getRating3() != null) {
-			values.put(AppStatsTable.KEY_STATS_3STARS, downloadInfo.getRating3());
+		if (appStats.getRating3() != null) {
+			values.put(AppStatsTable.KEY_STATS_3STARS, appStats.getRating3());
 		}
-		if (downloadInfo.getRating2() != null) {
-			values.put(AppStatsTable.KEY_STATS_2STARS, downloadInfo.getRating2());
+		if (appStats.getRating2() != null) {
+			values.put(AppStatsTable.KEY_STATS_2STARS, appStats.getRating2());
 		}
-		if (downloadInfo.getRating1() != null) {
-			values.put(AppStatsTable.KEY_STATS_1STARS, downloadInfo.getRating1());
+		if (appStats.getRating1() != null) {
+			values.put(AppStatsTable.KEY_STATS_1STARS, appStats.getRating1());
 		}
-		if (downloadInfo.getVersionCode() != null) {
-			values.put(AppStatsTable.KEY_STATS_VERSIONCODE, downloadInfo.getVersionCode());
+		if (appStats.getVersionCode() != null) {
+			values.put(AppStatsTable.KEY_STATS_VERSIONCODE, appStats.getVersionCode());
 		}
-		if (downloadInfo.getNumberOfErrors() != null) {
-			values.put(AppStatsTable.KEY_STATS_NUM_ERRORS, downloadInfo.getNumberOfErrors());
+		if (appStats.getNumberOfErrors() != null) {
+			values.put(AppStatsTable.KEY_STATS_NUM_ERRORS, appStats.getNumberOfErrors());
+		}
+		if (appStats.getTotalRevenue() != null) {
+			values.put(AppStatsTable.KEY_STATS_TOTAL_REVENUE, appStats.getTotalRevenue());
 		}
 
 		context.getContentResolver().insert(AppStatsTable.CONTENT_URI, values);
@@ -376,6 +381,28 @@ public class ContentAdapter {
 		Uri uri = context.getContentResolver().insert(AppInfoTable.CONTENT_URI, initialValues);
 		long id = Long.parseLong(uri.getPathSegments().get(1));
 		appInfo.setId(id);
+
+		// XXX here?
+		RevenueSummary revenue = appInfo.getTotalRevenueSummary();
+		if (revenue != null) {
+			ContentValues values = new ContentValues();
+			values.put(RevenueSummaryTable.TYPE, revenue.getType().ordinal());
+			values.put(RevenueSummaryTable.CURRENCY, revenue.getCurrency());
+			values.put(RevenueSummaryTable.LAST_DAY_TOTAL, revenue.getLastDay());
+			values.put(RevenueSummaryTable.LAST_7DAYS_TOTAL, revenue.getLast7Days());
+			values.put(RevenueSummaryTable.LAST_30DAYS_TOTAL, revenue.getLast30Days());
+			values.put(RevenueSummaryTable.APPINFO_ID, appInfo.getId());
+
+			if (revenue.getId() == null) {
+				uri = context.getContentResolver().insert(RevenueSummaryTable.CONTENT_URI, values);
+				id = Long.parseLong(uri.getPathSegments().get(1));
+				revenue.setId(id);
+			} else {
+				context.getContentResolver().update(RevenueSummaryTable.CONTENT_URI, values,
+						RevenueSummaryTable.APPINFO_ID + " = ?",
+						new String[] { Long.toString(revenue.getId()) });
+			}
+		}
 
 		backupManager.dataChanged();
 	}
@@ -502,6 +529,10 @@ public class ContentAdapter {
 			stats.init();
 
 			appInfo.setLatestStats(stats);
+
+			//
+			RevenueSummary revenueSummary = getRevenueSummaryForApp(appInfo);
+			appInfo.setTotalRevenueSummary(revenueSummary);
 		}
 
 		return appInfos;
@@ -882,52 +913,97 @@ public class ContentAdapter {
 
 	public AppStats getLatestForApp(String packageName) {
 
-		AppStats info = null;
+		AppStats stats = null;
+		Cursor cursor = null;
+		try {
+			cursor = context.getContentResolver().query(
+					AppStatsTable.CONTENT_URI,
+					new String[] { AppStatsTable.KEY_ROWID, AppStatsTable.KEY_STATS_PACKAGENAME,
+							AppStatsTable.KEY_STATS_DOWNLOADS, AppStatsTable.KEY_STATS_VERSIONCODE,
+							AppStatsTable.KEY_STATS_INSTALLS, AppStatsTable.KEY_STATS_COMMENTS,
+							AppStatsTable.KEY_STATS_MARKETERANKING,
+							AppStatsTable.KEY_STATS_CATEGORYRANKING,
+							AppStatsTable.KEY_STATS_5STARS, AppStatsTable.KEY_STATS_4STARS,
+							AppStatsTable.KEY_STATS_3STARS, AppStatsTable.KEY_STATS_2STARS,
+							AppStatsTable.KEY_STATS_1STARS, AppStatsTable.KEY_STATS_REQUESTDATE,
+							AppStatsTable.KEY_STATS_TOTAL_REVENUE },
+					AppStatsTable.KEY_STATS_PACKAGENAME + " = ?", new String[] { packageName },
+					AppStatsTable.KEY_STATS_REQUESTDATE + " desc limit 1");
 
-		Cursor cursor = context.getContentResolver().query(
-				AppStatsTable.CONTENT_URI,
-				new String[] { AppStatsTable.KEY_ROWID, AppStatsTable.KEY_STATS_PACKAGENAME,
-						AppStatsTable.KEY_STATS_DOWNLOADS, AppStatsTable.KEY_STATS_VERSIONCODE,
-						AppStatsTable.KEY_STATS_INSTALLS, AppStatsTable.KEY_STATS_COMMENTS,
-						AppStatsTable.KEY_STATS_MARKETERANKING,
-						AppStatsTable.KEY_STATS_CATEGORYRANKING, AppStatsTable.KEY_STATS_5STARS,
-						AppStatsTable.KEY_STATS_4STARS, AppStatsTable.KEY_STATS_3STARS,
-						AppStatsTable.KEY_STATS_2STARS, AppStatsTable.KEY_STATS_1STARS,
-						AppStatsTable.KEY_STATS_REQUESTDATE },
-				AppStatsTable.KEY_STATS_PACKAGENAME + "='" + packageName + "'", null,
-				AppStatsTable.KEY_STATS_REQUESTDATE + " desc limit 1");
+			if (cursor.moveToFirst()) {
 
-		if (cursor.moveToFirst()) {
+				do {
+					stats = new AppStats();
+					stats.setActiveInstalls(cursor.getInt(cursor
+							.getColumnIndex(AppStatsTable.KEY_STATS_INSTALLS)));
+					stats.setTotalDownloads(cursor.getInt(cursor
+							.getColumnIndex(AppStatsTable.KEY_STATS_DOWNLOADS)));
+					stats.setRequestDate(Utils.parseDbDate(cursor.getString(cursor
+							.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE))));
+					stats.setNumberOfComments(cursor.getInt(cursor
+							.getColumnIndex(AppStatsTable.KEY_STATS_COMMENTS)));
+					stats.setVersionCode(cursor.getInt(cursor
+							.getColumnIndex(AppStatsTable.KEY_STATS_VERSIONCODE)));
 
-			do {
-				info = new AppStats();
-				info.setActiveInstalls(cursor.getInt(cursor
-						.getColumnIndex(AppStatsTable.KEY_STATS_INSTALLS)));
-				info.setTotalDownloads(cursor.getInt(cursor
-						.getColumnIndex(AppStatsTable.KEY_STATS_DOWNLOADS)));
-				info.setRequestDate(Utils.parseDbDate(cursor.getString(cursor
-						.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE))));
-				info.setNumberOfComments(cursor.getInt(cursor
-						.getColumnIndex(AppStatsTable.KEY_STATS_COMMENTS)));
-				info.setVersionCode(cursor.getInt(cursor
-						.getColumnIndex(AppStatsTable.KEY_STATS_VERSIONCODE)));
+					stats.setRating(
+							cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_1STARS)),
+							cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_2STARS)),
+							cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_3STARS)),
+							cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_4STARS)),
+							cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_5STARS)));
+					int idx = cursor.getColumnIndex(AppStatsTable.KEY_STATS_TOTAL_REVENUE);
+					if (!cursor.isNull(idx)) {
+						stats.setTotalRevenue(cursor.getDouble(idx));
+					}
 
-				info.setRating(
-						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_1STARS)),
-						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_2STARS)),
-						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_3STARS)),
-						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_4STARS)),
-						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_5STARS)));
+					stats.init();
 
-				info.init();
+				} while (cursor.moveToNext());
 
-			} while (cursor.moveToNext());
+			}
 
+			return stats;
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
 		}
+	}
 
-		cursor.close();
+	public RevenueSummary getRevenueSummaryForApp(AppInfo app) {
+		Cursor cursor = null;
 
-		return info;
+		try {
+			cursor = context.getContentResolver().query(RevenueSummaryTable.CONTENT_URI,
+					RevenueSummaryTable.ALL_COLUMNS, RevenueSummaryTable.APPINFO_ID + "=?",
+					new String[] { Long.toString(app.getId()) }, null);
+
+			if (cursor.getCount() == 0) {
+				return null;
+			}
+
+			if (!cursor.moveToFirst()) {
+				return null;
+			}
+
+			int typeIdx = cursor.getInt(cursor.getColumnIndex(RevenueSummaryTable.TYPE));
+			String currency = cursor.getString(cursor.getColumnIndex(RevenueSummaryTable.CURRENCY));
+			double lastDay = cursor.getDouble(cursor
+					.getColumnIndex(RevenueSummaryTable.LAST_DAY_TOTAL));
+			double last7Days = cursor.getDouble(cursor
+					.getColumnIndex(RevenueSummaryTable.LAST_7DAYS_TOTAL));
+			double last30Days = cursor.getDouble(cursor
+					.getColumnIndex(RevenueSummaryTable.LAST_30DAYS_TOTAL));
+			RevenueSummary.Type type = RevenueSummary.Type.values()[typeIdx];
+			RevenueSummary result = new RevenueSummary(type, currency, lastDay, last7Days,
+					last30Days);
+
+			return result;
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
 	}
 
 	@SuppressLint("SimpleDateFormat")

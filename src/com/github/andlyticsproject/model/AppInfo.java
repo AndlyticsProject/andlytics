@@ -47,6 +47,8 @@ public class AppInfo {
 	private String developerId;
 	private String developerName;
 
+	private RevenueSummary totalRevenueSummary;
+
 	public Long getId() {
 		return id;
 	}
@@ -230,6 +232,14 @@ public class AppInfo {
 
 	public void setDeveloperName(String developerName) {
 		this.developerName = developerName;
+	}
+
+	public RevenueSummary getTotalRevenueSummary() {
+		return totalRevenueSummary;
+	}
+
+	public void setTotalRevenueSummary(RevenueSummary totalRevenueSummary) {
+		this.totalRevenueSummary = totalRevenueSummary;
 	}
 
 	// XXX -- do we need to compare everything? 

@@ -44,6 +44,7 @@ import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
+import com.github.andlyticsproject.model.RevenueSummary;
 
 public class MainListAdapter extends BaseAdapter {
 
@@ -93,7 +94,7 @@ public class MainListAdapter extends BaseAdapter {
 
 	private StatsMode statsMode;
 
-	private int expandViewHeightAdmob;
+	private DisplayMetrics displayMetrics;
 
 	public MainListAdapter(Activity activity, String accountname, StatsMode statsMode) {
 		BLACK_TEXT = activity.getResources().getColor(R.color.blackText);
@@ -109,11 +110,10 @@ public class MainListAdapter extends BaseAdapter {
 		this.upInterpolator = new AccelerateInterpolator(1.7f);
 		this.downInterpolator = new BounceInterpolator();
 
-		DisplayMetrics metrics = new DisplayMetrics();
-		activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		this.expandViewHeight = Math.round(metrics.scaledDensity * 150);
-		this.expandViewHeightAdmob = Math.round(metrics.scaledDensity * 200);
-		this.expandMargin = Math.round(metrics.scaledDensity * 5);
+		displayMetrics = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+		this.expandViewHeight = Math.round(displayMetrics.scaledDensity * 150);
+		this.expandMargin = Math.round(displayMetrics.scaledDensity * 5);
 		this.iconDown = activity.getResources().getDrawable(R.drawable.icon_down);
 		this.iconUp = activity.getResources().getDrawable(R.drawable.icon_up);
 
@@ -155,6 +155,10 @@ public class MainListAdapter extends BaseAdapter {
 					.findViewById(R.id.main_app_activeinstalls);
 			holder.activeInstallsPercent = (TextView) convertView
 					.findViewById(R.id.main_app_activeinstallsPercent);
+
+			holder.revenueFrame = (View) convertView.findViewById(R.id.main_app_revenue_frame);
+			holder.totalRevenue = (TextView) convertView
+					.findViewById(R.id.main_app_revenue_total_text);
 
 			holder.admobFrame = (View) convertView.findViewById(R.id.main_app_admob_frame);
 			holder.admobRequests = (TextView) convertView
@@ -294,9 +298,22 @@ public class MainListAdapter extends BaseAdapter {
 		}
 
 		int height = expandViewHeight;
+		RevenueSummary revenue = appDownloadInfo.getTotalRevenueSummary();
+		if (revenue != null && revenue.hasRevenue()) {
+			// 30dp for revenue section?
+			height = Math.round(height + 30 * displayMetrics.scaledDensity);
+			holder.revenueFrame.setVisibility(View.VISIBLE);
+			String template = revenue.getCurrency() + " %.2f/%.2f";
+			holder.totalRevenue.setText(String.format(template, revenue.getLastDay(),
+					revenue.getLast7Days()));
+		} else {
+			holder.revenueFrame.setVisibility(View.GONE);
+		}
+
 		Admob admobStats = appDownloadInfo.getAdmobStats();
 		if (admobStats != null) {
-			height = expandViewHeightAdmob;
+			// 50dp for AdMob section?
+			height = Math.round(height + 50 * displayMetrics.scaledDensity);
 			holder.admobFrame.setVisibility(View.VISIBLE);
 			holder.admobRevenue.setText(numberFormat.format(admobStats.getRevenue()));
 			holder.admobRequests.setText(admobStats.getRequests() + "");
@@ -338,12 +355,12 @@ public class MainListAdapter extends BaseAdapter {
 						R.anim.activity_next_out);
 			}
 		});
-		
+
 		// Make the name look like a ilnk
 		SpannableString name = new SpannableString(appDownloadInfo.getName());
 		name.setSpan(new UnderlineSpan(), 0, name.length(), 0);
 		holder.name.setText(name);
-		
+
 		holder.name.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -352,13 +369,13 @@ public class MainListAdapter extends BaseAdapter {
 				if (iconFile.exists()) {
 					intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
 				}
-				
+
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.activity_next_in,
 						R.anim.activity_next_out);
 			}
 		});
-		
+
 		holder.row.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -612,6 +629,9 @@ public class MainListAdapter extends BaseAdapter {
 		public TextView avgratingPercent;
 		public View buttonHistory;
 		public View ratingFrame;
+
+		public View revenueFrame;
+		public TextView totalRevenue;
 	}
 
 	private class GetCachedImageTask extends AsyncTask<File, Void, Bitmap> {
