@@ -232,8 +232,7 @@
                 android:minWidth="70dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="5dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp" />
+                android:paddingTop="3dp" />
 
             <TextView
                 android:id="@+id/main_app_admob_revenue_total_label"
