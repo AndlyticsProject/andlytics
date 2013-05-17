@@ -1,3 +1,4 @@
+
 package com.github.andlyticsproject.model;
 
 import java.math.BigDecimal;
@@ -73,17 +74,13 @@ public class AppStats {
 	// TODO -- do we support diffs for this?
 	private Integer numberOfErrors;
 
-	// XXX
-	private RevenueSummary totalRevenueSummary = new RevenueSummary("JPY", 0.0, 0.0, 0.0);
-
 	public AppStats() {
 	}
 
 	/**
 	 * Copy Constructor
-	 * 
-	 * @param appStats
-	 * a <code>AppStats</code> object
+	 *
+	 * @param appStats a <code>AppStats</code> object
 	 */
 	public AppStats(AppStats appStats) {
 		this.totalDownloads = appStats.totalDownloads;
@@ -111,8 +108,6 @@ public class AppStats {
 		this.setActiveInstallsPercentString(appStats.getActiveInstallsPercentString());
 		this.versionCode = appStats.versionCode;
 		this.packageName = appStats.packageName;
-		this.numberOfErrors = appStats.numberOfErrors;
-		this.totalRevenueSummary = appStats.totalRevenueSummary;
 	}
 
 	public void init() {
@@ -186,24 +181,24 @@ public class AppStats {
 	public void addRating(int i, int value) {
 
 		switch (i) {
-		case 1:
-			this.rating1 = value;
-			break;
-		case 2:
-			this.rating2 = value;
-			break;
-		case 3:
-			this.rating3 = value;
-			break;
-		case 4:
-			this.rating4 = value;
-			break;
-		case 5:
-			this.rating5 = value;
-			break;
+			case 1:
+				this.rating1 = value;
+				break;
+			case 2:
+				this.rating2 = value;
+				break;
+			case 3:
+				this.rating3 = value;
+				break;
+			case 4:
+				this.rating4 = value;
+				break;
+			case 5:
+				this.rating5 = value;
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 
 	}
@@ -224,24 +219,24 @@ public class AppStats {
 			int value = 0;
 
 			switch (i) {
-			case 1:
-				value = rating1;
-				break;
-			case 2:
-				value = rating2;
-				break;
-			case 3:
-				value = rating3;
-				break;
-			case 4:
-				value = rating4;
-				break;
-			case 5:
-				value = rating5;
-				break;
+				case 1:
+					value = rating1;
+					break;
+				case 2:
+					value = rating2;
+					break;
+				case 3:
+					value = rating3;
+					break;
+				case 4:
+					value = rating4;
+					break;
+				case 5:
+					value = rating5;
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 
 			ratings += i * value;
@@ -299,24 +294,24 @@ public class AppStats {
 				Integer rate = null;
 
 				switch (i) {
-				case 1:
-					rate = rating1;
-					break;
-				case 2:
-					rate = rating2;
-					break;
-				case 3:
-					rate = rating3;
-					break;
-				case 4:
-					rate = rating4;
-					break;
-				case 5:
-					rate = rating5;
-					break;
+					case 1:
+						rate = rating1;
+						break;
+					case 2:
+						rate = rating2;
+						break;
+					case 3:
+						rate = rating3;
+						break;
+					case 4:
+						rate = rating4;
+						break;
+					case 5:
+						rate = rating5;
+						break;
 
-				default:
-					break;
+					default:
+						break;
 				}
 
 				if (rate == null || rate < 1) {
@@ -576,14 +571,6 @@ public class AppStats {
 
 	public Integer getNumberOfErrors() {
 		return numberOfErrors;
-	}
-
-	public RevenueSummary getTotalRevenueSummary() {
-		return totalRevenueSummary;
-	}
-
-	public void setTotalRevenueSummary(RevenueSummary revenue) {
-		this.totalRevenueSummary = revenue;
 	}
 
 }

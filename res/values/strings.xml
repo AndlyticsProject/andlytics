@@ -206,9 +206,4 @@
 	<string name="appinfo_playstore_button">View in the Play Store</string>
 	<string name="appinfo_addlink_button">Add a link</string>
 	<string name="appinfo_app_links">App links</string>
-  
-    <string name="revenue_total">Revenue total (1/7/30d)</string>
-    <string name="revenue_last_day">Revenue last day</string>
-    <string name="revenue_last_7days">Revenue last 7 days</string>
-    <string name="revenue_last_30days">Revenue last 30 days</string>
 </resources>
