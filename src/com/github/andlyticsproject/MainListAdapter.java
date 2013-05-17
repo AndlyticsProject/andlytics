@@ -162,6 +162,9 @@ public class MainListAdapter extends BaseAdapter {
 			holder.totalRevenueLabel = (TextView) convertView
 					.findViewById(R.id.main_app_revenue_total_label);
 
+			holder.totalRevenuePercent = (TextView) convertView
+					.findViewById(R.id.main_app_revenue_totalPercent);
+
 			holder.last30DaysRevenue = (TextView) convertView
 					.findViewById(R.id.main_app_revenue_last_30days_text);
 			holder.last30DaysRevenueLabel = (TextView) convertView
@@ -316,8 +319,10 @@ public class MainListAdapter extends BaseAdapter {
 			double last30Days = revenue.getLast30Days();
 			holder.last30DaysRevenue.setText(String.format(last30Days < 1000 ? "%.2f" : "%.0f", last30Days));
 			holder.last30DaysRevenueLabel.setText(activity.getString(R.string.revenue_last_30days, revenue.getCurrency()));
-			
-			// TODO Setup daily diffs for the total to be shown to the right of the total
+
+			// TODO Drive this with a diff/reset at midnight?
+			setupFloatValueDiff(holder.totalRevenuePercent, (float) revenue.getLastDay(), 
+					String.format("%.2f", revenue.getLastDay()));
 		} else {
 			holder.revenueFrame.setVisibility(View.GONE);
 		}
@@ -647,6 +652,7 @@ public class MainListAdapter extends BaseAdapter {
 		public TextView totalRevenueLabel;
 		public TextView last30DaysRevenueLabel;
 		public TextView last30DaysRevenue;
+		public TextView totalRevenuePercent;
 	}
 
 	private class GetCachedImageTask extends AsyncTask<File, Void, Bitmap> {

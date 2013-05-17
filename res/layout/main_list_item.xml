@@ -242,6 +242,16 @@
                 android:layout_alignBaseline="@+id/main_app_revenue_total_text"
                 android:layout_toRightOf="@+id/main_app_revenue_total_text"
                 android:text="@string/revenue_total" />
+            
+            
+            <TextView
+                android:id="@+id/main_app_revenue_totalPercent"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_revenue_total_text"
+                android:layout_alignParentRight="true"
+                android:paddingRight="55dp" />
 
             <TextView
                 android:id="@+id/main_app_revenue_last_30days_text"
