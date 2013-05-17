@@ -538,7 +538,7 @@ public class JsonParser {
 		double last7Days = revenueObj.getDouble("3");
 		double last30Days = revenueObj.getDouble("5");
 
-		return RevenueSummary.createTotal(currency, lastDay, last7Days, last30Days);
+		return new RevenueSummary(currency, lastDay, last7Days, last30Days);
 	}
 
 	/**

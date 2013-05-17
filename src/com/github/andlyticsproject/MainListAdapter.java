@@ -298,14 +298,14 @@ public class MainListAdapter extends BaseAdapter {
 		}
 
 		int height = expandViewHeight;
-		RevenueSummary revenue = appDownloadInfo.getTotalRevenueSummary();
+		RevenueSummary revenue = appDownloadInfo.getLatestStats().getTotalRevenueSummary();
 		if (revenue != null && revenue.hasRevenue()) {
 			// 30dp for revenue section?
 			height = Math.round(height + 30 * displayMetrics.scaledDensity);
 			holder.revenueFrame.setVisibility(View.VISIBLE);
-			String template = revenue.getCurrency() + " %.2f/%.2f";
+			String template = revenue.getCurrency() + " %.2f/%.2f/%.2f";
 			holder.totalRevenue.setText(String.format(template, revenue.getLastDay(),
-					revenue.getLast7Days()));
+					revenue.getLast7Days(), revenue.getLast30Days()));
 		} else {
 			holder.revenueFrame.setVisibility(View.GONE);
 		}
