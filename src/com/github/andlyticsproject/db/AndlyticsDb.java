@@ -169,13 +169,9 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			//					+ DeveloperAccountsTable.DEVELOPER_ID + " text");
 		}
 		if (oldVersion < 21) {
-			Log.w(TAG, "Old version < 21 - adding revenue_summary table");
+			Log.w(TAG, "Old version < 20 - adding revenue_summary table");
 			db.execSQL("DROP TABLE IF EXISTS " + RevenueSummaryTable.DATABASE_TABLE_NAME);
 			db.execSQL(RevenueSummaryTable.TABLE_CREATE_REVENUE_SUMMARY);
-
-			Log.w(TAG, "Old version < 21 - add new stats colums");
-			db.execSQL("ALTER table " + AppStatsTable.DATABASE_TABLE_NAME + " add "
-					+ AppStatsTable.KEY_STATS_TOTAL_REVENUE + " double");
 		}
 	}
 
@@ -666,7 +662,8 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 
 			RevenueSummary.Type type = RevenueSummary.Type.values()[typeIdx];
 			RevenueSummary revenue = new RevenueSummary(type, currency, lastDayTotal,
-					last7DaysTotal, last30DaysTotal);
+					last7DaysTotal,
+					last30DaysTotal);
 			revenue.setId(id);
 
 			appInfo.setTotalRevenueSummary(revenue);
