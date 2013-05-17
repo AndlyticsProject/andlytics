@@ -94,7 +94,7 @@ public class MainListAdapter extends BaseAdapter {
 
 	private StatsMode statsMode;
 
-	private int expandViewHeightAdmob;
+	private DisplayMetrics displayMetrics;
 
 	public MainListAdapter(Activity activity, String accountname, StatsMode statsMode) {
 		BLACK_TEXT = activity.getResources().getColor(R.color.blackText);
@@ -110,13 +110,10 @@ public class MainListAdapter extends BaseAdapter {
 		this.upInterpolator = new AccelerateInterpolator(1.7f);
 		this.downInterpolator = new BounceInterpolator();
 
-		DisplayMetrics metrics = new DisplayMetrics();
-		activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		// XXX where does this come from?
-		// add some for revenue
-		this.expandViewHeight = Math.round(metrics.scaledDensity * (150 + 30));
-		this.expandViewHeightAdmob = Math.round(metrics.scaledDensity * (200 + 30));
-		this.expandMargin = Math.round(metrics.scaledDensity * 5);
+		displayMetrics = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+		this.expandViewHeight = Math.round(displayMetrics.scaledDensity * 150);
+		this.expandMargin = Math.round(displayMetrics.scaledDensity * 5);
 		this.iconDown = activity.getResources().getDrawable(R.drawable.icon_down);
 		this.iconUp = activity.getResources().getDrawable(R.drawable.icon_up);
 
@@ -300,8 +297,11 @@ public class MainListAdapter extends BaseAdapter {
 
 		}
 
+		int height = expandViewHeight;
 		RevenueSummary revenue = appDownloadInfo.getLatestStats().getTotalRevenueSummary();
-		if (revenue != null) {
+		if (revenue != null && revenue.hasRevenue()) {
+			// 30dp for revenue section?
+			height = Math.round(height + 30 * displayMetrics.scaledDensity);
 			holder.revenueFrame.setVisibility(View.VISIBLE);
 			String template = revenue.getCurrency() + " %.2f/%.2f/%.2f";
 			holder.totalRevenue.setText(String.format(template, revenue.getLastDay(),
@@ -310,10 +310,10 @@ public class MainListAdapter extends BaseAdapter {
 			holder.revenueFrame.setVisibility(View.GONE);
 		}
 
-		int height = expandViewHeight;
 		Admob admobStats = appDownloadInfo.getAdmobStats();
 		if (admobStats != null) {
-			height = expandViewHeightAdmob;
+			// 50dp for AdMob section?
+			height = Math.round(height + 50 * displayMetrics.scaledDensity);
 			holder.admobFrame.setVisibility(View.VISIBLE);
 			holder.admobRevenue.setText(numberFormat.format(admobStats.getRevenue()));
 			holder.admobRequests.setText(admobStats.getRequests() + "");
