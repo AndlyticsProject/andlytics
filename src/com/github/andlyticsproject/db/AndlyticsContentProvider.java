@@ -25,6 +25,7 @@ public class AndlyticsContentProvider extends ContentProvider {
 	private static final int ID_APP_VERSION_CHANGE = 4;
 	private static final int ID_UNIQUE_PACKAGES = 5;
 	private static final int ID_TABLE_LINKS = 6;
+	private static final int ID_TABLE_REVENUE_SUMMARY = 7;
 
 	public static final String AUTHORITY = "com.github.andlyticsproject.db.AndlyticsContentProvider";
 
@@ -54,6 +55,9 @@ public class AndlyticsContentProvider extends ContentProvider {
 		case ID_TABLE_LINKS:
 			count = db.delete(LinksTable.DATABASE_TABLE_NAME, where, whereArgs);
 			break;
+		case ID_TABLE_REVENUE_SUMMARY:
+			count = db.delete(RevenueSummaryTable.DATABASE_TABLE_NAME, where, whereArgs);
+			break;
 
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -76,6 +80,8 @@ public class AndlyticsContentProvider extends ContentProvider {
 			return AdmobTable.CONTENT_TYPE;
 		case ID_APP_VERSION_CHANGE:
 			return APP_VERSION_CHANGE;
+		case ID_TABLE_REVENUE_SUMMARY:
+			return RevenueSummaryTable.CONTENT_TYPE;
 
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -160,7 +166,15 @@ public class AndlyticsContentProvider extends ContentProvider {
 				getContext().getContentResolver().notifyChange(noteUri, null);
 				return noteUri;
 			}
+		case ID_TABLE_REVENUE_SUMMARY:
+			rowId = db.insert(RevenueSummaryTable.DATABASE_TABLE_NAME, null, values);
+			if (rowId > 0) {
+				Uri noteUri = ContentUris.withAppendedId(RevenueSummaryTable.CONTENT_URI, rowId);
+				getContext().getContentResolver().notifyChange(noteUri, null);
+				return noteUri;
+			}
 		}
+
 
 		throw new SQLException("Failed to insert row into " + uri);
 	}
@@ -205,6 +219,10 @@ public class AndlyticsContentProvider extends ContentProvider {
 			qb.setTables(AppInfoTable.DATABASE_TABLE_NAME);
 			qb.setProjectionMap(AppInfoTable.PACKAGE_NAMES_MAP);
 			qb.setDistinct(true);
+			break;
+		case ID_TABLE_REVENUE_SUMMARY:
+			qb.setTables(RevenueSummaryTable.DATABASE_TABLE_NAME);
+			qb.setProjectionMap(RevenueSummaryTable.PROJECTION_MAP);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -257,6 +275,9 @@ public class AndlyticsContentProvider extends ContentProvider {
 		case ID_TABLE_ADMOB:
 			count = db.update(AdmobTable.DATABASE_TABLE_NAME, values, where, whereArgs);
 			break;
+		case ID_TABLE_REVENUE_SUMMARY:
+			count = db.update(RevenueSummaryTable.DATABASE_TABLE_NAME, values, where, whereArgs);
+			break;
 
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -275,7 +296,8 @@ public class AndlyticsContentProvider extends ContentProvider {
 		sUriMatcher.addURI(AUTHORITY, LinksTable.DATABASE_TABLE_NAME, ID_TABLE_LINKS);
 		sUriMatcher.addURI(AUTHORITY, AdmobTable.DATABASE_TABLE_NAME, ID_TABLE_ADMOB);
 		sUriMatcher.addURI(AUTHORITY, APP_VERSION_CHANGE, ID_APP_VERSION_CHANGE);
-
+		sUriMatcher.addURI(AUTHORITY, RevenueSummaryTable.DATABASE_TABLE_NAME,
+				ID_TABLE_REVENUE_SUMMARY);
 	}
 
 	public long getAppStatsIdByDate(String packagename, Date date, SQLiteDatabase db)

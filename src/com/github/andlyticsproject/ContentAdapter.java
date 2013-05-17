@@ -26,12 +26,14 @@ import com.github.andlyticsproject.db.AndlyticsContentProvider;
 import com.github.andlyticsproject.db.AppInfoTable;
 import com.github.andlyticsproject.db.AppStatsTable;
 import com.github.andlyticsproject.db.CommentsTable;
+import com.github.andlyticsproject.db.RevenueSummaryTable;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AdmobList;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.AppStatsList;
 import com.github.andlyticsproject.model.Comment;
+import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.Utils;
 
 public class ContentAdapter {
@@ -377,6 +379,28 @@ public class ContentAdapter {
 		long id = Long.parseLong(uri.getPathSegments().get(1));
 		appInfo.setId(id);
 
+		// XXX here?
+		RevenueSummary revenue = appInfo.getTotalRevenueSummary();
+		if (revenue != null) {
+			ContentValues values = new ContentValues();
+			values.put(RevenueSummaryTable.TYPE, revenue.getType().ordinal());
+			values.put(RevenueSummaryTable.CURRENCY, revenue.getCurrency());
+			values.put(RevenueSummaryTable.LAST_DAY_TOTAL, revenue.getLastDay());
+			values.put(RevenueSummaryTable.LAST_7DAYS_TOTAL, revenue.getLast7Days());
+			values.put(RevenueSummaryTable.LAST_30DAYS_TOTAL, revenue.getLast30Days());
+			values.put(RevenueSummaryTable.APPINFO_ID, appInfo.getId());
+
+			if (revenue.getId() == null) {
+				uri = context.getContentResolver().insert(RevenueSummaryTable.CONTENT_URI, values);
+				id = Long.parseLong(uri.getPathSegments().get(1));
+				revenue.setId(id);
+			} else {
+				context.getContentResolver().update(RevenueSummaryTable.CONTENT_URI, values,
+						RevenueSummaryTable.APPINFO_ID + " = ?",
+						new String[] { Long.toString(revenue.getId()) });
+			}
+		}
+
 		backupManager.dataChanged();
 	}
 
@@ -502,6 +526,10 @@ public class ContentAdapter {
 			stats.init();
 
 			appInfo.setLatestStats(stats);
+
+			//
+			RevenueSummary revenueSummary = getRevenueSummaryForApp(appInfo);
+			appInfo.setTotalRevenueSummary(revenueSummary);
 		}
 
 		return appInfos;
@@ -928,6 +956,42 @@ public class ContentAdapter {
 		cursor.close();
 
 		return info;
+	}
+
+	public RevenueSummary getRevenueSummaryForApp(AppInfo app) {
+		Cursor cursor = null;
+
+		try {
+			cursor = context.getContentResolver().query(RevenueSummaryTable.CONTENT_URI,
+					RevenueSummaryTable.ALL_COLUMNS, RevenueSummaryTable.APPINFO_ID + "=?",
+					new String[] { Long.toString(app.getId()) }, null);
+
+			if (cursor.getCount() == 0) {
+				return null;
+			}
+
+			if (!cursor.moveToFirst()) {
+				return null;
+			}
+
+			int typeIdx = cursor.getInt(cursor.getColumnIndex(RevenueSummaryTable.TYPE));
+			String currency = cursor.getString(cursor.getColumnIndex(RevenueSummaryTable.CURRENCY));
+			double lastDay = cursor.getDouble(cursor
+					.getColumnIndex(RevenueSummaryTable.LAST_DAY_TOTAL));
+			double last7Days = cursor.getDouble(cursor
+					.getColumnIndex(RevenueSummaryTable.LAST_7DAYS_TOTAL));
+			double last30Days = cursor.getDouble(cursor
+					.getColumnIndex(RevenueSummaryTable.LAST_30DAYS_TOTAL));
+			RevenueSummary.Type type = RevenueSummary.Type.values()[typeIdx];
+			RevenueSummary result = new RevenueSummary(type, currency, lastDay, last7Days,
+					last30Days);
+
+			return result;
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
 	}
 
 	@SuppressLint("SimpleDateFormat")

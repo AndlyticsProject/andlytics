@@ -121,7 +121,7 @@ public class DevConsoleV2 implements DevConsole {
 			stats.setNumberOfComments(fetchCommentsCount(app, Utils.getDisplayLocale()));
 
 			RevenueSummary revenue = fetchRevenueSummary(app);
-			stats.setTotalRevenueSummary(revenue);
+			app.setTotalRevenueSummary(revenue);
 		}
 
 		return apps;
