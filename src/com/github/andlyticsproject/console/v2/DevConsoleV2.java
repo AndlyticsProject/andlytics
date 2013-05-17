@@ -122,6 +122,9 @@ public class DevConsoleV2 implements DevConsole {
 
 			RevenueSummary revenue = fetchRevenueSummary(app);
 			app.setTotalRevenueSummary(revenue);
+			if (revenue != null) {
+				stats.setTotalRevenue(revenue.getLastDay());
+			}
 		}
 
 		return apps;

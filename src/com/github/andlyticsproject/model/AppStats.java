@@ -73,6 +73,8 @@ public class AppStats {
 	// TODO -- do we support diffs for this?
 	private Integer numberOfErrors;
 
+	private Double totalRevenue;
+
 	public AppStats() {
 	}
 
@@ -109,6 +111,7 @@ public class AppStats {
 		this.versionCode = appStats.versionCode;
 		this.packageName = appStats.packageName;
 		this.numberOfErrors = appStats.numberOfErrors;
+		this.totalRevenue = appStats.totalRevenue;
 	}
 
 	public void init() {
@@ -572,6 +575,14 @@ public class AppStats {
 
 	public Integer getNumberOfErrors() {
 		return numberOfErrors;
+	}
+
+	public Double getTotalRevenue() {
+		return totalRevenue;
+	}
+
+	public void setTotalRevenue(Double totalRevenue) {
+		this.totalRevenue = totalRevenue;
 	}
 
 }
