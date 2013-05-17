@@ -31,7 +31,4 @@ public class RevenueSummary {
 		return last30Days;
 	}
 
-	public boolean hasRevenue() {
-		return last30Days > 0;
-	}
 }
