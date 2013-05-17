@@ -80,14 +80,14 @@
                 style="@style/MainTableText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignRight="@+id/main_app_rating"
+                android:layout_alignRight="@+id/main_app_icon_frame"
                 android:layout_below="@+id/main_app_ratingbar"
                 android:gravity="right"
                 android:maxLines="1"
                 android:minWidth="65dp"
                 android:paddingBottom="2dp"
                 android:paddingRight="5dp"
-                android:paddingTop="2dp" >
+                android:paddingTop="2dp">  
             </TextView>
 
             <TextView
@@ -110,7 +110,7 @@
                 android:layout_alignParentRight="true"
                 android:paddingRight="50dp" />
         </RelativeLayout>
-
+        
         <RelativeLayout
             android:id="@+id/main_app_download_frame"
             android:layout_width="fill_parent"
@@ -197,12 +197,59 @@
                 android:layout_alignParentRight="true"
                 android:paddingRight="55dp" />
         </RelativeLayout>
+        
+        <RelativeLayout
+            android:id="@+id/main_app_revenue_frame"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_app_download_frame"
+            android:background="@drawable/row_background_inner_borderless"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_more" />
+
+            <View
+                android:id="@+id/main_app_spacer_revenue"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/row_dash" />
+
+            <TextView
+                android:id="@+id/main_app_revenue_total_text"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/main_app_spacer_revenue"
+                android:gravity="right"
+                android:minWidth="70dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp" />
+
+            <TextView
+                android:id="@+id/main_app_admob_revenue_total_label"
+                style="@style/MainTableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/main_app_revenue_total_text"
+                android:layout_toRightOf="@+id/main_app_revenue_total_text"
+                android:text="@string/revenue_total" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/main_app_admob_frame"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/main_app_download_frame"
+            android:layout_below="@+id/main_app_revenue_frame"
             android:background="@drawable/row_background_inner_borderless"
             android:paddingLeft="10dp"
             android:paddingRight="10dp" >
@@ -241,6 +288,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/main_app_admob_revenue"
                 android:layout_toRightOf="@+id/main_app_admob_revenue"
+                android:paddingBottom="3dp"
                 android:text="@string/admob_revenue" />
 
             <TextView

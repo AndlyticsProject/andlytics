@@ -44,6 +44,7 @@ import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
+import com.github.andlyticsproject.model.RevenueSummary;
 
 public class MainListAdapter extends BaseAdapter {
 
@@ -111,8 +112,10 @@ public class MainListAdapter extends BaseAdapter {
 
 		DisplayMetrics metrics = new DisplayMetrics();
 		activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		this.expandViewHeight = Math.round(metrics.scaledDensity * 150);
-		this.expandViewHeightAdmob = Math.round(metrics.scaledDensity * 200);
+		// XXX where does this come from?
+		// add some for revenue
+		this.expandViewHeight = Math.round(metrics.scaledDensity * (150 + 30));
+		this.expandViewHeightAdmob = Math.round(metrics.scaledDensity * (200 + 30));
 		this.expandMargin = Math.round(metrics.scaledDensity * 5);
 		this.iconDown = activity.getResources().getDrawable(R.drawable.icon_down);
 		this.iconUp = activity.getResources().getDrawable(R.drawable.icon_up);
@@ -155,6 +158,10 @@ public class MainListAdapter extends BaseAdapter {
 					.findViewById(R.id.main_app_activeinstalls);
 			holder.activeInstallsPercent = (TextView) convertView
 					.findViewById(R.id.main_app_activeinstallsPercent);
+
+			holder.revenueFrame = (View) convertView.findViewById(R.id.main_app_revenue_frame);
+			holder.totalRevenue = (TextView) convertView
+					.findViewById(R.id.main_app_revenue_total_text);
 
 			holder.admobFrame = (View) convertView.findViewById(R.id.main_app_admob_frame);
 			holder.admobRequests = (TextView) convertView
@@ -293,6 +300,16 @@ public class MainListAdapter extends BaseAdapter {
 
 		}
 
+		RevenueSummary revenue = appDownloadInfo.getLatestStats().getTotalRevenueSummary();
+		if (revenue != null) {
+			holder.revenueFrame.setVisibility(View.VISIBLE);
+			String template = revenue.getCurrency() + " %.2f/%.2f/%.2f";
+			holder.totalRevenue.setText(String.format(template, revenue.getLastDay(),
+					revenue.getLast7Days(), revenue.getLast30Days()));
+		} else {
+			holder.revenueFrame.setVisibility(View.GONE);
+		}
+
 		int height = expandViewHeight;
 		Admob admobStats = appDownloadInfo.getAdmobStats();
 		if (admobStats != null) {
@@ -338,12 +355,12 @@ public class MainListAdapter extends BaseAdapter {
 						R.anim.activity_next_out);
 			}
 		});
-		
+
 		// Make the name look like a ilnk
 		SpannableString name = new SpannableString(appDownloadInfo.getName());
 		name.setSpan(new UnderlineSpan(), 0, name.length(), 0);
 		holder.name.setText(name);
-		
+
 		holder.name.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -352,13 +369,13 @@ public class MainListAdapter extends BaseAdapter {
 				if (iconFile.exists()) {
 					intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
 				}
-				
+
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.activity_next_in,
 						R.anim.activity_next_out);
 			}
 		});
-		
+
 		holder.row.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -612,6 +629,9 @@ public class MainListAdapter extends BaseAdapter {
 		public TextView avgratingPercent;
 		public View buttonHistory;
 		public View ratingFrame;
+
+		public View revenueFrame;
+		public TextView totalRevenue;
 	}
 
 	private class GetCachedImageTask extends AsyncTask<File, Void, Bitmap> {

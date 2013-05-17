@@ -16,6 +16,7 @@ import com.github.andlyticsproject.model.AppDetails;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
+import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.FileUtils;
 
 /**
@@ -92,14 +93,14 @@ public class JsonParser {
 		int latestValue = latestData.getJSONObject("2").getInt("1");
 
 		switch (statsType) {
-			case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
-				stats.setTotalDownloads(latestValue);
-				break;
-			case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
-				stats.setActiveInstalls(latestValue);
-				break;
-			default:
-				break;
+		case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
+			stats.setTotalDownloads(latestValue);
+			break;
+		case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
+			stats.setActiveInstalls(latestValue);
+			break;
+		default:
+			break;
 		}
 
 	}
@@ -500,11 +501,7 @@ public class JsonParser {
 		// {"error":{"data":{"1":ERROR_CODE},"code":ERROR_CODE}}
 		JSONObject jsonObj = new JSONObject(json);
 		if (jsonObj.has("error")) {
-			JSONObject errorObj = jsonObj.getJSONObject("error");
-			String data = errorObj.getJSONObject("data").optString("1");
-			String errorCode = errorObj.optString("code");
-			throw new DevConsoleException(String.format(
-					"Error replying to comment: %s, errorCode=%s", data, errorCode));
+			throw parseError(jsonObj, "replying to comments");
 		}
 		JSONObject replyObj = jsonObj.getJSONObject("result").getJSONObject("1");
 
@@ -513,6 +510,35 @@ public class JsonParser {
 		result.setDate(parseDate(Long.parseLong(replyObj.getString("3"))));
 
 		return result;
+	}
+
+	private static DevConsoleException parseError(JSONObject jsonObj, String message)
+			throws JSONException {
+		JSONObject errorObj = jsonObj.getJSONObject("error");
+		String data = errorObj.getJSONObject("data").optString("1");
+		String errorCode = errorObj.optString("code");
+
+		return new DevConsoleException(String.format("Error %s: %s, errorCode=%s", message, data,
+				errorCode));
+	}
+
+	static RevenueSummary parseRevenueResponse(String json) throws JSONException {
+		JSONObject jsonObj = new JSONObject(json);
+		if (jsonObj.has("error")) {
+			throw parseError(jsonObj, "replying to comments");
+		}
+
+		JSONObject resultObj = jsonObj.getJSONObject("result");
+		String currency = resultObj.getString("1");
+		// 2 -total, 3 -sales, 4- in-app products
+		// we only use total (for now)
+		JSONObject revenueObj = resultObj.getJSONObject("2");
+		// even keys are for previous period
+		double lastDay = revenueObj.getDouble("1");
+		double last7Days = revenueObj.getDouble("3");
+		double last30Days = revenueObj.getDouble("5");
+
+		return new RevenueSummary(currency, lastDay, last7Days, last30Days);
 	}
 
 	/**
