@@ -68,12 +68,12 @@ public class RevenueSummary {
 	public double getLast30Days() {
 		return last30Days;
 	}
-	
+
 	public double getOverall() {
 		return overall;
 	}
 
 	public boolean hasRevenue() {
-		return overall > 0;
+		return overall > 0 || last30Days > 0;
 	}
 }
