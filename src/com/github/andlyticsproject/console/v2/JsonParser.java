@@ -525,7 +525,7 @@ public class JsonParser {
 	static RevenueSummary parseRevenueResponse(String json) throws JSONException {
 		JSONObject jsonObj = new JSONObject(json);
 		if (jsonObj.has("error")) {
-			throw parseError(jsonObj, "replying to comments");
+			throw parseError(jsonObj, "fetch revenue summary");
 		}
 
 		JSONObject resultObj = jsonObj.getJSONObject("result");
@@ -537,7 +537,7 @@ public class JsonParser {
 		double lastDay = revenueObj.getDouble("1");
 		double last7Days = revenueObj.getDouble("3");
 		double last30Days = revenueObj.getDouble("5");
-		double overall = revenueObj.getDouble("7");
+		double overall = revenueObj.optDouble("7");
 
 		return RevenueSummary.createTotal(currency, lastDay, last7Days, last30Days, overall);
 	}
