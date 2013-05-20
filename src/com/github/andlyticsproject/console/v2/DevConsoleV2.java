@@ -338,7 +338,9 @@ public class DevConsoleV2 implements DevConsole {
 			// XXX not pretty, maybe use a dedicated exception?
 			// if we don't have 'view financial info' permission for an app 
 			// getting revenue returns 403. 
-			if (e.getStatusCode() == HttpStatus.SC_FORBIDDEN) {
+			// same sems to apply for 500
+			if (e.getStatusCode() == HttpStatus.SC_FORBIDDEN
+					|| e.getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
 				return null;
 			}
 
