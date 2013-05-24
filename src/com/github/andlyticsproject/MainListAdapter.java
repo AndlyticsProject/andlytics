@@ -16,6 +16,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
@@ -315,14 +316,23 @@ public class MainListAdapter extends BaseAdapter {
 			holder.revenueFrame.setVisibility(View.VISIBLE);
 			double overall = revenue.getOverall();
 			holder.totalRevenue.setText(String.format(overall < 1000 ? "%.2f" : "%.0f", overall));
-			holder.totalRevenueLabel.setText(activity.getString(R.string.revenue_total, revenue.getCurrency()));
+			holder.totalRevenueLabel.setText(activity.getString(R.string.revenue_total,
+					revenue.getCurrency()));
 			double last30Days = revenue.getLast30Days();
-			holder.last30DaysRevenue.setText(String.format(last30Days < 1000 ? "%.2f" : "%.0f", last30Days));
-			holder.last30DaysRevenueLabel.setText(activity.getString(R.string.revenue_last_30days, revenue.getCurrency()));
+			holder.last30DaysRevenue.setText(String.format(last30Days < 1000 ? "%.2f" : "%.0f",
+					last30Days));
+			holder.last30DaysRevenueLabel.setText(activity.getString(R.string.revenue_last_30days,
+					revenue.getCurrency()));
 
 			// TODO Drive this with a diff/reset at midnight?
-			setupFloatValueDiff(holder.totalRevenuePercent, (float) revenue.getLastDay(), 
-					String.format("%.2f", revenue.getLastDay()));
+			// XXX float
+			float rev = (float) revenue.getLastDay();
+			// XXX only parsed and set on HC+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				rev = appStats.getTotalRevenue() == null ? 0 : appStats.getTotalRevenue()
+						.floatValue();
+			}
+			setupFloatValueDiff(holder.totalRevenuePercent, rev, String.format("%.2f", rev));
 		} else {
 			holder.revenueFrame.setVisibility(View.GONE);
 		}

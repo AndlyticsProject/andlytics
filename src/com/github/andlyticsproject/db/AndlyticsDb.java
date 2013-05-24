@@ -19,6 +19,7 @@ import com.github.andlyticsproject.model.AppDetails;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.model.Link;
+import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.Utils;
 
@@ -667,7 +668,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			double overallTotal = c.getDouble(c
 					.getColumnIndex(RevenueSummaryTable.OVERALL_TOTAL));
 
-			RevenueSummary.Type type = RevenueSummary.Type.values()[typeIdx];
+			Revenue.Type type = Revenue.Type.values()[typeIdx];
 			RevenueSummary revenue = new RevenueSummary(type, currency, lastDayTotal,
 					last7DaysTotal, last30DaysTotal, overallTotal);
 			revenue.setId(id);

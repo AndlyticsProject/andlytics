@@ -2,13 +2,9 @@ package com.github.andlyticsproject.model;
 
 public class RevenueSummary {
 
-	public enum Type {
-		TOTAL, SALES, IN_APP
-	}
-
 	private Long id;
 
-	private Type type;
+	private Revenue.Type type;
 	private String currency;
 
 	private double lastDay;
@@ -18,20 +14,23 @@ public class RevenueSummary {
 
 	public static RevenueSummary createTotal(String currency, double lastDay, double last7Days,
 			double last30Days, double overall) {
-		return new RevenueSummary(Type.TOTAL, currency, lastDay, last7Days, last30Days, overall);
+		return new RevenueSummary(Revenue.Type.TOTAL, currency, lastDay, last7Days, last30Days,
+				overall);
 	}
 
 	public static RevenueSummary createSales(String currency, double lastDay, double last7Days,
 			double last30Days, double overall) {
-		return new RevenueSummary(Type.SALES, currency, lastDay, last7Days, last30Days, overall);
+		return new RevenueSummary(Revenue.Type.SALES, currency, lastDay, last7Days, last30Days,
+				overall);
 	}
 
 	public static RevenueSummary createInApp(String currency, double lastDay, double last7Days,
 			double last30Days, double overall) {
-		return new RevenueSummary(Type.IN_APP, currency, lastDay, last7Days, last30Days, overall);
+		return new RevenueSummary(Revenue.Type.IN_APP, currency, lastDay, last7Days, last30Days,
+				overall);
 	}
 
-	public RevenueSummary(Type type, String currency, double lastDay, double last7Days,
+	public RevenueSummary(Revenue.Type type, String currency, double lastDay, double last7Days,
 			double last30Days, double overall) {
 		this.type = type;
 		this.currency = currency;
@@ -49,7 +48,7 @@ public class RevenueSummary {
 		this.id = id;
 	}
 
-	public Type getType() {
+	public Revenue.Type getType() {
 		return type;
 	}
 

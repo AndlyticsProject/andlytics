@@ -1,5 +1,6 @@
 package com.github.andlyticsproject.console.v2;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.http.client.methods.HttpPost;
@@ -11,6 +12,7 @@ import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
+import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.FileUtils;
 
@@ -285,6 +287,22 @@ public class DevConsoleV2Protocol {
 		try {
 			return JsonParser.parseRevenueResponse(json);
 		} catch (JSONException ex) {
+			saveDebugJson(json);
+			throw new DevConsoleProtocolException(json, ex);
+		}
+	}
+
+	String createFetchHistoricalRevenueRequest(String packageName) {
+		checkState();
+
+		return String.format(REVENUE_HISTORICAL_DATA, packageName,
+				sessionCredentials.getXsrfToken());
+	}
+
+	Revenue parseLatestTotalRevenue(String json) {
+		try {
+			return JsonParser.parseLatestTotalRevenue(json);
+		} catch (IOException ex) {
 			saveDebugJson(json);
 			throw new DevConsoleProtocolException(json, ex);
 		}
