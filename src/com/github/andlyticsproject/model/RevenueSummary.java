@@ -20,7 +20,7 @@ public class RevenueSummary {
 
 	public static RevenueSummary createSales(String currency, double lastDay, double last7Days,
 			double last30Days, double overall) {
-		return new RevenueSummary(Revenue.Type.SALES, currency, lastDay, last7Days, last30Days,
+		return new RevenueSummary(Revenue.Type.APP_SALES, currency, lastDay, last7Days, last30Days,
 				overall);
 	}
 

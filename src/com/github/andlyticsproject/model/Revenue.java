@@ -6,7 +6,7 @@ import java.util.Date;
 public class Revenue {
 
 	public enum Type {
-		TOTAL, SALES, IN_APP
+		TOTAL, APP_SALES, IN_APP, SUBSCRIPTIONS
 	}
 
 

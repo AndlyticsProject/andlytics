@@ -565,7 +565,6 @@ public class JsonParser {
 		String currency = null;
 		Date reportDate = null;
 		Date revenueDate = null;
-		Date now = new Date();
 		String revenueType1 = null;
 		String revenueType2 = null;
 		double value = 0;
@@ -578,8 +577,11 @@ public class JsonParser {
 				while (reader.hasNext()) {
 					name = reader.nextName();
 					// 1: sales, 2: in-app, 3: subscriptions?
+					// XXX this doesn't handle the case where there is more 
+					// than one, e.g. app sales + subscriptions
 					if ("1".equals(name) || "2".equals(name) || "3".equals(name)) {
-						// revenue list??
+						// revenue list: date->amount
+						// [{"1":"1304103600000","2":{"2":234.0}},..{"1":"1304449200000","2":{"2":123.0}},...]
 						reader.beginObject();
 						while (reader.hasNext()) {
 							name = reader.nextName();
@@ -617,9 +619,7 @@ public class JsonParser {
 								}
 								reader.endArray();
 							} else if ("2".equals(name)) {
-								//consume
-								//"2":"IN_APP",
-								//"3":"IN_APP"
+								//"APP", "IN_APP",
 								revenueType1 = reader.nextString();
 							} else if ("3".equals(name)) {
 								revenueType2 = reader.nextString();
@@ -634,13 +634,22 @@ public class JsonParser {
 				}
 				reader.endObject();
 			} else if ("xsrf".equals(name)) {
-				// consume XSRF?
+				// consume XSRF
 				reader.nextString();
 			}
 		}
 		reader.endObject();
 
 
-		return new Revenue(Revenue.Type.TOTAL, revenueDate, currency, value);
+		// XXX what happens when there is more than one type?
+		Revenue.Type type = Revenue.Type.TOTAL;
+		if ("APP".equals(revenueType1)) {
+			type = Revenue.Type.APP_SALES;
+		} else if ("IN_APP".equals(revenueType1)) {
+			type = Revenue.Type.IN_APP;
+		} else {
+			type = Revenue.Type.SUBSCRIPTIONS;
+		}
+		return new Revenue(type, revenueDate, currency, value);
 	}
 }
