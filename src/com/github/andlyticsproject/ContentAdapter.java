@@ -33,6 +33,7 @@ import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.AppStatsList;
 import com.github.andlyticsproject.model.Comment;
+import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.Utils;
 
@@ -640,42 +641,47 @@ public class ContentAdapter {
 			limit = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		}
 
-		Cursor cursor = context.getContentResolver().query(
-				AppStatsTable.CONTENT_URI,
-				new String[] { AppStatsTable.KEY_ROWID, AppStatsTable.KEY_STATS_PACKAGENAME,
-						AppStatsTable.KEY_STATS_DOWNLOADS, AppStatsTable.KEY_STATS_INSTALLS,
-						AppStatsTable.KEY_STATS_COMMENTS, AppStatsTable.KEY_STATS_MARKETERANKING,
-						AppStatsTable.KEY_STATS_CATEGORYRANKING, AppStatsTable.KEY_STATS_5STARS,
-						AppStatsTable.KEY_STATS_4STARS, AppStatsTable.KEY_STATS_3STARS,
-						AppStatsTable.KEY_STATS_2STARS, AppStatsTable.KEY_STATS_1STARS,
-						AppStatsTable.KEY_STATS_REQUESTDATE, AppStatsTable.KEY_STATS_VERSIONCODE,
-						AppStatsTable.KEY_STATS_NUM_ERRORS },
-				AppStatsTable.KEY_STATS_PACKAGENAME + "='" + packageName + "'", null,
-				AppStatsTable.KEY_STATS_REQUESTDATE + " desc LIMIT " + limit + ""); // sort
-																					// order
-																					// ->
-																					// new
-																					// to
-																					// old
+		Cursor cursor = context.getContentResolver()
+				.query(AppStatsTable.CONTENT_URI,
+						new String[] { AppStatsTable.KEY_ROWID,
+								AppStatsTable.KEY_STATS_PACKAGENAME,
+								AppStatsTable.KEY_STATS_DOWNLOADS,
+								AppStatsTable.KEY_STATS_INSTALLS, AppStatsTable.KEY_STATS_COMMENTS,
+								AppStatsTable.KEY_STATS_MARKETERANKING,
+								AppStatsTable.KEY_STATS_CATEGORYRANKING,
+								AppStatsTable.KEY_STATS_5STARS, AppStatsTable.KEY_STATS_4STARS,
+								AppStatsTable.KEY_STATS_3STARS, AppStatsTable.KEY_STATS_2STARS,
+								AppStatsTable.KEY_STATS_1STARS,
+								AppStatsTable.KEY_STATS_REQUESTDATE,
+								AppStatsTable.KEY_STATS_VERSIONCODE,
+								AppStatsTable.KEY_STATS_NUM_ERRORS,
+								AppStatsTable.KEY_STATS_TOTAL_REVENUE },
+						AppStatsTable.KEY_STATS_PACKAGENAME + "='" + packageName + "'", null,
+						AppStatsTable.KEY_STATS_REQUESTDATE + " desc LIMIT " + limit + ""); // sort
+																							// order
+																							// ->
+																							// new
+																							// to
+																							// old
 
 		if (cursor.moveToFirst()) {
 			do {
-				AppStats info = new AppStats();
-				info.setActiveInstalls(cursor.getInt(cursor
+				AppStats stats = new AppStats();
+				stats.setActiveInstalls(cursor.getInt(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_INSTALLS)));
-				info.setTotalDownloads(cursor.getInt(cursor
+				stats.setTotalDownloads(cursor.getInt(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_DOWNLOADS)));
 
 				String dateString = cursor.getString(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE));
-				info.setRequestDate(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
+				stats.setRequestDate(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
 
-				info.setNumberOfComments(cursor.getInt(cursor
+				stats.setNumberOfComments(cursor.getInt(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_COMMENTS)));
-				info.setVersionCode(cursor.getInt(cursor
+				stats.setVersionCode(cursor.getInt(cursor
 						.getColumnIndex(AppStatsTable.KEY_STATS_VERSIONCODE)));
 
-				info.setRating(
+				stats.setRating(
 						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_1STARS)),
 						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_2STARS)),
 						cursor.getInt(cursor.getColumnIndex(AppStatsTable.KEY_STATS_3STARS)),
@@ -684,11 +690,15 @@ public class ContentAdapter {
 
 				int idx = cursor.getColumnIndex(AppStatsTable.KEY_STATS_NUM_ERRORS);
 				if (!cursor.isNull(idx)) {
-					info.setNumberOfErrors(cursor.getInt(idx));
+					stats.setNumberOfErrors(cursor.getInt(idx));
 				}
-				info.init();
+				idx = cursor.getColumnIndex(AppStatsTable.KEY_STATS_TOTAL_REVENUE);
+				if (!cursor.isNull(idx)) {
+					stats.setTotalRevenue(cursor.getDouble(idx));
+				}
+				stats.init();
 
-				result.add(info);
+				result.add(stats);
 
 			} while (cursor.moveToNext());
 
@@ -997,7 +1007,7 @@ public class ContentAdapter {
 					.getColumnIndex(RevenueSummaryTable.LAST_30DAYS_TOTAL));
 			double overall = cursor.getDouble(cursor
 					.getColumnIndex(RevenueSummaryTable.OVERALL_TOTAL));
-			RevenueSummary.Type type = RevenueSummary.Type.values()[typeIdx];
+			Revenue.Type type = Revenue.Type.values()[typeIdx];
 			RevenueSummary result = new RevenueSummary(type, currency, lastDay, last7Days,
 					last30Days, overall);
 

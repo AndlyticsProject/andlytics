@@ -15,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.os.Build;
 import android.util.Log;
 
 import com.github.andlyticsproject.console.AuthenticationException;
@@ -25,6 +26,7 @@ import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.DeveloperConsoleAccount;
+import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.Utils;
 
@@ -122,8 +124,19 @@ public class DevConsoleV2 implements DevConsole {
 
 			RevenueSummary revenue = fetchRevenueSummary(app);
 			app.setTotalRevenueSummary(revenue);
-			if (revenue != null) {
-				stats.setTotalRevenue(revenue.getLastDay());
+			//			if (revenue != null) {
+			//				stats.setTotalRevenue(revenue.getLastDay());
+			//			}
+
+			// only works on 11+
+			// XXX the latest recorded revenue is not necessarily today's 
+			// revenue. Check the date and do something clever or revise
+			// how of all this is stored?
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				Revenue latestRevenue = fetchLatestTotalRevenue(app);
+				if (latestRevenue != null) {
+					stats.setTotalRevenue(latestRevenue.getAmount());
+				}
 			}
 		}
 
@@ -334,6 +347,28 @@ public class DevConsoleV2 implements DevConsole {
 					developerId);
 
 			return protocol.parseRevenueResponse(response);
+		} catch (NetworkException e) {
+			// XXX not pretty, maybe use a dedicated exception?
+			// if we don't have 'view financial info' permission for an app 
+			// getting revenue returns 403. 
+			// same sems to apply for 500
+			if (e.getStatusCode() == HttpStatus.SC_FORBIDDEN
+					|| e.getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+				return null;
+			}
+
+			throw e;
+		}
+	}
+
+	private Revenue fetchLatestTotalRevenue(AppInfo appInfo) throws DevConsoleException {
+		try {
+			String developerId = appInfo.getDeveloperId();
+			String response = post(protocol.createRevenueUrl(developerId),
+					protocol.createFetchHistoricalRevenueRequest(appInfo.getPackageName()),
+					developerId);
+
+			return protocol.parseLatestTotalRevenue(response);
 		} catch (NetworkException e) {
 			// XXX not pretty, maybe use a dedicated exception?
 			// if we don't have 'view financial info' permission for an app 
