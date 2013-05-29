@@ -38,7 +38,7 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 
 	private static final String TAG = AccountManagerAuthenticator.class.getSimpleName();
 
-	private static final String DEVELOPER_CONSOLE_URL = "https://play.google.com/apps/publish/v2/";
+	private static final String DEVELOPER_CONSOLE_URL = "https://play.google.com/apps/publish/";
 
 	private static final int REQUEST_AUTHENTICATE = 42;
 
