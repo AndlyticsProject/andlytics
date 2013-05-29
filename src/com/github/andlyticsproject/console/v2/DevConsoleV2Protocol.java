@@ -97,10 +97,10 @@ public class DevConsoleV2Protocol {
 
 		post.addHeader("Host", "play.google.com");
 		post.addHeader("Connection", "keep-alive");
-		post.addHeader("Content-Type", "application/json; charset=utf-8");
+		post.addHeader("Content-Type", "application/javascript; charset=UTF-8");
 		// XXX get this dynamically by fetching and executing the nocache.js file:
 		// https://play.google.com/apps/publish/v2/gwt/com.google.wireless.android.vending.developer.fox.Fox.nocache.js
-		post.addHeader("X-GWT-Permutation", "6957AF5C5433DA24CD27DBA9210BDD27");
+		post.addHeader("X-GWT-Permutation", "7E419416D8BA779A68D417481802D188");
 		post.addHeader("Origin", "https://play.google.com");
 		post.addHeader("X-GWT-Module-Base", "https://play.google.com/apps/publish/gwt/");
 		post.addHeader("Referer", "https://play.google.com/apps/publish/?dev_acc=" + developerId);
