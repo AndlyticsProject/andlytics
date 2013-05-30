@@ -543,7 +543,8 @@ public class JsonParser {
 		double lastDay = revenueObj.getDouble("1");
 		double last7Days = revenueObj.getDouble("3");
 		double last30Days = revenueObj.getDouble("5");
-		double overall = revenueObj.optDouble("7");
+		// NaN is treated like NULL -> DB error
+		double overall = revenueObj.optDouble("7", 0.0);
 
 		return RevenueSummary.createTotal(currency, lastDay, last7Days, last30Days, overall);
 	}
