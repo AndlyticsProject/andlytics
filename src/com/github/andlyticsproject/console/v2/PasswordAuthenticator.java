@@ -90,15 +90,6 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 				throw new AuthenticationException("Auth error: " + response.getStatusLine());
 			}
 
-			cookies = cookieStore.getCookies();
-			String adCookie = findAdCookie(cookies);
-			if (DEBUG) {
-				Log.d(TAG, "AD cookie " + adCookie);
-			}
-			if (adCookie == null) {
-				throw new AuthenticationException("Couldn't get AD cookie.");
-			}
-
 			String responseStr = EntityUtils.toString(response.getEntity());
 			if (DEBUG) {
 				Log.d(TAG, "Response: " + responseStr);
@@ -117,7 +108,7 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 
 			SessionCredentials result = new SessionCredentials(accountName, xsrfToken,
 					developerAccounts);
-			result.addCookies(cookies);
+			result.addCookies(cookieStore.getCookies());
 			result.addWhitelistedFeatures(whitelistedFeatures);
 
 			return result;
