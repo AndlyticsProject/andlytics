@@ -6,9 +6,7 @@ import java.util.List;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
@@ -173,18 +171,6 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				Log.d(TAG, "Response: " + responseStr);
 			}
 
-			CookieStore cookieStore = httpClient.getCookieStore();
-			List<Cookie> cookies = cookieStore.getCookies();
-			String adCookie = findAdCookie(cookies);
-			if (DEBUG) {
-				Log.d(TAG, "AD cookie " + adCookie);
-			}
-			if (adCookie == null) {
-				debugAuthFailure(activity, responseStr);
-
-				throw new AuthenticationException("Couldn't get AD cookie.");
-			}
-
 			DeveloperConsoleAccount[] developerAccounts = findDeveloperAccounts(responseStr);
 			if (developerAccounts == null) {
 				debugAuthFailure(activity, responseStr);
@@ -203,7 +189,7 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 
 			SessionCredentials result = new SessionCredentials(accountName, xsrfToken,
 					developerAccounts);
-			result.addCookies(cookies);
+			result.addCookies(httpClient.getCookieStore().getCookies());
 			result.addWhitelistedFeatures(whitelistedFeatures);
 
 			return result;
