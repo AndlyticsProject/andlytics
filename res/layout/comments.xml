@@ -18,8 +18,8 @@
 			android:layout_height="fill_parent"
 			android:id="@+id/comments_list"
 			android:cacheColorHint="#00000000"
-			android:paddingLeft="5dp"
-			android:paddingRight="5dp"
+			android:paddingLeft="0dp"
+			android:paddingRight="0dp"
 			android:dividerHeight="1dp"
 			android:paddingTop="5dp"
 			android:background="@color/andBackground"
@@ -55,12 +55,5 @@
 	<include
 		android:id="@+id/tabbar_buttonbar"
 		layout="@layout/tabbar" />
-
-	<ImageView
-		android:layout_height="wrap_content"
-		android:src="@drawable/shadow_up"
-		android:layout_width="fill_parent"
-		android:scaleType="fitXY"
-		android:layout_above="@+id/comments_buttonbarSpacer" />
 
 </RelativeLayout>
