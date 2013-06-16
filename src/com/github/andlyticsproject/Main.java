@@ -401,8 +401,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			}
 
 			if (lastUpdateDate != null) {
-				statusText.setText(this.getString(R.string.last_update) + ": "
-						+ Preferences.getDateFormatLong(this).format(lastUpdateDate) + " "
+				statusText.setText(Preferences.getDateFormatLong(this).format(lastUpdateDate) + " "
 						+ timeFormat.format(lastUpdateDate));
 			}
 		}
