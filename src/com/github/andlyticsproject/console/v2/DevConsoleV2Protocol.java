@@ -40,7 +40,7 @@ public class DevConsoleV2Protocol {
 			+ "\"params\":{\"1\":[\"%1$s\"]},\"xsrf\":\"%2$s\"}";
 	// 1$: package name, 2$: start, 3$: num comments to fetch, 4$: display locale, 5$ XSRF
 	static final String GET_REVIEWS_TEMPLATE = "{\"method\":\"getReviews\","
-			+ "\"params\":{\"1\":\"%1$s\",\"2\":%2$d,\"3\":%3$d,\"8\":%4$s},\"xsrf\":\"%5$s\"}";
+			+ "\"params\":{\"1\":\"%1$s\",\"2\":%2$d,\"3\":%3$d,\"8\":\"%4$s\"},\"xsrf\":\"%5$s\"}";
 	// 1$: package name, 2$: stats type, 3$: stats by, 4$: XSRF
 	static final String GET_COMBINED_STATS_TEMPLATE = "{\"method\":\"getCombinedStats\","
 			+ "\"params\":{\"1\":\"%1$s\",\"2\":1,\"3\":%2$d,\"4\":[%3$d]},\"xsrf\":\"%4$s\"}";
