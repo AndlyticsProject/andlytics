@@ -4,19 +4,12 @@
     android:background="@color/andBackground"
     android:paddingBottom="5dp" >
 
-    <View
-        android:id="@+id/main_app_topspacer"
-        android:layout_width="fill_parent"
-        android:layout_height="10dp" >
-    </View>
-
     <include layout="@layout/main_list_item_ratings_details" />
 
     <RelativeLayout
         android:id="@+id/main_app_row"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/main_app_topspacer"
         android:layout_marginRight="5dp"
         android:background="@drawable/row_background" >
 
@@ -461,5 +454,11 @@
                 android:background="@drawable/row_dash" />
         </RelativeLayout>
     </RelativeLayout>
+    
+    <View
+        android:id="@+id/main_app_row"
+        android:layout_width="fill_parent"
+        android:layout_height="10dp" >
+    </View>
 
 </RelativeLayout>
