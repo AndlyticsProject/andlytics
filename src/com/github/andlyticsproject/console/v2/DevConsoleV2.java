@@ -15,7 +15,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.os.Build;
 import android.util.Log;
 
 import com.github.andlyticsproject.console.AuthenticationException;
@@ -124,20 +123,24 @@ public class DevConsoleV2 implements DevConsole {
 
 			RevenueSummary revenue = fetchRevenueSummary(app);
 			app.setTotalRevenueSummary(revenue);
-			//			if (revenue != null) {
-			//				stats.setTotalRevenue(revenue.getLastDay());
-			//			}
+			// this is currently the same as the last item of the historical
+			// data, so save some cycles and don't parse historical
+			// XXX the definition of 'last day' is unclear: GMT? 
+			if (revenue != null) {
+				stats.setTotalRevenue(revenue.getLastDay());
+			}
 
 			// only works on 11+
 			// XXX the latest recorded revenue is not necessarily today's 
 			// revenue. Check the date and do something clever or revise
 			// how of all this is stored?
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				Revenue latestRevenue = fetchLatestTotalRevenue(app);
-				if (latestRevenue != null) {
-					stats.setTotalRevenue(latestRevenue.getAmount());
-				}
-			}
+
+			//			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			//				Revenue latestRevenue = fetchLatestTotalRevenue(app);
+			//				if (latestRevenue != null) {
+			//					stats.setTotalRevenue(latestRevenue.getAmount());
+			//				}
+			//			}
 		}
 
 		return apps;
