@@ -36,7 +36,7 @@ public class StatsCsvReaderWriter {
 	public static final String[] HEADER_LIST = new String[] { "PACKAGE_NAME", "DATE",
 			"TOTAL_DOWNLOADS", "ACTIVE_INSTALLS", "NUMBER_OF_COMMENTS", "1_STAR_RATINGS",
 			"2_STAR_RATINGS", "3_STAR_RATINGS", "4_STAR_RATINGS", "5_STAR_RATINGS", "VERSION_CODE",
-			"NUM_ERRORS" };
+			"NUM_ERRORS", "TOTAL_REVENUE" };
 
 	private static final String EXPORT_DIR = "andlytics/";
 
@@ -108,6 +108,8 @@ public class StatsCsvReaderWriter {
 			line[10] = stat.getVersionCode() + "";
 
 			line[11] = stat.getNumberOfErrors() == null ? "" : stat.getNumberOfErrors().toString();
+
+			line[12] = stat.getTotalRevenue() == null ? "" : stat.getTotalRevenue().toString();
 
 			writer.writeNext(line);
 		}
@@ -224,8 +226,12 @@ public class StatsCsvReaderWriter {
 
 					if (nextLine.length > 11) {
 						String numErrorsStr = nextLine[11];
-						stats.setNumberOfErrors(TextUtils.isEmpty(numErrorsStr) ? null : Integer
-								.parseInt(numErrorsStr));
+						stats.setNumberOfErrors(parseInt(numErrorsStr));
+					}
+
+					if (nextLine.length > 12) {
+						String totalRevenueStr = nextLine[12];
+						stats.setTotalRevenue(parseDouble(totalRevenueStr));
 					}
 
 					appStats.add(stats);
@@ -242,6 +248,16 @@ public class StatsCsvReaderWriter {
 		}
 
 		return appStats;
+	}
+
+	private Double parseDouble(String totalRevenueStr) {
+		return TextUtils.isEmpty(totalRevenueStr) ? null : Double
+				.parseDouble(totalRevenueStr);
+	}
+
+	private Integer parseInt(String intStr) {
+		return TextUtils.isEmpty(intStr) ? null : Integer
+				.parseInt(intStr);
 	}
 
 	public String readPackageName(String fileName) throws ServiceException {
