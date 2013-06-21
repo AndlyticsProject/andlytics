@@ -32,6 +32,8 @@ public class DetailsActivity extends BaseActivity implements ChartFragment.OnCha
 	private AppStatsList statsForApp;
 	private List<Date> versionUpdateDates;
 
+	private String appName;
+
 	public static class TabListener<T extends ChartFragmentBase> implements ActionBar.TabListener {
 
 		private ChartFragment fragment;
@@ -51,9 +53,13 @@ public class DetailsActivity extends BaseActivity implements ChartFragment.OnCha
 				ft.add(android.R.id.content, fragment, tag);
 			} else {
 				ft.show(fragment);
+				activity.setTitle(fragment.getTitle());
 			}
 			if (activity.statsForApp != null && activity.versionUpdateDates != null) {
 				fragment.updateView(activity.statsForApp, activity.versionUpdateDates);
+			}
+			if (activity.appName != null) {
+				activity.getSupportActionBar().setSubtitle(activity.appName);
 			}
 		}
 
@@ -72,6 +78,7 @@ public class DetailsActivity extends BaseActivity implements ChartFragment.OnCha
 		super.onCreate(savedInstanceState);
 
 		smoothEnabled = Preferences.getChartSmooth(this);
+		appName = getDbAdapter().getAppName(packageName);
 
 		content = (ViewGroup) findViewById(R.id.details_content);
 

@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +22,7 @@ import com.github.andlyticsproject.model.AppStatsList;
 
 public abstract class ChartFragment extends ChartFragmentBase {
 
-	private OnChartUpdatedListener mListener;
+	private OnChartUpdatedListener chartUpdatedListener;
 
 	private ListView historyList;
 	private ChartListAdapter historyListAdapter;
@@ -67,10 +66,9 @@ public abstract class ChartFragment extends ChartFragmentBase {
 		oneEntryHint = (View) view.findViewById(R.id.base_chart_one_entry_hint);
 
 		historyList = (ListView) view.findViewById(R.id.base_chart_list);
-		// XXX
-		//		View inflate = getSupportLayoutInflater().inflate(R.layout.chart_list_footer, null);
-		//		historyListFooter = (TextView) inflate.findViewById(R.id.chart_footer_text);
-		//		historyList.addFooterView(inflate, null, false);
+		View inflate = getActivity().getLayoutInflater().inflate(R.layout.chart_list_footer, null);
+		historyListFooter = (TextView) inflate.findViewById(R.id.chart_footer_text);
+		historyList.addFooterView(inflate, null, false);
 
 		historyListAdapter = new ChartListAdapter(getActivity());
 		setAdapter(historyListAdapter);
@@ -85,15 +83,7 @@ public abstract class ChartFragment extends ChartFragmentBase {
 	public void onResume() {
 		super.onResume();
 
-		updateView(mListener.getStatsForApp(), mListener.getVersionUpdateDates());
-		// XXX
-		//		ContentAdapter db = ContentAdapter.getInstance(getActivity().getApplication());
-		//		String packageName = "org.nick.kanjirecognizer";
-		//		boolean smoothEnabled = true;
-		//		Timeframe currentTimeFrame = Timeframe.MONTH_TO_DATE;
-		//		AppStatsList statsForApp = db.getStatsForApp(packageName, currentTimeFrame, smoothEnabled);
-		//		List<Date> versionUpdateDates = db.getVersionUpdateDates(packageName);
-		//		updateView(statsForApp, versionUpdateDates);
+		updateView(chartUpdatedListener.getStatsForApp(), chartUpdatedListener.getVersionUpdateDates());
 	}
 
 	public void updateView(AppStatsList appStatsList, List<Date> versionUpdateDates) {
@@ -134,11 +124,11 @@ public abstract class ChartFragment extends ChartFragmentBase {
 			 */
 			historyListAdapter.notifyDataSetChanged();
 
-			//			if (smoothedValues && currentChartSet.equals(ChartSet.DOWNLOADS)) {
-			//				historyListFooter.setVisibility(View.VISIBLE);
-			//			} else {
-			//				historyListFooter.setVisibility(View.INVISIBLE);
-			//			}
+			if (smoothedValues && currentChartSet.equals(ChartSet.DOWNLOADS)) {
+				historyListFooter.setVisibility(View.VISIBLE);
+			} else {
+				historyListFooter.setVisibility(View.INVISIBLE);
+			}
 
 			if (oneEntryHint != null) {
 				if (statsForApp.size() == 1) {
@@ -147,9 +137,6 @@ public abstract class ChartFragment extends ChartFragmentBase {
 					oneEntryHint.setVisibility(View.INVISIBLE);
 				}
 			}
-
-			// chartFrame.showNext();
-
 		}
 	}
 
@@ -164,22 +151,14 @@ public abstract class ChartFragment extends ChartFragmentBase {
 	}
 
 	protected String getChartHint() {
-		// XXX abstract
-		return "Revenue";
-	}
-
-	// TODO: Rename method, update argument and hook method into UI event
-	public void onButtonPressed(Uri uri) {
-		if (mListener != null) {
-			//			mListener.onFragmentInteraction(uri);
-		}
+		return getString(R.string.revenue);
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mListener = (OnChartUpdatedListener) activity;
+			chartUpdatedListener = (OnChartUpdatedListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnFragmentInteractionListener");
@@ -189,7 +168,7 @@ public abstract class ChartFragment extends ChartFragmentBase {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		mListener = null;
+		chartUpdatedListener = null;
 	}
 
 	public interface OnChartUpdatedListener {
