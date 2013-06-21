@@ -3,7 +3,6 @@
 
     <string name="one_entry_hint_desc">Andlytics collects data over time. to see a meaningful chart come back as soon as more data is available.
         \n\nUsually download stats are updated every 24&#8211;48 hours.</string>
-
     <string name="crash_dialog_title">Sorry&#8230;</string>
     <string name="crash_desc">An unexpected error occurred.\n\nPlease help us to fix this by sending us error report data. Information about the error (stacktrace) and information about your device such as device manufacturer\'s name, device model number, operating system, etc. will be sent to help us identifying the problem.\n\nThanks!\n\n</string>
     <string name="crash_toast">An unexpected error occurred. Information about the error will be sent to help us identifying the problem.</string>
@@ -28,7 +27,6 @@
     <string name="num_active_installs">active installs</string>
     <string name="num_average_rating">average rating</string>
     <string name="num_ratings">ratings</string>
-    
     <string name="auto_sync">Auto synchronization</string>
     <string name="notifications">Notifications</string>
     <string name="statistics_export">Statistics data export</string>
@@ -99,7 +97,6 @@
     <string name="downloads_day">Downloads by day</string>
     <string name="active_installs_percent">Active installs in percent</string>
     <string name="swipe">Swipe to see next chart -></string>
-
     <string name="admob">AdMob</string>
     <string name="admob__revenue">Revenue</string>
     <string name="admob__epc">epc</string>
@@ -112,12 +109,9 @@
     <string name="admob__house_ad_clicks">House ad clicks</string>
     <string name="admob__charts_available">AdMob charts available</string>
     <string name="last_update">Last update</string>
-
     <string name="changelog_title">Changelog</string>
     <string name="changelog_thanks">Thank you for installing Andlytics!</string>
-
     <string name="notification_title">Andlytics change detection</string>
-
     <string name="import_">Import</string>
     <string name="import_no_sdcard_or_file">SD-Card not mounted or invalid file format, can\'t import!</string>
     <string name="import_no_stats_file">Stats file not found: %1$s</string>
@@ -129,22 +123,20 @@
     <string name="import_error">Error during import.</string>
     <string name="import_confirm_dialog_title">Confirm import</string>
     <string name="import_confirm_dialog_message">You already have stats for %d apps. Importing will overwrite them. Continue with import?</string>
-	<string name="export_">Export</string>
-	<string name="export_no_sdcard">SD-Card not mounted, can\'t export!</string>
-	<string name="export_no_app">No app selected, can\'t export!</string>
-	<string name="export_started">Export started.</string>
+    <string name="export_">Export</string>
+    <string name="export_no_sdcard">SD-Card not mounted, can\'t export!</string>
+    <string name="export_no_app">No app selected, can\'t export!</string>
+    <string name="export_started">Export started.</string>
     <string name="export_finished">Export finished.</string>
     <string name="export_failed_to_load_stats">Failed to load app stats.</string>
     <string name="export_saved_to">Saved to</string>
     <string name="export_confirm_dialog_title">Confirm export</string>
     <string name="export_confirm_dialog_message">An export file \'%s\' already exits. Exporting app stats will overwrite it. Continue with export?</string>
     <string name="share">Share</string>
-    
     <string name="manage_accounts">Manage accounts</string>
     <string name="preferences">Preferences</string>
     <string name="loading_app_list">Loading app list…</string>
     <string name="no_published_apps">No published apps found</string>
-    
     <string name="general_preferences">General preferences</string>
     <string name="account_specific_preferences">Account specific preferences</string>
     <string name="notification_when_account_visible">When app is visible</string>
@@ -158,57 +150,57 @@
     <string name="use_google_translate_app_summary">Use the Google Translate app for translating comments, when available.</string>
     <string name="show_comment_auto_translations">Auto translate comments</string>
     <string name="show_comment_auto_translations_summary">Show automatic translations from Google Play</string>
-    
+
     <!-- Errors -->
     <string name="network_error">A network error has occurred. Please try again later</string>
     <string name="signup_error">%1$s is not an android developer account, sign up at:\n\n %2$s</string>
     <string name="auth_error">Authentication failed for: %1$s</string>
     <string name="auth_error_open_browser">Additional authentication required. Tap to login via browser.</string>
     <string name="admob_ratelimit_error">Can\'t load Admob data because Admob has restricted the number of requests from this app, try again later</string>
-    <string name="admob_missing_error">AdMob account %1$s is missing. If this happens repeatedly try moving Andlytics from SD card to internal storage</string>    
-	<string name="admob_invalid_request_error">Error while requesting AdMob API</string>
-	<string name="admob_invalid_token_error">Error while authenticating AdMob account. Please try again later</string>
-	<string name="admob_generic_error">Unabled to load Admob data, please try again later</string>
-	<string name="admob_linked_accounts_error">AdMob accounts that are linked to Google accounts are disable for API access by Google. They are working on a new version of the API that supports OAuth</string>
-	<string name="remote_interface_changed_error">Updates are currently not possible, probably because the remote interface changed.\n\nPlease help us to fix this by sending us error report data. Information about the error (stacktrace) and information about your device such as device manufacturer\'s name, device model number, operating system, etc. will be sent to help us identifying the problem.\n\nThank you!</string>
-	<string name="multiple_dev_accounts_error">Your account is linked to multiple developer consoles. This feature is not supported in andlytics.\n\nYou can unlink additional accounts or ask Google for a public app stats API at: \n\nhttp://support.google.com/googleplay\n\nSorry :(</string>
-	<string name="stats_file_not_specified_error">Stats file not specified as data</string>
-	
-	<string name="admob_initial_import">Initial AdMob import, this may take a while&#8230;</string>
-	<string name="admob_data_prompt">Enter your email and password</string>
-	<string name="admob_password_prompt">Enter your password</string>
-	<string name="admob_authenticating">Authenticating&#8230;</string>
-	<string name="admob_auth_failed">Error: Authentication failed</string>
-	<string name="admob_wrong_password">Error: Wrong password</string>
-	<string name="update_required_title">Sorry, update required</string>
-	<string name="multiple_dev_accounts_title">Multiple Developer Accounts</string>
-	<string name="update_button">Update</string>
-	<string name="send_report_button">Send report</string>
-	
-	<string name="about_title">About Andlytics</string>
+    <string name="admob_missing_error">AdMob account %1$s is missing. If this happens repeatedly try moving Andlytics from SD card to internal storage</string>
+    <string name="admob_invalid_request_error">Error while requesting AdMob API</string>
+    <string name="admob_invalid_token_error">Error while authenticating AdMob account. Please try again later</string>
+    <string name="admob_generic_error">Unabled to load Admob data, please try again later</string>
+    <string name="admob_linked_accounts_error">AdMob accounts that are linked to Google accounts are disable for API access by Google. They are working on a new version of the API that supports OAuth</string>
+    <string name="remote_interface_changed_error">Updates are currently not possible, probably because the remote interface changed.\n\nPlease help us to fix this by sending us error report data. Information about the error (stacktrace) and information about your device such as device manufacturer\'s name, device model number, operating system, etc. will be sent to help us identifying the problem.\n\nThank you!</string>
+    <string name="multiple_dev_accounts_error">Your account is linked to multiple developer consoles. This feature is not supported in andlytics.\n\nYou can unlink additional accounts or ask Google for a public app stats API at: \n\nhttp://support.google.com/googleplay\n\nSorry :(</string>
+    <string name="stats_file_not_specified_error">Stats file not specified as data</string>
+    <string name="admob_initial_import">Initial AdMob import, this may take a while&#8230;</string>
+    <string name="admob_data_prompt">Enter your email and password</string>
+    <string name="admob_password_prompt">Enter your password</string>
+    <string name="admob_authenticating">Authenticating&#8230;</string>
+    <string name="admob_auth_failed">Error: Authentication failed</string>
+    <string name="admob_wrong_password">Error: Wrong password</string>
+    <string name="update_required_title">Sorry, update required</string>
+    <string name="multiple_dev_accounts_title">Multiple Developer Accounts</string>
+    <string name="update_button">Update</string>
+    <string name="send_report_button">Send report</string>
+    <string name="about_title">About Andlytics</string>
     <string name="about_credits">Credits</string>
-	<string name="about_text">Andlytics is open source, please feel free to contribute via GitHub. This app is not associated with Google in any way.\n\nVisit us on:</string>
-	<string name="about_thirdsparty_credits_title">Used 3rd party libraries:</string>
-	
-	<string name="appinfo_link_addedit_dialog_title_add">ADD LINK</string>
-	<string name="appinfo_link_addedit_dialog_title_edit">EDIT LINK</string>
-	<string name="appinfo_link_addedit_dialog_text">This form accepts any http or https URL. market:// links are not supported.</string>
-	<string name="appinfo_link_addedit_dialog_url_label">URL</string>
-	<string name="appinfo_link_addedit_dialog_name_label">Name</string>
-	<string name="appinfo_link_addedit_dialog_name_hint">Leave blank to use a default value</string>
-	<string name="appinfo_link_addedit_dialog_not_url">Your URL does not parse as a URL.</string>
-	<string name="appinfo_package_name_label">Package name</string>
+    <string name="about_text">Andlytics is open source, please feel free to contribute via GitHub. This app is not associated with Google in any way.\n\nVisit us on:</string>
+    <string name="about_thirdsparty_credits_title">Used 3rd party libraries:</string>
+    <string name="appinfo_link_addedit_dialog_title_add">ADD LINK</string>
+    <string name="appinfo_link_addedit_dialog_title_edit">EDIT LINK</string>
+    <string name="appinfo_link_addedit_dialog_text">This form accepts any http or https URL. market:// links are not supported.</string>
+    <string name="appinfo_link_addedit_dialog_url_label">URL</string>
+    <string name="appinfo_link_addedit_dialog_name_label">Name</string>
+    <string name="appinfo_link_addedit_dialog_name_hint">Leave blank to use a default value</string>
+    <string name="appinfo_link_addedit_dialog_not_url">Your URL does not parse as a URL.</string>
+    <string name="appinfo_package_name_label">Package name</string>
     <string name="appinfo_developer">Developer</string>
-	<string name="appinfo_last_store_update_label">Last store update</string>
-	<string name="appinfo_version_name_label">Version</string>
-	<string name="appinfo_description_label">Description</string>
-	<string name="appinfo_changelog_label">Change log</string>
-	<string name="appinfo_playstore_button">View in the Play Store</string>
-	<string name="appinfo_addlink_button">Add a link</string>
-	<string name="appinfo_app_links">App links</string>
-  
+    <string name="appinfo_last_store_update_label">Last store update</string>
+    <string name="appinfo_version_name_label">Version</string>
+    <string name="appinfo_description_label">Description</string>
+    <string name="appinfo_changelog_label">Change log</string>
+    <string name="appinfo_playstore_button">View in the Play Store</string>
+    <string name="appinfo_addlink_button">Add a link</string>
+    <string name="appinfo_app_links">App links</string>
+    <string name="revenue">Revenue</string>
+    <string name="total_revenue">Total revenue</string>
     <string name="revenue_total">%s total revenue</string>
     <string name="revenue_last_day">Revenue last day</string>
     <string name="revenue_last_7days">Revenue last 7 days</string>
     <string name="revenue_last_30days">%s 30 days revenue</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
