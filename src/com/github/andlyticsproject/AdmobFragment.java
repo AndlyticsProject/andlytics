@@ -33,6 +33,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.Timeframe;
+import com.github.andlyticsproject.admob.AdmobRequest;
+import com.github.andlyticsproject.admob.AdmobRequest.SyncCallback;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.Admob;
@@ -66,12 +68,15 @@ public class AdmobFragment extends ChartFragment implements
 		private ContentAdapter db;
 		private String packageName;
 		private Timeframe timeframe;
+		private boolean loadRemote;
 
-		public AdmobDbLoader(Context context, String packageName, Timeframe timeframe) {
+		public AdmobDbLoader(Context context, String packageName, Timeframe timeframe,
+				boolean loadRemote) {
 			super(context);
 			db = ContentAdapter.getInstance(AndlyticsApp.getInstance());
 			this.packageName = packageName;
 			this.timeframe = timeframe;
+			this.loadRemote = loadRemote;
 		}
 
 		@Override
@@ -86,8 +91,22 @@ public class AdmobFragment extends ChartFragment implements
 				Log.w(TAG, "Admob account and site ID not founf for " + packageName);
 				return null;
 			}
-
+			//
+			String currentAdmobAccount = admobDetails[0];
 			String currentSiteId = admobDetails[1];
+
+			if (loadRemote) {
+				List<String> siteList = new ArrayList<String>();
+				siteList.add(currentSiteId);
+
+				AdmobRequest.syncSiteStats(currentAdmobAccount, getContext(), siteList,
+						new SyncCallback() {
+
+							@Override
+							public void initialImportStarted() {
+							}
+						});
+			}
 
 			return db.getAdmobStats(currentSiteId, timeframe);
 		}
@@ -160,10 +179,14 @@ public class AdmobFragment extends ChartFragment implements
 	public void onResume() {
 		super.onResume();
 
+		loadData(getCurrentTimeFrame(), statsActivity.shouldRemoteUpdateStats());
+	}
+
+	private void loadData(Timeframe timeframe, boolean loadRemote) {
 		Bundle args = new Bundle();
 		args.putString("packageName", statsActivity.getPackage());
-		// XXX
-		args.putSerializable("timeframe", Timeframe.MONTH_TO_DATE);
+		args.putSerializable("timeframe", timeframe);
+		args.putBoolean("loadRemote", loadRemote);
 		statsActivity.refreshStarted();
 
 		getLoaderManager().restartLoader(0, args, this);
@@ -187,25 +210,52 @@ public class AdmobFragment extends ChartFragment implements
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		menu.clear();
 		inflater.inflate(R.menu.admob_fragment_menu, menu);
+		//
+		MenuItem activeTimeFrame = null;
+		switch (currentTimeFrame) {
+		case LAST_SEVEN_DAYS:
+			activeTimeFrame = menu.findItem(R.id.itemAdmobsmenuTimeframe7);
+			break;
+		case LAST_THIRTY_DAYS:
+			activeTimeFrame = menu.findItem(R.id.itemAdmobsmenuTimeframe30);
+			break;
+		case LAST_NINETY_DAYS:
+			activeTimeFrame = menu.findItem(R.id.itemAdmobsmenuTimeframe90);
+			break;
+		case UNLIMITED:
+			activeTimeFrame = menu.findItem(R.id.itemAdmobsmenuTimeframeUnlimited);
+			break;
+		case MONTH_TO_DATE:
+			activeTimeFrame = menu.findItem(R.id.itemAdmobsmenuTimeframeMonthToDate);
+			break;
+		}
+		activeTimeFrame.setChecked(true);
+
 		String[] admobDetails = AndlyticsDb.getInstance(getActivity()).getAdmobDetails(
 				statsActivity.getPackage());
 
 		if (statsActivity.isRefreshing()) {
-			menu.findItem(R.id.itemChartsmenuRefresh).setActionView(
+			menu.findItem(R.id.itemAdmobsmenuRefresh).setActionView(
 					R.layout.action_bar_indeterminate_progress);
 		}
 		if (admobDetails == null) {
 			menu.findItem(R.id.itemAdmobsmenuRemove).setVisible(false);
-			menu.findItem(R.id.itemChartsmenuTimeframe).setVisible(false);
-			menu.findItem(R.id.itemChartsmenuRefresh).setVisible(statsActivity.isRefreshing());
+			menu.findItem(R.id.itemAdmobsmenuTimeframe).setVisible(false);
+			menu.findItem(R.id.itemAdmobsmenuRefresh).setVisible(statsActivity.isRefreshing());
 		}
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Context ctx = getActivity();
+		if (ctx == null) {
+			return false;
+		}
+
 		switch (item.getItemId()) {
-		case R.id.itemChartsmenuRefresh:
+		case R.id.itemAdmobsmenuRefresh:
 			setChartIgnoreCallLayouts(true);
 			loadRemoteEntries();
 			return true;
@@ -219,13 +269,48 @@ public class AdmobFragment extends ChartFragment implements
 			mainViewSwitcher.swap();
 			getActivity().supportInvalidateOptionsMenu();
 			return true;
+		case R.id.itemAdmobsmenuTimeframe7:
+			currentTimeFrame = Timeframe.LAST_SEVEN_DAYS;
+			executeLoadData(currentTimeFrame);
+			Preferences.saveChartTimeframe(Timeframe.LAST_SEVEN_DAYS, ctx);
+			item.setChecked(true);
+			return true;
+		case R.id.itemAdmobsmenuTimeframe30:
+			currentTimeFrame = Timeframe.LAST_THIRTY_DAYS;
+			executeLoadData(currentTimeFrame);
+			Preferences.saveChartTimeframe(Timeframe.LAST_THIRTY_DAYS, ctx);
+			item.setChecked(true);
+			return true;
+		case R.id.itemAdmobsmenuTimeframe90:
+			currentTimeFrame = Timeframe.LAST_NINETY_DAYS;
+			executeLoadData(currentTimeFrame);
+			Preferences.saveChartTimeframe(Timeframe.LAST_NINETY_DAYS, ctx);
+			item.setChecked(true);
+			return true;
+		case R.id.itemAdmobsmenuTimeframeUnlimited:
+			currentTimeFrame = Timeframe.UNLIMITED;
+			executeLoadData(currentTimeFrame);
+			Preferences.saveChartTimeframe(Timeframe.UNLIMITED, ctx);
+			item.setChecked(true);
+			return true;
+		case R.id.itemAdmobsmenuTimeframeMonthToDate:
+			currentTimeFrame = Timeframe.MONTH_TO_DATE;
+			executeLoadData(currentTimeFrame);
+			Preferences.saveChartTimeframe(Timeframe.MONTH_TO_DATE, ctx);
+			item.setChecked(true);
+			return true;
 		default:
 			return (super.onOptionsItemSelected(item));
 		}
 	}
 
 	private void loadRemoteEntries() {
-		// XXX
+		loadData(currentTimeFrame, true);
+	}
+
+	@Override
+	protected void executeLoadData(Timeframe currentTimeFrame) {
+		loadData(currentTimeFrame, false);
 	}
 
 	@Override
@@ -323,11 +408,6 @@ public class AdmobFragment extends ChartFragment implements
 	}
 
 	private void loadChartData(List<Admob> statsForApp) {
-		/*
-		 * if(radioLastThrity != null) { radioLastThrity.setEnabled(false);
-		 * radioUnlimited.setEnabled(false); checkSmooth.setEnabled(false); }
-		 */
-
 		if (statsForApp != null && statsForApp.size() > 0) {
 			updateCharts(statsForApp);
 
@@ -342,11 +422,6 @@ public class AdmobFragment extends ChartFragment implements
 			// chartFrame.showNext();
 
 		}
-		/*
-		 * if(radioLastThrity != null) { radioLastThrity.setEnabled(true);
-		 * radioUnlimited.setEnabled(true); checkSmooth.setEnabled(true); }
-		 */
-
 	}
 
 	@Override
@@ -391,12 +466,14 @@ public class AdmobFragment extends ChartFragment implements
 	public Loader<LoaderResult<AdmobList>> onCreateLoader(int id, Bundle args) {
 		String packageName = null;
 		Timeframe timeframe = null;
+		boolean loadRemote = false;
 		if (args != null) {
 			packageName = args.getString("packageName");
 			timeframe = (Timeframe) args.getSerializable("timeframe");
+			loadRemote = args.getBoolean("loadRemote");
 		}
 
-		return new AdmobDbLoader(getActivity(), packageName, timeframe);
+		return new AdmobDbLoader(getActivity(), packageName, timeframe, loadRemote);
 	}
 
 	@Override

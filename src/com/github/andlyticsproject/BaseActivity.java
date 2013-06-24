@@ -330,7 +330,7 @@ public class BaseActivity extends SherlockFragmentActivity {
 		return (AndlyticsApp) getApplication();
 	}
 
-	protected boolean shouldRemoteUpdateStats() {
+	public boolean shouldRemoteUpdateStats() {
 		long now = System.currentTimeMillis();
 		long lastUpdate = developerAccountManager.getLastStatsRemoteUpdateTime(accountName);
 		// never updated

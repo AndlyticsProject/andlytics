@@ -186,6 +186,8 @@ public abstract class ChartFragment extends ChartFragmentBase {
 
 		public void refreshFinished();
 
+		public boolean shouldRemoteUpdateStats();
+
 		// XXX do NOT name this `getPackageName()`, will override 
 		// core activity method and crash the ActivityManager.
 		public String getPackage();

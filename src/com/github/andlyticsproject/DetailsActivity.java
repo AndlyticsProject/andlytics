@@ -328,7 +328,7 @@ public class DetailsActivity extends BaseActivity implements ChartFragment.Detai
 
 	public void updateView(AppStatsList statsForApp, List<Date> versionUpdateDates) {
 		// XXX is there a better way?
-		String[] tabTags = { "ratings_tab", "downloads_tab", "revenue_tab" };
+		String[] tabTags = { "ratings_tab", "downloads_tab", "revenue_tab", "admob_tab" };
 		String tabTag = tabTags[getSupportActionBar().getSelectedNavigationIndex()];
 		ChartFragment chartFargment = (ChartFragment) getSupportFragmentManager()
 				.findFragmentByTag(tabTag);

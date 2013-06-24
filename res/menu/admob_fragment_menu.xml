@@ -2,32 +2,32 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/itemChartsmenuRefresh"
+        android:id="@+id/itemAdmobsmenuRefresh"
         android:icon="@drawable/icon_refresh"
         android:showAsAction="ifRoom"
         android:title="@string/refresh">
     </item>
     <item
-        android:id="@+id/itemChartsmenuTimeframe"
+        android:id="@+id/itemAdmobsmenuTimeframe"
         android:icon="@drawable/icon_calendar"
         android:showAsAction="ifRoom|withText"
         android:title="@string/time_frame">
         <menu>
             <group android:checkableBehavior="single" >
                 <item
-                    android:id="@+id/itemChartsmenuTimeframe7"
+                    android:id="@+id/itemAdmobsmenuTimeframe7"
                     android:title="@string/seven_days"/>
                 <item
-                    android:id="@+id/itemChartsmenuTimeframe30"
+                    android:id="@+id/itemAdmobsmenuTimeframe30"
                     android:title="@string/thirty_days"/>
                 <item
-                    android:id="@+id/itemChartsmenuTimeframe90"
+                    android:id="@+id/itemAdmobsmenuTimeframe90"
                     android:title="@string/ninety_days"/>
                 <item
-                    android:id="@+id/itemChartsmenuTimeframeMonthToDate"
+                    android:id="@+id/itemAdmobsmenuTimeframeMonthToDate"
                     android:title="@string/month_to_date"/>
                 <item
-                    android:id="@+id/itemChartsmenuTimeframeUnlimited"
+                    android:id="@+id/itemAdmobsmenuTimeframeUnlimited"
                     android:title="@string/unlimited"/>
             </group>
         </menu>
