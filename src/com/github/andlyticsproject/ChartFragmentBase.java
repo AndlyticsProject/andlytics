@@ -15,6 +15,7 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.Gallery;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
@@ -65,15 +66,12 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.chart_fragment, container, false);
 
-		// XXX what is this for?
-		//		List<View> extras;
-		//
-		//		extras = getExtraFullViews();
-		//		if (extras != null) {
-		//			ViewSwitcher vs = (ViewSwitcher) findViewById(R.id.base_chart_viewswitcher_config);
-		//			for (View v : extras)
-		//				vs.addView(v);
-		//		}
+		List<View> extras = getExtraFullViews(view);
+		if (extras != null) {
+			ViewSwitcher vs = (ViewSwitcher) view.findViewById(R.id.base_chart_viewswitcher_config);
+			for (View v : extras)
+				vs.addView(v);
+		}
 
 		currentTimeFrame = Preferences.getChartTimeframe(getActivity());
 
@@ -162,8 +160,8 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 
 	protected abstract void notifyChangedDataformat();
 
-	protected List<View> getExtraFullViews() {
-		return null;
+	protected List<View> getExtraFullViews(View root) {
+		return new ArrayList<View>();
 	}
 
 	protected abstract void executeLoadData(Timeframe currentTimeFrame);

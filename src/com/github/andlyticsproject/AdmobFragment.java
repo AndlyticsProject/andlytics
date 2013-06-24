@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import android.accounts.Account;
@@ -23,6 +24,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
@@ -34,6 +37,7 @@ import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AdmobList;
+import com.github.andlyticsproject.model.AppStatsList;
 import com.github.andlyticsproject.util.LoaderBase;
 import com.github.andlyticsproject.util.LoaderResult;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
@@ -129,7 +133,7 @@ public class AdmobFragment extends ChartFragment implements
 		setAdapter(admobListAdapter);
 
 		String[] admobDetails = AndlyticsDb.getInstance(getActivity()).getAdmobDetails(
-				statsActivity.getPackageName());
+				statsActivity.getPackage());
 		if (admobDetails == null) {
 			mainViewSwitcher.swap();
 			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
@@ -157,12 +161,17 @@ public class AdmobFragment extends ChartFragment implements
 		super.onResume();
 
 		Bundle args = new Bundle();
-		args.putString("packageName", statsActivity.getPackageName());
+		args.putString("packageName", statsActivity.getPackage());
 		// XXX
 		args.putSerializable("timeframe", Timeframe.MONTH_TO_DATE);
 		statsActivity.refreshStarted();
 
 		getLoaderManager().restartLoader(0, args, this);
+	}
+
+	@Override
+	public void updateView(AppStatsList appStatsList, List<Date> versionUpdateDates) {
+		// XXX do nothing, need to redesign super class
 	}
 
 	@Override
@@ -178,11 +187,9 @@ public class AdmobFragment extends ChartFragment implements
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		menu.clear();
-		inflater.inflate(R.menu.admob_menu, menu);
-		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.admob_fragment_menu, menu);
 		String[] admobDetails = AndlyticsDb.getInstance(getActivity()).getAdmobDetails(
-				statsActivity.getPackageName());
+				statsActivity.getPackage());
 
 		if (statsActivity.isRefreshing()) {
 			menu.findItem(R.id.itemChartsmenuRefresh).setActionView(
@@ -203,7 +210,7 @@ public class AdmobFragment extends ChartFragment implements
 			loadRemoteEntries();
 			return true;
 		case R.id.itemAdmobsmenuRemove:
-			AndlyticsDb.getInstance(getActivity()).saveAdmobDetails(statsActivity.getPackageName(),
+			AndlyticsDb.getInstance(getActivity()).saveAdmobDetails(statsActivity.getPackage(),
 					null, null);
 			showAccountList();
 			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
@@ -349,32 +356,34 @@ public class AdmobFragment extends ChartFragment implements
 	}
 
 	@Override
-	protected List<View> getExtraFullViews() {
-		return new ArrayList<View>();
-		// XXX
-		//		configSwitcher = (ViewSwitcher) findViewById(R.id.base_chart_viewswitcher_config);
-		//		configSwitcher.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
-		//		configSwitcher.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_left));
-		//		List<View> ret = new ArrayList<View>();
-		//		RelativeLayout ll;
-		//
-		//		ll = (RelativeLayout) getLayoutInflater().inflate(R.layout.admob_config_selectapp, null);
-		//		siteList = (ViewGroup) ll.findViewById(R.id.admob_sitelist);
-		//		ret.add(ll);
-		//
-		//		ll = (RelativeLayout) getLayoutInflater().inflate(R.layout.admob_config_addaccount, null);
-		//		accountList = (ViewGroup) ll.findViewById(R.id.admob_accountlist);
-		//		addAccountButton = (View) ll.findViewById(R.id.admob_addaccount_button);
-		//		ret.add(ll);
-		//
-		//		addAccountButton.setOnClickListener(new OnClickListener() {
-		//
-		//			@Override
-		//			public void onClick(View v) {
-		//				addNewAdmobAccount();
-		//			}
-		//		});
-		//		return ret;
+	protected List<View> getExtraFullViews(View view) {
+		configSwitcher = (ViewSwitcher) view.findViewById(R.id.base_chart_viewswitcher_config);
+		configSwitcher.setInAnimation(AnimationUtils.loadAnimation(getActivity(),
+				R.anim.slide_in_right));
+		configSwitcher.setOutAnimation(AnimationUtils.loadAnimation(getActivity(),
+				R.anim.slide_out_left));
+		List<View> ret = new ArrayList<View>();
+		RelativeLayout ll;
+
+		ll = (RelativeLayout) getActivity().getLayoutInflater().inflate(
+				R.layout.admob_config_selectapp, null);
+		siteList = (ViewGroup) ll.findViewById(R.id.admob_sitelist);
+		ret.add(ll);
+
+		ll = (RelativeLayout) getActivity().getLayoutInflater().inflate(
+				R.layout.admob_config_addaccount, null);
+		accountList = (ViewGroup) ll.findViewById(R.id.admob_accountlist);
+		addAccountButton = (View) ll.findViewById(R.id.admob_addaccount_button);
+		ret.add(ll);
+
+		addAccountButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				addNewAdmobAccount();
+			}
+		});
+		return ret;
 
 	}
 

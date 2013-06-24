@@ -374,7 +374,7 @@ public class BaseActivity extends SherlockFragmentActivity {
 		return skipMainReload;
 	}
 
-	public String getPackageName() {
+	public String getPackage() {
 		return packageName;
 	}
 
