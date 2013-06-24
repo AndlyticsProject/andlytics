@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
@@ -36,7 +37,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 
 	//	private LayoutInflater layoutInflater;
 
-	private BaseActivity activity;
+	private Activity activity;
 
 	//	private Object currentChart;
 
@@ -46,7 +47,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 
 	private Admob overallStats;
 
-	public AdmobListAdapter(BaseChartActivity activity) {
+	public AdmobListAdapter(Activity activity) {
 		super(activity);
 		this.stats = new ArrayList<Admob>();
 		//		this.layoutInflater = activity.getLayoutInflater();

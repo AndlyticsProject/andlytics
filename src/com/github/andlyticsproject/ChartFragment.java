@@ -22,7 +22,7 @@ import com.github.andlyticsproject.model.AppStatsList;
 
 public abstract class ChartFragment extends ChartFragmentBase {
 
-	private OnChartUpdatedListener chartUpdatedListener;
+	protected DetailedStatsActivity statsActivity;
 
 	private ListView historyList;
 	private ChartListAdapter historyListAdapter;
@@ -83,7 +83,7 @@ public abstract class ChartFragment extends ChartFragmentBase {
 	public void onResume() {
 		super.onResume();
 
-		updateView(chartUpdatedListener.getStatsForApp(), chartUpdatedListener.getVersionUpdateDates());
+		updateView(statsActivity.getStatsForApp(), statsActivity.getVersionUpdateDates());
 	}
 
 	public void updateView(AppStatsList appStatsList, List<Date> versionUpdateDates) {
@@ -158,7 +158,7 @@ public abstract class ChartFragment extends ChartFragmentBase {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			chartUpdatedListener = (OnChartUpdatedListener) activity;
+			statsActivity = (DetailedStatsActivity) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnFragmentInteractionListener");
@@ -168,14 +168,29 @@ public abstract class ChartFragment extends ChartFragmentBase {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		chartUpdatedListener = null;
+		statsActivity = null;
 	}
 
-	public interface OnChartUpdatedListener {
+	// XXX rename once legacy ChartActivity is removed?
+	public interface DetailedStatsActivity {
 
 		public AppStatsList getStatsForApp();
 
 		public List<Date> getVersionUpdateDates();
+
+		public void handleUserVisibleException(Exception e);
+
+		public boolean isRefreshing();
+
+		public void refreshStarted();
+
+		public void refreshFinished();
+
+		public String getPackageName();
+
+		public String getDeveloperId();
+
+		public String getAccountName();
 	}
 
 	@Override

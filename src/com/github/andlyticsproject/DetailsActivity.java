@@ -19,7 +19,7 @@ import com.github.andlyticsproject.model.AppStatsList;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
-public class DetailsActivity extends BaseActivity implements ChartFragment.OnChartUpdatedListener {
+public class DetailsActivity extends BaseActivity implements ChartFragment.DetailedStatsActivity {
 
 	private static final String TAG = DetailsActivity.class.getSimpleName();
 	private static final boolean DEBUG = true;
@@ -82,39 +82,46 @@ public class DetailsActivity extends BaseActivity implements ChartFragment.OnCha
 
 		content = (ViewGroup) findViewById(R.id.details_content);
 
-		ActionBar actionBar = getSupportActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		//		ActionBar actionBar = getSupportActionBar();
+		//		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		//
+		//		Tab tab = actionBar
+		//				.newTab()
+		//				.setText(R.string.ratings)
+		//				.setTabListener(
+		//						new TabListener<RatingsFragment>(this, "ratings_tab", RatingsFragment.class));
+		//		actionBar.addTab(tab);
+		//
+		//		tab = actionBar
+		//				.newTab()
+		//				.setText(R.string.downloads)
+		//				.setTabListener(
+		//						new TabListener<DownloadsFragment>(this, "downloads_tab",
+		//								DownloadsFragment.class));
+		//		actionBar.addTab(tab);
+		//
+		//		tab = actionBar
+		//				.newTab()
+		//				.setText(R.string.revenue)
+		//				.setTabListener(
+		//						new TabListener<RevenueFragment>(this, "revenue_tab", RevenueFragment.class));
+		//		actionBar.addTab(tab);
 
-		Tab tab = actionBar
-				.newTab()
-				.setText(R.string.ratings)
-				.setTabListener(
-						new TabListener<RatingsFragment>(this, "ratings_tab", RatingsFragment.class));
-		actionBar.addTab(tab);
+		//		tab = actionBar
+		//				.newTab()
+		//				.setText(R.string.admob)
+		//				.setTabListener(
+		//						new TabListener<AdmobFragment>(this, "admob_tab", AdmobFragment.class));
+		//		actionBar.addTab(tab);
 
-		tab = actionBar
-				.newTab()
-				.setText(R.string.downloads)
-				.setTabListener(
-						new TabListener<DownloadsFragment>(this, "downloads_tab",
-								DownloadsFragment.class));
-		actionBar.addTab(tab);
-
-		tab = actionBar
-				.newTab()
-				.setText(R.string.revenue)
-				.setTabListener(
-						new TabListener<RevenueFragment>(this, "revenue_tab", RevenueFragment.class));
-		actionBar.addTab(tab);
-
-		if (getLastCustomNonConfigurationInstance() != null) {
-			loadChartData = (LoadChartData) getLastCustomNonConfigurationInstance();
-			loadChartData.attach(this);
-			if (loadChartData.statsForApp != null && loadChartData.versionUpdateDates != null) {
-				updateView(loadChartData.statsForApp, loadChartData.versionUpdateDates);
-				dataUpdateRequested = false;
-			}
-		}
+		//		if (getLastCustomNonConfigurationInstance() != null) {
+		//			loadChartData = (LoadChartData) getLastCustomNonConfigurationInstance();
+		//			loadChartData.attach(this);
+		//			if (loadChartData.statsForApp != null && loadChartData.versionUpdateDates != null) {
+		//				updateView(loadChartData.statsForApp, loadChartData.versionUpdateDates);
+		//				dataUpdateRequested = false;
+		//			}
+		//		}
 	}
 
 	@Override

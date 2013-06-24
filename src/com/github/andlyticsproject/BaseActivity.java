@@ -374,4 +374,16 @@ public class BaseActivity extends SherlockFragmentActivity {
 		return skipMainReload;
 	}
 
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public String getDeveloperId() {
+		return developerId;
+	}
+
+	public String getAccountName() {
+		return accountName;
+	}
+
 }
