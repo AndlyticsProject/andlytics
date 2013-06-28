@@ -28,8 +28,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/icon_more" >
-            </ImageView>
+                android:src="@drawable/icon_more" />
 
             <RelativeLayout
                 android:id="@+id/main_app_icon_frame"
@@ -43,8 +42,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="2dp"
-                    android:src="@drawable/default_app_icon" >
-                </ImageView>
+                    android:src="@drawable/default_app_icon" />
             </RelativeLayout>
 
             <TextView
@@ -80,8 +78,7 @@
                 android:minWidth="65dp"
                 android:paddingBottom="2dp"
                 android:paddingRight="5dp"
-                android:paddingTop="2dp" >
-            </TextView>
+                android:paddingTop="2dp" />
 
             <TextView
                 android:id="@+id/main_app_commentscountText"
@@ -314,8 +311,7 @@
                 android:layout_below="@+id/main_app_spacer2"
                 android:maxLines="1"
                 android:paddingRight="5dp"
-                android:paddingTop="2dp" >
-            </TextView>
+                android:paddingTop="2dp" />
 
             <TextView
                 android:id="@+id/main_app_avgratingText"
@@ -336,8 +332,7 @@
                 android:gravity="right"
                 android:minWidth="70dp"
                 android:paddingBottom="5dp"
-                android:paddingRight="5dp" >
-            </TextView>
+                android:paddingRight="5dp" />
 
             <TextView
                 android:id="@+id/main_app_avgratingPercent"
@@ -380,7 +375,6 @@
     <View
         android:id="@+id/main_app_row"
         android:layout_width="fill_parent"
-        android:layout_height="10dp" >
-    </View>
+        android:layout_height="10dp" />
 
 </RelativeLayout>
