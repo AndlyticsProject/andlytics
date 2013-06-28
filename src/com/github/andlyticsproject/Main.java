@@ -236,7 +236,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent i = null;
 		switch (item.getItemId()) {
 		case R.id.itemMainmenuRefresh:
 			loadRemoteEntries();
@@ -267,9 +266,9 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			//showDialog(DIALOG_ABOUT_ID);
 			break;
 		case R.id.itemMainmenuPreferences:
-			i = new Intent(this, PreferenceActivity.class);
-			i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
-			startActivity(i);
+			Intent preferencesIntent = new Intent(this, PreferenceActivity.class);
+			preferencesIntent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+			startActivity(preferencesIntent);
 			break;
 		case R.id.itemMainmenuStatsMode:
 			if (currentStatsMode.equals(StatsMode.PERCENT)) {
@@ -280,9 +279,9 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			updateStatsMode();
 			break;
 		case R.id.itemMainmenuAccounts:
-			i = new Intent(this, LoginActivity.class);
-			i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
-			startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
+			Intent accountsIntent = new Intent(this, LoginActivity.class);
+			accountsIntent.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
+			startActivityForResult(accountsIntent, REQUEST_CODE_MANAGE_ACCOUNTS);
 			break;
 		default:
 			return false;
