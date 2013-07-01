@@ -489,9 +489,16 @@ public class ChartListAdapter extends BaseChartListAdapter {
 			}
 		}
 		case REVENUE:
-			return "Total";
+			Preferences.saveShowChartHint(activity, false);
+			if (overallStats == null) {
+				return "";
+			}
+
+			return "Total "
+					+ (overallStats.getTotalRevenue() == null ? "unknown" : overallStats
+							.getTotalRevenue().toString());
 		}
-		throw new IndexOutOfBoundsException("page=" + page + " columnt=" + column);
+		throw new IndexOutOfBoundsException("page=" + page + " column=" + column);
 	}
 
 }

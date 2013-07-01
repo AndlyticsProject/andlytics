@@ -909,6 +909,13 @@ public class ContentAdapter {
 
 			overall.setActiveInstallsPercentString(percentBigDecimal.toPlainString() + "");
 
+			double totalRevenue = 0;
+			for (AppStats as : result) {
+				if (as.getTotalRevenue() != null) {
+					totalRevenue += as.getTotalRevenue();
+				}
+			}
+			overall.setTotalRevenue(totalRevenue);
 		}
 
 		AppStatsList list = new AppStatsList();
