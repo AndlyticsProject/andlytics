@@ -256,7 +256,7 @@ public class JsonParser {
 
 			String description = appDetails.getString("3");
 			String changelog = appDetails.optString("5");
-			Long lastPlayStoreUpdate = jsonAppInfo.optLong("7");
+			Long lastPlayStoreUpdate = jsonAppInfo.optLong("6");
 			AppDetails details = new AppDetails(description, changelog, lastPlayStoreUpdate);
 			app.setDetails(details);
 
