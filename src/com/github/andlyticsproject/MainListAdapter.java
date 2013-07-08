@@ -378,6 +378,7 @@ public class MainListAdapter extends BaseAdapter {
 					intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
 				}
 				intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
+				intent.putExtra(Constants.DEVELOPER_ID_PARCEL, appDownloadInfo.getDeveloperId());
 
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.activity_next_in,

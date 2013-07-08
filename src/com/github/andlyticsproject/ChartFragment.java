@@ -20,7 +20,7 @@ import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.AppStatsList;
 
 
-public abstract class ChartFragment extends ChartFragmentBase {
+public abstract class ChartFragment extends ChartFragmentBase implements StatsView {
 
 	protected DetailedStatsActivity statsActivity;
 
@@ -56,8 +56,6 @@ public abstract class ChartFragment extends ChartFragmentBase {
 	}
 
 	public abstract ChartSet getChartSet();
-
-	public abstract String getTitle();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

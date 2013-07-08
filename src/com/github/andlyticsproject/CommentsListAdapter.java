@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
@@ -35,13 +36,13 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 	private ArrayList<CommentGroup> commentGroups;
 
-	private CommentsActivity context;
+	private Activity context;
 
 	private DateFormat commentDateFormat = DateFormat.getDateInstance(DateFormat.FULL);
 
 	private boolean canReplyToComments;
 
-	public CommentsListAdapter(CommentsActivity activity) {
+	public CommentsListAdapter(Activity activity) {
 		this.setCommentGroups(new ArrayList<CommentGroup>());
 		this.layoutInflater = activity.getLayoutInflater();
 		this.context = activity;
@@ -105,7 +106,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 				@Override
 				public void onClick(View v) {
-					context.showReplyDialog(comment);
+					// XXX
+					//context.showReplyDialog(comment);
 				}
 			});
 		}

@@ -34,9 +34,9 @@ public class DetailsActivity extends BaseActivity implements ChartFragment.Detai
 
 	private String appName;
 
-	public static class TabListener<T extends ChartFragmentBase> implements ActionBar.TabListener {
+	public static class TabListener<T extends StatsView> implements ActionBar.TabListener {
 
-		private ChartFragment fragment;
+		private Fragment fragment;
 		private DetailsActivity activity;
 		private String tag;
 		private Class<T> clazz;
@@ -49,14 +49,15 @@ public class DetailsActivity extends BaseActivity implements ChartFragment.Detai
 
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
 			if (fragment == null) {
-				fragment = (ChartFragment) Fragment.instantiate(activity, clazz.getName());
+				fragment = Fragment.instantiate(activity, clazz.getName());
 				ft.add(android.R.id.content, fragment, tag);
 			} else {
 				ft.show(fragment);
-				activity.setTitle(fragment.getTitle());
+				activity.setTitle(((StatsView) fragment).getTitle());
 			}
 			if (activity.statsForApp != null && activity.versionUpdateDates != null) {
-				fragment.updateView(activity.statsForApp, activity.versionUpdateDates);
+				((StatsView) fragment)
+						.updateView(activity.statsForApp, activity.versionUpdateDates);
 			}
 			if (activity.appName != null) {
 				activity.getSupportActionBar().setSubtitle(activity.appName);
@@ -86,6 +87,14 @@ public class DetailsActivity extends BaseActivity implements ChartFragment.Detai
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		Tab tab = actionBar
+				.newTab()
+				.setText(R.string.comments)
+				.setTabListener(
+						new TabListener<CommentsFragment>(this, "comments_tab",
+								CommentsFragment.class));
+		actionBar.addTab(tab);
+
+		tab = actionBar
 				.newTab()
 				.setText(R.string.ratings)
 				.setTabListener(
@@ -328,9 +337,10 @@ public class DetailsActivity extends BaseActivity implements ChartFragment.Detai
 
 	public void updateView(AppStatsList statsForApp, List<Date> versionUpdateDates) {
 		// XXX is there a better way?
-		String[] tabTags = { "ratings_tab", "downloads_tab", "revenue_tab", "admob_tab" };
+		String[] tabTags = { "comments_tab", "ratings_tab", "downloads_tab", "revenue_tab",
+				"admob_tab" };
 		String tabTag = tabTags[getSupportActionBar().getSelectedNavigationIndex()];
-		ChartFragment chartFargment = (ChartFragment) getSupportFragmentManager()
+		StatsView chartFargment = (StatsView) getSupportFragmentManager()
 				.findFragmentByTag(tabTag);
 		if (chartFargment != null) {
 			chartFargment.updateView(statsForApp, versionUpdateDates);
