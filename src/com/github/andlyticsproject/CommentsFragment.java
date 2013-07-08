@@ -294,7 +294,7 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 		}
 	}
 
-	private void refreshComments() {
+	void refreshComments() {
 		resetNextCommentIndex();
 		fetchNextComments();
 	}

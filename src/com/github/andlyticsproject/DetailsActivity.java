@@ -8,23 +8,27 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.Timeframe;
+import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
+import com.github.andlyticsproject.console.v2.DevConsoleV2;
+import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.AppStatsList;
+import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
-public class DetailsActivity extends BaseActivity implements ChartFragment.DetailedStatsActivity {
+public class DetailsActivity extends BaseActivity implements ChartFragment.DetailedStatsActivity,
+		CommentReplier {
 
 	private static final String TAG = DetailsActivity.class.getSimpleName();
 	private static final boolean DEBUG = true;
 
-	private ViewGroup content;
+	private static final String REPLY_DIALOG_FRAGMENT = "reply_dialog_fragment";
 
 	private boolean smoothEnabled;
 	private Timeframe currentTimeFrame = Timeframe.MONTH_TO_DATE;
@@ -81,8 +85,6 @@ public class DetailsActivity extends BaseActivity implements ChartFragment.Detai
 		smoothEnabled = Preferences.getChartSmooth(this);
 		appName = getDbAdapter().getAppName(packageName);
 
-		content = (ViewGroup) findViewById(R.id.details_content);
-
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
@@ -116,12 +118,17 @@ public class DetailsActivity extends BaseActivity implements ChartFragment.Detai
 						new TabListener<RevenueFragment>(this, "revenue_tab", RevenueFragment.class));
 		actionBar.addTab(tab);
 
-		tab = actionBar
-				.newTab()
-				.setText(R.string.admob)
-				.setTabListener(
-						new TabListener<AdmobFragment>(this, "admob_tab", AdmobFragment.class));
-		actionBar.addTab(tab);
+		// Check if AdMob is configured for this app
+		String[] admobDetails = AndlyticsDb.getInstance(this).getAdmobDetails(packageName);
+		boolean admobConfigured = admobDetails != null;
+		if (admobConfigured || !Preferences.getHideAdmobForUnconfiguredApps(this)) {
+			tab = actionBar
+					.newTab()
+					.setText(R.string.admob)
+					.setTabListener(
+							new TabListener<AdmobFragment>(this, "admob_tab", AdmobFragment.class));
+			actionBar.addTab(tab);
+		}
 
 		if (getLastCustomNonConfigurationInstance() != null) {
 			loadChartData = (LoadChartData) getLastCustomNonConfigurationInstance();
@@ -340,8 +347,7 @@ public class DetailsActivity extends BaseActivity implements ChartFragment.Detai
 		String[] tabTags = { "comments_tab", "ratings_tab", "downloads_tab", "revenue_tab",
 				"admob_tab" };
 		String tabTag = tabTags[getSupportActionBar().getSelectedNavigationIndex()];
-		StatsView chartFargment = (StatsView) getSupportFragmentManager()
-				.findFragmentByTag(tabTag);
+		StatsView chartFargment = (StatsView) getSupportFragmentManager().findFragmentByTag(tabTag);
 		if (chartFargment != null) {
 			chartFargment.updateView(statsForApp, versionUpdateDates);
 		}
@@ -355,6 +361,90 @@ public class DetailsActivity extends BaseActivity implements ChartFragment.Detai
 	@Override
 	public List<Date> getVersionUpdateDates() {
 		return versionUpdateDates;
+	}
+
+	public void showReplyDialog(Comment comment) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag(REPLY_DIALOG_FRAGMENT);
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		ReplyDialog replyDialog = new ReplyDialog();
+
+		Bundle args = new Bundle();
+		args.putString("uniqueId", comment.getUniqueId());
+		args.putString("reply", comment.getReply() == null ? "" : comment.getReply().getText());
+
+		replyDialog.setArguments(args);
+
+		replyDialog.show(ft, REPLY_DIALOG_FRAGMENT);
+	}
+
+	public void hideReplyDialog() {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment dialog = getSupportFragmentManager().findFragmentByTag(REPLY_DIALOG_FRAGMENT);
+		if (dialog != null) {
+			ft.remove(dialog);
+			ft.commit();
+		}
+	}
+
+	public void replyToComment(final String commentUniqueId, final String replyText) {
+		Utils.execute(new DetachableAsyncTask<Void, Void, Comment, DetailsActivity>(this) {
+
+			Exception error;
+
+			@Override
+			protected void onPreExecute() {
+				if (activity == null) {
+					return;
+				}
+
+				activity.refreshStarted();
+			}
+
+			@Override
+			protected Comment doInBackground(Void... arg0) {
+				if (activity == null) {
+					return null;
+				}
+
+				try {
+					DevConsoleV2 devConsole = DevConsoleRegistry.getInstance().get(accountName);
+
+					return devConsole.replyToComment(DetailsActivity.this, packageName,
+							developerId, commentUniqueId, replyText);
+				} catch (Exception e) {
+					error = e;
+					return null;
+				}
+			}
+
+			@Override
+			protected void onPostExecute(Comment reply) {
+				if (activity == null) {
+					return;
+				}
+
+				activity.refreshFinished();
+
+				if (error != null) {
+					Log.e(TAG, "Error replying to comment: " + error.getMessage(), error);
+					activity.hideReplyDialog();
+					activity.handleUserVisibleException(error);
+
+					return;
+				}
+
+				CommentsFragment commentsFargment = (CommentsFragment) getSupportFragmentManager()
+						.findFragmentByTag("comments_tab");
+				if (commentsFargment != null) {
+					commentsFargment.refreshComments();
+				}
+			}
+		});
 	}
 
 

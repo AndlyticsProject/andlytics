@@ -43,6 +43,10 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 	private boolean canReplyToComments;
 
 	public CommentsListAdapter(Activity activity) {
+		// XXX no pretty, is there a better way?
+		if (!(activity instanceof CommentReplier)) {
+			throw new ClassCastException("Activity must implement CommentReplier.");
+		}
 		this.setCommentGroups(new ArrayList<CommentGroup>());
 		this.layoutInflater = activity.getLayoutInflater();
 		this.context = activity;
@@ -106,8 +110,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 				@Override
 				public void onClick(View v) {
-					// XXX
-					//context.showReplyDialog(comment);
+					CommentReplier replier = (CommentReplier) context;
+					replier.showReplyDialog(comment);
 				}
 			});
 		}
