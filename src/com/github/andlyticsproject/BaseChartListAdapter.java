@@ -3,9 +3,9 @@ package com.github.andlyticsproject;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -26,7 +26,7 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 	 */
 	private final int numPages, numColumns[];
 	private final int maxColumns;
-	private final BaseChartActivity activity;
+	private final Activity activity;
 	private float scale;
 	private int currentPage, currentColumn;
 	private final boolean usesSmooth;
@@ -75,7 +75,7 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 	public abstract void updateChartValue(int position, int page, int column, TextView tv)
 			throws IndexOutOfBoundsException;
 
-	public BaseChartListAdapter(BaseChartActivity activity) {
+	public BaseChartListAdapter(Activity activity) {
 		this.activity = activity;
 		numPages = getNumPages();
 		int max = -1;
@@ -101,9 +101,10 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				int column = (Integer) v.getTag();
-				Log.i(LOG_TAG, "Pressed " + column);
-				BaseChartListAdapter.this.activity.setCurrentChart(currentPage, column);
+				// XXX disable switching by clicking columns for now
+				//				int column = (Integer) v.getTag();
+				//				Log.i(LOG_TAG, "Pressed " + column);
+				//				BaseChartListAdapter.this.activity.setCurrentChart(currentPage, column);
 
 			}
 		};

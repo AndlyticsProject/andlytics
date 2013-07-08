@@ -31,7 +31,7 @@ public class Chart extends AbstractChart {
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public enum ChartSet {
-		RATINGS, DOWNLOADS, ADMOB
+		RATINGS, DOWNLOADS, REVENUE, ADMOB
 	}
 
 	/*
