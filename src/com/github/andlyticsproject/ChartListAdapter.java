@@ -163,7 +163,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 		}
 			break;
 		case REVENUE:
-			return "Daily revenue";
+			return activity.getString(R.string.daily_revenue);
 		}
 		throw new IndexOutOfBoundsException("page=" + page + " columnt=" + column);
 

@@ -10,4 +10,6 @@ public interface StatsView {
 	public void updateView(AppStatsList appStatsList, List<Date> versionUpdateDates);
 
 	public String getTitle();
+
+	public void setCurrentChart(int currentPage, int column);
 }

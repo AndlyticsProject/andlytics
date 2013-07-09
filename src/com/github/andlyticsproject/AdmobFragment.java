@@ -47,6 +47,10 @@ import com.github.andlyticsproject.view.ViewSwitcher3D;
 public class AdmobFragment extends ChartFragment implements
 		LoaderManager.LoaderCallbacks<LoaderResult<AdmobList>> {
 
+	static final String ARG_PACKAGE_NAME = "packageName";
+	static final String ARG_TIMEFRAME = "timeframe";
+	static final String ARG_LOAD_REMOTE = "loadRemote";
+
 	private static final String TAG = AdmobActivity.class.getSimpleName();
 
 	private AdmobListAdapter admobListAdapter;
@@ -64,6 +68,10 @@ public class AdmobFragment extends ChartFragment implements
 	private ViewGroup siteList;
 
 	static class AdmobDbLoader extends LoaderBase<AdmobList> {
+
+		static final String ARG_PACKAGE_NAME = "packageName";
+		static final String ARG_TIMEFRAME = "timeframe";
+		static final String ARG_LOAD_REMOTE = "loadRemote";
 
 		private ContentAdapter db;
 		private String packageName;
@@ -159,17 +167,6 @@ public class AdmobFragment extends ChartFragment implements
 				configSwitcher.showPrevious();
 			}
 			showAccountList();
-		} else {
-			// XXX
-			//			if (getLastCustomNonConfigurationInstance() != null) {
-			//				state = (State) getLastCustomNonConfigurationInstance();
-			//				state.attachAll(this);
-			//				if (state.loadDbEntries.admobList != null) {
-			//					showStats(state.loadDbEntries.admobList);
-			//				}
-			//			} else {
-			//				executeLoadDataDefault(false);
-			//			}
 		}
 
 		return view;
@@ -184,9 +181,9 @@ public class AdmobFragment extends ChartFragment implements
 
 	private void loadData(Timeframe timeframe, boolean loadRemote) {
 		Bundle args = new Bundle();
-		args.putString("packageName", statsActivity.getPackage());
-		args.putSerializable("timeframe", timeframe);
-		args.putBoolean("loadRemote", loadRemote);
+		args.putString(ARG_PACKAGE_NAME, statsActivity.getPackage());
+		args.putSerializable(ARG_TIMEFRAME, timeframe);
+		args.putBoolean(ARG_LOAD_REMOTE, loadRemote);
 		statsActivity.refreshStarted();
 
 		getLoaderManager().restartLoader(0, args, this);
@@ -350,7 +347,7 @@ public class AdmobFragment extends ChartFragment implements
 	}
 
 	private void loadRemoteSiteList(String currentAdmobAccount) {
-		// XXX
+		// XXX implement, new loader?
 		//		state.setLoadRemoteSiteList(new LoadRemoteSiteListTask(this, currentAdmobAccount));
 		//		Utils.execute(state.loadRemoteSiteList);
 	}
@@ -389,7 +386,9 @@ public class AdmobFragment extends ChartFragment implements
 
 	@Override
 	public String getTitle() {
-		return getString(R.string.admob);
+		// this can be called before the fragment is attached
+		Context ctx = AndlyticsApp.getInstance();
+		return ctx.getString(R.string.admob);
 	}
 
 	private void showStats(AdmobList admobList) {
@@ -426,8 +425,7 @@ public class AdmobFragment extends ChartFragment implements
 
 	@Override
 	protected void notifyChangedDataformat() {
-		// XXX
-		//		executeLoadDataDefault(false);
+		loadData(getCurrentTimeFrame(), false);
 	}
 
 	@Override
@@ -468,9 +466,9 @@ public class AdmobFragment extends ChartFragment implements
 		Timeframe timeframe = null;
 		boolean loadRemote = false;
 		if (args != null) {
-			packageName = args.getString("packageName");
-			timeframe = (Timeframe) args.getSerializable("timeframe");
-			loadRemote = args.getBoolean("loadRemote");
+			packageName = args.getString(ARG_PACKAGE_NAME);
+			timeframe = (Timeframe) args.getSerializable(ARG_TIMEFRAME);
+			loadRemote = args.getBoolean(ARG_LOAD_REMOTE);
 		}
 
 		return new AdmobDbLoader(getActivity(), packageName, timeframe, loadRemote);
@@ -492,15 +490,20 @@ public class AdmobFragment extends ChartFragment implements
 		}
 
 		showStats(result.getData());
-
-		// XXX
-		//		if (executeRemoteCall) {
-		//			new LoadRemoteEntriesTask(activity).execute();
-		//		}
 	}
 
 	@Override
 	public void onLoaderReset(Loader<LoaderResult<AdmobList>> arg0) {
-	};
+	}
+
+	@Override
+	public void initLoader() {
+		// NOOP, to fulfill ChartFragment interface
+	}
+
+	@Override
+	public void restartLoader(Bundle args) {
+		// NOOP, to fulfill ChartFragment interface
+	}
 
 }

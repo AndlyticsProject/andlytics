@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject;
 
 import java.util.List;
@@ -6,6 +5,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -34,14 +34,14 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 	private final int listItemTextSize;
 	private final int colorOdd;
 	private final int colorEven;
-	
+
 
 	public abstract int getNumPages();
 
 	/**
 	 * 
 	 * @param page
-	 *          Page to request number of charts (columns) index start at 0
+	 * Page to request number of charts (columns) index start at 0
 	 * @return Number of charts(columns) that will has the requested page
 	 */
 	public abstract int getNumCharts(int page) throws IndexOutOfBoundsException;
@@ -76,6 +76,10 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 			throws IndexOutOfBoundsException;
 
 	public BaseChartListAdapter(Activity activity) {
+		if (!(activity instanceof ChartSwitcher)) {
+			throw new ClassCastException("Activity must implement ChartSwitcher.");
+		}
+
 		this.activity = activity;
 		numPages = getNumPages();
 		int max = -1;
@@ -90,10 +94,11 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		usesSmooth = useSmoth;
 		maxColumns = max;
 		this.scale = activity.getResources().getDisplayMetrics().density;
-		listItemTextSize = activity.getResources().getDimensionPixelSize(R.dimen.chart_list_item_text_size);
+		listItemTextSize = activity.getResources().getDimensionPixelSize(
+				R.dimen.chart_list_item_text_size);
 		currentPage = 0;
 		currentColumn = 1;
-		
+
 		colorOdd = activity.getResources().getColor(R.color.rowLight);
 		colorEven = activity.getResources().getColor(R.color.rowDark);
 
@@ -101,10 +106,10 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				// XXX disable switching by clicking columns for now
-				//				int column = (Integer) v.getTag();
-				//				Log.i(LOG_TAG, "Pressed " + column);
-				//				BaseChartListAdapter.this.activity.setCurrentChart(currentPage, column);
+				int column = (Integer) v.getTag();
+				Log.i(LOG_TAG, "Pressed " + column);
+				((ChartSwitcher) BaseChartListAdapter.this.activity).setCurrentChart(currentPage,
+						column);
 
 			}
 		};
@@ -145,14 +150,14 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		
+
 		// coloring table rows
-		if (1 == position % 2) {			
+		if (1 == position % 2) {
 			convertView.setBackgroundColor(colorOdd);
 		} else {
 			convertView.setBackgroundColor(colorEven);
 		}
-		
+
 		// First field always will be the date
 		Typeface typeface = holder.fields[0].getTypeface();
 		for (i = 0; i < maxColumns; i++)
