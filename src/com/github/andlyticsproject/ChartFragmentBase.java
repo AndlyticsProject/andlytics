@@ -27,16 +27,8 @@ import com.github.andlyticsproject.view.ViewSwitcher3D;
 import com.github.andlyticsproject.view.ViewSwitcher3D.ViewSwitcherListener;
 
 public abstract class ChartFragmentBase extends SherlockFragment implements ViewSwitcherListener {
-	// TODO: Rename parameter arguments, choose names that match
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private static final String ARG_PARAM1 = "param1";
-	private static final String ARG_PARAM2 = "param2";
 
 	protected static final String SELECTED_CHART_POISTION = "selected_chart_position";
-
-	// TODO: Rename and change types of parameters
-	private String mParam1;
-	private String mParam2;
 
 	protected ChartGalleryAdapter chartGalleryAdapter;
 	protected ChartGallery chartGallery;
@@ -56,10 +48,6 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
-		}
 	}
 
 	@Override

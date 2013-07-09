@@ -7,10 +7,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -18,8 +18,12 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 
 public class ReplyDialog extends SherlockDialogFragment {
 
-	String commentUniqueId;
 	public static final int DEVELOPER_REPLY_MAX_CHARACTERS = 350;
+
+	static final String ARG_REPLY = "reply";
+	static final String ARG_UNIQUE_ID = "uniqueId";
+
+	private String commentUniqueId;
 
 	public ReplyDialog() {
 		setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog);
@@ -88,11 +92,11 @@ public class ReplyDialog extends SherlockDialogFragment {
 		});
 
 		Bundle args = getArguments();
-		if (args.containsKey("uniqueId")) {
-			commentUniqueId = args.getString("uniqueId");
+		if (args.containsKey(ARG_UNIQUE_ID)) {
+			commentUniqueId = args.getString(ARG_UNIQUE_ID);
 		}
-		if (args.containsKey("reply")) {
-			replyText.setText(args.getString("reply"));
+		if (args.containsKey(ARG_REPLY)) {
+			replyText.setText(args.getString(ARG_REPLY));
 		}
 
 		view.findViewById(R.id.comment_reply_dialog_negative_button)

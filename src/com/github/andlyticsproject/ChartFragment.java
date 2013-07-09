@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +15,68 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.AppStatsList;
+import com.github.andlyticsproject.util.LoaderBase;
+import com.github.andlyticsproject.util.LoaderResult;
 
 
 public abstract class ChartFragment extends ChartFragmentBase implements StatsView {
+
+
+	static class ChartData {
+		AppStatsList statsForApp;
+		List<Date> versionUpdateDates;
+	}
+
+	static class ChartDataLoader extends LoaderBase<ChartData> {
+
+		static final String ARG_PACKAGE_NAME = "packageName";
+		static final String ARG_TIMEFRAME = "timeframe";
+		static final String ARG_SMOOTH_ENABLED = "smoothEnabled";
+
+		private ContentAdapter db;
+		private String packageName;
+		private Timeframe timeframe;
+		private boolean smoothEnabled;
+
+		public ChartDataLoader(Activity context, String packageName, Timeframe timeframe,
+				boolean smoothEnabled) {
+			super(context);
+			db = ContentAdapter.getInstance(AndlyticsApp.getInstance());
+			this.packageName = packageName;
+			this.timeframe = timeframe;
+			this.smoothEnabled = smoothEnabled;
+		}
+
+		@Override
+		protected ChartData load() throws Exception {
+			if (packageName == null) {
+				return null;
+			}
+
+			ChartData result = new ChartData();
+			result.statsForApp = db.getStatsForApp(packageName, timeframe, smoothEnabled);
+			result.versionUpdateDates = db.getVersionUpdateDates(packageName);
+
+			return result;
+		}
+
+		@Override
+		protected void releaseResult(LoaderResult<ChartData> result) {
+			// just a string, nothing to do
+		}
+
+		@Override
+		protected boolean isActive(LoaderResult<ChartData> result) {
+			return false;
+		}
+	}
 
 	protected DetailedStatsActivity statsActivity;
 
@@ -31,10 +87,10 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 	private boolean dataUpdateRequested;
 
 	protected ChartSet currentChartSet;
-	private Boolean smoothEnabled;
-
+	private boolean smoothEnabled;
 
 	public ChartFragment() {
+		setHasOptionsMenu(true);
 	}
 
 	@Override
@@ -42,6 +98,7 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 		super.onCreate(savedInstanceState);
 
 		getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSherlockActivity().getSupportActionBar().setTitle(getTitle());
 
 		Bundle b = getArguments();
 		if (b != null) {
@@ -52,8 +109,20 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 		}
 
 		currentChartSet = getChartSet();
-		getSherlockActivity().getSupportActionBar().setTitle(getTitle());
+		smoothEnabled = Preferences.getChartSmooth(getActivity());
 	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		// just init don't try to load
+		initLoader();
+	}
+
+	public abstract void initLoader();
+
+	public abstract void restartLoader(Bundle args);
 
 	public abstract ChartSet getChartSet();
 
@@ -81,7 +150,8 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 	public void onResume() {
 		super.onResume();
 
-		updateView(statsActivity.getStatsForApp(), statsActivity.getVersionUpdateDates());
+		//		updateView(statsActivity.getStatsForApp(), statsActivity.getVersionUpdateDates());
+		executeLoadData(currentTimeFrame);
 	}
 
 	public void updateView(AppStatsList appStatsList, List<Date> versionUpdateDates) {
@@ -169,42 +239,100 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 		statsActivity = null;
 	}
 
-	// XXX rename once legacy ChartActivity is removed?
-	public interface DetailedStatsActivity {
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
 
-		public AppStatsList getStatsForApp();
+		inflater.inflate(R.menu.charts_menu, menu);
+		MenuItem activeTimeFrame = null;
+		switch (currentTimeFrame) {
+		case LAST_SEVEN_DAYS:
+			activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframe7);
+			break;
+		case LAST_THIRTY_DAYS:
+			activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframe30);
+			break;
+		case LAST_NINETY_DAYS:
+			activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframe90);
+			break;
+		case UNLIMITED:
+			activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframeUnlimited);
+			break;
+		case MONTH_TO_DATE:
+			activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframeMonthToDate);
+			break;
+		}
+		activeTimeFrame.setChecked(true);
 
-		public List<Date> getVersionUpdateDates();
+		if (statsActivity.isRefreshing()) {
+			menu.findItem(R.id.itemChartsmenuRefresh).setActionView(
+					R.layout.action_bar_indeterminate_progress);
+		}
+	}
 
-		public void handleUserVisibleException(Exception e);
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Context ctx = getActivity();
 
-		public boolean isRefreshing();
-
-		public void refreshStarted();
-
-		public void refreshFinished();
-
-		public boolean shouldRemoteUpdateStats();
-
-		// XXX do NOT name this `getPackageName()`, will override 
-		// core activity method and crash the ActivityManager.
-		public String getPackage();
-
-		public String getDeveloperId();
-
-		public String getAccountName();
+		switch (item.getItemId()) {
+		case R.id.itemChartsmenuRefresh:
+			setChartIgnoreCallLayouts(true);
+			executeLoadData(currentTimeFrame);
+			return true;
+		case R.id.itemChartsmenuToggle:
+			toggleChartData(item);
+			return true;
+		case R.id.itemChartsmenuTimeframe7:
+			currentTimeFrame = Timeframe.LAST_SEVEN_DAYS;
+			executeLoadData(currentTimeFrame);
+			Preferences.saveChartTimeframe(Timeframe.LAST_SEVEN_DAYS, ctx);
+			item.setChecked(true);
+			return true;
+		case R.id.itemChartsmenuTimeframe30:
+			currentTimeFrame = Timeframe.LAST_THIRTY_DAYS;
+			executeLoadData(currentTimeFrame);
+			Preferences.saveChartTimeframe(Timeframe.LAST_THIRTY_DAYS, ctx);
+			item.setChecked(true);
+			return true;
+		case R.id.itemChartsmenuTimeframe90:
+			currentTimeFrame = Timeframe.LAST_NINETY_DAYS;
+			executeLoadData(currentTimeFrame);
+			Preferences.saveChartTimeframe(Timeframe.LAST_NINETY_DAYS, ctx);
+			item.setChecked(true);
+			return true;
+		case R.id.itemChartsmenuTimeframeUnlimited:
+			currentTimeFrame = Timeframe.UNLIMITED;
+			executeLoadData(currentTimeFrame);
+			Preferences.saveChartTimeframe(Timeframe.UNLIMITED, ctx);
+			item.setChecked(true);
+			return true;
+		case R.id.itemChartsmenuTimeframeMonthToDate:
+			currentTimeFrame = Timeframe.MONTH_TO_DATE;
+			executeLoadData(currentTimeFrame);
+			Preferences.saveChartTimeframe(Timeframe.MONTH_TO_DATE, ctx);
+			item.setChecked(true);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
 	protected void notifyChangedDataformat() {
-		// TODO Auto-generated method stub
-
+		dataUpdateRequested = true;
+		executeLoadData(currentTimeFrame);
 	}
 
 	@Override
 	protected void executeLoadData(Timeframe currentTimeFrame) {
-		// TODO Auto-generated method stub
+		Bundle args = new Bundle();
+		args.putString(ChartDataLoader.ARG_PACKAGE_NAME, statsActivity.getPackage());
+		args.putBoolean(ChartDataLoader.ARG_SMOOTH_ENABLED, smoothEnabled);
+		args.putSerializable(ChartDataLoader.ARG_TIMEFRAME, currentTimeFrame);
 
+		statsActivity.refreshStarted();
+
+		restartLoader(args);
 	}
 
 	public void setCurrentChartSet(ChartSet currentChartSet) {
@@ -228,6 +356,5 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 		}
 		throw new IndexOutOfBoundsException("page=" + page + " column=" + column);
 	}
-
 
 }

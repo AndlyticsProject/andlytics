@@ -197,10 +197,10 @@
     <string name="appinfo_app_links">App links</string>
     <string name="revenue">Revenue</string>
     <string name="total_revenue">Total revenue</string>
+    <string name="daily_revenue">Daily revenue</string>
     <string name="revenue_total">%s total revenue</string>
     <string name="revenue_last_day">Revenue last day</string>
     <string name="revenue_last_7days">Revenue last 7 days</string>
     <string name="revenue_last_30days">%s 30 days revenue</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -20,7 +20,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.github.andlyticsproject.ChartFragment.DetailedStatsActivity;
 import com.github.andlyticsproject.CommentsFragment.Comments;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
@@ -427,7 +426,9 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 
 	@Override
 	public String getTitle() {
-		return getString(R.string.comments);
+		// this can be called before the fragment is attached
+		Context ctx = AndlyticsApp.getInstance();
+		return ctx.getString(R.string.comments);
 	}
 
 
