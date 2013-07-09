@@ -23,12 +23,15 @@ import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
 public class DetailsActivity extends BaseActivity implements ChartFragment.DetailedStatsActivity,
-		CommentReplier {
+		CommentReplier, ChartSwitcher {
 
 	private static final String TAG = DetailsActivity.class.getSimpleName();
 	private static final boolean DEBUG = true;
 
 	private static final String REPLY_DIALOG_FRAGMENT = "reply_dialog_fragment";
+
+	private static final String[] TAB_TAGS = { "comments_tab", "ratings_tab", "downloads_tab",
+			"revenue_tab", "admob_tab" };
 
 	private boolean smoothEnabled;
 	private Timeframe currentTimeFrame = Timeframe.MONTH_TO_DATE;
@@ -343,10 +346,7 @@ public class DetailsActivity extends BaseActivity implements ChartFragment.Detai
 	}
 
 	public void updateView(AppStatsList statsForApp, List<Date> versionUpdateDates) {
-		// XXX is there a better way?
-		String[] tabTags = { "comments_tab", "ratings_tab", "downloads_tab", "revenue_tab",
-				"admob_tab" };
-		String tabTag = tabTags[getSupportActionBar().getSelectedNavigationIndex()];
+		String tabTag = TAB_TAGS[getSupportActionBar().getSelectedNavigationIndex()];
 		StatsView chartFargment = (StatsView) getSupportFragmentManager().findFragmentByTag(tabTag);
 		if (chartFargment != null) {
 			chartFargment.updateView(statsForApp, versionUpdateDates);
@@ -445,6 +445,15 @@ public class DetailsActivity extends BaseActivity implements ChartFragment.Detai
 				}
 			}
 		});
+	}
+
+	@Override
+	public void setCurrentChart(int currentPage, int column) {
+		String tabTag = TAB_TAGS[getSupportActionBar().getSelectedNavigationIndex()];
+		StatsView chartFargment = (StatsView) getSupportFragmentManager().findFragmentByTag(tabTag);
+		if (chartFargment != null) {
+			chartFargment.setCurrentChart(currentPage, column);
+		}
 	}
 
 

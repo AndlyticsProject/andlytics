@@ -510,4 +510,9 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 	public void onLoaderReset(Loader<LoaderResult<Comments>> loader) {
 	}
 
+	@Override
+	public void setCurrentChart(int page, int column) {
+		// NOOP, we don't have charts
+	}
+
 }
