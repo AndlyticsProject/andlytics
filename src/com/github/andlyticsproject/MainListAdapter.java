@@ -314,6 +314,7 @@ public class MainListAdapter extends BaseAdapter {
 			// 55dp for revenue section?
 			height = Math.round(height + 55 * displayMetrics.scaledDensity);
 			holder.revenueFrame.setVisibility(View.VISIBLE);
+
 			double overall = revenue.getOverall();
 			holder.totalRevenue.setText(String.format(overall < 1000 ? "%.2f" : "%.0f", overall));
 			holder.totalRevenueLabel.setText(activity.getString(R.string.revenue_total,
@@ -409,15 +410,9 @@ public class MainListAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-
-				Intent intent = new Intent(activity, DetailsActivity.class);
-				intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
-				if (iconFile.exists()) {
-					intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
-				}
-				intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
+				Intent intent = createDetailsIntent(packageName, iconFile, ChartSet.DOWNLOADS,
+						DetailsActivity.TAB_IDX_COMMENTS);
 				intent.putExtra(Constants.DEVELOPER_ID_PARCEL, appDownloadInfo.getDeveloperId());
-
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.activity_next_in,
 						R.anim.activity_next_out);
@@ -429,14 +424,20 @@ public class MainListAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(activity, ChartActivity.class);
-				intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
-				intent.putExtra(Constants.CHART_NAME, R.string.downloads);
-				if (iconFile.exists()) {
-					intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
-				}
-				intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
-				intent.putExtra(Constants.CHART_SET, ChartSet.DOWNLOADS.name());
+				Intent intent = createDetailsIntent(packageName, iconFile, ChartSet.DOWNLOADS,
+						DetailsActivity.TAB_IDX_DOWNLOADS);
+				activity.startActivity(intent);
+				activity.overridePendingTransition(R.anim.activity_next_in,
+						R.anim.activity_next_out);
+			}
+		});
+
+		holder.revenueFrame.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = createDetailsIntent(packageName, iconFile, ChartSet.REVENUE,
+						DetailsActivity.TAB_IDX_REVENUE);
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.activity_next_in,
 						R.anim.activity_next_out);
@@ -447,12 +448,8 @@ public class MainListAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(activity, AdmobActivity.class);
-				intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
-				if (iconFile.exists()) {
-					intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
-				}
-				intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
+				Intent intent = createDetailsIntent(packageName, iconFile, ChartSet.ADMOB,
+						DetailsActivity.TAB_IDX_ADMOB);
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.activity_next_in,
 						R.anim.activity_next_out);
@@ -463,15 +460,8 @@ public class MainListAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(activity, ChartActivity.class);
-				intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
-				intent.putExtra(Constants.CHART_NAME, R.string.ratings);
-				if (iconFile.exists()) {
-					intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
-				}
-				intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
-				intent.putExtra(Constants.CHART_SET, ChartSet.RATINGS.name());
-
+				Intent intent = createDetailsIntent(packageName, iconFile, ChartSet.RATINGS,
+						DetailsActivity.TAB_IDX_RATINGS);
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.activity_next_in,
 						R.anim.activity_next_out);
@@ -739,6 +729,20 @@ public class MainListAdapter extends BaseAdapter {
 
 	public StatsMode getStatsMode() {
 		return statsMode;
+	}
+
+	private Intent createDetailsIntent(String packageName, File iconFile, ChartSet chartSet,
+			int selectedTab) {
+		Intent intent = new Intent(activity, DetailsActivity.class);
+		intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
+		intent.putExtra(Constants.CHART_NAME, R.string.ratings);
+		if (iconFile.exists()) {
+			intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
+		}
+		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
+		intent.putExtra(Constants.CHART_SET, chartSet.name());
+		intent.putExtra(DetailsActivity.EXTRA_SELECTED_TAB_IDX, selectedTab);
+		return intent;
 	}
 
 	class ExpandAnimation extends AsyncTask<Void, LayoutParams, Void> {

@@ -29,6 +29,13 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 	private static final String[] TAB_TAGS = { "comments_tab", "ratings_tab", "downloads_tab",
 			"revenue_tab", "admob_tab" };
 
+	public static String EXTRA_SELECTED_TAB_IDX = "selectedTabIdx";
+	public static int TAB_IDX_COMMENTS = 0;
+	public static int TAB_IDX_RATINGS = 1;
+	public static int TAB_IDX_DOWNLOADS = 2;
+	public static int TAB_IDX_REVENUE = 3;
+	public static int TAB_IDX_ADMOB = 4;
+
 	private String appName;
 
 	public static class TabListener<T extends StatsView> implements ActionBar.TabListener {
@@ -118,6 +125,13 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 					.setTabListener(
 							new TabListener<AdmobFragment>(this, "admob_tab", AdmobFragment.class));
 			actionBar.addTab(tab);
+		}
+
+		int selectedTabIdx = getIntent().getExtras().getInt(EXTRA_SELECTED_TAB_IDX, 0);
+		if (selectedTabIdx < actionBar.getTabCount()) {
+			actionBar.setSelectedNavigationItem(selectedTabIdx);
+		} else {
+			actionBar.setSelectedNavigationItem(0);
 		}
 	}
 
