@@ -550,6 +550,8 @@ public class CommentsActivity extends BaseDetailsActivity implements CommentRepl
 					return;
 				}
 
+				Toast.makeText(activity, R.string.reply_sent, Toast.LENGTH_LONG).show();
+
 				refreshComments();
 			}
 		});

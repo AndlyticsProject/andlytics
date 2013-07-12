@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -236,6 +237,8 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 
 					return;
 				}
+
+				Toast.makeText(activity, R.string.reply_sent, Toast.LENGTH_LONG).show();
 
 				CommentsFragment commentsFargment = (CommentsFragment) getSupportFragmentManager()
 						.findFragmentByTag("comments_tab");

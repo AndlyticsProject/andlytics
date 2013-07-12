@@ -7,4 +7,6 @@ public interface CommentReplier {
 	public void showReplyDialog(Comment comment);
 
 	public void hideReplyDialog();
+
+	public void replyToComment(String commentUniqueId, String reply);
 }
