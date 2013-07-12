@@ -61,6 +61,7 @@
     <string name="comment_reply">Developer reply</string>
     <string name="reply_to_comment">Reply to comment</string>
     <string name="reply_to_comment_max_characters">of 350 characters</string>
+    <string name="reply_sent">Comment reply sent. It will appear/update in the comment list shortly.</string>
     <string name="long_click_translate">Long click on comment for translation</string>
     <string name="load_more_comments">Load more comments</string>
     <string name="info_comments">The number of comments reported on the main screen may be higher than the number of comments shown here because of withdrawn / changed comments.</string>

@@ -26,6 +26,7 @@ import com.github.andlyticsproject.view.ChartGalleryAdapter;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
 import com.github.andlyticsproject.view.ViewSwitcher3D.ViewSwitcherListener;
 
+@SuppressWarnings("deprecation")
 public abstract class ChartFragmentBase extends SherlockFragment implements ViewSwitcherListener {
 
 	protected static final String SELECTED_CHART_POISTION = "selected_chart_position";
@@ -78,8 +79,9 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 				chartGallery.setIgnoreLayoutCalls(true);
 
 				if (view.getTag() != null) {
+					// (page, column, num columns)?
 					int pageColumn[] = (int[]) view.getTag();
-					myAdapter.setCurrentChart(pageColumn[0], pageColumn[0]);
+					myAdapter.setCurrentChart(pageColumn[0], pageColumn[1]);
 					updateChartHeadline();
 					myAdapter.notifyDataSetChanged();
 					onChartSelected(pageColumn[0], pageColumn[1]);

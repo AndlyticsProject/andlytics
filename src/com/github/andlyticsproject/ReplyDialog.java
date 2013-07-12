@@ -109,7 +109,7 @@ public class ReplyDialog extends SherlockDialogFragment {
 				.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						String reply = replyText.getText().toString();
-						CommentsActivity activity = (CommentsActivity) getActivity();
+						CommentReplier activity = (CommentReplier) getActivity();
 						if (activity != null) {
 							activity.replyToComment(commentUniqueId, reply);
 						}
