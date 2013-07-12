@@ -40,6 +40,9 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 	private static final String REPLY_DIALOG_FRAGMENT = "reply_dialog_fragment";
 	private static final int MAX_LOAD_COMMENTS = 20;
 
+	private static final int DB_LOADER_ID = 0;
+	private static final int REMOTE_LOADER_ID = 1;
+
 	private CommentsListAdapter commentsListAdapter;
 	private ExpandableListView list;
 	private View nocomments;
@@ -64,26 +67,24 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 
 	static class CommentsLoader extends LoaderBase<Comments> {
 
-		private Activity activity;
-		private ContentAdapter db;
-		private String packageName;
-		private String accountName;
-		private String developerId;
-		private boolean loadRemote;
-		private int nextCommentIndex;
+		protected Activity activity;
+		protected ContentAdapter db;
+		protected String packageName;
+		protected String accountName;
+		protected String developerId;
+		protected int nextCommentIndex;
 
-		private List<Comment> comments;
-		private int maxAvailableComments = -1;
+		protected List<Comment> comments;
+		protected int maxAvailableComments = -1;
 
 		public CommentsLoader(Activity context, String accountName, String developerId,
-				String packageName, boolean loadRemote, int nextCommentIndex) {
+				String packageName, int nextCommentIndex) {
 			super(context);
 			this.activity = context;
 			db = ContentAdapter.getInstance(AndlyticsApp.getInstance());
 			this.accountName = accountName;
 			this.developerId = developerId;
 			this.packageName = packageName;
-			this.loadRemote = loadRemote;
 			this.nextCommentIndex = nextCommentIndex;
 		}
 
@@ -93,46 +94,10 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 				return null;
 			}
 
-			boolean canReply = true;
-			if (loadRemote) {
-				if (maxAvailableComments == -1) {
-					AppStats appInfo = db.getLatestForApp(packageName);
-					if (appInfo != null) {
-						maxAvailableComments = appInfo.getNumberOfComments();
-					} else {
-						maxAvailableComments = MAX_LOAD_COMMENTS;
-					}
-				}
-
-				Comments result = new Comments();
-				if (maxAvailableComments != 0) {
-					DevConsoleV2 console = DevConsoleRegistry.getInstance().get(accountName);
-
-					List<Comment> loaded = console.getComments(activity, packageName, developerId,
-							nextCommentIndex, MAX_LOAD_COMMENTS, Utils.getDisplayLocale());
-					updateCommentsCacheIfNecessary(loaded);
-					// XXX
-					// we can only do this after we authenticate at least once,
-					// which may not happen before refreshing if we are loading
-					// from cache
-					canReply = console.canReplyToComments();
-
-					AndlyticsDb.getInstance(getContext()).saveLastCommentsRemoteUpdateTime(
-							packageName, System.currentTimeMillis());
-
-					result.loaded = loaded;
-					result.maxAvailableComments = maxAvailableComments;
-					result.cacheUpdated = loadRemote;
-					result.canReply = canReply;
-				}
-
-				return result;
-			}
-
 			return loadFromCache();
 		}
 
-		private void updateCommentsCacheIfNecessary(List<Comment> newComments) {
+		protected void updateCommentsCacheIfNecessary(List<Comment> newComments) {
 			if (newComments == null || newComments.isEmpty()) {
 				return;
 			}
@@ -143,13 +108,13 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 			}
 		}
 
-		private void updateCommentsCache(List<Comment> commentsToCache) {
+		protected void updateCommentsCache(List<Comment> commentsToCache) {
 			db.updateCommentsCache(commentsToCache, packageName);
 			comments = new ArrayList<Comment>();
 		}
 
 
-		private Comments loadFromCache() {
+		protected Comments loadFromCache() {
 			Comments result = new Comments();
 			result.cacheUpdated = false;
 			result.canReply = true;
@@ -173,6 +138,56 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 		protected boolean isActive(LoaderResult<Comments> result) {
 			return false;
 		}
+	}
+
+	static class RemoteCommentsLoader extends CommentsLoader {
+
+		public RemoteCommentsLoader(Activity context, String accountName, String developerId,
+				String packageName, int nextCommentIndex) {
+			super(context, accountName, developerId, packageName, nextCommentIndex);
+		}
+
+		@Override
+		protected Comments load() throws Exception {
+			if (packageName == null || accountName == null || developerId == null) {
+				return null;
+			}
+
+			boolean canReply = true;
+			if (maxAvailableComments == -1) {
+				AppStats appInfo = db.getLatestForApp(packageName);
+				if (appInfo != null) {
+					maxAvailableComments = appInfo.getNumberOfComments();
+				} else {
+					maxAvailableComments = MAX_LOAD_COMMENTS;
+				}
+			}
+
+			Comments result = new Comments();
+			if (maxAvailableComments != 0) {
+				DevConsoleV2 console = DevConsoleRegistry.getInstance().get(accountName);
+
+				List<Comment> loaded = console.getComments(activity, packageName, developerId,
+						nextCommentIndex, MAX_LOAD_COMMENTS, Utils.getDisplayLocale());
+				updateCommentsCacheIfNecessary(loaded);
+				// XXX
+				// we can only do this after we authenticate at least once,
+				// which may not happen before refreshing if we are loading
+				// from cache
+				canReply = console.canReplyToComments();
+
+				AndlyticsDb.getInstance(getContext()).saveLastCommentsRemoteUpdateTime(packageName,
+						System.currentTimeMillis());
+
+				result.loaded = loaded;
+				result.maxAvailableComments = maxAvailableComments;
+				result.cacheUpdated = true;
+				result.canReply = canReply;
+			}
+
+			return result;
+		}
+
 	}
 
 	public CommentsFragment() {
@@ -249,13 +264,12 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 		args.putString("accountName", statsActivity.getAccountName());
 		args.putString("developerId", statsActivity.getDeveloperId());
 		args.putString("packageName", statsActivity.getPackage());
-		args.putBoolean("loadRemote", loadRemote);
 		args.putInt("nextCommentIndex", nextCommentIndex);
 
 		statsActivity.refreshStarted();
 		disableFooter();
 
-		getLoaderManager().restartLoader(0, args, this);
+		getLoaderManager().restartLoader(loadRemote ? REMOTE_LOADER_ID : DB_LOADER_ID, args, this);
 	}
 
 
@@ -437,17 +451,21 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 		String accountName = null;
 		String developerId = null;
 		String packageName = null;
-		boolean loadRemote = false;
 		int nextCommentIndex = 0;
 		if (args != null) {
 			accountName = args.getString("accountName");
 			developerId = args.getString("developerId");
 			packageName = args.getString("packageName");
-			loadRemote = args.getBoolean("loadRemote");
 			nextCommentIndex = args.getInt("nextCommentIndex");
 		}
 
-		return new CommentsLoader(getActivity(), accountName, developerId, packageName, loadRemote,
+		if (id == DB_LOADER_ID) {
+			return new CommentsLoader(getActivity(), accountName, developerId, packageName,
+					nextCommentIndex);
+		}
+
+		// id = 1
+		return new RemoteCommentsLoader(getActivity(), accountName, developerId, packageName,
 				nextCommentIndex);
 	}
 
