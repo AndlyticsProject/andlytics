@@ -15,6 +15,7 @@ import com.github.andlyticsproject.chart.Chart;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.chart.Chart.ValueCallbackHander;
 import com.github.andlyticsproject.model.AppStats;
+import com.github.andlyticsproject.util.Utils;
 
 public class ChartListAdapter extends BaseChartListAdapter {
 	// private static String LOG_TAG=ChartListAdapter.class.toString();
@@ -23,18 +24,20 @@ public class ChartListAdapter extends BaseChartListAdapter {
 
 	private static final int RED_TEXT = Color.RED;
 
-	private static final int DATE = 0;
-	private static final int TOTAL_DOWNLAODS = 1;
-	private static final int ACTIVE_INSTALLS_TOTAL = 2;
-	private static final int TOTAL_DOWNLAODS_BY_DAY = 3;
-	private static final int ACTIVE_INSTALLS_PERCENT = 4;
+	private static final int COL_DATE = 0;
+	private static final int COL_TOTAL_DOWNLAODS = 1;
+	private static final int COL_ACTIVE_INSTALLS_TOTAL = 2;
+	private static final int COL_TOTAL_DOWNLAODS_BY_DAY = 3;
+	private static final int COL_ACTIVE_INSTALLS_PERCENT = 4;
 
-	private static final int AVG_RATING = 1;
-	private static final int RATINGS_5 = 2;
-	private static final int RATINGS_4 = 3;
-	private static final int RATINGS_3 = 4;
-	private static final int RATINGS_2 = 5;
-	private static final int RATINGS_1 = 6;
+	private static final int COL_AVG_RATING = 1;
+	private static final int COL_RATINGS_5 = 2;
+	private static final int COL_RATINGS_4 = 3;
+	private static final int COL_RATINGS_3 = 4;
+	private static final int COL_RATINGS_2 = 5;
+	private static final int COL_RATINGS_1 = 6;
+
+	private static final int COL_REVENUE = 1;
 
 	private Integer heighestRatingChange;
 	private Integer lowestRatingChange;
@@ -123,40 +126,40 @@ public class ChartListAdapter extends BaseChartListAdapter {
 
 	@Override
 	public String getChartTitle(int page, int column) throws IndexOutOfBoundsException {
-		if (column == DATE) {
+		if (column == COL_DATE) {
 			return "";
 		}
 		switch (ChartSet.values()[page]) {
 		case DOWNLOADS: {
 			switch (column) {
-			case TOTAL_DOWNLAODS:
+			case COL_TOTAL_DOWNLAODS:
 				return activity.getString(R.string.total_downloads);
 
-			case TOTAL_DOWNLAODS_BY_DAY:
+			case COL_TOTAL_DOWNLAODS_BY_DAY:
 				return activity.getString(R.string.downloads_day);
 
-			case ACTIVE_INSTALLS_PERCENT:
+			case COL_ACTIVE_INSTALLS_PERCENT:
 				return activity.getString(R.string.active_installs_percent);
 
-			case ACTIVE_INSTALLS_TOTAL:
+			case COL_ACTIVE_INSTALLS_TOTAL:
 				return activity.getString(R.string.active_installs);
 			}
 		}
 			break;
 		case RATINGS: {
 			switch (column) {
-			case AVG_RATING:
+			case COL_AVG_RATING:
 				return activity.getString(R.string.average_rating);
 
-			case RATINGS_1:
+			case COL_RATINGS_1:
 				return "1* " + activity.getString(R.string.num_ratings);
-			case RATINGS_2:
+			case COL_RATINGS_2:
 				return "2* " + activity.getString(R.string.num_ratings);
-			case RATINGS_3:
+			case COL_RATINGS_3:
 				return "3* " + activity.getString(R.string.num_ratings);
-			case RATINGS_4:
+			case COL_RATINGS_4:
 				return "4* " + activity.getString(R.string.num_ratings);
-			case RATINGS_5:
+			case COL_RATINGS_5:
 				return "5* " + activity.getString(R.string.num_ratings);
 			}
 
@@ -184,7 +187,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 	public void updateChartValue(int position, int page, int column, TextView tv)
 			throws IndexOutOfBoundsException {
 		AppStats appInfo = getItem(position);
-		if (column == DATE) {
+		if (column == COL_DATE) {
 			tv.setText(dateFormat.format(appInfo.getRequestDate()));
 			return;
 		}
@@ -194,19 +197,19 @@ public class ChartListAdapter extends BaseChartListAdapter {
 		case DOWNLOADS: {
 
 			switch (column) {
-			case TOTAL_DOWNLAODS:
-				tv.setText(appInfo.getTotalDownloads() + "");
+			case COL_TOTAL_DOWNLAODS:
+				tv.setText(Integer.toString(appInfo.getTotalDownloads()));
 				tv.setTextColor(textColor);
 				return;
-			case ACTIVE_INSTALLS_TOTAL:
-				tv.setText(appInfo.getActiveInstalls() + "");
+			case COL_ACTIVE_INSTALLS_TOTAL:
+				tv.setText(Integer.toString(appInfo.getActiveInstalls()));
 				tv.setTextColor(textColor);
 				return;
-			case TOTAL_DOWNLAODS_BY_DAY:
-				tv.setText(appInfo.getDailyDownloads() + "");
+			case COL_TOTAL_DOWNLAODS_BY_DAY:
+				tv.setText(Integer.toString(appInfo.getDailyDownloads()));
 				tv.setTextColor(textColor);
 				return;
-			case ACTIVE_INSTALLS_PERCENT:
+			case COL_ACTIVE_INSTALLS_PERCENT:
 				tv.setText(appInfo.getActiveInstallsPercentString());
 				tv.setTextColor(textColor);
 				return;
@@ -216,47 +219,47 @@ public class ChartListAdapter extends BaseChartListAdapter {
 		case RATINGS: {
 
 			switch (column) {
-			case AVG_RATING:
+			case COL_AVG_RATING:
 				tv.setText(appInfo.getAvgRatingString());
 				tv.setTextColor(textColor);
 				return;
-			case RATINGS_5:
+			case COL_RATINGS_5:
 				if (appInfo.getRating5Diff() > 0) {
 					tv.setText("+" + appInfo.getRating5Diff());
 				} else {
-					tv.setText(appInfo.getRating5Diff() + "");
+					tv.setText(appInfo.getRating5Diff().toString());
 				}
 				tv.setTextColor(textColor);
 				return;
-			case RATINGS_4:
+			case COL_RATINGS_4:
 				if (appInfo.getRating4Diff() > 0) {
 					tv.setText("+" + appInfo.getRating4Diff());
 				} else {
-					tv.setText(appInfo.getRating4Diff() + "");
+					tv.setText(appInfo.getRating4Diff().toString());
 				}
 				tv.setTextColor(textColor);
 				return;
-			case RATINGS_3:
+			case COL_RATINGS_3:
 				if (appInfo.getRating3Diff() > 0) {
 					tv.setText("+" + appInfo.getRating3Diff());
 				} else {
-					tv.setText(appInfo.getRating3Diff() + "");
+					tv.setText(appInfo.getRating3Diff().toString());
 				}
 				tv.setTextColor(textColor);
 				return;
-			case RATINGS_2:
+			case COL_RATINGS_2:
 				if (appInfo.getRating2Diff() > 0) {
 					tv.setText("+" + appInfo.getRating2Diff());
 				} else {
-					tv.setText(appInfo.getRating2Diff() + "");
+					tv.setText(appInfo.getRating2Diff().toString());
 				}
 				tv.setTextColor(textColor);
 				return;
-			case RATINGS_1:
+			case COL_RATINGS_1:
 				if (appInfo.getRating1Diff() > 0) {
 					tv.setText("+" + appInfo.getRating1Diff());
 				} else {
-					tv.setText(appInfo.getRating1Diff() + "");
+					tv.setText(appInfo.getRating1Diff().toString());
 				}
 				tv.setTextColor(textColor);
 				return;
@@ -267,9 +270,8 @@ public class ChartListAdapter extends BaseChartListAdapter {
 		case REVENUE: {
 
 			switch (column) {
-			case 1:
-				tv.setText(appInfo.getTotalRevenue() == null ? "" : appInfo.getTotalRevenue()
-						.toString());
+			case COL_REVENUE:
+				tv.setText(Utils.safeToString(appInfo.getTotalRevenue()));
 				tv.setTextColor(textColor);
 				return;
 			}
@@ -314,7 +316,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 		switch (ChartSet.values()[page]) {
 		case DOWNLOADS: {
 			switch (column) {
-			case TOTAL_DOWNLAODS:
+			case COL_TOTAL_DOWNLAODS:
 
 				handler = new DevConValueCallbackHander() {
 					@Override
@@ -324,7 +326,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 				};
 				return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
 
-			case TOTAL_DOWNLAODS_BY_DAY:
+			case COL_TOTAL_DOWNLAODS_BY_DAY:
 
 				handler = new DevConValueCallbackHander() {
 					@Override
@@ -335,7 +337,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 				return baseChart.buildBarChart(context, statsForApp.toArray(), handler,
 						Integer.MIN_VALUE, 0);
 
-			case ACTIVE_INSTALLS_TOTAL:
+			case COL_ACTIVE_INSTALLS_TOTAL:
 				handler = new DevConValueCallbackHander() {
 					@Override
 					public double getValue(Object appInfo) {
@@ -344,7 +346,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 				};
 				return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
 
-			case ACTIVE_INSTALLS_PERCENT:
+			case COL_ACTIVE_INSTALLS_PERCENT:
 				handler = new DevConValueCallbackHander() {
 					@Override
 					public double getValue(Object appInfo) {
@@ -360,7 +362,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 
 		case RATINGS: {
 			switch (column) {
-			case AVG_RATING:
+			case COL_AVG_RATING:
 
 				handler = new DevConValueCallbackHander() {
 					@Override
@@ -370,7 +372,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 				};
 				return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
 
-			case RATINGS_1:
+			case COL_RATINGS_1:
 
 				handler = new DevConValueCallbackHander() {
 					@Override
@@ -381,7 +383,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 				return baseChart.buildBarChart(context, statsForApp.toArray(), handler,
 						heighestRatingChange, lowestRatingChange);
 
-			case RATINGS_2:
+			case COL_RATINGS_2:
 
 				handler = new DevConValueCallbackHander() {
 					@Override
@@ -391,7 +393,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 				};
 				return baseChart.buildBarChart(context, statsForApp.toArray(), handler,
 						heighestRatingChange, lowestRatingChange);
-			case RATINGS_3:
+			case COL_RATINGS_3:
 
 				handler = new DevConValueCallbackHander() {
 					@Override
@@ -401,7 +403,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 				};
 				return baseChart.buildBarChart(context, statsForApp.toArray(), handler,
 						heighestRatingChange, lowestRatingChange);
-			case RATINGS_4:
+			case COL_RATINGS_4:
 
 				handler = new DevConValueCallbackHander() {
 					@Override
@@ -411,7 +413,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 				};
 				return baseChart.buildBarChart(context, statsForApp.toArray(), handler,
 						heighestRatingChange, lowestRatingChange);
-			case RATINGS_5:
+			case COL_RATINGS_5:
 
 				handler = new DevConValueCallbackHander() {
 					@Override
@@ -449,43 +451,43 @@ public class ChartListAdapter extends BaseChartListAdapter {
 
 	@Override
 	public String getSubHeadLine(int page, int column) throws IndexOutOfBoundsException {
-		if (column == DATE) {
+		if (column == COL_DATE) {
 			return "";
 		}
 		switch (ChartSet.values()[page]) {
 		case DOWNLOADS: {
 			switch (column) {
-			case TOTAL_DOWNLAODS:
-				return (overallStats != null) ? overallStats.getTotalDownloads() + "" : "";
+			case COL_TOTAL_DOWNLAODS:
+				return Integer.toString(overallStats.getTotalDownloads());
 
-			case TOTAL_DOWNLAODS_BY_DAY:
-				return overallStats.getDailyDownloads() + "";
+			case COL_TOTAL_DOWNLAODS_BY_DAY:
+				return Integer.toString(overallStats.getDailyDownloads());
 
-			case ACTIVE_INSTALLS_PERCENT:
+			case COL_ACTIVE_INSTALLS_PERCENT:
 				return overallStats.getActiveInstallsPercentString() + "%";
 
-			case ACTIVE_INSTALLS_TOTAL:
+			case COL_ACTIVE_INSTALLS_TOTAL:
 				Preferences.saveShowChartHint(activity, false);
-				return overallStats.getActiveInstalls() + "";
+				return Integer.toString(overallStats.getActiveInstalls());
 			}
 		}
 			break;
 		case RATINGS: {
 			switch (column) {
-			case AVG_RATING:
-				return overallStats.getAvgRatingString() + "";
+			case COL_AVG_RATING:
+				return overallStats.getAvgRatingString();
 
-			case RATINGS_1:
-				return overallStats.getRating1() + "";
-			case RATINGS_2:
-				return overallStats.getRating2() + "";
-			case RATINGS_3:
-				return overallStats.getRating3() + "";
-			case RATINGS_4:
-				return overallStats.getRating4() + "";
-			case RATINGS_5:
+			case COL_RATINGS_1:
+				return Utils.safeToString(overallStats.getRating1());
+			case COL_RATINGS_2:
+				return Utils.safeToString(overallStats.getRating2());
+			case COL_RATINGS_3:
+				return Utils.safeToString(overallStats.getRating3());
+			case COL_RATINGS_4:
+				return Utils.safeToString(overallStats.getRating4());
+			case COL_RATINGS_5:
 				Preferences.saveShowChartHint(activity, false);
-				return overallStats.getRating5() + "";
+				return Utils.safeToString(overallStats.getRating5());
 			}
 		}
 		case REVENUE:

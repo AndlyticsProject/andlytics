@@ -201,4 +201,12 @@ public final class Utils {
 		}
 	}
 
+	public static String safeToString(Object val) {
+		if (val == null) {
+			return "";
+		}
+
+		return val.toString();
+	}
+
 }
