@@ -730,18 +730,22 @@ public class MainListAdapter extends BaseAdapter {
 		return statsMode;
 	}
 
-	private Intent createDetailsIntent(AppInfo app, File iconFile, ChartSet chartSet,
+	private Intent createDetailsIntent(AppInfo appInfo, File iconFile, ChartSet chartSet,
 			int selectedTab) {
 		Intent intent = new Intent(activity, DetailsActivity.class);
-		intent.putExtra(Constants.PACKAGE_NAME_PARCEL, app.getPackageName());
+		intent.putExtra(Constants.PACKAGE_NAME_PARCEL, appInfo.getPackageName());
 		intent.putExtra(Constants.CHART_NAME, R.string.ratings);
 		if (iconFile.exists()) {
 			intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
 		}
 		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
-		intent.putExtra(Constants.DEVELOPER_ID_PARCEL, app.getDeveloperId());
+		intent.putExtra(Constants.DEVELOPER_ID_PARCEL, appInfo.getDeveloperId());
 		intent.putExtra(Constants.CHART_SET, chartSet.name());
 		intent.putExtra(DetailsActivity.EXTRA_SELECTED_TAB_IDX, selectedTab);
+		RevenueSummary revenue = appInfo.getTotalRevenueSummary();
+		boolean hasRevenue = revenue != null && revenue.hasRevenue();
+		intent.putExtra(DetailsActivity.EXTRA_HAS_REVENUE, hasRevenue);
+
 		return intent;
 	}
 
