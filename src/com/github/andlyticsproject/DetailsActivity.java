@@ -1,8 +1,5 @@
 package com.github.andlyticsproject;
 
-import java.util.Date;
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -160,11 +157,11 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 		}
 	}
 
-	public void updateView(AppStatsSummary statsForApp, List<Date> versionUpdateDates) {
+	public void updateView(AppStatsSummary statsForApp) {
 		String tabTag = TAB_TAGS[getSupportActionBar().getSelectedNavigationIndex()];
 		StatsView chartFargment = (StatsView) getSupportFragmentManager().findFragmentByTag(tabTag);
 		if (chartFargment != null) {
-			chartFargment.updateView(statsForApp, versionUpdateDates);
+			chartFargment.updateView(statsForApp);
 		}
 	}
 

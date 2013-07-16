@@ -3,7 +3,6 @@ package com.github.andlyticsproject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +19,6 @@ import android.net.Uri;
 
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.db.AdmobTable;
-import com.github.andlyticsproject.db.AndlyticsContentProvider;
 import com.github.andlyticsproject.db.AppInfoTable;
 import com.github.andlyticsproject.db.AppStatsTable;
 import com.github.andlyticsproject.db.CommentsTable;
@@ -993,93 +991,6 @@ public class ContentAdapter {
 			context.getContentResolver().update(AppInfoTable.CONTENT_URI, initialValues,
 					AppInfoTable.KEY_ROWID + "=" + exisitingId, null);
 			result = exisitingId;
-		}
-
-		return result;
-	}
-
-	// XXX this does nothing. Remove?
-	public List<Date> getVersionUpdateDates(String packageName) {
-
-		List<Date> result = new ArrayList<Date>();
-
-		if (true) {
-			return result;
-		}
-
-		Uri uri = Uri.parse("content://" + AndlyticsContentProvider.AUTHORITY + "/"
-				+ AndlyticsContentProvider.APP_VERSION_CHANGE);
-
-		List<String> versionCodes = new ArrayList<String>();
-
-		Cursor cursor = context.getContentResolver().query(
-				uri,
-				new String[] { AppStatsTable.KEY_ROWID, AppStatsTable.KEY_STATS_PACKAGENAME,
-						AppStatsTable.KEY_STATS_DOWNLOADS, AppStatsTable.KEY_STATS_INSTALLS,
-						AppStatsTable.KEY_STATS_COMMENTS, AppStatsTable.KEY_STATS_MARKETERANKING,
-						AppStatsTable.KEY_STATS_CATEGORYRANKING, AppStatsTable.KEY_STATS_5STARS,
-						AppStatsTable.KEY_STATS_4STARS, AppStatsTable.KEY_STATS_3STARS,
-						AppStatsTable.KEY_STATS_2STARS, AppStatsTable.KEY_STATS_1STARS,
-						AppStatsTable.KEY_STATS_REQUESTDATE, AppStatsTable.KEY_STATS_VERSIONCODE },
-				AppStatsTable.KEY_STATS_PACKAGENAME + "='" + packageName + "'", null,
-				AppStatsTable.KEY_STATS_REQUESTDATE); // sort order -> new to
-														// old
-
-		if (cursor.moveToFirst()) {
-
-			do {
-
-				AppStats info = new AppStats();
-				String dateString = cursor.getString(cursor
-						.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE));
-				info.setRequestDate(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
-
-				info.setNumberOfComments(cursor.getInt(cursor
-						.getColumnIndex(AppStatsTable.KEY_STATS_COMMENTS)));
-				info.setVersionCode(cursor.getInt(cursor
-						.getColumnIndex(AppStatsTable.KEY_STATS_VERSIONCODE)));
-
-				versionCodes.add(cursor.getInt(cursor
-						.getColumnIndex(AppStatsTable.KEY_STATS_VERSIONCODE)) + "");
-
-			} while (cursor.moveToNext());
-		}
-
-		cursor.close();
-
-		Collections.sort(versionCodes);
-
-		for (String code : versionCodes) {
-
-			cursor = context.getContentResolver().query(
-					AppStatsTable.CONTENT_URI,
-					new String[] {
-
-					AppStatsTable.KEY_STATS_REQUESTDATE, AppStatsTable.KEY_STATS_VERSIONCODE },
-					AppStatsTable.KEY_STATS_PACKAGENAME + "='" + packageName + "' and "
-							+ AppStatsTable.KEY_STATS_VERSIONCODE + "=" + code, null,
-					AppStatsTable.KEY_STATS_REQUESTDATE + " limit 1"); // sort
-																		// order
-																		// ->
-																		// new
-																		// to
-																		// old
-
-			if (cursor.moveToFirst()) {
-
-				do {
-					String dateString = cursor.getString(cursor
-							.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE));
-					result.add(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
-				} while (cursor.moveToNext());
-			}
-
-			cursor.close();
-
-		}
-
-		if (result.size() > 0) {
-			result = result.subList(1, result.size());
 		}
 
 		return result;

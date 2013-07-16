@@ -3,7 +3,6 @@ package com.github.andlyticsproject;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -29,12 +28,7 @@ import com.github.andlyticsproject.util.LoaderResult;
 public abstract class ChartFragment extends ChartFragmentBase implements StatsView {
 
 
-	static class ChartData {
-		AppStatsSummary statsForApp;
-		List<Date> versionUpdateDates;
-	}
-
-	static class ChartDataLoader extends LoaderBase<ChartData> {
+	static class AppStatsSummaryLoader extends LoaderBase<AppStatsSummary> {
 
 		static final String ARG_PACKAGE_NAME = "packageName";
 		static final String ARG_TIMEFRAME = "timeframe";
@@ -45,7 +39,7 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 		private Timeframe timeframe;
 		private boolean smoothEnabled;
 
-		public ChartDataLoader(Activity context, String packageName, Timeframe timeframe,
+		public AppStatsSummaryLoader(Activity context, String packageName, Timeframe timeframe,
 				boolean smoothEnabled) {
 			super(context);
 			db = ContentAdapter.getInstance(AndlyticsApp.getInstance());
@@ -55,25 +49,21 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 		}
 
 		@Override
-		protected ChartData load() throws Exception {
+		protected AppStatsSummary load() throws Exception {
 			if (packageName == null) {
 				return null;
 			}
 
-			ChartData result = new ChartData();
-			result.statsForApp = db.getStatsForApp(packageName, timeframe, smoothEnabled);
-			result.versionUpdateDates = db.getVersionUpdateDates(packageName);
-
-			return result;
+			return db.getStatsForApp(packageName, timeframe, smoothEnabled);
 		}
 
 		@Override
-		protected void releaseResult(LoaderResult<ChartData> result) {
+		protected void releaseResult(LoaderResult<AppStatsSummary> result) {
 			// just a string, nothing to do
 		}
 
 		@Override
-		protected boolean isActive(LoaderResult<ChartData> result) {
+		protected boolean isActive(LoaderResult<AppStatsSummary> result) {
 			return false;
 		}
 	}
@@ -150,12 +140,11 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 	public void onResume() {
 		super.onResume();
 
-		//		updateView(statsActivity.getStatsForApp(), statsActivity.getVersionUpdateDates());
 		executeLoadData(currentTimeFrame);
 	}
 
-	public void updateView(AppStatsSummary appStatsList, List<Date> versionUpdateDates) {
-		if (appStatsList == null || versionUpdateDates == null) {
+	public void updateView(AppStatsSummary appStatsList) {
+		if (appStatsList == null) {
 			return;
 		}
 
@@ -184,7 +173,6 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 			statsForAppReversed.addAll(statsForApp);
 			Collections.reverse(statsForAppReversed);
 			historyListAdapter.setDownloadInfos(statsForAppReversed);
-			historyListAdapter.setVersionUpdateDates(versionUpdateDates);
 			/*
 			 * int page=historyListAdapter.getCurrentPage(); int
 			 * column=historyListAdapter.getCurrentColumn();
@@ -326,9 +314,9 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 	@Override
 	protected void executeLoadData(Timeframe currentTimeFrame) {
 		Bundle args = new Bundle();
-		args.putString(ChartDataLoader.ARG_PACKAGE_NAME, statsActivity.getPackage());
-		args.putBoolean(ChartDataLoader.ARG_SMOOTH_ENABLED, smoothEnabled);
-		args.putSerializable(ChartDataLoader.ARG_TIMEFRAME, currentTimeFrame);
+		args.putString(AppStatsSummaryLoader.ARG_PACKAGE_NAME, statsActivity.getPackage());
+		args.putBoolean(AppStatsSummaryLoader.ARG_SMOOTH_ENABLED, smoothEnabled);
+		args.putSerializable(AppStatsSummaryLoader.ARG_TIMEFRAME, currentTimeFrame);
 
 		statsActivity.refreshStarted();
 

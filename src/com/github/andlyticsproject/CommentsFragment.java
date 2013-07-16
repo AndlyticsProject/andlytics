@@ -1,7 +1,6 @@
 package com.github.andlyticsproject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -434,7 +433,7 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 
 
 	@Override
-	public void updateView(AppStatsSummary appStatsList, List<Date> versionUpdateDates) {
+	public void updateView(AppStatsSummary appStatsList) {
 		// XXX do nothing, revise interface!
 	}
 
