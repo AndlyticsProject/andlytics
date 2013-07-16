@@ -320,7 +320,7 @@ public class ContentAdapter {
 		if (appStats.getTotalRevenue() != null) {
 			values.put(AppStatsTable.KEY_STATS_TOTAL_REVENUE, appStats.getTotalRevenue()
 					.getAmount());
-			values.put(AppStatsTable.KEY_STATS_CURRENCY, appStats.getTotalRevenue().getCurrency());
+			values.put(AppStatsTable.KEY_STATS_CURRENCY, appStats.getTotalRevenue().getCurrencyCode());
 		}
 
 		context.getContentResolver().insert(AppStatsTable.CONTENT_URI, values);
@@ -916,11 +916,13 @@ public class ContentAdapter {
 				if (as.getTotalRevenue() != null) {
 					totalRevenue += as.getTotalRevenue().getAmount();
 					if (currency == null) {
-						currency = as.getTotalRevenue().getCurrency();
+						currency = as.getTotalRevenue().getCurrencyCode();
 					}
 				}
 			}
-			overall.setTotalRevenue(new Revenue(Revenue.Type.TOTAL, totalRevenue, currency));
+			if (currency != null) {
+				overall.setTotalRevenue(new Revenue(Revenue.Type.TOTAL, totalRevenue, currency));
+			}
 		}
 
 		AppStatsList list = new AppStatsList();

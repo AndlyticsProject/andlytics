@@ -317,14 +317,11 @@ public class MainListAdapter extends BaseAdapter {
 			holder.revenueFrame.setVisibility(View.VISIBLE);
 
 			Revenue overall = revenue.getOverall();
-			holder.totalRevenue.setText(overall == null ? "0.0" : overall.amountAsString());
-			holder.totalRevenueLabel.setText(activity.getString(R.string.revenue_total,
-					overall.getCurrency()));
+			holder.totalRevenue.setText(overall == null ? "0.0" : overall.asString());
+			holder.totalRevenueLabel.setText(R.string.revenue_total);
 			Revenue last30Days = revenue.getLast30Days();
-			holder.last30DaysRevenue.setText(last30Days == null ? "0.0" : last30Days
-					.amountAsString());
-			holder.last30DaysRevenueLabel.setText(activity.getString(R.string.revenue_last_30days,
-					last30Days.getCurrency()));
+			holder.last30DaysRevenue.setText(last30Days == null ? "0.0" : last30Days.asString());
+			holder.last30DaysRevenueLabel.setText(R.string.revenue_last_30days);
 
 			// TODO Drive this with a diff/reset at midnight?
 			// XXX float
