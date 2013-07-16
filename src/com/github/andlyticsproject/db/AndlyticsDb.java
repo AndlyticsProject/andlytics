@@ -178,6 +178,8 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			Log.w(TAG, "Old version < 21 - add new stats colums");
 			db.execSQL("ALTER table " + AppStatsTable.DATABASE_TABLE_NAME + " add "
 					+ AppStatsTable.KEY_STATS_TOTAL_REVENUE + " double");
+			db.execSQL("ALTER table " + AppStatsTable.DATABASE_TABLE_NAME + " add "
+					+ AppStatsTable.KEY_STATS_CURRENCY + " text");
 		}
 	}
 

@@ -73,7 +73,7 @@ public class AppStats {
 	// TODO -- do we support diffs for this?
 	private Integer numberOfErrors;
 
-	private Double totalRevenue;
+	private Revenue totalRevenue;
 
 	public AppStats() {
 	}
@@ -577,11 +577,11 @@ public class AppStats {
 		return numberOfErrors;
 	}
 
-	public Double getTotalRevenue() {
+	public Revenue getTotalRevenue() {
 		return totalRevenue;
 	}
 
-	public void setTotalRevenue(Double totalRevenue) {
+	public void setTotalRevenue(Revenue totalRevenue) {
 		this.totalRevenue = totalRevenue;
 	}
 

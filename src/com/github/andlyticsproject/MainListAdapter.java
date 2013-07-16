@@ -45,6 +45,7 @@ import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
+import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.model.RevenueSummary;
 
 public class MainListAdapter extends BaseAdapter {
@@ -315,25 +316,24 @@ public class MainListAdapter extends BaseAdapter {
 			height = Math.round(height + 55 * displayMetrics.scaledDensity);
 			holder.revenueFrame.setVisibility(View.VISIBLE);
 
-			double overall = revenue.getOverall();
-			holder.totalRevenue.setText(String.format(overall < 1000 ? "%.2f" : "%.0f", overall));
+			Revenue overall = revenue.getOverall();
+			holder.totalRevenue.setText(overall == null ? "0.0" : overall.amountAsString());
 			holder.totalRevenueLabel.setText(activity.getString(R.string.revenue_total,
-					revenue.getCurrency()));
-			double last30Days = revenue.getLast30Days();
-			holder.last30DaysRevenue.setText(String.format(last30Days < 1000 ? "%.2f" : "%.0f",
-					last30Days));
+					overall.getCurrency()));
+			Revenue last30Days = revenue.getLast30Days();
+			holder.last30DaysRevenue.setText(last30Days == null ? "0.0" : last30Days
+					.amountAsString());
 			holder.last30DaysRevenueLabel.setText(activity.getString(R.string.revenue_last_30days,
-					revenue.getCurrency()));
+					last30Days.getCurrency()));
 
 			// TODO Drive this with a diff/reset at midnight?
 			// XXX float
-			float rev = (float) revenue.getLastDay();
+			Revenue rev = revenue.getLastDay();
 			// XXX only parsed and set on HC+
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				rev = appStats.getTotalRevenue() == null ? 0 : appStats.getTotalRevenue()
-						.floatValue();
+				rev = appStats.getTotalRevenue();
 			}
-			setupFloatValueDiff(holder.totalRevenuePercent, rev, String.format("%.2f", rev));
+			setupFloatValueDiff(holder.totalRevenuePercent, rev.getAmount(), rev.asString());
 		} else {
 			holder.revenueFrame.setVisibility(View.GONE);
 		}
@@ -586,7 +586,7 @@ public class MainListAdapter extends BaseAdapter {
 
 	}
 
-	private void setupFloatValueDiff(TextView view, float diff, String diffvalue) {
+	private void setupFloatValueDiff(TextView view, double diff, String diffvalue) {
 
 		String value = diffvalue;
 		if ("0.000".equals(diffvalue)) {

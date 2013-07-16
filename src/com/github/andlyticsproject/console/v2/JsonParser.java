@@ -651,6 +651,9 @@ public class JsonParser {
 		} else {
 			type = Revenue.Type.SUBSCRIPTIONS;
 		}
-		return new Revenue(type, revenueDate, currency, value);
+
+		// XXX do we need the date?
+		//		return new Revenue(type, revenueDate, currency, value);
+		return new Revenue(type, value, currency);
 	}
 }

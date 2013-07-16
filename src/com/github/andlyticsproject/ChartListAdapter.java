@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import com.github.andlyticsproject.chart.Chart.ValueCallbackHander;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.util.Utils;
 
+@SuppressLint("SimpleDateFormat")
 public class ChartListAdapter extends BaseChartListAdapter {
 	// private static String LOG_TAG=ChartListAdapter.class.toString();
 
@@ -51,6 +53,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 	private SimpleDateFormat dateFormat;
 	private AppStats overallStats;
 
+	@SuppressLint("SimpleDateFormat")
 	public ChartListAdapter(Activity activity) {
 		super(activity);
 		BLACK_TEXT = activity.getResources().getColor(R.color.blackText);
@@ -432,7 +435,8 @@ public class ChartListAdapter extends BaseChartListAdapter {
 				@Override
 				public double getValue(Object appInfo) {
 					AppStats stats = (AppStats) appInfo;
-					return stats.getTotalRevenue() == null ? 0 : stats.getTotalRevenue();
+					return stats.getTotalRevenue() == null ? 0 : stats.getTotalRevenue()
+							.getAmount();
 				}
 			};
 			return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
