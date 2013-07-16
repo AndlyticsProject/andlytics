@@ -28,6 +28,7 @@ import com.github.andlyticsproject.console.MultiAccountException;
 import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.dialog.CrashDialog;
 import com.github.andlyticsproject.dialog.CrashDialog.CrashDialogBuilder;
+import com.github.andlyticsproject.legacy.ChartActivity;
 import com.github.andlyticsproject.util.Utils;
 
 public class BaseActivity extends SherlockFragmentActivity {

@@ -1,4 +1,4 @@
-package com.github.andlyticsproject;
+package com.github.andlyticsproject.legacy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,15 @@ import android.widget.ViewSwitcher;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.andlyticsproject.BaseChartListAdapter;
+import com.github.andlyticsproject.ChartSwitcher;
+import com.github.andlyticsproject.Preferences;
+import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.Preferences.Timeframe;
+import com.github.andlyticsproject.R.drawable;
+import com.github.andlyticsproject.R.id;
+import com.github.andlyticsproject.R.layout;
+import com.github.andlyticsproject.R.menu;
 import com.github.andlyticsproject.chart.Chart;
 import com.github.andlyticsproject.view.ChartGallery;
 import com.github.andlyticsproject.view.ChartGalleryAdapter;

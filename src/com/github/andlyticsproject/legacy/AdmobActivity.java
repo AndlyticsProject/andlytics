@@ -1,4 +1,4 @@
-package com.github.andlyticsproject;
+package com.github.andlyticsproject.legacy;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -27,7 +27,18 @@ import android.widget.ViewSwitcher;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.andlyticsproject.AdmobListAdapter;
+import com.github.andlyticsproject.AndlyticsApp;
+import com.github.andlyticsproject.Constants;
+import com.github.andlyticsproject.ContentAdapter;
+import com.github.andlyticsproject.Preferences;
+import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.Preferences.Timeframe;
+import com.github.andlyticsproject.R.anim;
+import com.github.andlyticsproject.R.id;
+import com.github.andlyticsproject.R.layout;
+import com.github.andlyticsproject.R.menu;
+import com.github.andlyticsproject.R.string;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.admob.AdmobRequest.SyncCallback;
 import com.github.andlyticsproject.console.NetworkException;

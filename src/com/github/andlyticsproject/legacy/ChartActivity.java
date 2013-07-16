@@ -1,4 +1,4 @@
-package com.github.andlyticsproject;
+package com.github.andlyticsproject.legacy;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -13,7 +13,15 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.andlyticsproject.ChartListAdapter;
+import com.github.andlyticsproject.Constants;
+import com.github.andlyticsproject.ContentAdapter;
+import com.github.andlyticsproject.Preferences;
+import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.Preferences.Timeframe;
+import com.github.andlyticsproject.R.id;
+import com.github.andlyticsproject.R.layout;
+import com.github.andlyticsproject.R.string;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.AppStatsList;

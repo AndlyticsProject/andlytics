@@ -219,7 +219,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 	}
 
 	@Override
-	protected View buildChart(Context context, Chart baseChart, List<?> statsForApp, int page,
+	public View buildChart(Context context, Chart baseChart, List<?> statsForApp, int page,
 			int column) throws IndexOutOfBoundsException {
 		ValueCallbackHander handler = null;
 

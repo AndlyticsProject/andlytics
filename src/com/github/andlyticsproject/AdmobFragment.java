@@ -56,7 +56,7 @@ public class AdmobFragment extends ChartFragment implements
 	static final String ARG_TIMEFRAME = "timeframe";
 	static final String ARG_LOAD_REMOTE = "loadRemote";
 
-	private static final String TAG = AdmobActivity.class.getSimpleName();
+	private static final String TAG = AdmobFragment.class.getSimpleName();
 
 	private AdmobListAdapter admobListAdapter;
 	public Integer heighestRatingChange;

@@ -209,7 +209,7 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		return view;
 	}
 
-	protected abstract View buildChart(Context context, Chart baseChart, List<?> statsForApp,
+	public abstract View buildChart(Context context, Chart baseChart, List<?> statsForApp,
 			int page, int column) throws IndexOutOfBoundsException;
 
 	public String getCurrentChartTitle() {

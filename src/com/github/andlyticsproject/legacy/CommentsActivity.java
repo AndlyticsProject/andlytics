@@ -1,4 +1,4 @@
-package com.github.andlyticsproject;
+package com.github.andlyticsproject.legacy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,17 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.andlyticsproject.CommentReplier;
+import com.github.andlyticsproject.CommentsListAdapter;
+import com.github.andlyticsproject.ContentAdapter;
+import com.github.andlyticsproject.Main;
+import com.github.andlyticsproject.Preferences;
+import com.github.andlyticsproject.R;
+import com.github.andlyticsproject.ReplyDialog;
+import com.github.andlyticsproject.R.id;
+import com.github.andlyticsproject.R.layout;
+import com.github.andlyticsproject.R.menu;
+import com.github.andlyticsproject.R.string;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.db.AndlyticsDb;
