@@ -92,7 +92,7 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 
 		Bundle b = getArguments();
 		if (b != null) {
-			String chartSet = b.getString(Constants.CHART_SET);
+			String chartSet = b.getString(DetailsActivity.EXTRA_CHART_SET);
 			if (chartSet != null) {
 				currentChartSet = ChartSet.valueOf(chartSet);
 			}

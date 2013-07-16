@@ -1,9 +1,6 @@
 
 package com.github.andlyticsproject.admob;
 
-import com.github.andlyticsproject.AdmobAuthenticatorActivity;
-import com.github.andlyticsproject.Constants;
-
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
@@ -14,11 +11,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 
+import com.github.andlyticsproject.AdmobAuthenticatorActivity;
+
 /**
  * Authenticator service that returns a subclass of AbstractAccountAuthenticator
  * in onBind()
  */
 public class AdmobAccountAuthenticator extends Service {
+
+	public static final String AUTHTOKEN_TYPE_ADMOB = "com.github.andlyticsproject.admob";
+	public static final String ACCOUNT_TYPE_ADMOB = "com.github.andlyticsproject.admob";
 
 	private static Authenticator sAccountAuthenticator = null;
 
@@ -100,7 +102,7 @@ public class AdmobAccountAuthenticator extends Service {
 		@Override
 		public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account,
 				String authTokenType, Bundle loginOptions) {
-			if (!authTokenType.equals(Constants.AUTHTOKEN_TYPE_ADMOB)) {
+			if (!authTokenType.equals(AdmobAccountAuthenticator.AUTHTOKEN_TYPE_ADMOB)) {
 				final Bundle result = new Bundle();
 				result.putString(AccountManager.KEY_ERROR_MESSAGE, "invalid authTokenType");
 				return result;
@@ -112,7 +114,7 @@ public class AdmobAccountAuthenticator extends Service {
 				if (token != null) {
 					final Bundle result = new Bundle();
 					result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-					result.putString(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE_ADMOB);
+					result.putString(AccountManager.KEY_ACCOUNT_TYPE, AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB);
 					result.putString(AccountManager.KEY_AUTHTOKEN, token);
 					return result;
 				}
@@ -133,7 +135,7 @@ public class AdmobAccountAuthenticator extends Service {
 		 */
 		@Override
 		public String getAuthTokenLabel(String authTokenType) {
-			if (authTokenType.equals(Constants.AUTHTOKEN_TYPE_ADMOB)) {
+			if (authTokenType.equals(AdmobAccountAuthenticator.AUTHTOKEN_TYPE_ADMOB)) {
 				return mContext.getString(com.github.andlyticsproject.R.string.app_name_admob);
 			}
 			return null;

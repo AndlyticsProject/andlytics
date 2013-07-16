@@ -42,6 +42,10 @@ public class LoginActivity extends SherlockActivity {
 
 	private static final String TAG = LoginActivity.class.getSimpleName();
 
+	public static final String EXTRA_MANAGE_ACCOUNTS_MODE = "com.github.andlyticsproject.manageAccounts";
+
+	public static final String AUTH_TOKEN_TYPE_ANDROID_DEVELOPER = "androiddeveloper";
+
 	protected static final int CREATE_ACCOUNT_REQUEST = 1;
 
 	private List<DeveloperAccount> developerAccounts;
@@ -74,7 +78,7 @@ public class LoginActivity extends SherlockActivity {
 		// rather than performing the initial login
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			manageAccountsMode = extras.getBoolean(Constants.MANAGE_ACCOUNTS_MODE);
+			manageAccountsMode = extras.getBoolean(LoginActivity.EXTRA_MANAGE_ACCOUNTS_MODE);
 		}
 
 		if (manageAccountsMode) {
@@ -182,7 +186,7 @@ public class LoginActivity extends SherlockActivity {
 	}
 
 	protected void showAccountList() {
-		Account[] googleAccounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
+		Account[] googleAccounts = accountManager.getAccountsByType(AutosyncHandler.ACCOUNT_TYPE_GOOGLE);
 		List<DeveloperAccount> dbAccounts = developerAccountManager.getAllDeveloperAccounts();
 		developerAccounts = new ArrayList<DeveloperAccount>();
 
@@ -290,16 +294,16 @@ public class LoginActivity extends SherlockActivity {
 		};
 
 		// TODO request a weblogin: token here, so we have it cached?
-		accountManager.addAccount(Constants.ACCOUNT_TYPE_GOOGLE,
-				Constants.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, null, null /* options */,
+		accountManager.addAccount(AutosyncHandler.ACCOUNT_TYPE_GOOGLE,
+				LoginActivity.AUTH_TOKEN_TYPE_ANDROID_DEVELOPER, null, null /* options */,
 				LoginActivity.this, callback, null /* handler */);
 	}
 
 	private void redirectToMain(String selectedAccount, String developerId) {
 		Preferences.saveSkipAutoLogin(this, false);
 		Intent intent = new Intent(LoginActivity.this, Main.class);
-		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, selectedAccount);
-		intent.putExtra(Constants.DEVELOPER_ID_PARCEL, developerId);
+		intent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, selectedAccount);
+		intent.putExtra(BaseActivity.EXTRA_DEVELOPER_ID, developerId);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 		overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);

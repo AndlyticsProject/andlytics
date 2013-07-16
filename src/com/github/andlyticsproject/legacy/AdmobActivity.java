@@ -29,7 +29,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.AdmobListAdapter;
 import com.github.andlyticsproject.AndlyticsApp;
-import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.R;
@@ -39,6 +38,7 @@ import com.github.andlyticsproject.R.id;
 import com.github.andlyticsproject.R.layout;
 import com.github.andlyticsproject.R.menu;
 import com.github.andlyticsproject.R.string;
+import com.github.andlyticsproject.admob.AdmobAccountAuthenticator;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.admob.AdmobRequest.SyncCallback;
 import com.github.andlyticsproject.console.NetworkException;
@@ -237,7 +237,7 @@ public class AdmobActivity extends BaseChartActivity {
 	protected void showAccountList() {
 
 		final AccountManager manager = AccountManager.get(this);
-		final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_ADMOB);
+		final Account[] accounts = manager.getAccountsByType(AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB);
 		final int size = accounts.length;
 		String[] names = new String[size];
 		accountList.removeAllViews();
@@ -292,8 +292,8 @@ public class AdmobActivity extends BaseChartActivity {
 			}
 		};
 
-		AccountManager.get(AdmobActivity.this).addAccount(Constants.ACCOUNT_TYPE_ADMOB,
-				Constants.AUTHTOKEN_TYPE_ADMOB, null, null /* options */, AdmobActivity.this,
+		AccountManager.get(AdmobActivity.this).addAccount(AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB,
+				AdmobAccountAuthenticator.AUTHTOKEN_TYPE_ADMOB, null, null /* options */, AdmobActivity.this,
 				callback, null /* handler */);
 	}
 

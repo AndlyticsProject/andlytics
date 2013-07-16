@@ -35,6 +35,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.Timeframe;
+import com.github.andlyticsproject.admob.AdmobAccountAuthenticator;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.admob.AdmobRequest.SyncCallback;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
@@ -329,7 +330,7 @@ public class AdmobFragment extends ChartFragment implements
 
 	protected void showAccountList() {
 		final AccountManager manager = AccountManager.get(getActivity());
-		final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_ADMOB);
+		final Account[] accounts = manager.getAccountsByType(AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB);
 		final int size = accounts.length;
 		String[] names = new String[size];
 		accountList.removeAllViews();
@@ -397,7 +398,7 @@ public class AdmobFragment extends ChartFragment implements
 
 		Activity activity = getActivity();
 		AccountManager.get(activity)
-				.addAccount(Constants.ACCOUNT_TYPE_ADMOB, Constants.AUTHTOKEN_TYPE_ADMOB, null,
+				.addAccount(AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB, AdmobAccountAuthenticator.AUTHTOKEN_TYPE_ADMOB, null,
 						null /* options */, activity, callback, null /* handler */);
 	}
 

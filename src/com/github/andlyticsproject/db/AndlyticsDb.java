@@ -13,7 +13,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.model.AppDetails;
 import com.github.andlyticsproject.model.AppInfo;
@@ -21,6 +20,7 @@ import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.model.Link;
 import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.model.RevenueSummary;
+import com.github.andlyticsproject.sync.AutosyncHandler;
 import com.github.andlyticsproject.util.Utils;
 
 public class AndlyticsDb extends SQLiteOpenHelper {
@@ -249,7 +249,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		db.beginTransaction();
 		try {
 			AccountManager am = AccountManager.get(context);
-			Account[] accounts = am.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
+			Account[] accounts = am.getAccountsByType(AutosyncHandler.ACCOUNT_TYPE_GOOGLE);
 			String activeAccount = Preferences.getAccountName(context);
 			for (Account account : accounts) {
 				boolean isHidden = Preferences.getIsHiddenAccount(context, account.name);

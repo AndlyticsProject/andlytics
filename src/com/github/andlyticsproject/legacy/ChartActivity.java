@@ -13,8 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.github.andlyticsproject.ChartListAdapter;
-import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.ContentAdapter;
+import com.github.andlyticsproject.DetailsActivity;
 import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.R;
@@ -67,7 +67,7 @@ public class ChartActivity extends BaseChartActivity {
 		setIntent(intent);
 		Bundle b = intent.getExtras();
 		if (b != null) {
-			String chartSet = b.getString(Constants.CHART_SET);
+			String chartSet = b.getString(DetailsActivity.EXTRA_CHART_SET);
 			if (chartSet != null) {
 				currentChartSet = ChartSet.valueOf(chartSet);
 			}
@@ -91,7 +91,7 @@ public class ChartActivity extends BaseChartActivity {
 
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
-			String chartSet = b.getString(Constants.CHART_SET);
+			String chartSet = b.getString(DetailsActivity.EXTRA_CHART_SET);
 			if (chartSet != null) {
 				currentChartSet = ChartSet.valueOf(chartSet);
 			}

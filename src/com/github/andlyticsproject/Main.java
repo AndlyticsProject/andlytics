@@ -82,6 +82,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
 
 	private static class State {
+		// TODO replace with loaders
 		LoadDbEntries loadDbEntries;
 		LoadRemoteEntries loadRemoteEntries;
 		LoadIconInCache loadIconInCache;
@@ -140,7 +141,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private State state = new State();
 
 	/** Called when the activity is first created. */
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -190,7 +190,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		if (!developerAccounts.get(itemPosition).getName().equals(accountName)) {
 			// Only switch if it is a new account
 			Intent intent = new Intent(Main.this, Main.class);
-			intent.putExtra(Constants.AUTH_ACCOUNT_NAME, developerAccounts.get(itemPosition)
+			intent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, developerAccounts.get(itemPosition)
 					.getName());
 			startActivity(intent);
 			overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
@@ -268,7 +268,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			break;
 		case R.id.itemMainmenuPreferences:
 			i = new Intent(this, PreferenceActivity.class);
-			i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+			i.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, accountName);
 			startActivity(i);
 			break;
 		case R.id.itemMainmenuStatsMode:
@@ -281,7 +281,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			break;
 		case R.id.itemMainmenuAccounts:
 			i = new Intent(this, LoginActivity.class);
-			i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
+			i.putExtra(LoginActivity.EXTRA_MANAGE_ACCOUNTS_MODE, true);
 			startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
 			break;
 		default:

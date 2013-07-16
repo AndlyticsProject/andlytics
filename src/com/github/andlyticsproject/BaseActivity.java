@@ -35,6 +35,11 @@ public class BaseActivity extends SherlockFragmentActivity {
 
 	private static final String TAG = BaseActivity.class.getSimpleName();
 
+	public static final String EXTRA_AUTH_ACCOUNT_NAME = "com.github.andlyticsproject.accontname";
+	public static final String EXTRA_PACKAGE_NAME = "com.github.andlyticsproject.packagename";
+	public static final String EXTRA_DEVELOPER_ID = "com.github.andlyticsproject.developerid";
+	public static final String EXTRA_ICON_FILE = "com.github.andlyticsproject.iconfile";
+
 	protected static final int REQUEST_AUTHENTICATE = 42;
 
 	protected String packageName;
@@ -48,6 +53,7 @@ public class BaseActivity extends SherlockFragmentActivity {
 
 	protected DeveloperAccountManager developerAccountManager;
 
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,10 +66,10 @@ public class BaseActivity extends SherlockFragmentActivity {
 			// BaseDetailsActivity
 			// Will this effect startActivity etc with regard to null behaviour?
 			// Might be best to leave them here
-			packageName = b.getString(Constants.PACKAGE_NAME_PARCEL);
-			developerId = b.getString(Constants.DEVELOPER_ID_PARCEL);
-			iconFilePath = b.getString(Constants.ICON_FILE_PARCEL);
-			accountName = b.getString(Constants.AUTH_ACCOUNT_NAME);
+			packageName = b.getString(BaseActivity.EXTRA_PACKAGE_NAME);
+			developerId = b.getString(BaseActivity.EXTRA_DEVELOPER_ID);
+			iconFilePath = b.getString(BaseActivity.EXTRA_ICON_FILE);
+			accountName = b.getString(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME);
 			developerAccountManager.selectDeveloperAccount(accountName);
 		}
 
@@ -71,10 +77,10 @@ public class BaseActivity extends SherlockFragmentActivity {
 
 	public void startActivity(Class<?> clazz, boolean disableAnimation, boolean skipDataReload) {
 		Intent intent = new Intent(BaseActivity.this, clazz);
-		intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
-		intent.putExtra(Constants.DEVELOPER_ID_PARCEL, developerId);
-		intent.putExtra(Constants.ICON_FILE_PARCEL, iconFilePath);
-		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+		intent.putExtra(BaseActivity.EXTRA_PACKAGE_NAME, packageName);
+		intent.putExtra(BaseActivity.EXTRA_DEVELOPER_ID, developerId);
+		intent.putExtra(BaseActivity.EXTRA_ICON_FILE, iconFilePath);
+		intent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, accountName);
 		if (clazz.equals(Main.class)) {
 			// Main does not have singleTask set in the manifest
 			// in order to facilitate easy switching between accounts using list
@@ -96,12 +102,12 @@ public class BaseActivity extends SherlockFragmentActivity {
 
 	public void startChartActivity(ChartSet set) {
 		Intent intent = new Intent(BaseActivity.this, ChartActivity.class);
-		intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
-		intent.putExtra(Constants.DEVELOPER_ID_PARCEL, developerId);
-		intent.putExtra(Constants.ICON_FILE_PARCEL, iconFilePath);
-		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+		intent.putExtra(BaseActivity.EXTRA_PACKAGE_NAME, packageName);
+		intent.putExtra(BaseActivity.EXTRA_DEVELOPER_ID, developerId);
+		intent.putExtra(BaseActivity.EXTRA_ICON_FILE, iconFilePath);
+		intent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, accountName);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-		intent.putExtra(Constants.CHART_SET, set.name());
+		intent.putExtra(DetailsActivity.EXTRA_CHART_SET, set.name());
 
 		startActivity(intent);
 	}

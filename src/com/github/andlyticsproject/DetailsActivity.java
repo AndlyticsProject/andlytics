@@ -22,6 +22,9 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 
 	private static final String TAG = DetailsActivity.class.getSimpleName();
 
+	public static final String EXTRA_CHART_SET = "com.github.andlyticsproject.chartset";
+	public static final String EXTRA_CHART_NAME = "com.github.andlyticsproject.chartname";
+
 	private static final String REPLY_DIALOG_FRAGMENT = "reply_dialog_fragment";
 
 	private static final String[] TAB_TAGS = { "comments_tab", "ratings_tab", "downloads_tab",
