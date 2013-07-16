@@ -57,7 +57,7 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 				fragment = Fragment.instantiate(activity, clazz.getName());
 				ft.add(android.R.id.content, fragment, tag);
 			} else {
-				ft.attach(fragment);
+				ft.show(fragment);
 			}
 
 			activity.setTitle(((StatsView) fragment).getTitle());
@@ -68,7 +68,7 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 			if (fragment != null) {
-				ft.detach(fragment);
+				ft.hide(fragment);
 			}
 		}
 
