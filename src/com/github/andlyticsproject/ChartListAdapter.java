@@ -8,7 +8,6 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,8 +22,6 @@ public class ChartListAdapter extends BaseChartListAdapter {
 	// private static String LOG_TAG=ChartListAdapter.class.toString();
 
 	private static int BLACK_TEXT;
-
-	private static final int RED_TEXT = Color.RED;
 
 	private static final int COL_DATE = 0;
 	private static final int COL_TOTAL_DOWNLAODS = 1;
@@ -45,8 +42,6 @@ public class ChartListAdapter extends BaseChartListAdapter {
 	private Integer lowestRatingChange;
 
 	private List<AppStats> downloadInfos;
-
-	private List<Date> versionUpdateDates;
 
 	private Activity activity;
 
@@ -95,14 +90,6 @@ public class ChartListAdapter extends BaseChartListAdapter {
 	public void notifyDataSetChanged() {
 		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatStringShort(activity));
 		super.notifyDataSetChanged();
-	}
-
-	public void setVersionUpdateDates(List<Date> versionUpdateDates) {
-		this.versionUpdateDates = versionUpdateDates;
-	}
-
-	public List<Date> getVersionUpdateDates() {
-		return versionUpdateDates;
 	}
 
 	@Override
@@ -194,8 +181,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 			tv.setText(dateFormat.format(appInfo.getRequestDate()));
 			return;
 		}
-		int textColor = versionUpdateDates.contains(appInfo.getRequestDate()) ? RED_TEXT
-				: BLACK_TEXT;
+		int textColor = BLACK_TEXT;
 		switch (ChartSet.values()[page]) {
 		case DOWNLOADS: {
 

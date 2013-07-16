@@ -7,13 +7,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
-import com.github.andlyticsproject.ChartFragment.ChartData;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
+import com.github.andlyticsproject.model.AppStatsSummary;
 import com.github.andlyticsproject.util.LoaderResult;
 
 public class DownloadsFragment extends ChartFragment implements
-		LoaderManager.LoaderCallbacks<LoaderResult<ChartData>> {
+		LoaderManager.LoaderCallbacks<LoaderResult<AppStatsSummary>> {
 
 	private static final String TAG = DownloadsFragment.class.getSimpleName();
 
@@ -33,22 +33,22 @@ public class DownloadsFragment extends ChartFragment implements
 	}
 
 	@Override
-	public Loader<LoaderResult<ChartData>> onCreateLoader(int id, Bundle args) {
+	public Loader<LoaderResult<AppStatsSummary>> onCreateLoader(int id, Bundle args) {
 		String packageName = null;
 		Timeframe timeframe = null;
 		boolean smoothEnabled = false;
 		if (args != null) {
-			packageName = args.getString(ChartDataLoader.ARG_PACKAGE_NAME);
-			timeframe = (Timeframe) args.getSerializable(ChartDataLoader.ARG_TIMEFRAME);
-			smoothEnabled = args.getBoolean(ChartDataLoader.ARG_SMOOTH_ENABLED);
+			packageName = args.getString(AppStatsSummaryLoader.ARG_PACKAGE_NAME);
+			timeframe = (Timeframe) args.getSerializable(AppStatsSummaryLoader.ARG_TIMEFRAME);
+			smoothEnabled = args.getBoolean(AppStatsSummaryLoader.ARG_SMOOTH_ENABLED);
 		}
 
-		return new ChartDataLoader(getActivity(), packageName, timeframe, smoothEnabled);
+		return new AppStatsSummaryLoader(getActivity(), packageName, timeframe, smoothEnabled);
 	}
 
 	@Override
-	public void onLoadFinished(Loader<LoaderResult<ChartData>> loader,
-			LoaderResult<ChartData> result) {
+	public void onLoadFinished(Loader<LoaderResult<AppStatsSummary>> loader,
+			LoaderResult<AppStatsSummary> result) {
 		if (getActivity() == null) {
 			return;
 		}
@@ -67,14 +67,14 @@ public class DownloadsFragment extends ChartFragment implements
 			return;
 		}
 
-		ChartData chartData = result.getData();
-		if (chartData.statsForApp != null && chartData.versionUpdateDates != null) {
-			updateView(chartData.statsForApp, chartData.versionUpdateDates);
+		AppStatsSummary statsSummary = result.getData();
+		if (statsSummary != null) {
+			updateView(statsSummary);
 		}
 	}
 
 	@Override
-	public void onLoaderReset(Loader<LoaderResult<ChartData>> loader) {
+	public void onLoaderReset(Loader<LoaderResult<AppStatsSummary>> loader) {
 	}
 
 	@Override
