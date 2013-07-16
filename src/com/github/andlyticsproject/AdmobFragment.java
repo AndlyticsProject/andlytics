@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -29,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -40,8 +43,10 @@ import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AdmobList;
 import com.github.andlyticsproject.model.AppStatsList;
+import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.LoaderBase;
 import com.github.andlyticsproject.util.LoaderResult;
+import com.github.andlyticsproject.util.Utils;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
 
 public class AdmobFragment extends ChartFragment implements
@@ -66,6 +71,8 @@ public class AdmobFragment extends ChartFragment implements
 	protected String admobToken;
 
 	private ViewGroup siteList;
+
+	private LoadRemoteSiteListTask loadSitesTask;
 
 	static class AdmobDbLoader extends LoaderBase<AdmobList> {
 
@@ -132,6 +139,7 @@ public class AdmobFragment extends ChartFragment implements
 
 	public AdmobFragment() {
 		setHasOptionsMenu(true);
+		setRetainInstance(true);
 	}
 
 	@Override
@@ -176,7 +184,12 @@ public class AdmobFragment extends ChartFragment implements
 	public void onResume() {
 		super.onResume();
 
-		loadData(getCurrentTimeFrame(), statsActivity.shouldRemoteUpdateStats());
+		loadDataDefault(statsActivity.shouldRemoteUpdateStats());
+	}
+
+
+	private void loadDataDefault(boolean loadRemote) {
+		loadData(getCurrentTimeFrame(), loadRemote);
 	}
 
 	private void loadData(Timeframe timeframe, boolean loadRemote) {
@@ -347,9 +360,19 @@ public class AdmobFragment extends ChartFragment implements
 	}
 
 	private void loadRemoteSiteList(String currentAdmobAccount) {
-		// XXX implement, new loader?
-		//		state.setLoadRemoteSiteList(new LoadRemoteSiteListTask(this, currentAdmobAccount));
-		//		Utils.execute(state.loadRemoteSiteList);
+		if (getActivity() == null) {
+			return;
+		}
+
+		// can't have two loaders with different interface, use 
+		// AsyncTask and retained fragment
+		if (loadSitesTask != null) {
+			loadSitesTask.cancel(true);
+			loadSitesTask = null;
+		}
+
+		loadSitesTask = new LoadRemoteSiteListTask(getActivity(), this, currentAdmobAccount);
+		Utils.execute(loadSitesTask);
 	}
 
 	private void addNewAdmobAccount() {
@@ -505,5 +528,94 @@ public class AdmobFragment extends ChartFragment implements
 	public void restartLoader(Bundle args) {
 		// NOOP, to fulfill ChartFragment interface
 	}
+
+	private static class LoadRemoteSiteListTask extends
+			DetachableAsyncTask<Void, Void, Exception, Activity> {
+
+		private Map<String, String> data;
+
+		private AdmobFragment admobFragment;
+		private DetailedStatsActivity statsActivity;
+		private String currentAdmobAccount;
+
+		public LoadRemoteSiteListTask(Activity activity, AdmobFragment admobFragment,
+				String currentAdmobAccount) {
+			super(activity);
+			this.statsActivity = (DetailedStatsActivity) activity;
+			this.admobFragment = admobFragment;
+			this.currentAdmobAccount = currentAdmobAccount;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			if (activity == null) {
+				return;
+			}
+
+			statsActivity.refreshStarted();
+		}
+
+		@Override
+		protected Exception doInBackground(Void... params) {
+			if (activity == null) {
+				return null;
+			}
+
+			try {
+				data = AdmobRequest.getSiteList(currentAdmobAccount, activity);
+			} catch (Exception e) {
+				return e;
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Exception error) {
+			if (activity == null) {
+				return;
+			}
+
+			statsActivity.refreshFinished();
+
+			if (error != null) {
+				statsActivity.handleUserVisibleException(error);
+				return;
+			}
+
+			if (data != null && data.size() > 0) {
+				admobFragment.siteList.removeAllViews();
+
+				Set<String> keySet = data.keySet();
+				for (String siteId : keySet) {
+
+					String siteName = data.get(siteId);
+
+					// pull the id from the data
+					View inflate = activity.getLayoutInflater().inflate(
+							R.layout.admob_account_list_item, null);
+					TextView accountName = (TextView) inflate
+							.findViewById(R.id.admob_account_list_item_text);
+					accountName.setText(siteName);
+					inflate.setTag(siteId);
+					inflate.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							String admobSiteId = (String) view.getTag();
+							AndlyticsDb.getInstance(activity).saveAdmobDetails(
+									statsActivity.getPackage(), currentAdmobAccount, admobSiteId);
+
+							admobFragment.mainViewSwitcher.swap();
+							admobFragment.loadDataDefault(true);
+							((SherlockFragmentActivity) activity).supportInvalidateOptionsMenu();
+						}
+					});
+					admobFragment.siteList.addView(inflate);
+
+				}
+			}
+		}
+	};
 
 }
