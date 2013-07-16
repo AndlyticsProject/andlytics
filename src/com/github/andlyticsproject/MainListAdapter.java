@@ -45,6 +45,7 @@ import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.model.Admob;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
+import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.model.RevenueSummary;
 
 public class MainListAdapter extends BaseAdapter {
@@ -228,8 +229,8 @@ public class MainListAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		final AppInfo appDownloadInfo = getItem(position);
-		final AppStats appStats = appDownloadInfo.getLatestStats();
+		final AppInfo appInfo = getItem(position);
+		final AppStats appStats = appInfo.getLatestStats();
 
 		int ai = appStats.getActiveInstalls();
 
@@ -241,7 +242,7 @@ public class MainListAdapter extends BaseAdapter {
 		holder.activeInstalls.setText(ai + "");
 		holder.downloadsCount.setText(td + "");
 
-		String packageNameText = appDownloadInfo.getPackageName();
+		String packageNameText = appInfo.getPackageName();
 		//        if(appStats.getVersionCode() != null) {
 		//            packageNameText += " - " + appStats.getVersionCode();
 		//        }
@@ -309,36 +310,35 @@ public class MainListAdapter extends BaseAdapter {
 		}
 
 		int height = expandViewHeight;
-		RevenueSummary revenue = appDownloadInfo.getTotalRevenueSummary();
+		RevenueSummary revenue = appInfo.getTotalRevenueSummary();
 		if (revenue != null && revenue.hasRevenue()) {
 			// 55dp for revenue section?
 			height = Math.round(height + 55 * displayMetrics.scaledDensity);
 			holder.revenueFrame.setVisibility(View.VISIBLE);
 
-			double overall = revenue.getOverall();
-			holder.totalRevenue.setText(String.format(overall < 1000 ? "%.2f" : "%.0f", overall));
+			Revenue overall = revenue.getOverall();
+			holder.totalRevenue.setText(overall == null ? "0.0" : overall.amountAsString());
 			holder.totalRevenueLabel.setText(activity.getString(R.string.revenue_total,
-					revenue.getCurrency()));
-			double last30Days = revenue.getLast30Days();
-			holder.last30DaysRevenue.setText(String.format(last30Days < 1000 ? "%.2f" : "%.0f",
-					last30Days));
+					overall.getCurrency()));
+			Revenue last30Days = revenue.getLast30Days();
+			holder.last30DaysRevenue.setText(last30Days == null ? "0.0" : last30Days
+					.amountAsString());
 			holder.last30DaysRevenueLabel.setText(activity.getString(R.string.revenue_last_30days,
-					revenue.getCurrency()));
+					last30Days.getCurrency()));
 
 			// TODO Drive this with a diff/reset at midnight?
 			// XXX float
-			float rev = (float) revenue.getLastDay();
+			Revenue rev = revenue.getLastDay();
 			// XXX only parsed and set on HC+
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				rev = appStats.getTotalRevenue() == null ? 0 : appStats.getTotalRevenue()
-						.floatValue();
+				rev = appStats.getTotalRevenue();
 			}
-			setupFloatValueDiff(holder.totalRevenuePercent, rev, String.format("%.2f", rev));
+			setupFloatValueDiff(holder.totalRevenuePercent, rev.getAmount(), rev.asString());
 		} else {
 			holder.revenueFrame.setVisibility(View.GONE);
 		}
 
-		Admob admobStats = appDownloadInfo.getAdmobStats();
+		Admob admobStats = appInfo.getAdmobStats();
 		if (admobStats != null) {
 			// 50dp for AdMob section?
 			height = Math.round(height + 50 * displayMetrics.scaledDensity);
@@ -350,9 +350,9 @@ public class MainListAdapter extends BaseAdapter {
 		}
 		final int expandHeight = height;
 
-		final String packageName = appDownloadInfo.getPackageName();
+		final String packageName = appInfo.getPackageName();
 
-		final File iconFile = new File(cachDir + "/" + appDownloadInfo.getIconName());
+		final File iconFile = new File(cachDir + "/" + appInfo.getIconName());
 
 		if (inMemoryCache.contains(packageName)) {
 
@@ -364,7 +364,7 @@ public class MainListAdapter extends BaseAdapter {
 			holder.icon.setTag(TAG_IMAGE_REF, packageName);
 			holder.icon.setImageDrawable(null);
 			holder.icon.clearAnimation();
-			new GetCachedImageTask(holder.icon, appDownloadInfo.getPackageName())
+			new GetCachedImageTask(holder.icon, appInfo.getPackageName())
 					.execute(new File[] { iconFile });
 		}
 
@@ -378,7 +378,7 @@ public class MainListAdapter extends BaseAdapter {
 					intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
 				}
 				intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
-				intent.putExtra(Constants.DEVELOPER_ID_PARCEL, appDownloadInfo.getDeveloperId());
+				intent.putExtra(Constants.DEVELOPER_ID_PARCEL, appInfo.getDeveloperId());
 
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.activity_next_in,
@@ -386,8 +386,8 @@ public class MainListAdapter extends BaseAdapter {
 			}
 		});
 
-		// Make the name look like a ilnk
-		SpannableString name = new SpannableString(appDownloadInfo.getName());
+		// Make the name look like a link
+		SpannableString name = new SpannableString(appInfo.getName());
 		name.setSpan(new UnderlineSpan(), 0, name.length(), 0);
 		holder.name.setText(name);
 
@@ -410,9 +410,8 @@ public class MainListAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = createDetailsIntent(packageName, iconFile, ChartSet.DOWNLOADS,
+				Intent intent = createDetailsIntent(appInfo, iconFile, ChartSet.DOWNLOADS,
 						DetailsActivity.TAB_IDX_COMMENTS);
-				intent.putExtra(Constants.DEVELOPER_ID_PARCEL, appDownloadInfo.getDeveloperId());
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.activity_next_in,
 						R.anim.activity_next_out);
@@ -424,7 +423,7 @@ public class MainListAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = createDetailsIntent(packageName, iconFile, ChartSet.DOWNLOADS,
+				Intent intent = createDetailsIntent(appInfo, iconFile, ChartSet.DOWNLOADS,
 						DetailsActivity.TAB_IDX_DOWNLOADS);
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.activity_next_in,
@@ -436,7 +435,7 @@ public class MainListAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = createDetailsIntent(packageName, iconFile, ChartSet.REVENUE,
+				Intent intent = createDetailsIntent(appInfo, iconFile, ChartSet.REVENUE,
 						DetailsActivity.TAB_IDX_REVENUE);
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.activity_next_in,
@@ -448,7 +447,7 @@ public class MainListAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = createDetailsIntent(packageName, iconFile, ChartSet.ADMOB,
+				Intent intent = createDetailsIntent(appInfo, iconFile, ChartSet.ADMOB,
 						DetailsActivity.TAB_IDX_ADMOB);
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.activity_next_in,
@@ -460,7 +459,7 @@ public class MainListAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = createDetailsIntent(packageName, iconFile, ChartSet.RATINGS,
+				Intent intent = createDetailsIntent(appInfo, iconFile, ChartSet.RATINGS,
 						DetailsActivity.TAB_IDX_RATINGS);
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.activity_next_in,
@@ -470,7 +469,7 @@ public class MainListAdapter extends BaseAdapter {
 
 		android.widget.RelativeLayout.LayoutParams layout = ((RelativeLayout.LayoutParams) holder.ratingFrame
 				.getLayoutParams());
-		if (appDownloadInfo.isRatingDetailsExpanded()) {
+		if (appInfo.isRatingDetailsExpanded()) {
 			holder.ratingFrame.setTag(TAG_IS_EXPANDED, true);
 			layout.topMargin = expandHeight;
 			holder.expand.clearAnimation();
@@ -510,7 +509,7 @@ public class MainListAdapter extends BaseAdapter {
 					boolean isExpanded = (Boolean) holder.ratingFrame.getTag(TAG_IS_EXPANDED);
 					ContentAdapter db = ContentAdapter.getInstance(AndlyticsApp.getInstance());
 					db.setRatingExpanded(accountname, packageName, !isExpanded);
-					appDownloadInfo.setRatingDetailsExpanded(!isExpanded);
+					appInfo.setRatingDetailsExpanded(!isExpanded);
 
 					int margin = expandMargin;
 
@@ -587,7 +586,7 @@ public class MainListAdapter extends BaseAdapter {
 
 	}
 
-	private void setupFloatValueDiff(TextView view, float diff, String diffvalue) {
+	private void setupFloatValueDiff(TextView view, double diff, String diffvalue) {
 
 		String value = diffvalue;
 		if ("0.000".equals(diffvalue)) {
@@ -731,17 +730,22 @@ public class MainListAdapter extends BaseAdapter {
 		return statsMode;
 	}
 
-	private Intent createDetailsIntent(String packageName, File iconFile, ChartSet chartSet,
+	private Intent createDetailsIntent(AppInfo appInfo, File iconFile, ChartSet chartSet,
 			int selectedTab) {
 		Intent intent = new Intent(activity, DetailsActivity.class);
-		intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
+		intent.putExtra(Constants.PACKAGE_NAME_PARCEL, appInfo.getPackageName());
 		intent.putExtra(Constants.CHART_NAME, R.string.ratings);
 		if (iconFile.exists()) {
 			intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
 		}
 		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
+		intent.putExtra(Constants.DEVELOPER_ID_PARCEL, appInfo.getDeveloperId());
 		intent.putExtra(Constants.CHART_SET, chartSet.name());
 		intent.putExtra(DetailsActivity.EXTRA_SELECTED_TAB_IDX, selectedTab);
+		RevenueSummary revenue = appInfo.getTotalRevenueSummary();
+		boolean hasRevenue = revenue != null && revenue.hasRevenue();
+		intent.putExtra(DetailsActivity.EXTRA_HAS_REVENUE, hasRevenue);
+
 		return intent;
 	}
 

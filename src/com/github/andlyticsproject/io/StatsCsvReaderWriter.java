@@ -26,7 +26,9 @@ import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import com.github.andlyticsproject.model.AppStats;
+import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.util.FileUtils;
+import com.github.andlyticsproject.util.Utils;
 
 @SuppressLint("SimpleDateFormat")
 public class StatsCsvReaderWriter {
@@ -36,7 +38,7 @@ public class StatsCsvReaderWriter {
 	public static final String[] HEADER_LIST = new String[] { "PACKAGE_NAME", "DATE",
 			"TOTAL_DOWNLOADS", "ACTIVE_INSTALLS", "NUMBER_OF_COMMENTS", "1_STAR_RATINGS",
 			"2_STAR_RATINGS", "3_STAR_RATINGS", "4_STAR_RATINGS", "5_STAR_RATINGS", "VERSION_CODE",
-			"NUM_ERRORS", "TOTAL_REVENUE" };
+			"NUM_ERRORS", "TOTAL_REVENUE", "CURRENCY" };
 
 	private static final String EXPORT_DIR = "andlytics/";
 
@@ -95,21 +97,21 @@ public class StatsCsvReaderWriter {
 
 			line[0] = packageName;
 			line[1] = createTimestampFormat().format(stat.getRequestDate());
-			line[2] = stat.getTotalDownloads() + "";
-			line[3] = stat.getActiveInstalls() + "";
-			line[4] = stat.getNumberOfComments() + "";
+			line[2] = Integer.toString(stat.getTotalDownloads());
+			line[3] = Integer.toString(stat.getActiveInstalls());
+			line[4] = Integer.toString(stat.getNumberOfComments());
 
-			line[5] = stat.getRating1() + "";
-			line[6] = stat.getRating2() + "";
-			line[7] = stat.getRating3() + "";
-			line[8] = stat.getRating4() + "";
-			line[9] = stat.getRating5() + "";
+			line[5] = Utils.safeToString(stat.getRating1());
+			line[6] = Utils.safeToString(stat.getRating2());
+			line[7] = Utils.safeToString(stat.getRating3());
+			line[8] = Utils.safeToString(stat.getRating4());
+			line[9] = Utils.safeToString(stat.getRating5());
 
-			line[10] = stat.getVersionCode() + "";
+			line[10] = Utils.safeToString(stat.getVersionCode());
 
-			line[11] = stat.getNumberOfErrors() == null ? "" : stat.getNumberOfErrors().toString();
+			line[11] = Utils.safeToString(stat.getNumberOfErrors());
 
-			line[12] = stat.getTotalRevenue() == null ? "" : stat.getTotalRevenue().toString();
+			line[12] = stat.getTotalRevenue() == null ? "" : stat.getTotalRevenue().asString();
 
 			writer.writeNext(line);
 		}
@@ -231,7 +233,11 @@ public class StatsCsvReaderWriter {
 
 					if (nextLine.length > 12) {
 						String totalRevenueStr = nextLine[12];
-						stats.setTotalRevenue(parseDouble(totalRevenueStr));
+						if (!TextUtils.isEmpty(totalRevenueStr)) {
+							String[] fields = totalRevenueStr.split(" ");
+							stats.setTotalRevenue(new Revenue(Revenue.Type.TOTAL,
+									parseDouble(fields[0]), fields[1]));
+						}
 					}
 
 					appStats.add(stats);
@@ -251,13 +257,11 @@ public class StatsCsvReaderWriter {
 	}
 
 	private Double parseDouble(String totalRevenueStr) {
-		return TextUtils.isEmpty(totalRevenueStr) ? null : Double
-				.parseDouble(totalRevenueStr);
+		return TextUtils.isEmpty(totalRevenueStr) ? null : Double.parseDouble(totalRevenueStr);
 	}
 
 	private Integer parseInt(String intStr) {
-		return TextUtils.isEmpty(intStr) ? null : Integer
-				.parseInt(intStr);
+		return TextUtils.isEmpty(intStr) ? null : Integer.parseInt(intStr);
 	}
 
 	public String readPackageName(String fileName) throws ServiceException {

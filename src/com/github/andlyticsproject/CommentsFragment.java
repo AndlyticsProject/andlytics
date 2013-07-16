@@ -208,7 +208,8 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 		super.onActivityCreated(savedInstanceState);
 
 		// just init don't try to load
-		getLoaderManager().initLoader(0, null, this);
+		getLoaderManager().initLoader(DB_LOADER_ID, null, this);
+		getLoaderManager().initLoader(REMOTE_LOADER_ID, null, this);
 	}
 
 	@Override

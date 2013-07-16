@@ -7,10 +7,10 @@ public class RevenueSummary {
 	private Revenue.Type type;
 	private String currency;
 
-	private double lastDay;
-	private double last7Days;
-	private double last30Days;
-	private double overall;
+	private Revenue lastDay;
+	private Revenue last7Days;
+	private Revenue last30Days;
+	private Revenue overall;
 
 	public static RevenueSummary createTotal(String currency, double lastDay, double last7Days,
 			double last30Days, double overall) {
@@ -34,10 +34,10 @@ public class RevenueSummary {
 			double last30Days, double overall) {
 		this.type = type;
 		this.currency = currency;
-		this.lastDay = lastDay;
-		this.last7Days = last7Days;
-		this.last30Days = last30Days;
-		this.overall = overall;
+		this.lastDay = new Revenue(type, lastDay, currency);
+		this.last7Days = new Revenue(type, last7Days, currency);
+		this.last30Days = new Revenue(type, last30Days, currency);
+		this.overall = new Revenue(type, overall, currency);
 	}
 
 	public Long getId() {
@@ -56,23 +56,23 @@ public class RevenueSummary {
 		return currency;
 	}
 
-	public double getLastDay() {
+	public Revenue getLastDay() {
 		return lastDay;
 	}
 
-	public double getLast7Days() {
+	public Revenue getLast7Days() {
 		return last7Days;
 	}
 
-	public double getLast30Days() {
+	public Revenue getLast30Days() {
 		return last30Days;
 	}
 
-	public double getOverall() {
+	public Revenue getOverall() {
 		return overall;
 	}
 
 	public boolean hasRevenue() {
-		return overall > 0 || last30Days > 0;
+		return overall.getAmount() > 0 || last30Days.getAmount() > 0;
 	}
 }

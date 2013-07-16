@@ -37,7 +37,10 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 	public static int TAB_IDX_REVENUE = 3;
 	public static int TAB_IDX_ADMOB = 4;
 
+	public static String EXTRA_HAS_REVENUE = "hasRevenue";
+
 	private String appName;
+	private boolean hasRevenue;
 
 	public static class TabListener<T extends StatsView> implements ActionBar.TabListener {
 
@@ -58,7 +61,6 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 				ft.add(android.R.id.content, fragment, tag);
 			} else {
 				ft.show(fragment);
-
 			}
 
 			activity.setTitle(((StatsView) fragment).getTitle());
@@ -82,6 +84,7 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 		super.onCreate(savedInstanceState);
 
 		appName = getDbAdapter().getAppName(packageName);
+		hasRevenue = getIntent().getBooleanExtra(EXTRA_HAS_REVENUE, true);
 
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -109,12 +112,15 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 								DownloadsFragment.class));
 		actionBar.addTab(tab);
 
-		tab = actionBar
-				.newTab()
-				.setText(R.string.revenue)
-				.setTabListener(
-						new TabListener<RevenueFragment>(this, "revenue_tab", RevenueFragment.class));
-		actionBar.addTab(tab);
+		if (hasRevenue) {
+			tab = actionBar
+					.newTab()
+					.setText(R.string.revenue)
+					.setTabListener(
+							new TabListener<RevenueFragment>(this, "revenue_tab",
+									RevenueFragment.class));
+			actionBar.addTab(tab);
+		}
 
 		// Check if AdMob is configured for this app
 		String[] admobDetails = AndlyticsDb.getInstance(this).getAdmobDetails(packageName);
