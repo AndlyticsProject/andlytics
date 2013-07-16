@@ -7,6 +7,8 @@ import java.util.Date;
 import android.annotation.SuppressLint;
 import android.util.SparseArray;
 
+import com.github.andlyticsproject.AppStatsDiff;
+
 public class AppStats {
 
 	private int totalDownloads;
@@ -583,6 +585,37 @@ public class AppStats {
 
 	public void setTotalRevenue(Revenue totalRevenue) {
 		this.totalRevenue = totalRevenue;
+	}
+
+	public AppStatsDiff createDiff(AppStats previousStats, AppInfo appInfo) {
+		AppStatsDiff diff = new AppStatsDiff();
+		diff.setAppName(appInfo.getName());
+		diff.setPackageName(appInfo.getPackageName());
+		diff.setIconName(appInfo.getIconName());
+		diff.setSkipNotification(appInfo.isSkipNotification());
+		diff.setVersionName(appInfo.getVersionName());
+
+		if (previousStats != null) {
+
+			init();
+			previousStats.init();
+
+			diff.setActiveInstallsChange(getActiveInstalls()
+					- previousStats.getActiveInstalls());
+			diff.setDownloadsChange(getTotalDownloads()
+					- previousStats.getTotalDownloads());
+			diff.setCommentsChange(getNumberOfComments()
+					- previousStats.getNumberOfComments());
+			diff.setAvgRatingChange(getAvgRating() - previousStats.getAvgRating());
+			diff.setRating1Change(getRating1() - previousStats.getRating1());
+			diff.setRating2Change(getRating2() - previousStats.getRating2());
+			diff.setRating3Change(getRating3() - previousStats.getRating3());
+			diff.setRating4Change(getRating4() - previousStats.getRating4());
+			diff.setRating5Change(getRating5() - previousStats.getRating5());
+
+		}
+
+		return diff;
 	}
 
 }

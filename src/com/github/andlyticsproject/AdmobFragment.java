@@ -40,9 +40,9 @@ import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.admob.AdmobRequest.SyncCallback;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.db.AndlyticsDb;
-import com.github.andlyticsproject.model.Admob;
-import com.github.andlyticsproject.model.AdmobList;
-import com.github.andlyticsproject.model.AppStatsList;
+import com.github.andlyticsproject.model.AdmobStats;
+import com.github.andlyticsproject.model.AdmobStatsSummary;
+import com.github.andlyticsproject.model.AppStatsSummary;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.LoaderBase;
 import com.github.andlyticsproject.util.LoaderResult;
@@ -50,13 +50,13 @@ import com.github.andlyticsproject.util.Utils;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
 
 public class AdmobFragment extends ChartFragment implements
-		LoaderManager.LoaderCallbacks<LoaderResult<AdmobList>> {
+		LoaderManager.LoaderCallbacks<LoaderResult<AdmobStatsSummary>> {
 
 	static final String ARG_PACKAGE_NAME = "packageName";
 	static final String ARG_TIMEFRAME = "timeframe";
 	static final String ARG_LOAD_REMOTE = "loadRemote";
 
-	private static final String TAG = AdmobActivity.class.getSimpleName();
+	private static final String TAG = AdmobFragment.class.getSimpleName();
 
 	private AdmobListAdapter admobListAdapter;
 	public Integer heighestRatingChange;
@@ -74,7 +74,7 @@ public class AdmobFragment extends ChartFragment implements
 
 	private LoadRemoteSiteListTask loadSitesTask;
 
-	static class AdmobDbLoader extends LoaderBase<AdmobList> {
+	static class AdmobDbLoader extends LoaderBase<AdmobStatsSummary> {
 
 		static final String ARG_PACKAGE_NAME = "packageName";
 		static final String ARG_TIMEFRAME = "timeframe";
@@ -95,7 +95,7 @@ public class AdmobFragment extends ChartFragment implements
 		}
 
 		@Override
-		protected AdmobList load() throws Exception {
+		protected AdmobStatsSummary load() throws Exception {
 			if (packageName == null || timeframe == null) {
 				return null;
 			}
@@ -127,12 +127,12 @@ public class AdmobFragment extends ChartFragment implements
 		}
 
 		@Override
-		protected void releaseResult(LoaderResult<AdmobList> result) {
+		protected void releaseResult(LoaderResult<AdmobStatsSummary> result) {
 			// just a string, nothing to do
 		}
 
 		@Override
-		protected boolean isActive(LoaderResult<AdmobList> result) {
+		protected boolean isActive(LoaderResult<AdmobStatsSummary> result) {
 			return false;
 		}
 	}
@@ -203,7 +203,7 @@ public class AdmobFragment extends ChartFragment implements
 	}
 
 	@Override
-	public void updateView(AppStatsList appStatsList, List<Date> versionUpdateDates) {
+	public void updateView(AppStatsSummary appStatsList, List<Date> versionUpdateDates) {
 		// XXX do nothing, need to redesign super class
 	}
 
@@ -414,13 +414,13 @@ public class AdmobFragment extends ChartFragment implements
 		return ctx.getString(R.string.admob);
 	}
 
-	private void showStats(AdmobList admobList) {
+	private void showStats(AdmobStatsSummary admobList) {
 		admobListAdapter.setOverallStats(admobList.getOverallStats());
 
-		List<Admob> admobStats = admobList.getAdmobs();
+		List<AdmobStats> admobStats = admobList.getAdmobs();
 		loadChartData(admobStats);
 		// make shallow copy
-		List<Admob> reversedAdmobStats = new ArrayList<Admob>();
+		List<AdmobStats> reversedAdmobStats = new ArrayList<AdmobStats>();
 		reversedAdmobStats.addAll(admobStats);
 		Collections.reverse(reversedAdmobStats);
 
@@ -429,7 +429,7 @@ public class AdmobFragment extends ChartFragment implements
 		admobListAdapter.notifyDataSetChanged();
 	}
 
-	private void loadChartData(List<Admob> statsForApp) {
+	private void loadChartData(List<AdmobStats> statsForApp) {
 		if (statsForApp != null && statsForApp.size() > 0) {
 			updateCharts(statsForApp);
 
@@ -484,7 +484,7 @@ public class AdmobFragment extends ChartFragment implements
 	}
 
 	@Override
-	public Loader<LoaderResult<AdmobList>> onCreateLoader(int id, Bundle args) {
+	public Loader<LoaderResult<AdmobStatsSummary>> onCreateLoader(int id, Bundle args) {
 		String packageName = null;
 		Timeframe timeframe = null;
 		boolean loadRemote = false;
@@ -498,8 +498,8 @@ public class AdmobFragment extends ChartFragment implements
 	}
 
 	@Override
-	public void onLoadFinished(Loader<LoaderResult<AdmobList>> loader,
-			LoaderResult<AdmobList> result) {
+	public void onLoadFinished(Loader<LoaderResult<AdmobStatsSummary>> loader,
+			LoaderResult<AdmobStatsSummary> result) {
 		statsActivity.refreshFinished();
 
 		if (result.isFailed()) {
@@ -516,7 +516,7 @@ public class AdmobFragment extends ChartFragment implements
 	}
 
 	@Override
-	public void onLoaderReset(Loader<LoaderResult<AdmobList>> arg0) {
+	public void onLoaderReset(Loader<LoaderResult<AdmobStatsSummary>> arg0) {
 	}
 
 	@Override

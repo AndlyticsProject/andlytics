@@ -34,7 +34,7 @@ import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.console.NetworkException;
-import com.github.andlyticsproject.model.Admob;
+import com.github.andlyticsproject.model.AdmobStats;
 
 public class AdmobRequest {
 
@@ -340,7 +340,7 @@ public class AdmobRequest {
 
 			// read db for required sync period
 			ContentAdapter contentAdapter = ContentAdapter.getInstance(AndlyticsApp.getInstance());
-			List<Admob> admobStats = contentAdapter.getAdmobStats(admobSiteId,
+			List<AdmobStats> admobStats = contentAdapter.getAdmobStats(admobSiteId,
 					Timeframe.LATEST_VALUE).getAdmobs();
 
 			if (admobStats.size() > 0) {
@@ -359,7 +359,7 @@ public class AdmobRequest {
 
 			}
 
-			List<Admob> result = new ArrayList<Admob>();
+			List<AdmobStats> result = new ArrayList<AdmobStats>();
 
 			//String endDate = dateFormat.format(calendar.getTime());
 			JSONArray data = getData(context, account, token, "site", "stats", new String[] {
@@ -379,7 +379,7 @@ public class AdmobRequest {
 					//convert the line of data to a json object so we can pick specific data out of it
 					JSONObject adObject = new JSONObject(data.get(i).toString());
 
-					Admob admob = new Admob();
+					AdmobStats admob = new AdmobStats();
 					admob.setSiteId(admobSiteId);
 					admob.setClicks(adObject.getInt(KEY_CLICKS));
 					admob.setCpcRevenue(Float.parseFloat(adObject.getString(KEY_CPC_REVENUE)));
@@ -411,19 +411,19 @@ public class AdmobRequest {
 				if (result.size() > 6) {
 
 					// insert first results single to avoid manual triggered doubles
-					List<Admob> subList1 = result.subList(0, 5);
-					for (Admob admob : subList1) {
+					List<AdmobStats> subList1 = result.subList(0, 5);
+					for (AdmobStats admob : subList1) {
 						contentAdapter.insertOrUpdateAdmobStats(admob);
 					}
 
-					List<Admob> subList2 = result.subList(5, result.size());
+					List<AdmobStats> subList2 = result.subList(5, result.size());
 					contentAdapter.bulkInsertAdmobStats(subList2);
 
 				} else {
 					contentAdapter.bulkInsertAdmobStats(result);
 				}
 			} else {
-				for (Admob admob : result) {
+				for (AdmobStats admob : result) {
 					contentAdapter.insertOrUpdateAdmobStats(admob);
 				}
 			}

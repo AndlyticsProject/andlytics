@@ -312,7 +312,7 @@ public class ChartListAdapter extends BaseChartListAdapter {
 	}
 
 	@Override
-	protected View buildChart(Context context, Chart baseChart, List<?> statsForApp, int page,
+	public View buildChart(Context context, Chart baseChart, List<?> statsForApp, int page,
 			int column) throws IndexOutOfBoundsException {
 		// Log.i(LOG_TAG,"buildChart p="+page+" c="+column);
 		ValueCallbackHander handler = null;

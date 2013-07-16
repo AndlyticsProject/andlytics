@@ -1,4 +1,4 @@
-package com.github.andlyticsproject;
+package com.github.andlyticsproject.legacy;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -13,10 +13,18 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.andlyticsproject.ChartListAdapter;
+import com.github.andlyticsproject.Constants;
+import com.github.andlyticsproject.ContentAdapter;
+import com.github.andlyticsproject.Preferences;
+import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.Preferences.Timeframe;
+import com.github.andlyticsproject.R.id;
+import com.github.andlyticsproject.R.layout;
+import com.github.andlyticsproject.R.string;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.model.AppStats;
-import com.github.andlyticsproject.model.AppStatsList;
+import com.github.andlyticsproject.model.AppStatsSummary;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
@@ -166,7 +174,7 @@ public class ChartActivity extends BaseChartActivity {
 			db = ContentAdapter.getInstance(activity.getApplication());
 		}
 
-		private AppStatsList statsForApp;
+		private AppStatsSummary statsForApp;
 		private List<Date> versionUpdateDates;
 
 		@Override
@@ -199,7 +207,7 @@ public class ChartActivity extends BaseChartActivity {
 							"statsForApp::lowestRatingChanage "
 									+ statsForApp.getLowestRatingChange());
 					Log.d(TAG, "statsForApp::appStats " + statsForApp.getAppStats().size());
-					Log.d(TAG, "statsForApps::overall " + statsForApp.getOverall());
+					Log.d(TAG, "statsForApps::overall " + statsForApp.getOverallStats());
 					Log.d(TAG, "versionUpdateDates " + versionUpdateDates.size());
 				}
 
@@ -235,11 +243,11 @@ public class ChartActivity extends BaseChartActivity {
 		return false;
 	}
 
-	private void updateView(AppStatsList appStatsList, List<Date> versionUpdateDates) {
+	private void updateView(AppStatsSummary appStatsList, List<Date> versionUpdateDates) {
 		List<AppStats> statsForApp = appStatsList.getAppStats();
 		if (statsForApp != null && statsForApp.size() > 0) {
 			boolean smoothedValues = applySmoothedValues(statsForApp);
-			historyListAdapter.setOverallStats(appStatsList.getOverall());
+			historyListAdapter.setOverallStats(appStatsList.getOverallStats());
 			historyListAdapter.setHeighestRatingChange(appStatsList.getHighestRatingChange());
 			historyListAdapter.setLowestRatingChange(appStatsList.getLowestRatingChange());
 

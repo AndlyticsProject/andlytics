@@ -25,7 +25,7 @@ import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.AppStats;
-import com.github.andlyticsproject.model.AppStatsList;
+import com.github.andlyticsproject.model.AppStatsSummary;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
 import com.github.andlyticsproject.util.LoaderBase;
@@ -434,7 +434,7 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 
 
 	@Override
-	public void updateView(AppStatsList appStatsList, List<Date> versionUpdateDates) {
+	public void updateView(AppStatsSummary appStatsList, List<Date> versionUpdateDates) {
 		// XXX do nothing, revise interface!
 	}
 

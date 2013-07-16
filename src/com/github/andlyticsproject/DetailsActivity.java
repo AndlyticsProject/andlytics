@@ -15,7 +15,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.db.AndlyticsDb;
-import com.github.andlyticsproject.model.AppStatsList;
+import com.github.andlyticsproject.model.AppStatsSummary;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
@@ -160,7 +160,7 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 		}
 	}
 
-	public void updateView(AppStatsList statsForApp, List<Date> versionUpdateDates) {
+	public void updateView(AppStatsSummary statsForApp, List<Date> versionUpdateDates) {
 		String tabTag = TAB_TAGS[getSupportActionBar().getSelectedNavigationIndex()];
 		StatsView chartFargment = (StatsView) getSupportFragmentManager().findFragmentByTag(tabTag);
 		if (chartFargment != null) {

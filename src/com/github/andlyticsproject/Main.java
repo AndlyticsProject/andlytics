@@ -46,7 +46,7 @@ import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
-import com.github.andlyticsproject.model.Admob;
+import com.github.andlyticsproject.model.AdmobStats;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.sync.NotificationHandler;
@@ -563,10 +563,10 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			for (AppInfo appInfo : allStats) {
 				if (!appInfo.isGhost()) {
 					if (appInfo.getAdmobSiteId() != null) {
-						List<Admob> admobStats = db.getAdmobStats(appInfo.getAdmobSiteId(),
+						List<AdmobStats> admobStats = db.getAdmobStats(appInfo.getAdmobSiteId(),
 								Timeframe.LAST_TWO_DAYS).getAdmobs();
 						if (admobStats.size() > 0) {
-							Admob admob = admobStats.get(admobStats.size() - 1);
+							AdmobStats admob = admobStats.get(admobStats.size() - 1);
 							appInfo.setAdmobStats(admob);
 						}
 					}
