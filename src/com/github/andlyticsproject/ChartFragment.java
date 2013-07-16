@@ -21,7 +21,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.model.AppStats;
-import com.github.andlyticsproject.model.AppStatsList;
+import com.github.andlyticsproject.model.AppStatsSummary;
 import com.github.andlyticsproject.util.LoaderBase;
 import com.github.andlyticsproject.util.LoaderResult;
 
@@ -30,7 +30,7 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 
 
 	static class ChartData {
-		AppStatsList statsForApp;
+		AppStatsSummary statsForApp;
 		List<Date> versionUpdateDates;
 	}
 
@@ -154,7 +154,7 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 		executeLoadData(currentTimeFrame);
 	}
 
-	public void updateView(AppStatsList appStatsList, List<Date> versionUpdateDates) {
+	public void updateView(AppStatsSummary appStatsList, List<Date> versionUpdateDates) {
 		if (appStatsList == null || versionUpdateDates == null) {
 			return;
 		}
@@ -166,7 +166,7 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 		List<AppStats> statsForApp = appStatsList.getAppStats();
 		if (statsForApp != null && statsForApp.size() > 0) {
 			boolean smoothedValues = applySmoothedValues(statsForApp);
-			historyListAdapter.setOverallStats(appStatsList.getOverall());
+			historyListAdapter.setOverallStats(appStatsList.getOverallStats());
 			historyListAdapter.setHeighestRatingChange(appStatsList.getHighestRatingChange());
 			historyListAdapter.setLowestRatingChange(appStatsList.getLowestRatingChange());
 

@@ -35,7 +35,7 @@ public class AppInfo {
 
 	private String versionName;
 
-	private Admob admobStats;
+	private AdmobStats admobStats;
 
 	private String admobAccount;
 	private String admobSiteId;
@@ -177,11 +177,11 @@ public class AppInfo {
 		return versionName;
 	}
 
-	public void setAdmobStats(Admob admobStats) {
+	public void setAdmobStats(AdmobStats admobStats) {
 		this.admobStats = admobStats;
 	}
 
-	public Admob getAdmobStats() {
+	public AdmobStats getAdmobStats() {
 		return admobStats;
 	}
 

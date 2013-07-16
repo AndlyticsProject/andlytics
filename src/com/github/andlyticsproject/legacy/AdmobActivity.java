@@ -43,8 +43,8 @@ import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.admob.AdmobRequest.SyncCallback;
 import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.db.AndlyticsDb;
-import com.github.andlyticsproject.model.Admob;
-import com.github.andlyticsproject.model.AdmobList;
+import com.github.andlyticsproject.model.AdmobStats;
+import com.github.andlyticsproject.model.AdmobStatsSummary;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
@@ -300,7 +300,7 @@ public class AdmobActivity extends BaseChartActivity {
 	private static class LoadDbEntriesTask extends
 			DetachableAsyncTask<Object, Void, Exception, AdmobActivity> {
 
-		private AdmobList admobList;
+		private AdmobStatsSummary admobList;
 		private Boolean executeRemoteCall = false;
 		private ContentAdapter db;
 
@@ -363,13 +363,13 @@ public class AdmobActivity extends BaseChartActivity {
 		}
 	};
 
-	private void showStats(AdmobList admobList) {
+	private void showStats(AdmobStatsSummary admobList) {
 		admobListAdapter.setOverallStats(admobList.getOverallStats());
 
-		List<Admob> admobStats = admobList.getAdmobs();
+		List<AdmobStats> admobStats = admobList.getAdmobs();
 		loadChartData(admobStats);
 		// make shallow copy
-		List<Admob> reversedAdmobStats = new ArrayList<Admob>();
+		List<AdmobStats> reversedAdmobStats = new ArrayList<AdmobStats>();
 		reversedAdmobStats.addAll(admobStats);
 		Collections.reverse(reversedAdmobStats);
 
@@ -543,7 +543,7 @@ public class AdmobActivity extends BaseChartActivity {
 		}
 	};
 
-	private void loadChartData(List<Admob> statsForApp) {
+	private void loadChartData(List<AdmobStats> statsForApp) {
 		/*
 		 * if(radioLastThrity != null) { radioLastThrity.setEnabled(false);
 		 * radioUnlimited.setEnabled(false); checkSmooth.setEnabled(false); }

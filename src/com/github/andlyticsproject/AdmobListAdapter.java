@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.github.andlyticsproject.chart.Chart;
 import com.github.andlyticsproject.chart.Chart.ValueCallbackHander;
-import com.github.andlyticsproject.model.Admob;
+import com.github.andlyticsproject.model.AdmobStats;
 
 @SuppressLint("SimpleDateFormat")
 public class AdmobListAdapter extends BaseChartListAdapter {
@@ -33,7 +33,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 	private static final int COL_HOUSEAD_CLICKS = 4;
 
 	private NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
-	private List<Admob> stats;
+	private List<AdmobStats> stats;
 
 	//	private LayoutInflater layoutInflater;
 
@@ -45,11 +45,11 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 
 	//	private List<AdmobChartType> secondPageCharts;
 
-	private Admob overallStats;
+	private AdmobStats overallStats;
 
 	public AdmobListAdapter(Activity activity) {
 		super(activity);
-		this.stats = new ArrayList<Admob>();
+		this.stats = new ArrayList<AdmobStats>();
 		//		this.layoutInflater = activity.getLayoutInflater();
 		this.activity = activity;
 		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatStringShort(activity));
@@ -61,7 +61,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 	}
 
 	@Override
-	public Admob getItem(int position) {
+	public AdmobStats getItem(int position) {
 		return stats.get(position);
 	}
 
@@ -80,7 +80,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 	 * }
 	 */
 
-	public void setOverallStats(Admob overallStats) {
+	public void setOverallStats(AdmobStats overallStats) {
 		this.overallStats = overallStats;
 	}
 
@@ -90,11 +90,11 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 		super.notifyDataSetChanged();
 	}
 
-	public void setStats(List<Admob> stats) {
+	public void setStats(List<AdmobStats> stats) {
 		this.stats = stats;
 	}
 
-	public List<Admob> getStats() {
+	public List<AdmobStats> getStats() {
 		return stats;
 	}
 
@@ -166,7 +166,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 	@Override
 	public void updateChartValue(int position, int page, int column, TextView tv)
 			throws IndexOutOfBoundsException {
-		Admob admob = getItem(position);
+		AdmobStats admob = getItem(position);
 		if (column == COL_DATE) {
 			tv.setText(dateFormat.format(admob.getDate()));
 			return;
@@ -231,7 +231,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 				handler = new AdmobValueCallbackHander() {
 					@Override
 					public double getValue(Object appInfo) {
-						return ((Admob) appInfo).getRevenue();
+						return ((AdmobStats) appInfo).getRevenue();
 					}
 				};
 				return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
@@ -240,7 +240,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 				handler = new AdmobValueCallbackHander() {
 					@Override
 					public double getValue(Object appInfo) {
-						return ((Admob) appInfo).getEpc();
+						return ((AdmobStats) appInfo).getEpc();
 					}
 				};
 				return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
@@ -248,7 +248,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 				handler = new AdmobValueCallbackHander() {
 					@Override
 					public double getValue(Object appInfo) {
-						return ((Admob) appInfo).getRequests();
+						return ((AdmobStats) appInfo).getRequests();
 					}
 				};
 				return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
@@ -257,7 +257,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 				handler = new AdmobValueCallbackHander() {
 					@Override
 					public double getValue(Object appInfo) {
-						return ((Admob) appInfo).getClicks();
+						return ((AdmobStats) appInfo).getClicks();
 					}
 				};
 				return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
@@ -265,7 +265,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 				handler = new AdmobValueCallbackHander() {
 					@Override
 					public double getValue(Object appInfo) {
-						return ((Admob) appInfo).getFillRate();
+						return ((AdmobStats) appInfo).getFillRate();
 					}
 				};
 				return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
@@ -278,7 +278,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 				handler = new AdmobValueCallbackHander() {
 					@Override
 					public double getValue(Object appInfo) {
-						return ((Admob) appInfo).getEcpm();
+						return ((AdmobStats) appInfo).getEcpm();
 					}
 				};
 				return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
@@ -287,7 +287,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 				handler = new AdmobValueCallbackHander() {
 					@Override
 					public double getValue(Object appInfo) {
-						return ((Admob) appInfo).getImpressions();
+						return ((AdmobStats) appInfo).getImpressions();
 					}
 				};
 				return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
@@ -295,7 +295,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 				handler = new AdmobValueCallbackHander() {
 					@Override
 					public double getValue(Object appInfo) {
-						return ((Admob) appInfo).getCtr();
+						return ((AdmobStats) appInfo).getCtr();
 					}
 				};
 				return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
@@ -303,7 +303,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 				handler = new AdmobValueCallbackHander() {
 					@Override
 					public double getValue(Object appInfo) {
-						return ((Admob) appInfo).getHouseAdClicks();
+						return ((AdmobStats) appInfo).getHouseAdClicks();
 					}
 				};
 				return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
@@ -317,7 +317,7 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 	public abstract class AdmobValueCallbackHander implements ValueCallbackHander {
 		@Override
 		public Date getDate(Object appInfo) {
-			return ((Admob) appInfo).getDate();
+			return ((AdmobStats) appInfo).getDate();
 		}
 
 		@Override

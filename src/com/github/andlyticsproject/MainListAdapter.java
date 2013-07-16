@@ -42,7 +42,7 @@ import android.widget.TextView;
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.cache.AppIconInMemoryCache;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
-import com.github.andlyticsproject.model.Admob;
+import com.github.andlyticsproject.model.AdmobStats;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Revenue;
@@ -335,7 +335,7 @@ public class MainListAdapter extends BaseAdapter {
 			holder.revenueFrame.setVisibility(View.GONE);
 		}
 
-		Admob admobStats = appInfo.getAdmobStats();
+		AdmobStats admobStats = appInfo.getAdmobStats();
 		if (admobStats != null) {
 			// 50dp for AdMob section?
 			height = Math.round(height + 50 * displayMetrics.scaledDensity);

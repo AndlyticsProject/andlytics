@@ -4,7 +4,7 @@ package com.github.andlyticsproject.model;
 import java.text.DecimalFormat;
 import java.util.Date;
 
-public class Admob {
+public class AdmobStats {
 
 	private String siteId;
 	private Integer requests = 0;
