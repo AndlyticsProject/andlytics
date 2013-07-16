@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.DeveloperAccountManager;
 import com.github.andlyticsproject.model.DeveloperAccount;
 
@@ -29,7 +28,7 @@ public class SyncDeveloperAccountsService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		developerAccountManager = DeveloperAccountManager.getInstance(this);
 		Account[] googleAccounts = AccountManager.get(this).getAccountsByType(
-				Constants.ACCOUNT_TYPE_GOOGLE);
+				AutosyncHandler.ACCOUNT_TYPE_GOOGLE);
 
 		Log.d(TAG, "Synchornizing Andlytics developer accounts and Google accounts...");
 		addNewGoogleAccounts(googleAccounts);
@@ -75,14 +74,14 @@ public class SyncDeveloperAccountsService extends IntentService {
 		List<DeveloperAccount> accounts = developerAccountManager.getActiveDeveloperAccounts();
 		for (DeveloperAccount developerAccount : accounts) {
 			Account googleAccount = new Account(developerAccount.getName(),
-					Constants.ACCOUNT_TYPE_GOOGLE);
+					AutosyncHandler.ACCOUNT_TYPE_GOOGLE);
 			boolean syncAutomatically = ContentResolver.getSyncAutomatically(googleAccount,
-					Constants.ACCOUNT_AUTHORITY);
+					AutosyncHandler.ACCOUNT_AUTHORITY);
 			if (syncAutomatically && developerAccount.isVisible()) {
 				Bundle extras = new Bundle();
 				Log.d(TAG, "requesting sync for " + developerAccount + " now! :: "
 						+ new Date(System.currentTimeMillis()).toGMTString());
-				ContentResolver.requestSync(googleAccount, Constants.ACCOUNT_AUTHORITY, extras);
+				ContentResolver.requestSync(googleAccount, AutosyncHandler.ACCOUNT_AUTHORITY, extras);
 			} else {
 				Log.d(TAG, "auto sync disabled for account :: " + developerAccount);
 			}

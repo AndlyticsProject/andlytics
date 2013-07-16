@@ -18,7 +18,7 @@ import android.support.v4.app.NotificationCompat.Builder;
 
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.AppStatsDiff;
-import com.github.andlyticsproject.Constants;
+import com.github.andlyticsproject.BaseActivity;
 import com.github.andlyticsproject.DeveloperAccountManager;
 import com.github.andlyticsproject.Main;
 import com.github.andlyticsproject.Preferences;
@@ -139,7 +139,7 @@ public class NotificationHandler {
 				builder.setNumber(number);
 
 				Intent notificationIntent = new Intent(context, Main.class);
-				notificationIntent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+				notificationIntent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, accountName);
 				notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 				PendingIntent contentIntent = PendingIntent.getActivity(context,

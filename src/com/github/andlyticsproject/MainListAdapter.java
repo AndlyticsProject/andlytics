@@ -370,12 +370,12 @@ public class MainListAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(activity, AppInfoActivity.class);
-				intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
+				intent.putExtra(BaseActivity.EXTRA_PACKAGE_NAME, packageName);
 				if (iconFile.exists()) {
-					intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
+					intent.putExtra(BaseActivity.EXTRA_ICON_FILE, iconFile.getAbsolutePath());
 				}
-				intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
-				intent.putExtra(Constants.DEVELOPER_ID_PARCEL, appInfo.getDeveloperId());
+				intent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, accountname);
+				intent.putExtra(BaseActivity.EXTRA_DEVELOPER_ID, appInfo.getDeveloperId());
 
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.activity_next_in,
@@ -392,9 +392,9 @@ public class MainListAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(activity, AppInfoActivity.class);
-				intent.putExtra(Constants.PACKAGE_NAME_PARCEL, packageName);
+				intent.putExtra(BaseActivity.EXTRA_PACKAGE_NAME, packageName);
 				if (iconFile.exists()) {
-					intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
+					intent.putExtra(BaseActivity.EXTRA_ICON_FILE, iconFile.getAbsolutePath());
 				}
 
 				activity.startActivity(intent);
@@ -730,14 +730,14 @@ public class MainListAdapter extends BaseAdapter {
 	private Intent createDetailsIntent(AppInfo appInfo, File iconFile, ChartSet chartSet,
 			int selectedTab) {
 		Intent intent = new Intent(activity, DetailsActivity.class);
-		intent.putExtra(Constants.PACKAGE_NAME_PARCEL, appInfo.getPackageName());
-		intent.putExtra(Constants.CHART_NAME, R.string.ratings);
+		intent.putExtra(BaseActivity.EXTRA_PACKAGE_NAME, appInfo.getPackageName());
+		intent.putExtra(DetailsActivity.EXTRA_CHART_NAME, R.string.ratings);
 		if (iconFile.exists()) {
-			intent.putExtra(Constants.ICON_FILE_PARCEL, iconFile.getAbsolutePath());
+			intent.putExtra(BaseActivity.EXTRA_ICON_FILE, iconFile.getAbsolutePath());
 		}
-		intent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountname);
-		intent.putExtra(Constants.DEVELOPER_ID_PARCEL, appInfo.getDeveloperId());
-		intent.putExtra(Constants.CHART_SET, chartSet.name());
+		intent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, accountname);
+		intent.putExtra(BaseActivity.EXTRA_DEVELOPER_ID, appInfo.getDeveloperId());
+		intent.putExtra(DetailsActivity.EXTRA_CHART_SET, chartSet.name());
 		intent.putExtra(DetailsActivity.EXTRA_SELECTED_TAB_IDX, selectedTab);
 		RevenueSummary revenue = appInfo.getTotalRevenueSummary();
 		boolean hasRevenue = revenue != null && revenue.hasRevenue();
