@@ -110,10 +110,12 @@ public class AdmobFragment extends ChartFragment implements
 			String currentAdmobAccount = admobDetails[0];
 			String currentSiteId = admobDetails[1];
 
+			Log.d(TAG, "Loading Admob stats...");
 			if (loadRemote) {
 				List<String> siteList = new ArrayList<String>();
 				siteList.add(currentSiteId);
 
+				Log.d(TAG, "Loading remote Admob stats...");
 				AdmobRequest.syncSiteStats(currentAdmobAccount, getContext(), siteList,
 						new SyncCallback() {
 
@@ -123,6 +125,7 @@ public class AdmobFragment extends ChartFragment implements
 						});
 			}
 
+			Log.d(TAG, "Loading Admob stats from DB...");
 			return db.getAdmobStats(currentSiteId, timeframe);
 		}
 
@@ -151,8 +154,8 @@ public class AdmobFragment extends ChartFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		// just init don't try to load
-		getLoaderManager().initLoader(0, null, this);
+		// init loader
+		loadCurrentData();
 	}
 
 	@Override
@@ -184,12 +187,18 @@ public class AdmobFragment extends ChartFragment implements
 	public void onResume() {
 		super.onResume();
 
-		loadDataDefault(statsActivity.shouldRemoteUpdateStats());
+		Log.d(TAG, "onResume()");
+
+		if (statsActivity.shouldRemoteUpdateStats()) {
+			loadRemoteData();
+		} else {
+			loadCurrentData();
+		}
 	}
 
 
-	private void loadDataDefault(boolean loadRemote) {
-		loadData(getCurrentTimeFrame(), loadRemote);
+	private void loadRemoteData() {
+		loadData(getCurrentTimeFrame(), true);
 	}
 
 	private void loadData(Timeframe timeframe, boolean loadRemote) {
@@ -199,7 +208,19 @@ public class AdmobFragment extends ChartFragment implements
 		args.putBoolean(ARG_LOAD_REMOTE, loadRemote);
 		statsActivity.refreshStarted();
 
+		Log.d(TAG, "Restarting loader");
 		getLoaderManager().restartLoader(0, args, this);
+	}
+
+	@Override
+	protected void loadCurrentData() {
+		Bundle args = new Bundle();
+		args.putString(ARG_PACKAGE_NAME, statsActivity.getPackage());
+		args.putSerializable(ARG_TIMEFRAME, getCurrentTimeFrame());
+		args.putBoolean(ARG_LOAD_REMOTE, false);
+		statsActivity.refreshStarted();
+
+		getLoaderManager().initLoader(0, args, this);
 	}
 
 	@Override
@@ -330,7 +351,8 @@ public class AdmobFragment extends ChartFragment implements
 
 	protected void showAccountList() {
 		final AccountManager manager = AccountManager.get(getActivity());
-		final Account[] accounts = manager.getAccountsByType(AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB);
+		final Account[] accounts = manager
+				.getAccountsByType(AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB);
 		final int size = accounts.length;
 		String[] names = new String[size];
 		accountList.removeAllViews();
@@ -397,9 +419,9 @@ public class AdmobFragment extends ChartFragment implements
 		};
 
 		Activity activity = getActivity();
-		AccountManager.get(activity)
-				.addAccount(AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB, AdmobAccountAuthenticator.AUTHTOKEN_TYPE_ADMOB, null,
-						null /* options */, activity, callback, null /* handler */);
+		AccountManager.get(activity).addAccount(AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB,
+				AdmobAccountAuthenticator.AUTHTOKEN_TYPE_ADMOB, null, null /* options */,
+				activity, callback, null /* handler */);
 	}
 
 	@Override
@@ -520,7 +542,7 @@ public class AdmobFragment extends ChartFragment implements
 	}
 
 	@Override
-	public void initLoader() {
+	public void initLoader(Bundle args) {
 		// NOOP, to fulfill ChartFragment interface
 	}
 
@@ -607,7 +629,7 @@ public class AdmobFragment extends ChartFragment implements
 									statsActivity.getPackage(), currentAdmobAccount, admobSiteId);
 
 							admobFragment.mainViewSwitcher.swap();
-							admobFragment.loadDataDefault(true);
+							admobFragment.loadRemoteData();
 							((SherlockFragmentActivity) activity).supportInvalidateOptionsMenu();
 						}
 					});

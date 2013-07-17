@@ -206,8 +206,8 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		// just init don't try to load
-		getLoaderManager().initLoader(DB_LOADER_ID, null, this);
+		loadCurrentData();
+		// just init don't try to load, will load onResume if necessary
 		getLoaderManager().initLoader(REMOTE_LOADER_ID, null, this);
 	}
 
@@ -256,10 +256,14 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 	public void onResume() {
 		super.onResume();
 
-		loadData(statsActivity.shouldRemoteUpdateStats());
+		if (statsActivity.shouldRemoteUpdateStats()) {
+			loadRemoteData();
+		} else {
+			loadCurrentData();
+		}
 	}
 
-	private void loadData(boolean loadRemote) {
+	private void loadRemoteData() {
 		Bundle args = new Bundle();
 		args.putString("accountName", statsActivity.getAccountName());
 		args.putString("developerId", statsActivity.getDeveloperId());
@@ -269,7 +273,20 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 		statsActivity.refreshStarted();
 		disableFooter();
 
-		getLoaderManager().restartLoader(loadRemote ? REMOTE_LOADER_ID : DB_LOADER_ID, args, this);
+		getLoaderManager().restartLoader(REMOTE_LOADER_ID, args, this);
+	}
+
+	private void loadCurrentData() {
+		Bundle args = new Bundle();
+		args.putString("accountName", statsActivity.getAccountName());
+		args.putString("developerId", statsActivity.getDeveloperId());
+		args.putString("packageName", statsActivity.getPackage());
+		args.putInt("nextCommentIndex", nextCommentIndex);
+
+		statsActivity.refreshStarted();
+		disableFooter();
+
+		getLoaderManager().initLoader(DB_LOADER_ID, args, this);
 	}
 
 
@@ -328,7 +345,7 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 	}
 
 	private void fetchNextComments() {
-		loadData(true);
+		loadRemoteData();
 	}
 
 	protected boolean shouldRemoteUpdateComments() {
