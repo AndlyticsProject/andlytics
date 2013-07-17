@@ -231,6 +231,7 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 
+		menu.clear();
 		inflater.inflate(R.menu.charts_menu, menu);
 		MenuItem activeTimeFrame = null;
 		switch (currentTimeFrame) {

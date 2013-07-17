@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/itemAdmobsmenuRefresh"
+        android:icon="@drawable/icon_refresh"
+        android:showAsAction="ifRoom"
+        android:title="@string/refresh">
+    </item>
+    <item
+        android:id="@+id/itemChartsmenuToggle"        
+        android:icon="@drawable/icon_data"
+        android:showAsAction="ifRoom"
+        android:title="@string/refresh">
+    </item>
+    <item
+        android:id="@+id/itemAdmobsmenuTimeframe"
+        android:icon="@drawable/icon_calendar"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/time_frame">
+        <menu>
+            <group android:checkableBehavior="single" >
+                <item
+                    android:id="@+id/itemAdmobsmenuTimeframe7"
+                    android:title="@string/seven_days"/>
+                <item
+                    android:id="@+id/itemAdmobsmenuTimeframe30"
+                    android:title="@string/thirty_days"/>
+                <item
+                    android:id="@+id/itemAdmobsmenuTimeframe90"
+                    android:title="@string/ninety_days"/>
+                <item
+                    android:id="@+id/itemAdmobsmenuTimeframeMonthToDate"
+                    android:title="@string/month_to_date"/>
+                <item
+                    android:id="@+id/itemAdmobsmenuTimeframeUnlimited"
+                    android:title="@string/unlimited"/>
+            </group>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/itemAdmobsmenuRemove"
+        android:showAsAction="never"
+        android:title="@string/remove_admob">
+    </item>
+
+</menu>
