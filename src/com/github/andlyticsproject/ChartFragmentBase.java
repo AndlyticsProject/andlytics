@@ -29,7 +29,8 @@ import com.github.andlyticsproject.view.ViewSwitcher3D.ViewSwitcherListener;
 @SuppressWarnings("deprecation")
 public abstract class ChartFragmentBase extends SherlockFragment implements ViewSwitcherListener {
 
-	protected static final String SELECTED_CHART_POISTION = "selected_chart_position";
+	protected static final String SELECTED_CHART_PAGE = "selected_chart_page";
+	protected static final String SELECTED_CHART_COLUMN = "selected_chart_position";
 
 	protected ChartGalleryAdapter chartGalleryAdapter;
 	protected ChartGallery chartGallery;
@@ -42,6 +43,8 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 	protected ViewGroup chartframe;
 	protected BaseChartListAdapter myAdapter;
 
+	protected int currentChartPage = -1;
+	protected int currentChartColumn = -1;
 
 	public ChartFragmentBase() {
 	}
@@ -85,7 +88,6 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 					updateChartHeadline();
 					myAdapter.notifyDataSetChanged();
 					onChartSelected(pageColumn[0], pageColumn[1]);
-
 				}
 
 			}
@@ -100,6 +102,11 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 		dataframe = (ViewGroup) view.findViewById(R.id.base_chart_datacontainer);
 		chartframe = (ViewGroup) view.findViewById(R.id.base_chart_chartframe);
 
+		if (savedInstanceState != null) {
+			currentChartPage = savedInstanceState.getInt(SELECTED_CHART_PAGE);
+			currentChartColumn = savedInstanceState.getInt(SELECTED_CHART_COLUMN);
+		}
+
 		return view;
 	}
 
@@ -107,7 +114,10 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 	@Override
 	public void onSaveInstanceState(Bundle state) {
 		super.onSaveInstanceState(state);
-		state.putInt(SELECTED_CHART_POISTION, chartGallery.getSelectedItemPosition());
+		if (chartGallery != null && myAdapter != null) {
+			state.putInt(SELECTED_CHART_PAGE, myAdapter.getCurrentPage());
+			state.putInt(SELECTED_CHART_COLUMN, myAdapter.getCurrentColumn());
+		}
 	}
 
 	/**
@@ -147,6 +157,10 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 		throw new IndexOutOfBoundsException("page=" + page + " column=" + column);
 	}
 
+	public int getCurrentChart() {
+		return chartGallery.getSelectedItemPosition();
+	}
+
 
 	protected abstract void notifyChangedDataformat();
 
@@ -182,7 +196,6 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 	@Override
 	public void onRender() {
 		chartGallery.invalidate();
-
 	}
 
 	public Timeframe getCurrentTimeFrame() {
@@ -261,13 +274,13 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 		chartGallery.setIgnoreLayoutCalls(ignoreLayoutCalls);
 	}
 
-	// XXX?
-	//	@Override
-	//	public void onRestoreInstanceState(Bundle state) {
-	//		super.onRestoreInstanceState(state);
-	//		int chartIndex = state.getInt(SELECTED_CHART_POISTION);
-	//		chartGallery.setSelection(chartIndex);
-	//	}
-
+	protected void restoreChartSelection() {
+		if (currentChartPage != -1 && currentChartColumn != -1) {
+			setCurrentChart(currentChartPage, currentChartColumn);
+			// only restore once
+			currentChartPage = -1;
+			currentChartColumn = -1;
+		}
+	}
 
 }

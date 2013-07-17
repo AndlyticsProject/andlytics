@@ -9,4 +9,6 @@ public interface StatsView {
 	public String getTitle();
 
 	public void setCurrentChart(int currentPage, int column);
+
+	public int getCurrentChart();
 }

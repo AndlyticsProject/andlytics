@@ -37,7 +37,7 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 	public static int TAB_IDX_REVENUE = 3;
 	public static int TAB_IDX_ADMOB = 4;
 
-	public static String EXTRA_HAS_REVENUE = "hasRevenue";
+	public static String EXTRA_HAS_REVENUE = "com.github.andlyticsproject.hasRevenue";
 
 	private String appName;
 	private boolean hasRevenue;
@@ -53,6 +53,8 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 			this.activity = activity;
 			this.tag = tag;
 			this.clazz = clz;
+
+			fragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
 		}
 
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -60,7 +62,7 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 				fragment = Fragment.instantiate(activity, clazz.getName());
 				ft.add(android.R.id.content, fragment, tag);
 			} else {
-				ft.show(fragment);
+				ft.attach(fragment);
 			}
 
 			activity.setTitle(((StatsView) fragment).getTitle());
@@ -71,7 +73,7 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 			if (fragment != null) {
-				ft.hide(fragment);
+				ft.detach(fragment);
 			}
 		}
 
@@ -81,6 +83,9 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG, "onCreate()");
+		//		FragmentManager.enableDebugLogging(true);
+
 		super.onCreate(savedInstanceState);
 
 		appName = getDbAdapter().getAppName(packageName);
@@ -135,6 +140,9 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 		}
 
 		int selectedTabIdx = getIntent().getExtras().getInt(EXTRA_SELECTED_TAB_IDX, 0);
+		if (savedInstanceState != null) {
+			selectedTabIdx = savedInstanceState.getInt(EXTRA_SELECTED_TAB_IDX, 0);
+		}
 		if (selectedTabIdx < actionBar.getTabCount()) {
 			actionBar.setSelectedNavigationItem(selectedTabIdx);
 		} else {

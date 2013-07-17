@@ -196,6 +196,8 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 					oneEntryHint.setVisibility(View.INVISIBLE);
 				}
 			}
+
+			restoreChartSelection();
 		}
 	}
 

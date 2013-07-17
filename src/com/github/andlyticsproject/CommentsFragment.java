@@ -551,4 +551,10 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 		// NOOP, we don't have charts
 	}
 
+	@Override
+	public int getCurrentChart() {
+		// we don't have charts
+		return -1;
+	}
+
 }
