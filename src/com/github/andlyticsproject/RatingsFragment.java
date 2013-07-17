@@ -78,8 +78,8 @@ public class RatingsFragment extends ChartFragment implements
 	}
 
 	@Override
-	public void initLoader() {
-		getLoaderManager().restartLoader(0, null, this);
+	public void initLoader(Bundle args) {
+		getLoaderManager().initLoader(0, args, this);
 
 	}
 

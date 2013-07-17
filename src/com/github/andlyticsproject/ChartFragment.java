@@ -8,6 +8,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.github.andlyticsproject.util.LoaderResult;
 
 public abstract class ChartFragment extends ChartFragmentBase implements StatsView {
 
+	private static final String TAG = ChartFragment.class.getSimpleName();
 
 	static class AppStatsSummaryLoader extends LoaderBase<AppStatsSummary> {
 
@@ -54,6 +56,7 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 				return null;
 			}
 
+			Log.d(TAG, "loading stats for " + packageName);
 			return db.getStatsForApp(packageName, timeframe, smoothEnabled);
 		}
 
@@ -106,11 +109,11 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		// just init don't try to load
-		initLoader();
+		// init loader
+		loadCurrentData();
 	}
 
-	public abstract void initLoader();
+	public abstract void initLoader(Bundle args);
 
 	public abstract void restartLoader(Bundle args);
 
@@ -140,7 +143,7 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 	public void onResume() {
 		super.onResume();
 
-		executeLoadData(currentTimeFrame);
+		loadCurrentData();
 	}
 
 	public void updateView(AppStatsSummary appStatsList) {
@@ -322,6 +325,17 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 		statsActivity.refreshStarted();
 
 		restartLoader(args);
+	}
+
+	protected void loadCurrentData() {
+		Bundle args = new Bundle();
+		args.putString(AppStatsSummaryLoader.ARG_PACKAGE_NAME, statsActivity.getPackage());
+		args.putBoolean(AppStatsSummaryLoader.ARG_SMOOTH_ENABLED, smoothEnabled);
+		args.putSerializable(AppStatsSummaryLoader.ARG_TIMEFRAME, getCurrentTimeFrame());
+
+		statsActivity.refreshStarted();
+
+		initLoader(args);
 	}
 
 	public void setCurrentChartSet(ChartSet currentChartSet) {
