@@ -147,6 +147,11 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 		super.onResume();
 	}
 
+	protected void onSaveInstanceState(Bundle state) {
+		super.onSaveInstanceState(state);
+		state.putInt(EXTRA_SELECTED_TAB_IDX, getSupportActionBar().getSelectedNavigationIndex());
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
