@@ -225,7 +225,20 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 
 	@Override
 	public void updateView(StatsSummary<AdmobStats> statsSummary) {
-		// XXX do nothing, need to redesign super class
+		admobListAdapter.setOverallStats(statsSummary.getOverallStats());
+
+		List<AdmobStats> admobStats = statsSummary.getStats();
+		loadChartData(admobStats);
+		// make shallow copy
+		List<AdmobStats> reversedAdmobStats = new ArrayList<AdmobStats>();
+		reversedAdmobStats.addAll(admobStats);
+		Collections.reverse(reversedAdmobStats);
+
+		admobListAdapter.setStats(reversedAdmobStats);
+		// admobListAdapter.setCurrentChart(currentChart);
+		admobListAdapter.notifyDataSetChanged();
+
+		restoreChartSelection();
 	}
 
 	@Override
@@ -441,21 +454,6 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 		return ctx.getString(R.string.admob);
 	}
 
-	private void showStats(AdmobStatsSummary admobList) {
-		admobListAdapter.setOverallStats(admobList.getOverallStats());
-
-		List<AdmobStats> admobStats = admobList.getStats();
-		loadChartData(admobStats);
-		// make shallow copy
-		List<AdmobStats> reversedAdmobStats = new ArrayList<AdmobStats>();
-		reversedAdmobStats.addAll(admobStats);
-		Collections.reverse(reversedAdmobStats);
-
-		admobListAdapter.setStats(reversedAdmobStats);
-		// admobListAdapter.setCurrentChart(currentChart);
-		admobListAdapter.notifyDataSetChanged();
-	}
-
 	private void loadChartData(List<AdmobStats> statsForApp) {
 		if (statsForApp != null && statsForApp.size() > 0) {
 			updateCharts(statsForApp);
@@ -539,7 +537,7 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 			return;
 		}
 
-		showStats(result.getData());
+		updateView(result.getData());
 	}
 
 	@Override

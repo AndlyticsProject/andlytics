@@ -344,19 +344,4 @@ public abstract class ChartFragment<T extends Statistic> extends ChartFragmentBa
 		return currentChartSet;
 	}
 
-	@Override
-	public void setCurrentChart(int page, int column) {
-		int pos = 0;
-		for (View view : chartGalleryAdapter.getViews()) {
-			int pageColumn[] = (int[]) view.getTag();
-			if (page == pageColumn[0] && column == pageColumn[1]) {
-				chartGallery.setSelection(pos, false);
-				return;
-			}
-			pos++;
-		}
-		throw new IndexOutOfBoundsException("page=" + page + " column=" + column);
-	}
-
-
 }
