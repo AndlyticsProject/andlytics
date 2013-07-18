@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.github.andlyticsproject.chart.Chart;
 
-public abstract class BaseChartListAdapter extends BaseAdapter {
+public abstract class BaseChartListAdapter<T> extends BaseAdapter {
 	private static String LOG_TAG = BaseChartListAdapter.class.toString();
 	/**
 	 * 
@@ -34,6 +34,8 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 	private final int listItemTextSize;
 	private final int colorOdd;
 	private final int colorEven;
+
+	public abstract T getItem(int position);
 
 
 	public abstract int getNumPages();

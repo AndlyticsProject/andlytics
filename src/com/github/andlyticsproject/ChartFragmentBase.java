@@ -41,7 +41,7 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 	protected ViewSwitcher3D listViewSwitcher;
 	protected ViewGroup dataframe;
 	protected ViewGroup chartframe;
-	protected BaseChartListAdapter myAdapter;
+	protected BaseChartListAdapter<?> myAdapter;
 
 	protected int currentChartPage = -1;
 	protected int currentChartColumn = -1;
@@ -170,7 +170,7 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 
 	protected abstract void executeLoadData(Timeframe currentTimeFrame);
 
-	protected final void setAdapter(BaseChartListAdapter adapter) {
+	protected final void setAdapter(BaseChartListAdapter<?> adapter) {
 		myAdapter = adapter;
 		dataList.setAdapter(adapter);
 	}

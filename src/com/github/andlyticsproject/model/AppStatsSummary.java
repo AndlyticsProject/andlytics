@@ -10,26 +10,25 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 
-public class AppStatsSummary {
-
-	private List<AppStats> appStats = new ArrayList<AppStats>();
-	private AppStats overallStats = new AppStats();
+public class AppStatsSummary extends StatsSummary<AppStats> {
 
 	private Integer highestRatingChange = 0;
 	private Integer lowestRatingChange = 0;
 
-	public void addStats(AppStats stats) {
-		stats.init();
-		appStats.add(stats);
+	public AppStatsSummary() {
+		overallStats = new AppStats();
 	}
 
-	public List<AppStats> getAppStats() {
-		return Collections.unmodifiableList(appStats);
+	@Override
+	public void addStat(AppStats stat) {
+		stat.init();
+		stats.add(stat);
 	}
 
 	@SuppressLint("SimpleDateFormat")
+	@Override
 	public void calculateOverallStats(int limit, boolean smoothEnabled) {
-		Collections.reverse(appStats);
+		Collections.reverse(stats);
 
 		List<AppStats> missingAppStats = new ArrayList<AppStats>();
 		List<Integer> missingAppStatsPositionOffest = new ArrayList<Integer>();
@@ -37,13 +36,13 @@ public class AppStatsSummary {
 		int positionInsertOffset = 0;
 
 		// add missing sync days
-		if (appStats.size() > 1) {
+		if (stats.size() > 1) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-			for (int currentIndex = 1; currentIndex < appStats.size(); currentIndex++) {
+			for (int currentIndex = 1; currentIndex < stats.size(); currentIndex++) {
 
-				String olderEntryDate = appStats.get(currentIndex - 1).getRequestDateString();
-				String newerEntryDate = appStats.get(currentIndex).getRequestDateString();
+				String olderEntryDate = stats.get(currentIndex - 1).getRequestDateString();
+				String newerEntryDate = stats.get(currentIndex).getRequestDateString();
 
 				try {
 					Date olderDate = dateFormat.parse(olderEntryDate);
@@ -52,8 +51,8 @@ public class AppStatsSummary {
 					long daysDistance = ((newerDate.getTime() - olderDate.getTime()) / 1000 / 60 / 60 / 24);
 
 					for (int i = 1; i < daysDistance; i++) {
-						AppStats missingEntry = new AppStats(appStats.get(currentIndex - 1));
-						missingEntry.setRequestDate(new Date(missingEntry.getRequestDate()
+						AppStats missingEntry = new AppStats(stats.get(currentIndex - 1));
+						missingEntry.setDate(new Date(missingEntry.getDate()
 								.getTime() + (i * 1000 * 60 * 60 * 24)));
 						missingAppStats.add(missingEntry);
 						missingAppStatsPositionOffest.add(currentIndex + positionInsertOffset);
@@ -66,22 +65,22 @@ public class AppStatsSummary {
 		}
 
 		for (int i = 0; i < missingAppStatsPositionOffest.size(); i++) {
-			appStats.add(missingAppStatsPositionOffest.get(i), missingAppStats.get(i));
+			stats.add(missingAppStatsPositionOffest.get(i), missingAppStats.get(i));
 		}
 
 		// calculate daily downloads
 		int nullStartIndex = -1;
 		boolean greaterNullDetected = false;
 
-		for (int currentIndex = 1; currentIndex < appStats.size(); currentIndex++) {
+		for (int currentIndex = 1; currentIndex < stats.size(); currentIndex++) {
 
 			// normalize daily, total & active
-			int olderTotalValue = appStats.get(currentIndex - 1).getTotalDownloads();
-			int newerTotalValue = appStats.get(currentIndex).getTotalDownloads();
+			int olderTotalValue = stats.get(currentIndex - 1).getTotalDownloads();
+			int newerTotalValue = stats.get(currentIndex).getTotalDownloads();
 			int totalValueDiff = newerTotalValue - olderTotalValue;
 
-			int olderActiveValue = appStats.get(currentIndex - 1).getActiveInstalls();
-			int newerActiveValue = appStats.get(currentIndex).getActiveInstalls();
+			int olderActiveValue = stats.get(currentIndex - 1).getActiveInstalls();
+			int newerActiveValue = stats.get(currentIndex).getActiveInstalls();
 			int activeValueDiff = newerActiveValue - olderActiveValue;
 
 			if (nullStartIndex > -1) {
@@ -109,8 +108,8 @@ public class AppStatsSummary {
 							- (olderActiveValue + ((activeSmoothvalue * (distance))));
 					;
 
-					int totalDownload = appStats.get(nullStartIndex - 1).getTotalDownloads();
-					int activeInstall = appStats.get(nullStartIndex - 1).getActiveInstalls();
+					int totalDownload = stats.get(nullStartIndex - 1).getTotalDownloads();
+					int activeInstall = stats.get(nullStartIndex - 1).getActiveInstalls();
 
 					for (int j = nullStartIndex; j < currentIndex + 1; j++) {
 
@@ -119,31 +118,31 @@ public class AppStatsSummary {
 
 						// for the last value, take rounding error in account
 						if (currentIndex == j) {
-							appStats.get(j)
+							stats.get(j)
 									.setDailyDownloads(totalSmoothvalue + roundingErrorTotal);
-							appStats.get(j).setTotalDownloads(totalDownload + roundingErrorTotal);
-							appStats.get(j).setActiveInstalls(activeInstall + roundingErrorActive);
+							stats.get(j).setTotalDownloads(totalDownload + roundingErrorTotal);
+							stats.get(j).setActiveInstalls(activeInstall + roundingErrorActive);
 						} else {
-							appStats.get(j).setDailyDownloads(totalSmoothvalue);
-							appStats.get(j).setTotalDownloads(totalDownload);
-							appStats.get(j).setActiveInstalls(activeInstall);
+							stats.get(j).setDailyDownloads(totalSmoothvalue);
+							stats.get(j).setTotalDownloads(totalDownload);
+							stats.get(j).setActiveInstalls(activeInstall);
 						}
 
-						appStats.get(j).setSmoothingApplied(true);
+						stats.get(j).setSmoothingApplied(true);
 					}
 
 					nullStartIndex = -1;
 					greaterNullDetected = false;
 				} else {
 
-					appStats.get(currentIndex).setDailyDownloads(totalValueDiff);
+					stats.get(currentIndex).setDailyDownloads(totalValueDiff);
 				}
 			}
 		}
 
 		// reduce if limit exceeded (only if sync < 24h)
-		if (appStats.size() > limit) {
-			appStats = appStats.subList(appStats.size() - limit, appStats.size());
+		if (stats.size() > limit) {
+			stats = stats.subList(stats.size() - limit, stats.size());
 		}
 
 		float overallActiveInstallPercent = 0;
@@ -153,64 +152,64 @@ public class AppStatsSummary {
 		AppStats prevStats = null;
 		int value = 0;
 
-		for (int i = 0; i < appStats.size(); i++) {
+		for (int i = 0; i < stats.size(); i++) {
 
-			AppStats stats = appStats.get(i);
+			AppStats stat = stats.get(i);
 			if (prevStats != null) {
-				value = stats.getRating1() - prevStats.getRating1();
+				value = stat.getRating1() - prevStats.getRating1();
 				if (value > highestRatingChange)
 					highestRatingChange = value;
 				if (value < lowestRatingChange)
 					lowestRatingChange = value;
-				stats.setRating1Diff(value);
+				stat.setRating1Diff(value);
 
-				value = stats.getRating2() - prevStats.getRating2();
+				value = stat.getRating2() - prevStats.getRating2();
 				if (value > highestRatingChange)
 					highestRatingChange = value;
 				if (value < lowestRatingChange)
 					lowestRatingChange = value;
-				stats.setRating2Diff(value);
+				stat.setRating2Diff(value);
 
-				value = stats.getRating3() - prevStats.getRating3();
+				value = stat.getRating3() - prevStats.getRating3();
 				if (value > highestRatingChange)
 					highestRatingChange = value;
 				if (value < lowestRatingChange)
 					lowestRatingChange = value;
-				stats.setRating3Diff(value);
+				stat.setRating3Diff(value);
 
-				value = stats.getRating4() - prevStats.getRating4();
+				value = stat.getRating4() - prevStats.getRating4();
 				if (value > highestRatingChange)
 					highestRatingChange = value;
 				if (value < lowestRatingChange)
 					lowestRatingChange = value;
-				stats.setRating4Diff(value);
+				stat.setRating4Diff(value);
 
-				value = stats.getRating5() - prevStats.getRating5();
+				value = stat.getRating5() - prevStats.getRating5();
 				if (value > highestRatingChange)
 					highestRatingChange = value;
 				if (value < lowestRatingChange)
 					lowestRatingChange = value;
 
-				stats.setRating5Diff(value);
+				stat.setRating5Diff(value);
 
-				stats.setAvgRatingDiff(stats.getAvgRating() - prevStats.getAvgRating());
-				stats.setRatingCountDiff(stats.getRatingCount() - prevStats.getRatingCount());
-				stats.setNumberOfCommentsDiff(stats.getNumberOfComments()
+				stat.setAvgRatingDiff(stat.getAvgRating() - prevStats.getAvgRating());
+				stat.setRatingCountDiff(stat.getRatingCount() - prevStats.getRatingCount());
+				stat.setNumberOfCommentsDiff(stat.getNumberOfComments()
 						- prevStats.getNumberOfComments());
-				stats.setActiveInstallsDiff(stats.getActiveInstalls()
+				stat.setActiveInstallsDiff(stat.getActiveInstalls()
 						- prevStats.getActiveInstalls());
 			}
-			prevStats = stats;
+			prevStats = stat;
 
-			overallActiveInstallPercent += stats.getActiveInstallsPercent();
-			overallAvgRating += stats.getAvgRating();
+			overallActiveInstallPercent += stat.getActiveInstallsPercent();
+			overallAvgRating += stat.getAvgRating();
 
 		}
 
-		if (appStats.size() > 0) {
+		if (stats.size() > 0) {
 
-			AppStats first = appStats.get(0);
-			AppStats last = appStats.get(appStats.size() - 1);
+			AppStats first = stats.get(0);
+			AppStats last = stats.get(stats.size() - 1);
 
 			overallStats.setActiveInstalls(last.getActiveInstalls() - first.getActiveInstalls());
 			overallStats.setTotalDownloads(last.getTotalDownloads() - first.getTotalDownloads());
@@ -221,21 +220,21 @@ public class AppStatsSummary {
 			overallStats.setRating5(last.getRating5() - first.getRating5());
 			overallStats.init();
 			overallStats.setDailyDownloads((last.getTotalDownloads() - first.getTotalDownloads())
-					/ appStats.size());
+					/ stats.size());
 
-			BigDecimal avgBigDecimal = new BigDecimal(overallAvgRating / appStats.size());
+			BigDecimal avgBigDecimal = new BigDecimal(overallAvgRating / stats.size());
 			avgBigDecimal = avgBigDecimal.setScale(3, BigDecimal.ROUND_HALF_UP);
 			overallStats.setAvgRatingString(avgBigDecimal.toPlainString() + "");
 
 			BigDecimal percentBigDecimal = new BigDecimal(overallActiveInstallPercent
-					/ appStats.size());
+					/ stats.size());
 			percentBigDecimal = percentBigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
 
 			overallStats.setActiveInstallsPercentString(percentBigDecimal.toPlainString() + "");
 
 			double totalRevenue = 0;
 			String currency = null;
-			for (AppStats as : appStats) {
+			for (AppStats as : stats) {
 				if (as.getTotalRevenue() != null) {
 					totalRevenue += as.getTotalRevenue().getAmount();
 					if (currency == null) {
@@ -248,11 +247,17 @@ public class AppStatsSummary {
 						.setTotalRevenue(new Revenue(Revenue.Type.TOTAL, totalRevenue, currency));
 			}
 		}
-
 	}
 
-	public AppStats getOverallStats() {
-		return overallStats;
+	@Override
+	public boolean applySmoothedValues() {
+		for (AppStats stat : stats) {
+			if (stat.isSmoothingApplied()) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public void setLowestRatingChange(Integer lowestRatingChange) {

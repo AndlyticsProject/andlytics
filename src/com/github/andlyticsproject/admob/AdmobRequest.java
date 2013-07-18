@@ -341,7 +341,7 @@ public class AdmobRequest {
 			// read db for required sync period
 			ContentAdapter contentAdapter = ContentAdapter.getInstance(AndlyticsApp.getInstance());
 			List<AdmobStats> admobStats = contentAdapter.getAdmobStats(admobSiteId,
-					Timeframe.LATEST_VALUE).getAdmobs();
+					Timeframe.LATEST_VALUE).getStats();
 
 			if (admobStats.size() > 0) {
 				// found previouse sync, no bulk import

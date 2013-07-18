@@ -42,14 +42,14 @@ import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.AdmobStats;
 import com.github.andlyticsproject.model.AdmobStatsSummary;
-import com.github.andlyticsproject.model.AppStatsSummary;
+import com.github.andlyticsproject.model.StatsSummary;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.LoaderBase;
 import com.github.andlyticsproject.util.LoaderResult;
 import com.github.andlyticsproject.util.Utils;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
 
-public class AdmobFragment extends ChartFragment implements
+public class AdmobFragment extends ChartFragment<AdmobStats> implements
 		LoaderManager.LoaderCallbacks<LoaderResult<AdmobStatsSummary>> {
 
 	static final String ARG_PACKAGE_NAME = "packageName";
@@ -224,8 +224,14 @@ public class AdmobFragment extends ChartFragment implements
 	}
 
 	@Override
-	public void updateView(AppStatsSummary appStatsList) {
+	public void updateView(StatsSummary<AdmobStats> statsSummary) {
 		// XXX do nothing, need to redesign super class
+	}
+
+	@Override
+	public void setupListAdapter(ChartListAdapter<AdmobStats> listAdapter,
+			StatsSummary<AdmobStats> statsSummary) {
+		// nothing to do
 	}
 
 	@Override
@@ -237,7 +243,6 @@ public class AdmobFragment extends ChartFragment implements
 		// destroyed, it will crash. Why is this necessary?
 		getLoaderManager().destroyLoader(0);
 	}
-
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -439,7 +444,7 @@ public class AdmobFragment extends ChartFragment implements
 	private void showStats(AdmobStatsSummary admobList) {
 		admobListAdapter.setOverallStats(admobList.getOverallStats());
 
-		List<AdmobStats> admobStats = admobList.getAdmobs();
+		List<AdmobStats> admobStats = admobList.getStats();
 		loadChartData(admobStats);
 		// make shallow copy
 		List<AdmobStats> reversedAdmobStats = new ArrayList<AdmobStats>();
@@ -638,6 +643,11 @@ public class AdmobFragment extends ChartFragment implements
 				}
 			}
 		}
-	};
+	}
+
+	@Override
+	public ChartListAdapter<AdmobStats> createChartAdapter() {
+		return new AdmobListAdapter(getActivity());
+	}
 
 }

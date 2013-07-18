@@ -31,13 +31,8 @@ import com.github.andlyticsproject.AdmobListAdapter;
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.Preferences;
-import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.Preferences.Timeframe;
-import com.github.andlyticsproject.R.anim;
-import com.github.andlyticsproject.R.id;
-import com.github.andlyticsproject.R.layout;
-import com.github.andlyticsproject.R.menu;
-import com.github.andlyticsproject.R.string;
+import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.admob.AdmobAccountAuthenticator;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.admob.AdmobRequest.SyncCallback;
@@ -366,7 +361,7 @@ public class AdmobActivity extends BaseChartActivity {
 	private void showStats(AdmobStatsSummary admobList) {
 		admobListAdapter.setOverallStats(admobList.getOverallStats());
 
-		List<AdmobStats> admobStats = admobList.getAdmobs();
+		List<AdmobStats> admobStats = admobList.getStats();
 		loadChartData(admobStats);
 		// make shallow copy
 		List<AdmobStats> reversedAdmobStats = new ArrayList<AdmobStats>();

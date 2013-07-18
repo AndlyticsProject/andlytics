@@ -127,13 +127,13 @@ public class ContentAdapter {
 							.getString(cursor.getColumnIndex(AdmobTable.KEY_DATE));
 					admob.setDate(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
 
-					admobList.addStats(admob);
+					admobList.addStat(admob);
 				} while (cursor.moveToNext());
 
 			}
 			cursor.close();
 
-			admobList.calculateOverallStats();
+			admobList.calculateOverallStats(0, false);
 
 			return admobList;
 		} finally {
@@ -246,7 +246,7 @@ public class ContentAdapter {
 		ContentValues values = new ContentValues();
 
 		values.put(AppStatsTable.KEY_STATS_REQUESTDATE,
-				Utils.formatDbDate(appStats.getRequestDate()));
+				Utils.formatDbDate(appStats.getDate()));
 		values.put(AppStatsTable.KEY_STATS_PACKAGENAME, packageName);
 		values.put(AppStatsTable.KEY_STATS_DOWNLOADS, appStats.getTotalDownloads());
 		values.put(AppStatsTable.KEY_STATS_INSTALLS, appStats.getActiveInstalls());
@@ -463,11 +463,11 @@ public class ContentAdapter {
 
 			AppStats stats = new AppStats();
 
-			if (statsForApp.getAppStats().size() > 1) {
-				stats = statsForApp.getAppStats().get(1);
+			if (statsForApp.getStats().size() > 1) {
+				stats = statsForApp.getStats().get(1);
 			} else {
-				if (statsForApp.getAppStats().size() > 0) {
-					stats = statsForApp.getAppStats().get(0);
+				if (statsForApp.getStats().size() > 0) {
+					stats = statsForApp.getStats().get(0);
 
 				}
 			}
@@ -622,7 +622,7 @@ public class ContentAdapter {
 
 					String dateString = cursor.getString(cursor
 							.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE));
-					stats.setRequestDate(Utils.parseDbDate(dateString.substring(0, 10)
+					stats.setDate(Utils.parseDbDate(dateString.substring(0, 10)
 							+ " 12:00:00"));
 
 					stats.setNumberOfComments(cursor.getInt(cursor
@@ -649,7 +649,7 @@ public class ContentAdapter {
 						stats.setTotalRevenue(new Revenue(Revenue.Type.TOTAL, amount, currency));
 					}
 
-					result.addStats(stats);
+					result.addStat(stats);
 
 				} while (cursor.moveToNext());
 
@@ -698,7 +698,7 @@ public class ContentAdapter {
 							.getColumnIndex(AppStatsTable.KEY_STATS_INSTALLS)));
 					stats.setTotalDownloads(cursor.getInt(cursor
 							.getColumnIndex(AppStatsTable.KEY_STATS_DOWNLOADS)));
-					stats.setRequestDate(Utils.parseDbDate(cursor.getString(cursor
+					stats.setDate(Utils.parseDbDate(cursor.getString(cursor
 							.getColumnIndex(AppStatsTable.KEY_STATS_REQUESTDATE))));
 					stats.setNumberOfComments(cursor.getInt(cursor
 							.getColumnIndex(AppStatsTable.KEY_STATS_COMMENTS)));

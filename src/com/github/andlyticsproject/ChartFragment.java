@@ -20,13 +20,15 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
-import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.AppStatsSummary;
+import com.github.andlyticsproject.model.Statistic;
+import com.github.andlyticsproject.model.StatsSummary;
 import com.github.andlyticsproject.util.LoaderBase;
 import com.github.andlyticsproject.util.LoaderResult;
 
 
-public abstract class ChartFragment extends ChartFragmentBase implements StatsView {
+public abstract class ChartFragment<T extends Statistic> extends ChartFragmentBase implements
+		StatsView<T> {
 
 	private static final String TAG = ChartFragment.class.getSimpleName();
 
@@ -74,10 +76,9 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 	protected DetailedStatsActivity statsActivity;
 
 	private ListView historyList;
-	private ChartListAdapter historyListAdapter;
+	private ChartListAdapter<T> historyListAdapter;
 	private TextView historyListFooter;
 	private View oneEntryHint;
-	private boolean dataUpdateRequested;
 
 	protected ChartSet currentChartSet;
 	private boolean smoothEnabled;
@@ -119,6 +120,8 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 
 	public abstract ChartSet getChartSet();
 
+	public abstract ChartListAdapter<T> createChartAdapter();
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
@@ -130,11 +133,12 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 		historyListFooter = (TextView) inflate.findViewById(R.id.chart_footer_text);
 		historyList.addFooterView(inflate, null, false);
 
-		historyListAdapter = new ChartListAdapter(getActivity());
+		historyListAdapter = createChartAdapter();
 		setAdapter(historyListAdapter);
 
-		historyListAdapter.setCurrentChart(currentChartSet.ordinal(), 1);
-		setAllowChangePageSliding(false);
+		// column 0 is always date, select next one
+		historyListAdapter.setCurrentChart(0, 1);
+		setAllowChangePageSliding(true);
 
 		return view;
 	}
@@ -146,8 +150,9 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 		loadCurrentData();
 	}
 
-	public void updateView(AppStatsSummary appStatsList) {
-		if (appStatsList == null) {
+	@Override
+	public void updateView(StatsSummary<T> statsSummary) {
+		if (statsSummary == null) {
 			return;
 		}
 
@@ -155,27 +160,26 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 			return;
 		}
 
-		List<AppStats> statsForApp = appStatsList.getAppStats();
+		List<T> statsForApp = statsSummary.getStats();
 		if (statsForApp != null && statsForApp.size() > 0) {
-			boolean smoothedValues = applySmoothedValues(statsForApp);
-			historyListAdapter.setOverallStats(appStatsList.getOverallStats());
-			historyListAdapter.setHeighestRatingChange(appStatsList.getHighestRatingChange());
-			historyListAdapter.setLowestRatingChange(appStatsList.getLowestRatingChange());
+			boolean smoothedValues = statsSummary.applySmoothedValues();
+			historyListAdapter.setOverallStats(statsSummary.getOverallStats());
+			setupListAdapter(historyListAdapter, statsSummary);
 
 			updateCharts(statsForApp);
 
 			DateFormat dateFormat = Preferences.getDateFormatLong(getActivity());
-			timetext = dateFormat.format(statsForApp.get(0).getRequestDate()) + " - "
-					+ dateFormat.format(statsForApp.get(statsForApp.size() - 1).getRequestDate());
+			timetext = dateFormat.format(statsForApp.get(0).getDate()) + " - "
+					+ dateFormat.format(statsForApp.get(statsForApp.size() - 1).getDate());
 
 			updateChartHeadline();
 
 			// make a shallow copy, otherwise original data can't be used to
 			// restore state
-			List<AppStats> statsForAppReversed = new ArrayList<AppStats>();
+			List<T> statsForAppReversed = new ArrayList<T>();
 			statsForAppReversed.addAll(statsForApp);
 			Collections.reverse(statsForAppReversed);
-			historyListAdapter.setDownloadInfos(statsForAppReversed);
+			historyListAdapter.setStats(statsForAppReversed);
 			/*
 			 * int page=historyListAdapter.getCurrentPage(); int
 			 * column=historyListAdapter.getCurrentColumn();
@@ -201,15 +205,8 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 		}
 	}
 
-	private static boolean applySmoothedValues(List<AppStats> statsForApp) {
-		for (AppStats appInfo : statsForApp) {
-			if (appInfo.isSmoothingApplied()) {
-				return true;
-			}
-		}
-
-		return false;
-	}
+	public abstract void setupListAdapter(ChartListAdapter<T> listAdapter,
+			StatsSummary<T> statsSummary);
 
 	protected String getChartHint() {
 		return getString(R.string.revenue);
@@ -313,7 +310,6 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 
 	@Override
 	protected void notifyChangedDataformat() {
-		dataUpdateRequested = true;
 		executeLoadData(currentTimeFrame);
 	}
 
@@ -361,5 +357,6 @@ public abstract class ChartFragment extends ChartFragmentBase implements StatsVi
 		}
 		throw new IndexOutOfBoundsException("page=" + page + " column=" + column);
 	}
+
 
 }

@@ -96,7 +96,7 @@ public class StatsCsvReaderWriter {
 		for (AppStats stat : stats) {
 
 			line[0] = packageName;
-			line[1] = createTimestampFormat().format(stat.getRequestDate());
+			line[1] = createTimestampFormat().format(stat.getDate());
 			line[2] = Integer.toString(stat.getTotalDownloads());
 			line[3] = Integer.toString(stat.getActiveInstalls());
 			line[4] = Integer.toString(stat.getNumberOfComments());
@@ -212,7 +212,7 @@ public class StatsCsvReaderWriter {
 
 					AppStats stats = new AppStats();
 					stats.setPackageName(nextLine[0]);
-					stats.setRequestDate(createTimestampFormat().parse(nextLine[1]));
+					stats.setDate(createTimestampFormat().parse(nextLine[1]));
 					stats.setTotalDownloads(Integer.parseInt(nextLine[2]));
 					stats.setActiveInstalls(Integer.parseInt(nextLine[3]));
 					stats.setNumberOfComments(Integer.parseInt(nextLine[4]));

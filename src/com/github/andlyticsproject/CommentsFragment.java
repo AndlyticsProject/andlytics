@@ -24,19 +24,18 @@ import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.AppStats;
-import com.github.andlyticsproject.model.AppStatsSummary;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
+import com.github.andlyticsproject.model.StatsSummary;
 import com.github.andlyticsproject.util.LoaderBase;
 import com.github.andlyticsproject.util.LoaderResult;
 import com.github.andlyticsproject.util.Utils;
 
-public class CommentsFragment extends SherlockFragment implements StatsView,
+public class CommentsFragment extends SherlockFragment implements StatsView<Comment>,
 		LoaderManager.LoaderCallbacks<LoaderResult<Comments>> {
 
 	private static final String TAG = CommentsFragment.class.getSimpleName();
 
-	private static final String REPLY_DIALOG_FRAGMENT = "reply_dialog_fragment";
 	private static final int MAX_LOAD_COMMENTS = 20;
 
 	private static final int DB_LOADER_ID = 0;
@@ -450,10 +449,9 @@ public class CommentsFragment extends SherlockFragment implements StatsView,
 
 
 	@Override
-	public void updateView(AppStatsSummary appStatsList) {
+	public void updateView(StatsSummary<Comment> statsSummary) {
 		// XXX do nothing, revise interface!
 	}
-
 
 	@Override
 	public String getTitle() {

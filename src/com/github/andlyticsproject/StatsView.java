@@ -1,10 +1,11 @@
 package com.github.andlyticsproject;
 
-import com.github.andlyticsproject.model.AppStatsSummary;
+import com.github.andlyticsproject.model.Statistic;
+import com.github.andlyticsproject.model.StatsSummary;
 
-public interface StatsView {
+public interface StatsView<T extends Statistic> {
 
-	public void updateView(AppStatsSummary appStatsList);
+	public void updateView(StatsSummary<T> appStatsList);
 
 	public String getTitle();
 

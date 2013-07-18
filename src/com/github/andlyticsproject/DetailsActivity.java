@@ -12,7 +12,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.db.AndlyticsDb;
-import com.github.andlyticsproject.model.AppStatsSummary;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
@@ -42,7 +41,7 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 	private String appName;
 	private boolean hasRevenue;
 
-	public static class TabListener<T extends StatsView> implements ActionBar.TabListener {
+	public static class TabListener<T extends StatsView<?>> implements ActionBar.TabListener {
 
 		private Fragment fragment;
 		private DetailsActivity activity;
@@ -65,7 +64,7 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 				ft.attach(fragment);
 			}
 
-			activity.setTitle(((StatsView) fragment).getTitle());
+			activity.setTitle(((StatsView<?>) fragment).getTitle());
 			if (activity.appName != null) {
 				activity.getSupportActionBar().setSubtitle(activity.appName);
 			}
@@ -173,14 +172,6 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 		}
 	}
 
-	public void updateView(AppStatsSummary statsForApp) {
-		String tabTag = TAB_TAGS[getSupportActionBar().getSelectedNavigationIndex()];
-		StatsView chartFargment = (StatsView) getSupportFragmentManager().findFragmentByTag(tabTag);
-		if (chartFargment != null) {
-			chartFargment.updateView(statsForApp);
-		}
-	}
-
 	public void showReplyDialog(Comment comment) {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		Fragment prev = getSupportFragmentManager().findFragmentByTag(REPLY_DIALOG_FRAGMENT);
@@ -271,7 +262,8 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 	@Override
 	public void setCurrentChart(int currentPage, int column) {
 		String tabTag = TAB_TAGS[getSupportActionBar().getSelectedNavigationIndex()];
-		StatsView chartFargment = (StatsView) getSupportFragmentManager().findFragmentByTag(tabTag);
+		StatsView<?> chartFargment = (StatsView<?>) getSupportFragmentManager().findFragmentByTag(
+				tabTag);
 		if (chartFargment != null) {
 			chartFargment.setCurrentChart(currentPage, column);
 		}
