@@ -321,7 +321,7 @@ public class JsonParser {
 				continue;
 			}
 			AppStats stats = new AppStats();
-			stats.setRequestDate(now);
+			stats.setDate(now);
 			if (jsonAppStats.length() < 4) {
 				// no statistics (yet?) or weird format
 				// TODO do we need differentiate?

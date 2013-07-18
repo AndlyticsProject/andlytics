@@ -19,7 +19,7 @@ import com.github.andlyticsproject.chart.Chart.ValueCallbackHander;
 import com.github.andlyticsproject.model.AdmobStats;
 
 @SuppressLint("SimpleDateFormat")
-public class AdmobListAdapter extends BaseChartListAdapter {
+public class AdmobListAdapter extends ChartListAdapter<AdmobStats> {
 
 	private static final int COL_DATE = 0;
 	private static final int COL_REVENUE = 1;
@@ -33,31 +33,10 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 	private static final int COL_HOUSEAD_CLICKS = 4;
 
 	private NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
-	private List<AdmobStats> stats;
-
-	//	private LayoutInflater layoutInflater;
-
-	private Activity activity;
-
-	//	private Object currentChart;
-
-	private SimpleDateFormat dateFormat;
-
-	//	private List<AdmobChartType> secondPageCharts;
-
-	private AdmobStats overallStats;
 
 	public AdmobListAdapter(Activity activity) {
 		super(activity);
 		this.stats = new ArrayList<AdmobStats>();
-		//		this.layoutInflater = activity.getLayoutInflater();
-		this.activity = activity;
-		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatStringShort(activity));
-	}
-
-	@Override
-	public int getCount() {
-		return stats.size();
 	}
 
 	@Override
@@ -66,47 +45,10 @@ public class AdmobListAdapter extends BaseChartListAdapter {
 	}
 
 	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-
-	/*
-	 * public Object getCurrentChart() {
-	 * return currentChart;
-	 * }
-	 * 
-	 * public void setCurrentChart(Object currentChart) {
-	 * this.currentChart = currentChart;
-	 * }
-	 */
-
-	public void setOverallStats(AdmobStats overallStats) {
-		this.overallStats = overallStats;
-	}
-
-	@Override
 	public void notifyDataSetChanged() {
 		this.dateFormat = new SimpleDateFormat(Preferences.getDateFormatStringShort(activity));
 		super.notifyDataSetChanged();
 	}
-
-	public void setStats(List<AdmobStats> stats) {
-		this.stats = stats;
-	}
-
-	public List<AdmobStats> getStats() {
-		return stats;
-	}
-
-	/*
-	 * public void setSecondPageCharts(List<AdmobChartType> secondPageCharts) {
-	 * this.secondPageCharts = secondPageCharts;
-	 * }
-	 * 
-	 * public List<AdmobChartType> getSecondPageCharts() {
-	 * return secondPageCharts;
-	 * }
-	 */
 
 	@Override
 	public int getNumPages() {

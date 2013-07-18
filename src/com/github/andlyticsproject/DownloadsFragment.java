@@ -9,10 +9,12 @@ import android.util.Log;
 
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
+import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.AppStatsSummary;
+import com.github.andlyticsproject.model.StatsSummary;
 import com.github.andlyticsproject.util.LoaderResult;
 
-public class DownloadsFragment extends ChartFragment implements
+public class DownloadsFragment extends ChartFragment<AppStats> implements
 		LoaderManager.LoaderCallbacks<LoaderResult<AppStatsSummary>> {
 
 	private static final String TAG = DownloadsFragment.class.getSimpleName();
@@ -86,6 +88,18 @@ public class DownloadsFragment extends ChartFragment implements
 	@Override
 	public void restartLoader(Bundle args) {
 		getLoaderManager().restartLoader(0, args, this);
+	}
+
+
+	@Override
+	public ChartListAdapter<AppStats> createChartAdapter() {
+		return new DownloadsChartListAdapter(getActivity());
+	}
+
+	@Override
+	public void setupListAdapter(ChartListAdapter<AppStats> listAdapter,
+			StatsSummary<AppStats> statsSummary) {
+		// nothing to do
 	}
 
 }

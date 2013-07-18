@@ -1,42 +1,44 @@
 package com.github.andlyticsproject.model;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
-public class AdmobStatsSummary {
+public class AdmobStatsSummary extends StatsSummary<AdmobStats> {
 
-	private List<AdmobStats> admobStats = new ArrayList<AdmobStats>();
-	private AdmobStats overallStats = new AdmobStats();
+	public AdmobStatsSummary() {
+		overallStats = new AdmobStats();
+	}
 
-	public void addStats(AdmobStats stats) {
-		admobStats.add(stats);
+	@Override
+	public void addStat(AdmobStats stat) {
+		stats.add(stat);
 
-		overallStats.setClicks(overallStats.getClicks() + stats.getClicks());
-		overallStats.setCpcRevenue(overallStats.getCpcRevenue() + stats.getCpcRevenue());
-		overallStats.setCpmRevenue(overallStats.getCpmRevenue() + stats.getCpmRevenue());
-		overallStats.setCtr(overallStats.getCtr() + stats.getCtr());
-		overallStats.setEcpm(overallStats.getEcpm() + stats.getEcpm());
-		overallStats.setExchangeDownloads(overallStats.getExchangeDownloads() + stats.getExchangeDownloads());
-		overallStats.setFillRate(overallStats.getFillRate() + stats.getFillRate());
-		overallStats.setHouseAdClicks(overallStats.getHouseAdClicks() + stats.getHouseAdClicks());
-		overallStats.setHouseadFillRate(overallStats.getHouseadFillRate() + stats.getHouseadFillRate());
-		overallStats.setHouseadRequests(overallStats.getHouseadRequests() + stats.getHouseadRequests());
-		overallStats.setImpressions(overallStats.getImpressions() + stats.getImpressions());
+		overallStats.setClicks(overallStats.getClicks() + stat.getClicks());
+		overallStats.setCpcRevenue(overallStats.getCpcRevenue() + stat.getCpcRevenue());
+		overallStats.setCpmRevenue(overallStats.getCpmRevenue() + stat.getCpmRevenue());
+		overallStats.setCtr(overallStats.getCtr() + stat.getCtr());
+		overallStats.setEcpm(overallStats.getEcpm() + stat.getEcpm());
+		overallStats.setExchangeDownloads(overallStats.getExchangeDownloads()
+				+ stat.getExchangeDownloads());
+		overallStats.setFillRate(overallStats.getFillRate() + stat.getFillRate());
+		overallStats.setHouseAdClicks(overallStats.getHouseAdClicks() + stat.getHouseAdClicks());
+		overallStats.setHouseadFillRate(overallStats.getHouseadFillRate()
+				+ stat.getHouseadFillRate());
+		overallStats.setHouseadRequests(overallStats.getHouseadRequests()
+				+ stat.getHouseadRequests());
+		overallStats.setImpressions(overallStats.getImpressions() + stat.getImpressions());
 		overallStats.setInterstitialRequests(overallStats.getInterstitialRequests()
-				+ stats.getInterstitialRequests());
-		overallStats.setOverallFillRate(overallStats.getOverallFillRate() + stats.getOverallFillRate());
-		overallStats.setRequests(overallStats.getRequests() + stats.getRequests());
-		overallStats.setRevenue(overallStats.getRevenue() + stats.getRevenue());
+				+ stat.getInterstitialRequests());
+		overallStats.setOverallFillRate(overallStats.getOverallFillRate()
+				+ stat.getOverallFillRate());
+		overallStats.setRequests(overallStats.getRequests() + stat.getRequests());
+		overallStats.setRevenue(overallStats.getRevenue() + stat.getRevenue());
 	}
 
-	public List<AdmobStats> getAdmobs() {
-		return Collections.unmodifiableList(admobStats);
-	}
 
-	public void calculateOverallStats() {
-		Collections.reverse(admobStats);
-		int count = admobStats.size();
+	@Override
+	public void calculateOverallStats(int limit, boolean smoothEnabled) {
+		Collections.reverse(stats);
+		int count = stats.size();
 		if (count > 0) {
 			overallStats.setCtr(overallStats.getCtr() / count);
 			overallStats.setFillRate(overallStats.getFillRate() / count);
@@ -44,9 +46,9 @@ public class AdmobStatsSummary {
 		}
 	}
 
-	public AdmobStats getOverallStats() {
-		return overallStats;
+	@Override
+	public boolean applySmoothedValues() {
+		return false;
 	}
-
 
 }

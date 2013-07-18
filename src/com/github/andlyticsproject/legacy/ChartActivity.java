@@ -116,7 +116,8 @@ public class ChartActivity extends BaseChartActivity {
 		historyListFooter = (TextView) inflate.findViewById(R.id.chart_footer_text);
 		historyList.addFooterView(inflate, null, false);
 
-		historyListAdapter = new ChartListAdapter(this);
+		// XXX this whole package is going away, make it compile for now
+		historyListAdapter = null;//new ChartListAdapter(this);
 		setAdapter(historyListAdapter);
 
 		historyListAdapter.setCurrentChart(currentChartSet.ordinal(), 1);
@@ -187,8 +188,7 @@ public class ChartActivity extends BaseChartActivity {
 				return null;
 			}
 
-			if (activity.dataUpdateRequested
-					|| activity.historyListAdapter.getDownloadInfos() == null
+			if (activity.dataUpdateRequested || activity.historyListAdapter.getStats() == null
 					|| activity.historyListAdapter.isEmpty()) {
 				statsForApp = db.getStatsForApp(activity.packageName, params[0],
 						activity.smoothEnabled);
@@ -200,7 +200,7 @@ public class ChartActivity extends BaseChartActivity {
 					Log.d(TAG,
 							"statsForApp::lowestRatingChanage "
 									+ statsForApp.getLowestRatingChange());
-					Log.d(TAG, "statsForApp::appStats " + statsForApp.getAppStats().size());
+					Log.d(TAG, "statsForApp::appStats " + statsForApp.getStats().size());
 					Log.d(TAG, "statsForApps::overall " + statsForApp.getOverallStats());
 				}
 
@@ -237,18 +237,19 @@ public class ChartActivity extends BaseChartActivity {
 	}
 
 	private void updateView(AppStatsSummary appStatsList) {
-		List<AppStats> statsForApp = appStatsList.getAppStats();
+		List<AppStats> statsForApp = appStatsList.getStats();
 		if (statsForApp != null && statsForApp.size() > 0) {
 			boolean smoothedValues = applySmoothedValues(statsForApp);
 			historyListAdapter.setOverallStats(appStatsList.getOverallStats());
-			historyListAdapter.setHeighestRatingChange(appStatsList.getHighestRatingChange());
-			historyListAdapter.setLowestRatingChange(appStatsList.getLowestRatingChange());
+			// XXX this package is going away ,make it compile for now
+			//			historyListAdapter.setHighestRatingChange(appStatsList.getHighestRatingChange());
+			//			historyListAdapter.setLowestRatingChange(appStatsList.getLowestRatingChange());
 
 			updateCharts(statsForApp);
 
 			DateFormat dateFormat = Preferences.getDateFormatLong(this);
-			timetext = dateFormat.format(statsForApp.get(0).getRequestDate()) + " - "
-					+ dateFormat.format(statsForApp.get(statsForApp.size() - 1).getRequestDate());
+			timetext = dateFormat.format(statsForApp.get(0).getDate()) + " - "
+					+ dateFormat.format(statsForApp.get(statsForApp.size() - 1).getDate());
 
 			updateChartHeadline();
 
@@ -257,7 +258,7 @@ public class ChartActivity extends BaseChartActivity {
 			List<AppStats> statsForAppReversed = new ArrayList<AppStats>();
 			statsForAppReversed.addAll(statsForApp);
 			Collections.reverse(statsForAppReversed);
-			historyListAdapter.setDownloadInfos(statsForAppReversed);
+			historyListAdapter.setStats(statsForAppReversed);
 			/*
 			 * int page=historyListAdapter.getCurrentPage(); int
 			 * column=historyListAdapter.getCurrentColumn();

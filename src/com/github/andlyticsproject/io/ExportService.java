@@ -82,7 +82,7 @@ public class ExportService extends IntentService {
 				for (int i = 0; i < packageNames.length; i++) {
 					AppStatsSummary statsForApp = db.getStatsForApp(packageNames[i],
 							Timeframe.UNLIMITED, false);
-					statsWriter.writeStats(packageNames[i], statsForApp.getAppStats(), zip);
+					statsWriter.writeStats(packageNames[i], statsForApp.getStats(), zip);
 				}
 			} catch (IOException e) {
 				Log.d(TAG, "Zip error, deleting incomplete file.");
