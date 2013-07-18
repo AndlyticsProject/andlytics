@@ -84,10 +84,12 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 				if (view.getTag() != null) {
 					// (page, column, num columns)?
 					int pageColumn[] = (int[]) view.getTag();
-					myAdapter.setCurrentChart(pageColumn[0], pageColumn[1]);
+					int page = pageColumn[0];
+					int column = pageColumn[1];
+					myAdapter.setCurrentChart(page, column);
 					updateChartHeadline();
 					myAdapter.notifyDataSetChanged();
-					onChartSelected(pageColumn[0], pageColumn[1]);
+					onChartSelected(page, column);
 				}
 
 			}
@@ -102,11 +104,6 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 		dataframe = (ViewGroup) view.findViewById(R.id.base_chart_datacontainer);
 		chartframe = (ViewGroup) view.findViewById(R.id.base_chart_chartframe);
 
-		if (savedInstanceState != null) {
-			currentChartPage = savedInstanceState.getInt(SELECTED_CHART_PAGE);
-			currentChartColumn = savedInstanceState.getInt(SELECTED_CHART_COLUMN);
-		}
-
 		return view;
 	}
 
@@ -118,6 +115,17 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 			state.putInt(SELECTED_CHART_PAGE, myAdapter.getCurrentPage());
 			state.putInt(SELECTED_CHART_COLUMN, myAdapter.getCurrentColumn());
 		}
+	}
+
+	@Override
+	public void onViewStateRestored(Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
+		if (savedInstanceState != null) {
+			currentChartPage = savedInstanceState.getInt(SELECTED_CHART_PAGE, -1);
+			currentChartColumn = savedInstanceState.getInt(SELECTED_CHART_COLUMN, -1);
+		}
+
+		restoreChartSelection();
 	}
 
 	/**
@@ -142,14 +150,22 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 	 * @param column
 	 */
 	protected void onChartSelected(int page, int column) {
+		currentChartPage = page;
+		currentChartColumn = column;
 	}
 
-	protected void setCurrentChart(int page, int column) {
+	public void setCurrentChart(int page, int column) {
+		if (chartGalleryAdapter.getViews().isEmpty()) {
+			// chart not initialized yet
+			return;
+		}
+
 		int pos = 0;
 		for (View view : chartGalleryAdapter.getViews()) {
 			int pageColumn[] = (int[]) view.getTag();
 			if (page == pageColumn[0] && column == pageColumn[1]) {
 				chartGallery.setSelection(pos, false);
+				myAdapter.setCurrentChart(page, column);
 				return;
 			}
 			pos++;
@@ -277,9 +293,6 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 	protected void restoreChartSelection() {
 		if (currentChartPage != -1 && currentChartColumn != -1) {
 			setCurrentChart(currentChartPage, currentChartColumn);
-			// only restore once
-			currentChartPage = -1;
-			currentChartColumn = -1;
 		}
 	}
 
