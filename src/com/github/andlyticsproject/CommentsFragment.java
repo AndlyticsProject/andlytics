@@ -276,6 +276,7 @@ public class CommentsFragment extends SherlockFragment implements StatsView<Comm
 	}
 
 	private void loadCurrentData() {
+		nextCommentIndex = 0;
 		Bundle args = new Bundle();
 		args.putString("accountName", statsActivity.getAccountName());
 		args.putString("developerId", statsActivity.getDeveloperId());
@@ -396,15 +397,14 @@ public class CommentsFragment extends SherlockFragment implements StatsView<Comm
 	public void rebuildCommentGroups() {
 		commentGroups = new ArrayList<CommentGroup>();
 		Comment prevComment = null;
-		for (Comment comment : Comment.expandReplies(comments)) {
+		List<Comment> expanded = Comment.expandReplies(comments);
+		for (Comment comment : expanded) {
 			if (prevComment != null) {
-
 				CommentGroup group = new CommentGroup();
 				group.setDate(comment.isReply() ? comment.getOriginalCommentDate() : comment
 						.getDate());
 
 				if (commentGroups.contains(group)) {
-
 					int index = commentGroups.indexOf(group);
 					group = commentGroups.get(index);
 					group.addComment(comment);
@@ -412,13 +412,11 @@ public class CommentsFragment extends SherlockFragment implements StatsView<Comm
 				} else {
 					addNewCommentGroup(comment);
 				}
-
 			} else {
 				addNewCommentGroup(comment);
 			}
 			prevComment = comment;
 		}
-
 	}
 
 	private void addNewCommentGroup(Comment comment) {
@@ -525,6 +523,7 @@ public class CommentsFragment extends SherlockFragment implements StatsView<Comm
 
 		commentsListAdapter.setCanReplyToComments(newComments.canReply);
 		incrementNextCommentIndex(newComments.loaded.size());
+		// XXX optimize or move to loader!
 		rebuildCommentGroups();
 		showFooterIfNecessary();
 
