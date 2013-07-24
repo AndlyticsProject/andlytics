@@ -1,6 +1,7 @@
 package com.github.andlyticsproject;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import android.app.Activity;
@@ -47,7 +48,9 @@ public class CommentsFragment extends SherlockFragment implements StatsView<Comm
 	private View footer;
 
 	private int maxAvailableComments;
-	private ArrayList<CommentGroup> commentGroups;
+	// need to preserve insertion order
+	// yyymmdd -> CommentGroup
+	private LinkedHashMap<String, CommentGroup> commentGroups;
 	private List<Comment> comments;
 	public int nextCommentIndex;
 	public boolean hasMoreComments;
@@ -205,9 +208,8 @@ public class CommentsFragment extends SherlockFragment implements StatsView<Comm
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		loadCurrentData();
-		// just init don't try to load, will load onResume if necessary
-		getLoaderManager().initLoader(REMOTE_LOADER_ID, null, this);
+		// calling initLoader() here results in onLoadFinished() being 
+		// called twice. Bad things happen then...
 	}
 
 	@Override
@@ -236,7 +238,7 @@ public class CommentsFragment extends SherlockFragment implements StatsView<Comm
 		list.setAdapter(commentsListAdapter);
 
 		maxAvailableComments = -1;
-		commentGroups = new ArrayList<CommentGroup>();
+		commentGroups = new LinkedHashMap<String, CommentGroup>();
 		comments = new ArrayList<Comment>();
 
 		footer.setOnClickListener(new OnClickListener() {
@@ -384,7 +386,7 @@ public class CommentsFragment extends SherlockFragment implements StatsView<Comm
 	private void expandCommentGroups() {
 		if (comments != null && comments.size() > 0) {
 			nocomments.setVisibility(View.GONE);
-			commentsListAdapter.setCommentGroups(commentGroups);
+			commentsListAdapter.setCommentGroups(toList(commentGroups));
 			for (int i = 0; i < commentGroups.size(); i++) {
 				list.expandGroup(i);
 			}
@@ -394,38 +396,33 @@ public class CommentsFragment extends SherlockFragment implements StatsView<Comm
 		}
 	}
 
-	public void rebuildCommentGroups() {
-		commentGroups = new ArrayList<CommentGroup>();
-		Comment prevComment = null;
-		List<Comment> expanded = Comment.expandReplies(comments);
-		for (Comment comment : expanded) {
-			if (prevComment != null) {
-				CommentGroup group = new CommentGroup();
-				group.setDate(comment.isReply() ? comment.getOriginalCommentDate() : comment
-						.getDate());
-
-				if (commentGroups.contains(group)) {
-					int index = commentGroups.indexOf(group);
-					group = commentGroups.get(index);
-					group.addComment(comment);
-
-				} else {
-					addNewCommentGroup(comment);
-				}
-			} else {
-				addNewCommentGroup(comment);
-			}
-			prevComment = comment;
+	private static List<CommentGroup> toList(LinkedHashMap<String, CommentGroup> groups) {
+		List<CommentGroup> result = new ArrayList<CommentGroup>();
+		for (LinkedHashMap.Entry<String, CommentGroup> e : groups.entrySet()) {
+			result.add(e.getValue());
 		}
+
+		return result;
 	}
 
-	private void addNewCommentGroup(Comment comment) {
-		CommentGroup group = new CommentGroup();
-		group.setDate(comment.getDate());
-		List<Comment> groupComments = new ArrayList<Comment>();
-		groupComments.add(comment);
-		group.setComments(groupComments);
-		commentGroups.add(group);
+	public void rebuildCommentGroups() {
+		long start = System.currentTimeMillis();
+		commentGroups = new LinkedHashMap<String, CommentGroup>();
+		List<Comment> expanded = Comment.expandReplies(comments);
+		for (Comment comment : expanded) {
+			CommentGroup group = new CommentGroup(comment);
+			if (commentGroups.containsKey(group.getFormattedDate())) {
+				group = commentGroups.get(group.getFormattedDate());
+				group.addComment(comment);
+			} else {
+				commentGroups.put(group.getFormattedDate(), group);
+			}
+		}
+
+		if (BuildConfig.DEBUG) {
+			long elapsed = System.currentTimeMillis() - start;
+			Log.d(TAG, String.format("rebuildCommentGroups took: %d [ms]", elapsed));
+		}
 	}
 
 	@Override

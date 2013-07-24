@@ -5,6 +5,7 @@ import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -34,7 +35,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 	private LayoutInflater layoutInflater;
 
-	private ArrayList<CommentGroup> commentGroups;
+	private List<CommentGroup> commentGroups;
 
 	private Activity context;
 
@@ -347,11 +348,11 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		return false;
 	}
 
-	public void setCommentGroups(ArrayList<CommentGroup> commentGroups) {
+	public void setCommentGroups(List<CommentGroup> commentGroups) {
 		this.commentGroups = commentGroups;
 	}
 
-	public ArrayList<CommentGroup> getCommentGroups() {
+	public List<CommentGroup> getCommentGroups() {
 		return commentGroups;
 	}
 

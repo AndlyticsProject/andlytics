@@ -1,6 +1,7 @@
 package com.github.andlyticsproject.legacy;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
@@ -22,10 +23,6 @@ import com.github.andlyticsproject.Main;
 import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.ReplyDialog;
-import com.github.andlyticsproject.R.id;
-import com.github.andlyticsproject.R.layout;
-import com.github.andlyticsproject.R.menu;
-import com.github.andlyticsproject.R.string;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.db.AndlyticsDb;
@@ -409,13 +406,11 @@ public class CommentsActivity extends BaseDetailsActivity implements CommentRepl
 		Comment prevComment = null;
 		for (Comment comment : Comment.expandReplies(comments)) {
 			if (prevComment != null) {
-
-				CommentGroup group = new CommentGroup();
-				group.setDate(comment.isReply() ? comment.getOriginalCommentDate() : comment
-						.getDate());
+				Date date = comment.isReply() ? comment.getOriginalCommentDate() : comment
+						.getDate();
+				CommentGroup group = new CommentGroup(date);
 
 				if (commentGroups.contains(group)) {
-
 					int index = commentGroups.indexOf(group);
 					group = commentGroups.get(index);
 					group.addComment(comment);
@@ -433,12 +428,7 @@ public class CommentsActivity extends BaseDetailsActivity implements CommentRepl
 	}
 
 	private void addNewCommentGroup(Comment comment) {
-		CommentGroup group = new CommentGroup();
-		group.setDate(comment.getDate());
-		List<Comment> groupComments = new ArrayList<Comment>();
-		groupComments.add(comment);
-		group.setComments(groupComments);
-		commentGroups.add(group);
+		commentGroups.add(new CommentGroup(comment));
 	}
 
 	private void refreshCommentsIfNecessary() {
