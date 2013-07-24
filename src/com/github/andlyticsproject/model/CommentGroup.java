@@ -1,4 +1,3 @@
-
 package com.github.andlyticsproject.model;
 
 import java.text.SimpleDateFormat;
@@ -6,64 +5,78 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.annotation.SuppressLint;
+
+@SuppressLint("SimpleDateFormat")
 public class CommentGroup {
 
+	private SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyyMMdd");
+
+	// both non-null
 	private Date date;
+	// pre-computed to optimize list.contains() searches
+	// TODO revise whole rebuildCommentGroups() algorithm?
+	private String yyyymmddDate;
 
-	private List<Comment> comments;
+	private List<Comment> comments = new ArrayList<Comment>();
 
-	public CommentGroup() {
-		comments = new ArrayList<Comment>();
+	public CommentGroup(Date date) {
+		setDate(date);
+	}
+
+	public CommentGroup(Comment comment) {
+		Date date = comment.isReply() ? comment.getOriginalCommentDate() : comment.getDate();
+		setDate(date);
+		comments.add(comment);
 	}
 
 	public Date getDate() {
-		return date;
+		return date = (Date) date.clone();
 	}
 
 	public void setDate(Date date) {
-		this.date = date;
+		this.date = (Date) date.clone();
+		this.yyyymmddDate = DATE_FMT.format(date);
+	}
+
+	public String getFormattedDate() {
+		return yyyymmddDate;
 	}
 
 	public List<Comment> getComments() {
 		return comments;
 	}
 
-	public void setComments(List<Comment> comments) {
-		this.comments = comments;
+	public void addComment(Comment comment) {
+		comments.add(comment);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result + yyyymmddDate.hashCode();
+
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
+		if (!(obj instanceof CommentGroup)) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CommentGroup other = (CommentGroup) obj;
-		if (date == null) {
-			if (other.date != null)
-				return false;
-		} else {
-			// TODO do a better check
-			SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-			return fmt.format(date).equals(fmt.format(other.date));
 		}
-		return true;
+
+		CommentGroup rhs = (CommentGroup) obj;
+		if (date == null && rhs.date != null) {
+			return false;
+		}
+
+		return yyyymmddDate.equals(rhs.yyyymmddDate);
 	}
 
-	public void addComment(Comment comment) {
-
-		comments.add(comment);
-
+	@Override
+	public String toString() {
+		return "CommentGroup " + yyyymmddDate;
 	}
 
 }

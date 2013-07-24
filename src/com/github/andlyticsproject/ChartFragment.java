@@ -110,8 +110,7 @@ public abstract class ChartFragment<T extends Statistic> extends ChartFragmentBa
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		// init loader
-		loadCurrentData();
+		// DON'T init loader here, data is loaded twice!
 	}
 
 	public abstract void initLoader(Bundle args);
