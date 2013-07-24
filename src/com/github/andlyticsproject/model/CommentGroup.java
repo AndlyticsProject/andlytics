@@ -14,8 +14,8 @@ public class CommentGroup {
 
 	// both non-null
 	private Date date;
-	// pre-computed to optimize list.contains() searches
-	// TODO revise whole rebuildCommentGroups() algorithm?
+	// comments are grouped by date, we ignore HH:mm:ss and use 
+	// this for comparison/searches
 	private String yyyymmddDate;
 
 	private List<Comment> comments = new ArrayList<Comment>();
