@@ -102,7 +102,7 @@ public class ImportService extends IntentService {
 
 			}
 		} catch (Exception e) {
-			Log.e(TAG, "Error importing stats: " + e.getMessage());
+			Log.e(TAG, "Error importing stats: " + e.getMessage(), e);
 			error = e;
 			errors = true;
 		}

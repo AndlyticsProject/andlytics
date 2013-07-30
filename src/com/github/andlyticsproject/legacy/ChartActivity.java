@@ -1,9 +1,8 @@
-package com.github.andlyticsproject;
+package com.github.andlyticsproject.legacy;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
@@ -13,10 +12,15 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.andlyticsproject.ChartListAdapter;
+import com.github.andlyticsproject.ContentAdapter;
+import com.github.andlyticsproject.DetailsActivity;
+import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.Preferences.Timeframe;
+import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.model.AppStats;
-import com.github.andlyticsproject.model.AppStatsList;
+import com.github.andlyticsproject.model.AppStatsSummary;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
@@ -63,7 +67,7 @@ public class ChartActivity extends BaseChartActivity {
 		setIntent(intent);
 		Bundle b = intent.getExtras();
 		if (b != null) {
-			String chartSet = b.getString(Constants.CHART_SET);
+			String chartSet = b.getString(DetailsActivity.EXTRA_CHART_SET);
 			if (chartSet != null) {
 				currentChartSet = ChartSet.valueOf(chartSet);
 			}
@@ -87,7 +91,7 @@ public class ChartActivity extends BaseChartActivity {
 
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
-			String chartSet = b.getString(Constants.CHART_SET);
+			String chartSet = b.getString(DetailsActivity.EXTRA_CHART_SET);
 			if (chartSet != null) {
 				currentChartSet = ChartSet.valueOf(chartSet);
 			}
@@ -112,7 +116,8 @@ public class ChartActivity extends BaseChartActivity {
 		historyListFooter = (TextView) inflate.findViewById(R.id.chart_footer_text);
 		historyList.addFooterView(inflate, null, false);
 
-		historyListAdapter = new ChartListAdapter(this);
+		// XXX this whole package is going away, make it compile for now
+		historyListAdapter = null;//new ChartListAdapter(this);
 		setAdapter(historyListAdapter);
 
 		historyListAdapter.setCurrentChart(currentChartSet.ordinal(), 1);
@@ -121,8 +126,8 @@ public class ChartActivity extends BaseChartActivity {
 		if (getLastCustomNonConfigurationInstance() != null) {
 			loadChartData = (LoadChartData) getLastCustomNonConfigurationInstance();
 			loadChartData.attach(this);
-			if (loadChartData.statsForApp != null && loadChartData.versionUpdateDates != null) {
-				updateView(loadChartData.statsForApp, loadChartData.versionUpdateDates);
+			if (loadChartData.statsForApp != null) {
+				updateView(loadChartData.statsForApp);
 				dataUpdateRequested = false;
 			}
 		}
@@ -166,8 +171,7 @@ public class ChartActivity extends BaseChartActivity {
 			db = ContentAdapter.getInstance(activity.getApplication());
 		}
 
-		private AppStatsList statsForApp;
-		private List<Date> versionUpdateDates;
+		private AppStatsSummary statsForApp;
 
 		@Override
 		protected void onPreExecute() {
@@ -184,12 +188,10 @@ public class ChartActivity extends BaseChartActivity {
 				return null;
 			}
 
-			if (activity.dataUpdateRequested
-					|| activity.historyListAdapter.getDownloadInfos() == null
+			if (activity.dataUpdateRequested || activity.historyListAdapter.getStats() == null
 					|| activity.historyListAdapter.isEmpty()) {
 				statsForApp = db.getStatsForApp(activity.packageName, params[0],
 						activity.smoothEnabled);
-				versionUpdateDates = db.getVersionUpdateDates(activity.packageName);
 
 				if (DEBUG) {
 					Log.d(TAG,
@@ -198,9 +200,8 @@ public class ChartActivity extends BaseChartActivity {
 					Log.d(TAG,
 							"statsForApp::lowestRatingChanage "
 									+ statsForApp.getLowestRatingChange());
-					Log.d(TAG, "statsForApp::appStats " + statsForApp.getAppStats().size());
-					Log.d(TAG, "statsForApps::overall " + statsForApp.getOverall());
-					Log.d(TAG, "versionUpdateDates " + versionUpdateDates.size());
+					Log.d(TAG, "statsForApp::appStats " + statsForApp.getStats().size());
+					Log.d(TAG, "statsForApps::overall " + statsForApp.getOverallStats());
 				}
 
 				activity.dataUpdateRequested = false;
@@ -217,8 +218,8 @@ public class ChartActivity extends BaseChartActivity {
 				return;
 			}
 
-			if (result && statsForApp != null && versionUpdateDates != null) {
-				activity.updateView(statsForApp, versionUpdateDates);
+			if (result && statsForApp != null) {
+				activity.updateView(statsForApp);
 			}
 			activity.refreshFinished();
 		}
@@ -235,19 +236,20 @@ public class ChartActivity extends BaseChartActivity {
 		return false;
 	}
 
-	private void updateView(AppStatsList appStatsList, List<Date> versionUpdateDates) {
-		List<AppStats> statsForApp = appStatsList.getAppStats();
+	private void updateView(AppStatsSummary appStatsList) {
+		List<AppStats> statsForApp = appStatsList.getStats();
 		if (statsForApp != null && statsForApp.size() > 0) {
 			boolean smoothedValues = applySmoothedValues(statsForApp);
-			historyListAdapter.setOverallStats(appStatsList.getOverall());
-			historyListAdapter.setHeighestRatingChange(appStatsList.getHighestRatingChange());
-			historyListAdapter.setLowestRatingChange(appStatsList.getLowestRatingChange());
+			historyListAdapter.setOverallStats(appStatsList.getOverallStats());
+			// XXX this package is going away ,make it compile for now
+			//			historyListAdapter.setHighestRatingChange(appStatsList.getHighestRatingChange());
+			//			historyListAdapter.setLowestRatingChange(appStatsList.getLowestRatingChange());
 
 			updateCharts(statsForApp);
 
 			DateFormat dateFormat = Preferences.getDateFormatLong(this);
-			timetext = dateFormat.format(statsForApp.get(0).getRequestDate()) + " - "
-					+ dateFormat.format(statsForApp.get(statsForApp.size() - 1).getRequestDate());
+			timetext = dateFormat.format(statsForApp.get(0).getDate()) + " - "
+					+ dateFormat.format(statsForApp.get(statsForApp.size() - 1).getDate());
 
 			updateChartHeadline();
 
@@ -256,8 +258,7 @@ public class ChartActivity extends BaseChartActivity {
 			List<AppStats> statsForAppReversed = new ArrayList<AppStats>();
 			statsForAppReversed.addAll(statsForApp);
 			Collections.reverse(statsForAppReversed);
-			historyListAdapter.setDownloadInfos(statsForAppReversed);
-			historyListAdapter.setVersionUpdateDates(versionUpdateDates);
+			historyListAdapter.setStats(statsForAppReversed);
 			/*
 			 * int page=historyListAdapter.getCurrentPage(); int
 			 * column=historyListAdapter.getCurrentColumn();

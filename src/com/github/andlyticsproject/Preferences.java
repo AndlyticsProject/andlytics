@@ -307,7 +307,7 @@ public class Preferences {
 	}
 
 	@Deprecated
-	public static void saveAdmobAccount(AdmobActivity context, String siteId, String accountName) {
+	public static void saveAdmobAccount(Context context, String siteId, String accountName) {
 		SharedPreferences.Editor editor = getSettings(context).edit();
 		editor.putString(ADMOB_ACCOUNT + siteId, accountName);
 		editor.commit();

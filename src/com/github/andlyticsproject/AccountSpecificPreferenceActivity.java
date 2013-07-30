@@ -34,7 +34,7 @@ public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivit
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		accountName = getIntent().getExtras().getString(Constants.AUTH_ACCOUNT_NAME);
+		accountName = getIntent().getExtras().getString(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		setTitle(accountName);

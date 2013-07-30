@@ -1,4 +1,4 @@
-package com.github.andlyticsproject;
+package com.github.andlyticsproject.legacy;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +8,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.actionbarsherlock.view.MenuItem;
+import com.github.andlyticsproject.BaseActivity;
+import com.github.andlyticsproject.Preferences;
+import com.github.andlyticsproject.R;
+import com.github.andlyticsproject.R.anim;
+import com.github.andlyticsproject.R.id;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.db.AndlyticsDb;
 

@@ -1,4 +1,4 @@
-package com.github.andlyticsproject;
+package com.github.andlyticsproject.legacy;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -27,13 +27,19 @@ import android.widget.ViewSwitcher;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.andlyticsproject.AdmobListAdapter;
+import com.github.andlyticsproject.AndlyticsApp;
+import com.github.andlyticsproject.ContentAdapter;
+import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.Preferences.Timeframe;
+import com.github.andlyticsproject.R;
+import com.github.andlyticsproject.admob.AdmobAccountAuthenticator;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.admob.AdmobRequest.SyncCallback;
 import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.db.AndlyticsDb;
-import com.github.andlyticsproject.model.Admob;
-import com.github.andlyticsproject.model.AdmobList;
+import com.github.andlyticsproject.model.AdmobStats;
+import com.github.andlyticsproject.model.AdmobStatsSummary;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
@@ -226,7 +232,7 @@ public class AdmobActivity extends BaseChartActivity {
 	protected void showAccountList() {
 
 		final AccountManager manager = AccountManager.get(this);
-		final Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_ADMOB);
+		final Account[] accounts = manager.getAccountsByType(AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB);
 		final int size = accounts.length;
 		String[] names = new String[size];
 		accountList.removeAllViews();
@@ -281,15 +287,15 @@ public class AdmobActivity extends BaseChartActivity {
 			}
 		};
 
-		AccountManager.get(AdmobActivity.this).addAccount(Constants.ACCOUNT_TYPE_ADMOB,
-				Constants.AUTHTOKEN_TYPE_ADMOB, null, null /* options */, AdmobActivity.this,
+		AccountManager.get(AdmobActivity.this).addAccount(AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB,
+				AdmobAccountAuthenticator.AUTHTOKEN_TYPE_ADMOB, null, null /* options */, AdmobActivity.this,
 				callback, null /* handler */);
 	}
 
 	private static class LoadDbEntriesTask extends
 			DetachableAsyncTask<Object, Void, Exception, AdmobActivity> {
 
-		private AdmobList admobList;
+		private AdmobStatsSummary admobList;
 		private Boolean executeRemoteCall = false;
 		private ContentAdapter db;
 
@@ -352,13 +358,13 @@ public class AdmobActivity extends BaseChartActivity {
 		}
 	};
 
-	private void showStats(AdmobList admobList) {
+	private void showStats(AdmobStatsSummary admobList) {
 		admobListAdapter.setOverallStats(admobList.getOverallStats());
 
-		List<Admob> admobStats = admobList.getAdmobs();
+		List<AdmobStats> admobStats = admobList.getStats();
 		loadChartData(admobStats);
 		// make shallow copy
-		List<Admob> reversedAdmobStats = new ArrayList<Admob>();
+		List<AdmobStats> reversedAdmobStats = new ArrayList<AdmobStats>();
 		reversedAdmobStats.addAll(admobStats);
 		Collections.reverse(reversedAdmobStats);
 
@@ -532,7 +538,7 @@ public class AdmobActivity extends BaseChartActivity {
 		}
 	};
 
-	private void loadChartData(List<Admob> statsForApp) {
+	private void loadChartData(List<AdmobStats> statsForApp) {
 		/*
 		 * if(radioLastThrity != null) { radioLastThrity.setEnabled(false);
 		 * radioUnlimited.setEnabled(false); checkSmooth.setEnabled(false); }
