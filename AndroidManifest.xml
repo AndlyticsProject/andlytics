@@ -4,7 +4,7 @@
     package="com.github.andlyticsproject"
     android:installLocation="auto"
     android:versionCode="233"
-    android:versionName="2.6.0">
+    android:versionName="2.6.0" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -19,7 +19,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="18" />
 
     <application
         android:name="AndlyticsApp"
@@ -27,6 +27,7 @@
         android:backupAgent=".io.AndlyticsBackupAgent"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
+        android:requiredAccountType="com.google"
         android:theme="@style/Theme.Andlytics" >
         <activity
             android:name=".LoginActivity"
