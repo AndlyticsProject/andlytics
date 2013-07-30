@@ -111,7 +111,10 @@ public class StatsCsvReaderWriter {
 
 			line[11] = Utils.safeToString(stat.getNumberOfErrors());
 
-			line[12] = stat.getTotalRevenue() == null ? "" : stat.getTotalRevenue().asString();
+			line[12] = stat.getTotalRevenue() == null ? "" : stat.getTotalRevenue()
+					.amountAsString();
+			line[13] = stat.getTotalRevenue() == null ? "" : stat.getTotalRevenue()
+					.getCurrencyCode();
 
 			writer.writeNext(line);
 		}
@@ -234,9 +237,9 @@ public class StatsCsvReaderWriter {
 					if (nextLine.length > 12) {
 						String totalRevenueStr = nextLine[12];
 						if (!TextUtils.isEmpty(totalRevenueStr)) {
-							String[] fields = totalRevenueStr.split(" ");
+							String currency = nextLine[13];
 							stats.setTotalRevenue(new Revenue(Revenue.Type.TOTAL,
-									parseDouble(fields[0]), fields[1]));
+									parseDouble(totalRevenueStr.trim()), currency));
 						}
 					}
 
