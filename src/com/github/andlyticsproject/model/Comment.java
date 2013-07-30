@@ -5,7 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class Comment {
+// XXX this is a bit of a kludge...
+public class Comment extends Statistic {
 
 	private boolean isReply = false;
 
@@ -22,8 +23,6 @@ public class Comment {
 
 	// language of the original comment
 	private String language;
-
-	private Date date;
 
 	private Date originalCommentDate;
 
@@ -75,19 +74,6 @@ public class Comment {
 
 	public void setLanguage(String language) {
 		this.language = language;
-	}
-
-	/**
-	 * Date or the comment (or the date of the reply)
-	 * 
-	 * @return
-	 */
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
 	}
 
 	/**

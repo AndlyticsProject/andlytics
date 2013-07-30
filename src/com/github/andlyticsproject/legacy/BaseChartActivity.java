@@ -1,4 +1,4 @@
-package com.github.andlyticsproject;
+package com.github.andlyticsproject.legacy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,15 @@ import android.widget.ViewSwitcher;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.andlyticsproject.BaseChartListAdapter;
+import com.github.andlyticsproject.ChartSwitcher;
+import com.github.andlyticsproject.Preferences;
+import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.Preferences.Timeframe;
+import com.github.andlyticsproject.R.drawable;
+import com.github.andlyticsproject.R.id;
+import com.github.andlyticsproject.R.layout;
+import com.github.andlyticsproject.R.menu;
 import com.github.andlyticsproject.chart.Chart;
 import com.github.andlyticsproject.view.ChartGallery;
 import com.github.andlyticsproject.view.ChartGalleryAdapter;
@@ -26,7 +34,7 @@ import com.github.andlyticsproject.view.ViewSwitcher3D.ViewSwitcherListener;
 
 @SuppressWarnings("deprecation")
 public abstract class BaseChartActivity extends BaseDetailsActivity implements
-		ViewSwitcherListener {
+		ViewSwitcherListener, ChartSwitcher {
 
 	static final String SELECTED_CHART_POISTION = "selected_chart_position";
 
@@ -67,8 +75,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements
 		chartGallery.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int position, long id) {
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
 				chartGallery.setIgnoreLayoutCalls(true);
 
@@ -97,8 +104,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements
 	@Override
 	protected void onSaveInstanceState(Bundle state) {
 		super.onSaveInstanceState(state);
-		state.putInt(SELECTED_CHART_POISTION,
-				chartGallery.getSelectedItemPosition());
+		state.putInt(SELECTED_CHART_POISTION, chartGallery.getSelectedItemPosition());
 	}
 
 	@Override
@@ -124,12 +130,10 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements
 			activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframe90);
 			break;
 		case UNLIMITED:
-			activeTimeFrame = menu
-					.findItem(R.id.itemChartsmenuTimeframeUnlimited);
+			activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframeUnlimited);
 			break;
 		case MONTH_TO_DATE:
-			activeTimeFrame = menu
-					.findItem(R.id.itemChartsmenuTimeframeMonthToDate);
+			activeTimeFrame = menu.findItem(R.id.itemChartsmenuTimeframeMonthToDate);
 			break;
 		}
 		activeTimeFrame.setChecked(true);
@@ -146,7 +150,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements
 	 * Called if item in option menu is selected.
 	 * 
 	 * @param item
-	 *            The chosen menu item
+	 * The chosen menu item
 	 * @return boolean true/false
 	 */
 	@Override
@@ -162,36 +166,31 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements
 		case R.id.itemChartsmenuTimeframe7:
 			currentTimeFrame = Timeframe.LAST_SEVEN_DAYS;
 			executeLoadData(currentTimeFrame);
-			Preferences.saveChartTimeframe(Timeframe.LAST_SEVEN_DAYS,
-					BaseChartActivity.this);
+			Preferences.saveChartTimeframe(Timeframe.LAST_SEVEN_DAYS, BaseChartActivity.this);
 			item.setChecked(true);
 			return true;
 		case R.id.itemChartsmenuTimeframe30:
 			currentTimeFrame = Timeframe.LAST_THIRTY_DAYS;
 			executeLoadData(currentTimeFrame);
-			Preferences.saveChartTimeframe(Timeframe.LAST_THIRTY_DAYS,
-					BaseChartActivity.this);
+			Preferences.saveChartTimeframe(Timeframe.LAST_THIRTY_DAYS, BaseChartActivity.this);
 			item.setChecked(true);
 			return true;
 		case R.id.itemChartsmenuTimeframe90:
 			currentTimeFrame = Timeframe.LAST_NINETY_DAYS;
 			executeLoadData(currentTimeFrame);
-			Preferences.saveChartTimeframe(Timeframe.LAST_NINETY_DAYS,
-					BaseChartActivity.this);
+			Preferences.saveChartTimeframe(Timeframe.LAST_NINETY_DAYS, BaseChartActivity.this);
 			item.setChecked(true);
 			return true;
 		case R.id.itemChartsmenuTimeframeUnlimited:
 			currentTimeFrame = Timeframe.UNLIMITED;
 			executeLoadData(currentTimeFrame);
-			Preferences.saveChartTimeframe(Timeframe.UNLIMITED,
-					BaseChartActivity.this);
+			Preferences.saveChartTimeframe(Timeframe.UNLIMITED, BaseChartActivity.this);
 			item.setChecked(true);
 			return true;
 		case R.id.itemChartsmenuTimeframeMonthToDate:
 			currentTimeFrame = Timeframe.MONTH_TO_DATE;
 			executeLoadData(currentTimeFrame);
-			Preferences.saveChartTimeframe(Timeframe.MONTH_TO_DATE,
-					BaseChartActivity.this);
+			Preferences.saveChartTimeframe(Timeframe.MONTH_TO_DATE, BaseChartActivity.this);
 			item.setChecked(true);
 			return true;
 		default:
@@ -204,7 +203,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements
 	 */
 	private void toggleChartData(MenuItem item) {
 		if (View.VISIBLE == chartframe.getVisibility()) {
-			chartframe.setVisibility(View.GONE);			
+			chartframe.setVisibility(View.GONE);
 			dataframe.setVisibility(View.VISIBLE);
 			item.setIcon(this.getResources().getDrawable(R.drawable.icon_graph));
 		} else {
@@ -223,7 +222,8 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements
 	protected void onChartSelected(int page, int column) {
 	}
 
-	protected void setCurrentChart(int page, int column) {
+	@Override
+	public void setCurrentChart(int page, int column) {
 		int pos = 0;
 		for (View view : chartGalleryAdapter.getViews()) {
 			int pageColumn[] = (int[]) view.getTag();
@@ -233,8 +233,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements
 			}
 			pos++;
 		}
-		throw new IndexOutOfBoundsException("page=" + page + " column="
-				+ column);
+		throw new IndexOutOfBoundsException("page=" + page + " column=" + column);
 	}
 
 	protected abstract void notifyChangedDataformat();
@@ -288,15 +287,14 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements
 		for (int i = 0; i < myAdapter.getNumPages(); i++)
 			for (int j = 1; j < myAdapter.getNumCharts(i); j++) {
 				int pageColumn[] = new int[3];
-				View chartView = myAdapter.buildChart(this, chart, statsForApp,
-						i, j);
+				View chartView = myAdapter.buildChart(this, chart, statsForApp, i, j);
 				/*
 				 * if(chartView==null) {
 				 * Log.i(LOG_TAG,"Ignoring chart p="+i+" c="+j+"for class="
 				 * +this.getClass().toString()); continue; }
 				 */
-				Gallery.LayoutParams params = new Gallery.LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+				Gallery.LayoutParams params = new Gallery.LayoutParams(LayoutParams.FILL_PARENT,
+						LayoutParams.FILL_PARENT);
 				chartView.setLayoutParams(params);
 				pageColumn[0] = i;
 				pageColumn[1] = j;
@@ -329,8 +327,7 @@ public abstract class BaseChartActivity extends BaseDetailsActivity implements
 			timeframeText.setText(Html.fromHtml(getChartHint()));
 		} else {
 			if (timetext != null) {
-				timeframeText.setText(Html.fromHtml(timetext + ": <b>"
-						+ subHeadlineText + "</b>"));
+				timeframeText.setText(Html.fromHtml(timetext + ": <b>" + subHeadlineText + "</b>"));
 			}
 		}
 

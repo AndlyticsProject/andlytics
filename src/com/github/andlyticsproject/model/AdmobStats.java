@@ -1,10 +1,8 @@
-
 package com.github.andlyticsproject.model;
 
 import java.text.DecimalFormat;
-import java.util.Date;
 
-public class Admob {
+public class AdmobStats extends Statistic {
 
 	private String siteId;
 	private Integer requests = 0;
@@ -22,7 +20,6 @@ public class Admob {
 	private Float cpcRevenue = .0f;
 	private Float cpmRevenue = .0f;
 	private Integer exchangeDownloads = 0;
-	private Date date;
 	private static final int XK_cent = 0x00a2; /* U+00A2 CENT SIGN */
 	private static final DecimalFormat centsFormatter = new DecimalFormat("0.00" + ((char) XK_cent));
 
@@ -152,14 +149,6 @@ public class Admob {
 
 	public void setCpmRevenue(Float cpmRevenue) {
 		this.cpmRevenue = cpmRevenue;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
 	}
 
 	public void setExchangeDownloads(Integer exchangeDownloads) {

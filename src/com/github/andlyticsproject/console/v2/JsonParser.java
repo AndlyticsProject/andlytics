@@ -1,5 +1,7 @@
 package com.github.andlyticsproject.console.v2;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +11,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.util.JsonReader;
 import android.util.Log;
 
 import com.github.andlyticsproject.console.DevConsoleException;
@@ -16,6 +21,8 @@ import com.github.andlyticsproject.model.AppDetails;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
+import com.github.andlyticsproject.model.Revenue;
+import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.FileUtils;
 
 /**
@@ -92,14 +99,14 @@ public class JsonParser {
 		int latestValue = latestData.getJSONObject("2").getInt("1");
 
 		switch (statsType) {
-			case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
-				stats.setTotalDownloads(latestValue);
-				break;
-			case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
-				stats.setActiveInstalls(latestValue);
-				break;
-			default:
-				break;
+		case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
+			stats.setTotalDownloads(latestValue);
+			break;
+		case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
+			stats.setActiveInstalls(latestValue);
+			break;
+		default:
+			break;
 		}
 
 	}
@@ -314,7 +321,7 @@ public class JsonParser {
 				continue;
 			}
 			AppStats stats = new AppStats();
-			stats.setRequestDate(now);
+			stats.setDate(now);
 			if (jsonAppStats.length() < 4) {
 				// no statistics (yet?) or weird format
 				// TODO do we need differentiate?
@@ -500,11 +507,7 @@ public class JsonParser {
 		// {"error":{"data":{"1":ERROR_CODE},"code":ERROR_CODE}}
 		JSONObject jsonObj = new JSONObject(json);
 		if (jsonObj.has("error")) {
-			JSONObject errorObj = jsonObj.getJSONObject("error");
-			String data = errorObj.getJSONObject("data").optString("1");
-			String errorCode = errorObj.optString("code");
-			throw new DevConsoleException(String.format(
-					"Error replying to comment: %s, errorCode=%s", data, errorCode));
+			throw parseError(jsonObj, "replying to comments");
 		}
 		JSONObject replyObj = jsonObj.getJSONObject("result").getJSONObject("1");
 
@@ -513,6 +516,37 @@ public class JsonParser {
 		result.setDate(parseDate(Long.parseLong(replyObj.getString("3"))));
 
 		return result;
+	}
+
+	private static DevConsoleException parseError(JSONObject jsonObj, String message)
+			throws JSONException {
+		JSONObject errorObj = jsonObj.getJSONObject("error");
+		String data = errorObj.getJSONObject("data").optString("1");
+		String errorCode = errorObj.optString("code");
+
+		return new DevConsoleException(String.format("Error %s: %s, errorCode=%s", message, data,
+				errorCode));
+	}
+
+	static RevenueSummary parseRevenueResponse(String json) throws JSONException {
+		JSONObject jsonObj = new JSONObject(json);
+		if (jsonObj.has("error")) {
+			throw parseError(jsonObj, "fetch revenue summary");
+		}
+
+		JSONObject resultObj = jsonObj.getJSONObject("result");
+		String currency = resultObj.getString("1");
+		// 2 -total, 3 -sales, 4- in-app products
+		// we only use total (for now)
+		JSONObject revenueObj = resultObj.getJSONObject("2");
+		// even keys are for previous period
+		double lastDay = revenueObj.getDouble("1");
+		double last7Days = revenueObj.getDouble("3");
+		double last30Days = revenueObj.getDouble("5");
+		// NaN is treated like NULL -> DB error
+		double overall = revenueObj.optDouble("7", 0.0);
+
+		return RevenueSummary.createTotal(currency, lastDay, last7Days, last30Days, overall);
 	}
 
 	/**
@@ -525,4 +559,101 @@ public class JsonParser {
 		return new Date(unixDateCode);
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public static Revenue parseLatestTotalRevenue(String json) throws IOException {
+		JsonReader reader = new JsonReader(new StringReader(json));
+		reader.setLenient(true);
+		String currency = null;
+		Date reportDate = null;
+		Date revenueDate = null;
+		String revenueType1 = null;
+		String revenueType2 = null;
+		double value = 0;
+
+		reader.beginObject();
+		while (reader.hasNext()) {
+			String name = reader.nextName();
+			if ("result".equals(name)) {
+				reader.beginObject();
+				while (reader.hasNext()) {
+					name = reader.nextName();
+					// 1: sales, 2: in-app, 3: subscriptions?
+					// XXX this doesn't handle the case where there is more 
+					// than one, e.g. app sales + subscriptions
+					if ("1".equals(name) || "2".equals(name) || "3".equals(name)) {
+						// revenue list: date->amount
+						// [{"1":"1304103600000","2":{"2":234.0}},..{"1":"1304449200000","2":{"2":123.0}},...]
+						reader.beginObject();
+						while (reader.hasNext()) {
+							name = reader.nextName();
+							if ("1".equals(name)) {
+								reader.beginArray();
+								while (reader.hasNext()) {
+									reader.beginObject();
+									double dailyRevenue = 0;
+									Date date = null;
+									while (reader.hasNext()) {
+										name = reader.nextName();
+										if ("1".equals(name)) {
+											date = new Date(reader.nextLong());
+											if (revenueDate == null) {
+												revenueDate = (Date) date.clone();
+											}
+										} else if ("2".equals(name)) {
+											reader.beginObject();
+											while (reader.hasNext()) {
+												name = reader.nextName();
+												if ("2".equals(name)) {
+													dailyRevenue = reader.nextDouble();
+													if (date != null
+															&& date.getTime() > revenueDate
+																	.getTime()) {
+														revenueDate = date;
+														value = dailyRevenue;
+													}
+												}
+											}
+											reader.endObject();
+										}
+									}
+									reader.endObject();
+								}
+								reader.endArray();
+							} else if ("2".equals(name)) {
+								//"APP", "IN_APP",
+								revenueType1 = reader.nextString();
+							} else if ("3".equals(name)) {
+								revenueType2 = reader.nextString();
+							}
+						}
+						reader.endObject();
+					} else if ("4".equals(name)) {
+						reportDate = new Date(reader.nextLong());
+					} else if ("5".equals(name)) {
+						currency = reader.nextString();
+					}
+				}
+				reader.endObject();
+			} else if ("xsrf".equals(name)) {
+				// consume XSRF
+				reader.nextString();
+			}
+		}
+		reader.endObject();
+
+
+		// XXX what happens when there is more than one type?
+		Revenue.Type type = Revenue.Type.TOTAL;
+		if ("APP".equals(revenueType1)) {
+			type = Revenue.Type.APP_SALES;
+		} else if ("IN_APP".equals(revenueType1)) {
+			type = Revenue.Type.IN_APP;
+		} else {
+			type = Revenue.Type.SUBSCRIPTIONS;
+		}
+
+		// XXX do we need the date?
+		//		return new Revenue(type, revenueDate, currency, value);
+		return new Revenue(type, value, currency);
+	}
 }

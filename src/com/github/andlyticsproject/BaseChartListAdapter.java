@@ -1,8 +1,8 @@
-
 package com.github.andlyticsproject;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.github.andlyticsproject.chart.Chart;
 
-public abstract class BaseChartListAdapter extends BaseAdapter {
+public abstract class BaseChartListAdapter<T> extends BaseAdapter {
 	private static String LOG_TAG = BaseChartListAdapter.class.toString();
 	/**
 	 * 
@@ -26,7 +26,7 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 	 */
 	private final int numPages, numColumns[];
 	private final int maxColumns;
-	private final BaseChartActivity activity;
+	private final Activity activity;
 	private float scale;
 	private int currentPage, currentColumn;
 	private final boolean usesSmooth;
@@ -34,14 +34,16 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 	private final int listItemTextSize;
 	private final int colorOdd;
 	private final int colorEven;
-	
+
+	public abstract T getItem(int position);
+
 
 	public abstract int getNumPages();
 
 	/**
 	 * 
 	 * @param page
-	 *          Page to request number of charts (columns) index start at 0
+	 * Page to request number of charts (columns) index start at 0
 	 * @return Number of charts(columns) that will has the requested page
 	 */
 	public abstract int getNumCharts(int page) throws IndexOutOfBoundsException;
@@ -75,7 +77,11 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 	public abstract void updateChartValue(int position, int page, int column, TextView tv)
 			throws IndexOutOfBoundsException;
 
-	public BaseChartListAdapter(BaseChartActivity activity) {
+	public BaseChartListAdapter(Activity activity) {
+		if (!(activity instanceof ChartSwitcher)) {
+			throw new ClassCastException("Activity must implement ChartSwitcher.");
+		}
+
 		this.activity = activity;
 		numPages = getNumPages();
 		int max = -1;
@@ -90,10 +96,11 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		usesSmooth = useSmoth;
 		maxColumns = max;
 		this.scale = activity.getResources().getDisplayMetrics().density;
-		listItemTextSize = activity.getResources().getDimensionPixelSize(R.dimen.chart_list_item_text_size);
+		listItemTextSize = activity.getResources().getDimensionPixelSize(
+				R.dimen.chart_list_item_text_size);
 		currentPage = 0;
 		currentColumn = 1;
-		
+
 		colorOdd = activity.getResources().getColor(R.color.rowLight);
 		colorEven = activity.getResources().getColor(R.color.rowDark);
 
@@ -103,7 +110,8 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				int column = (Integer) v.getTag();
 				Log.i(LOG_TAG, "Pressed " + column);
-				BaseChartListAdapter.this.activity.setCurrentChart(currentPage, column);
+				((ChartSwitcher) BaseChartListAdapter.this.activity).setCurrentChart(currentPage,
+						column);
 
 			}
 		};
@@ -144,14 +152,14 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		
+
 		// coloring table rows
-		if (1 == position % 2) {			
+		if (1 == position % 2) {
 			convertView.setBackgroundColor(colorOdd);
 		} else {
 			convertView.setBackgroundColor(colorEven);
 		}
-		
+
 		// First field always will be the date
 		Typeface typeface = holder.fields[0].getTypeface();
 		for (i = 0; i < maxColumns; i++)
@@ -203,7 +211,7 @@ public abstract class BaseChartListAdapter extends BaseAdapter {
 		return view;
 	}
 
-	protected abstract View buildChart(Context context, Chart baseChart, List<?> statsForApp,
+	public abstract View buildChart(Context context, Chart baseChart, List<?> statsForApp,
 			int page, int column) throws IndexOutOfBoundsException;
 
 	public String getCurrentChartTitle() {

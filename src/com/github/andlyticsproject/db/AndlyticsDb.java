@@ -13,19 +13,21 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.model.AppDetails;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.model.Link;
+import com.github.andlyticsproject.model.Revenue;
+import com.github.andlyticsproject.model.RevenueSummary;
+import com.github.andlyticsproject.sync.AutosyncHandler;
 import com.github.andlyticsproject.util.Utils;
 
 public class AndlyticsDb extends SQLiteOpenHelper {
 
 	private static final String TAG = AndlyticsDb.class.getSimpleName();
 
-	private static final int DATABASE_VERSION = 20;
+	private static final int DATABASE_VERSION = 21;
 
 	private static final String DATABASE_NAME = "andlytics";
 
@@ -56,6 +58,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		db.execSQL(DeveloperAccountsTable.TABLE_CREATE_DEVELOPER_ACCOUNT);
 		db.execSQL(LinksTable.TABLE_CREATE_LINKS);
 		db.execSQL(AppDetailsTable.TABLE_CREATE_APP_DETAILS);
+		db.execSQL(RevenueSummaryTable.TABLE_CREATE_REVENUE_SUMMARY);
 	}
 
 	@Override
@@ -167,7 +170,17 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			//			db.execSQL("ALTER table " + DeveloperAccountsTable.DATABASE_TABLE_NAME + " add "
 			//					+ DeveloperAccountsTable.DEVELOPER_ID + " text");
 		}
+		if (oldVersion < 21) {
+			Log.w(TAG, "Old version < 21 - adding revenue_summary table");
+			db.execSQL("DROP TABLE IF EXISTS " + RevenueSummaryTable.DATABASE_TABLE_NAME);
+			db.execSQL(RevenueSummaryTable.TABLE_CREATE_REVENUE_SUMMARY);
 
+			Log.w(TAG, "Old version < 21 - add new stats colums");
+			db.execSQL("ALTER table " + AppStatsTable.DATABASE_TABLE_NAME + " add "
+					+ AppStatsTable.KEY_STATS_TOTAL_REVENUE + " double");
+			db.execSQL("ALTER table " + AppStatsTable.DATABASE_TABLE_NAME + " add "
+					+ AppStatsTable.KEY_STATS_CURRENCY + " text");
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -236,7 +249,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		db.beginTransaction();
 		try {
 			AccountManager am = AccountManager.get(context);
-			Account[] accounts = am.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
+			Account[] accounts = am.getAccountsByType(AutosyncHandler.ACCOUNT_TYPE_GOOGLE);
 			String activeAccount = Preferences.getAccountName(context);
 			for (Account account : accounts) {
 				boolean isHidden = Preferences.getIsHiddenAccount(context, account.name);
@@ -628,6 +641,45 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 
 		getWritableDatabase().update(LinksTable.DATABASE_TABLE_NAME, values,
 				LinksTable.ROWID + " = ?", new String[] { Long.toString(id) });
+	}
+
+	public synchronized void fetchRevenueSummary(AppInfo appInfo) {
+		if (appInfo.getId() == null) {
+			// not persistent
+			return;
+		}
+
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = null;
+		try {
+			c = db.query(RevenueSummaryTable.DATABASE_TABLE_NAME, RevenueSummaryTable.ALL_COLUMNS,
+					RevenueSummaryTable.APPINFO_ID + "=?",
+					new String[] { Long.toString(appInfo.getId()) }, null, null, null);
+			if (c.getCount() < 1 || !c.moveToNext()) {
+				return;
+			}
+
+			Long id = c.getLong(c.getColumnIndex(RevenueSummaryTable.ROWID));
+			int typeIdx = c.getInt(c.getColumnIndex(RevenueSummaryTable.TYPE));
+			String currency = c.getString(c.getColumnIndex(RevenueSummaryTable.CURRENCY));
+			double lastDayTotal = c.getDouble(c.getColumnIndex(RevenueSummaryTable.LAST_DAY_TOTAL));
+			double last7DaysTotal = c.getDouble(c
+					.getColumnIndex(RevenueSummaryTable.LAST_7DAYS_TOTAL));
+			double last30DaysTotal = c.getDouble(c
+					.getColumnIndex(RevenueSummaryTable.LAST_30DAYS_TOTAL));
+			double overallTotal = c.getDouble(c.getColumnIndex(RevenueSummaryTable.OVERALL_TOTAL));
+
+			Revenue.Type type = Revenue.Type.values()[typeIdx];
+			RevenueSummary revenue = new RevenueSummary(type, currency, lastDayTotal,
+					last7DaysTotal, last30DaysTotal, overallTotal);
+			revenue.setId(id);
+
+			appInfo.setTotalRevenueSummary(revenue);
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+		}
 	}
 
 }

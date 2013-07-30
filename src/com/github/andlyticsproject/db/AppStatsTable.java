@@ -30,6 +30,8 @@ public final class AppStatsTable implements BaseColumns {
 	public static final String KEY_STATS_1STARS = "starsone";
 	public static final String KEY_STATS_VERSIONCODE = "versioncode";
 	public static final String KEY_STATS_NUM_ERRORS = "numerrors";
+	public static final String KEY_STATS_TOTAL_REVENUE = "totalrevenue";
+	public static final String KEY_STATS_CURRENCY = "currency";
 
 	public static final String TABLE_CREATE_STATS = "create table "
 			+ AppStatsTable.DATABASE_TABLE_NAME + " (_id integer primary key autoincrement, "
@@ -43,7 +45,9 @@ public final class AppStatsTable implements BaseColumns {
 			+ " integer," + AppStatsTable.KEY_STATS_3STARS + " integer,"
 			+ AppStatsTable.KEY_STATS_2STARS + " integer," + AppStatsTable.KEY_STATS_1STARS
 			+ " integer," + AppStatsTable.KEY_STATS_VERSIONCODE + " integer, "
-			+ KEY_STATS_NUM_ERRORS + " integer)";
+			+ AppStatsTable.KEY_STATS_NUM_ERRORS + " integer, "
+			+ AppStatsTable.KEY_STATS_TOTAL_REVENUE + " double, "
+			+ AppStatsTable.KEY_STATS_CURRENCY + " text)";
 
 	public static HashMap<String, String> PROJECTION_MAP;
 
@@ -70,6 +74,9 @@ public final class AppStatsTable implements BaseColumns {
 		PROJECTION_MAP
 				.put(AppStatsTable.KEY_STATS_VERSIONCODE, AppStatsTable.KEY_STATS_VERSIONCODE);
 		PROJECTION_MAP.put(AppStatsTable.KEY_STATS_NUM_ERRORS, AppStatsTable.KEY_STATS_NUM_ERRORS);
+		PROJECTION_MAP.put(AppStatsTable.KEY_STATS_TOTAL_REVENUE,
+				AppStatsTable.KEY_STATS_TOTAL_REVENUE);
+		PROJECTION_MAP.put(AppStatsTable.KEY_STATS_CURRENCY, AppStatsTable.KEY_STATS_CURRENCY);
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.github.andlyticsproject.console.v2;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.http.client.methods.HttpPost;
@@ -11,6 +12,8 @@ import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
+import com.github.andlyticsproject.model.Revenue;
+import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.FileUtils;
 
 @SuppressLint("DefaultLocale")
@@ -21,6 +24,7 @@ public class DevConsoleV2Protocol {
 	static final String URL_APPS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/androidapps";
 	static final String URL_STATISTICS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/statistics";
 	static final String URL_REVIEWS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/reviews";
+	static final String URL_REVENUE = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/revenue";
 
 	// Templates for payloads used in POST requests
 	static final String FETCH_APPS_TEMPLATE = "{\"method\":\"fetch\","
@@ -43,6 +47,10 @@ public class DevConsoleV2Protocol {
 	// %1$s: package name, %2$s: comment ID, %3$s: reply text, %4$s: XSRF
 	static final String REPLY_TO_COMMENT_TEMPLATE = "{\"method\":\"sendReply\","
 			+ "\"params\":{\"1\":\"%1$s\",\"2\":\"%2$s\",\"3\":\"%3$s\"},\"xsrf\":\"%4$s\"}";
+	// %1$s: package name, %2$s: XSRF
+	static final String REVENUE_SUMMARY_TEMPLATE = "{\"method\":\"revenueSummary\",\"params\":{\"1\":\"%1$s\",\"2\":\"\"},\"xsrf\":\"%2$s\"}";
+	// %1$s: package name, %2$s: XSRF
+	static final String REVENUE_HISTORICAL_DATA = "{\"method\":\"historicalData\",\"params\":{\"1\":\"%1$s\",\"2\":\"\"},\"xsrf\":\"%2$s\"}";
 
 	static final String REPLY_TO_COMMENTS_FEATURE = "REPLY_TO_COMMENTS";
 
@@ -122,6 +130,10 @@ public class DevConsoleV2Protocol {
 
 	String createCommentsUrl(String developerId) {
 		return createDeveloperUrl(URL_REVIEWS, developerId);
+	}
+
+	String createRevenueUrl(String developerId) {
+		return createDeveloperUrl(URL_REVENUE, developerId);
 	}
 
 	String createFetchAppInfosRequest() {
@@ -259,6 +271,38 @@ public class DevConsoleV2Protocol {
 		try {
 			return JsonParser.parseCommentReplyResponse(json);
 		} catch (JSONException ex) {
+			saveDebugJson(json);
+			throw new DevConsoleProtocolException(json, ex);
+		}
+	}
+
+	String createFetchRevenueSummaryRequest(String packageName) {
+		checkState();
+
+		return String.format(REVENUE_SUMMARY_TEMPLATE, packageName,
+				sessionCredentials.getXsrfToken());
+	}
+
+	RevenueSummary parseRevenueResponse(String json) {
+		try {
+			return JsonParser.parseRevenueResponse(json);
+		} catch (JSONException ex) {
+			saveDebugJson(json);
+			throw new DevConsoleProtocolException(json, ex);
+		}
+	}
+
+	String createFetchHistoricalRevenueRequest(String packageName) {
+		checkState();
+
+		return String.format(REVENUE_HISTORICAL_DATA, packageName,
+				sessionCredentials.getXsrfToken());
+	}
+
+	Revenue parseLatestTotalRevenue(String json) {
+		try {
+			return JsonParser.parseLatestTotalRevenue(json);
+		} catch (IOException ex) {
 			saveDebugJson(json);
 			throw new DevConsoleProtocolException(json, ex);
 		}

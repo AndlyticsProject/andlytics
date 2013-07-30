@@ -46,7 +46,7 @@ import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
-import com.github.andlyticsproject.model.Admob;
+import com.github.andlyticsproject.model.AdmobStats;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.sync.NotificationHandler;
@@ -82,6 +82,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
 
 	private static class State {
+		// TODO replace with loaders
 		LoadDbEntries loadDbEntries;
 		LoadRemoteEntries loadRemoteEntries;
 		LoadIconInCache loadIconInCache;
@@ -140,7 +141,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private State state = new State();
 
 	/** Called when the activity is first created. */
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -190,8 +190,8 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		if (!developerAccounts.get(itemPosition).getName().equals(accountName)) {
 			// Only switch if it is a new account
 			Intent intent = new Intent(Main.this, Main.class);
-			intent.putExtra(Constants.AUTH_ACCOUNT_NAME, developerAccounts.get(itemPosition)
-					.getName());
+			intent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME,
+					developerAccounts.get(itemPosition).getName());
 			startActivity(intent);
 			overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
 			// Call finish to ensure we don't get multiple activities running
@@ -267,7 +267,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			break;
 		case R.id.itemMainmenuPreferences:
 			Intent preferencesIntent = new Intent(this, PreferenceActivity.class);
-			preferencesIntent.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+			preferencesIntent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, accountName);
 			startActivity(preferencesIntent);
 			break;
 		case R.id.itemMainmenuStatsMode:
@@ -280,7 +280,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			break;
 		case R.id.itemMainmenuAccounts:
 			Intent accountsIntent = new Intent(this, LoginActivity.class);
-			accountsIntent.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
+			accountsIntent.putExtra(LoginActivity.EXTRA_MANAGE_ACCOUNTS_MODE, true);
 			startActivityForResult(accountsIntent, REQUEST_CODE_MANAGE_ACCOUNTS);
 			break;
 		default:
@@ -562,10 +562,10 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			for (AppInfo appInfo : allStats) {
 				if (!appInfo.isGhost()) {
 					if (appInfo.getAdmobSiteId() != null) {
-						List<Admob> admobStats = db.getAdmobStats(appInfo.getAdmobSiteId(),
-								Timeframe.LAST_TWO_DAYS).getAdmobs();
+						List<AdmobStats> admobStats = db.getAdmobStats(appInfo.getAdmobSiteId(),
+								Timeframe.LAST_TWO_DAYS).getStats();
 						if (admobStats.size() > 0) {
-							Admob admob = admobStats.get(admobStats.size() - 1);
+							AdmobStats admob = admobStats.get(admobStats.size() - 1);
 							appInfo.setAdmobStats(admob);
 						}
 					}

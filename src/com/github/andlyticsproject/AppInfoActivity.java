@@ -65,8 +65,8 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
-			packageName = b.getString(Constants.PACKAGE_NAME_PARCEL);
-			iconFilePath = b.getString(Constants.ICON_FILE_PARCEL);
+			packageName = b.getString(BaseActivity.EXTRA_PACKAGE_NAME);
+			iconFilePath = b.getString(BaseActivity.EXTRA_ICON_FILE);
 		}
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -20,6 +20,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Looper;
 import android.util.Log;
 
 import com.github.andlyticsproject.AndlyticsApp;
@@ -89,10 +90,6 @@ public final class Utils {
 		} catch (NameNotFoundException e) {
 			return null;
 		}
-	}
-
-	public static <P, T extends AsyncTask<P, ?, ?>> void execute(T task) {
-		execute(task, (P[]) null);
 	}
 
 	@SuppressLint("NewApi")
@@ -191,6 +188,21 @@ public final class Utils {
 
 	public static synchronized String formatDbDate(Date date) {
 		return DB_DATE_FORMAT.format(date);
+	}
+
+	public static void ensureMainThread(Context ctx) {
+		Looper looper = Looper.myLooper();
+		if (looper != null && looper != ctx.getMainLooper()) {
+			throw new IllegalStateException("Only call this from your main thread.");
+		}
+	}
+
+	public static String safeToString(Object val) {
+		if (val == null) {
+			return "";
+		}
+
+		return val.toString();
 	}
 
 }
