@@ -6,7 +6,6 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 
-
 public class Revenue {
 
 	private static final String DECIMALS_FORMAT = "%.2f";
@@ -14,6 +13,8 @@ public class Revenue {
 	private static final String DECIMAL_CURRENCY_FORMAT = "%s%.2f";
 	private static final String NO_DECIMALS_CURRENCY_FORMAT = "%s%.0f";
 	private static final int DECIMAL_DISPLAY_THRESHOLD = 1000;
+
+	private static final double DEVELOPER_CUT_PERCENTAGE = 0.7;
 
 	public enum Type {
 		TOTAL, APP_SALES, IN_APP, SUBSCRIPTIONS
@@ -28,10 +29,13 @@ public class Revenue {
 	private String currencyCode;
 	private Currency currency;
 	private double amount;
+	private double developerCut;
 
 	public Revenue(Type type, double amount, String currencyCode) {
 		this.type = type;
 		this.amount = amount;
+		// XXX make this smarter, round up,etc.
+		this.developerCut = DEVELOPER_CUT_PERCENTAGE * amount;
 		this.currencyCode = currencyCode;
 		this.currency = Currency.getInstance(currencyCode);
 	}
@@ -52,6 +56,10 @@ public class Revenue {
 		return amount;
 	}
 
+	public double getDeveloperCut() {
+		return developerCut;
+	}
+
 	@SuppressLint("DefaultLocale")
 	public String asString() {
 		if (NO_DECIMAL_CURRENCIES.contains(currencyCode)) {
@@ -70,6 +78,16 @@ public class Revenue {
 
 		return String.format((amount < DECIMAL_DISPLAY_THRESHOLD ? DECIMALS_FORMAT
 				: NO_DECIMALS_FORMAT), amount);
+	}
+
+	@SuppressLint("DefaultLocale")
+	public String developerCutAsString() {
+		if (NO_DECIMAL_CURRENCIES.contains(currencyCode)) {
+			return String.format(NO_DECIMALS_CURRENCY_FORMAT, currency.getSymbol(), developerCut);
+		}
+
+		return String.format((amount < DECIMAL_DISPLAY_THRESHOLD ? DECIMAL_CURRENCY_FORMAT
+				: DECIMAL_CURRENCY_FORMAT), currency.getSymbol(), developerCut);
 	}
 
 	@Override
