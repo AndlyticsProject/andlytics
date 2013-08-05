@@ -29,8 +29,8 @@ public class RevenueChartListAdapter extends ChartListAdapter<AppStats> {
 	@Override
 	public int getNumCharts(int page) throws IndexOutOfBoundsException {
 		switch (page) {
-			case 0:
-				return 3;
+		case 0:
+			return 3;
 		}
 		throw new IndexOutOfBoundsException("page=" + page);
 	}
@@ -42,13 +42,13 @@ public class RevenueChartListAdapter extends ChartListAdapter<AppStats> {
 		}
 
 		switch (page) {
-			case 0:
-				switch (column) {
-					case COL_REVENUE:
-						return activity.getString(R.string.total_revenue);
-					case COL_DEVELOPER_CUT:
-						return "Developer cut";
-				}
+		case 0:
+			switch (column) {
+			case COL_REVENUE:
+				return activity.getString(R.string.total_revenue);
+			case COL_DEVELOPER_CUT:
+				return "Developer cut";
+			}
 		}
 		throw new IndexOutOfBoundsException("page=" + page + " column=" + column);
 
@@ -64,24 +64,24 @@ public class RevenueChartListAdapter extends ChartListAdapter<AppStats> {
 		}
 		int textColor = BLACK_TEXT;
 		switch (page) {
-			case 0: {
+		case 0: {
 
-				switch (column) {
-					case COL_REVENUE:
-						tv.setText(Utils.safeToString(appInfo.getTotalRevenue()));
-						tv.setTextColor(textColor);
-						return;
-					case COL_DEVELOPER_CUT:
-						if (appInfo.getTotalRevenue() == null) {
-							tv.setText("");
-						} else {
-							tv.setText(appInfo.getTotalRevenue().developerCutAsString());
-						}
-						tv.setTextColor(textColor);
-						return;
+			switch (column) {
+			case COL_REVENUE:
+				tv.setText(Utils.safeToString(appInfo.getTotalRevenue()));
+				tv.setTextColor(textColor);
+				return;
+			case COL_DEVELOPER_CUT:
+				if (appInfo.getTotalRevenue() == null) {
+					tv.setText("");
+				} else {
+					tv.setText(appInfo.getTotalRevenue().developerCutAsString());
 				}
-
+				tv.setTextColor(textColor);
+				return;
 			}
+
+		}
 		}
 		throw new IndexOutOfBoundsException("page=" + page + " column=" + column);
 
@@ -91,7 +91,9 @@ public class RevenueChartListAdapter extends ChartListAdapter<AppStats> {
 			int column) throws IndexOutOfBoundsException {
 		ValueCallbackHander handler = null;
 		switch (page) {
-			case 0:
+		case 0:
+			switch (column) {
+			case COL_REVENUE:
 				handler = new DevConValueCallbackHander() {
 					@Override
 					public double getValue(Object appInfo) {
@@ -101,6 +103,19 @@ public class RevenueChartListAdapter extends ChartListAdapter<AppStats> {
 					}
 				};
 				return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
+			case COL_DEVELOPER_CUT:
+				handler = new DevConValueCallbackHander() {
+					@Override
+					public double getValue(Object appInfo) {
+						AppStats stats = (AppStats) appInfo;
+						return stats.getTotalRevenue() == null ? 0 : stats.getTotalRevenue()
+								.getDeveloperCut();
+					}
+				};
+				return baseChart.buildLineChart(context, statsForApp.toArray(), handler);
+
+
+			}
 		}
 
 		throw new IndexOutOfBoundsException("page=" + page + " column=" + column);
@@ -112,20 +127,20 @@ public class RevenueChartListAdapter extends ChartListAdapter<AppStats> {
 			return "";
 		}
 		switch (page) {
-			case 0:
-				Preferences.saveShowChartHint(activity, false);
-				if (overallStats == null) {
-					return "";
-				}
+		case 0:
+			Preferences.saveShowChartHint(activity, false);
+			if (overallStats == null) {
+				return "";
+			}
 
-				switch (column) {
-					case COL_REVENUE:
-						return overallStats.getTotalRevenue() == null ? "unknown" : overallStats
-								.getTotalRevenue().asString();
-					case COL_DEVELOPER_CUT:
-						return overallStats.getTotalRevenue() == null ? "unknown" : overallStats
-								.getTotalRevenue().developerCutAsString();
-				}
+			switch (column) {
+			case COL_REVENUE:
+				return overallStats.getTotalRevenue() == null ? "unknown" : overallStats
+						.getTotalRevenue().asString();
+			case COL_DEVELOPER_CUT:
+				return overallStats.getTotalRevenue() == null ? "unknown" : overallStats
+						.getTotalRevenue().developerCutAsString();
+			}
 		}
 		throw new IndexOutOfBoundsException("page=" + page + " column=" + column);
 	}
