@@ -55,6 +55,11 @@
             android:summary="@string/show_comment_auto_translations_summary"
             android:defaultValue="true"/>
         
+        <CheckBoxPreference android:key="revenue.show.developer.cut"
+            android:title="@string/show_developer_cut_revenue"
+            android:summary="@string/show_developer_cut_revenue_summary"
+            android:defaultValue="true"/>
+        
         <CheckBoxPreference android:key="acra.enable"
             android:title="@string/pref_disable_acra"
             android:summaryOn="@string/pref_acra_enabled"
