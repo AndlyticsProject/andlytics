@@ -68,6 +68,8 @@ public class Preferences {
 	public static final String USE_GOOGLE_TRANSLATE_APP = "use.google.translate.app";
 	public static final String SHOW_COMMENT_AUTO_TRANSLATIONS = "show.comment.auto.translations";
 
+	public static final String SHOW_DEVELOPER_CUT_REVENUE = "revenue.show.developer.cut";
+
 	public enum Timeframe {
 		LAST_NINETY_DAYS, LAST_THIRTY_DAYS, UNLIMITED, LAST_TWO_DAYS, LATEST_VALUE, LAST_SEVEN_DAYS, MONTH_TO_DATE
 	}
@@ -417,5 +419,13 @@ public class Preferences {
 
 	public static synchronized void saveShowCommentAutoTranslations(Context context, boolean value) {
 		getSettings(context).edit().putBoolean(SHOW_COMMENT_AUTO_TRANSLATIONS, value).commit();
+	}
+
+	public static synchronized boolean isShowDeveloperCutRevenue(Context context) {
+		return getSettings(context).getBoolean(SHOW_DEVELOPER_CUT_REVENUE, true);
+	}
+
+	public static synchronized void saveShowDeveloperCutRevenue(Context context, boolean value) {
+		getSettings(context).edit().putBoolean(SHOW_DEVELOPER_CUT_REVENUE, value).commit();
 	}
 }

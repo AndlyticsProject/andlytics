@@ -16,7 +16,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
@@ -311,26 +310,39 @@ public class MainListAdapter extends BaseAdapter {
 
 		int height = expandViewHeight;
 		RevenueSummary revenue = appInfo.getTotalRevenueSummary();
+		boolean showDeveloperCut = Preferences.isShowDeveloperCutRevenue(activity);
 		if (revenue != null && revenue.hasRevenue()) {
 			// 55dp for revenue section?
 			height = Math.round(height + 55 * displayMetrics.scaledDensity);
 			holder.revenueFrame.setVisibility(View.VISIBLE);
 
 			Revenue overall = revenue.getOverall();
-			holder.totalRevenue.setText(overall == null ? "0.0" : overall.asString());
+			if (showDeveloperCut) {
+				holder.totalRevenue.setText(overall == null ? "0.0" : overall
+						.developerCutAsString());
+			} else {
+				holder.totalRevenue.setText(overall == null ? "0.0" : overall.asString());
+			}
 			holder.totalRevenueLabel.setText(R.string.revenue_total);
 			Revenue last30Days = revenue.getLast30Days();
-			holder.last30DaysRevenue.setText(last30Days == null ? "0.0" : last30Days.asString());
+			if (showDeveloperCut) {
+				holder.last30DaysRevenue.setText(last30Days == null ? "0.0" : last30Days
+						.developerCutAsString());
+			} else {
+				holder.last30DaysRevenue
+						.setText(last30Days == null ? "0.0" : last30Days.asString());
+			}
 			holder.last30DaysRevenueLabel.setText(R.string.revenue_last_30days);
 
 			// TODO Drive this with a diff/reset at midnight?
 			// XXX float
-			Revenue rev = revenue.getLastDay();
-			// XXX only parsed and set on HC+
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				rev = appStats.getTotalRevenue();
+			Revenue rev = appStats.getTotalRevenue();
+			if (showDeveloperCut) {
+				setupFloatValueDiff(holder.totalRevenuePercent, rev.getDeveloperCut(),
+						rev.developerCutAsString());
+			} else {
+				setupFloatValueDiff(holder.totalRevenuePercent, rev.getAmount(), rev.asString());
 			}
-			setupFloatValueDiff(holder.totalRevenuePercent, rev.getAmount(), rev.asString());
 		} else {
 			holder.revenueFrame.setVisibility(View.GONE);
 		}

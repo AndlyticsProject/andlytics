@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.github.andlyticsproject"
     android:installLocation="auto"
-    android:versionCode="234"
+    android:versionCode="235"
     android:versionName="2.6.0-ALPHA" >
 
     <uses-permission android:name="android.permission.INTERNET" />
