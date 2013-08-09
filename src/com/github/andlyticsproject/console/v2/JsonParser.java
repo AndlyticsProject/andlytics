@@ -99,14 +99,14 @@ public class JsonParser {
 		int latestValue = latestData.getJSONObject("2").getInt("1");
 
 		switch (statsType) {
-		case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
-			stats.setTotalDownloads(latestValue);
-			break;
-		case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
-			stats.setActiveInstalls(latestValue);
-			break;
-		default:
-			break;
+			case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
+				stats.setTotalDownloads(latestValue);
+				break;
+			case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
+				stats.setActiveInstalls(latestValue);
+				break;
+			default:
+				break;
 		}
 
 	}
@@ -535,7 +535,12 @@ public class JsonParser {
 		}
 
 		JSONObject resultObj = jsonObj.getJSONObject("result");
-		String currency = resultObj.getString("1");
+		String currency = resultObj.optString("1");
+		// XXX does this really mean that the app has no revenue
+		if (currency == null || "".equals(currency)) {
+			return null;
+		}
+
 		// 2 -total, 3 -sales, 4- in-app products
 		// we only use total (for now)
 		JSONObject revenueObj = resultObj.getJSONObject("2");
@@ -578,7 +583,7 @@ public class JsonParser {
 				while (reader.hasNext()) {
 					name = reader.nextName();
 					// 1: sales, 2: in-app, 3: subscriptions?
-					// XXX this doesn't handle the case where there is more 
+					// XXX this doesn't handle the case where there is more
 					// than one, e.g. app sales + subscriptions
 					if ("1".equals(name) || "2".equals(name) || "3".equals(name)) {
 						// revenue list: date->amount
@@ -620,7 +625,7 @@ public class JsonParser {
 								}
 								reader.endArray();
 							} else if ("2".equals(name)) {
-								//"APP", "IN_APP",
+								// "APP", "IN_APP",
 								revenueType1 = reader.nextString();
 							} else if ("3".equals(name)) {
 								revenueType2 = reader.nextString();
@@ -641,7 +646,6 @@ public class JsonParser {
 		}
 		reader.endObject();
 
-
 		// XXX what happens when there is more than one type?
 		Revenue.Type type = Revenue.Type.TOTAL;
 		if ("APP".equals(revenueType1)) {
@@ -653,7 +657,7 @@ public class JsonParser {
 		}
 
 		// XXX do we need the date?
-		//		return new Revenue(type, revenueDate, currency, value);
+		// return new Revenue(type, revenueDate, currency, value);
 		return new Revenue(type, value, currency);
 	}
 }
