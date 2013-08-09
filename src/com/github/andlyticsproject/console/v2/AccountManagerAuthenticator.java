@@ -7,6 +7,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
@@ -37,6 +38,10 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 	private static final String TAG = AccountManagerAuthenticator.class.getSimpleName();
 
 	private static final String DEVELOPER_CONSOLE_URL = "https://play.google.com/apps/publish/";
+	private static final Uri ISSUE_AUTH_TOKEN_URL = Uri
+			.parse("https://www.google.com/accounts/IssueAuthToken?service=gaia&Session=false");
+	private static final Uri TOKEN_AUTH_URL = Uri
+			.parse("https://www.google.com/accounts/TokenAuth");
 
 	private static final int REQUEST_AUTHENTICATE = 42;
 
@@ -140,14 +145,44 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				Log.d(TAG, "Weblogin URL: " + webloginUrl);
 			}
 
-			if (!webloginUrl.contains("MergeSession")) {
+			if (!webloginUrl.contains("MergeSession") || webloginUrl.contains("WILL_NOT_SIGN_IN")) {
 				Log.d(TAG, "Most probably additional verification is required, "
 						+ "opening browser");
 
-				openAuthUrlInBrowser(activity);
+				String sid = accountManager
+						.getAuthToken(account, "SID", null, activity, null, null).getResult()
+						.getString(AccountManager.KEY_AUTHTOKEN);
+				if (sid == null) {
+					throw new AuthenticationException("Authentication error: cannot get SID.");
+				}
+				String lsid = accountManager
+						.getAuthToken(account, "LSID", null, activity, null, null).getResult()
+						.getString(AccountManager.KEY_AUTHTOKEN);
+				if (lsid == null) {
+					throw new AuthenticationException("Authentication error: cannot get LSID.");
+				}
 
-				throw new AuthenticationException("Sign in via the browser, then "
-						+ "get back to Andlytics");
+				String url = ISSUE_AUTH_TOKEN_URL.buildUpon().appendQueryParameter("SID", sid)
+						.appendQueryParameter("LSID", lsid).build().toString();
+				HttpPost getUberToken = new HttpPost(url);
+				HttpResponse response = httpClient.execute(getUberToken);
+				int status = response.getStatusLine().getStatusCode();
+				if (status == HttpStatus.SC_UNAUTHORIZED) {
+					throw new AuthenticationException("Cannot get uber token: "
+							+ response.getStatusLine());
+				}
+				String uberToken = EntityUtils.toString(response.getEntity(), "UTF-8");
+				if (uberToken == null || "".equals(uberToken)) {
+					throw new AuthenticationException("Invalid ubertoken");
+				}
+				if (DEBUG) {
+					Log.d(TAG, "Uber token: " + uberToken);
+				}
+
+				webloginUrl = TOKEN_AUTH_URL.buildUpon()
+						.appendQueryParameter("source", "android-browser")
+						.appendQueryParameter("auth", uberToken)
+						.appendQueryParameter("continue", DEVELOPER_CONSOLE_URL).build().toString();
 			}
 
 			HttpGet getConsole = new HttpGet(webloginUrl);
