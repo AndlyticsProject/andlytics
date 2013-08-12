@@ -737,13 +737,13 @@ public class ContentAdapter {
 		try {
 			cursor = context.getContentResolver().query(RevenueSummaryTable.CONTENT_URI,
 					RevenueSummaryTable.ALL_COLUMNS, RevenueSummaryTable.APPINFO_ID + "=?",
-					new String[] { Long.toString(app.getId()) }, null);
+					new String[] { Long.toString(app.getId()) }, RevenueSummaryTable.ROWID);
 
 			if (cursor.getCount() == 0) {
 				return null;
 			}
 
-			if (!cursor.moveToFirst()) {
+			if (!cursor.moveToLast()) {
 				return null;
 			}
 
