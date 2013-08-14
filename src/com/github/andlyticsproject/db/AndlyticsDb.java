@@ -182,7 +182,9 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 					+ AppStatsTable.KEY_STATS_CURRENCY + " text");
 		}
 
-		if (oldVersion < 22) {
+		// only add this if migrating from 21
+		if (oldVersion == 21) {
+			Log.w(TAG, "Old version < 22 - adding revenue_summary.date column");
 			db.execSQL("ALTER table " + RevenueSummaryTable.DATABASE_TABLE_NAME + " add "
 					+ RevenueSummaryTable.DATE + " date");
 			// set all 2013-01-01 00:00:00
