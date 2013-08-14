@@ -1,38 +1,42 @@
 package com.github.andlyticsproject.model;
 
+import java.util.Date;
+
 public class RevenueSummary {
 
 	private Long id;
 
 	private Revenue.Type type;
 	private String currency;
+	private Date date;
 
 	private Revenue lastDay;
 	private Revenue last7Days;
 	private Revenue last30Days;
 	private Revenue overall;
 
-	public static RevenueSummary createTotal(String currency, double lastDay, double last7Days,
-			double last30Days, double overall) {
-		return new RevenueSummary(Revenue.Type.TOTAL, currency, lastDay, last7Days, last30Days,
-				overall);
+	public static RevenueSummary createTotal(String currency, Date date, double lastDay,
+			double last7Days, double last30Days, double overall) {
+		return new RevenueSummary(Revenue.Type.TOTAL, currency, date, lastDay, last7Days,
+				last30Days, overall);
 	}
 
-	public static RevenueSummary createSales(String currency, double lastDay, double last7Days,
-			double last30Days, double overall) {
-		return new RevenueSummary(Revenue.Type.APP_SALES, currency, lastDay, last7Days, last30Days,
-				overall);
+	public static RevenueSummary createSales(String currency, Date date, double lastDay,
+			double last7Days, double last30Days, double overall) {
+		return new RevenueSummary(Revenue.Type.APP_SALES, currency, date, lastDay, last7Days,
+				last30Days, overall);
 	}
 
-	public static RevenueSummary createInApp(String currency, double lastDay, double last7Days,
-			double last30Days, double overall) {
-		return new RevenueSummary(Revenue.Type.IN_APP, currency, lastDay, last7Days, last30Days,
-				overall);
+	public static RevenueSummary createInApp(String currency, Date date, double lastDay,
+			double last7Days, double last30Days, double overall) {
+		return new RevenueSummary(Revenue.Type.IN_APP, currency, date, lastDay, last7Days,
+				last30Days, overall);
 	}
 
-	public RevenueSummary(Revenue.Type type, String currency, double lastDay, double last7Days,
-			double last30Days, double overall) {
+	public RevenueSummary(Revenue.Type type, String currency, Date date, double lastDay,
+			double last7Days, double last30Days, double overall) {
 		this.type = type;
+		this.date = (Date) date.clone();
 		this.currency = currency;
 		this.lastDay = new Revenue(type, lastDay, currency);
 		this.last7Days = new Revenue(type, last7Days, currency);
@@ -54,6 +58,10 @@ public class RevenueSummary {
 
 	public String getCurrency() {
 		return currency;
+	}
+
+	public Date getDate() {
+		return (Date) date.clone();
 	}
 
 	public Revenue getLastDay() {
