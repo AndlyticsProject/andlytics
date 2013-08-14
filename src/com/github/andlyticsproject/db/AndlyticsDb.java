@@ -27,7 +27,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 
 	private static final String TAG = AndlyticsDb.class.getSimpleName();
 
-	private static final int DATABASE_VERSION = 21;
+	private static final int DATABASE_VERSION = 22;
 
 	private static final String DATABASE_NAME = "andlytics";
 
@@ -180,6 +180,14 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 					+ AppStatsTable.KEY_STATS_TOTAL_REVENUE + " double");
 			db.execSQL("ALTER table " + AppStatsTable.DATABASE_TABLE_NAME + " add "
 					+ AppStatsTable.KEY_STATS_CURRENCY + " text");
+		}
+
+		if (oldVersion < 22) {
+			db.execSQL("ALTER table " + RevenueSummaryTable.DATABASE_TABLE_NAME + " add "
+					+ RevenueSummaryTable.DATE + " date");
+			// set all 2013-01-01 00:00:00
+			db.execSQL("UPDATE " + RevenueSummaryTable.DATABASE_TABLE_NAME + " SET "
+					+ RevenueSummaryTable.DATE + "= '1356998400'");
 		}
 	}
 
@@ -654,7 +662,8 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		try {
 			c = db.query(RevenueSummaryTable.DATABASE_TABLE_NAME, RevenueSummaryTable.ALL_COLUMNS,
 					RevenueSummaryTable.APPINFO_ID + "=?",
-					new String[] { Long.toString(appInfo.getId()) }, null, null, null);
+					new String[] { Long.toString(appInfo.getId()) }, null, null,
+					RevenueSummaryTable.DATE + " desc", "1");
 			if (c.getCount() < 1 || !c.moveToNext()) {
 				return;
 			}
@@ -662,6 +671,11 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			Long id = c.getLong(c.getColumnIndex(RevenueSummaryTable.ROWID));
 			int typeIdx = c.getInt(c.getColumnIndex(RevenueSummaryTable.TYPE));
 			String currency = c.getString(c.getColumnIndex(RevenueSummaryTable.CURRENCY));
+			Date date = Utils.parseDbDate("2013-01-01 00:00:00");
+			int idx = c.getColumnIndex(RevenueSummaryTable.DATE);
+			if (!c.isNull(idx)) {
+				date = new Date(c.getLong(idx));
+			}
 			double lastDayTotal = c.getDouble(c.getColumnIndex(RevenueSummaryTable.LAST_DAY_TOTAL));
 			double last7DaysTotal = c.getDouble(c
 					.getColumnIndex(RevenueSummaryTable.LAST_7DAYS_TOTAL));
@@ -670,7 +684,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			double overallTotal = c.getDouble(c.getColumnIndex(RevenueSummaryTable.OVERALL_TOTAL));
 
 			Revenue.Type type = Revenue.Type.values()[typeIdx];
-			RevenueSummary revenue = new RevenueSummary(type, currency, lastDayTotal,
+			RevenueSummary revenue = new RevenueSummary(type, currency, date, lastDayTotal,
 					last7DaysTotal, last30DaysTotal, overallTotal);
 			revenue.setId(id);
 

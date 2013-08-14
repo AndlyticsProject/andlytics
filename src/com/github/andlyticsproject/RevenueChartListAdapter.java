@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.github.andlyticsproject.chart.Chart;
 import com.github.andlyticsproject.chart.Chart.ValueCallbackHander;
 import com.github.andlyticsproject.model.AppStats;
+import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.util.Utils;
 
 public class RevenueChartListAdapter extends ChartListAdapter<AppStats> {
@@ -57,9 +58,10 @@ public class RevenueChartListAdapter extends ChartListAdapter<AppStats> {
 	@Override
 	public void updateChartValue(int position, int page, int column, TextView tv)
 			throws IndexOutOfBoundsException {
-		AppStats appInfo = getItem(position);
+		AppStats appStats = getItem(position);
+		Revenue totalRevenue = appStats.getTotalRevenue();
 		if (column == COL_DATE) {
-			tv.setText(dateFormat.format(appInfo.getDate()));
+			tv.setText(dateFormat.format(appStats.getDate()));
 			return;
 		}
 		int textColor = BLACK_TEXT;
@@ -68,14 +70,14 @@ public class RevenueChartListAdapter extends ChartListAdapter<AppStats> {
 
 			switch (column) {
 			case COL_REVENUE:
-				tv.setText(Utils.safeToString(appInfo.getTotalRevenue()));
+				tv.setText(Utils.safeToString(totalRevenue));
 				tv.setTextColor(textColor);
 				return;
 			case COL_DEVELOPER_CUT:
-				if (appInfo.getTotalRevenue() == null) {
+				if (totalRevenue == null) {
 					tv.setText("");
 				} else {
-					tv.setText(appInfo.getTotalRevenue().developerCutAsString());
+					tv.setText(totalRevenue.developerCutAsString());
 				}
 				tv.setTextColor(textColor);
 				return;

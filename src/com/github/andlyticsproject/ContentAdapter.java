@@ -315,20 +315,38 @@ public class ContentAdapter {
 			ContentValues values = new ContentValues();
 			values.put(RevenueSummaryTable.TYPE, revenue.getType().ordinal());
 			values.put(RevenueSummaryTable.CURRENCY, revenue.getCurrency());
+			values.put(RevenueSummaryTable.DATE, revenue.getDate().getTime());
 			values.put(RevenueSummaryTable.LAST_DAY_TOTAL, revenue.getLastDay().getAmount());
 			values.put(RevenueSummaryTable.LAST_7DAYS_TOTAL, revenue.getLast7Days().getAmount());
 			values.put(RevenueSummaryTable.LAST_30DAYS_TOTAL, revenue.getLast30Days().getAmount());
 			values.put(RevenueSummaryTable.OVERALL_TOTAL, revenue.getOverall().getAmount());
 			values.put(RevenueSummaryTable.APPINFO_ID, appInfo.getId());
 
-			if (revenue.getId() == null) {
-				uri = context.getContentResolver().insert(RevenueSummaryTable.CONTENT_URI, values);
-				id = Long.parseLong(uri.getPathSegments().get(1));
-				revenue.setId(id);
-			} else {
-				context.getContentResolver().update(RevenueSummaryTable.CONTENT_URI, values,
-						RevenueSummaryTable.APPINFO_ID + " = ?",
-						new String[] { Long.toString(revenue.getId()) });
+			Cursor c = null;
+			try {
+				c = context.getContentResolver().query(
+						RevenueSummaryTable.CONTENT_URI,
+						RevenueSummaryTable.ALL_COLUMNS,
+						RevenueSummaryTable.APPINFO_ID + " =?  and " + RevenueSummaryTable.DATE
+								+ " = ?",
+						new String[] { Long.toString(appInfo.getId()),
+								Long.toString(revenue.getDate().getTime()) },
+						RevenueSummaryTable.DATE + " desc");
+				if (!c.moveToNext()) {
+					uri = context.getContentResolver().insert(RevenueSummaryTable.CONTENT_URI,
+							values);
+					id = Long.parseLong(uri.getPathSegments().get(1));
+					revenue.setId(id);
+				} else {
+					long revenueId = c.getLong(c.getColumnIndex(RevenueSummaryTable.ROWID));
+					context.getContentResolver().update(RevenueSummaryTable.CONTENT_URI, values,
+							RevenueSummaryTable.ROWID + " = ?",
+							new String[] { Long.toString(revenueId) });
+				}
+			} finally {
+				if (c != null) {
+					c.close();
+				}
 			}
 		}
 
@@ -735,20 +753,29 @@ public class ContentAdapter {
 		Cursor cursor = null;
 
 		try {
-			cursor = context.getContentResolver().query(RevenueSummaryTable.CONTENT_URI,
-					RevenueSummaryTable.ALL_COLUMNS, RevenueSummaryTable.APPINFO_ID + "=?",
-					new String[] { Long.toString(app.getId()) }, RevenueSummaryTable.ROWID);
+			// limit clause not supported, so we might get quite a few results
+			cursor = context.getContentResolver()
+					.query(RevenueSummaryTable.CONTENT_URI, RevenueSummaryTable.ALL_COLUMNS,
+							RevenueSummaryTable.APPINFO_ID + "=?",
+							new String[] { Long.toString(app.getId()) },
+							RevenueSummaryTable.DATE + " desc");
 
 			if (cursor.getCount() == 0) {
 				return null;
 			}
 
-			if (!cursor.moveToLast()) {
+			if (!cursor.moveToFirst()) {
 				return null;
 			}
 
 			int typeIdx = cursor.getInt(cursor.getColumnIndex(RevenueSummaryTable.TYPE));
 			String currency = cursor.getString(cursor.getColumnIndex(RevenueSummaryTable.CURRENCY));
+			// XXX hack -- make sure date is not null
+			Date date = Utils.parseDbDate("2013-01-01 00:00:00");
+			int idx = cursor.getColumnIndex(RevenueSummaryTable.DATE);
+			if (!cursor.isNull(idx)) {
+				date = new Date(cursor.getLong(idx));
+			}
 			double lastDay = cursor.getDouble(cursor
 					.getColumnIndex(RevenueSummaryTable.LAST_DAY_TOTAL));
 			double last7Days = cursor.getDouble(cursor
@@ -758,7 +785,7 @@ public class ContentAdapter {
 			double overall = cursor.getDouble(cursor
 					.getColumnIndex(RevenueSummaryTable.OVERALL_TOTAL));
 			Revenue.Type type = Revenue.Type.values()[typeIdx];
-			RevenueSummary result = new RevenueSummary(type, currency, lastDay, last7Days,
+			RevenueSummary result = new RevenueSummary(type, currency, date, lastDay, last7Days,
 					last30Days, overall);
 
 			return result;

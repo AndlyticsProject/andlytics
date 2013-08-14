@@ -99,14 +99,14 @@ public class JsonParser {
 		int latestValue = latestData.getJSONObject("2").getInt("1");
 
 		switch (statsType) {
-			case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
-				stats.setTotalDownloads(latestValue);
-				break;
-			case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
-				stats.setActiveInstalls(latestValue);
-				break;
-			default:
-				break;
+		case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
+			stats.setTotalDownloads(latestValue);
+			break;
+		case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
+			stats.setActiveInstalls(latestValue);
+			break;
+		default:
+			break;
 		}
 
 	}
@@ -541,6 +541,10 @@ public class JsonParser {
 			return null;
 		}
 
+		//  "6": "1376352000000"
+		long timestamp = resultObj.getLong("6");
+		// no time info, 00:00:00 GMT(?)
+		Date date = new Date(timestamp / 1000);
 		// 2 -total, 3 -sales, 4- in-app products
 		// we only use total (for now)
 		JSONObject revenueObj = resultObj.getJSONObject("2");
@@ -551,7 +555,7 @@ public class JsonParser {
 		// NaN is treated like NULL -> DB error
 		double overall = revenueObj.optDouble("7", 0.0);
 
-		return RevenueSummary.createTotal(currency, lastDay, last7Days, last30Days, overall);
+		return RevenueSummary.createTotal(currency, date, lastDay, last7Days, last30Days, overall);
 	}
 
 	/**
