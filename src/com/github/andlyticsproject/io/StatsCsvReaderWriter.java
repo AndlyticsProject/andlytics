@@ -119,6 +119,7 @@ public class StatsCsvReaderWriter {
 			writer.writeNext(line);
 		}
 		writer.flush();
+		writer.close();
 	}
 
 	public static List<String> getImportFileNamesFromZip(String accountName,
@@ -246,7 +247,9 @@ public class StatsCsvReaderWriter {
 					appStats.add(stats);
 
 				}
+				
 			}
+			reader.close();
 
 		} catch (FileNotFoundException e) {
 			throw new ServiceException(e);
@@ -293,6 +296,7 @@ public class StatsCsvReaderWriter {
 					packageName = nextLine[0];
 				}
 			}
+			reader.close();
 
 		} catch (FileNotFoundException e) {
 			throw new ServiceException(e);
