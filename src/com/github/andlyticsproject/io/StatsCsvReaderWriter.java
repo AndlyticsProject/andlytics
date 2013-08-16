@@ -163,7 +163,7 @@ public class StatsCsvReaderWriter {
 			String[] firstLine = reader.readNext();
 			if (firstLine != null) {
 				if (HEADER_LIST.length >= firstLine.length) {
-					for (int i = 0; i < HEADER_LIST.length - 1; i++) {
+					for (int i = 0; i < firstLine.length - 1; i++) {
 						if (!HEADER_LIST[i].equals(firstLine[i])) {
 							return false;
 						}
