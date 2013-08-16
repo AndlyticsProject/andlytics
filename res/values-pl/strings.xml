@@ -58,6 +58,8 @@
   <string name="comment_no_user_info">Użytkownik Google</string>
   <string name="comment_reply">Odpowiedź autora</string>
   <string name="reply_to_comment">Odpowiedz na komentarz</string>
+  <string name="reply_to_comment_max_characters">350 znaków</string>
+  <string name="reply_sent">Wysłano odpowiedź. Pojawi się lub zostanie zmieniona na liście wkrótce.</string>
   <string name="long_click_translate">Przytrzymaj, aby przetłumaczyć</string>
   <string name="load_more_comments">Załaduj więcej komentarzy</string>
   <string name="info_comments">Liczba komentarzy widocznych na głównym ekranie aplikacji może być wyższa od liczby komentarzy pokazanych tutaj. Może być to spowodowane wycofaniem lub zmianą komentarza przez użytkownika.</string>
@@ -190,4 +192,13 @@
   <string name="appinfo_playstore_button">Zobacz w Sklepie Google Play</string>
   <string name="appinfo_addlink_button">Dodaj link</string>
   <string name="appinfo_app_links">Powiązania aplikacji</string>
+  <string name="revenue">Przychód</string>
+  <string name="total_revenue">Sprzedaż ogółem</string>
+  <string name="daily_revenue">Dzienny dochód</string>
+  <string name="revenue_total">sprzedaż ogółem</string>
+  <string name="revenue_last_day">Dochody z ostatniego dnia</string>
+  <string name="revenue_last_7days">Dochód z ostatnich 7 dni</string>
+  <string name="revenue_last_30days">dochód z 30 dni</string>
+  <string name="show_developer_cut_revenue">Pokaż koszty prowizji dewelopera</string>
+  <string name="show_developer_cut_revenue_summary">Pokaż dochody z uwzględnieniem prowizji (70%).</string>
 </resources>
