@@ -112,7 +112,9 @@ public class SyncAdapterService extends Service {
 					if (admobDetails != null) {
 						String admobAccount = admobDetails[0];
 						String admobSiteId = admobDetails[1];
-						if (admobAccount != null) {
+						String adUnitId = admobDetails[2];
+						// only sync legacy data if not migrated
+						if (admobAccount != null && adUnitId == null) {
 							List<String> siteList = admobAccountSiteMap.get(admobAccount);
 							if (siteList == null) {
 								siteList = new ArrayList<String>();

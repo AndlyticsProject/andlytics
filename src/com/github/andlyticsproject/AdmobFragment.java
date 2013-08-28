@@ -109,24 +109,28 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 			//
 			String currentAdmobAccount = admobDetails[0];
 			String currentSiteId = admobDetails[1];
+			String adUnitId = admobDetails[2];
 
 			Log.d(TAG, "Loading Admob stats...");
 			if (loadRemote) {
-				List<String> siteList = new ArrayList<String>();
-				siteList.add(currentSiteId);
+				// only if not migrated
+				if (adUnitId == null) {
+					List<String> siteList = new ArrayList<String>();
+					siteList.add(currentSiteId);
 
-				Log.d(TAG, "Loading remote Admob stats...");
-				AdmobRequest.syncSiteStats(currentAdmobAccount, getContext(), siteList,
-						new SyncCallback() {
+					Log.d(TAG, "Loading remote Admob stats...");
+					AdmobRequest.syncSiteStats(currentAdmobAccount, getContext(), siteList,
+							new SyncCallback() {
 
-							@Override
-							public void initialImportStarted() {
-							}
-						});
+								@Override
+								public void initialImportStarted() {
+								}
+							});
+				}
 			}
 
 			Log.d(TAG, "Loading Admob stats from DB...");
-			return db.getAdmobStats(currentSiteId, timeframe);
+			return db.getAdmobStats(currentSiteId, adUnitId, timeframe);
 		}
 
 		@Override

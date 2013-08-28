@@ -40,8 +40,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
-import com.github.andlyticsproject.about.AboutActivity;
-import com.github.andlyticsproject.admob.AdmobRequest;
+import com.github.andlyticsproject.adsense.AdSenseTest;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.db.AndlyticsDb;
@@ -261,7 +260,8 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			break;
 		case R.id.itemMainmenuAbout:
 			// launch about activity				
-			Intent aboutIntent = new Intent(this, AboutActivity.class);
+			Intent aboutIntent = new Intent(this, AdSenseTest.class);
+			//			new Intent(this, AboutActivity.class);
 			startActivity(aboutIntent);
 			//showDialog(DIALOG_ABOUT_ID);
 			break;
@@ -484,8 +484,8 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				Set<String> admobAccuntKeySet = admobAccountSiteMap.keySet();
 				for (String admobAccount : admobAccuntKeySet) {
 
-					AdmobRequest.syncSiteStats(admobAccount, activity,
-							admobAccountSiteMap.get(admobAccount), null);
+					//					AdmobRequest.syncSiteStats(admobAccount, activity,
+					//							admobAccountSiteMap.get(admobAccount), null);
 				}
 
 				activity.state.setLoadIconInCache(new LoadIconInCache(activity));
@@ -563,7 +563,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				if (!appInfo.isGhost()) {
 					if (appInfo.getAdmobSiteId() != null) {
 						List<AdmobStats> admobStats = db.getAdmobStats(appInfo.getAdmobSiteId(),
-								Timeframe.LAST_TWO_DAYS).getStats();
+								appInfo.getAdmobAdUnitId(), Timeframe.LAST_TWO_DAYS).getStats();
 						if (admobStats.size() > 0) {
 							AdmobStats admob = admobStats.get(admobStats.size() - 1);
 							appInfo.setAdmobStats(admob);

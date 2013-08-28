@@ -39,6 +39,7 @@ public class AppInfo {
 
 	private String admobAccount;
 	private String admobSiteId;
+	private String admobAdUnitId;
 
 	private Date lastCommentsUpdate;
 
@@ -199,6 +200,14 @@ public class AppInfo {
 
 	public void setAdmobSiteId(String admobSiteId) {
 		this.admobSiteId = admobSiteId;
+	}
+
+	public String getAdmobAdUnitId() {
+		return admobAdUnitId;
+	}
+
+	public void setAdmobAdUnitId(String admobAdUnitId) {
+		this.admobAdUnitId = admobAdUnitId;
 	}
 
 	public Date getLastCommentsUpdate() {

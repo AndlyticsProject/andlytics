@@ -27,7 +27,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 
 	private static final String TAG = AndlyticsDb.class.getSimpleName();
 
-	private static final int DATABASE_VERSION = 22;
+	private static final int DATABASE_VERSION = 23;
 
 	private static final String DATABASE_NAME = "andlytics";
 
@@ -191,6 +191,12 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			db.execSQL("UPDATE " + RevenueSummaryTable.DATABASE_TABLE_NAME + " SET "
 					+ RevenueSummaryTable.DATE + "= '1356998400'");
 		}
+
+		if (oldVersion < 23) {
+			Log.w(TAG, "Old version < 23 - adding appinfo.ad_unit_id column");
+			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
+					+ AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID + " text");
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -311,22 +317,23 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		return result;
 	}
 
-	// account, site ID
+	// account, site ID, ad unit ID (only if migrated to 'new Admob')
 	public String[] getAdmobDetails(String packageName) {
 		SQLiteDatabase db = getWritableDatabase();
 		Cursor c = null;
 		try {
 			c = db.query(AppInfoTable.DATABASE_TABLE_NAME, new String[] {
-					AppInfoTable.KEY_APP_ADMOB_ACCOUNT, AppInfoTable.KEY_APP_ADMOB_SITE_ID },
-					AppInfoTable.KEY_APP_PACKAGENAME + "=?", new String[] { packageName }, null,
-					null, null);
+					AppInfoTable.KEY_APP_ADMOB_ACCOUNT, AppInfoTable.KEY_APP_ADMOB_SITE_ID,
+					AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID }, AppInfoTable.KEY_APP_PACKAGENAME
+					+ "=?", new String[] { packageName }, null, null, null);
 			if (!c.moveToNext()) {
 				return null;
 			}
 
-			String[] result = new String[2];
+			String[] result = new String[3];
 			result[0] = c.getString(c.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_ACCOUNT));
 			result[1] = c.getString(c.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_SITE_ID));
+			result[2] = c.getString(c.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID));
 			if (result[0] == null || result[1] == null) {
 				return null;
 			}
@@ -341,6 +348,11 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 
 	public synchronized void saveAdmobDetails(String packageName, String admobAccount,
 			String admobSiteId) {
+		saveAdmobDetails(packageName, admobAccount, null);
+	}
+
+	public synchronized void saveAdmobDetails(String packageName, String admobAccount,
+			String admobSiteId, String admobAdUnitId) {
 		SQLiteDatabase db = getWritableDatabase();
 		db.beginTransaction();
 		try {
@@ -349,6 +361,25 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			ContentValues values = new ContentValues();
 			values.put(AppInfoTable.KEY_APP_ADMOB_ACCOUNT, admobAccount);
 			values.put(AppInfoTable.KEY_APP_ADMOB_SITE_ID, admobSiteId);
+			values.put(AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID, admobAdUnitId);
+
+			db.update(AppInfoTable.DATABASE_TABLE_NAME, values, "_id = ?",
+					new String[] { Long.toString(id) });
+
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+	}
+
+	public synchronized void saveAdmobAdUnitId(String packageName, String admobAdUnitId) {
+		SQLiteDatabase db = getWritableDatabase();
+		db.beginTransaction();
+		try {
+			long id = findPackageId(db, packageName);
+
+			ContentValues values = new ContentValues();
+			values.put(AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID, admobAdUnitId);
 
 			db.update(AppInfoTable.DATABASE_TABLE_NAME, values, "_id = ?",
 					new String[] { Long.toString(id) });
@@ -479,6 +510,10 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_SITE_ID);
 			if (!cursor.isNull(idx)) {
 				appInfo.setAdmobSiteId(cursor.getString(idx));
+			}
+			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID);
+			if (!cursor.isNull(idx)) {
+				appInfo.setAdmobAdUnitId(cursor.getString(idx));
 			}
 			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE);
 			if (!cursor.isNull(idx)) {
