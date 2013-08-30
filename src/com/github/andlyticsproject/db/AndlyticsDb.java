@@ -196,6 +196,10 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			Log.w(TAG, "Old version < 23 - adding appinfo.ad_unit_id column");
 			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
 					+ AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID + " text");
+
+			Log.w(TAG, "Old version < 23 - adding admob.currency column");
+			db.execSQL("ALTER table " + AdmobTable.DATABASE_TABLE_NAME + " add "
+					+ AdmobTable.KEY_CURRENCY + " text");
 		}
 	}
 

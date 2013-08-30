@@ -4,6 +4,9 @@ import java.text.DecimalFormat;
 
 public class AdmobStats extends Statistic {
 
+	private static final int XK_cent = 0x00a2; /* U+00A2 CENT SIGN */
+	private static final DecimalFormat centsFormatter = new DecimalFormat("0.00" + ((char) XK_cent));
+
 	private String siteId;
 	private Integer requests = 0;
 	private Integer houseadRequests = 0;
@@ -20,8 +23,7 @@ public class AdmobStats extends Statistic {
 	private Float cpcRevenue = .0f;
 	private Float cpmRevenue = .0f;
 	private Integer exchangeDownloads = 0;
-	private static final int XK_cent = 0x00a2; /* U+00A2 CENT SIGN */
-	private static final DecimalFormat centsFormatter = new DecimalFormat("0.00" + ((char) XK_cent));
+	private String currencyCode;
 
 	public String getSiteId() {
 		return siteId;
@@ -157,6 +159,14 @@ public class AdmobStats extends Statistic {
 
 	public Integer getExchangeDownloads() {
 		return exchangeDownloads;
+	}
+
+	public String getCurrencyCode() {
+		return currencyCode;
+	}
+
+	public void setCurrencyCode(String currencyCode) {
+		this.currencyCode = currencyCode;
 	}
 
 }

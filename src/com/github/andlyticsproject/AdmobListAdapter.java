@@ -4,9 +4,12 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -31,8 +34,6 @@ public class AdmobListAdapter extends ChartListAdapter<AdmobStats> {
 	private static final int COL_IMPRESSIONS = 2;
 	private static final int COL_CTR = 3;
 	private static final int COL_HOUSEAD_CLICKS = 4;
-
-	private NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
 
 	public AdmobListAdapter(Activity activity) {
 		super(activity);
@@ -118,10 +119,11 @@ public class AdmobListAdapter extends ChartListAdapter<AdmobStats> {
 		case 0: {
 			switch (column) {
 			case COL_REVENUE:
-				tv.setText(numberFormat.format(admob.getRevenue()));
+				tv.setText(getNumberFormat(admob.getCurrencyCode()).format(admob.getRevenue()));
 				return;
 			case COL_EPC:
-				tv.setText(admob.getEpcCents());
+				//				tv.setText(admob.getEpcCents());
+				tv.setText(getNumberFormat(admob.getCurrencyCode()).format(admob.getEpc()));
 				return;
 			case COL_REQUESTS:
 				tv.setText(admob.getRequests() + "");
@@ -140,7 +142,7 @@ public class AdmobListAdapter extends ChartListAdapter<AdmobStats> {
 		case 1: {
 			switch (column) {
 			case COL_ECPM:
-				tv.setText(numberFormat.format(admob.getEcpm()));
+				tv.setText(getNumberFormat(admob.getCurrencyCode()).format(admob.getEcpm()));
 				return;
 			case COL_IMPRESSIONS:
 				tv.setText(admob.getImpressions() + "");
@@ -275,14 +277,17 @@ public class AdmobListAdapter extends ChartListAdapter<AdmobStats> {
 			return "";
 		}
 
+		String currencyCode = stats.isEmpty() ? "USD" : stats.get(0).getCurrencyCode();
 		switch (page) {
 		case 0: {
 			switch (column) {
 			case COL_REVENUE:
-				return (overallStats != null) ? numberFormat.format(overallStats.getRevenue()) : "";
+				return (overallStats != null) ? getNumberFormat(currencyCode).format(
+						overallStats.getRevenue()) : "";
 
 			case COL_EPC:
-				return (overallStats != null) ? overallStats.getEpcCents() : "";
+				return (overallStats != null) ? getNumberFormat(currencyCode).format(
+						overallStats.getEpc()) : "";
 
 			case COL_REQUESTS:
 				return (overallStats != null) ? overallStats.getRequests() + "" : "";
@@ -299,7 +304,8 @@ public class AdmobListAdapter extends ChartListAdapter<AdmobStats> {
 		case 1: {
 			switch (column) {
 			case COL_ECPM:
-				return (overallStats != null) ? numberFormat.format(overallStats.getEcpm()) : "";
+				return (overallStats != null) ? getNumberFormat(currencyCode).format(
+						overallStats.getEcpm()) : "";
 
 			case COL_IMPRESSIONS:
 				return (overallStats != null) ? overallStats.getImpressions() + "" : "";
@@ -327,4 +333,21 @@ public class AdmobListAdapter extends ChartListAdapter<AdmobStats> {
 		return false;
 	}
 
+	private NumberFormat US_NUMBER_FORMAT = NumberFormat.getCurrencyInstance(Locale.US);
+	private Map<String, NumberFormat> currencyFormats = new HashMap<String, NumberFormat>();
+
+	private NumberFormat getNumberFormat(String currencyCode) {
+		if (currencyCode == null) {
+			return US_NUMBER_FORMAT;
+		}
+
+		NumberFormat numberFormat = currencyFormats.get(currencyCode);
+		if (numberFormat == null) {
+			numberFormat = NumberFormat.getCurrencyInstance();
+			numberFormat.setCurrency(Currency.getInstance(currencyCode));
+			currencyFormats.put(currencyCode, numberFormat);
+		}
+
+		return numberFormat;
+	}
 }

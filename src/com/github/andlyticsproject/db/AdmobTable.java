@@ -1,10 +1,10 @@
 
 package com.github.andlyticsproject.db;
 
+import java.util.HashMap;
+
 import android.net.Uri;
 import android.provider.BaseColumns;
-
-import java.util.HashMap;
 
 public final class AdmobTable implements BaseColumns {
 
@@ -35,6 +35,7 @@ public final class AdmobTable implements BaseColumns {
 	public static final String KEY_CPM_REVENUE = "cpm_revenue";
 	public static final String KEY_EXCHANGE_DOWNLOADS = "exchange_downloads";
 	public static final String KEY_DATE = "date";
+	public static final String KEY_CURRENCY = "currency";
 
 	public static final String TABLE_CREATE_ADMOB = "create table "
 			+ AdmobTable.DATABASE_TABLE_NAME + " (_id integer primary key autoincrement, "
@@ -47,7 +48,7 @@ public final class AdmobTable implements BaseColumns {
 			+ AdmobTable.KEY_ECPM + " float," + AdmobTable.KEY_REVENUE + " float,"
 			+ AdmobTable.KEY_CPC_REVENUE + " float," + AdmobTable.KEY_CPM_REVENUE + " float,"
 			+ AdmobTable.KEY_EXCHANGE_DOWNLOADS + " integer," + AdmobTable.KEY_DATE
-			+ " date not null)";
+			+ " date not null, " + KEY_CURRENCY + " text)";
 
 	public static HashMap<String, String> PROJECTION_MAP;
 
@@ -72,6 +73,7 @@ public final class AdmobTable implements BaseColumns {
 		PROJECTION_MAP.put(KEY_CPM_REVENUE, KEY_CPM_REVENUE);
 		PROJECTION_MAP.put(KEY_EXCHANGE_DOWNLOADS, KEY_EXCHANGE_DOWNLOADS);
 		PROJECTION_MAP.put(KEY_DATE, KEY_DATE);
+		PROJECTION_MAP.put(KEY_CURRENCY, KEY_CURRENCY);
 	}
 
 }

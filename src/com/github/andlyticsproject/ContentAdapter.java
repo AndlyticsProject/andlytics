@@ -93,8 +93,8 @@ public class ContentAdapter {
 								AdmobTable.KEY_HOUSEAD_CLICKS, AdmobTable.KEY_CTR,
 								AdmobTable.KEY_ECPM, AdmobTable.KEY_REVENUE,
 								AdmobTable.KEY_CPC_REVENUE, AdmobTable.KEY_CPM_REVENUE,
-								AdmobTable.KEY_EXCHANGE_DOWNLOADS, AdmobTable.KEY_DATE
-
+								AdmobTable.KEY_EXCHANGE_DOWNLOADS, AdmobTable.KEY_DATE,
+								AdmobTable.KEY_CURRENCY
 						}, AdmobTable.KEY_SITE_ID + "='" + siteId + "'", null,
 						AdmobTable.KEY_DATE + " desc LIMIT " + limit + ""); // sort
 																			// order ->
@@ -119,8 +119,8 @@ public class ContentAdapter {
 								AdmobTable.KEY_HOUSEAD_CLICKS, AdmobTable.KEY_CTR,
 								AdmobTable.KEY_ECPM, AdmobTable.KEY_REVENUE,
 								AdmobTable.KEY_CPC_REVENUE, AdmobTable.KEY_CPM_REVENUE,
-								AdmobTable.KEY_EXCHANGE_DOWNLOADS, AdmobTable.KEY_DATE
-
+								AdmobTable.KEY_EXCHANGE_DOWNLOADS, AdmobTable.KEY_DATE,
+								AdmobTable.KEY_CURRENCY
 						}, AdmobTable.KEY_SITE_ID + "=?", new String[] { adUnitId },
 						AdmobTable.KEY_DATE + " desc LIMIT " + limit + ""); // sort
 																			// order ->
@@ -170,6 +170,11 @@ public class ContentAdapter {
 		admob.setRevenue(cursor.getFloat(cursor.getColumnIndex(AdmobTable.KEY_REVENUE)));
 		String dateString = cursor.getString(cursor.getColumnIndex(AdmobTable.KEY_DATE));
 		admob.setDate(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
+		int idx = cursor.getColumnIndex(AdmobTable.KEY_CURRENCY);
+		if (!cursor.isNull(idx)) {
+			admob.setCurrencyCode(cursor.getString(idx));
+		}
+
 		return admob;
 	}
 
@@ -246,6 +251,7 @@ public class ContentAdapter {
 		values.put(AdmobTable.KEY_REQUESTS, admob.getRequests());
 		values.put(AdmobTable.KEY_REVENUE, admob.getRevenue());
 		values.put(AdmobTable.KEY_SITE_ID, admob.getSiteId());
+		values.put(AdmobTable.KEY_CURRENCY, admob.getCurrencyCode());
 
 		return values;
 	}
