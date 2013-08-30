@@ -205,5 +205,6 @@
     <string name="revenue_last_30days">30 days revenue</string>
     <string name="show_developer_cut_revenue">Show developer cut of revenue</string>
     <string name="show_developer_cut_revenue_summary">Show developer cut of sales revenue (70%).</string>
+    <string name="account_authorization_denied">Authorization for account \'%s\' denied.</string>
 
 </resources>

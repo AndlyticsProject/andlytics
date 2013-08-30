@@ -1,6 +1,8 @@
 package com.github.andlyticsproject.adsense;
 
+import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +22,7 @@ import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.model.AdmobStats;
 import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.adsense.AdSense;
@@ -40,23 +43,61 @@ public class AdSenseClient {
 	private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 	private static final int MAX_LIST_PAGE_SIZE = 50;
 
+	private static final long MILLIES_IN_DAY = 60 * 60 * 24 * 1000L;
+
 	private AdSenseClient() {
 	}
 
-	public static void syncSiteStats(Context context, String admobAccount, List<String> adUnits,
-			Bundle extras, String authority, Bundle syncBundle) throws Exception {
-		BackgroundGoogleAccountCredential credential = BackgroundGoogleAccountCredential
-				.usingOAuth2(context, Collections.singleton(AdSenseScopes.ADSENSE_READONLY),
-						extras, authority, syncBundle);
+	public static void foregroundSyncStats(Context context, String admobAccount,
+			List<String> adUnits) throws Exception {
+		AdSense adsense = createForegroundSyncClient(context, admobAccount);
+		syncStats(context, adsense, adUnits);
+	}
+
+	private static AdSense createForegroundSyncClient(Context context, String admobAccount) {
+		GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(context,
+				Collections.singleton(AdSenseScopes.ADSENSE_READONLY));
 		credential.setSelectedAccountName(admobAccount);
 		AdSense adsense = new AdSense.Builder(AndroidHttp.newCompatibleTransport(), JSON_FACTORY,
 				credential).setApplicationName(APPLICATION_NAME).build();
 
+		return adsense;
+	}
+
+	public static void backgroundSyncStats(Context context, String admobAccount,
+			List<String> adUnits, Bundle extras, String authority, Bundle syncBundle)
+			throws Exception {
+		AdSense adsense = createBackgroundSyncClient(context, admobAccount, extras, authority,
+				syncBundle);
+		syncStats(context, adsense, adUnits);
+	}
+
+	private static void syncStats(Context context, AdSense adsense, List<String> adUnits)
+			throws Exception {
+		Calendar[] syncPeriod = getSyncPeriod(adUnits);
 		boolean bulkInsert = false;
-		Date startDate = null;
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DAY_OF_YEAR, 1);
-		Date endDate = calendar.getTime();
+		Date startDate = syncPeriod[0].getTime();
+		Date endDate = syncPeriod[1].getTime();
+		if ((endDate.getTime() - startDate.getTime()) > 7 * MILLIES_IN_DAY) {
+			bulkInsert = true;
+		}
+
+		// we assume there is only one(?)
+		String adClientId = getClientId(adsense);
+		if (adClientId == null) {
+			// XXX throw?
+			return;
+		}
+
+		List<AdmobStats> result = generateReport(adsense, adClientId, startDate, endDate);
+
+		updateStats(context, bulkInsert, result);
+	}
+
+	private static Calendar[] getSyncPeriod(List<String> adUnits) {
+		Calendar startDateCal = null;
+		Calendar endDateCal = Calendar.getInstance();
+		endDateCal.add(Calendar.DAY_OF_YEAR, 1);
 
 		for (String adUnit : adUnits) {
 			// read db for required sync period
@@ -65,30 +106,69 @@ public class AdSenseClient {
 					Timeframe.LATEST_VALUE).getStats();
 
 			if (admobStats.size() > 0) {
-				// found previouse sync, no bulk import
-				startDate = admobStats.get(0).getDate();
+				// found previous sync, no bulk import
+				Date startDate = admobStats.get(0).getDate();
 
-				Calendar startCal = Calendar.getInstance();
-				startCal.setTime(startDate);
-				startCal.add(Calendar.DAY_OF_YEAR, -4);
-				startDate = startCal.getTime();
+				startDateCal = Calendar.getInstance();
+				startDateCal.setTime(startDate);
+				startDateCal.add(Calendar.DAY_OF_YEAR, -4);
 			} else {
-				calendar.add(Calendar.MONTH, -6);
-				startDate = calendar.getTime();
-				bulkInsert = true;
+				startDateCal = Calendar.getInstance();
+				startDateCal.setTime(endDateCal.getTime());
+				startDateCal.add(Calendar.MONTH, -6);
 			}
 		}
 
+		return new Calendar[] { startDateCal, endDateCal };
+	}
+
+	private static String getClientId(AdSense adsense) throws IOException {
 		AdClients adClients = adsense.adclients().list().setMaxResults(MAX_LIST_PAGE_SIZE)
 				.setPageToken(null).execute();
 		if (adClients.getItems() == null || adClients.getItems().isEmpty()) {
-			// XXX throw?
-			return;
+			return null;
 		}
 
 		// we assume there is only one(?)
-		String adClientId = adClients.getItems().get(0).getId();
+		return adClients.getItems().get(0).getId();
+	}
 
+	private static void updateStats(Context context, boolean bulkInsert, List<AdmobStats> result) {
+		ContentAdapter contentAdapter = ContentAdapter.getInstance((Application) context
+				.getApplicationContext());
+		if (bulkInsert) {
+			if (result.size() > 6) {
+				// insert first results single to avoid manual triggered doubles
+				List<AdmobStats> subList1 = result.subList(0, 5);
+				for (AdmobStats admob : subList1) {
+					contentAdapter.insertOrUpdateAdmobStats(admob);
+				}
+
+				List<AdmobStats> subList2 = result.subList(5, result.size());
+				contentAdapter.bulkInsertAdmobStats(subList2);
+			} else {
+				contentAdapter.bulkInsertAdmobStats(result);
+			}
+		} else {
+			for (AdmobStats admob : result) {
+				contentAdapter.insertOrUpdateAdmobStats(admob);
+			}
+		}
+	}
+
+	private static AdSense createBackgroundSyncClient(Context context, String admobAccount,
+			Bundle extras, String authority, Bundle syncBundle) {
+		BackgroundGoogleAccountCredential credential = BackgroundGoogleAccountCredential
+				.usingOAuth2(context, Collections.singleton(AdSenseScopes.ADSENSE_READONLY),
+						extras, authority, syncBundle);
+		credential.setSelectedAccountName(admobAccount);
+		AdSense adsense = new AdSense.Builder(AndroidHttp.newCompatibleTransport(), JSON_FACTORY,
+				credential).setApplicationName(APPLICATION_NAME).build();
+		return adsense;
+	}
+
+	private static List<AdmobStats> generateReport(AdSense adsense, String adClientId,
+			Date startDate, Date endDate) throws IOException, ParseException {
 		String startDateStr = DATE_FORMATTER.format(startDate);
 		String endDateStr = DATE_FORMATTER.format(endDate);
 		Generate request = adsense.reports().generate(startDateStr, endDateStr);
@@ -108,9 +188,8 @@ public class AdSenseClient {
 		List<AdmobStats> result = new ArrayList<AdmobStats>();
 		if (response.getRows() == null || response.getRows().isEmpty()) {
 			Log.d(TAG, "AdSense API returned no rows.");
-
-			return;
 		}
+
 		if (DEBUG) {
 			StringBuilder buff = new StringBuilder();
 			for (AdsenseReportsGenerateResponse.Headers header : response.getHeaders()) {
@@ -153,26 +232,7 @@ public class AdSenseClient {
 			result.add(admob);
 		}
 
-		ContentAdapter contentAdapter = ContentAdapter.getInstance((Application) context
-				.getApplicationContext());
-		if (bulkInsert) {
-			if (result.size() > 6) {
-				// insert first results single to avoid manual triggered doubles
-				List<AdmobStats> subList1 = result.subList(0, 5);
-				for (AdmobStats admob : subList1) {
-					contentAdapter.insertOrUpdateAdmobStats(admob);
-				}
-
-				List<AdmobStats> subList2 = result.subList(5, result.size());
-				contentAdapter.bulkInsertAdmobStats(subList2);
-			} else {
-				contentAdapter.bulkInsertAdmobStats(result);
-			}
-		} else {
-			for (AdmobStats admob : result) {
-				contentAdapter.insertOrUpdateAdmobStats(admob);
-			}
-		}
+		return result;
 	}
 
 	public static String escapeFilterParameter(String parameter) {

@@ -147,7 +147,7 @@ public class SyncAdapterService extends Service {
 					Set<String> admobAccuntKeySet = admobAccountSiteMap.keySet();
 					for (String admobAccount : admobAccuntKeySet) {
 						if (migratedToAdSense) {
-							AdSenseClient.syncSiteStats(context, admobAccount,
+							AdSenseClient.backgroundSyncStats(context, admobAccount,
 									admobAccountSiteMap.get(admobAccount), extras, authority, null);
 						} else {
 							AdmobRequest.syncSiteStats(admobAccount, context,
