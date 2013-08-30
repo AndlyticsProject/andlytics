@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Currency;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -49,7 +50,8 @@ import com.github.andlyticsproject.model.RevenueSummary;
 
 public class MainListAdapter extends BaseAdapter {
 
-	private NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+	// initialized only once based on AdMob revenue currency
+	private NumberFormat numberFormat = null;
 
 	private static int BLACK_TEXT;
 
@@ -352,6 +354,17 @@ public class MainListAdapter extends BaseAdapter {
 			// 50dp for AdMob section?
 			height = Math.round(height + 50 * displayMetrics.scaledDensity);
 			holder.admobFrame.setVisibility(View.VISIBLE);
+			if (numberFormat == null) {
+				// default: old AdMob, USD only
+				if (admobStats.getCurrencyCode() == null) {
+					numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+				} else {
+					// start with locale default
+					numberFormat = NumberFormat.getCurrencyInstance();
+					Currency currency = Currency.getInstance(admobStats.getCurrencyCode());
+					numberFormat.setCurrency(currency);
+				}
+			}
 			holder.admobRevenue.setText(numberFormat.format(admobStats.getRevenue()));
 			holder.admobRequests.setText(admobStats.getRequests() + "");
 		} else {

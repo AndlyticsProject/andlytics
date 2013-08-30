@@ -200,6 +200,11 @@ public class AdSenseClient {
 			}
 			Log.d(TAG, "");
 		}
+		String currencyCode = null;
+		AdsenseReportsGenerateResponse.Headers revenueHeader = response.getHeaders().get(11);
+		if (revenueHeader != null && revenueHeader.getCurrency() != null) {
+			currencyCode = revenueHeader.getCurrency();
+		}
 
 		for (List<String> row : response.getRows()) {
 			if (DEBUG) {
@@ -228,6 +233,7 @@ public class AdSenseClient {
 			//				admob.setOverallFillRate(Float.parseFloat(adObject.getString(KEY_OVERALL_FILL_RATE)));
 			admob.setRequests(Integer.parseInt(row.get(5)));
 			admob.setRevenue(Float.parseFloat(row.get(11)));
+			admob.setCurrencyCode(currencyCode);
 
 			result.add(admob);
 		}
