@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -42,6 +43,7 @@ import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.about.AboutActivity;
 import com.github.andlyticsproject.admob.AdmobRequest;
+import com.github.andlyticsproject.adsense.AdSenseClient;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.db.AndlyticsDb;
@@ -53,6 +55,8 @@ import com.github.andlyticsproject.sync.NotificationHandler;
 import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 public class Main extends BaseActivity implements OnNavigationListener {
 
@@ -80,6 +84,11 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);
 
 	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
+
+	private static final int REQUEST_GOOGLE_PLAY_SERVICES = 0;
+	private static final int REQUEST_AUTHORIZATION = 1;
+	private static final int REQUEST_ACCOUNT_PICKER = 2;
+
 
 	private static class State {
 		// TODO replace with loaders
@@ -263,7 +272,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			// launch about activity				
 			Intent aboutIntent = new Intent(this, AboutActivity.class);
 			startActivity(aboutIntent);
-			//showDialog(DIALOG_ABOUT_ID);
 			break;
 		case R.id.itemMainmenuPreferences:
 			Intent preferencesIntent = new Intent(this, PreferenceActivity.class);
@@ -316,8 +324,39 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				Toast.makeText(this, getString(R.string.auth_error, accountName), Toast.LENGTH_LONG)
 						.show();
 			}
+		} else if (requestCode == REQUEST_GOOGLE_PLAY_SERVICES) {
+			if (resultCode == Activity.RESULT_OK) {
+			} else {
+				checkGooglePlayServicesAvailable();
+			}
+		} else if (requestCode == REQUEST_AUTHORIZATION) {
+			if (resultCode == Activity.RESULT_OK) {
+				loadRemoteEntries();
+			} else {
+				Toast.makeText(this, getString(R.string.account_authorization_denied, accountName),
+						Toast.LENGTH_LONG).show();
+			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private boolean checkGooglePlayServicesAvailable() {
+		int connectionStatusCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+		if (GooglePlayServicesUtil.isUserRecoverableError(connectionStatusCode)) {
+			showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
+			return false;
+		}
+		return true;
+	}
+
+	private void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				Dialog dialog = GooglePlayServicesUtil.getErrorDialog(connectionStatusCode,
+						Main.this, REQUEST_GOOGLE_PLAY_SERVICES);
+				dialog.show();
+			}
+		});
 	}
 
 	@Override
@@ -451,6 +490,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 					return null;
 				}
 
+				boolean migratedToAdSense = false;
 				Map<String, List<String>> admobAccountSiteMap = new HashMap<String, List<String>>();
 
 				List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
@@ -464,12 +504,21 @@ public class Main extends BaseActivity implements OnNavigationListener {
 					if (admobDetails != null) {
 						String admobAccount = admobDetails[0];
 						String admobSiteId = admobDetails[1];
-						if (admobAccount != null) {
+						String adUnitId = admobDetails[2];
+						if (admobAccount != null && adUnitId == null) {
 							List<String> siteList = admobAccountSiteMap.get(admobAccount);
 							if (siteList == null) {
 								siteList = new ArrayList<String>();
 							}
 							siteList.add(admobSiteId);
+							admobAccountSiteMap.put(admobAccount, siteList);
+						} else {
+							migratedToAdSense = true;
+							List<String> siteList = admobAccountSiteMap.get(admobAccount);
+							if (siteList == null) {
+								siteList = new ArrayList<String>();
+							}
+							siteList.add(adUnitId);
 							admobAccountSiteMap.put(admobAccount, siteList);
 						}
 					}
@@ -483,14 +532,21 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				// sync admob accounts
 				Set<String> admobAccuntKeySet = admobAccountSiteMap.keySet();
 				for (String admobAccount : admobAccuntKeySet) {
-
-					AdmobRequest.syncSiteStats(admobAccount, activity,
-							admobAccountSiteMap.get(admobAccount), null);
+					if (migratedToAdSense) {
+						AdSenseClient.foregroundSyncStats(activity, admobAccount,
+								admobAccountSiteMap.get(admobAccount));
+					} else {
+						AdmobRequest.syncSiteStats(admobAccount, activity,
+								admobAccountSiteMap.get(admobAccount), null);
+					}
 				}
 
 				activity.state.setLoadIconInCache(new LoadIconInCache(activity));
 				Utils.execute(activity.state.loadIconInCache, appDownloadInfos);
 
+			} catch (UserRecoverableAuthIOException userRecoverableException) {
+				activity.startActivityForResult(userRecoverableException.getIntent(),
+						REQUEST_AUTHORIZATION);
 			} catch (Exception e) {
 				// These exceptions can contain very long JSON strings
 				// Explicitly print out the root cause first
@@ -563,7 +619,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				if (!appInfo.isGhost()) {
 					if (appInfo.getAdmobSiteId() != null) {
 						List<AdmobStats> admobStats = db.getAdmobStats(appInfo.getAdmobSiteId(),
-								Timeframe.LAST_TWO_DAYS).getStats();
+								appInfo.getAdmobAdUnitId(), Timeframe.LAST_TWO_DAYS).getStats();
 						if (admobStats.size() > 0) {
 							AdmobStats admob = admobStats.get(admobStats.size() - 1);
 							appInfo.setAdmobStats(admob);

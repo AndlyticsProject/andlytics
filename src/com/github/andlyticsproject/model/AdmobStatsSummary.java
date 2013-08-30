@@ -1,8 +1,13 @@
 package com.github.andlyticsproject.model;
 
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AdmobStatsSummary extends StatsSummary<AdmobStats> {
+
+	private Set<Date> dates = new HashSet<Date>();
 
 	public AdmobStatsSummary() {
 		overallStats = new AdmobStats();
@@ -10,6 +15,17 @@ public class AdmobStatsSummary extends StatsSummary<AdmobStats> {
 
 	@Override
 	public void addStat(AdmobStats stat) {
+		// hack to ignore empty Admob stats after migration
+		if (stat.getRequests() == 0 && stat.getFillRate() == 0) {
+			return;
+		}
+
+		// XXX hack to ignore duplicate dates after migration
+		if (dates.contains(stat.getDate())) {
+			return;
+		}
+
+		dates.add(stat.getDate());
 		stats.add(stat);
 
 		overallStats.setClicks(overallStats.getClicks() + stat.getClicks());

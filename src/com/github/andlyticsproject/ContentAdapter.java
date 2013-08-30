@@ -55,7 +55,12 @@ public class ContentAdapter {
 	}
 
 	public AdmobStatsSummary getAdmobStats(String siteId, Timeframe currentTimeFrame) {
-		AdmobStatsSummary admobList = new AdmobStatsSummary();
+		return getAdmobStats(siteId, null, currentTimeFrame);
+	}
+
+	public AdmobStatsSummary getAdmobStats(String siteId, String adUnitId,
+			Timeframe currentTimeFrame) {
+		AdmobStatsSummary statsSummary = new AdmobStatsSummary();
 
 		int limit = Integer.MAX_VALUE;
 		if (currentTimeFrame.equals(Timeframe.LAST_NINETY_DAYS)) {
@@ -73,74 +78,99 @@ public class ContentAdapter {
 		}
 
 		Cursor cursor = null;
+
 		try {
-			cursor = context.getContentResolver().query(
-					AdmobTable.CONTENT_URI,
-					new String[] {
+			if (adUnitId == null) {
+				cursor = context.getContentResolver().query(
+						AdmobTable.CONTENT_URI,
+						new String[] {
 
-					AdmobTable.KEY_ROWID, AdmobTable.KEY_SITE_ID, AdmobTable.KEY_REQUESTS,
-							AdmobTable.KEY_HOUSEAD_REQUESTS, AdmobTable.KEY_INTERSTITIAL_REQUESTS,
-							AdmobTable.KEY_IMPRESSIONS, AdmobTable.KEY_FILL_RATE,
-							AdmobTable.KEY_HOUSEAD_FILL_RATE, AdmobTable.KEY_OVERALL_FILL_RATE,
-							AdmobTable.KEY_CLICKS, AdmobTable.KEY_HOUSEAD_CLICKS,
-							AdmobTable.KEY_CTR, AdmobTable.KEY_ECPM, AdmobTable.KEY_REVENUE,
-							AdmobTable.KEY_CPC_REVENUE, AdmobTable.KEY_CPM_REVENUE,
-							AdmobTable.KEY_EXCHANGE_DOWNLOADS, AdmobTable.KEY_DATE
+						AdmobTable.KEY_ROWID, AdmobTable.KEY_SITE_ID, AdmobTable.KEY_REQUESTS,
+								AdmobTable.KEY_HOUSEAD_REQUESTS,
+								AdmobTable.KEY_INTERSTITIAL_REQUESTS, AdmobTable.KEY_IMPRESSIONS,
+								AdmobTable.KEY_FILL_RATE, AdmobTable.KEY_HOUSEAD_FILL_RATE,
+								AdmobTable.KEY_OVERALL_FILL_RATE, AdmobTable.KEY_CLICKS,
+								AdmobTable.KEY_HOUSEAD_CLICKS, AdmobTable.KEY_CTR,
+								AdmobTable.KEY_ECPM, AdmobTable.KEY_REVENUE,
+								AdmobTable.KEY_CPC_REVENUE, AdmobTable.KEY_CPM_REVENUE,
+								AdmobTable.KEY_EXCHANGE_DOWNLOADS, AdmobTable.KEY_DATE
 
-					}, AdmobTable.KEY_SITE_ID + "='" + siteId + "'", null,
-					AdmobTable.KEY_DATE + " desc LIMIT " + limit + ""); // sort
-																		// order ->
-																		// new to
-																		// old
+						}, AdmobTable.KEY_SITE_ID + "='" + siteId + "'", null,
+						AdmobTable.KEY_DATE + " desc LIMIT " + limit + ""); // sort
+																			// order ->
+																			// new to
+																			// old
 
-			if (cursor.moveToFirst()) {
-				do {
-					AdmobStats admob = new AdmobStats();
+				while (cursor.moveToNext()) {
+					AdmobStats admob = readAdmobStats(cursor);
+					statsSummary.addStat(admob);
+				}
+				cursor.close();
+			} else {
+				cursor = context.getContentResolver().query(
+						AdmobTable.CONTENT_URI,
+						new String[] {
 
-					admob.setSiteId(cursor.getString(cursor.getColumnIndex(AdmobTable.KEY_ROWID)));
-					admob.setClicks(cursor.getInt(cursor.getColumnIndex(AdmobTable.KEY_CLICKS)));
-					admob.setCpcRevenue(cursor.getFloat(cursor
-							.getColumnIndex(AdmobTable.KEY_CPC_REVENUE)));
-					admob.setCpmRevenue(cursor.getFloat(cursor
-							.getColumnIndex(AdmobTable.KEY_CPM_REVENUE)));
-					admob.setCtr(cursor.getFloat(cursor.getColumnIndex(AdmobTable.KEY_CTR)));
-					admob.setEcpm(cursor.getFloat(cursor.getColumnIndex(AdmobTable.KEY_ECPM)));
-					admob.setExchangeDownloads(cursor.getInt(cursor
-							.getColumnIndex(AdmobTable.KEY_EXCHANGE_DOWNLOADS)));
-					admob.setFillRate(cursor.getFloat(cursor
-							.getColumnIndex(AdmobTable.KEY_FILL_RATE)));
-					admob.setHouseAdClicks(cursor.getInt(cursor
-							.getColumnIndex(AdmobTable.KEY_HOUSEAD_CLICKS)));
-					admob.setHouseadFillRate(cursor.getFloat(cursor
-							.getColumnIndex(AdmobTable.KEY_HOUSEAD_FILL_RATE)));
-					admob.setHouseadRequests(cursor.getInt(cursor
-							.getColumnIndex(AdmobTable.KEY_HOUSEAD_REQUESTS)));
-					admob.setImpressions(cursor.getInt(cursor
-							.getColumnIndex(AdmobTable.KEY_IMPRESSIONS)));
-					admob.setInterstitialRequests(cursor.getInt(cursor
-							.getColumnIndex(AdmobTable.KEY_INTERSTITIAL_REQUESTS)));
-					admob.setOverallFillRate(cursor.getFloat(cursor
-							.getColumnIndex(AdmobTable.KEY_OVERALL_FILL_RATE)));
-					admob.setRequests(cursor.getInt(cursor.getColumnIndex(AdmobTable.KEY_REQUESTS)));
-					admob.setRevenue(cursor.getFloat(cursor.getColumnIndex(AdmobTable.KEY_REVENUE)));
-					String dateString = cursor
-							.getString(cursor.getColumnIndex(AdmobTable.KEY_DATE));
-					admob.setDate(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
+						AdmobTable.KEY_ROWID, AdmobTable.KEY_SITE_ID, AdmobTable.KEY_REQUESTS,
+								AdmobTable.KEY_HOUSEAD_REQUESTS,
+								AdmobTable.KEY_INTERSTITIAL_REQUESTS, AdmobTable.KEY_IMPRESSIONS,
+								AdmobTable.KEY_FILL_RATE, AdmobTable.KEY_HOUSEAD_FILL_RATE,
+								AdmobTable.KEY_OVERALL_FILL_RATE, AdmobTable.KEY_CLICKS,
+								AdmobTable.KEY_HOUSEAD_CLICKS, AdmobTable.KEY_CTR,
+								AdmobTable.KEY_ECPM, AdmobTable.KEY_REVENUE,
+								AdmobTable.KEY_CPC_REVENUE, AdmobTable.KEY_CPM_REVENUE,
+								AdmobTable.KEY_EXCHANGE_DOWNLOADS, AdmobTable.KEY_DATE
 
-					admobList.addStat(admob);
-				} while (cursor.moveToNext());
+						}, AdmobTable.KEY_SITE_ID + "=?", new String[] { adUnitId },
+						AdmobTable.KEY_DATE + " desc LIMIT " + limit + ""); // sort
+																			// order ->
+																			// new to
+																			// old
 
+				while (cursor.moveToNext()) {
+					AdmobStats admob = readAdmobStats(cursor);
+					statsSummary.addStat(admob);
+				}
+				cursor.close();
 			}
-			cursor.close();
 
-			admobList.calculateOverallStats(0, false);
+			statsSummary.calculateOverallStats(0, false);
 
-			return admobList;
+			return statsSummary;
 		} finally {
 			if (cursor != null) {
 				cursor.close();
 			}
 		}
+	}
+
+	private AdmobStats readAdmobStats(Cursor cursor) {
+		AdmobStats admob = new AdmobStats();
+
+		admob.setSiteId(cursor.getString(cursor.getColumnIndex(AdmobTable.KEY_ROWID)));
+		admob.setClicks(cursor.getInt(cursor.getColumnIndex(AdmobTable.KEY_CLICKS)));
+		admob.setCpcRevenue(cursor.getFloat(cursor.getColumnIndex(AdmobTable.KEY_CPC_REVENUE)));
+		admob.setCpmRevenue(cursor.getFloat(cursor.getColumnIndex(AdmobTable.KEY_CPM_REVENUE)));
+		admob.setCtr(cursor.getFloat(cursor.getColumnIndex(AdmobTable.KEY_CTR)));
+		admob.setEcpm(cursor.getFloat(cursor.getColumnIndex(AdmobTable.KEY_ECPM)));
+		admob.setExchangeDownloads(cursor.getInt(cursor
+				.getColumnIndex(AdmobTable.KEY_EXCHANGE_DOWNLOADS)));
+		admob.setFillRate(cursor.getFloat(cursor.getColumnIndex(AdmobTable.KEY_FILL_RATE)));
+		admob.setHouseAdClicks(cursor.getInt(cursor.getColumnIndex(AdmobTable.KEY_HOUSEAD_CLICKS)));
+		admob.setHouseadFillRate(cursor.getFloat(cursor
+				.getColumnIndex(AdmobTable.KEY_HOUSEAD_FILL_RATE)));
+		admob.setHouseadRequests(cursor.getInt(cursor
+				.getColumnIndex(AdmobTable.KEY_HOUSEAD_REQUESTS)));
+		admob.setImpressions(cursor.getInt(cursor.getColumnIndex(AdmobTable.KEY_IMPRESSIONS)));
+		admob.setInterstitialRequests(cursor.getInt(cursor
+				.getColumnIndex(AdmobTable.KEY_INTERSTITIAL_REQUESTS)));
+		admob.setOverallFillRate(cursor.getFloat(cursor
+				.getColumnIndex(AdmobTable.KEY_OVERALL_FILL_RATE)));
+		admob.setRequests(cursor.getInt(cursor.getColumnIndex(AdmobTable.KEY_REQUESTS)));
+		admob.setRevenue(cursor.getFloat(cursor.getColumnIndex(AdmobTable.KEY_REVENUE)));
+		String dateString = cursor.getString(cursor.getColumnIndex(AdmobTable.KEY_DATE));
+		admob.setDate(Utils.parseDbDate(dateString.substring(0, 10) + " 12:00:00"));
+		return admob;
 	}
 
 	public void insertOrUpdateAdmobStats(AdmobStats admob) {
@@ -416,6 +446,7 @@ public class ContentAdapter {
 									AppInfoTable.KEY_APP_ICONURL,
 									AppInfoTable.KEY_APP_ADMOB_ACCOUNT,
 									AppInfoTable.KEY_APP_ADMOB_SITE_ID,
+									AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID,
 									AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE,
 									AppInfoTable.KEY_APP_DEVELOPER_ID,
 									AppInfoTable.KEY_APP_DEVELOPER_NAME },
@@ -450,6 +481,10 @@ public class ContentAdapter {
 				idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_SITE_ID);
 				if (!cursor.isNull(idx)) {
 					appInfo.setAdmobSiteId(cursor.getString(idx));
+				}
+				idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID);
+				if (!cursor.isNull(idx)) {
+					appInfo.setAdmobAdUnitId(cursor.getString(idx));
 				}
 				idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE);
 				if (!cursor.isNull(idx)) {
