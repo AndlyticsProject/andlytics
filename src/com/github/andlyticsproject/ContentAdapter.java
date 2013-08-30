@@ -78,33 +78,35 @@ public class ContentAdapter {
 		}
 
 		Cursor cursor = null;
+
 		try {
-			cursor = context.getContentResolver().query(
-					AdmobTable.CONTENT_URI,
-					new String[] {
+			if (adUnitId == null) {
+				cursor = context.getContentResolver().query(
+						AdmobTable.CONTENT_URI,
+						new String[] {
 
-					AdmobTable.KEY_ROWID, AdmobTable.KEY_SITE_ID, AdmobTable.KEY_REQUESTS,
-							AdmobTable.KEY_HOUSEAD_REQUESTS, AdmobTable.KEY_INTERSTITIAL_REQUESTS,
-							AdmobTable.KEY_IMPRESSIONS, AdmobTable.KEY_FILL_RATE,
-							AdmobTable.KEY_HOUSEAD_FILL_RATE, AdmobTable.KEY_OVERALL_FILL_RATE,
-							AdmobTable.KEY_CLICKS, AdmobTable.KEY_HOUSEAD_CLICKS,
-							AdmobTable.KEY_CTR, AdmobTable.KEY_ECPM, AdmobTable.KEY_REVENUE,
-							AdmobTable.KEY_CPC_REVENUE, AdmobTable.KEY_CPM_REVENUE,
-							AdmobTable.KEY_EXCHANGE_DOWNLOADS, AdmobTable.KEY_DATE
+						AdmobTable.KEY_ROWID, AdmobTable.KEY_SITE_ID, AdmobTable.KEY_REQUESTS,
+								AdmobTable.KEY_HOUSEAD_REQUESTS,
+								AdmobTable.KEY_INTERSTITIAL_REQUESTS, AdmobTable.KEY_IMPRESSIONS,
+								AdmobTable.KEY_FILL_RATE, AdmobTable.KEY_HOUSEAD_FILL_RATE,
+								AdmobTable.KEY_OVERALL_FILL_RATE, AdmobTable.KEY_CLICKS,
+								AdmobTable.KEY_HOUSEAD_CLICKS, AdmobTable.KEY_CTR,
+								AdmobTable.KEY_ECPM, AdmobTable.KEY_REVENUE,
+								AdmobTable.KEY_CPC_REVENUE, AdmobTable.KEY_CPM_REVENUE,
+								AdmobTable.KEY_EXCHANGE_DOWNLOADS, AdmobTable.KEY_DATE
 
-					}, AdmobTable.KEY_SITE_ID + "='" + siteId + "'", null,
-					AdmobTable.KEY_DATE + " desc LIMIT " + limit + ""); // sort
-																		// order ->
-																		// new to
-																		// old
+						}, AdmobTable.KEY_SITE_ID + "='" + siteId + "'", null,
+						AdmobTable.KEY_DATE + " desc LIMIT " + limit + ""); // sort
+																			// order ->
+																			// new to
+																			// old
 
-			while (cursor.moveToNext()) {
-				AdmobStats admob = readAdmobStats(cursor);
-				statsSummary.addStat(admob);
-			}
-			cursor.close();
-
-			if (adUnitId != null) {
+				while (cursor.moveToNext()) {
+					AdmobStats admob = readAdmobStats(cursor);
+					statsSummary.addStat(admob);
+				}
+				cursor.close();
+			} else {
 				cursor = context.getContentResolver().query(
 						AdmobTable.CONTENT_URI,
 						new String[] {

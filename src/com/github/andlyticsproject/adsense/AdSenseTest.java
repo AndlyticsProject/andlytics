@@ -193,6 +193,7 @@ public class AdSenseTest extends SherlockFragmentActivity implements OnClickList
 
 		// Sort by ascending date.
 		request.setSort(Arrays.asList("+DATE"));
+		request.setUseTimezoneReporting(true);
 
 		AdsenseReportsGenerateResponse response = request.execute();
 		List<AdmobStats> result = new ArrayList<AdmobStats>();
@@ -200,6 +201,9 @@ public class AdSenseTest extends SherlockFragmentActivity implements OnClickList
 			StringBuilder buff = new StringBuilder();
 			for (AdsenseReportsGenerateResponse.Headers header : response.getHeaders()) {
 				buff.append(String.format("%25s", header.getName()));
+				if (header.getCurrency() != null) {
+					buff.append(" " + header.getCurrency());
+				}
 			}
 			Log.d(TAG, "");
 
