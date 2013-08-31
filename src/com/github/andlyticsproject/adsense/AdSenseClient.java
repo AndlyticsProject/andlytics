@@ -178,7 +178,8 @@ public class AdSenseClient {
 
 		request.setDimension(Arrays.asList("DATE", "AD_UNIT_ID", "AD_UNIT_CODE", "AD_UNIT_NAME"));
 		request.setMetric(Arrays.asList("PAGE_VIEWS", "AD_REQUESTS", "AD_REQUESTS_COVERAGE",
-				"CLICKS", "AD_REQUESTS_CTR", "COST_PER_CLICK", "AD_REQUESTS_RPM", "EARNINGS"));
+				"CLICKS", "AD_REQUESTS_CTR", "COST_PER_CLICK", "AD_REQUESTS_RPM", "EARNINGS",
+				"INDIVIDUAL_AD_IMPRESSIONS"));
 
 		// Sort by ascending date.
 		request.setSort(Arrays.asList("+DATE"));
@@ -216,23 +217,16 @@ public class AdSenseClient {
 			}
 
 			AdmobStats admob = new AdmobStats();
-			admob.setSiteId(row.get(1));
-			admob.setClicks(Integer.parseInt(row.get(7)));
-			//				admob.setCpcRevenue(Float.parseFloat(adObject.getString(KEY_CPC_REVENUE)));
-			//				admob.setCpmRevenue(Float.parseFloat(adObject.getString(KEY_CPM_REVENUE)));
-			admob.setCtr(Float.parseFloat(row.get(8)));
 			admob.setDate(DATE_FORMATTER.parse(row.get(0)));
-			//				admob.setEcpm(Float.parseFloat(adObject.getString(KEY_ECPM)));
-			//				admob.setExchangeDownloads(adObject.getInt(KEY_EXCHANGE_DOWNLOADS));
-			admob.setFillRate(Float.parseFloat(row.get(6)));
-			//				admob.setHouseAdClicks(adObject.getInt(KEY_HOUSEAD_CLICKS));
-			//				admob.setHouseadFillRate(Float.parseFloat(adObject.getString(KEY_HOUSEAD_FILL_RATE)));
-			//				admob.setHouseadRequests(adObject.getInt(KEY_HOUSEAD_REQUESTS));
-			//				admob.setImpressions(adObject.getInt(KEY_IMPRESSIONS));
-			//				admob.setInterstitialRequests(adObject.getInt(KEY_INTERSTITIAL_REQUESTS));
-			//				admob.setOverallFillRate(Float.parseFloat(adObject.getString(KEY_OVERALL_FILL_RATE)));
+			admob.setSiteId(row.get(1));
 			admob.setRequests(Integer.parseInt(row.get(5)));
+			admob.setFillRate(Float.parseFloat(row.get(6)));
+			admob.setClicks(Integer.parseInt(row.get(7)));
+			admob.setCtr(Float.parseFloat(row.get(8)));
+			admob.setCpcRevenue(Float.parseFloat(row.get(9)));
+			admob.setEcpm(Float.parseFloat(row.get(10)));
 			admob.setRevenue(Float.parseFloat(row.get(11)));
+			admob.setImpressions(Integer.parseInt(row.get(12)));
 			admob.setCurrencyCode(currencyCode);
 
 			result.add(admob);
