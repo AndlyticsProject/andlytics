@@ -55,7 +55,6 @@ import com.github.andlyticsproject.sync.NotificationHandler;
 import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 public class Main extends BaseActivity implements OnNavigationListener {
@@ -84,11 +83,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);
 
 	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
-
-	private static final int REQUEST_GOOGLE_PLAY_SERVICES = 0;
-	private static final int REQUEST_AUTHORIZATION = 1;
-	private static final int REQUEST_ACCOUNT_PICKER = 2;
-
 
 	private static class State {
 		// TODO replace with loaders
@@ -338,25 +332,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	private boolean checkGooglePlayServicesAvailable() {
-		int connectionStatusCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-		if (GooglePlayServicesUtil.isUserRecoverableError(connectionStatusCode)) {
-			showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
-			return false;
-		}
-		return true;
-	}
-
-	private void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
-		runOnUiThread(new Runnable() {
-			public void run() {
-				Dialog dialog = GooglePlayServicesUtil.getErrorDialog(connectionStatusCode,
-						Main.this, REQUEST_GOOGLE_PLAY_SERVICES);
-				dialog.show();
-			}
-		});
 	}
 
 	@Override

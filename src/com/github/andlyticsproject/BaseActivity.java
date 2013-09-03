@@ -2,6 +2,7 @@ package com.github.andlyticsproject;
 
 import org.acra.ACRA;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -30,6 +31,7 @@ import com.github.andlyticsproject.dialog.CrashDialog;
 import com.github.andlyticsproject.dialog.CrashDialog.CrashDialogBuilder;
 import com.github.andlyticsproject.legacy.ChartActivity;
 import com.github.andlyticsproject.util.Utils;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class BaseActivity extends SherlockFragmentActivity {
 
@@ -39,6 +41,10 @@ public class BaseActivity extends SherlockFragmentActivity {
 	public static final String EXTRA_PACKAGE_NAME = "com.github.andlyticsproject.packagename";
 	public static final String EXTRA_DEVELOPER_ID = "com.github.andlyticsproject.developerid";
 	public static final String EXTRA_ICON_FILE = "com.github.andlyticsproject.iconfile";
+
+	public static final int REQUEST_GOOGLE_PLAY_SERVICES = 0;
+	public static final int REQUEST_AUTHORIZATION = 1;
+	public static final int REQUEST_ACCOUNT_PICKER = 2;
 
 	protected static final int REQUEST_AUTHENTICATE = 42;
 
@@ -391,6 +397,25 @@ public class BaseActivity extends SherlockFragmentActivity {
 
 	public String getAccountName() {
 		return accountName;
+	}
+
+	protected boolean checkGooglePlayServicesAvailable() {
+		int connectionStatusCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+		if (GooglePlayServicesUtil.isUserRecoverableError(connectionStatusCode)) {
+			showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
+			return false;
+		}
+		return true;
+	}
+
+	private void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				Dialog dialog = GooglePlayServicesUtil.getErrorDialog(connectionStatusCode,
+						BaseActivity.this, REQUEST_GOOGLE_PLAY_SERVICES);
+				dialog.show();
+			}
+		});
 	}
 
 }

@@ -338,7 +338,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			result[0] = c.getString(c.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_ACCOUNT));
 			result[1] = c.getString(c.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_SITE_ID));
 			result[2] = c.getString(c.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID));
-			if (result[0] == null || result[1] == null) {
+			if (result[0] == null && result[1] == null) {
 				return null;
 			}
 
@@ -352,7 +352,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 
 	public synchronized void saveAdmobDetails(String packageName, String admobAccount,
 			String admobSiteId) {
-		saveAdmobDetails(packageName, admobAccount, null);
+		saveAdmobDetails(packageName, admobAccount, admobSiteId, null);
 	}
 
 	public synchronized void saveAdmobDetails(String packageName, String admobAccount,
@@ -376,13 +376,15 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		}
 	}
 
-	public synchronized void saveAdmobAdUnitId(String packageName, String admobAdUnitId) {
+	public synchronized void saveAdmobAdUnitId(String packageName, String admobAccount,
+			String admobAdUnitId) {
 		SQLiteDatabase db = getWritableDatabase();
 		db.beginTransaction();
 		try {
 			long id = findPackageId(db, packageName);
 
 			ContentValues values = new ContentValues();
+			values.put(AppInfoTable.KEY_APP_ADMOB_ACCOUNT, admobAccount);
 			values.put(AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID, admobAdUnitId);
 
 			db.update(AppInfoTable.DATABASE_TABLE_NAME, values, "_id = ?",

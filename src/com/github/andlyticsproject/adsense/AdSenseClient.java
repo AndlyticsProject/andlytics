@@ -9,7 +9,10 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -21,6 +24,7 @@ import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.model.AdmobStats;
+import com.github.andlyticsproject.util.Utils;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.JsonFactory;
@@ -29,6 +33,8 @@ import com.google.api.services.adsense.AdSense;
 import com.google.api.services.adsense.AdSense.Reports.Generate;
 import com.google.api.services.adsense.AdSenseScopes;
 import com.google.api.services.adsense.model.AdClients;
+import com.google.api.services.adsense.model.AdUnit;
+import com.google.api.services.adsense.model.AdUnits;
 import com.google.api.services.adsense.model.AdsenseReportsGenerateResponse;
 
 @SuppressLint("SimpleDateFormat")
@@ -219,14 +225,14 @@ public class AdSenseClient {
 			AdmobStats admob = new AdmobStats();
 			admob.setDate(DATE_FORMATTER.parse(row.get(0)));
 			admob.setSiteId(row.get(1));
-			admob.setRequests(Integer.parseInt(row.get(5)));
-			admob.setFillRate(Float.parseFloat(row.get(6)));
-			admob.setClicks(Integer.parseInt(row.get(7)));
-			admob.setCtr(Float.parseFloat(row.get(8)));
-			admob.setCpcRevenue(Float.parseFloat(row.get(9)));
-			admob.setEcpm(Float.parseFloat(row.get(10)));
-			admob.setRevenue(Float.parseFloat(row.get(11)));
-			admob.setImpressions(Integer.parseInt(row.get(12)));
+			admob.setRequests(Utils.tryParseInt(row.get(5)));
+			admob.setFillRate(Utils.tryParseFloat(row.get(6)));
+			admob.setClicks(Utils.tryParseInt(row.get(7)));
+			admob.setCtr(Utils.tryParseFloat(row.get(8)));
+			admob.setCpcRevenue(Utils.tryParseFloat(row.get(9)));
+			admob.setEcpm(Utils.tryParseFloat(row.get(10)));
+			admob.setRevenue(Utils.tryParseFloat(row.get(11)));
+			admob.setImpressions(Utils.tryParseInt(row.get(12)));
 			admob.setCurrencyCode(currencyCode);
 
 			result.add(admob);
@@ -237,5 +243,27 @@ public class AdSenseClient {
 
 	public static String escapeFilterParameter(String parameter) {
 		return parameter.replace("\\", "\\\\").replace(",", "\\,");
+	}
+
+	public static Map<String, String> getAdUnits(Context context, String admobAccount)
+			throws IOException {
+		AdSense adsense = createForegroundSyncClient(context, admobAccount);
+		String adClientId = getClientId(adsense);
+		if (adClientId == null) {
+			// XXX throw?
+			return new HashMap<String, String>();
+		}
+
+		AdUnits units = adsense.adunits().list(adClientId).setMaxResults(MAX_LIST_PAGE_SIZE)
+				.setPageToken(null).execute();
+		List<AdUnit> items = units.getItems();
+
+		// preserver order
+		Map<String, String> result = new LinkedHashMap<String, String>();
+		for (AdUnit unit : items) {
+			result.put(unit.getId(), unit.getName());
+		}
+
+		return result;
 	}
 }

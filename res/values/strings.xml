@@ -206,5 +206,6 @@
     <string name="show_developer_cut_revenue">Show developer cut of revenue</string>
     <string name="show_developer_cut_revenue_summary">Show developer cut of sales revenue (70%).</string>
     <string name="account_authorization_denied">Authorization for account \'%s\' denied.</string>
+    <string name="use_new_admob">Use new AdMob</string>
 
 </resources>
