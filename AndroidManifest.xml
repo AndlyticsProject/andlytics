@@ -107,9 +107,6 @@
             android:name=".DetailsActivity"
             android:label="@string/app_name" >
         </activity>
-        <activity
-            android:name="com.github.andlyticsproject.adsense.AdSenseTest"
-            android:label="AdSense Sample" />
 
         <service
             android:name=".sync.SyncAdapterService"

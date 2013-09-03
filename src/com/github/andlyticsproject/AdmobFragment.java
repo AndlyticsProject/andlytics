@@ -4,6 +4,7 @@ package com.github.andlyticsproject;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,7 @@ import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobAccountAuthenticator;
 import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.admob.AdmobRequest.SyncCallback;
+import com.github.andlyticsproject.adsense.AdSenseClient;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.AdmobStats;
@@ -48,6 +50,7 @@ import com.github.andlyticsproject.util.LoaderBase;
 import com.github.andlyticsproject.util.LoaderResult;
 import com.github.andlyticsproject.util.Utils;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 public class AdmobFragment extends ChartFragment<AdmobStats> implements
 		LoaderManager.LoaderCallbacks<LoaderResult<AdmobStatsSummary>> {
@@ -73,6 +76,9 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 	private ViewGroup siteList;
 
 	private LoadRemoteSiteListTask loadSitesTask;
+	private LoadAdUnitsTask loadAdUnitsTask;
+
+	private String selectedAdmobAccount;
 
 	static class AdmobDbLoader extends LoaderBase<AdmobStatsSummary> {
 
@@ -115,17 +121,17 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 			if (loadRemote) {
 				// only if not migrated
 				if (adUnitId == null) {
-					List<String> siteList = new ArrayList<String>();
-					siteList.add(currentSiteId);
-
 					Log.d(TAG, "Loading remote Admob stats...");
-					AdmobRequest.syncSiteStats(currentAdmobAccount, getContext(), siteList,
-							new SyncCallback() {
+					AdmobRequest.syncSiteStats(currentAdmobAccount, getContext(),
+							Arrays.asList(currentSiteId), new SyncCallback() {
 
 								@Override
 								public void initialImportStarted() {
 								}
 							});
+				} else {
+					AdSenseClient.foregroundSyncStats(getContext(), currentAdmobAccount,
+							Arrays.asList(adUnitId));
 				}
 			}
 
@@ -181,7 +187,7 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
 				configSwitcher.showPrevious();
 			}
-			showAccountList();
+			showAdmobAccountList();
 		}
 
 		return view;
@@ -315,7 +321,7 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 		case R.id.itemAdmobsmenuRemove:
 			AndlyticsDb.getInstance(getActivity()).saveAdmobDetails(statsActivity.getPackage(),
 					null, null);
-			showAccountList();
+			showAdmobAccountList();
 			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
 				configSwitcher.showPrevious();
 			}
@@ -352,8 +358,36 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 			Preferences.saveChartTimeframe(Timeframe.MONTH_TO_DATE, ctx);
 			item.setChecked(true);
 			return true;
+		case R.id.itemAdmobsmenuNewAdmob:
+			if (configSwitcher.getCurrentView().getId() == R.id.base_chart_config) {
+				configSwitcher.showPrevious();
+				mainViewSwitcher.swap();
+			}
+			hideAdmobHelp(configSwitcher.getCurrentView());
+
+			showAdSenseAccountList();
+			return true;
 		default:
 			return (super.onOptionsItemSelected(item));
+		}
+	}
+
+	private void hideAdmobHelp(View view) {
+		View v = view.findViewById(R.id.admob_addaccount_button);
+		if (v != null) {
+			v.setVisibility(View.INVISIBLE);
+		}
+		v = view.findViewById(R.id.admob_accout_desc);
+		if (v != null) {
+			v.setVisibility(View.INVISIBLE);
+		}
+		v = view.findViewById(R.id.admob_config_headline_subtext);
+		if (v != null) {
+			v.setVisibility(View.INVISIBLE);
+		}
+		v = view.findViewById(R.id.admob_config_screenshot);
+		if (v != null) {
+			v.setVisibility(View.INVISIBLE);
 		}
 	}
 
@@ -371,10 +405,18 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 		return "8 " + this.getString(R.string.admob__charts_available) + " ->";
 	}
 
-	protected void showAccountList() {
+	protected void showAdmobAccountList() {
+		showAccountList(false);
+	}
+
+	private void showAdSenseAccountList() {
+		showAccountList(true);
+	}
+
+	private void showAccountList(final boolean useAdSense) {
 		final AccountManager manager = AccountManager.get(getActivity());
-		final Account[] accounts = manager
-				.getAccountsByType(AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB);
+		final Account[] accounts = manager.getAccountsByType(useAdSense ? "com.google"
+				: AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB);
 		final int size = accounts.length;
 		String[] names = new String[size];
 		accountList.removeAllViews();
@@ -391,11 +433,14 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 
 				@Override
 				public void onClick(View view) {
-
 					String currentAdmobAccount = (String) view.getTag();
-
+					selectedAdmobAccount = currentAdmobAccount;
 					configSwitcher.showNext();
-					loadRemoteSiteList(currentAdmobAccount);
+					if (useAdSense) {
+						loadAdUnits();
+					} else {
+						loadRemoteSiteList();
+					}
 
 				}
 			});
@@ -403,7 +448,7 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 		}
 	}
 
-	private void loadRemoteSiteList(String currentAdmobAccount) {
+	void loadRemoteSiteList() {
 		if (getActivity() == null) {
 			return;
 		}
@@ -415,8 +460,24 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 			loadSitesTask = null;
 		}
 
-		loadSitesTask = new LoadRemoteSiteListTask(getActivity(), this, currentAdmobAccount);
+		loadSitesTask = new LoadRemoteSiteListTask(getActivity(), this, selectedAdmobAccount);
 		Utils.execute(loadSitesTask);
+	}
+
+	void loadAdUnits() {
+		if (getActivity() == null) {
+			return;
+		}
+
+		// can't have two loaders with different interface, use 
+		// AsyncTask and retained fragment
+		if (loadAdUnitsTask != null) {
+			loadAdUnitsTask.cancel(true);
+			loadAdUnitsTask = null;
+		}
+
+		loadAdUnitsTask = new LoadAdUnitsTask(getActivity(), this, selectedAdmobAccount);
+		Utils.execute(loadAdUnitsTask);
 	}
 
 	private void addNewAdmobAccount() {
@@ -427,7 +488,7 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 					bundle.keySet();
 					Log.d(TAG, "account added: " + bundle);
 
-					showAccountList();
+					showAdmobAccountList();
 
 				} catch (OperationCanceledException e) {
 					Log.d(TAG, "addAccount was canceled");
@@ -634,6 +695,102 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 							String admobSiteId = (String) view.getTag();
 							AndlyticsDb.getInstance(activity).saveAdmobDetails(
 									statsActivity.getPackage(), currentAdmobAccount, admobSiteId);
+
+							admobFragment.mainViewSwitcher.swap();
+							admobFragment.loadRemoteData();
+							((SherlockFragmentActivity) activity).supportInvalidateOptionsMenu();
+						}
+					});
+					admobFragment.siteList.addView(inflate);
+
+				}
+			}
+		}
+	}
+
+	private static class LoadAdUnitsTask extends
+			DetachableAsyncTask<Void, Void, Exception, Activity> {
+
+		// ad unit -> name
+		private Map<String, String> adUnits;
+
+		private AdmobFragment admobFragment;
+		private DetailedStatsActivity statsActivity;
+		private String admobAccount;
+
+		public LoadAdUnitsTask(Activity activity, AdmobFragment admobFragment, String admobAccount) {
+			super(activity);
+			this.statsActivity = (DetailedStatsActivity) activity;
+			this.admobFragment = admobFragment;
+			this.admobAccount = admobAccount;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			if (activity == null) {
+				return;
+			}
+
+			statsActivity.refreshStarted();
+		}
+
+		@Override
+		protected Exception doInBackground(Void... params) {
+			if (activity == null) {
+				return null;
+			}
+
+			try {
+				adUnits = AdSenseClient.getAdUnits(activity, admobAccount);
+			} catch (Exception e) {
+				return e;
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Exception error) {
+			if (activity == null) {
+				return;
+			}
+
+			statsActivity.refreshFinished();
+
+			if (error != null) {
+				if (error instanceof UserRecoverableAuthIOException) {
+					activity.startActivityForResult(
+							((UserRecoverableAuthIOException) error).getIntent(),
+							BaseActivity.REQUEST_AUTHORIZATION);
+					return;
+				}
+
+				statsActivity.handleUserVisibleException(error);
+				return;
+			}
+
+			if (adUnits != null && adUnits.size() > 0) {
+				admobFragment.siteList.removeAllViews();
+
+				Set<String> keySet = adUnits.keySet();
+				for (String siteId : keySet) {
+
+					String siteName = adUnits.get(siteId);
+
+					// pull the id from the data
+					View inflate = activity.getLayoutInflater().inflate(
+							R.layout.admob_account_list_item, null);
+					TextView accountName = (TextView) inflate
+							.findViewById(R.id.admob_account_list_item_text);
+					accountName.setText(siteName);
+					inflate.setTag(siteId);
+					inflate.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							String admobAdUnitId = (String) view.getTag();
+							AndlyticsDb.getInstance(activity).saveAdmobAdUnitId(
+									statsActivity.getPackage(), admobAccount, admobAdUnitId);
 
 							admobFragment.mainViewSwitcher.swap();
 							admobFragment.loadRemoteData();

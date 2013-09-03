@@ -1,5 +1,7 @@
 package com.github.andlyticsproject;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -269,5 +271,25 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_GOOGLE_PLAY_SERVICES) {
+			if (resultCode != Activity.RESULT_OK) {
+				checkGooglePlayServicesAvailable();
+			}
+		} else if (requestCode == REQUEST_AUTHORIZATION) {
+			if (resultCode == Activity.RESULT_OK) {
+				if (getSupportActionBar().getSelectedNavigationIndex() == TAB_IDX_ADMOB) {
+					String tabTag = TAB_TAGS[getSupportActionBar().getSelectedNavigationIndex()];
+					AdmobFragment admobFragment = (AdmobFragment) getSupportFragmentManager()
+							.findFragmentByTag(tabTag);
+					admobFragment.loadAdUnits();
+				}
+			} else {
+				Toast.makeText(this, getString(R.string.account_authorization_denied, accountName),
+						Toast.LENGTH_LONG).show();
+			}
+		}
+	}
 
 }

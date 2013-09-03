@@ -205,4 +205,20 @@ public final class Utils {
 		return val.toString();
 	}
 
+	public static Integer tryParseInt(String str) {
+		try {
+			return Integer.parseInt(str);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	public static Float tryParseFloat(String str) {
+		try {
+			return Float.parseFloat(str);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
 }

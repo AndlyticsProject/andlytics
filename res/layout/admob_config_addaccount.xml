@@ -110,7 +110,8 @@
                 android:paddingBottom="5dp"
                 android:text="@string/admob_info" />
 
-            <ImageView
+            <ImageView  
+                android:id="@+id/admob_config_screenshot"
                 android:layout_width="wrap_content"
                 android:paddingTop="10dp"
                 android:layout_height="wrap_content"
