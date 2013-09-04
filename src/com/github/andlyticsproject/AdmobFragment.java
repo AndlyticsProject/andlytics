@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -50,7 +51,10 @@ import com.github.andlyticsproject.util.LoaderBase;
 import com.github.andlyticsproject.util.LoaderResult;
 import com.github.andlyticsproject.util.Utils;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
+import com.google.android.gms.auth.GoogleAuthException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 
 public class AdmobFragment extends ChartFragment<AdmobStats> implements
 		LoaderManager.LoaderCallbacks<LoaderResult<AdmobStatsSummary>> {
@@ -359,9 +363,12 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 			item.setChecked(true);
 			return true;
 		case R.id.itemAdmobsmenuNewAdmob:
-			if (configSwitcher.getCurrentView().getId() == R.id.base_chart_config) {
-				configSwitcher.showPrevious();
+			if (mainViewSwitcher.isBacksideVisible()) {
 				mainViewSwitcher.swap();
+			}
+
+			if (configSwitcher.getCurrentView().getId() != R.id.admob_config_headline_addaccount_root) {
+				configSwitcher.showPrevious();
 			}
 			hideAdmobHelp(configSwitcher.getCurrentView());
 
@@ -762,8 +769,26 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 					activity.startActivityForResult(
 							((UserRecoverableAuthIOException) error).getIntent(),
 							BaseActivity.REQUEST_AUTHORIZATION);
+
+					return;
+				} else if (error instanceof GoogleJsonResponseException) {
+					GoogleJsonError details = ((GoogleJsonResponseException) error).getDetails();
+					String message = error.getMessage();
+					if (details != null) {
+						message = details.getMessage();
+					}
+					Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+					admobFragment.configSwitcher.showPrevious();
+
+					return;
+				} else if (error.getCause() instanceof GoogleAuthException) {
+					String message = ((GoogleAuthException) error.getCause()).getMessage();
+					Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+					admobFragment.configSwitcher.showPrevious();
+
 					return;
 				}
+
 
 				statsActivity.handleUserVisibleException(error);
 				return;
