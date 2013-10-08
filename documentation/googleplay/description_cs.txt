@@ -1,0 +1,18 @@
+Andlytics shromažďuje statistiky z vývojářské konzole Google Play. To umožňuje sledování aktivních instalací, celkový počet nainstalací, hodnocení a komentáře pro všechny vaše Android aplikace, které jsou publikovány ve službě Google Play.
+
+Andlytics může také shromažďovat statistiky AdMob, včetně příjmů, požadavků a dojmů. Podporuje synchronizaci statistik na pozadí a oznámení, když dojde ke změnám.
+
+Google neposkytuje veřejná API pro shromažďování statistických údajů. Tedy, pokud Google provede změnu webu, může tím způsobit, že Andlytics přestane fungovat. V tom případě buďte trpěliví, na nápravě se již zajisté pracuje.
+
+Andlytics je open source, neváhejte přispět prostřednictvím GitHub.
+
+Andlytics není spojen v ničem s Googlem.
+
+"Google Apps pro firmy" a více připojených vývojářských účtů ještě nejsou podporovány. Pokud máte některý z těchto účtů, kontaktujte nás prostřednictvím GitHub a pomozte nám přidat podporu.
+
+Na některých zařízeních AdMob účty mizí, přehráním Andlytics z SD karty do vnitřní paměti může chybu opravit.
+
+AdMob účty, které jsou propojeny s účtem Google naleznete na http://www.admob.com/my_account/account_info, tam najdete API heslo.
+
+Klíčová slova: Vývojářská konzole, vývojářské nástroje, android vývojáři
+

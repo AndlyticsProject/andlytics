@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string-array name="autosync_periods">
+    <item>Nikdy</item>
+    <item>1 minuta</item>
+    <item>15 minut</item>
+    <item>30 minut</item>
+    <item>1 hodina</item>
+    <item>2 hodiny</item>
+    <item>3 hodiny</item>
+    <item>6 hodin</item>
+    <item>8 hodin</item>
+    <item>12 hodin</item>
+    <item>24 hodin</item>
+  </string-array>
+</resources>
