@@ -80,7 +80,6 @@ public class ChartActivity extends BaseChartActivity {
 
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		smoothEnabled = Preferences.getChartSmooth(this);
