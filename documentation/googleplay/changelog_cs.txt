@@ -1,0 +1,58 @@
+v2.5.0
+- Podpora více propojených účtů [beta]
+- Info stránka aplikace (klepněte na název aplikace)
+- Automatický překlad komentářů (klepněte na globus pro přepínání)
+- Autorova odpověď na komentáře
+- Přesměrování prohlížeče, pokud Goolge/play vyžaduje potvrzení dat jako mobilní číslo
+
+2.4.0
+- Drobné opravy chyb
+- Drobné změny v uživatelském rozhraní
+- Aplikace Google překladač integrována (viz Předvolby)
+- Přepínač graf/data v actionbaru
+- Samostatné obrazovky (poděkování/změny)
+
+2.3.1
+- Pouze shromažďování statistických údajů o publikované aplikaci
+
+2.3.0
+- Nyní založena konzole pro nové vývojáře
+- Statistiky a komentáře jsou již opakovaně synchronizovány a zároveň aktivně využívají aplikaci
+- Odstraněn konfigurační panel grafu a byl nahrazen s akčními položkami/předvolbami
+- Upraveny grafy a tabulky pro tablety
+- Hodnocení je zobrazeno jako barevné kódované progresivní bary
+- Přidána možnost globálního data formátu
+- Přidána podpora pro zobrazování odpovědi vývojáře na komentáře
+- Odstraněna podpora pro Android 2.1
+- Aktualizované překlady
+- Spousta dalších oprav a vylepšení
+
+2.2.2
+- Opraveno oznámení na Honeycomb
+
+2.2.1
+- Drobné opravy chyb
+- Oprava hotfix API
+
+2.2.0
+- Nové vedení účtu, přepínání účtu prostřednictvím panelu akcí
+- Nový spodní panel pro hlavní akce
+-Nový Import/Export s nahráním do Dropboxu (klepněte na oznámení o exportu) a import přes Dropbox (přes Dropbox zpracování souborů ZIP)
+- JellyBean oznámení včetně vlastních zvuků
+- specifické předvolby obecné/účet
+- AdMob mohou být skryty pomocí předvolby
+- UI zlepšení: rychlost reakce, ikona oprav, ukazatel průběhu
+- Nový jazyk: japonština, francouzština
+
+2.1.0
+- ICS kompatibilní panel akcí
+- HD ikony pro velké obrazovky
+- Nové nastavení obrazovky
+- Nové jazyky: Španělština, Italština, Ruština
+
+2.0.1
+- Opraveno ověřování
+- Pro funkce jsou nyní zdarma (vzhledem k tomu, že to je open source)
+- Nový design
+- EPC pro AdMob
+- Nové jazyky: španělský, německý, holandský

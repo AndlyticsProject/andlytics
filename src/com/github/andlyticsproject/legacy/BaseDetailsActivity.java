@@ -11,8 +11,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.BaseActivity;
 import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.R;
-import com.github.andlyticsproject.R.anim;
-import com.github.andlyticsproject.R.id;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.db.AndlyticsDb;
 
