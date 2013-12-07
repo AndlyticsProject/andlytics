@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/admob_config_headline_addaccount_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
@@ -73,6 +74,7 @@
             </RelativeLayout>
 
             <!-- TODO Remove this -->
+
             <RelativeLayout
                 android:id="@+id/admob_accout_desc"
                 android:layout_width="fill_parent"
@@ -99,8 +101,8 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/andBorder"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp" />                
-                
+                android:paddingRight="5dp" />
+
             <TextView
                 android:id="@+id/admob_config_headline_subtext"
                 style="@style/MainTableText"
@@ -110,12 +112,12 @@
                 android:paddingBottom="5dp"
                 android:text="@string/admob_info" />
 
-            <ImageView  
+            <ImageView
                 android:id="@+id/admob_config_screenshot"
                 android:layout_width="wrap_content"
-                android:paddingTop="10dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/admob_config_headline_subtext"
+                android:paddingTop="10dp"
                 android:src="@drawable/admob" />
         </RelativeLayout>
     </ScrollView>
