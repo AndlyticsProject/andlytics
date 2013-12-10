@@ -1,10 +1,5 @@
 package com.github.andlyticsproject.io;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.zip.ZipOutputStream;
-
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -21,6 +16,11 @@ import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.model.AppStatsSummary;
 import com.github.andlyticsproject.util.FileUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.zip.ZipOutputStream;
 
 public class ExportService extends IntentService {
 
@@ -85,7 +85,7 @@ public class ExportService extends IntentService {
 					statsWriter.writeStats(packageNames[i], statsForApp.getStats(), zip);
 				}
 			} catch (IOException e) {
-				Log.d(TAG, "Zip error, deleting incomplete file.");
+				Log.e(TAG, "Zip error, deleting incomplete file.", e);
 				zipFile.delete();
 			} finally {
 				zip.close();

@@ -1,17 +1,7 @@
 package com.github.andlyticsproject;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -21,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -57,6 +48,17 @@ import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public class Main extends BaseActivity implements OnNavigationListener {
 
 	/** Key for latest version code preference. */
@@ -82,6 +84,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 	private DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);
 
+	private static final int REQUEST_OPEN_DOCUMENT = 88;
 	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
 
 	private static class State {
@@ -237,6 +240,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	 * The chosen menu item
 	 * @return boolean true/false
 	 */
+	@TargetApi(19)
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -244,18 +248,28 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			loadRemoteEntries();
 			break;
 		case R.id.itemMainmenuImport:
-			File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
-			if (!fileToImport.exists()) {
-				Toast.makeText(this,
-						getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
-						Toast.LENGTH_LONG).show();
-				return true;
-			}
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+				Intent openIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+				openIntent.setType("*/*");
+				openIntent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "application/zip" });
+				//hidden
+				openIntent.putExtra("android.content.extra.SHOW_ADVANCED", true);
+				startActivityForResult(openIntent, REQUEST_OPEN_DOCUMENT);
+			} else {
+				File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
+				if (!fileToImport.exists()) {
+					Toast.makeText(
+							this,
+							getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
+							Toast.LENGTH_LONG).show();
+					return true;
+				}
 
-			Intent importIntent = new Intent(this, ImportActivity.class);
-			importIntent.setAction(Intent.ACTION_VIEW);
-			importIntent.setData(Uri.fromFile(fileToImport));
-			startActivity(importIntent);
+				Intent importIntent = new Intent(this, ImportActivity.class);
+				importIntent.setAction(Intent.ACTION_VIEW);
+				importIntent.setData(Uri.fromFile(fileToImport));
+				startActivity(importIntent);
+			}
 			break;
 		case R.id.itemMainmenuExport:
 			Intent exportIntent = new Intent(this, ExportActivity.class);
@@ -328,6 +342,19 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				loadRemoteEntries();
 			} else {
 				Toast.makeText(this, getString(R.string.account_authorization_denied, accountName),
+						Toast.LENGTH_LONG).show();
+			}
+		} else if (requestCode == REQUEST_OPEN_DOCUMENT) {
+			if (resultCode == RESULT_OK) {
+				Intent importIntent = new Intent(this, ImportActivity.class);
+				importIntent.setAction(Intent.ACTION_VIEW);
+				Uri uri = data.getData();
+				importIntent.setData(data.getData());
+				startActivity(importIntent);
+			} else {
+				Toast.makeText(
+						this,
+						getString(R.string.import_no_stats_file, data == null ? "" : data.getData()),
 						Toast.LENGTH_LONG).show();
 			}
 		}
