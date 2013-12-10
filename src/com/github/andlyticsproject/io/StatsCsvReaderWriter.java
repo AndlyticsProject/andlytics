@@ -1,5 +1,19 @@
 package com.github.andlyticsproject.io;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.os.Environment;
+import android.text.TextUtils;
+import android.util.Log;
+
+import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
+
+import com.github.andlyticsproject.model.AppStats;
+import com.github.andlyticsproject.model.Revenue;
+import com.github.andlyticsproject.util.FileUtils;
+import com.github.andlyticsproject.util.Utils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,19 +30,6 @@ import java.util.TimeZone;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.os.Environment;
-import android.text.TextUtils;
-import android.util.Log;
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
-
-import com.github.andlyticsproject.model.AppStats;
-import com.github.andlyticsproject.model.Revenue;
-import com.github.andlyticsproject.util.FileUtils;
-import com.github.andlyticsproject.util.Utils;
 
 @SuppressLint("SimpleDateFormat")
 public class StatsCsvReaderWriter {
@@ -84,10 +85,12 @@ public class StatsCsvReaderWriter {
 	public StatsCsvReaderWriter(Context context) {
 	}
 
+	@SuppressWarnings("resource")
 	public void writeStats(String packageName, List<AppStats> stats, ZipOutputStream zip)
 			throws IOException {
 		zip.putNextEntry(new ZipEntry(packageName + CSV_SUFFIX));
 
+		// we don't own the stream, it's closed by the caller
 		CSVWriter writer = new CSVWriter(new OutputStreamWriter(zip));
 		writer.writeNext(HEADER_LIST);
 
@@ -119,7 +122,6 @@ public class StatsCsvReaderWriter {
 			writer.writeNext(line);
 		}
 		writer.flush();
-		writer.close();
 	}
 
 	public static List<String> getImportFileNamesFromZip(String accountName,
@@ -141,6 +143,8 @@ public class StatsCsvReaderWriter {
 					result.add(entry.getName());
 				}
 			}
+
+			zipFile.close();
 			return result;
 		} catch (IOException e) {
 			Log.e(TAG, "Error reading zip file: " + e.getMessage());
@@ -198,12 +202,14 @@ public class StatsCsvReaderWriter {
 		return filename.substring(0, suffixIdx);
 	}
 
+	@SuppressWarnings("resource")
 	public List<AppStats> readStats(InputStream in) throws ServiceException {
 
 		List<AppStats> appStats = new ArrayList<AppStats>();
 
 		CSVReader reader;
 		try {
+			// we don't own the stream, it's closed by the caller
 			reader = new CSVReader(new InputStreamReader(in));
 
 			String[] firstLine = reader.readNext();
@@ -247,10 +253,8 @@ public class StatsCsvReaderWriter {
 					appStats.add(stats);
 
 				}
-				
-			}
-			reader.close();
 
+			}
 		} catch (FileNotFoundException e) {
 			throw new ServiceException(e);
 		} catch (IOException e) {
