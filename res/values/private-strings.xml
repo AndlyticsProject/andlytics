@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Andlytics</string>
     <string name="app_name_admob">AdMob</string>
-    <string name="bugsense_url">http://www.bugsense.com/api/acra?api_key=00000000</string>
+    <string name="bugsense_url">http://www.bugsense.com/api/acra?api_key=56629227</string>
     <string name="market_uri">market://details?id=com.github.andlyticsproject</string>
     <string name="github_issues_url">https://github.com/AndlyticsProject/andlytics/issues</string>
     <string name="github_url">https://github.com/AndlyticsProject/andlytics/</string>
