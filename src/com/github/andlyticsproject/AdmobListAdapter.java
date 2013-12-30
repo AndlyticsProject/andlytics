@@ -123,7 +123,9 @@ public class AdmobListAdapter extends ChartListAdapter<AdmobStats> {
 				return;
 			case COL_EPC:
 				//				tv.setText(admob.getEpcCents());
-				tv.setText(getNumberFormat(admob.getCurrencyCode()).format(admob.getEpc()));
+						// tv.setText(getNumberFormat(admob.getCurrencyCode()).format(admob.getEpc()));
+						tv.setText(getNumberFormat(admob.getCurrencyCode()).format(
+								admob.getCpcRevenue()));
 				return;
 			case COL_REQUESTS:
 				tv.setText(admob.getRequests() + "");
