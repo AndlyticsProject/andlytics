@@ -1,16 +1,5 @@
 package com.github.andlyticsproject.console.v2;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.util.JsonReader;
@@ -24,6 +13,17 @@ import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.FileUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * This class contains static methods used to parse JSON from {@link DevConsoleV2}
@@ -271,7 +271,8 @@ public class JsonParser {
 			 * Array with app icon [null,null,null,icon]
 			 */
 			// XXX
-			JSONArray appVersions = jsonAppInfo.optJSONObject("4").optJSONArray("1");
+			JSONArray appVersions = jsonAppInfo.getJSONObject("4").getJSONObject("1")
+					.optJSONArray("1");
 			if (DEBUG) {
 				pp("appVersions", appVersions);
 			}
