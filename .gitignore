@@ -20,3 +20,5 @@ proguard/
 local.properties
 secure.properties
 /assets
+private-strings.xml
+res/values/private-strings.xml

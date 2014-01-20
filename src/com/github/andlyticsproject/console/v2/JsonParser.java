@@ -1,14 +1,5 @@
 package com.github.andlyticsproject.console.v2;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.util.Log;
 
 import com.github.andlyticsproject.console.DevConsoleException;
@@ -17,6 +8,15 @@ import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.util.FileUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * This class contains static methods used to parse JSON from {@link DevConsoleV2}
@@ -92,14 +92,14 @@ public class JsonParser {
 		int latestValue = latestData.getJSONObject("2").getInt("1");
 
 		switch (statsType) {
-			case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
-				stats.setTotalDownloads(latestValue);
-				break;
-			case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
-				stats.setActiveInstalls(latestValue);
-				break;
-			default:
-				break;
+		case DevConsoleV2Protocol.STATS_TYPE_TOTAL_USER_INSTALLS:
+			stats.setTotalDownloads(latestValue);
+			break;
+		case DevConsoleV2Protocol.STATS_TYPE_ACTIVE_DEVICE_INSTALLS:
+			stats.setActiveInstalls(latestValue);
+			break;
+		default:
+			break;
 		}
 
 	}
@@ -264,7 +264,8 @@ public class JsonParser {
 			 * Array with app icon [null,null,null,icon]
 			 */
 			// XXX
-			JSONArray appVersions = jsonAppInfo.optJSONObject("4").optJSONArray("1");
+			JSONArray appVersions = jsonAppInfo.getJSONObject("4").getJSONObject("1")
+					.optJSONArray("1");
 			if (DEBUG) {
 				pp("appVersions", appVersions);
 			}
