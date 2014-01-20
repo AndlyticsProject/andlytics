@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.github.andlyticsproject"
     android:installLocation="auto"
-    android:versionCode="238"
-    android:versionName="2.5.6" >
+    android:versionCode="243"
+    android:versionName="2.5.7" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -19,7 +19,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="19" />
 
     <application
         android:name="AndlyticsApp"
