@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -114,8 +115,8 @@ public class StatsCsvReaderWriter {
 
 			line[11] = Utils.safeToString(stat.getNumberOfErrors());
 
-			line[12] = stat.getTotalRevenue() == null ? "" : stat.getTotalRevenue()
-					.amountAsString();
+			line[12] = stat.getTotalRevenue() == null ? "" : String.format("%.2f", stat
+					.getTotalRevenue().getAmount(), Locale.US);
 			line[13] = stat.getTotalRevenue() == null ? "" : stat.getTotalRevenue()
 					.getCurrencyCode();
 
