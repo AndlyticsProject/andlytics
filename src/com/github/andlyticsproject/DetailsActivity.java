@@ -2,6 +2,9 @@ package com.github.andlyticsproject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -93,6 +96,13 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 		hasRevenue = getIntent().getBooleanExtra(EXTRA_HAS_REVENUE, true);
 
 		ActionBar actionBar = getSupportActionBar();
+
+		if (iconFilePath != null) {
+			Bitmap bm = BitmapFactory.decodeFile(iconFilePath);
+			BitmapDrawable icon = new BitmapDrawable(getResources(), bm);
+			actionBar.setIcon(icon);
+		}
+		
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		Tab tab = actionBar
