@@ -17,7 +17,8 @@ repositories {
 }
 
 dependencies {
-	compile project(':actionbarsherlock')
+    compile 'com.android.support:support-v4:19.0.+'
+    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     compile "org.achartengine:achartengine:1.1.0"
     compile "ch.acra:acra:4.5.0"
     compile 'com.google.android.gms:play-services:4.0.30'
