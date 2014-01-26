@@ -141,6 +141,10 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 		}
 
 		int selectedTabIdx = getIntent().getExtras().getInt(EXTRA_SELECTED_TAB_IDX, 0);
+		// FIXME This is a hack to select AdMob in the case that the revenue tab isn't enabled
+		if (!hasRevenue && selectedTabIdx == TAB_IDX_ADMOB) {
+			selectedTabIdx = TAB_IDX_REVENUE;
+		}
 		if (savedInstanceState != null) {
 			selectedTabIdx = savedInstanceState.getInt(EXTRA_SELECTED_TAB_IDX, 0);
 		}
