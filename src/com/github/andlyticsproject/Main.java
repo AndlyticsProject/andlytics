@@ -619,7 +619,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 			for (AppInfo appInfo : allStats) {
 				if (!appInfo.isGhost()) {
-					if (appInfo.getAdmobSiteId() != null) {
+					if (appInfo.getAdmobSiteId() != null || appInfo.getAdmobAdUnitId() != null) {
 						List<AdmobStats> admobStats = db.getAdmobStats(appInfo.getAdmobSiteId(),
 								appInfo.getAdmobAdUnitId(), Timeframe.LAST_TWO_DAYS).getStats();
 						if (admobStats.size() > 0) {
