@@ -1,18 +1,5 @@
 package com.github.andlyticsproject.console.v2;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.HttpStatus;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpResponseException;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.util.Log;
@@ -26,6 +13,19 @@ import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.DeveloperConsoleAccount;
 import com.github.andlyticsproject.util.Utils;
+
+import org.apache.http.HttpStatus;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is a WIP class representing the new v2 version of the developer console.
@@ -61,7 +61,9 @@ public class DevConsoleV2 implements DevConsole {
 	private ResponseHandler<String> responseHandler = HttpClientFactory.createResponseHandler();
 
 	public static DevConsoleV2 createForAccount(String accountName, DefaultHttpClient httpClient) {
-		DevConsoleAuthenticator authenticator = new AccountManagerAuthenticator(accountName,
+		//		DevConsoleAuthenticator authenticator = new AccountManagerAuthenticator(accountName,
+		//				httpClient);
+		DevConsoleAuthenticator authenticator = new OauthAccountManagerAuthenticator(accountName,
 				httpClient);
 
 		return new DevConsoleV2(httpClient, authenticator, new DevConsoleV2Protocol());
