@@ -460,14 +460,24 @@ public class JsonParser {
 				comment.setAppVersion(version);
 			}
 
-			String commentLang = jsonComment.optJSONObject("5").getString("1");
-			String commentText = jsonComment.optJSONObject("5").getString("3");
+			JSONObject jsonCommentReview = jsonComment.optJSONObject("5");
+			String commentLang = jsonCommentReview.getString("1");
+			String commentText = jsonCommentReview.getString("3");
+			String commentTitle = jsonCommentReview.getString("2");
+
+			if (commentTitle.length() == 0) {
+				// Title field is empty, see if the title is part of the comment text
+				String originalTitleAndComment[] = commentText.split("\\t");
+				if (originalTitleAndComment.length == 2) {
+					commentTitle = originalTitleAndComment[0];
+					commentText = originalTitleAndComment[1];
+				}
+			}
+
 			comment.setLanguage(commentLang);
 			comment.setOriginalText(commentText);
 			// overwritten if translation is available
 			comment.setText(commentText);
-			
-			String commentTitle = jsonComment.optJSONObject("5").getString("2");
 			comment.setOriginalTitle(commentTitle);
 			comment.setTitle(commentTitle);
 
