@@ -19,6 +19,12 @@ https://plus.google.com/communities/106533634605835980810
 
 https://play.google.com/apps/testing/com.github.andlyticsproject
 
+### Nightly builds
+
+* http://andlytics.schoentoon.com/andlytics.apk
+
+You can check which commit it's build from at http://andlytics.schoentoon.com/latest_version and it'll get updated everynight just past midnight (GMT +1)
+
 
 ## License
 
@@ -57,13 +63,6 @@ For AdMob accounts that are linked to a Google Account you can find the API pass
 
 Keywords: Developer console, developer tools, android developers
 
-## Nightly builds
-
-Not working, don't use
-
-* http://andlytics.schoentoon.com/andlytics.apk
-
-You can check which commit it's build from at http://andlytics.schoentoon.com/latest_version and it'll get updated everynight just past midnight (GMT +1)
 
 ## Contributing
 
