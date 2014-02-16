@@ -24,23 +24,27 @@ import com.github.andlyticsproject.model.DeveloperConsoleAccount;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class AccountManagerAuthenticator extends BaseAuthenticator {
+public class OauthAccountManagerAuthenticator extends BaseAuthenticator {
 
-	private static final String TAG = AccountManagerAuthenticator.class.getSimpleName();
+	private static final String TAG = OauthAccountManagerAuthenticator.class.getSimpleName();
 
 	private static final String DEVELOPER_CONSOLE_URL = "https://play.google.com/apps/publish/";
-	private static final Uri ISSUE_AUTH_TOKEN_URL = Uri
-			.parse("https://www.google.com/accounts/IssueAuthToken?service=gaia&Session=false");
-	private static final Uri TOKEN_AUTH_URL = Uri
-			.parse("https://www.google.com/accounts/TokenAuth");
+
+	private static final String OAUTH_LOGIN_SCOPE = "oauth2:https://www.google.com/accounts/OAuthLogin";
+	private static final String OAUTH_LOGIN_URL = "https://accounts.google.com/OAuthLogin?source=ChromiumBrowser&issueuberauth=1";
+	private static final String MERGE_SESSION_URL = "https://accounts.google.com/MergeSession";
 
 	private static final int REQUEST_AUTHENTICATE = 42;
 
@@ -53,17 +57,12 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 
 	private DefaultHttpClient httpClient;
 
-	public AccountManagerAuthenticator(String accountName, DefaultHttpClient httpClient) {
+	public OauthAccountManagerAuthenticator(String accountName, DefaultHttpClient httpClient) {
 		super(accountName);
 		this.accountManager = AccountManager.get(AndlyticsApp.getInstance());
 		this.httpClient = httpClient;
 	}
 
-	// as described here: http://www.slideshare.net/pickerweng/chromium-os-login
-	// http://www.chromium.org/chromium-os/chromiumos-design-docs/login
-	// and implemented by the Android Browser:
-	// packages/apps/Browser/src/com/android/browser/GoogleAccountLogin.java
-	// packages/apps/Browser/src/com/android/browser/DeviceAccountLogin.java
 	@Override
 	public SessionCredentials authenticate(Activity activity, boolean invalidate)
 			throws AuthenticationException {
@@ -99,8 +98,7 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 				accountManager.invalidateAuthToken(account.type, webloginUrl);
 			}
 
-			Bundle authResult = accountManager.getAuthToken(account,
-					"weblogin:service=androiddeveloper&continue=" + DEVELOPER_CONSOLE_URL, false,
+			Bundle authResult = accountManager.getAuthToken(account, OAUTH_LOGIN_SCOPE, false,
 					null, null).getResult();
 			if (authResult.containsKey(AccountManager.KEY_INTENT)) {
 				Intent authIntent = authResult.getParcelable(AccountManager.KEY_INTENT);
@@ -135,58 +133,46 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 
 				return null;
 			}
-			webloginUrl = authResult.getString(AccountManager.KEY_AUTHTOKEN);
-			if (webloginUrl == null) {
+
+			String oauthLoginToken = authResult.getString(AccountManager.KEY_AUTHTOKEN);
+			if (oauthLoginToken == null) {
 				throw new AuthenticationException(
 						"Unexpected authentication error: weblogin URL = null");
 			}
 			if (DEBUG) {
-				Log.d(TAG, "Weblogin URL: " + webloginUrl);
+				Log.d(TAG, "OAuth Login token: " + webloginUrl);
 			}
 
-			if (!webloginUrl.contains("MergeSession") || webloginUrl.contains("WILL_NOT_SIGN_IN")) {
-				Log.d(TAG, "Most probably additional verification is required, "
-						+ "opening browser");
-
-				String sid = accountManager
-						.getAuthToken(account, "SID", null, activity, null, null).getResult()
-						.getString(AccountManager.KEY_AUTHTOKEN);
-				if (sid == null) {
-					throw new AuthenticationException("Authentication error: cannot get SID.");
-				}
-				String lsid = accountManager
-						.getAuthToken(account, "LSID", null, activity, null, null).getResult()
-						.getString(AccountManager.KEY_AUTHTOKEN);
-				if (lsid == null) {
-					throw new AuthenticationException("Authentication error: cannot get LSID.");
-				}
-
-				String url = ISSUE_AUTH_TOKEN_URL.buildUpon().appendQueryParameter("SID", sid)
-						.appendQueryParameter("LSID", lsid).build().toString();
-				HttpPost getUberToken = new HttpPost(url);
-				HttpResponse response = httpClient.execute(getUberToken);
-				int status = response.getStatusLine().getStatusCode();
-				if (status == HttpStatus.SC_UNAUTHORIZED) {
-					throw new AuthenticationException("Cannot get uber token: "
-							+ response.getStatusLine());
-				}
-				String uberToken = EntityUtils.toString(response.getEntity(), "UTF-8");
-				if (uberToken == null || "".equals(uberToken)) {
-					throw new AuthenticationException("Invalid ubertoken");
-				}
-				if (DEBUG) {
-					Log.d(TAG, "Uber token: " + uberToken);
-				}
-
-				webloginUrl = TOKEN_AUTH_URL.buildUpon()
-						.appendQueryParameter("source", "android-browser")
-						.appendQueryParameter("auth", uberToken)
-						.appendQueryParameter("continue", DEVELOPER_CONSOLE_URL).build().toString();
-			}
-
-			HttpGet getConsole = new HttpGet(webloginUrl);
-			HttpResponse response = httpClient.execute(getConsole);
+			HttpGet getOauthUberToken = new HttpGet(OAUTH_LOGIN_URL);
+			getOauthUberToken.addHeader("Authorization", "OAuth " + oauthLoginToken);
+			HttpResponse response = httpClient.execute(getOauthUberToken);
 			int status = response.getStatusLine().getStatusCode();
+			if (status == HttpStatus.SC_UNAUTHORIZED) {
+				throw new AuthenticationException("Cannot get uber token: "
+						+ response.getStatusLine());
+			}
+			String uberToken = EntityUtils.toString(response.getEntity(), "UTF-8");
+			Log.d(TAG, "uber token: " + uberToken);
+			if (uberToken == null || "".equals(uberToken) || uberToken.contains("Error")) {
+				throw new AuthenticationException("Cannot get uber token. Got: " + uberToken);
+			}
+
+			HttpPost getConsole = new HttpPost(MERGE_SESSION_URL);
+			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+			pairs.add(new BasicNameValuePair("uberauth", uberToken));
+			pairs.add(new BasicNameValuePair("continue", DEVELOPER_CONSOLE_URL));
+			pairs.add(new BasicNameValuePair("source", "ChromiumBrowser"));
+			// for debugging?
+			webloginUrl = Uri.parse(MERGE_SESSION_URL).buildUpon()
+					.appendQueryParameter("source", "ChromiumBrowser")
+					.appendQueryParameter("uberauth", uberToken)
+					.appendQueryParameter("continue", DEVELOPER_CONSOLE_URL).build().toString();
+			Log.d(TAG, "MergeSession URL: " + webloginUrl);
+
+			UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(pairs, "UTF-8");
+			getConsole.setEntity(formEntity);
+			response = httpClient.execute(getConsole);
+			status = response.getStatusLine().getStatusCode();
 			if (status == HttpStatus.SC_UNAUTHORIZED) {
 				throw new AuthenticationException("Authentication token expired: "
 						+ response.getStatusLine());

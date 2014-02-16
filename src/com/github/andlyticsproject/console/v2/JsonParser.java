@@ -466,14 +466,29 @@ public class JsonParser {
 			comment.setOriginalText(commentText);
 			// overwritten if translation is available
 			comment.setText(commentText);
+			
+			String commentTitle = jsonComment.optJSONObject("5").getString("2");
+			comment.setOriginalTitle(commentTitle);
+			comment.setTitle(commentTitle);
 
 			JSONObject translation = jsonComment.optJSONObject("11");
 			if (translation != null) {
 				String displayLanguage = Locale.getDefault().getLanguage();
 				String translationLang = translation.getString("1");
-				String translationText = translation.getString("3");
-				if (translationLang.contains(displayLanguage)) {
-					comment.setText(translationText);
+				
+				if(translation.has("2")) {
+					String translationTitle = translation.getString("2");
+					if (translationLang.contains(displayLanguage)) {
+						comment.setTitle(translationTitle);
+					}
+				}
+				// Apparently, a translation body is not always provided
+				// Possibly happens if the translation fails or equals the original
+				if(translation.has("3")) {
+					String translationText = translation.getString("3");
+					if (translationLang.contains(displayLanguage)) {
+						comment.setText(translationText);
+					}
 				}
 			}
 
