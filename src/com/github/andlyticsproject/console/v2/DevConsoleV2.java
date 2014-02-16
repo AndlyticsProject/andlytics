@@ -1,18 +1,5 @@
 package com.github.andlyticsproject.console.v2;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.HttpStatus;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpResponseException;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.util.Log;
@@ -28,6 +15,19 @@ import com.github.andlyticsproject.model.DeveloperConsoleAccount;
 import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.Utils;
+
+import org.apache.http.HttpStatus;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is a WIP class representing the new v2 version of the developer console.
@@ -63,7 +63,9 @@ public class DevConsoleV2 implements DevConsole {
 	private ResponseHandler<String> responseHandler = HttpClientFactory.createResponseHandler();
 
 	public static DevConsoleV2 createForAccount(String accountName, DefaultHttpClient httpClient) {
-		DevConsoleAuthenticator authenticator = new AccountManagerAuthenticator(accountName,
+		// DevConsoleAuthenticator authenticator = new AccountManagerAuthenticator(accountName,
+		// httpClient);
+		DevConsoleAuthenticator authenticator = new OauthAccountManagerAuthenticator(accountName,
 				httpClient);
 
 		return new DevConsoleV2(httpClient, authenticator, new DevConsoleV2Protocol());
@@ -125,22 +127,22 @@ public class DevConsoleV2 implements DevConsole {
 			app.setTotalRevenueSummary(revenue);
 			// this is currently the same as the last item of the historical
 			// data, so save some cycles and don't parse historical
-			// XXX the definition of 'last day' is unclear: GMT? 
+			// XXX the definition of 'last day' is unclear: GMT?
 			if (revenue != null) {
 				stats.setTotalRevenue(revenue.getLastDay());
 			}
 
 			// only works on 11+
-			// XXX the latest recorded revenue is not necessarily today's 
+			// XXX the latest recorded revenue is not necessarily today's
 			// revenue. Check the date and do something clever or revise
 			// how of all this is stored?
 
-			//			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			//				Revenue latestRevenue = fetchLatestTotalRevenue(app);
-			//				if (latestRevenue != null) {
-			//					stats.setTotalRevenue(latestRevenue.getAmount());
-			//				}
-			//			}
+			// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			// Revenue latestRevenue = fetchLatestTotalRevenue(app);
+			// if (latestRevenue != null) {
+			// stats.setTotalRevenue(latestRevenue.getAmount());
+			// }
+			// }
 		}
 
 		return apps;
@@ -285,9 +287,9 @@ public class DevConsoleV2 implements DevConsole {
 	 * Fetches ratings for the given packageName and adds them to the given {@link AppStats} object
 	 * 
 	 * @param packageName
-	 * The app to fetch ratings for
+	 *            The app to fetch ratings for
 	 * @param stats
-	 * The AppStats object to add them to
+	 *            The AppStats object to add them to
 	 * @throws DevConsoleException
 	 */
 	private void fetchRatings(AppInfo appInfo, AppStats stats) throws DevConsoleException {
@@ -352,8 +354,8 @@ public class DevConsoleV2 implements DevConsole {
 			return protocol.parseRevenueResponse(response);
 		} catch (NetworkException e) {
 			// XXX not pretty, maybe use a dedicated exception?
-			// if we don't have 'view financial info' permission for an app 
-			// getting revenue returns 403. 
+			// if we don't have 'view financial info' permission for an app
+			// getting revenue returns 403.
 			// same sems to apply for 500
 			if (e.getStatusCode() == HttpStatus.SC_FORBIDDEN
 					|| e.getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
@@ -374,8 +376,8 @@ public class DevConsoleV2 implements DevConsole {
 			return protocol.parseLatestTotalRevenue(response);
 		} catch (NetworkException e) {
 			// XXX not pretty, maybe use a dedicated exception?
-			// if we don't have 'view financial info' permission for an app 
-			// getting revenue returns 403. 
+			// if we don't have 'view financial info' permission for an app
+			// getting revenue returns 403.
 			// same sems to apply for 500
 			if (e.getStatusCode() == HttpStatus.SC_FORBIDDEN
 					|| e.getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {

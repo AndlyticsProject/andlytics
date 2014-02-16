@@ -115,8 +115,8 @@ public class StatsCsvReaderWriter {
 
 			line[11] = Utils.safeToString(stat.getNumberOfErrors());
 
-			line[12] = stat.getTotalRevenue() == null ? "" : String.format("%.2f", stat
-					.getTotalRevenue().getAmount(), Locale.US);
+			line[12] = stat.getTotalRevenue() == null ? "" : String.format(Locale.US, "%.2f", stat
+					.getTotalRevenue().getAmount());
 			line[13] = stat.getTotalRevenue() == null ? "" : stat.getTotalRevenue()
 					.getCurrencyCode();
 
