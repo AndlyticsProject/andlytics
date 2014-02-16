@@ -471,9 +471,14 @@ public class JsonParser {
 			if (translation != null) {
 				String displayLanguage = Locale.getDefault().getLanguage();
 				String translationLang = translation.getString("1");
-				String translationText = translation.getString("3");
-				if (translationLang.contains(displayLanguage)) {
-					comment.setText(translationText);
+				
+				// Apparently, a translation body is not always provided
+				// Possibly happens if the translation fails or equals the original
+				if(translation.has("3")) {
+					String translationText = translation.getString("3");
+					if (translationLang.contains(displayLanguage)) {
+						comment.setText(translationText);
+					}
 				}
 			}
 
