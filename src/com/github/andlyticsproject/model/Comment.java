@@ -14,10 +14,14 @@ public class Comment extends Statistic {
 	// looks like this: 'gp:AOqpTOGnebkY.....'
 	private String uniqueId;
 
+	private String title;
+	
 	// this is either the translated text, or the same as originalText, 
 	// depending on display language (current locale)
 	private String text;
 
+	private String originalTitle;
+	
 	// text in original language
 	private String originalText;
 
@@ -51,6 +55,14 @@ public class Comment extends Statistic {
 	public void setUniqueId(String uniqueId) {
 		this.uniqueId = uniqueId;
 	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 	public String getText() {
 		return text;
@@ -60,6 +72,14 @@ public class Comment extends Statistic {
 		this.text = text;
 	}
 
+	public String getOriginalTitle() {
+		return originalTitle;
+	}
+
+	public void setOriginalTitle(String originalTitle) {
+		this.originalTitle = originalTitle;
+	}
+	
 	public String getOriginalText() {
 		return originalText;
 	}

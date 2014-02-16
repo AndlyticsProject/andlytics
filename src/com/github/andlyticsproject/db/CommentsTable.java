@@ -16,6 +16,7 @@ public class CommentsTable {
 
 	public static final String KEY_ROWID = "_id";
 	public static final String KEY_COMMENT_PACKAGENAME = "packagename";
+	public static final String KEY_COMMENT_TITLE = "title";
 	public static final String KEY_COMMENT_TEXT = "text";
 	public static final String KEY_COMMENT_DATE = "date";
 	public static final String KEY_COMMENT_USER = "user";
@@ -25,6 +26,7 @@ public class CommentsTable {
 	public static final String KEY_COMMENT_REPLY_TEXT = "reply_text";
 	public static final String KEY_COMMENT_REPLY_DATE = "reply_date";
 	public static final String KEY_COMMENT_LANGUAGE = "language";
+	public static final String KEY_COMMENT_ORIGINAL_TITLE = "original_title";
 	public static final String KEY_COMMENT_ORIGINAL_TEXT = "original_text";
 	public static final String KEY_COMMENT_UNIQUE_ID = "unique_id";
 
@@ -32,9 +34,11 @@ public class CommentsTable {
 			+ " (_id integer primary key autoincrement, " + KEY_COMMENT_PACKAGENAME
 			+ " text not null," + KEY_COMMENT_DATE + " text not null," + KEY_COMMENT_USER
 			+ " text," + KEY_COMMENT_DEVICE + " text," + KEY_COMMENT_APP_VERSION + " text,"
-			+ KEY_COMMENT_TEXT + " text not null," + KEY_COMMENT_RATING + " integer,"
+			+ KEY_COMMENT_TITLE + " text not null," + KEY_COMMENT_TEXT + " text not null,"
+			+ KEY_COMMENT_RATING + " integer,"
 			+ KEY_COMMENT_REPLY_TEXT + " text," + KEY_COMMENT_REPLY_DATE + " text, "
-			+ KEY_COMMENT_LANGUAGE + " text," + KEY_COMMENT_ORIGINAL_TEXT + " text, "
+			+ KEY_COMMENT_LANGUAGE + " text," 
+			+ KEY_COMMENT_ORIGINAL_TITLE + " text, " + KEY_COMMENT_ORIGINAL_TEXT + " text, "
 			+ KEY_COMMENT_UNIQUE_ID + " text)";
 
 	public static HashMap<String, String> PROJECTION_MAP;
@@ -43,24 +47,20 @@ public class CommentsTable {
 		PROJECTION_MAP = new HashMap<String, String>();
 
 		PROJECTION_MAP.put(CommentsTable.KEY_ROWID, CommentsTable.KEY_ROWID);
-		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_PACKAGENAME,
-				CommentsTable.KEY_COMMENT_PACKAGENAME);
+		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_PACKAGENAME, CommentsTable.KEY_COMMENT_PACKAGENAME);
+		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_TITLE, CommentsTable.KEY_COMMENT_TITLE);
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_TEXT, CommentsTable.KEY_COMMENT_TEXT);
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_DATE, CommentsTable.KEY_COMMENT_DATE);
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_USER, CommentsTable.KEY_COMMENT_USER);
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_RATING, CommentsTable.KEY_COMMENT_RATING);
-		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_APP_VERSION,
-				CommentsTable.KEY_COMMENT_APP_VERSION);
+		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_APP_VERSION, CommentsTable.KEY_COMMENT_APP_VERSION);
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_DEVICE, CommentsTable.KEY_COMMENT_DEVICE);
-		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_REPLY_TEXT,
-				CommentsTable.KEY_COMMENT_REPLY_TEXT);
-		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_REPLY_DATE,
-				CommentsTable.KEY_COMMENT_REPLY_DATE);
+		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_REPLY_TEXT, CommentsTable.KEY_COMMENT_REPLY_TEXT);
+		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_REPLY_DATE, CommentsTable.KEY_COMMENT_REPLY_DATE);
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_LANGUAGE, CommentsTable.KEY_COMMENT_LANGUAGE);
-		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_ORIGINAL_TEXT,
-				CommentsTable.KEY_COMMENT_ORIGINAL_TEXT);
-		PROJECTION_MAP
-				.put(CommentsTable.KEY_COMMENT_UNIQUE_ID, CommentsTable.KEY_COMMENT_UNIQUE_ID);
+		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_ORIGINAL_TITLE, CommentsTable.KEY_COMMENT_ORIGINAL_TITLE);
+		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_ORIGINAL_TEXT,	CommentsTable.KEY_COMMENT_ORIGINAL_TEXT);
+		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_UNIQUE_ID, CommentsTable.KEY_COMMENT_UNIQUE_ID);
 
 	}
 

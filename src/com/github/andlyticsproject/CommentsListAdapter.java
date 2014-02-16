@@ -123,28 +123,17 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		} else {
 			boolean showTranslations = Preferences.isShowCommentAutoTranslations(context);
 			String commentText = comment.getText();
+			String commentTitle = comment.getTitle();
 			if (!showTranslations && comment.getOriginalText() != null) {
 				commentText = comment.getOriginalText();
 			}
-
-			// XXX translations replace the tab delimiter with space, so
-			// no way to separate the title. Show title in original language
-			// for now
-			String originalTitleAndComment[] = comment.getOriginalText() == null ? null : comment
-					.getOriginalText().split("\\t");
-			if (originalTitleAndComment != null && originalTitleAndComment.length > 1) {
-				holder.title.setText(originalTitleAndComment[0]);
-				if (showTranslations) {
-					holder.text.setText(commentText);
-				} else {
-					holder.text.setText(originalTitleAndComment[1]);
-				}
-				holder.text.setVisibility(View.VISIBLE);
-			} else {
-				holder.text.setText(commentText);
-				holder.title.setText(null);
-				holder.title.setVisibility(View.GONE);
+			if (!showTranslations && comment.getOriginalTitle() != null) {
+				commentTitle = comment.getOriginalTitle();
 			}
+			
+			holder.text.setText(commentText);
+			holder.title.setText(commentTitle);
+
 			// italic for translated text
 			boolean translated = showTranslations && comment.isTranslated();
 			holder.text.setTextAppearance(context, translated ? R.style.italicText
