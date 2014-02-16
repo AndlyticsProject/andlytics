@@ -85,6 +85,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 		if (holder.language != null) {
 			final TextView commentText = holder.text;
+			final TextView commentTitle = holder.title;
 			holder.language.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -97,9 +98,13 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 					if (comment.getText().equals(commentText.getText().toString())) {
 						commentText.setText(comment.getOriginalText());
 						commentText.setTextAppearance(context, R.style.normalText);
+						commentTitle.setText(comment.getOriginalTitle());
+						commentTitle.setTextAppearance(context, R.style.boldText);
 					} else {
 						commentText.setText(comment.getText());
 						commentText.setTextAppearance(context, R.style.italicText);
+						commentTitle.setText(comment.getTitle());
+						commentTitle.setTextAppearance(context, R.style.boldItalicText);
 					}
 				}
 			});
@@ -138,6 +143,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			boolean translated = showTranslations && comment.isTranslated();
 			holder.text.setTextAppearance(context, translated ? R.style.italicText
 					: R.style.normalText);
+			holder.title.setTextAppearance(context, translated ? R.style.boldItalicText
+					: R.style.boldText);
 
 			holder.user.setText(comment.getUser() == null ? context
 					.getString(R.string.comment_no_user_info) : comment.getUser());
