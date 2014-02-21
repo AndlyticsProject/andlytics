@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.andlyticsproject.admob.AdmobAccountAuthenticator;
 import com.github.andlyticsproject.admob.AdmobAuthenticationUtilities;
 import com.github.andlyticsproject.admob.AdmobRequest;
 
@@ -138,7 +139,7 @@ public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
 	}
 
 	private void finishConfirmCredentials(boolean result) {
-		Account account = new Account(mUsername, Constants.ACCOUNT_TYPE_ADMOB);
+		Account account = new Account(mUsername, AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB);
 		mAccountManager.setPassword(account, mPassword);
 		Intent intent = new Intent();
 		intent.putExtra(AccountManager.KEY_BOOLEAN_RESULT, result);
@@ -148,7 +149,7 @@ public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
 	}
 
 	private void finishLogin() {
-		Account account = new Account(mUsername, Constants.ACCOUNT_TYPE_ADMOB);
+		Account account = new Account(mUsername, AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB);
 		if (mRequestNewAccount) {
 			mAccountManager.addAccountExplicitly(account, mPassword, null);
 			ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true);
@@ -158,8 +159,8 @@ public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
 		Intent intent = new Intent();
 		mAuthtoken = mPassword;
 		intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mUsername);
-		intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE_ADMOB);
-		if (mAuthtokenType != null && mAuthtokenType.equals(Constants.AUTHTOKEN_TYPE_ADMOB)) {
+		intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB);
+		if (mAuthtokenType != null && mAuthtokenType.equals(AdmobAccountAuthenticator.AUTHTOKEN_TYPE_ADMOB)) {
 			intent.putExtra(AccountManager.KEY_AUTHTOKEN, mAuthtoken);
 		}
 		setAccountAuthenticatorResult(intent.getExtras());
@@ -167,10 +168,12 @@ public class AdmobAuthenticatorActivity extends AccountAuthenticatorActivity {
 		finish();
 	}
 
+	@SuppressWarnings("deprecation")
 	private void showProgress() {
 		showDialog(0);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void hideProgress() {
 		try {
 			dismissDialog(0);

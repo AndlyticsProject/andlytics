@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@color/andBackground">
+
+	<RelativeLayout
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:inAnimation="@anim/view_switcher_fade_in"
+		android:outAnimation="@anim/view_switcher_fade_out"
+		android:id="@+id/comments_list_frame"
+		android:layout_above="@+id/comments_buttonbarSpacer">
+
+		<ExpandableListView
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:id="@+id/comments_list"
+			android:cacheColorHint="#00000000"
+			android:paddingLeft="0dp"
+			android:paddingRight="0dp"
+			android:dividerHeight="1dp"
+			android:paddingTop="5dp"
+			android:background="@color/andBackground"
+			android:divider="@color/andBackground" />
+
+		<RelativeLayout
+			android:id="@+id/comments_nocomments"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:background="@color/andBackground"
+			android:visibility="gone">
+			<TextView
+				style="@style/MainTableText"
+				android:text="@string/no_comments_found"
+				android:textStyle="normal"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_centerVertical="true"
+				android:layout_centerHorizontal="true"
+				android:gravity="center"
+				android:padding="10dp" />
+		</RelativeLayout>
+
+	</RelativeLayout>
+
+</RelativeLayout>

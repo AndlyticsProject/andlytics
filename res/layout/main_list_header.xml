@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="right">
 
-	<View
-		android:layout_width="fill_parent"
-		android:layout_height="5dp" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"        
+        android:paddingRight="2dp"
+        android:layout_gravity="center"
+        android:src="@drawable/icon_refresh_dark_small" />
+
+    <TextView
+        android:id="@+id/main_app_status_line"
+        style="@style/MainTableText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dp"
+        android:paddingTop="1dp"
+        android:paddingRight="4dp"
+        android:textColor="@color/greyText" />
 
 </LinearLayout>

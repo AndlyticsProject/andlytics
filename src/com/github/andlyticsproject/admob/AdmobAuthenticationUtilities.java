@@ -30,7 +30,6 @@ import android.util.Log;
 import java.io.IOException;
 
 import com.github.andlyticsproject.AdmobAuthenticatorActivity;
-import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.console.NetworkException;
 
 /**
@@ -161,7 +160,7 @@ public class AdmobAuthenticationUtilities {
 
 		AccountManager manager = AccountManager.get(context);
 		if (accountName != null) {
-			Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE_ADMOB);
+			Account[] accounts = manager.getAccountsByType(AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB);
 			int size = accounts.length;
 			for (int i = 0; i < size; i++) {
 				Account ac = accounts[i];
@@ -189,7 +188,7 @@ public class AdmobAuthenticationUtilities {
 
 		Bundle bundle;
 		try {
-			bundle = manager.getAuthToken(account, Constants.AUTHTOKEN_TYPE_ADMOB, true, null, null)
+			bundle = manager.getAuthToken(account, AdmobAccountAuthenticator.AUTHTOKEN_TYPE_ADMOB, true, null, null)
 								.getResult();
 
 			if (bundle.containsKey(AccountManager.KEY_INTENT)) {
@@ -234,7 +233,7 @@ public class AdmobAuthenticationUtilities {
 		Log.d(TAG, "invalidate admob token");
 
 		AccountManager manager = AccountManager.get(context);
-		manager.invalidateAuthToken(Constants.ACCOUNT_TYPE_ADMOB, token);
+		manager.invalidateAuthToken(AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB, token);
 
 	}
 

@@ -31,7 +31,7 @@ public class Chart extends AbstractChart {
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public enum ChartSet {
-		RATINGS, DOWNLOADS, ADMOB
+		RATINGS, DOWNLOADS, REVENUE, ADMOB
 	}
 
 	/*
@@ -171,7 +171,10 @@ public class Chart extends AbstractChart {
 
 		double[] highlightValuesArray = new double[highlightDates.size()];
 
-		double highestValue = Double.MIN_VALUE;
+		// This could break something, but we don't (?) use negative 
+		// stats, so should be OK. Passing Double.MIN_VALUE to achartengine 
+		// crashes Android, so not a good idea to use it. Cf. #464
+		double highestValue = 0;//Double.MIN_VALUE;
 		double lowestValue = Double.MAX_VALUE;
 
 		for (int i = 0; i < statsForApp.size(); i++) {

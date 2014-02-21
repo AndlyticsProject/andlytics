@@ -1,5 +1,19 @@
 package com.github.andlyticsproject.io;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.os.Environment;
+import android.text.TextUtils;
+import android.util.Log;
+
+import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
+
+import com.github.andlyticsproject.model.AppStats;
+import com.github.andlyticsproject.model.Revenue;
+import com.github.andlyticsproject.util.FileUtils;
+import com.github.andlyticsproject.util.Utils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,21 +26,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.os.Environment;
-import android.text.TextUtils;
-import android.util.Log;
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
-
-import com.github.andlyticsproject.model.AppStats;
-import com.github.andlyticsproject.util.FileUtils;
 
 @SuppressLint("SimpleDateFormat")
 public class StatsCsvReaderWriter {
@@ -36,7 +40,7 @@ public class StatsCsvReaderWriter {
 	public static final String[] HEADER_LIST = new String[] { "PACKAGE_NAME", "DATE",
 			"TOTAL_DOWNLOADS", "ACTIVE_INSTALLS", "NUMBER_OF_COMMENTS", "1_STAR_RATINGS",
 			"2_STAR_RATINGS", "3_STAR_RATINGS", "4_STAR_RATINGS", "5_STAR_RATINGS", "VERSION_CODE",
-			"NUM_ERRORS" };
+			"NUM_ERRORS", "TOTAL_REVENUE", "CURRENCY" };
 
 	private static final String EXPORT_DIR = "andlytics/";
 
@@ -82,10 +86,12 @@ public class StatsCsvReaderWriter {
 	public StatsCsvReaderWriter(Context context) {
 	}
 
+	@SuppressWarnings("resource")
 	public void writeStats(String packageName, List<AppStats> stats, ZipOutputStream zip)
 			throws IOException {
 		zip.putNextEntry(new ZipEntry(packageName + CSV_SUFFIX));
 
+		// we don't own the stream, it's closed by the caller
 		CSVWriter writer = new CSVWriter(new OutputStreamWriter(zip));
 		writer.writeNext(HEADER_LIST);
 
@@ -94,20 +100,25 @@ public class StatsCsvReaderWriter {
 		for (AppStats stat : stats) {
 
 			line[0] = packageName;
-			line[1] = createTimestampFormat().format(stat.getRequestDate());
-			line[2] = stat.getTotalDownloads() + "";
-			line[3] = stat.getActiveInstalls() + "";
-			line[4] = stat.getNumberOfComments() + "";
+			line[1] = createTimestampFormat().format(stat.getDate());
+			line[2] = Integer.toString(stat.getTotalDownloads());
+			line[3] = Integer.toString(stat.getActiveInstalls());
+			line[4] = Integer.toString(stat.getNumberOfComments());
 
-			line[5] = stat.getRating1() + "";
-			line[6] = stat.getRating2() + "";
-			line[7] = stat.getRating3() + "";
-			line[8] = stat.getRating4() + "";
-			line[9] = stat.getRating5() + "";
+			line[5] = Utils.safeToString(stat.getRating1());
+			line[6] = Utils.safeToString(stat.getRating2());
+			line[7] = Utils.safeToString(stat.getRating3());
+			line[8] = Utils.safeToString(stat.getRating4());
+			line[9] = Utils.safeToString(stat.getRating5());
 
-			line[10] = stat.getVersionCode() + "";
+			line[10] = Utils.safeToString(stat.getVersionCode());
 
-			line[11] = stat.getNumberOfErrors() == null ? "" : stat.getNumberOfErrors().toString();
+			line[11] = Utils.safeToString(stat.getNumberOfErrors());
+
+			line[12] = stat.getTotalRevenue() == null ? "" : String.format(Locale.US, "%.2f", stat
+					.getTotalRevenue().getAmount());
+			line[13] = stat.getTotalRevenue() == null ? "" : stat.getTotalRevenue()
+					.getCurrencyCode();
 
 			writer.writeNext(line);
 		}
@@ -133,6 +144,8 @@ public class StatsCsvReaderWriter {
 					result.add(entry.getName());
 				}
 			}
+
+			zipFile.close();
 			return result;
 		} catch (IOException e) {
 			Log.e(TAG, "Error reading zip file: " + e.getMessage());
@@ -156,7 +169,7 @@ public class StatsCsvReaderWriter {
 			String[] firstLine = reader.readNext();
 			if (firstLine != null) {
 				if (HEADER_LIST.length >= firstLine.length) {
-					for (int i = 0; i < HEADER_LIST.length - 1; i++) {
+					for (int i = 0; i < firstLine.length - 1; i++) {
 						if (!HEADER_LIST[i].equals(firstLine[i])) {
 							return false;
 						}
@@ -190,12 +203,14 @@ public class StatsCsvReaderWriter {
 		return filename.substring(0, suffixIdx);
 	}
 
+	@SuppressWarnings("resource")
 	public List<AppStats> readStats(InputStream in) throws ServiceException {
 
 		List<AppStats> appStats = new ArrayList<AppStats>();
 
 		CSVReader reader;
 		try {
+			// we don't own the stream, it's closed by the caller
 			reader = new CSVReader(new InputStreamReader(in));
 
 			String[] firstLine = reader.readNext();
@@ -208,7 +223,7 @@ public class StatsCsvReaderWriter {
 
 					AppStats stats = new AppStats();
 					stats.setPackageName(nextLine[0]);
-					stats.setRequestDate(createTimestampFormat().parse(nextLine[1]));
+					stats.setDate(createTimestampFormat().parse(nextLine[1]));
 					stats.setTotalDownloads(Integer.parseInt(nextLine[2]));
 					stats.setActiveInstalls(Integer.parseInt(nextLine[3]));
 					stats.setNumberOfComments(Integer.parseInt(nextLine[4]));
@@ -224,15 +239,23 @@ public class StatsCsvReaderWriter {
 
 					if (nextLine.length > 11) {
 						String numErrorsStr = nextLine[11];
-						stats.setNumberOfErrors(TextUtils.isEmpty(numErrorsStr) ? null : Integer
-								.parseInt(numErrorsStr));
+						stats.setNumberOfErrors(parseInt(numErrorsStr));
+					}
+
+					if (nextLine.length > 12) {
+						String totalRevenueStr = nextLine[12];
+						if (!TextUtils.isEmpty(totalRevenueStr)) {
+							String currency = nextLine[13];
+							stats.setTotalRevenue(new Revenue(Revenue.Type.TOTAL,
+									parseDouble(totalRevenueStr.trim()), currency));
+						}
 					}
 
 					appStats.add(stats);
 
 				}
-			}
 
+			}
 		} catch (FileNotFoundException e) {
 			throw new ServiceException(e);
 		} catch (IOException e) {
@@ -242,6 +265,14 @@ public class StatsCsvReaderWriter {
 		}
 
 		return appStats;
+	}
+
+	private Double parseDouble(String totalRevenueStr) {
+		return TextUtils.isEmpty(totalRevenueStr) ? null : Double.parseDouble(totalRevenueStr);
+	}
+
+	private Integer parseInt(String intStr) {
+		return TextUtils.isEmpty(intStr) ? null : Integer.parseInt(intStr);
 	}
 
 	public String readPackageName(String fileName) throws ServiceException {
@@ -270,6 +301,7 @@ public class StatsCsvReaderWriter {
 					packageName = nextLine[0];
 				}
 			}
+			reader.close();
 
 		} catch (FileNotFoundException e) {
 			throw new ServiceException(e);

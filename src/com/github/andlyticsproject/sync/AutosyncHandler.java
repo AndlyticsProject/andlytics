@@ -8,20 +8,21 @@ import android.content.ContentResolver;
 import android.content.PeriodicSync;
 import android.os.Bundle;
 
-import com.github.andlyticsproject.Constants;
 
 public class AutosyncHandler {	
 
 	public static int DEFAULT_PERIOD = 60 * 3; // 3 hours (in minutes)
+	public static final String ACCOUNT_AUTHORITY = "com.github.andlyticsproject";
+	public static final String ACCOUNT_TYPE_GOOGLE = "com.google";
 
 	public boolean isAutosyncEnabled(String accountName) {
-		Account account = new Account(accountName, Constants.ACCOUNT_TYPE_GOOGLE);
-		return ContentResolver.getSyncAutomatically(account, Constants.ACCOUNT_AUTHORITY);
+		Account account = new Account(accountName, AutosyncHandler.ACCOUNT_TYPE_GOOGLE);
+		return ContentResolver.getSyncAutomatically(account, AutosyncHandler.ACCOUNT_AUTHORITY);
 	}
 	
 	public void setAutosyncEnabled(String accountName, boolean enabled) {
-		Account account = new Account(accountName, Constants.ACCOUNT_TYPE_GOOGLE);
-		ContentResolver.setSyncAutomatically(account, Constants.ACCOUNT_AUTHORITY, enabled);
+		Account account = new Account(accountName, AutosyncHandler.ACCOUNT_TYPE_GOOGLE);
+		ContentResolver.setSyncAutomatically(account, AutosyncHandler.ACCOUNT_AUTHORITY, enabled);
 	}
 
 	/**
@@ -33,10 +34,10 @@ public class AutosyncHandler {
 
 		int result = 0;
 
-		Account account = new Account(accountName, Constants.ACCOUNT_TYPE_GOOGLE);
-		if (ContentResolver.getSyncAutomatically(account, Constants.ACCOUNT_AUTHORITY)) {
+		Account account = new Account(accountName, AutosyncHandler.ACCOUNT_TYPE_GOOGLE);
+		if (ContentResolver.getSyncAutomatically(account, AutosyncHandler.ACCOUNT_AUTHORITY)) {
 			List<PeriodicSync> periodicSyncs = ContentResolver.getPeriodicSyncs(account,
-					Constants.ACCOUNT_AUTHORITY);
+					AutosyncHandler.ACCOUNT_AUTHORITY);
 			for (PeriodicSync periodicSync : periodicSyncs) {
 				result = 60 * (int) periodicSync.period;
 				break;
@@ -54,13 +55,13 @@ public class AutosyncHandler {
 	public void setAutosyncPeriod(String accountName, Integer periodInMins) {
 
 		Bundle extras = new Bundle();
-		Account account = new Account(accountName, Constants.ACCOUNT_TYPE_GOOGLE);
+		Account account = new Account(accountName, AutosyncHandler.ACCOUNT_TYPE_GOOGLE);
 
 		if (periodInMins == 0) {
-			ContentResolver.setSyncAutomatically(account, Constants.ACCOUNT_AUTHORITY, false);
+			ContentResolver.setSyncAutomatically(account, AutosyncHandler.ACCOUNT_AUTHORITY, false);
 		} else {
-			ContentResolver.setSyncAutomatically(account, Constants.ACCOUNT_AUTHORITY, true);
-			ContentResolver.addPeriodicSync(account, Constants.ACCOUNT_AUTHORITY, extras, periodInMins * 60);
+			ContentResolver.setSyncAutomatically(account, AutosyncHandler.ACCOUNT_AUTHORITY, true);
+			ContentResolver.addPeriodicSync(account, AutosyncHandler.ACCOUNT_AUTHORITY, extras, periodInMins * 60);
 		}
 		
 	}

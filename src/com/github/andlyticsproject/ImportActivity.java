@@ -1,9 +1,5 @@
 package com.github.andlyticsproject;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -28,7 +24,14 @@ import com.github.andlyticsproject.io.ImportService;
 import com.github.andlyticsproject.io.ServiceException;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
+import com.github.andlyticsproject.util.FileUtils;
 import com.github.andlyticsproject.util.Utils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImportActivity extends SherlockFragmentActivity {
 
@@ -85,7 +88,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 				setFilenames(loadTask.getFilenames());
 			} else {
 				loadTask = new LoadImportDialogTask(this, accountName);
-				Utils.execute(loadTask, data.getPath());
+				Utils.execute(loadTask, data);
 			}
 		} else {
 			Log.w(TAG, "Don't know how to handle this action: " + getIntent().getAction());
@@ -198,7 +201,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 
 
 	private static class LoadImportDialogTask extends
-			DetachableAsyncTask<String, Void, Boolean, ImportActivity> {
+			DetachableAsyncTask<Uri, Void, Boolean, ImportActivity> {
 
 		ContentAdapter db;
 		String accountName;
@@ -210,7 +213,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 		}
 
 		private List<String> filenames = new ArrayList<String>();
-		private String zipFilename;
+		private Uri zipFileUri;
 
 		@Override
 		protected void onPreExecute() {
@@ -218,22 +221,48 @@ public class ImportActivity extends SherlockFragmentActivity {
 		}
 
 		@Override
-		protected Boolean doInBackground(String... params) {
+		protected Boolean doInBackground(Uri... params) {
 			if (activity == null) {
 				return false;
 			}
 
-			zipFilename = params[0];
+			zipFileUri = params[0];
 			List<String> pacakgeNames = db.getPackagesForAccount(accountName);
 			try {
-				filenames = StatsCsvReaderWriter.getImportFileNamesFromZip(
-						activity.getAccountName(), pacakgeNames, zipFilename);
+				String zipFilePath = zipFileUri.getPath();
+				File tempZip = null;
+				try {
+					if (!zipFileUri.getScheme().equalsIgnoreCase("file")) {
+						tempZip = copyToTempFile();
+						zipFilePath = tempZip.getAbsolutePath();
+					}
+					filenames = StatsCsvReaderWriter.getImportFileNamesFromZip(
+							activity.getAccountName(), pacakgeNames, zipFilePath);
+				} catch (IOException e) {
+					Log.e(TAG, "Error reading import zip file: " + e.getMessage());
+					return false;
+				} finally {
+					if (tempZip != null) {
+						tempZip.delete();
+					}
+				}
 
 				return true;
 			} catch (ServiceException e) {
 				Log.e(TAG, "Error reading import zip file: " + e.getMessage());
 				return false;
 			}
+		}
+
+		private File copyToTempFile() throws IOException {
+			File tempZip = File.createTempFile("andlytics-import", ".zip");
+			FileOutputStream out = new FileOutputStream(tempZip);
+			byte[] zipBytes = FileUtils.readFromUri(activity, zipFileUri);
+			out.write(zipBytes);
+			out.flush();
+			out.close();
+
+			return tempZip;
 		}
 
 		@Override

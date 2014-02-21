@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.github.andlyticsproject"
     android:installLocation="auto"
-    android:versionCode="247"
-    android:versionName="2.5.8" >
+    android:versionCode="250"
+    android:versionName="2.6.0" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -27,6 +27,7 @@
         android:backupAgent=".io.AndlyticsBackupAgent"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
+        android:requiredAccountType="com.google"
         android:theme="@style/Theme.Andlytics" >
         <activity
             android:name=".LoginActivity"
@@ -43,20 +44,8 @@
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
         <activity
-            android:name=".CommentsActivity"
-            android:label="@string/comments" >
-        </activity>
-        <activity
             android:name=".AppInfoActivity"
             android:label="@string/appinfo" >
-        </activity>
-        <activity
-            android:name=".ChartActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".AdmobActivity"
-            android:label="@string/app_name_admob" >
         </activity>
         <activity
             android:name=".AdmobAuthenticatorActivity"
@@ -114,6 +103,10 @@
             android:name=".about.AboutActivity"
             android:label="@string/about_title" >
         </activity>
+        <activity
+            android:name=".DetailsActivity"
+            android:label="@string/app_name" >
+        </activity>
 
         <service
             android:name=".sync.SyncAdapterService"
@@ -163,6 +156,9 @@
         <meta-data
             android:name="com.google.android.backup.api_key"
             android:value="@string/backup_api_key" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

@@ -13,7 +13,7 @@ import android.util.Log;
 
 import com.github.andlyticsproject.db.AndlyticsDb;
 
-@ReportsCrashes(formKey = "dHBKcnZqTHMyMHlfLTB0RjhMejZfbkE6MQ", sharedPreferencesMode = Context.MODE_PRIVATE, sharedPreferencesName = Preferences.PREF, mode = ReportingInteractionMode.TOAST)
+@ReportsCrashes(formKey = "dummy", sharedPreferencesMode = Context.MODE_PRIVATE, sharedPreferencesName = Preferences.PREF, mode = ReportingInteractionMode.TOAST)
 public class AndlyticsApp extends Application {
 
 	private static final String TAG = AndlyticsApp.class.getSimpleName();
@@ -49,7 +49,7 @@ public class AndlyticsApp extends Application {
 			String bugsenseUrl = getResources().getString(R.string.bugsense_url);
 			HttpSender bugSenseSender = new HttpSender(HttpSender.Method.POST,
 					HttpSender.Type.FORM, bugsenseUrl, null);
-			ACRA.getErrorReporter().addReportSender(bugSenseSender);
+			ACRA.getErrorReporter().setReportSender(bugSenseSender);
 		} catch (IllegalStateException e) {
 			Log.w(TAG, "ACRA.init() called more than once?: " + e.getMessage(), e);
 		}

@@ -12,6 +12,8 @@ import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.DeveloperConsoleAccount;
+import com.github.andlyticsproject.model.Revenue;
+import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.Utils;
 
 import org.apache.http.HttpStatus;
@@ -61,8 +63,6 @@ public class DevConsoleV2 implements DevConsole {
 	private ResponseHandler<String> responseHandler = HttpClientFactory.createResponseHandler();
 
 	public static DevConsoleV2 createForAccount(String accountName, DefaultHttpClient httpClient) {
-		//		DevConsoleAuthenticator authenticator = new AccountManagerAuthenticator(accountName,
-		//				httpClient);
 		DevConsoleAuthenticator authenticator = new OauthAccountManagerAuthenticator(accountName,
 				httpClient);
 
@@ -120,6 +120,27 @@ public class DevConsoleV2 implements DevConsole {
 			AppStats stats = app.getLatestStats();
 			fetchRatings(app, stats);
 			stats.setNumberOfComments(fetchCommentsCount(app, Utils.getDisplayLocale()));
+
+			RevenueSummary revenue = fetchRevenueSummary(app);
+			app.setTotalRevenueSummary(revenue);
+			// this is currently the same as the last item of the historical
+			// data, so save some cycles and don't parse historical
+			// XXX the definition of 'last day' is unclear: GMT?
+			if (revenue != null) {
+				stats.setTotalRevenue(revenue.getLastDay());
+			}
+
+			// only works on 11+
+			// XXX the latest recorded revenue is not necessarily today's
+			// revenue. Check the date and do something clever or revise
+			// how of all this is stored?
+
+			// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			// Revenue latestRevenue = fetchLatestTotalRevenue(app);
+			// if (latestRevenue != null) {
+			// stats.setTotalRevenue(latestRevenue.getAmount());
+			// }
+			// }
 		}
 
 		return apps;
@@ -264,9 +285,9 @@ public class DevConsoleV2 implements DevConsole {
 	 * Fetches ratings for the given packageName and adds them to the given {@link AppStats} object
 	 * 
 	 * @param packageName
-	 *            The app to fetch ratings for
+	 * The app to fetch ratings for
 	 * @param stats
-	 *            The AppStats object to add them to
+	 * The AppStats object to add them to
 	 * @throws DevConsoleException
 	 */
 	private void fetchRatings(AppInfo appInfo, AppStats stats) throws DevConsoleException {
@@ -319,6 +340,50 @@ public class DevConsoleV2 implements DevConsole {
 		comments.addAll(protocol.parseCommentsResponse(response));
 
 		return comments;
+	}
+
+	private RevenueSummary fetchRevenueSummary(AppInfo appInfo) throws DevConsoleException {
+		try {
+			String developerId = appInfo.getDeveloperId();
+			String response = post(protocol.createRevenueUrl(developerId),
+					protocol.createFetchRevenueSummaryRequest(appInfo.getPackageName()),
+					developerId);
+
+			return protocol.parseRevenueResponse(response);
+		} catch (NetworkException e) {
+			// XXX not pretty, maybe use a dedicated exception?
+			// if we don't have 'view financial info' permission for an app
+			// getting revenue returns 403.
+			// same sems to apply for 500
+			if (e.getStatusCode() == HttpStatus.SC_FORBIDDEN
+					|| e.getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+				return null;
+			}
+
+			throw e;
+		}
+	}
+
+	private Revenue fetchLatestTotalRevenue(AppInfo appInfo) throws DevConsoleException {
+		try {
+			String developerId = appInfo.getDeveloperId();
+			String response = post(protocol.createRevenueUrl(developerId),
+					protocol.createFetchHistoricalRevenueRequest(appInfo.getPackageName()),
+					developerId);
+
+			return protocol.parseLatestTotalRevenue(response);
+		} catch (NetworkException e) {
+			// XXX not pretty, maybe use a dedicated exception?
+			// if we don't have 'view financial info' permission for an app
+			// getting revenue returns 403.
+			// same sems to apply for 500
+			if (e.getStatusCode() == HttpStatus.SC_FORBIDDEN
+					|| e.getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+				return null;
+			}
+
+			throw e;
+		}
 	}
 
 	private boolean authenticateWithCachedCredentialas(Activity activity) {
@@ -374,7 +439,7 @@ public class DevConsoleV2 implements DevConsole {
 				throw new AuthenticationException(e);
 			}
 
-			throw new NetworkException(e);
+			throw new NetworkException(e, e.getStatusCode());
 		} catch (IOException e) {
 			throw new NetworkException(e);
 		}
