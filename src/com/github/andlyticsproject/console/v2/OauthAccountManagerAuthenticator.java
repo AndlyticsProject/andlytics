@@ -2,24 +2,22 @@ package com.github.andlyticsproject.console.v2;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 
 import com.github.andlyticsproject.AndlyticsApp;
-import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.model.DeveloperConsoleAccount;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.android.gms.auth.UserRecoverableNotifiedException;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -98,43 +96,50 @@ public class OauthAccountManagerAuthenticator extends BaseAuthenticator {
 				accountManager.invalidateAuthToken(account.type, webloginUrl);
 			}
 
-			Bundle authResult = accountManager.getAuthToken(account, OAUTH_LOGIN_SCOPE, false,
-					null, null).getResult();
-			if (authResult.containsKey(AccountManager.KEY_INTENT)) {
-				Intent authIntent = authResult.getParcelable(AccountManager.KEY_INTENT);
-				if (DEBUG) {
-					Log.w(TAG, "Got a reauthenticate intent: " + authIntent);
+			String oauthLoginToken = null;
+			if (activity == null) {
+				// background
+				try {
+					oauthLoginToken = GoogleAuthUtil.getTokenWithNotification(
+							AndlyticsApp.getInstance(), accountName, OAUTH_LOGIN_SCOPE, null);
+				} catch (UserRecoverableNotifiedException userNotifiedException) {
+					throw new AuthenticationException(
+							"Additional authentication requried, see notifications.");
+				} catch (GoogleAuthException authEx) {
+					// This is likely unrecoverable.
+					Log.e(TAG, "Unrecoverable authentication exception: " + authEx.getMessage(),
+							authEx);
+					throw new AuthenticationException("Authentication error: "
+							+ authEx.getMessage());
+				} catch (IOException ioEx) {
+					Log.w(TAG, "transient error encountered: " + ioEx.getMessage());
+					throw new NetworkException(ioEx.getMessage());
 				}
-
-				// silent mode, show notification
-				if (activity == null) {
-					Context ctx = AndlyticsApp.getInstance();
-					Builder builder = new NotificationCompat.Builder(ctx);
-					builder.setSmallIcon(R.drawable.statusbar_andlytics);
-					builder.setContentTitle(ctx.getResources().getString(R.string.auth_error,
-							accountName));
-					builder.setContentText(ctx.getResources().getString(R.string.auth_error,
-							accountName));
-					builder.setAutoCancel(true);
-					PendingIntent contentIntent = PendingIntent.getActivity(ctx,
-							accountName.hashCode(), authIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-					builder.setContentIntent(contentIntent);
-
-					NotificationManager nm = (NotificationManager) ctx
-							.getSystemService(Context.NOTIFICATION_SERVICE);
-					nm.notify(accountName.hashCode(), builder.build());
+			} else {
+				try {
+					oauthLoginToken = GoogleAuthUtil.getToken(activity, accountName,
+							OAUTH_LOGIN_SCOPE);
+				} catch (GooglePlayServicesAvailabilityException playEx) {
+					Dialog dialog = GooglePlayServicesUtil.getErrorDialog(
+							playEx.getConnectionStatusCode(), activity, REQUEST_AUTHENTICATE);
+					dialog.show();
 
 					return null;
+				} catch (UserRecoverableAuthException recoverableException) {
+					Intent recoveryIntent = recoverableException.getIntent();
+					activity.startActivityForResult(recoveryIntent, REQUEST_AUTHENTICATE);
+				} catch (GoogleAuthException authEx) {
+					// This is likely unrecoverable.
+					Log.e(TAG, "Unrecoverable authentication exception: " + authEx.getMessage(),
+							authEx);
+					throw new AuthenticationException("Authentication error: "
+							+ authEx.getMessage());
+				} catch (IOException ioEx) {
+					Log.w(TAG, "transient error encountered: " + ioEx.getMessage());
+					throw new NetworkException(ioEx.getMessage());
 				}
-
-				// activity mode, start activity
-				authIntent.setFlags(authIntent.getFlags() & ~Intent.FLAG_ACTIVITY_NEW_TASK);
-				activity.startActivityForResult(authIntent, REQUEST_AUTHENTICATE);
-
-				return null;
 			}
 
-			String oauthLoginToken = authResult.getString(AccountManager.KEY_AUTHTOKEN);
 			if (oauthLoginToken == null) {
 				throw new AuthenticationException(
 						"Unexpected authentication error: weblogin URL = null");
@@ -215,10 +220,6 @@ public class OauthAccountManagerAuthenticator extends BaseAuthenticator {
 			return result;
 		} catch (IOException e) {
 			throw new NetworkException(e);
-		} catch (OperationCanceledException e) {
-			throw new AuthenticationException(e);
-		} catch (AuthenticatorException e) {
-			throw new AuthenticationException(e);
 		}
 	}
 
