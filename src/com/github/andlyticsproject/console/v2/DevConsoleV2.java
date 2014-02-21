@@ -287,9 +287,9 @@ public class DevConsoleV2 implements DevConsole {
 	 * Fetches ratings for the given packageName and adds them to the given {@link AppStats} object
 	 * 
 	 * @param packageName
-	 *            The app to fetch ratings for
+	 * The app to fetch ratings for
 	 * @param stats
-	 *            The AppStats object to add them to
+	 * The AppStats object to add them to
 	 * @throws DevConsoleException
 	 */
 	private void fetchRatings(AppInfo appInfo, AppStats stats) throws DevConsoleException {
