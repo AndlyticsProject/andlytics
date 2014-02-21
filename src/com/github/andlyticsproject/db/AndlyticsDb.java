@@ -13,19 +13,21 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.github.andlyticsproject.Constants;
 import com.github.andlyticsproject.Preferences;
 import com.github.andlyticsproject.model.AppDetails;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.model.Link;
+import com.github.andlyticsproject.model.Revenue;
+import com.github.andlyticsproject.model.RevenueSummary;
+import com.github.andlyticsproject.sync.AutosyncHandler;
 import com.github.andlyticsproject.util.Utils;
 
 public class AndlyticsDb extends SQLiteOpenHelper {
 
 	private static final String TAG = AndlyticsDb.class.getSimpleName();
 
-	private static final int DATABASE_VERSION = 20;
+	private static final int DATABASE_VERSION = 24;
 
 	private static final String DATABASE_NAME = "andlytics";
 
@@ -56,6 +58,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		db.execSQL(DeveloperAccountsTable.TABLE_CREATE_DEVELOPER_ACCOUNT);
 		db.execSQL(LinksTable.TABLE_CREATE_LINKS);
 		db.execSQL(AppDetailsTable.TABLE_CREATE_APP_DETAILS);
+		db.execSQL(RevenueSummaryTable.TABLE_CREATE_REVENUE_SUMMARY);
 	}
 
 	@Override
@@ -167,7 +170,45 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			//			db.execSQL("ALTER table " + DeveloperAccountsTable.DATABASE_TABLE_NAME + " add "
 			//					+ DeveloperAccountsTable.DEVELOPER_ID + " text");
 		}
+		if (oldVersion < 21) {
+			Log.w(TAG, "Old version < 21 - adding revenue_summary table");
+			db.execSQL("DROP TABLE IF EXISTS " + RevenueSummaryTable.DATABASE_TABLE_NAME);
+			db.execSQL(RevenueSummaryTable.TABLE_CREATE_REVENUE_SUMMARY);
 
+			Log.w(TAG, "Old version < 21 - add new stats colums");
+			db.execSQL("ALTER table " + AppStatsTable.DATABASE_TABLE_NAME + " add "
+					+ AppStatsTable.KEY_STATS_TOTAL_REVENUE + " double");
+			db.execSQL("ALTER table " + AppStatsTable.DATABASE_TABLE_NAME + " add "
+					+ AppStatsTable.KEY_STATS_CURRENCY + " text");
+		}
+
+		// only add this if migrating from 21
+		if (oldVersion == 21) {
+			Log.w(TAG, "Old version < 22 - adding revenue_summary.date column");
+			db.execSQL("ALTER table " + RevenueSummaryTable.DATABASE_TABLE_NAME + " add "
+					+ RevenueSummaryTable.DATE + " date");
+			// set all 2013-01-01 00:00:00
+			db.execSQL("UPDATE " + RevenueSummaryTable.DATABASE_TABLE_NAME + " SET "
+					+ RevenueSummaryTable.DATE + "= '1356998400'");
+		}
+
+		if (oldVersion < 23) {
+			Log.w(TAG, "Old version < 23 - adding appinfo.ad_unit_id column");
+			db.execSQL("ALTER table " + AppInfoTable.DATABASE_TABLE_NAME + " add "
+					+ AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID + " text");
+
+			Log.w(TAG, "Old version < 23 - adding admob.currency column");
+			db.execSQL("ALTER table " + AdmobTable.DATABASE_TABLE_NAME + " add "
+					+ AdmobTable.KEY_CURRENCY + " text");
+		}
+		
+		if (oldVersion < 24) {
+			Log.w(TAG, "Old version < 24 - adding comment.title column");
+			db.execSQL("ALTER table " + CommentsTable.DATABASE_TABLE_NAME + " add "
+					+ CommentsTable.KEY_COMMENT_TITLE + " text");
+			db.execSQL("ALTER table " + CommentsTable.DATABASE_TABLE_NAME + " add "
+					+ CommentsTable.KEY_COMMENT_ORIGINAL_TITLE + " text");
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -236,7 +277,7 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		db.beginTransaction();
 		try {
 			AccountManager am = AccountManager.get(context);
-			Account[] accounts = am.getAccountsByType(Constants.ACCOUNT_TYPE_GOOGLE);
+			Account[] accounts = am.getAccountsByType(AutosyncHandler.ACCOUNT_TYPE_GOOGLE);
 			String activeAccount = Preferences.getAccountName(context);
 			for (Account account : accounts) {
 				boolean isHidden = Preferences.getIsHiddenAccount(context, account.name);
@@ -288,23 +329,24 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 		return result;
 	}
 
-	// account, site ID
+	// account, site ID, ad unit ID (only if migrated to 'new Admob')
 	public String[] getAdmobDetails(String packageName) {
 		SQLiteDatabase db = getWritableDatabase();
 		Cursor c = null;
 		try {
 			c = db.query(AppInfoTable.DATABASE_TABLE_NAME, new String[] {
-					AppInfoTable.KEY_APP_ADMOB_ACCOUNT, AppInfoTable.KEY_APP_ADMOB_SITE_ID },
-					AppInfoTable.KEY_APP_PACKAGENAME + "=?", new String[] { packageName }, null,
-					null, null);
+					AppInfoTable.KEY_APP_ADMOB_ACCOUNT, AppInfoTable.KEY_APP_ADMOB_SITE_ID,
+					AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID }, AppInfoTable.KEY_APP_PACKAGENAME
+					+ "=?", new String[] { packageName }, null, null, null);
 			if (!c.moveToNext()) {
 				return null;
 			}
 
-			String[] result = new String[2];
+			String[] result = new String[3];
 			result[0] = c.getString(c.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_ACCOUNT));
 			result[1] = c.getString(c.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_SITE_ID));
-			if (result[0] == null || result[1] == null) {
+			result[2] = c.getString(c.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID));
+			if (result[0] == null && result[1] == null) {
 				return null;
 			}
 
@@ -318,6 +360,11 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 
 	public synchronized void saveAdmobDetails(String packageName, String admobAccount,
 			String admobSiteId) {
+		saveAdmobDetails(packageName, admobAccount, admobSiteId, null);
+	}
+
+	public synchronized void saveAdmobDetails(String packageName, String admobAccount,
+			String admobSiteId, String admobAdUnitId) {
 		SQLiteDatabase db = getWritableDatabase();
 		db.beginTransaction();
 		try {
@@ -326,6 +373,27 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			ContentValues values = new ContentValues();
 			values.put(AppInfoTable.KEY_APP_ADMOB_ACCOUNT, admobAccount);
 			values.put(AppInfoTable.KEY_APP_ADMOB_SITE_ID, admobSiteId);
+			values.put(AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID, admobAdUnitId);
+
+			db.update(AppInfoTable.DATABASE_TABLE_NAME, values, "_id = ?",
+					new String[] { Long.toString(id) });
+
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+	}
+
+	public synchronized void saveAdmobAdUnitId(String packageName, String admobAccount,
+			String admobAdUnitId) {
+		SQLiteDatabase db = getWritableDatabase();
+		db.beginTransaction();
+		try {
+			long id = findPackageId(db, packageName);
+
+			ContentValues values = new ContentValues();
+			values.put(AppInfoTable.KEY_APP_ADMOB_ACCOUNT, admobAccount);
+			values.put(AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID, admobAdUnitId);
 
 			db.update(AppInfoTable.DATABASE_TABLE_NAME, values, "_id = ?",
 					new String[] { Long.toString(id) });
@@ -456,6 +524,10 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_SITE_ID);
 			if (!cursor.isNull(idx)) {
 				appInfo.setAdmobSiteId(cursor.getString(idx));
+			}
+			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_ADMOB_AD_UNIT_ID);
+			if (!cursor.isNull(idx)) {
+				appInfo.setAdmobAdUnitId(cursor.getString(idx));
 			}
 			idx = cursor.getColumnIndex(AppInfoTable.KEY_APP_LAST_COMMENTS_UPDATE);
 			if (!cursor.isNull(idx)) {
@@ -628,6 +700,51 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 
 		getWritableDatabase().update(LinksTable.DATABASE_TABLE_NAME, values,
 				LinksTable.ROWID + " = ?", new String[] { Long.toString(id) });
+	}
+
+	public synchronized void fetchRevenueSummary(AppInfo appInfo) {
+		if (appInfo.getId() == null) {
+			// not persistent
+			return;
+		}
+
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = null;
+		try {
+			c = db.query(RevenueSummaryTable.DATABASE_TABLE_NAME, RevenueSummaryTable.ALL_COLUMNS,
+					RevenueSummaryTable.APPINFO_ID + "=?",
+					new String[] { Long.toString(appInfo.getId()) }, null, null,
+					RevenueSummaryTable.DATE + " desc", "1");
+			if (c.getCount() < 1 || !c.moveToNext()) {
+				return;
+			}
+
+			Long id = c.getLong(c.getColumnIndex(RevenueSummaryTable.ROWID));
+			int typeIdx = c.getInt(c.getColumnIndex(RevenueSummaryTable.TYPE));
+			String currency = c.getString(c.getColumnIndex(RevenueSummaryTable.CURRENCY));
+			Date date = Utils.parseDbDate("2013-01-01 00:00:00");
+			int idx = c.getColumnIndex(RevenueSummaryTable.DATE);
+			if (!c.isNull(idx)) {
+				date = new Date(c.getLong(idx));
+			}
+			double lastDayTotal = c.getDouble(c.getColumnIndex(RevenueSummaryTable.LAST_DAY_TOTAL));
+			double last7DaysTotal = c.getDouble(c
+					.getColumnIndex(RevenueSummaryTable.LAST_7DAYS_TOTAL));
+			double last30DaysTotal = c.getDouble(c
+					.getColumnIndex(RevenueSummaryTable.LAST_30DAYS_TOTAL));
+			double overallTotal = c.getDouble(c.getColumnIndex(RevenueSummaryTable.OVERALL_TOTAL));
+
+			Revenue.Type type = Revenue.Type.values()[typeIdx];
+			RevenueSummary revenue = new RevenueSummary(type, currency, date, lastDayTotal,
+					last7DaysTotal, last30DaysTotal, overallTotal);
+			revenue.setId(id);
+
+			appInfo.setTotalRevenueSummary(revenue);
+		} finally {
+			if (c != null) {
+				c.close();
+			}
+		}
 	}
 
 }

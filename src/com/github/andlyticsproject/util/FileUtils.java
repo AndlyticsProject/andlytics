@@ -1,16 +1,19 @@
 package com.github.andlyticsproject.util;
 
+import android.content.Context;
+import android.net.Uri;
+import android.os.Environment;
+import android.util.Log;
+
+import com.github.andlyticsproject.io.MediaScannerWrapper;
+
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import android.content.Context;
-import android.os.Environment;
-import android.util.Log;
-
-import com.github.andlyticsproject.io.MediaScannerWrapper;
+import java.io.InputStream;
 
 public class FileUtils {
 
@@ -78,6 +81,27 @@ public class FileUtils {
 			in.read(data);
 
 			return new String(data, "UTF-8");
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (in != null) {
+				FileUtils.closeSilently(in);
+			}
+		}
+	}
+
+	public static byte[] readFromUri(Context ctx, Uri uri) {
+		InputStream in = null;
+		try {
+			in = ctx.getContentResolver().openInputStream(uri);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			byte[] buff = new byte[1024];
+			int count = -1;
+			while ((count = in.read(buff)) != -1) {
+				baos.write(buff, 0, count);
+			}
+
+			return baos.toByteArray();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} finally {

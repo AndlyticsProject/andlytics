@@ -1,17 +1,12 @@
 package com.github.andlyticsproject.io;
 
-import java.io.FileInputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.BigTextStyle;
 import android.support.v4.app.NotificationCompat.Builder;
@@ -21,6 +16,11 @@ import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.LoginActivity;
 import com.github.andlyticsproject.R;
 import com.github.andlyticsproject.model.AppStats;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class ImportService extends IntentService {
 
@@ -40,7 +40,7 @@ public class ImportService extends IntentService {
 
 	private List<String> fileNames;
 
-	private String zipFilename;
+	private Uri zipFileUri;
 
 	private NotificationManager notificationManager;
 
@@ -61,8 +61,8 @@ public class ImportService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		Log.d(TAG, "import service onStartCommand");
 
-		this.zipFilename = intent.getData().getPath();
-		Log.d(TAG, "zip file: " + zipFilename);
+		this.zipFileUri = intent.getData();
+		Log.d(TAG, "zip file: " + zipFileUri);
 
 		this.fileNames = Arrays.asList(intent.getStringArrayExtra(FILE_NAMES));
 		Log.d(TAG, "file names:: " + fileNames);
@@ -82,7 +82,8 @@ public class ImportService extends IntentService {
 		try {
 			StatsCsvReaderWriter statsWriter = new StatsCsvReaderWriter(ImportService.this);
 
-			ZipInputStream inzip = new ZipInputStream(new FileInputStream(zipFilename));
+			ZipInputStream inzip = new ZipInputStream(getContentResolver().openInputStream(
+					zipFileUri));
 			ZipEntry entry = null;
 			while ((entry = inzip.getNextEntry()) != null) {
 				String filename = entry.getName();
@@ -101,8 +102,10 @@ public class ImportService extends IntentService {
 				}
 
 			}
+
+			inzip.close();
 		} catch (Exception e) {
-			Log.e(TAG, "Error importing stats: " + e.getMessage());
+			Log.e(TAG, "Error importing stats: " + e.getMessage(), e);
 			error = e;
 			errors = true;
 		}

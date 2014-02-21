@@ -8,8 +8,23 @@ This repository contains the source code for the Andlytics Android app.
 
 ![](https://lh4.ggpht.com/ckVylBqx0sS1b-KW99qkg7NYuDNRGGstnZKsw-qe3TnpUOH4em5cH-8QuPXs2NQj9Nou=w705)
 
+
 Please see the [issues](https://github.com/AndlyticsProject/andlytics/issues) section to
 report any bugs or feature requests and to see the list of known issues.
+
+### Alpha/Beta Versions
+Join the G+ community and register as a tester to get latest alpha/beta versions:
+
+https://plus.google.com/communities/106533634605835980810
+
+https://play.google.com/apps/testing/com.github.andlyticsproject
+
+### Nightly builds
+
+* http://andlytics.schoentoon.com/andlytics.apk
+
+You can check which commit it's build from at http://andlytics.schoentoon.com/latest_version and it'll get updated everynight just past midnight (GMT +1)
+
 
 ## License
 
@@ -48,11 +63,6 @@ For AdMob accounts that are linked to a Google Account you can find the API pass
 
 Keywords: Developer console, developer tools, android developers
 
-## Nightly builds
-
-* http://andlytics.schoentoon.com/andlytics.apk
-
-You can check which commit it's build from at http://andlytics.schoentoon.com/latest_version and it'll get updated everynight just past midnight (GMT +1)
 
 ## Contributing
 
@@ -68,3 +78,7 @@ When submitting code, please try to be consistent with the code around you. As a
 Any contributions, large or small, major features, bug fixes, unit/integration tests are welcomed and appreciated, but will be thoroughly reviewed and discussed.
 
 Translations should be done via [crowdin.net](http://crowdin.net/project/andlytics).
+
+## SocialMedia
+
+<a href="https://plus.google.com/103867882342055020019" rel="publisher">Find us on Google+</a>

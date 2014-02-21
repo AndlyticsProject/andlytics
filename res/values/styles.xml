@@ -92,4 +92,12 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="boldItalicText">
+        <item name="android:textStyle">italic|bold</item>
+    </style>
+
+    <style name="boldText">
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

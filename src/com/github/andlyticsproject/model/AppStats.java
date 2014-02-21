@@ -3,12 +3,13 @@ package com.github.andlyticsproject.model;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import android.annotation.SuppressLint;
 import android.util.SparseArray;
 
-public class AppStats {
+import com.github.andlyticsproject.AppStatsDiff;
+
+public class AppStats extends Statistic {
 
 	private int totalDownloads;
 
@@ -19,8 +20,6 @@ public class AppStats {
 	private int numberOfComments;
 
 	private int numberOfCommentsDiff;
-
-	private Date requestDate;
 
 	private int dailyDownloads;
 
@@ -73,7 +72,9 @@ public class AppStats {
 
 	// TODO -- do we support diffs for this?
 	private Integer numberOfErrors;
-
+	
+	private Revenue totalRevenue;
+	
 	public AppStats() {
 	}
 
@@ -86,7 +87,7 @@ public class AppStats {
 		this.totalDownloads = appStats.totalDownloads;
 		this.activeInstalls = appStats.activeInstalls;
 		this.numberOfComments = appStats.numberOfComments;
-		this.requestDate = appStats.requestDate;
+		this.date = appStats.date;
 		this.dailyDownloads = appStats.dailyDownloads;
 		this.smoothingApplied = appStats.smoothingApplied;
 		this.rating1 = appStats.rating1;
@@ -143,14 +144,6 @@ public class AppStats {
 
 	public void setNumberOfComments(int numberOfComments) {
 		this.numberOfComments = numberOfComments;
-	}
-
-	public Date getRequestDate() {
-		return requestDate;
-	}
-
-	public void setRequestDate(Date requestDate) {
-		this.requestDate = requestDate;
 	}
 
 	public int getDailyDownloads() {
@@ -337,7 +330,7 @@ public class AppStats {
 	@SuppressLint("SimpleDateFormat")
 	public String getRequestDateString() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return dateFormat.format(getRequestDate());
+		return dateFormat.format(getDate());
 	}
 
 	public double getActiveInstallsPercent() {
@@ -357,7 +350,7 @@ public class AppStats {
 		result = prime * result + activeInstalls;
 		result = prime * result + dailyDownloads;
 		result = prime * result + numberOfComments;
-		result = prime * result + ((requestDate == null) ? 0 : requestDate.hashCode());
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + (smoothingApplied ? 1231 : 1237);
 		result = prime * result + totalDownloads;
 		return result;
@@ -378,10 +371,10 @@ public class AppStats {
 			return false;
 		if (numberOfComments != other.numberOfComments)
 			return false;
-		if (requestDate == null) {
-			if (other.requestDate != null)
+		if (date == null) {
+			if (other.date != null)
 				return false;
-		} else if (!requestDate.equals(other.requestDate))
+		} else if (!date.equals(other.date))
 			return false;
 		if (smoothingApplied != other.smoothingApplied)
 			return false;
@@ -571,6 +564,42 @@ public class AppStats {
 
 	public Integer getNumberOfErrors() {
 		return numberOfErrors;
+	}
+
+	public Revenue getTotalRevenue() {
+		return totalRevenue;
+	}
+
+	public void setTotalRevenue(Revenue totalRevenue) {
+		this.totalRevenue = totalRevenue;
+	}
+
+	public AppStatsDiff createDiff(AppStats previousStats, AppInfo appInfo) {
+		AppStatsDiff diff = new AppStatsDiff();
+		diff.setAppName(appInfo.getName());
+		diff.setPackageName(appInfo.getPackageName());
+		diff.setIconName(appInfo.getIconName());
+		diff.setSkipNotification(appInfo.isSkipNotification());
+		diff.setVersionName(appInfo.getVersionName());
+
+		if (previousStats != null) {
+
+			init();
+			previousStats.init();
+
+			diff.setActiveInstallsChange(getActiveInstalls() - previousStats.getActiveInstalls());
+			diff.setDownloadsChange(getTotalDownloads() - previousStats.getTotalDownloads());
+			diff.setCommentsChange(getNumberOfComments() - previousStats.getNumberOfComments());
+			diff.setAvgRatingChange(getAvgRating() - previousStats.getAvgRating());
+			diff.setRating1Change(getRating1() - previousStats.getRating1());
+			diff.setRating2Change(getRating2() - previousStats.getRating2());
+			diff.setRating3Change(getRating3() - previousStats.getRating3());
+			diff.setRating4Change(getRating4() - previousStats.getRating4());
+			diff.setRating5Change(getRating5() - previousStats.getRating5());
+
+		}
+
+		return diff;
 	}
 
 }

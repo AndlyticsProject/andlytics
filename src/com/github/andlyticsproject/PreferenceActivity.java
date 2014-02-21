@@ -78,7 +78,7 @@ public class PreferenceActivity extends SherlockPreferenceActivity implements
 		public boolean onPreferenceClick(Preference preference) {
 			String accountName = (String) preference.getTitle();
 			Intent i = new Intent(PreferenceActivity.this, AccountSpecificPreferenceActivity.class);
-			i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
+			i.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, accountName);
 			startActivity(i);
 			return true;
 		}

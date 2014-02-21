@@ -5,8 +5,10 @@ import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
@@ -33,15 +35,19 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 	private LayoutInflater layoutInflater;
 
-	private ArrayList<CommentGroup> commentGroups;
+	private List<CommentGroup> commentGroups;
 
-	private CommentsActivity context;
+	private Activity context;
 
 	private DateFormat commentDateFormat = DateFormat.getDateInstance(DateFormat.FULL);
 
 	private boolean canReplyToComments;
 
-	public CommentsListAdapter(CommentsActivity activity) {
+	public CommentsListAdapter(Activity activity) {
+		// XXX no pretty, is there a better way?
+		if (!(activity instanceof CommentReplier)) {
+			throw new ClassCastException("Activity must implement CommentReplier.");
+		}
 		this.setCommentGroups(new ArrayList<CommentGroup>());
 		this.layoutInflater = activity.getLayoutInflater();
 		this.context = activity;
@@ -79,6 +85,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 		if (holder.language != null) {
 			final TextView commentText = holder.text;
+			final TextView commentTitle = holder.title;
 			holder.language.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -91,9 +98,13 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 					if (comment.getText().equals(commentText.getText().toString())) {
 						commentText.setText(comment.getOriginalText());
 						commentText.setTextAppearance(context, R.style.normalText);
+						commentTitle.setText(comment.getOriginalTitle());
+						commentTitle.setTextAppearance(context, R.style.boldText);
 					} else {
 						commentText.setText(comment.getText());
 						commentText.setTextAppearance(context, R.style.italicText);
+						commentTitle.setText(comment.getTitle());
+						commentTitle.setTextAppearance(context, R.style.boldItalicText);
 					}
 				}
 			});
@@ -105,7 +116,8 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 
 				@Override
 				public void onClick(View v) {
-					context.showReplyDialog(comment);
+					CommentReplier replier = (CommentReplier) context;
+					replier.showReplyDialog(comment);
 				}
 			});
 		}
@@ -116,32 +128,23 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		} else {
 			boolean showTranslations = Preferences.isShowCommentAutoTranslations(context);
 			String commentText = comment.getText();
+			String commentTitle = comment.getTitle();
 			if (!showTranslations && comment.getOriginalText() != null) {
 				commentText = comment.getOriginalText();
 			}
-
-			// XXX translations replace the tab delimiter with space, so
-			// no way to separate the title. Show title in original language
-			// for now
-			String originalTitleAndComment[] = comment.getOriginalText() == null ? null : comment
-					.getOriginalText().split("\\t");
-			if (originalTitleAndComment != null && originalTitleAndComment.length > 1) {
-				holder.title.setText(originalTitleAndComment[0]);
-				if (showTranslations) {
-					holder.text.setText(commentText);
-				} else {
-					holder.text.setText(originalTitleAndComment[1]);
-				}
-				holder.text.setVisibility(View.VISIBLE);
-			} else {
-				holder.text.setText(commentText);
-				holder.title.setText(null);
-				holder.title.setVisibility(View.GONE);
+			if (!showTranslations && comment.getOriginalTitle() != null) {
+				commentTitle = comment.getOriginalTitle();
 			}
+			
+			holder.text.setText(commentText);
+			holder.title.setText(commentTitle);
+
 			// italic for translated text
 			boolean translated = showTranslations && comment.isTranslated();
 			holder.text.setTextAppearance(context, translated ? R.style.italicText
 					: R.style.normalText);
+			holder.title.setTextAppearance(context, translated ? R.style.boldItalicText
+					: R.style.boldText);
 
 			holder.user.setText(comment.getUser() == null ? context
 					.getString(R.string.comment_no_user_info) : comment.getUser());
@@ -341,11 +344,11 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		return false;
 	}
 
-	public void setCommentGroups(ArrayList<CommentGroup> commentGroups) {
+	public void setCommentGroups(List<CommentGroup> commentGroups) {
 		this.commentGroups = commentGroups;
 	}
 
-	public ArrayList<CommentGroup> getCommentGroups() {
+	public List<CommentGroup> getCommentGroups() {
 		return commentGroups;
 	}
 

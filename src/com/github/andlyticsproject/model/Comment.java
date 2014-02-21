@@ -5,7 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class Comment {
+// XXX this is a bit of a kludge...
+public class Comment extends Statistic {
 
 	private boolean isReply = false;
 
@@ -13,17 +14,19 @@ public class Comment {
 	// looks like this: 'gp:AOqpTOGnebkY.....'
 	private String uniqueId;
 
+	private String title;
+	
 	// this is either the translated text, or the same as originalText, 
 	// depending on display language (current locale)
 	private String text;
 
+	private String originalTitle;
+	
 	// text in original language
 	private String originalText;
 
 	// language of the original comment
 	private String language;
-
-	private Date date;
 
 	private Date originalCommentDate;
 
@@ -52,6 +55,14 @@ public class Comment {
 	public void setUniqueId(String uniqueId) {
 		this.uniqueId = uniqueId;
 	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 	public String getText() {
 		return text;
@@ -61,6 +72,14 @@ public class Comment {
 		this.text = text;
 	}
 
+	public String getOriginalTitle() {
+		return originalTitle;
+	}
+
+	public void setOriginalTitle(String originalTitle) {
+		this.originalTitle = originalTitle;
+	}
+	
 	public String getOriginalText() {
 		return originalText;
 	}
@@ -75,19 +94,6 @@ public class Comment {
 
 	public void setLanguage(String language) {
 		this.language = language;
-	}
-
-	/**
-	 * Date or the comment (or the date of the reply)
-	 * 
-	 * @return
-	 */
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
 	}
 
 	/**

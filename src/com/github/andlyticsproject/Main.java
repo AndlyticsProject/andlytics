@@ -1,17 +1,8 @@
 package com.github.andlyticsproject;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -42,17 +34,30 @@ import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.about.AboutActivity;
 import com.github.andlyticsproject.admob.AdmobRequest;
+import com.github.andlyticsproject.adsense.AdSenseClient;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
-import com.github.andlyticsproject.model.Admob;
+import com.github.andlyticsproject.model.AdmobStats;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.sync.NotificationHandler;
 import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Main extends BaseActivity implements OnNavigationListener {
 
@@ -79,9 +84,11 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 	private DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);
 
+	private static final int REQUEST_OPEN_DOCUMENT = 88;
 	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
 
 	private static class State {
+		// TODO replace with loaders
 		LoadDbEntries loadDbEntries;
 		LoadRemoteEntries loadRemoteEntries;
 		LoadIconInCache loadIconInCache;
@@ -140,7 +147,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	private State state = new State();
 
 	/** Called when the activity is first created. */
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -190,8 +196,8 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		if (!developerAccounts.get(itemPosition).getName().equals(accountName)) {
 			// Only switch if it is a new account
 			Intent intent = new Intent(Main.this, Main.class);
-			intent.putExtra(Constants.AUTH_ACCOUNT_NAME, developerAccounts.get(itemPosition)
-					.getName());
+			intent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME,
+					developerAccounts.get(itemPosition).getName());
 			startActivity(intent);
 			overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
 			// Call finish to ensure we don't get multiple activities running
@@ -234,26 +240,36 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	 * The chosen menu item
 	 * @return boolean true/false
 	 */
+	@TargetApi(19)
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent i = null;
 		switch (item.getItemId()) {
 		case R.id.itemMainmenuRefresh:
 			loadRemoteEntries();
 			break;
 		case R.id.itemMainmenuImport:
-			File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
-			if (!fileToImport.exists()) {
-				Toast.makeText(this,
-						getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
-						Toast.LENGTH_LONG).show();
-				return true;
-			}
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+				Intent openIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+				openIntent.setType("*/*");
+				openIntent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "application/zip" });
+				//hidden
+				openIntent.putExtra("android.content.extra.SHOW_ADVANCED", true);
+				startActivityForResult(openIntent, REQUEST_OPEN_DOCUMENT);
+			} else {
+				File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
+				if (!fileToImport.exists()) {
+					Toast.makeText(
+							this,
+							getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
+							Toast.LENGTH_LONG).show();
+					return true;
+				}
 
-			Intent importIntent = new Intent(this, ImportActivity.class);
-			importIntent.setAction(Intent.ACTION_VIEW);
-			importIntent.setData(Uri.fromFile(fileToImport));
-			startActivity(importIntent);
+				Intent importIntent = new Intent(this, ImportActivity.class);
+				importIntent.setAction(Intent.ACTION_VIEW);
+				importIntent.setData(Uri.fromFile(fileToImport));
+				startActivity(importIntent);
+			}
 			break;
 		case R.id.itemMainmenuExport:
 			Intent exportIntent = new Intent(this, ExportActivity.class);
@@ -264,12 +280,11 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			// launch about activity				
 			Intent aboutIntent = new Intent(this, AboutActivity.class);
 			startActivity(aboutIntent);
-			//showDialog(DIALOG_ABOUT_ID);
 			break;
 		case R.id.itemMainmenuPreferences:
-			i = new Intent(this, PreferenceActivity.class);
-			i.putExtra(Constants.AUTH_ACCOUNT_NAME, accountName);
-			startActivity(i);
+			Intent preferencesIntent = new Intent(this, PreferenceActivity.class);
+			preferencesIntent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, accountName);
+			startActivity(preferencesIntent);
 			break;
 		case R.id.itemMainmenuStatsMode:
 			if (currentStatsMode.equals(StatsMode.PERCENT)) {
@@ -280,9 +295,9 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			updateStatsMode();
 			break;
 		case R.id.itemMainmenuAccounts:
-			i = new Intent(this, LoginActivity.class);
-			i.putExtra(Constants.MANAGE_ACCOUNTS_MODE, true);
-			startActivityForResult(i, REQUEST_CODE_MANAGE_ACCOUNTS);
+			Intent accountsIntent = new Intent(this, LoginActivity.class);
+			accountsIntent.putExtra(LoginActivity.EXTRA_MANAGE_ACCOUNTS_MODE, true);
+			startActivityForResult(accountsIntent, REQUEST_CODE_MANAGE_ACCOUNTS);
 			break;
 		default:
 			return false;
@@ -316,6 +331,31 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			} else {
 				Toast.makeText(this, getString(R.string.auth_error, accountName), Toast.LENGTH_LONG)
 						.show();
+			}
+		} else if (requestCode == REQUEST_GOOGLE_PLAY_SERVICES) {
+			if (resultCode == Activity.RESULT_OK) {
+			} else {
+				checkGooglePlayServicesAvailable();
+			}
+		} else if (requestCode == REQUEST_AUTHORIZATION) {
+			if (resultCode == Activity.RESULT_OK) {
+				loadRemoteEntries();
+			} else {
+				Toast.makeText(this, getString(R.string.account_authorization_denied, accountName),
+						Toast.LENGTH_LONG).show();
+			}
+		} else if (requestCode == REQUEST_OPEN_DOCUMENT) {
+			if (resultCode == RESULT_OK) {
+				Intent importIntent = new Intent(this, ImportActivity.class);
+				importIntent.setAction(Intent.ACTION_VIEW);
+				Uri uri = data.getData();
+				importIntent.setData(data.getData());
+				startActivity(importIntent);
+			} else {
+				Toast.makeText(
+						this,
+						getString(R.string.import_no_stats_file, data == null ? "" : data.getData()),
+						Toast.LENGTH_LONG).show();
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
@@ -401,8 +441,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			}
 
 			if (lastUpdateDate != null) {
-				statusText.setText(this.getString(R.string.last_update) + ": "
-						+ Preferences.getDateFormatLong(this).format(lastUpdateDate) + " "
+				statusText.setText(Preferences.getDateFormatLong(this).format(lastUpdateDate) + " "
 						+ timeFormat.format(lastUpdateDate));
 			}
 		}
@@ -453,6 +492,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 					return null;
 				}
 
+				boolean migratedToAdSense = false;
 				Map<String, List<String>> admobAccountSiteMap = new HashMap<String, List<String>>();
 
 				List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
@@ -466,12 +506,21 @@ public class Main extends BaseActivity implements OnNavigationListener {
 					if (admobDetails != null) {
 						String admobAccount = admobDetails[0];
 						String admobSiteId = admobDetails[1];
-						if (admobAccount != null) {
+						String adUnitId = admobDetails[2];
+						if (admobAccount != null && adUnitId == null) {
 							List<String> siteList = admobAccountSiteMap.get(admobAccount);
 							if (siteList == null) {
 								siteList = new ArrayList<String>();
 							}
 							siteList.add(admobSiteId);
+							admobAccountSiteMap.put(admobAccount, siteList);
+						} else {
+							migratedToAdSense = true;
+							List<String> siteList = admobAccountSiteMap.get(admobAccount);
+							if (siteList == null) {
+								siteList = new ArrayList<String>();
+							}
+							siteList.add(adUnitId);
 							admobAccountSiteMap.put(admobAccount, siteList);
 						}
 					}
@@ -485,14 +534,21 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				// sync admob accounts
 				Set<String> admobAccuntKeySet = admobAccountSiteMap.keySet();
 				for (String admobAccount : admobAccuntKeySet) {
-
-					AdmobRequest.syncSiteStats(admobAccount, activity,
-							admobAccountSiteMap.get(admobAccount), null);
+					if (migratedToAdSense) {
+						AdSenseClient.foregroundSyncStats(activity, admobAccount,
+								admobAccountSiteMap.get(admobAccount));
+					} else {
+						AdmobRequest.syncSiteStats(admobAccount, activity,
+								admobAccountSiteMap.get(admobAccount), null);
+					}
 				}
 
 				activity.state.setLoadIconInCache(new LoadIconInCache(activity));
 				Utils.execute(activity.state.loadIconInCache, appDownloadInfos);
 
+			} catch (UserRecoverableAuthIOException userRecoverableException) {
+				activity.startActivityForResult(userRecoverableException.getIntent(),
+						REQUEST_AUTHORIZATION);
 			} catch (Exception e) {
 				// These exceptions can contain very long JSON strings
 				// Explicitly print out the root cause first
@@ -563,11 +619,11 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 			for (AppInfo appInfo : allStats) {
 				if (!appInfo.isGhost()) {
-					if (appInfo.getAdmobSiteId() != null) {
-						List<Admob> admobStats = db.getAdmobStats(appInfo.getAdmobSiteId(),
-								Timeframe.LAST_TWO_DAYS).getAdmobs();
+					if (appInfo.getAdmobSiteId() != null || appInfo.getAdmobAdUnitId() != null) {
+						List<AdmobStats> admobStats = db.getAdmobStats(appInfo.getAdmobSiteId(),
+								appInfo.getAdmobAdUnitId(), Timeframe.LAST_TWO_DAYS).getStats();
 						if (admobStats.size() > 0) {
-							Admob admob = admobStats.get(admobStats.size() - 1);
+							AdmobStats admob = admobStats.get(admobStats.size() - 1);
 							appInfo.setAdmobStats(admob);
 						}
 					}
