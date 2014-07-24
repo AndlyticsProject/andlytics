@@ -320,10 +320,10 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 				appInfo.getDetails().getLastStoreUpdate()));
 
 		TextView descriptionView = (TextView) findViewById(R.id.appinfo_description);
-		descriptionView.setText(appInfo.getDetails().getDescription());
+		descriptionView.setText(Html.fromHtml(appInfo.getDetails().getDescription()));
 
 		TextView changelogView = (TextView) findViewById(R.id.appinfo_changelog);
-		changelogView.setText(appInfo.getDetails().getChangelog());
+		changelogView.setText(Html.fromHtml(appInfo.getDetails().getChangelog()));
 	}
 
 	@Override
