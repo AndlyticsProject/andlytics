@@ -3,11 +3,11 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.11.+'
+        classpath 'com.android.tools.build:gradle:0.12.+'
     }
 }
 
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 repositories {
     mavenCentral()
@@ -41,8 +41,20 @@ dependencies {
 android {
 
 	compileSdkVersion 19
-    buildToolsVersion "19.1"
-	
+	buildToolsVersion "20"
+
+    signingConfigs {
+        release {
+            storeFile file ("andlytics-release-key.keystore")
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+
 	sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -63,4 +75,14 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
+}
+
+// get signing config from gradle.properties file if it exists
+// See Andlytics Dropbox folder for example
+if (project.hasProperty('storePassword')
+        && project.hasProperty('keyAlias')
+        && project.hasProperty('keyPassword')) {
+    android.signingConfigs.release.storePassword = storePassword
+    android.signingConfigs.release.keyAlias = keyAlias
+    android.signingConfigs.release.keyPassword = keyPassword
 }

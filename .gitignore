@@ -21,3 +21,4 @@ proguard/
 local.properties
 secure.properties
 /assets
+/gradle.properties
