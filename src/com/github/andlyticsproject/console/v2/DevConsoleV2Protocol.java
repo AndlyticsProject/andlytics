@@ -1,11 +1,5 @@
 package com.github.andlyticsproject.console.v2;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.apache.http.client.methods.HttpPost;
-import org.json.JSONException;
-
 import android.annotation.SuppressLint;
 
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
@@ -15,6 +9,12 @@ import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.FileUtils;
+
+import org.apache.http.client.methods.HttpPost;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.List;
 
 @SuppressLint("DefaultLocale")
 public class DevConsoleV2Protocol {
@@ -246,7 +246,10 @@ public class DevConsoleV2Protocol {
 	}
 
 	boolean canReplyToComments() {
-		return hasFeature(REPLY_TO_COMMENTS_FEATURE);
+		// this has apparently been removed because now everybody can 
+		// reply to comments
+		//		return hasFeature(REPLY_TO_COMMENTS_FEATURE);
+		return true;
 	}
 
 	int extractCommentsCount(String json) {
