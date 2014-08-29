@@ -123,14 +123,16 @@ public class DevConsoleV2 implements DevConsole {
 			fetchRatings(app, stats);
 			stats.setNumberOfComments(fetchCommentsCount(app, Utils.getDisplayLocale()));
 
-			RevenueSummary revenue = fetchRevenueSummary(app);
-			app.setTotalRevenueSummary(revenue);
+			// temporarily disabled because the interface has changed
+			// see #620
+			//			RevenueSummary revenue = fetchRevenueSummary(app);
+			//			app.setTotalRevenueSummary(revenue);
 			// this is currently the same as the last item of the historical
 			// data, so save some cycles and don't parse historical
 			// XXX the definition of 'last day' is unclear: GMT?
-			if (revenue != null) {
-				stats.setTotalRevenue(revenue.getLastDay());
-			}
+			//			if (revenue != null) {
+			//				stats.setTotalRevenue(revenue.getLastDay());
+			//			}
 
 			// only works on 11+
 			// XXX the latest recorded revenue is not necessarily today's
