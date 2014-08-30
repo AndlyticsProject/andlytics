@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +60,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Main extends BaseActivity implements OnNavigationListener {
+public class Main extends BaseActivity implements OnNavigationListener, SwipeRefreshLayout.OnRefreshListener {
 
 	/** Key for latest version code preference. */
 	private static final String LAST_VERSION_CODE_KEY = "last_version_code";
@@ -70,6 +71,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	public static final int DIALOG_ABOUT_ID = 1;
 
 	private boolean cancelRequested;
+	private SwipeRefreshLayout swipeRefresh;
 	private ListView mainListView;
 	private TextView statusText;
 	private ViewSwitcher mainViewSwitcher;
@@ -157,6 +159,11 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		// BaseActivity has already selected the account
 		updateAccountsList();
 
+        // setup swipeRefreshLayou
+        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
+        swipeRefresh.setColorSchemeResources(R.color.swipe1, R.color.swipe2, R.color.swipe1, R.color.swipe2);
+        swipeRefresh.setOnRefreshListener(this);
+
 		// setup main list
 		mainListView = (ListView) findViewById(R.id.main_app_list);
 		mainListView.addHeaderView(layoutInflater.inflate(R.layout.main_list_header, null), null,
@@ -191,7 +198,33 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		}
 	}
 
-	@Override
+    @Override
+    public void onRefresh() {
+        if (swipeRefresh != null) {
+            swipeRefresh.setEnabled(false);
+        }
+        loadRemoteEntries();
+    }
+
+    @Override
+    public void refreshStarted() {
+        super.refreshStarted();
+        if (swipeRefresh != null && !swipeRefresh.isRefreshing()) {
+            swipeRefresh.setRefreshing(true);
+            swipeRefresh.setEnabled(false);
+        }
+    }
+
+    @Override
+    public void refreshFinished() {
+        super.refreshFinished();
+        if (swipeRefresh != null) {
+            swipeRefresh.setRefreshing(false);
+            swipeRefresh.setEnabled(true);
+        }
+    }
+
+    @Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 		if (!developerAccounts.get(itemPosition).getName().equals(accountName)) {
 			// Only switch if it is a new account
@@ -446,7 +479,12 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			}
 		}
 
-		if (!(R.id.main_app_list == mainViewSwitcher.getCurrentView().getId())) {
+        if (swipeRefresh != null && !swipeRefresh.isRefreshing()) {
+            swipeRefresh.setRefreshing(false);
+            swipeRefresh.setEnabled(true);
+        }
+
+		if (!(R.id.swipeRefresh == mainViewSwitcher.getCurrentView().getId())) {
 			mainViewSwitcher.showNext();
 		}
 

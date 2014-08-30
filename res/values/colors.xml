@@ -13,4 +13,9 @@
     <color name="andBackgroundDarkHighlight">#DCE1E2</color>
     <color name="andBorder">#CFD2DA</color>
     <color name="andDivider">#E0E3E9</color>
+
+    <!-- Swipe refresh colors -->
+
+    <color name="swipe1">#555555</color>
+    <color name="swipe2">#CFD2DA</color>
 </resources>
