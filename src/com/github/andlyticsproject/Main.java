@@ -200,16 +200,14 @@ public class Main extends BaseActivity implements OnNavigationListener, SwipeRef
 
 	@Override
 	public void onRefresh() {
-		if (swipeRefresh != null) {
-			swipeRefresh.setEnabled(false);
-		}
+		swipeRefresh.setEnabled(false);
 		loadRemoteEntries();
 	}
 
 	@Override
 	public void refreshStarted() {
 		super.refreshStarted();
-		if (swipeRefresh != null && !swipeRefresh.isRefreshing()) {
+		if (!swipeRefresh.isRefreshing()) {
 			swipeRefresh.setRefreshing(true);
 			swipeRefresh.setEnabled(false);
 		}
@@ -218,10 +216,8 @@ public class Main extends BaseActivity implements OnNavigationListener, SwipeRef
 	@Override
 	public void refreshFinished() {
 		super.refreshFinished();
-		if (swipeRefresh != null) {
-			swipeRefresh.setRefreshing(false);
-			swipeRefresh.setEnabled(true);
-		}
+		swipeRefresh.setRefreshing(false);
+		swipeRefresh.setEnabled(true);
 	}
 
 	@Override
@@ -479,7 +475,7 @@ public class Main extends BaseActivity implements OnNavigationListener, SwipeRef
 			}
 		}
 
-		if (swipeRefresh != null && !swipeRefresh.isRefreshing()) {
+		if (!swipeRefresh.isRefreshing()) {
 			swipeRefresh.setRefreshing(false);
 			swipeRefresh.setEnabled(true);
 		}
