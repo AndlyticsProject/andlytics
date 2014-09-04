@@ -300,8 +300,10 @@ public class DevConsoleV2Protocol {
 			firstElem.put("3", -1);
 
 			JSONArray arr = new JSONArray();
+			// XXX currency
 			arr.put(new JSONObject().put("1", 11).put("2", new JSONArray().put("JPY")));
 			arr.put(new JSONObject().put("1", 18).put("2",
+			// summary, last day, last 7, last 30
 					new JSONArray().put("-1").put("1").put("7").put("30")));
 			firstElem.put("6", arr);
 
@@ -309,97 +311,6 @@ public class DevConsoleV2Protocol {
 			firstElem.put("8", new JSONArray().put(17));
 
 			paramOne.put(firstElem);
-
-			JSONObject secondElem = new JSONObject();
-			secondElem.put("1", new JSONObject().put("1", packageName).put("2", "1"));
-			secondElem.put("2", -1);
-			secondElem.put("3", -1);
-
-			arr = new JSONArray();
-			arr.put(new JSONObject().put("1", 11).put("2", new JSONArray().put("JPY")));
-			arr.put(new JSONObject().put("1", 18).put("2",
-					new JSONArray().put("-1").put("1").put("7").put("30")));
-			arr.put(new JSONObject().put("1", 10).put("2", new JSONArray().put("PAIDAPP")));
-			secondElem.put("6", arr);
-
-			secondElem.put("7", new JSONArray().put(18));
-			secondElem.put("8", new JSONArray().put(17));
-
-			//			paramOne.put(secondElem);
-
-			//			{
-			//		        "1": {
-			//		          "1": "org.nick.kanjirecognizer",
-			//		          "2": 1
-			//		        },
-			//		        "2": -1,
-			//		        "3": -1,
-			//		        "6": [
-			//		          {
-			//		            "1": 11,
-			//		            "2": [
-			//		              "JPY"
-			//		            ]
-			//		          },
-			//		          {
-			//		            "1": 10,
-			//		            "2": [
-			//		              "PAIDAPP"
-			//		            ]
-			//		          },
-			//		          {
-			//		            "1": 18,
-			//		            "2": [
-			//		              "-1",
-			//		              "1",
-			//		              "7",
-			//		              "30"
-			//		            ]
-			//		          }
-			//		        ],
-			//		        "7": [
-			//		          18
-			//		        ],
-			//		        "8": [
-			//		          17
-			//		        ]
-			//		      }
-
-			System.out.println(jsonObj.toString());
-
-
-			//			{
-			//		        "1": {
-			//		          "1": "org.nick.kanjirecognizer",
-			//		          "2": 1
-			//		        },
-			//		        "2": -1,
-			//		        "3": -1,
-			//		        "6": [
-			//		          {
-			//		            "1": 11,
-			//		            "2": [
-			//		              "JPY"
-			//		            ]
-			//		          },
-			//		          {
-			//		            "1": 18,
-			//		            "2": [
-			//		              "-1",
-			//		              "1",
-			//		              "7",
-			//		              "30"
-			//		            ]
-			//		          }
-			//		        ],
-			//		        "7": [
-			//		          18
-			//		        ],
-			//		        "8": [
-			//		          17
-			//		        ]
-			//		      },
-
 
 			return jsonObj.toString();
 		} catch (JSONException e) {
@@ -409,9 +320,6 @@ public class DevConsoleV2Protocol {
 
 	RevenueSummary parseRevenueResponse(String json) {
 		try {
-			// XXX
-			System.out.println("*** " + json);
-
 			return JsonParser.parseRevenueResponse(json);
 		} catch (JSONException ex) {
 			saveDebugJson(json);
