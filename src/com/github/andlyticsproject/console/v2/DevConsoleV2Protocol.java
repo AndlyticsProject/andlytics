@@ -6,14 +6,14 @@ import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
-import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.FileUtils;
 
 import org.apache.http.client.methods.HttpPost;
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.List;
 
 @SuppressLint("DefaultLocale")
@@ -24,7 +24,8 @@ public class DevConsoleV2Protocol {
 	static final String URL_APPS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/androidapps";
 	static final String URL_STATISTICS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/statistics";
 	static final String URL_REVIEWS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/reviews";
-	static final String URL_REVENUE = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/revenue";
+	// XXX
+	static final String URL_REVENUE = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/statistics";
 
 	// Templates for payloads used in POST requests
 	static final String FETCH_APPS_TEMPLATE = "{\"method\":\"fetch\","
@@ -282,12 +283,135 @@ public class DevConsoleV2Protocol {
 	String createFetchRevenueSummaryRequest(String packageName) {
 		checkState();
 
-		return String.format(REVENUE_SUMMARY_TEMPLATE, packageName,
-				sessionCredentials.getXsrfToken());
+		try {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("method", "fetchStats");
+			jsonObj.put("xsrf", sessionCredentials.getXsrfToken());
+
+			JSONObject paramsObj = new JSONObject();
+			jsonObj.put("params", paramsObj);
+
+			JSONArray paramOne = new JSONArray();
+			paramsObj.put("1", paramOne);
+
+			JSONObject firstElem = new JSONObject();
+			firstElem.put("1", new JSONObject().put("1", packageName).put("2", "1"));
+			firstElem.put("2", -1);
+			firstElem.put("3", -1);
+
+			JSONArray arr = new JSONArray();
+			arr.put(new JSONObject().put("1", 11).put("2", new JSONArray().put("JPY")));
+			arr.put(new JSONObject().put("1", 18).put("2",
+					new JSONArray().put("-1").put("1").put("7").put("30")));
+			firstElem.put("6", arr);
+
+			firstElem.put("7", new JSONArray().put(18));
+			firstElem.put("8", new JSONArray().put(17));
+
+			paramOne.put(firstElem);
+
+			JSONObject secondElem = new JSONObject();
+			secondElem.put("1", new JSONObject().put("1", packageName).put("2", "1"));
+			secondElem.put("2", -1);
+			secondElem.put("3", -1);
+
+			arr = new JSONArray();
+			arr.put(new JSONObject().put("1", 11).put("2", new JSONArray().put("JPY")));
+			arr.put(new JSONObject().put("1", 18).put("2",
+					new JSONArray().put("-1").put("1").put("7").put("30")));
+			arr.put(new JSONObject().put("1", 10).put("2", new JSONArray().put("PAIDAPP")));
+			secondElem.put("6", arr);
+
+			secondElem.put("7", new JSONArray().put(18));
+			secondElem.put("8", new JSONArray().put(17));
+
+			//			paramOne.put(secondElem);
+
+			//			{
+			//		        "1": {
+			//		          "1": "org.nick.kanjirecognizer",
+			//		          "2": 1
+			//		        },
+			//		        "2": -1,
+			//		        "3": -1,
+			//		        "6": [
+			//		          {
+			//		            "1": 11,
+			//		            "2": [
+			//		              "JPY"
+			//		            ]
+			//		          },
+			//		          {
+			//		            "1": 10,
+			//		            "2": [
+			//		              "PAIDAPP"
+			//		            ]
+			//		          },
+			//		          {
+			//		            "1": 18,
+			//		            "2": [
+			//		              "-1",
+			//		              "1",
+			//		              "7",
+			//		              "30"
+			//		            ]
+			//		          }
+			//		        ],
+			//		        "7": [
+			//		          18
+			//		        ],
+			//		        "8": [
+			//		          17
+			//		        ]
+			//		      }
+
+			System.out.println(jsonObj.toString());
+
+
+			//			{
+			//		        "1": {
+			//		          "1": "org.nick.kanjirecognizer",
+			//		          "2": 1
+			//		        },
+			//		        "2": -1,
+			//		        "3": -1,
+			//		        "6": [
+			//		          {
+			//		            "1": 11,
+			//		            "2": [
+			//		              "JPY"
+			//		            ]
+			//		          },
+			//		          {
+			//		            "1": 18,
+			//		            "2": [
+			//		              "-1",
+			//		              "1",
+			//		              "7",
+			//		              "30"
+			//		            ]
+			//		          }
+			//		        ],
+			//		        "7": [
+			//		          18
+			//		        ],
+			//		        "8": [
+			//		          17
+			//		        ]
+			//		      },
+
+
+			return jsonObj.toString();
+		} catch (JSONException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	RevenueSummary parseRevenueResponse(String json) {
 		try {
+			// XXX
+			System.out.println("*** " + json);
+
 			return JsonParser.parseRevenueResponse(json);
 		} catch (JSONException ex) {
 			saveDebugJson(json);
@@ -300,15 +424,6 @@ public class DevConsoleV2Protocol {
 
 		return String.format(REVENUE_HISTORICAL_DATA, packageName,
 				sessionCredentials.getXsrfToken());
-	}
-
-	Revenue parseLatestTotalRevenue(String json) {
-		try {
-			return JsonParser.parseLatestTotalRevenue(json);
-		} catch (IOException ex) {
-			saveDebugJson(json);
-			throw new DevConsoleProtocolException(json, ex);
-		}
 	}
 
 }
