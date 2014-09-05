@@ -24,8 +24,6 @@ public class DevConsoleV2Protocol {
 	static final String URL_APPS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/androidapps";
 	static final String URL_STATISTICS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/statistics";
 	static final String URL_REVIEWS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/reviews";
-	// XXX
-	static final String URL_REVENUE = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/statistics";
 
 	// Templates for payloads used in POST requests
 	static final String FETCH_APPS_TEMPLATE = "{\"method\":\"fetch\","
@@ -134,7 +132,7 @@ public class DevConsoleV2Protocol {
 	}
 
 	String createRevenueUrl(String developerId) {
-		return createDeveloperUrl(URL_REVENUE, developerId);
+		return createDeveloperUrl(URL_STATISTICS, developerId);
 	}
 
 	String createFetchAppInfosRequest() {
@@ -300,8 +298,8 @@ public class DevConsoleV2Protocol {
 			firstElem.put("3", -1);
 
 			JSONArray arr = new JSONArray();
-			// XXX currency
-			arr.put(new JSONObject().put("1", 11).put("2", new JSONArray().put("JPY")));
+			arr.put(new JSONObject().put("1", 11).put("2",
+					new JSONArray().put(sessionCredentials.getPreferredCurrency())));
 			arr.put(new JSONObject().put("1", 18).put("2",
 			// summary, last day, last 7, last 30
 					new JSONArray().put("-1").put("1").put("7").put("30")));
@@ -320,7 +318,7 @@ public class DevConsoleV2Protocol {
 
 	RevenueSummary parseRevenueResponse(String json) {
 		try {
-			return JsonParser.parseRevenueResponse(json);
+			return JsonParser.parseRevenueResponse(json, sessionCredentials.getPreferredCurrency());
 		} catch (JSONException ex) {
 			saveDebugJson(json);
 			throw new DevConsoleProtocolException(json, ex);

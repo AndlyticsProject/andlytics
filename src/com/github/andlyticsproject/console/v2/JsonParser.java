@@ -558,7 +558,7 @@ public class JsonParser {
 				errorCode));
 	}
 
-	static RevenueSummary parseRevenueResponse(String json) throws JSONException {
+	static RevenueSummary parseRevenueResponse(String json, String currency) throws JSONException {
 		JSONObject jsonObj = new JSONObject(json);
 		if (jsonObj.has("error")) {
 			throw parseError(jsonObj, "fetch revenue summary");
@@ -575,8 +575,6 @@ public class JsonParser {
 			return null;
 		}
 
-		// XXX
-		String currency = "JPY";
 		JSONArray revenueArr = summaryObj.getJSONArray("1");
 
 		double overall = 0;
