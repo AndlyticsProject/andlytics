@@ -12,10 +12,14 @@ import android.util.Log;
 
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.R;
+import com.github.andlyticsproject.console.DevConsoleException;
 import com.github.andlyticsproject.model.DeveloperConsoleAccount;
 import com.github.andlyticsproject.util.FileUtils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,60 +31,116 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 
 	private static final String TAG = BaseAuthenticator.class.getSimpleName();
 
-	protected static final Pattern DEV_ACC_PATTERN = Pattern
-			.compile("\"DeveloperConsoleAccounts\":\"\\{\\\\\"1\\\\\":\\[\\{\\\\\"1\\\\\":\\\\\"(\\d{20})\\\\\"");
-	protected static final Pattern DEV_ACCS_PATTERN = Pattern
-			.compile("\\\\\"1\\\\\":\\\\\"(\\d{20})\\\\\",\\\\\"2\\\\\":\\\\\"(.+?)\\\\\",");
-	protected static final Pattern XSRF_TOKEN_PATTERN = Pattern
-			.compile("\"XsrfToken\":\"\\{\\\\\"1\\\\\":\\\\\"(\\S+)\\\\\"\\}\"");
-
-	protected static final Pattern WHITELISTED_FEATURES_PATTERN = Pattern
-			.compile("\"WhitelistedFeatures\":\"\\{\\\\\"1\\\\\":\\[(\\S+?)\\]\\}");
+	protected static final Pattern STARTUP_DATA_PATTERN = Pattern
+			.compile("startupData = (\\{.+?\\});");
 
 	protected String accountName;
+
+	protected JSONObject startupData;
 
 	protected BaseAuthenticator(String accountName) {
 		this.accountName = accountName;
 	}
 
 	protected String findXsrfToken(String responseStr) {
-		Matcher m = XSRF_TOKEN_PATTERN.matcher(responseStr);
-		if (m.find()) {
-			return m.group(1);
+		try {
+			if (startupData == null) {
+				Matcher m = STARTUP_DATA_PATTERN.matcher(responseStr);
+				if (m.find()) {
+					String startupDataStr = m.group(1);
+					startupData = new JSONObject(startupDataStr);
+				} else {
+					return null;
+				}
+			}
+
+			String result = new JSONObject(startupData.getString("XsrfToken")).getString("1");
+
+			return result;
+		} catch (JSONException e) {
+			throw new DevConsoleException(e);
 		}
-		return null;
 	}
 
 	protected DeveloperConsoleAccount[] findDeveloperAccounts(String responseStr) {
 		List<DeveloperConsoleAccount> devAccounts = new ArrayList<DeveloperConsoleAccount>();
-		Matcher m = DEV_ACCS_PATTERN.matcher(responseStr);
-		while (m.find()) {
-			String developerId = m.group(1);
-			String developerName = m.group(2);
-			if (developerName.contains("\\\\u")) {
-				developerName = developerName.replace("\\\\u", "\\u");
-				developerName = StringEscapeUtils.unescapeJava(developerName);
-			} else if (developerName.contains("\\u")) {
-				developerName = StringEscapeUtils.unescapeJava(developerName);
+
+		try {
+			Matcher m = STARTUP_DATA_PATTERN.matcher(responseStr);
+			if (m.find()) {
+				String startupDataStr = m.group(1);
+				if (startupData == null) {
+					startupData = new JSONObject(startupDataStr);
+				}
+
+				JSONObject devConsoleAccountsObj = new JSONObject(
+						startupData.getString("DeveloperConsoleAccounts"));
+				JSONArray devConsoleAccountsArr = devConsoleAccountsObj.getJSONArray("1");
+				for (int i = 0; i < devConsoleAccountsArr.length(); i++) {
+					JSONObject accountObj = devConsoleAccountsArr.getJSONObject(i);
+					String developerId = accountObj.getString("1");
+					String developerName = StringEscapeUtils
+							.unescapeJava(accountObj.getString("2"));
+					devAccounts.add(new DeveloperConsoleAccount(developerId, developerName));
+				}
+
 			}
-			devAccounts.add(new DeveloperConsoleAccount(developerId, developerName));
+
+			return devAccounts.isEmpty() ? null : devAccounts
+					.toArray(new DeveloperConsoleAccount[devAccounts.size()]);
+		} catch (JSONException e) {
+			throw new DevConsoleException(e);
 		}
-		return devAccounts.isEmpty() ? null : devAccounts
-				.toArray(new DeveloperConsoleAccount[devAccounts.size()]);
 	}
 
 	protected List<String> findWhitelistedFeatures(String responseStr) {
 		List<String> result = new ArrayList<String>();
-		Matcher m = WHITELISTED_FEATURES_PATTERN.matcher(responseStr);
-		if (m.find()) {
-			String featuresStr = m.group(1);
-			String[] features = featuresStr.split(",");
-			for (String feature : features) {
-				result.add(feature.replaceAll("\\\\\"", ""));
-			}
-		}
 
-		return Collections.unmodifiableList(result);
+		try {
+			if (startupData == null) {
+				Matcher m = STARTUP_DATA_PATTERN.matcher(responseStr);
+				if (m.find()) {
+					String startupDataStr = m.group(1);
+					startupData = new JSONObject(startupDataStr);
+				} else {
+					return result;
+				}
+			}
+
+			JSONArray featuresArr = new JSONObject(startupData.getString("WhitelistedFeatures"))
+					.getJSONArray("1");
+			for (int i = 0; i < featuresArr.length(); i++) {
+				result.add(featuresArr.getString(i));
+			}
+
+			return Collections.unmodifiableList(result);
+		} catch (JSONException e) {
+			throw new DevConsoleException(e);
+		}
+	}
+
+	protected String findPreferredCurrency(String responseStr) {
+		// fallback
+		String result = "USD";
+
+		try {
+			if (startupData == null) {
+				Matcher m = STARTUP_DATA_PATTERN.matcher(responseStr);
+				if (m.find()) {
+					String startupDataStr = m.group(1);
+					startupData = new JSONObject(startupDataStr);
+				} else {
+					return result;
+				}
+			}
+
+			JSONObject userDetails = new JSONObject(startupData.getString("UserDetails"));
+			result = userDetails.getString("2");
+
+			return result;
+		} catch (JSONException e) {
+			throw new DevConsoleException(e);
+		}
 	}
 
 	public String getAccountName() {

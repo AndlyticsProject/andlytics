@@ -1,8 +1,5 @@
 package com.github.andlyticsproject.console.v2;
 
-import android.annotation.TargetApi;
-import android.os.Build;
-import android.util.JsonReader;
 import android.util.Log;
 
 import com.github.andlyticsproject.console.DevConsoleException;
@@ -10,7 +7,6 @@ import com.github.andlyticsproject.model.AppDetails;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
-import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.FileUtils;
 
@@ -18,12 +14,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * This class contains static methods used to parse JSON from {@link DevConsoleV2}
@@ -33,6 +29,14 @@ import java.util.Locale;
  * 
  */
 public class JsonParser {
+
+	private static final int REVENUE_LAST_30DAYS = 30;
+
+	private static final int REVENUE_LAST_7DAYS = 7;
+
+	private static final int REVENUE_LAST_DAY = 1;
+
+	private static final int REVENUE_OVERALL = -1;
 
 	private static final String TAG = JsonParser.class.getSimpleName();
 
@@ -485,8 +489,8 @@ public class JsonParser {
 			if (translation != null) {
 				String displayLanguage = Locale.getDefault().getLanguage();
 				String translationLang = translation.getString("1");
-				
-				if(translation.has("2")) {
+
+				if (translation.has("2")) {
 					String translationTitle = translation.getString("2");
 					if (translationLang.contains(displayLanguage)) {
 						comment.setTitle(translationTitle);
@@ -494,7 +498,7 @@ public class JsonParser {
 				}
 				// Apparently, a translation body is not always provided
 				// Possibly happens if the translation fails or equals the original
-				if(translation.has("3")) {
+				if (translation.has("3")) {
 					String translationText = translation.getString("3");
 					if (translationLang.contains(displayLanguage)) {
 						comment.setText(translationText);
@@ -554,34 +558,61 @@ public class JsonParser {
 				errorCode));
 	}
 
-	static RevenueSummary parseRevenueResponse(String json) throws JSONException {
+	static RevenueSummary parseRevenueResponse(String json, String currency) throws JSONException {
 		JSONObject jsonObj = new JSONObject(json);
 		if (jsonObj.has("error")) {
 			throw parseError(jsonObj, "fetch revenue summary");
 		}
 
-		JSONObject resultObj = jsonObj.getJSONObject("result");
-		String currency = resultObj.optString("1");
-		// XXX does this really mean that the app has no revenue
-		if (currency == null || "".equals(currency)) {
+		JSONArray arr = jsonObj.getJSONObject("result").getJSONArray("1");
+		if (arr.length() == 0) {
 			return null;
 		}
 
-		//  "6": "1376352000000"
-		long timestamp = resultObj.getLong("6");
-		// no time info, 00:00:00 GMT(?)
-		Date date = new Date(timestamp / 1000);
-		// 2 -total, 3 -sales, 4- in-app products
-		// we only use total (for now)
-		JSONObject revenueObj = resultObj.getJSONObject("2");
-		// even keys are for previous period
-		double lastDay = revenueObj.getDouble("1");
-		double last7Days = revenueObj.getDouble("3");
-		double last30Days = revenueObj.getDouble("5");
-		// NaN is treated like NULL -> DB error
-		double overall = revenueObj.optDouble("7", 0.0);
+		JSONObject summaryObj = arr.getJSONObject(0);
+		// free app or no revenue available
+		if (!summaryObj.has("1")) {
+			return null;
+		}
 
-		return RevenueSummary.createTotal(currency, date, lastDay, last7Days, last30Days, overall);
+		JSONArray revenueArr = summaryObj.getJSONArray("1");
+
+		double overall = 0;
+		double lastDay = 0;
+		double last30Days = 0;
+		double last7Days = 0;
+
+		for (int i = 0; i < revenueArr.length(); i++) {
+			JSONObject revenueObj = revenueArr.getJSONObject(i);
+			int period = revenueObj.getJSONArray("1").getInt(0);
+			double value = revenueObj.getJSONArray("2").optDouble(0, 0.0) / 1000000;
+
+			switch (period) {
+			case REVENUE_OVERALL:
+				overall = value;
+				break;
+			case REVENUE_LAST_DAY:
+				lastDay = value;
+				break;
+			case REVENUE_LAST_7DAYS:
+				last7Days = value;
+				break;
+			case REVENUE_LAST_30DAYS:
+				last30Days = value;
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown revenue period: " + period);
+			}
+		}
+
+		long timestamp = summaryObj.getLong("2");
+		String tzStr = summaryObj.getString("3");
+		TimeZone tz = TimeZone.getTimeZone(tzStr);
+		Calendar cal = Calendar.getInstance(tz);
+		cal.setTimeInMillis(timestamp / 1000);
+
+		return RevenueSummary.createTotal(currency, cal.getTime(), lastDay, last7Days, last30Days,
+				overall);
 	}
 
 	/**
@@ -594,100 +625,4 @@ public class JsonParser {
 		return new Date(unixDateCode);
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public static Revenue parseLatestTotalRevenue(String json) throws IOException {
-		JsonReader reader = new JsonReader(new StringReader(json));
-		reader.setLenient(true);
-		String currency = null;
-		Date reportDate = null;
-		Date revenueDate = null;
-		String revenueType1 = null;
-		String revenueType2 = null;
-		double value = 0;
-
-		reader.beginObject();
-		while (reader.hasNext()) {
-			String name = reader.nextName();
-			if ("result".equals(name)) {
-				reader.beginObject();
-				while (reader.hasNext()) {
-					name = reader.nextName();
-					// 1: sales, 2: in-app, 3: subscriptions?
-					// XXX this doesn't handle the case where there is more
-					// than one, e.g. app sales + subscriptions
-					if ("1".equals(name) || "2".equals(name) || "3".equals(name)) {
-						// revenue list: date->amount
-						// [{"1":"1304103600000","2":{"2":234.0}},..{"1":"1304449200000","2":{"2":123.0}},...]
-						reader.beginObject();
-						while (reader.hasNext()) {
-							name = reader.nextName();
-							if ("1".equals(name)) {
-								reader.beginArray();
-								while (reader.hasNext()) {
-									reader.beginObject();
-									double dailyRevenue = 0;
-									Date date = null;
-									while (reader.hasNext()) {
-										name = reader.nextName();
-										if ("1".equals(name)) {
-											date = new Date(reader.nextLong());
-											if (revenueDate == null) {
-												revenueDate = (Date) date.clone();
-											}
-										} else if ("2".equals(name)) {
-											reader.beginObject();
-											while (reader.hasNext()) {
-												name = reader.nextName();
-												if ("2".equals(name)) {
-													dailyRevenue = reader.nextDouble();
-													if (date != null
-															&& date.getTime() > revenueDate
-																	.getTime()) {
-														revenueDate = date;
-														value = dailyRevenue;
-													}
-												}
-											}
-											reader.endObject();
-										}
-									}
-									reader.endObject();
-								}
-								reader.endArray();
-							} else if ("2".equals(name)) {
-								// "APP", "IN_APP",
-								revenueType1 = reader.nextString();
-							} else if ("3".equals(name)) {
-								revenueType2 = reader.nextString();
-							}
-						}
-						reader.endObject();
-					} else if ("4".equals(name)) {
-						reportDate = new Date(reader.nextLong());
-					} else if ("5".equals(name)) {
-						currency = reader.nextString();
-					}
-				}
-				reader.endObject();
-			} else if ("xsrf".equals(name)) {
-				// consume XSRF
-				reader.nextString();
-			}
-		}
-		reader.endObject();
-
-		// XXX what happens when there is more than one type?
-		Revenue.Type type = Revenue.Type.TOTAL;
-		if ("APP".equals(revenueType1)) {
-			type = Revenue.Type.APP_SALES;
-		} else if ("IN_APP".equals(revenueType1)) {
-			type = Revenue.Type.IN_APP;
-		} else {
-			type = Revenue.Type.SUBSCRIPTIONS;
-		}
-
-		// XXX do we need the date?
-		// return new Revenue(type, revenueDate, currency, value);
-		return new Revenue(type, value, currency);
-	}
 }

@@ -221,10 +221,13 @@ public class AccountManagerAuthenticator extends BaseAuthenticator {
 
 			List<String> whitelistedFeatures = findWhitelistedFeatures(responseStr);
 
+			String preferredCurrency = findPreferredCurrency(responseStr);
+
 			SessionCredentials result = new SessionCredentials(accountName, xsrfToken,
 					developerAccounts);
 			result.addCookies(httpClient.getCookieStore().getCookies());
 			result.addWhitelistedFeatures(whitelistedFeatures);
+			result.setPreferredCurrency(preferredCurrency);
 
 			return result;
 		} catch (IOException e) {

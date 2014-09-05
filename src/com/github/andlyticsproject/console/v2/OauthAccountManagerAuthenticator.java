@@ -157,7 +157,9 @@ public class OauthAccountManagerAuthenticator extends BaseAuthenticator {
 						+ response.getStatusLine());
 			}
 			String uberToken = EntityUtils.toString(response.getEntity(), "UTF-8");
-			Log.d(TAG, "uber token: " + uberToken);
+			if (DEBUG) {
+				Log.d(TAG, "uber token: " + uberToken);
+			}
 			if (uberToken == null || "".equals(uberToken) || uberToken.contains("Error")) {
 				throw new AuthenticationException("Cannot get uber token. Got: " + uberToken);
 			}
@@ -172,7 +174,9 @@ public class OauthAccountManagerAuthenticator extends BaseAuthenticator {
 					.appendQueryParameter("source", "ChromiumBrowser")
 					.appendQueryParameter("uberauth", uberToken)
 					.appendQueryParameter("continue", DEVELOPER_CONSOLE_URL).build().toString();
-			Log.d(TAG, "MergeSession URL: " + webloginUrl);
+			if (DEBUG) {
+				Log.d(TAG, "MergeSession URL: " + webloginUrl);
+			}
 
 			UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(pairs, "UTF-8");
 			getConsole.setEntity(formEntity);
@@ -212,10 +216,13 @@ public class OauthAccountManagerAuthenticator extends BaseAuthenticator {
 
 			List<String> whitelistedFeatures = findWhitelistedFeatures(responseStr);
 
+			String preferredCurrency = findPreferredCurrency(responseStr);
+
 			SessionCredentials result = new SessionCredentials(accountName, xsrfToken,
 					developerAccounts);
 			result.addCookies(httpClient.getCookieStore().getCookies());
 			result.addWhitelistedFeatures(whitelistedFeatures);
+			result.setPreferredCurrency(preferredCurrency);
 
 			return result;
 		} catch (IOException e) {
