@@ -135,7 +135,9 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 			}
 
 			JSONObject userDetails = new JSONObject(startupData.getString("UserDetails"));
-			result = userDetails.getString("2");
+			if (userDetails.has("2")) {
+				result = userDetails.getString("2");
+			}
 
 			return result;
 		} catch (JSONException e) {
