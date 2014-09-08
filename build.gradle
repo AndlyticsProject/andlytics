@@ -43,10 +43,10 @@ android {
 	compileSdkVersion 19
 	buildToolsVersion "20"
 
-    lintOptions {
-        checkReleaseBuilds false
-        abortOnError false
-    }
+    //lintOptions {
+    //    checkReleaseBuilds false
+    //    abortOnError false
+    //}
 
 
     signingConfigs {
