@@ -1,19 +1,5 @@
 package com.github.andlyticsproject.adsense;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
@@ -30,12 +16,28 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.adsense.AdSense;
-import com.google.api.services.adsense.AdSense.Reports.Generate;
+import com.google.api.services.adsense.AdSense.Accounts.Reports.Generate;
 import com.google.api.services.adsense.AdSenseScopes;
+import com.google.api.services.adsense.model.Account;
+import com.google.api.services.adsense.model.Accounts;
 import com.google.api.services.adsense.model.AdClients;
 import com.google.api.services.adsense.model.AdUnit;
 import com.google.api.services.adsense.model.AdUnits;
 import com.google.api.services.adsense.model.AdsenseReportsGenerateResponse;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @SuppressLint("SimpleDateFormat")
 public class AdSenseClient {
@@ -64,8 +66,8 @@ public class AdSenseClient {
 		GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(context,
 				Collections.singleton(AdSenseScopes.ADSENSE_READONLY));
 		credential.setSelectedAccountName(admobAccount);
-		AdSense adsense = new AdSense.Builder(AndroidHttp.newCompatibleTransport(), JSON_FACTORY,
-				credential).setApplicationName(APPLICATION_NAME).build();
+		AdSense adsense = new AdSense.Builder(AndroidHttp.newCompatibleTransport(),
+				JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
 
 		return adsense;
 	}
@@ -129,14 +131,21 @@ public class AdSenseClient {
 	}
 
 	private static String getClientId(AdSense adsense) throws IOException {
-		AdClients adClients = adsense.adclients().list().setMaxResults(MAX_LIST_PAGE_SIZE)
-				.setPageToken(null).execute();
+		Account account = getFirstAccount(adsense);
+		AdClients adClients = adsense.accounts().adclients().list(account.getId())
+				.setMaxResults(MAX_LIST_PAGE_SIZE).setPageToken(null).execute();
 		if (adClients.getItems() == null || adClients.getItems().isEmpty()) {
 			return null;
 		}
 
 		// we assume there is only one(?)
 		return adClients.getItems().get(0).getId();
+	}
+
+	private static Account getFirstAccount(AdSense adsense) throws IOException {
+		Accounts accounts = adsense.accounts().list().execute();
+
+		return accounts.getItems().get(0);
 	}
 
 	private static void updateStats(Context context, boolean bulkInsert, List<AdmobStats> result) {
@@ -166,10 +175,11 @@ public class AdSenseClient {
 			Bundle extras, String authority, Bundle syncBundle) {
 		BackgroundGoogleAccountCredential credential = BackgroundGoogleAccountCredential
 				.usingOAuth2(context, Collections.singleton(AdSenseScopes.ADSENSE_READONLY),
-						extras, authority, syncBundle);
+						extras,
+						authority, syncBundle);
 		credential.setSelectedAccountName(admobAccount);
-		AdSense adsense = new AdSense.Builder(AndroidHttp.newCompatibleTransport(), JSON_FACTORY,
-				credential).setApplicationName(APPLICATION_NAME).build();
+		AdSense adsense = new AdSense.Builder(AndroidHttp.newCompatibleTransport(),
+				JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
 		return adsense;
 	}
 
@@ -177,7 +187,9 @@ public class AdSenseClient {
 			Date startDate, Date endDate) throws IOException, ParseException {
 		String startDateStr = DATE_FORMATTER.format(startDate);
 		String endDateStr = DATE_FORMATTER.format(endDate);
-		Generate request = adsense.reports().generate(startDateStr, endDateStr);
+		Account account = getFirstAccount(adsense);
+		Generate request = adsense.accounts().reports()
+				.generate(account.getId(), startDateStr, endDateStr);
 
 		// Specify the desired ad client using a filter.
 		request.setFilter(Arrays.asList("AD_CLIENT_ID==" + escapeFilterParameter(adClientId)));
@@ -254,8 +266,9 @@ public class AdSenseClient {
 			return new HashMap<String, String>();
 		}
 
-		AdUnits units = adsense.adunits().list(adClientId).setMaxResults(MAX_LIST_PAGE_SIZE)
-				.setPageToken(null).execute();
+		Account account = getFirstAccount(adsense);
+		AdUnits units = adsense.accounts().adunits().list(account.getId(), adClientId)
+				.setMaxResults(MAX_LIST_PAGE_SIZE).setPageToken(null).execute();
 		List<AdUnit> items = units.getItems();
 
 		// preserver order

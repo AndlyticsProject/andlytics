@@ -24,15 +24,15 @@ dependencies {
     compile 'com.google.android.gms:play-services:4.0.30'
     compile 'org.apache.commons:commons-lang3:3.1'
 
-    compile ('com.google.api-client:google-api-client:1.16.0-rc') {
+    compile ('com.google.api-client:google-api-client:1.19.0') {
         exclude group: 'org.apache.httpcomponents'
         exclude group: 'xpp3'
         exclude group: 'junit'
         exclude group: 'com.google.android'
     }
-    compile 'com.google.api-client:google-api-client-android:1.16.0-rc'
-    compile 'com.google.api-client:google-api-client-gson:1.16.0-rc'
-    compile 'com.google.apis:google-api-services-adsense:v1.3-rev19-1.16.0-rc'
+    compile 'com.google.api-client:google-api-client-android:1.19.0'
+    compile 'com.google.api-client:google-api-client-gson:1.19.0'
+    compile 'com.google.apis:google-api-services-adsense:v1.4-rev29-1.19.0'
     compile 'com.google.code.gson:gson:2.1'
     compile 'net.sf.opencsv:opencsv:2.3'
     compile 'com.google.code.findbugs:jsr305:1.3.9'
@@ -42,6 +42,12 @@ android {
 
 	compileSdkVersion 19
 	buildToolsVersion "20"
+
+    //lintOptions {
+    //    checkReleaseBuilds false
+    //    abortOnError false
+    //}
+
 
     signingConfigs {
         release {
