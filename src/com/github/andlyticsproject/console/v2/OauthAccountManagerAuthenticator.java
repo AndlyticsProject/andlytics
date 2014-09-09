@@ -11,7 +11,6 @@ import android.util.Log;
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.NetworkException;
-import com.github.andlyticsproject.model.DeveloperConsoleAccount;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
@@ -73,7 +72,6 @@ public class OauthAccountManagerAuthenticator extends BaseAuthenticator {
 		return authenticateInternal(null, invalidate);
 	}
 
-	@SuppressWarnings("deprecation")
 	private SessionCredentials authenticateInternal(Activity activity, boolean invalidate)
 			throws AuthenticationException {
 		try {
@@ -200,31 +198,8 @@ public class OauthAccountManagerAuthenticator extends BaseAuthenticator {
 				Log.d(TAG, "Response: " + responseStr);
 			}
 
-			DeveloperConsoleAccount[] developerAccounts = findDeveloperAccounts(responseStr);
-			if (developerAccounts == null) {
-				debugAuthFailure(activity, responseStr, webloginUrl);
-
-				throw new AuthenticationException("Couldn't get developer account ID.");
-			}
-
-			String xsrfToken = findXsrfToken(responseStr);
-			if (xsrfToken == null) {
-				debugAuthFailure(activity, responseStr, webloginUrl);
-
-				throw new AuthenticationException("Couldn't get XSRF token.");
-			}
-
-			List<String> whitelistedFeatures = findWhitelistedFeatures(responseStr);
-
-			String preferredCurrency = findPreferredCurrency(responseStr);
-
-			SessionCredentials result = new SessionCredentials(accountName, xsrfToken,
-					developerAccounts);
-			result.addCookies(httpClient.getCookieStore().getCookies());
-			result.addWhitelistedFeatures(whitelistedFeatures);
-			result.setPreferredCurrency(preferredCurrency);
-
-			return result;
+			return createSessionCredentials(accountName, webloginUrl, responseStr,
+					httpClient.getCookieStore().getCookies());
 		} catch (IOException e) {
 			throw new NetworkException(e);
 		}
