@@ -111,7 +111,7 @@
             <WebView
                 android:id="@+id/about_thirdsparty_credits"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:background="#FFF" />
         </LinearLayout>
     </LinearLayout>

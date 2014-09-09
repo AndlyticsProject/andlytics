@@ -348,7 +348,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			if (resultCode == RESULT_OK) {
 				Intent importIntent = new Intent(this, ImportActivity.class);
 				importIntent.setAction(Intent.ACTION_VIEW);
-				Uri uri = data.getData();
 				importIntent.setData(data.getData());
 				startActivity(importIntent);
 			} else {
