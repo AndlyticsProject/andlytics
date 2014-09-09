@@ -112,8 +112,7 @@
                 android:id="@+id/about_thirdsparty_credits"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:background="#FFF" 
-                android:padding="6dip"/>
+                android:background="#FFF" />
         </LinearLayout>
     </LinearLayout>
 
