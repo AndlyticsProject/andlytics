@@ -3,4 +3,6 @@
     <issue id="ContentDescription" severity="ignore" />
     <issue id="MissingTranslation" severity="warning" />
     <issue id="Overdraw" severity="ignore" />
+    <issue id="RtlSymmetry" severity="ignore" />
+    <issue id="WebViewLayout" severity="ignore" />
 </lint>
