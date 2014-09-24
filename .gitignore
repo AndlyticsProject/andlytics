@@ -22,3 +22,6 @@ local.properties
 secure.properties
 /assets
 /gradle.properties
+.idea/
+.gradle/
+*.iml
