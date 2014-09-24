@@ -1,20 +1,20 @@
 package com.github.andlyticsproject.console.v2;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.apache.http.client.methods.HttpPost;
-import org.json.JSONException;
-
 import android.annotation.SuppressLint;
 
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
-import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.FileUtils;
+
+import org.apache.http.client.methods.HttpPost;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
 
 @SuppressLint("DefaultLocale")
 public class DevConsoleV2Protocol {
@@ -24,7 +24,6 @@ public class DevConsoleV2Protocol {
 	static final String URL_APPS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/androidapps";
 	static final String URL_STATISTICS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/statistics";
 	static final String URL_REVIEWS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/reviews";
-	static final String URL_REVENUE = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/revenue";
 
 	// Templates for payloads used in POST requests
 	static final String FETCH_APPS_TEMPLATE = "{\"method\":\"fetch\","
@@ -133,7 +132,7 @@ public class DevConsoleV2Protocol {
 	}
 
 	String createRevenueUrl(String developerId) {
-		return createDeveloperUrl(URL_REVENUE, developerId);
+		return createDeveloperUrl(URL_STATISTICS, developerId);
 	}
 
 	String createFetchAppInfosRequest() {
@@ -246,7 +245,10 @@ public class DevConsoleV2Protocol {
 	}
 
 	boolean canReplyToComments() {
-		return hasFeature(REPLY_TO_COMMENTS_FEATURE);
+		// this has apparently been removed because now everybody can 
+		// reply to comments
+		//		return hasFeature(REPLY_TO_COMMENTS_FEATURE);
+		return true;
 	}
 
 	int extractCommentsCount(String json) {
@@ -279,13 +281,44 @@ public class DevConsoleV2Protocol {
 	String createFetchRevenueSummaryRequest(String packageName) {
 		checkState();
 
-		return String.format(REVENUE_SUMMARY_TEMPLATE, packageName,
-				sessionCredentials.getXsrfToken());
+		try {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("method", "fetchStats");
+			jsonObj.put("xsrf", sessionCredentials.getXsrfToken());
+
+			JSONObject paramsObj = new JSONObject();
+			jsonObj.put("params", paramsObj);
+
+			JSONArray paramOne = new JSONArray();
+			paramsObj.put("1", paramOne);
+
+			JSONObject firstElem = new JSONObject();
+			firstElem.put("1", new JSONObject().put("1", packageName).put("2", "1"));
+			firstElem.put("2", -1);
+			firstElem.put("3", -1);
+
+			JSONArray arr = new JSONArray();
+			arr.put(new JSONObject().put("1", 11).put("2",
+					new JSONArray().put(sessionCredentials.getPreferredCurrency())));
+			arr.put(new JSONObject().put("1", 18).put("2",
+			// summary, last day, last 7, last 30
+					new JSONArray().put("-1").put("1").put("7").put("30")));
+			firstElem.put("6", arr);
+
+			firstElem.put("7", new JSONArray().put(18));
+			firstElem.put("8", new JSONArray().put(17));
+
+			paramOne.put(firstElem);
+
+			return jsonObj.toString();
+		} catch (JSONException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	RevenueSummary parseRevenueResponse(String json) {
 		try {
-			return JsonParser.parseRevenueResponse(json);
+			return JsonParser.parseRevenueResponse(json, sessionCredentials.getPreferredCurrency());
 		} catch (JSONException ex) {
 			saveDebugJson(json);
 			throw new DevConsoleProtocolException(json, ex);
@@ -297,15 +330,6 @@ public class DevConsoleV2Protocol {
 
 		return String.format(REVENUE_HISTORICAL_DATA, packageName,
 				sessionCredentials.getXsrfToken());
-	}
-
-	Revenue parseLatestTotalRevenue(String json) {
-		try {
-			return JsonParser.parseLatestTotalRevenue(json);
-		} catch (IOException ex) {
-			saveDebugJson(json);
-			throw new DevConsoleProtocolException(json, ex);
-		}
 	}
 
 }

@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -109,26 +110,6 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 				intent.setData(Uri.parse("https://play.google.com/store/apps/details?id="
 						+ packageName));
 				startActivity(intent);
-			}
-		});
-
-		View descriptionView = findViewById(R.id.appinfo_description);
-
-		descriptionView.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showLongTextDialog(R.string.appinfo_description_label, ((TextView) v).getText()
-						.toString());
-			}
-		});
-
-		View changelogView = findViewById(R.id.appinfo_changelog);
-
-		changelogView.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showLongTextDialog(R.string.appinfo_changelog_label, ((TextView) v).getText()
-						.toString());
 			}
 		});
 
@@ -320,10 +301,24 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 				appInfo.getDetails().getLastStoreUpdate()));
 
 		TextView descriptionView = (TextView) findViewById(R.id.appinfo_description);
-		descriptionView.setText(appInfo.getDetails().getDescription());
+		final String description = appInfo.getDetails().getDescription().replace("\n", "<br/>");
+		descriptionView.setText(Html.fromHtml(description));
+		descriptionView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showLongTextDialog(R.string.appinfo_description_label, description);
+			}
+		});
 
 		TextView changelogView = (TextView) findViewById(R.id.appinfo_changelog);
-		changelogView.setText(appInfo.getDetails().getChangelog());
+		final String changelog = appInfo.getDetails().getChangelog().replace("\n", "<br/>");
+		changelogView.setText(Html.fromHtml(changelog));
+		changelogView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showLongTextDialog(R.string.appinfo_changelog_label, changelog);
+			}
+		});
 	}
 
 	@Override

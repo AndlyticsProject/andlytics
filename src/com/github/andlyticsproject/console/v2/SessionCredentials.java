@@ -1,12 +1,12 @@
 package com.github.andlyticsproject.console.v2;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.github.andlyticsproject.model.DeveloperConsoleAccount;
 
 import org.apache.http.cookie.Cookie;
 
-import com.github.andlyticsproject.model.DeveloperConsoleAccount;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class SessionCredentials {
 
@@ -20,6 +20,8 @@ public class SessionCredentials {
 	// XXX this doesn't really belong here...
 	// Or maybe the class should be just called Session?
 	private List<String> whitelistedFeatures = new ArrayList<String>();
+
+	private String preferredCurrency;
 
 	public SessionCredentials(String accountName, String xsrfToken,
 			DeveloperConsoleAccount[] consoleAccounts) {
@@ -62,6 +64,14 @@ public class SessionCredentials {
 
 	public boolean hasFeature(String feature) {
 		return whitelistedFeatures.contains(feature);
+	}
+
+	public String getPreferredCurrency() {
+		return preferredCurrency;
+	}
+
+	public void setPreferredCurrency(String preferredCurrency) {
+		this.preferredCurrency = preferredCurrency;
 	}
 
 }

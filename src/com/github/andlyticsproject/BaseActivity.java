@@ -1,7 +1,5 @@
 package com.github.andlyticsproject;
 
-import org.acra.ACRA;
-
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,16 +20,16 @@ import com.github.andlyticsproject.admob.AdmobGenericException;
 import com.github.andlyticsproject.admob.AdmobInvalidRequestException;
 import com.github.andlyticsproject.admob.AdmobInvalidTokenException;
 import com.github.andlyticsproject.admob.AdmobRateLimitExceededException;
-import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.console.MultiAccountException;
 import com.github.andlyticsproject.console.NetworkException;
 import com.github.andlyticsproject.dialog.CrashDialog;
 import com.github.andlyticsproject.dialog.CrashDialog.CrashDialogBuilder;
-import com.github.andlyticsproject.legacy.ChartActivity;
 import com.github.andlyticsproject.util.Utils;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import org.acra.ACRA;
 
 public class BaseActivity extends SherlockFragmentActivity {
 
@@ -102,18 +100,6 @@ public class BaseActivity extends SherlockFragmentActivity {
 		if (skipDataReload) {
 			setSkipMainReload(true);
 		}
-
-		startActivity(intent);
-	}
-
-	public void startChartActivity(ChartSet set) {
-		Intent intent = new Intent(BaseActivity.this, ChartActivity.class);
-		intent.putExtra(BaseActivity.EXTRA_PACKAGE_NAME, packageName);
-		intent.putExtra(BaseActivity.EXTRA_DEVELOPER_ID, developerId);
-		intent.putExtra(BaseActivity.EXTRA_ICON_FILE, iconFilePath);
-		intent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, accountName);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-		intent.putExtra(DetailsActivity.EXTRA_CHART_SET, set.name());
 
 		startActivity(intent);
 	}

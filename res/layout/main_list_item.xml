@@ -456,7 +456,7 @@
     </RelativeLayout>
     
     <View
-        android:id="@+id/main_app_row"
+        android:id="@+id/main_app_row_padding"
         android:layout_width="fill_parent"
         android:layout_height="10dp" >
     </View>

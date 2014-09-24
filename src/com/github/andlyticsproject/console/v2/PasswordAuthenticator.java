@@ -1,8 +1,9 @@
 package com.github.andlyticsproject.console.v2;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import android.app.Activity;
+import android.util.Log;
+
+import com.github.andlyticsproject.console.AuthenticationException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -17,11 +18,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import android.app.Activity;
-import android.util.Log;
-
-import com.github.andlyticsproject.console.AuthenticationException;
-import com.github.andlyticsproject.model.DeveloperConsoleAccount;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PasswordAuthenticator extends BaseAuthenticator {
 
@@ -94,24 +93,9 @@ public class PasswordAuthenticator extends BaseAuthenticator {
 			if (DEBUG) {
 				Log.d(TAG, "Response: " + responseStr);
 			}
-			DeveloperConsoleAccount[] developerAccounts = findDeveloperAccounts(responseStr);
-			if (developerAccounts == null) {
-				throw new AuthenticationException("Couldn't get developer account ID.");
-			}
 
-			String xsrfToken = findXsrfToken(responseStr);
-			if (xsrfToken == null) {
-				throw new AuthenticationException("Couldn't get XSRF token.");
-			}
-
-			List<String> whitelistedFeatures = findWhitelistedFeatures(responseStr);
-
-			SessionCredentials result = new SessionCredentials(accountName, xsrfToken,
-					developerAccounts);
-			result.addCookies(cookieStore.getCookies());
-			result.addWhitelistedFeatures(whitelistedFeatures);
-
-			return result;
+			return createSessionCredentials(accountName, AUTHENTICATE_URL, responseStr, httpClient
+					.getCookieStore().getCookies());
 		} catch (ClientProtocolException e) {
 			throw new AuthenticationException(e);
 		} catch (IOException e) {
