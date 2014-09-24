@@ -11,7 +11,6 @@ import android.util.Log;
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.NetworkException;
-import com.github.andlyticsproject.model.DeveloperConsoleAccount;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
@@ -73,7 +72,6 @@ public class OauthAccountManagerAuthenticator extends BaseAuthenticator {
 		return authenticateInternal(null, invalidate);
 	}
 
-	@SuppressWarnings("deprecation")
 	private SessionCredentials authenticateInternal(Activity activity, boolean invalidate)
 			throws AuthenticationException {
 		try {
@@ -157,7 +155,9 @@ public class OauthAccountManagerAuthenticator extends BaseAuthenticator {
 						+ response.getStatusLine());
 			}
 			String uberToken = EntityUtils.toString(response.getEntity(), "UTF-8");
-			Log.d(TAG, "uber token: " + uberToken);
+			if (DEBUG) {
+				Log.d(TAG, "uber token: " + uberToken);
+			}
 			if (uberToken == null || "".equals(uberToken) || uberToken.contains("Error")) {
 				throw new AuthenticationException("Cannot get uber token. Got: " + uberToken);
 			}
@@ -172,7 +172,9 @@ public class OauthAccountManagerAuthenticator extends BaseAuthenticator {
 					.appendQueryParameter("source", "ChromiumBrowser")
 					.appendQueryParameter("uberauth", uberToken)
 					.appendQueryParameter("continue", DEVELOPER_CONSOLE_URL).build().toString();
-			Log.d(TAG, "MergeSession URL: " + webloginUrl);
+			if (DEBUG) {
+				Log.d(TAG, "MergeSession URL: " + webloginUrl);
+			}
 
 			UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(pairs, "UTF-8");
 			getConsole.setEntity(formEntity);
@@ -196,28 +198,8 @@ public class OauthAccountManagerAuthenticator extends BaseAuthenticator {
 				Log.d(TAG, "Response: " + responseStr);
 			}
 
-			DeveloperConsoleAccount[] developerAccounts = findDeveloperAccounts(responseStr);
-			if (developerAccounts == null) {
-				debugAuthFailure(activity, responseStr, webloginUrl);
-
-				throw new AuthenticationException("Couldn't get developer account ID.");
-			}
-
-			String xsrfToken = findXsrfToken(responseStr);
-			if (xsrfToken == null) {
-				debugAuthFailure(activity, responseStr, webloginUrl);
-
-				throw new AuthenticationException("Couldn't get XSRF token.");
-			}
-
-			List<String> whitelistedFeatures = findWhitelistedFeatures(responseStr);
-
-			SessionCredentials result = new SessionCredentials(accountName, xsrfToken,
-					developerAccounts);
-			result.addCookies(httpClient.getCookieStore().getCookies());
-			result.addWhitelistedFeatures(whitelistedFeatures);
-
-			return result;
+			return createSessionCredentials(accountName, webloginUrl, responseStr,
+					httpClient.getCookieStore().getCookies());
 		} catch (IOException e) {
 			throw new NetworkException(e);
 		}

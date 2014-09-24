@@ -23,3 +23,4 @@ secure.properties
 /assets
 private-strings.xml
 res/values/private-strings.xml
+/gradle.properties

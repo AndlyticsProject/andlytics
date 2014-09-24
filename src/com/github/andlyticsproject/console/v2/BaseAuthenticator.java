@@ -1,6 +1,5 @@
 package com.github.andlyticsproject.console.v2;
 
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -12,10 +11,16 @@ import android.util.Log;
 
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.R;
+import com.github.andlyticsproject.console.AuthenticationException;
+import com.github.andlyticsproject.console.DevConsoleException;
 import com.github.andlyticsproject.model.DeveloperConsoleAccount;
 import com.github.andlyticsproject.util.FileUtils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.http.cookie.Cookie;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,15 +32,8 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 
 	private static final String TAG = BaseAuthenticator.class.getSimpleName();
 
-	protected static final Pattern DEV_ACC_PATTERN = Pattern
-			.compile("\"DeveloperConsoleAccounts\":\"\\{\\\\\"1\\\\\":\\[\\{\\\\\"1\\\\\":\\\\\"(\\d{20})\\\\\"");
-	protected static final Pattern DEV_ACCS_PATTERN = Pattern
-			.compile("\\\\\"1\\\\\":\\\\\"(\\d{20})\\\\\",\\\\\"2\\\\\":\\\\\"(.+?)\\\\\",");
-	protected static final Pattern XSRF_TOKEN_PATTERN = Pattern
-			.compile("\"XsrfToken\":\"\\{\\\\\"1\\\\\":\\\\\"(\\S+)\\\\\"\\}\"");
-
-	protected static final Pattern WHITELISTED_FEATURES_PATTERN = Pattern
-			.compile("\"WhitelistedFeatures\":\"\\{\\\\\"1\\\\\":\\[(\\S+?)\\]\\}");
+	protected static final Pattern STARTUP_DATA_PATTERN = Pattern
+			.compile("startupData = (\\{.+?\\});");
 
 	protected String accountName;
 
@@ -43,56 +41,92 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 		this.accountName = accountName;
 	}
 
-	protected String findXsrfToken(String responseStr) {
-		Matcher m = XSRF_TOKEN_PATTERN.matcher(responseStr);
-		if (m.find()) {
-			return m.group(1);
+	protected String findXsrfToken(JSONObject startupData) {
+		try {
+			return new JSONObject(startupData.getString("XsrfToken")).getString("1");
+		} catch (JSONException e) {
+			throw new DevConsoleException(e);
 		}
-		return null;
 	}
 
-	protected DeveloperConsoleAccount[] findDeveloperAccounts(String responseStr) {
+	protected DeveloperConsoleAccount[] findDeveloperAccounts(JSONObject startupData) {
 		List<DeveloperConsoleAccount> devAccounts = new ArrayList<DeveloperConsoleAccount>();
-		Matcher m = DEV_ACCS_PATTERN.matcher(responseStr);
-		while (m.find()) {
-			String developerId = m.group(1);
-			String developerName = m.group(2);
-			if (developerName.contains("\\\\u")) {
-				developerName = developerName.replace("\\\\u", "\\u");
-				developerName = StringEscapeUtils.unescapeJava(developerName);
-			} else if (developerName.contains("\\u")) {
-				developerName = StringEscapeUtils.unescapeJava(developerName);
+
+		try {
+			JSONObject devConsoleAccountsObj = new JSONObject(
+					startupData.getString("DeveloperConsoleAccounts"));
+			JSONArray devConsoleAccountsArr = devConsoleAccountsObj.getJSONArray("1");
+			for (int i = 0; i < devConsoleAccountsArr.length(); i++) {
+				JSONObject accountObj = devConsoleAccountsArr.getJSONObject(i);
+				String developerId = accountObj.getString("1");
+				String developerName = StringEscapeUtils.unescapeJava(accountObj.getString("2"));
+				devAccounts.add(new DeveloperConsoleAccount(developerId, developerName));
 			}
-			devAccounts.add(new DeveloperConsoleAccount(developerId, developerName));
+
+
+			return devAccounts.isEmpty() ? null : devAccounts
+					.toArray(new DeveloperConsoleAccount[devAccounts.size()]);
+		} catch (JSONException e) {
+			throw new DevConsoleException(e);
 		}
-		return devAccounts.isEmpty() ? null : devAccounts
-				.toArray(new DeveloperConsoleAccount[devAccounts.size()]);
 	}
 
-	protected List<String> findWhitelistedFeatures(String responseStr) {
+	protected List<String> findWhitelistedFeatures(JSONObject startupData) {
 		List<String> result = new ArrayList<String>();
-		Matcher m = WHITELISTED_FEATURES_PATTERN.matcher(responseStr);
-		if (m.find()) {
-			String featuresStr = m.group(1);
-			String[] features = featuresStr.split(",");
-			for (String feature : features) {
-				result.add(feature.replaceAll("\\\\\"", ""));
-			}
-		}
 
-		return Collections.unmodifiableList(result);
+		try {
+			JSONArray featuresArr = new JSONObject(startupData.getString("WhitelistedFeatures"))
+					.getJSONArray("1");
+			for (int i = 0; i < featuresArr.length(); i++) {
+				result.add(featuresArr.getString(i));
+			}
+
+			return Collections.unmodifiableList(result);
+		} catch (JSONException e) {
+			throw new DevConsoleException(e);
+		}
+	}
+
+	public JSONObject getStartupData(String responseStr) {
+		try {
+			Matcher m = STARTUP_DATA_PATTERN.matcher(responseStr);
+			if (m.find()) {
+				String startupDataStr = m.group(1);
+				return new JSONObject(startupDataStr);
+			}
+
+			return null;
+		} catch (JSONException e) {
+			throw new DevConsoleException(e);
+		}
+	}
+
+	protected String findPreferredCurrency(JSONObject startupData) {
+		// fallback
+		String result = "USD";
+
+		try {
+			JSONObject userDetails = new JSONObject(startupData.getString("UserDetails"));
+			if (userDetails.has("2")) {
+				result = userDetails.getString("2");
+			}
+
+			return result;
+		} catch (JSONException e) {
+			throw new DevConsoleException(e);
+		}
 	}
 
 	public String getAccountName() {
 		return accountName;
 	}
 
-	protected void debugAuthFailure(Activity activity, String responseStr, String webloginUrl) {
+	protected void debugAuthFailure(String responseStr, String webloginUrl) {
 		FileUtils.writeToAndlyticsDir("console-response.html", responseStr);
-		openAuthUrlInBrowser(activity, webloginUrl);
+		openAuthUrlInBrowser(webloginUrl);
 	}
 
-	protected void openAuthUrlInBrowser(Activity activity, String webloginUrl) {
+	protected void openAuthUrlInBrowser(String webloginUrl) {
 		if (webloginUrl == null) {
 			Log.d(TAG, "Null webloginUrl?");
 			return;
@@ -122,6 +156,42 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 		NotificationManager nm = (NotificationManager) ctx
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.notify(accountName.hashCode(), builder.build());
+	}
+
+	protected SessionCredentials createSessionCredentials(String accountName, String webloginUrl,
+			String responseStr, List<Cookie> cookies) {
+		JSONObject startupData = getStartupData(responseStr);
+		if (startupData == null) {
+			debugAuthFailure(responseStr, webloginUrl);
+
+			throw new AuthenticationException("Couldn't find StartupData JSON object.");
+		}
+
+		DeveloperConsoleAccount[] developerAccounts = findDeveloperAccounts(startupData);
+		if (developerAccounts == null) {
+			debugAuthFailure(responseStr, webloginUrl);
+
+			throw new AuthenticationException("Couldn't get developer account ID.");
+		}
+
+		String xsrfToken = findXsrfToken(startupData);
+		if (xsrfToken == null) {
+			debugAuthFailure(responseStr, webloginUrl);
+
+			throw new AuthenticationException("Couldn't get XSRF token.");
+		}
+
+		List<String> whitelistedFeatures = findWhitelistedFeatures(startupData);
+
+		String preferredCurrency = findPreferredCurrency(startupData);
+
+		SessionCredentials result = new SessionCredentials(accountName, xsrfToken,
+				developerAccounts);
+		result.addCookies(cookies);
+		result.addWhitelistedFeatures(whitelistedFeatures);
+		result.setPreferredCurrency(preferredCurrency);
+
+		return result;
 	}
 
 }

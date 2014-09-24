@@ -2,6 +2,7 @@ package com.github.andlyticsproject.dialog;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,7 +30,7 @@ public class LongTextDialog extends SherlockDialogFragment {
 				.findViewById(R.id.longtext_title);
 
 		if (arguments.containsKey("longText")) {
-			longText.setText(arguments.getString("longText"));
+			longText.setText(Html.fromHtml(arguments.getString("longText")));
 		}
 
 		if (arguments.containsKey("title")) {

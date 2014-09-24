@@ -1,14 +1,5 @@
 package com.github.andlyticsproject;
 
-import java.io.File;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Currency;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -47,6 +38,15 @@ import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.model.RevenueSummary;
+
+import java.io.File;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Currency;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 public class MainListAdapter extends BaseAdapter {
 
@@ -339,11 +339,13 @@ public class MainListAdapter extends BaseAdapter {
 			// TODO Drive this with a diff/reset at midnight?
 			// XXX float
 			Revenue rev = appStats.getTotalRevenue();
-			if (showDeveloperCut) {
-				setupFloatValueDiff(holder.totalRevenuePercent, rev.getDeveloperCut(),
-						rev.developerCutAsString());
-			} else {
-				setupFloatValueDiff(holder.totalRevenuePercent, rev.getAmount(), rev.asString());
+			if (rev != null) {
+				if (showDeveloperCut) {
+					setupFloatValueDiff(holder.totalRevenuePercent, rev.getDeveloperCut(),
+							rev.developerCutAsString());
+				} else {
+					setupFloatValueDiff(holder.totalRevenuePercent, rev.getAmount(), rev.asString());
+				}
 			}
 		} else {
 			holder.revenueFrame.setVisibility(View.GONE);
