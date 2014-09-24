@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" 
+    android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/main_margin"
     android:layout_marginRight="@dimen/main_margin"
-    android:background="@color/andBackground" >
+    android:background="@color/andBackground">
 
     <ViewSwitcher
         android:id="@+id/main_viewswitcher"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:inAnimation="@anim/view_switcher_fade_in"
-        android:outAnimation="@anim/view_switcher_fade_out" >
+        android:outAnimation="@anim/view_switcher_fade_out">
 
         <TextView
             android:id="@+id/main_app_list_loading"
@@ -22,15 +22,21 @@
             android:textColor="@color/andBorder"
             android:textSize="20sp" />
 
-        <ListView
-            android:id="@+id/main_app_list"
+        <android.support.v4.widget.SwipeRefreshLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:cacheColorHint="@color/andBackground"
-            android:divider="#fff"
-            android:dividerHeight="0dp"
-            android:fadingEdge="none"
-            android:scrollbars="vertical" />
+            android:id="@+id/swipeRefresh">
+
+            <ListView
+                android:id="@+id/main_app_list"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:cacheColorHint="@color/andBackground"
+                android:divider="#fff"
+                android:dividerHeight="0dp"
+                android:fadingEdge="none"
+                android:scrollbars="vertical" />
+        </android.support.v4.widget.SwipeRefreshLayout>
     </ViewSwitcher>
 
 </RelativeLayout>
