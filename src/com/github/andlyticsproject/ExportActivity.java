@@ -1,11 +1,9 @@
 package com.github.andlyticsproject;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,7 +12,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +27,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.github.andlyticsproject.cache.AppIconInMemoryCache;
 import com.github.andlyticsproject.io.ExportService;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
@@ -38,7 +34,11 @@ import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
-public class ExportActivity extends SherlockFragmentActivity {
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ExportActivity extends Activity {
 
 	private static final String TAG = ExportActivity.class.getSimpleName();
 
@@ -75,7 +75,7 @@ public class ExportActivity extends SherlockFragmentActivity {
 		layoutInflater = getLayoutInflater();
 
 		accountName = getIntent().getExtras().getString(EXTRA_ACCOUNT_NAME);
-		getSupportActionBar().setSubtitle(accountName);
+		getActionBar().setSubtitle(accountName);
 
 		adapter = new ExportListAdapter();
 		setAppInfos(appInfos);
@@ -91,8 +91,8 @@ public class ExportActivity extends SherlockFragmentActivity {
 		this.cacheDir = getCacheDir();
 		this.spacerIcon = getResources().getDrawable(R.drawable.app_icon_spacer);
 
-		if (getLastCustomNonConfigurationInstance() != null) {
-			loadTask = (LoadExportTask) getLastCustomNonConfigurationInstance();
+		if (getLastNonConfigurationInstance() != null) {
+			loadTask = (LoadExportTask) getLastNonConfigurationInstance();
 			loadTask.attach(this);
 			setAppInfos(loadTask.getAppInfos());
 		} else {
@@ -137,7 +137,7 @@ public class ExportActivity extends SherlockFragmentActivity {
 				File exportFile = StatsCsvReaderWriter.getExportFileForAccount(accountName);
 				if (exportFile.exists()) {
 					ConfirmExportDialogFragment.newInstance(exportFile.getName()).show(
-							getSupportFragmentManager(), "confirmExportDialog");
+							getFragmentManager(), "confirmExportDialog");
 				} else {
 					startExport();
 				}
@@ -157,7 +157,7 @@ public class ExportActivity extends SherlockFragmentActivity {
 
 
 	@Override
-	public Object onRetainCustomNonConfigurationInstance() {
+	public Object onRetainNonConfigurationInstance() {
 		return loadTask == null ? null : loadTask.detach();
 	}
 

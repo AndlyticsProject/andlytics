@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="@string/app_name"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/abs__action_bar_subtitle_text_size"
+        android:textSize="18sp"
         android:ellipsize="end"
         android:singleLine="true" />
 
@@ -18,7 +18,7 @@
         android:id="@android:id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/abs__action_bar_subtitle_text_size"
+        android:textSize="14sp"
         android:ellipsize="end"
         android:singleLine="true"/>
 

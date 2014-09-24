@@ -6,13 +6,11 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
-
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.MenuItem;
+import android.view.MenuItem;
 
 // See PreferenceActivity for warning suppression justification
 @SuppressWarnings("deprecation")
-public class NotificationPreferenceActivity extends SherlockPreferenceActivity {
+public class NotificationPreferenceActivity extends PreferenceActivity {
 
 	private CheckBoxPreference downloadsPref;
 	private CheckBoxPreference ratingsPref;
@@ -23,7 +21,7 @@ public class NotificationPreferenceActivity extends SherlockPreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		PreferenceManager prefMgr = getPreferenceManager();
 		prefMgr.setSharedPreferencesName(Preferences.PREF);
 		addPreferencesFromResource(R.xml.notification_preferences);

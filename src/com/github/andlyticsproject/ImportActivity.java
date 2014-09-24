@@ -1,16 +1,18 @@
 package com.github.andlyticsproject;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -18,8 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.io.ImportService;
 import com.github.andlyticsproject.io.ServiceException;
 import com.github.andlyticsproject.io.StatsCsvReaderWriter;
@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImportActivity extends SherlockFragmentActivity {
+public class ImportActivity extends Activity {
 
 	private static final String TAG = ImportActivity.class.getSimpleName();
 
@@ -66,7 +66,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 		layoutInflater = getLayoutInflater();
 
 		accountName = getAccountName();
-		getSupportActionBar().setSubtitle(accountName);
+		getActionBar().setSubtitle(accountName);
 
 		if (state != null) {
 			importFilenames = (ArrayList<String>) state.getSerializable(EXTRA_IMPORT_FILENAMES);
@@ -82,8 +82,8 @@ public class ImportActivity extends SherlockFragmentActivity {
 				finish();
 			}
 
-			if (getLastCustomNonConfigurationInstance() != null) {
-				loadTask = (LoadImportDialogTask) getLastCustomNonConfigurationInstance();
+			if (getLastNonConfigurationInstance() != null) {
+				loadTask = (LoadImportDialogTask) getLastNonConfigurationInstance();
 				loadTask.attach(this);
 				setFilenames(loadTask.getFilenames());
 			} else {
@@ -103,7 +103,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 	}
 
 	@Override
-	public Object onRetainCustomNonConfigurationInstance() {
+	public Object onRetainNonConfigurationInstance() {
 		return loadTask == null ? null : loadTask.detach();
 	}
 
@@ -127,7 +127,7 @@ public class ImportActivity extends SherlockFragmentActivity {
 				}
 
 				ConfirmImportDialogFragment.newInstance(adapter.getCount()).show(
-						getSupportFragmentManager(), "confirmImportDialog");
+						getFragmentManager(), "confirmImportDialog");
 			}
 		});
 

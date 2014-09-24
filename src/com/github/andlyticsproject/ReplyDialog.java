@@ -1,8 +1,8 @@
 package com.github.andlyticsproject;
 
+import android.app.DialogFragment;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -14,9 +14,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
-public class ReplyDialog extends SherlockDialogFragment {
+public class ReplyDialog extends DialogFragment {
 
 	public static final int DEVELOPER_REPLY_MAX_CHARACTERS = 350;
 

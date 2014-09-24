@@ -1,15 +1,6 @@
 package com.github.andlyticsproject;
 
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -17,12 +8,15 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Loader;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -32,10 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.admob.AdmobAccountAuthenticator;
 import com.github.andlyticsproject.admob.AdmobRequest;
@@ -55,6 +45,15 @@ import com.google.android.gms.auth.GoogleAuthException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class AdmobFragment extends ChartFragment<AdmobStats> implements
 		LoaderManager.LoaderCallbacks<LoaderResult<AdmobStatsSummary>> {
@@ -330,7 +329,7 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 				configSwitcher.showPrevious();
 			}
 			mainViewSwitcher.swap();
-			getActivity().supportInvalidateOptionsMenu();
+			getActivity().invalidateOptionsMenu();
 			return true;
 		case R.id.itemAdmobsmenuTimeframe7:
 			currentTimeFrame = Timeframe.LAST_SEVEN_DAYS;
@@ -705,7 +704,7 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 
 							admobFragment.mainViewSwitcher.swap();
 							admobFragment.loadRemoteData();
-							((SherlockFragmentActivity) activity).supportInvalidateOptionsMenu();
+							activity.invalidateOptionsMenu();
 						}
 					});
 					admobFragment.siteList.addView(inflate);
@@ -819,7 +818,7 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 
 							admobFragment.mainViewSwitcher.swap();
 							admobFragment.loadRemoteData();
-							((SherlockFragmentActivity) activity).supportInvalidateOptionsMenu();
+							activity.invalidateOptionsMenu();
 						}
 					});
 					admobFragment.siteList.addView(inflate);
