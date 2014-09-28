@@ -1,5 +1,6 @@
 package com.github.andlyticsproject;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,7 +14,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.github.andlyticsproject.admob.AdmobAccountRemovedException;
 import com.github.andlyticsproject.admob.AdmobAskForPasswordException;
 import com.github.andlyticsproject.admob.AdmobGenericException;
@@ -31,7 +31,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import org.acra.ACRA;
 
-public class BaseActivity extends SherlockFragmentActivity {
+public class BaseActivity extends Activity {
 
 	private static final String TAG = BaseActivity.class.getSimpleName();
 
@@ -348,14 +348,14 @@ public class BaseActivity extends SherlockFragmentActivity {
 		ensureMainThread();
 
 		refreshing = true;
-		supportInvalidateOptionsMenu();
+		invalidateOptionsMenu();
 	}
 
 	public void refreshFinished() {
 		ensureMainThread();
 
 		refreshing = false;
-		supportInvalidateOptionsMenu();
+		invalidateOptionsMenu();
 	}
 
 	private void ensureMainThread() {

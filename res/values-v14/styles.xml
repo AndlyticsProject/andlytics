@@ -5,11 +5,11 @@
     <!-- These go in values-v14 to avoid exceptions on some devices -->
     <!-- https://github.com/JakeWharton/ActionBarSherlock/issues/446 -->
 
-    <style name="Theme.Andlytics" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="Theme.Andlytics" parent="android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/Widget.Andlytics.ActionBar</item>
     </style>
 
-    <style name="Widget.Andlytics.ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+    <style name="Widget.Andlytics.ActionBar" parent="android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:subtitleTextStyle">@style/TextAppearance.Andlytics.Widget.ActionBar.Subtitle</item>
     </style>
     

@@ -1,25 +1,21 @@
 package com.github.andlyticsproject;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Loader;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.CommentsFragment.Comments;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
@@ -32,7 +28,11 @@ import com.github.andlyticsproject.util.LoaderBase;
 import com.github.andlyticsproject.util.LoaderResult;
 import com.github.andlyticsproject.util.Utils;
 
-public class CommentsFragment extends SherlockFragment implements StatsView<Comment>,
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+public class CommentsFragment extends Fragment implements StatsView<Comment>,
 		LoaderManager.LoaderCallbacks<LoaderResult<Comments>> {
 
 	private static final String TAG = CommentsFragment.class.getSimpleName();
@@ -199,8 +199,8 @@ public class CommentsFragment extends SherlockFragment implements StatsView<Comm
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSherlockActivity().getSupportActionBar().setTitle(getTitle());
+		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActivity().getActionBar().setTitle(getTitle());
 	}
 
 
