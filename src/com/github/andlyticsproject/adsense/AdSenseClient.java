@@ -118,14 +118,19 @@ public class AdSenseClient {
 			bulkInsert = true;
 		}
 
+		Account account = getFirstAccount(adsense);
+		if (account == null) {
+			return;
+		}
+
 		// we assume there is only one(?)
-		String adClientId = getClientId(adsense);
+		String adClientId = getClientId(adsense, account);
 		if (adClientId == null) {
 			// XXX throw?
 			return;
 		}
 
-		List<AdmobStats> result = generateReport(adsense, adClientId, startDate, endDate);
+		List<AdmobStats> result = generateReport(adsense, account, adClientId, startDate, endDate);
 
 		updateStats(context, bulkInsert, result);
 	}
@@ -158,8 +163,7 @@ public class AdSenseClient {
 		return new Calendar[] { startDateCal, endDateCal };
 	}
 
-	private static String getClientId(AdSense adsense) throws IOException {
-		Account account = getFirstAccount(adsense);
+	private static String getClientId(AdSense adsense, Account account) throws IOException {
 		AdClients adClients = adsense.accounts().adclients().list(account.getId())
 				.setMaxResults(MAX_LIST_PAGE_SIZE).setPageToken(null).execute();
 		if (adClients.getItems() == null || adClients.getItems().isEmpty()) {
@@ -172,6 +176,10 @@ public class AdSenseClient {
 
 	private static Account getFirstAccount(AdSense adsense) throws IOException {
 		Accounts accounts = adsense.accounts().list().execute();
+
+		if (accounts.isEmpty()) {
+			return null;
+		}
 
 		return accounts.getItems().get(0);
 	}
@@ -210,11 +218,10 @@ public class AdSenseClient {
 		return adsense;
 	}
 
-	private static List<AdmobStats> generateReport(AdSense adsense, String adClientId,
-			Date startDate, Date endDate) throws IOException, ParseException {
+	private static List<AdmobStats> generateReport(AdSense adsense, Account account,
+			String adClientId, Date startDate, Date endDate) throws IOException, ParseException {
 		String startDateStr = DATE_FORMATTER.format(startDate);
 		String endDateStr = DATE_FORMATTER.format(endDate);
-		Account account = getFirstAccount(adsense);
 		Generate request = adsense.accounts().reports()
 				.generate(account.getId(), startDateStr, endDateStr);
 
@@ -287,13 +294,18 @@ public class AdSenseClient {
 	public static Map<String, String> getAdUnits(Context context, String admobAccount)
 			throws IOException {
 		AdSense adsense = createForegroundSyncClient(context, admobAccount);
-		String adClientId = getClientId(adsense);
+
+		Account account = getFirstAccount(adsense);
+		if (account == null) {
+			return new HashMap<String, String>();
+		}
+
+		String adClientId = getClientId(adsense, account);
 		if (adClientId == null) {
 			// XXX throw?
 			return new HashMap<String, String>();
 		}
 
-		Account account = getFirstAccount(adsense);
 		AdUnits units = adsense.accounts().adunits().list(account.getId(), adClientId)
 				.setMaxResults(MAX_LIST_PAGE_SIZE).setPageToken(null).execute();
 		List<AdUnit> items = units.getItems();
