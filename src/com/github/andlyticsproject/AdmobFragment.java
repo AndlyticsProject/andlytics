@@ -3,10 +3,6 @@ package com.github.andlyticsproject;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.Context;
@@ -46,7 +42,6 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,11 +65,7 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 	private ViewSwitcher3D mainViewSwitcher;
 	private ViewGroup accountList;
 
-	private View addAccountButton;
-
 	private ViewSwitcher configSwitcher;
-
-	protected String admobToken;
 
 	private ViewGroup siteList;
 
@@ -190,7 +181,8 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
 				configSwitcher.showPrevious();
 			}
-			showAdmobAccountList();
+			//			showAdmobAccountList();
+			showAdSenseAccountList();
 		}
 
 		return view;
@@ -361,39 +353,8 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 			Preferences.saveChartTimeframe(Timeframe.MONTH_TO_DATE, ctx);
 			item.setChecked(true);
 			return true;
-		case R.id.itemAdmobsmenuNewAdmob:
-			if (mainViewSwitcher.isBacksideVisible()) {
-				mainViewSwitcher.swap();
-			}
-
-			if (configSwitcher.getCurrentView().getId() != R.id.admob_config_headline_addaccount_root) {
-				configSwitcher.showPrevious();
-			}
-			hideAdmobHelp(configSwitcher.getCurrentView());
-
-			showAdSenseAccountList();
-			return true;
 		default:
 			return (super.onOptionsItemSelected(item));
-		}
-	}
-
-	private void hideAdmobHelp(View view) {
-		View v = view.findViewById(R.id.admob_addaccount_button);
-		if (v != null) {
-			v.setVisibility(View.INVISIBLE);
-		}
-		v = view.findViewById(R.id.admob_accout_desc);
-		if (v != null) {
-			v.setVisibility(View.INVISIBLE);
-		}
-		v = view.findViewById(R.id.admob_config_headline_subtext);
-		if (v != null) {
-			v.setVisibility(View.INVISIBLE);
-		}
-		v = view.findViewById(R.id.admob_config_screenshot);
-		if (v != null) {
-			v.setVisibility(View.INVISIBLE);
 		}
 	}
 
@@ -486,33 +447,6 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 		Utils.execute(loadAdUnitsTask);
 	}
 
-	private void addNewAdmobAccount() {
-		AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
-			public void run(AccountManagerFuture<Bundle> future) {
-				try {
-					Bundle bundle = future.getResult();
-					bundle.keySet();
-					Log.d(TAG, "account added: " + bundle);
-
-					showAdmobAccountList();
-
-				} catch (OperationCanceledException e) {
-					Log.d(TAG, "addAccount was canceled");
-				} catch (IOException e) {
-					Log.d(TAG, "addAccount failed: " + e);
-				} catch (AuthenticatorException e) {
-					Log.d(TAG, "addAccount failed: " + e);
-				}
-				// gotAccount(false);
-			}
-		};
-
-		Activity activity = getActivity();
-		AccountManager.get(activity).addAccount(AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB,
-				AdmobAccountAuthenticator.AUTHTOKEN_TYPE_ADMOB, null, null /* options */,
-				activity, callback, null /* handler */);
-	}
-
 	@Override
 	public ChartSet getChartSet() {
 		return ChartSet.ADMOB;
@@ -555,26 +489,17 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 		configSwitcher.setOutAnimation(AnimationUtils.loadAnimation(getActivity(),
 				R.anim.slide_out_left));
 		List<View> ret = new ArrayList<View>();
-		RelativeLayout ll;
 
-		ll = (RelativeLayout) getActivity().getLayoutInflater().inflate(
+		RelativeLayout container = (RelativeLayout) getActivity().getLayoutInflater().inflate(
 				R.layout.admob_config_selectapp, null);
-		siteList = (ViewGroup) ll.findViewById(R.id.admob_sitelist);
-		ret.add(ll);
+		siteList = (ViewGroup) container.findViewById(R.id.admob_sitelist);
+		ret.add(container);
 
-		ll = (RelativeLayout) getActivity().getLayoutInflater().inflate(
+		container = (RelativeLayout) getActivity().getLayoutInflater().inflate(
 				R.layout.admob_config_addaccount, null);
-		accountList = (ViewGroup) ll.findViewById(R.id.admob_accountlist);
-		addAccountButton = (View) ll.findViewById(R.id.admob_addaccount_button);
-		ret.add(ll);
+		accountList = (ViewGroup) container.findViewById(R.id.admob_accountlist);
+		ret.add(container);
 
-		addAccountButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				addNewAdmobAccount();
-			}
-		});
 		return ret;
 
 	}

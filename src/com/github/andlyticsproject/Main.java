@@ -48,6 +48,8 @@ import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 
 import java.io.File;
 import java.io.IOException;
@@ -583,6 +585,20 @@ public class Main extends BaseActivity implements OnNavigationListener,
 			} catch (UserRecoverableAuthIOException userRecoverableException) {
 				activity.startActivityForResult(userRecoverableException.getIntent(),
 						REQUEST_AUTHORIZATION);
+			} catch (GoogleJsonResponseException e) {
+				List<ErrorInfo> errors = e.getDetails().getErrors();
+				for (ErrorInfo err : errors) {
+					if ("dailyLimitExceeded".equals(err.getReason())) {
+						// ignore
+						Log.w(TAG, "Quota exeeded: " + e.toString());
+						return null;
+					}
+				}
+
+				Log.e(TAG,
+						"Error while requesting developer console : " + Utils.stackTraceToString(e));
+				Log.e(TAG, "Error while requesting developer console : " + e.getMessage(), e);
+				exception = e;
 			} catch (Exception e) {
 				// These exceptions can contain very long JSON strings
 				// Explicitly print out the root cause first
