@@ -1,11 +1,5 @@
 package com.github.andlyticsproject.sync;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import android.accounts.Account;
 import android.accounts.OperationCanceledException;
 import android.app.Service;
@@ -23,7 +17,6 @@ import com.github.andlyticsproject.AppStatsDiff;
 import com.github.andlyticsproject.ContentAdapter;
 import com.github.andlyticsproject.DeveloperAccountManager;
 import com.github.andlyticsproject.admob.AdmobException;
-import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.adsense.AdSenseClient;
 import com.github.andlyticsproject.console.DevConsoleException;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
@@ -31,6 +24,12 @@ import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.model.DeveloperAccount;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class SyncAdapterService extends Service {
 
@@ -104,7 +103,6 @@ public class SyncAdapterService extends Service {
 				List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
 				Map<String, List<String>> admobAccountSiteMap = new HashMap<String, List<String>>();
 
-				boolean migratedToAdSense = false;
 				db = ContentAdapter.getInstance(AndlyticsApp.getInstance());
 				for (AppInfo appDownloadInfo : appDownloadInfos) {
 					// update in database
@@ -124,7 +122,6 @@ public class SyncAdapterService extends Service {
 							siteList.add(admobSiteId);
 							admobAccountSiteMap.put(admobAccount, siteList);
 						} else {
-							migratedToAdSense = true;
 							List<String> siteList = admobAccountSiteMap.get(admobAccount);
 							if (siteList == null) {
 								siteList = new ArrayList<String>();
@@ -146,13 +143,8 @@ public class SyncAdapterService extends Service {
 					// sync admob accounts
 					Set<String> admobAccuntKeySet = admobAccountSiteMap.keySet();
 					for (String admobAccount : admobAccuntKeySet) {
-						if (migratedToAdSense) {
-							AdSenseClient.backgroundSyncStats(context, admobAccount,
-									admobAccountSiteMap.get(admobAccount), extras, authority, null);
-						} else {
-							AdmobRequest.syncSiteStats(admobAccount, context,
-									admobAccountSiteMap.get(admobAccount), null);
-						}
+						AdSenseClient.backgroundSyncStats(context, admobAccount,
+								admobAccountSiteMap.get(admobAccount), extras, authority, null);
 					}
 					Log.d(TAG, "Sucessfully synced AdMob stats");
 				}

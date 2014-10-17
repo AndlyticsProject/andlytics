@@ -34,7 +34,6 @@ import android.widget.ViewSwitcher;
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.about.AboutActivity;
-import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.adsense.AdSenseClient;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
@@ -48,8 +47,6 @@ import com.github.andlyticsproject.util.ChangelogBuilder;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 
 import java.io.File;
 import java.io.IOException;
@@ -528,7 +525,6 @@ public class Main extends BaseActivity implements OnNavigationListener,
 					return null;
 				}
 
-				boolean migratedToAdSense = false;
 				Map<String, List<String>> admobAccountSiteMap = new HashMap<String, List<String>>();
 
 				List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
@@ -551,7 +547,6 @@ public class Main extends BaseActivity implements OnNavigationListener,
 							siteList.add(admobSiteId);
 							admobAccountSiteMap.put(admobAccount, siteList);
 						} else {
-							migratedToAdSense = true;
 							List<String> siteList = admobAccountSiteMap.get(admobAccount);
 							if (siteList == null) {
 								siteList = new ArrayList<String>();
@@ -570,13 +565,8 @@ public class Main extends BaseActivity implements OnNavigationListener,
 				// sync admob accounts
 				Set<String> admobAccuntKeySet = admobAccountSiteMap.keySet();
 				for (String admobAccount : admobAccuntKeySet) {
-					if (migratedToAdSense) {
-						AdSenseClient.foregroundSyncStats(activity, admobAccount,
-								admobAccountSiteMap.get(admobAccount));
-					} else {
-						AdmobRequest.syncSiteStats(admobAccount, activity,
-								admobAccountSiteMap.get(admobAccount), null);
-					}
+					AdSenseClient.foregroundSyncStats(activity, admobAccount,
+							admobAccountSiteMap.get(admobAccount));
 				}
 
 				activity.state.setLoadIconInCache(new LoadIconInCache(activity));
@@ -585,20 +575,6 @@ public class Main extends BaseActivity implements OnNavigationListener,
 			} catch (UserRecoverableAuthIOException userRecoverableException) {
 				activity.startActivityForResult(userRecoverableException.getIntent(),
 						REQUEST_AUTHORIZATION);
-			} catch (GoogleJsonResponseException e) {
-				List<ErrorInfo> errors = e.getDetails().getErrors();
-				for (ErrorInfo err : errors) {
-					if ("dailyLimitExceeded".equals(err.getReason())) {
-						// ignore
-						Log.w(TAG, "Quota exeeded: " + e.toString());
-						return null;
-					}
-				}
-
-				Log.e(TAG,
-						"Error while requesting developer console : " + Utils.stackTraceToString(e));
-				Log.e(TAG, "Error while requesting developer console : " + e.getMessage(), e);
-				exception = e;
 			} catch (Exception e) {
 				// These exceptions can contain very long JSON strings
 				// Explicitly print out the root cause first

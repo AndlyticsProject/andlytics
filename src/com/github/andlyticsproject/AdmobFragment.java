@@ -23,9 +23,6 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.github.andlyticsproject.Preferences.Timeframe;
-import com.github.andlyticsproject.admob.AdmobAccountAuthenticator;
-import com.github.andlyticsproject.admob.AdmobRequest;
-import com.github.andlyticsproject.admob.AdmobRequest.SyncCallback;
 import com.github.andlyticsproject.adsense.AdSenseClient;
 import com.github.andlyticsproject.chart.Chart.ChartSet;
 import com.github.andlyticsproject.db.AndlyticsDb;
@@ -69,7 +66,6 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 
 	private ViewGroup siteList;
 
-	private LoadRemoteSiteListTask loadSitesTask;
 	private LoadAdUnitsTask loadAdUnitsTask;
 
 	private String selectedAdmobAccount;
@@ -113,20 +109,8 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 
 			Log.d(TAG, "Loading Admob stats...");
 			if (loadRemote) {
-				// only if not migrated
-				if (adUnitId == null) {
-					Log.d(TAG, "Loading remote Admob stats...");
-					AdmobRequest.syncSiteStats(currentAdmobAccount, getContext(),
-							Arrays.asList(currentSiteId), new SyncCallback() {
-
-								@Override
-								public void initialImportStarted() {
-								}
-							});
-				} else {
-					AdSenseClient.foregroundSyncStats(getContext(), currentAdmobAccount,
-							Arrays.asList(adUnitId));
-				}
+				AdSenseClient.foregroundSyncStats(getContext(), currentAdmobAccount,
+						Arrays.asList(adUnitId));
 			}
 
 			Log.d(TAG, "Loading Admob stats from DB...");
@@ -181,8 +165,8 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
 				configSwitcher.showPrevious();
 			}
-			//			showAdmobAccountList();
-			showAdSenseAccountList();
+
+			showAccountList();
 		}
 
 		return view;
@@ -316,7 +300,7 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 		case R.id.itemAdmobsmenuRemove:
 			AndlyticsDb.getInstance(getActivity()).saveAdmobDetails(statsActivity.getPackage(),
 					null, null);
-			showAdmobAccountList();
+			showAccountList();
 			if (configSwitcher.getCurrentView().getId() != R.id.base_chart_config) {
 				configSwitcher.showPrevious();
 			}
@@ -372,18 +356,9 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 		return "8 " + this.getString(R.string.admob__charts_available) + " ->";
 	}
 
-	protected void showAdmobAccountList() {
-		showAccountList(false);
-	}
-
-	private void showAdSenseAccountList() {
-		showAccountList(true);
-	}
-
-	private void showAccountList(final boolean useAdSense) {
+	private void showAccountList() {
 		final AccountManager manager = AccountManager.get(getActivity());
-		final Account[] accounts = manager.getAccountsByType(useAdSense ? "com.google"
-				: AdmobAccountAuthenticator.ACCOUNT_TYPE_ADMOB);
+		final Account[] accounts = manager.getAccountsByType("com.google");
 		final int size = accounts.length;
 		String[] names = new String[size];
 		accountList.removeAllViews();
@@ -403,32 +378,12 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 					String currentAdmobAccount = (String) view.getTag();
 					selectedAdmobAccount = currentAdmobAccount;
 					configSwitcher.showNext();
-					if (useAdSense) {
-						loadAdUnits();
-					} else {
-						loadRemoteSiteList();
-					}
+					loadAdUnits();
 
 				}
 			});
 			accountList.addView(inflate);
 		}
-	}
-
-	void loadRemoteSiteList() {
-		if (getActivity() == null) {
-			return;
-		}
-
-		// can't have two loaders with different interface, use 
-		// AsyncTask and retained fragment
-		if (loadSitesTask != null) {
-			loadSitesTask.cancel(true);
-			loadSitesTask = null;
-		}
-
-		loadSitesTask = new LoadRemoteSiteListTask(getActivity(), this, selectedAdmobAccount);
-		Utils.execute(loadSitesTask);
 	}
 
 	void loadAdUnits() {
@@ -548,95 +503,6 @@ public class AdmobFragment extends ChartFragment<AdmobStats> implements
 	@Override
 	public void restartLoader(Bundle args) {
 		// NOOP, to fulfill ChartFragment interface
-	}
-
-	private static class LoadRemoteSiteListTask extends
-			DetachableAsyncTask<Void, Void, Exception, Activity> {
-
-		private Map<String, String> data;
-
-		private AdmobFragment admobFragment;
-		private DetailedStatsActivity statsActivity;
-		private String currentAdmobAccount;
-
-		public LoadRemoteSiteListTask(Activity activity, AdmobFragment admobFragment,
-				String currentAdmobAccount) {
-			super(activity);
-			this.statsActivity = (DetailedStatsActivity) activity;
-			this.admobFragment = admobFragment;
-			this.currentAdmobAccount = currentAdmobAccount;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			if (activity == null) {
-				return;
-			}
-
-			statsActivity.refreshStarted();
-		}
-
-		@Override
-		protected Exception doInBackground(Void... params) {
-			if (activity == null) {
-				return null;
-			}
-
-			try {
-				data = AdmobRequest.getSiteList(currentAdmobAccount, activity);
-			} catch (Exception e) {
-				return e;
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Exception error) {
-			if (activity == null) {
-				return;
-			}
-
-			statsActivity.refreshFinished();
-
-			if (error != null) {
-				statsActivity.handleUserVisibleException(error);
-				return;
-			}
-
-			if (data != null && data.size() > 0) {
-				admobFragment.siteList.removeAllViews();
-
-				Set<String> keySet = data.keySet();
-				for (String siteId : keySet) {
-
-					String siteName = data.get(siteId);
-
-					// pull the id from the data
-					View inflate = activity.getLayoutInflater().inflate(
-							R.layout.admob_account_list_item, null);
-					TextView accountName = (TextView) inflate
-							.findViewById(R.id.admob_account_list_item_text);
-					accountName.setText(siteName);
-					inflate.setTag(siteId);
-					inflate.setOnClickListener(new OnClickListener() {
-
-						@Override
-						public void onClick(View view) {
-							String admobSiteId = (String) view.getTag();
-							AndlyticsDb.getInstance(activity).saveAdmobDetails(
-									statsActivity.getPackage(), currentAdmobAccount, admobSiteId);
-
-							admobFragment.mainViewSwitcher.swap();
-							admobFragment.loadRemoteData();
-							activity.invalidateOptionsMenu();
-						}
-					});
-					admobFragment.siteList.addView(inflate);
-
-				}
-			}
-		}
 	}
 
 	private static class LoadAdUnitsTask extends
