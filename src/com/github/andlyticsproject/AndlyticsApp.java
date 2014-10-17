@@ -1,17 +1,17 @@
 package com.github.andlyticsproject;
 
-import org.acra.ACRA;
-import org.acra.ACRAConfiguration;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
-import org.acra.sender.HttpSender;
-
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.util.Log;
 
 import com.github.andlyticsproject.db.AndlyticsDb;
+
+import org.acra.ACRA;
+import org.acra.ACRAConfiguration;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+import org.acra.sender.HttpSender;
 
 @ReportsCrashes(formKey = "dummy", sharedPreferencesMode = Context.MODE_PRIVATE, sharedPreferencesName = Preferences.PREF, mode = ReportingInteractionMode.TOAST)
 public class AndlyticsApp extends Application {

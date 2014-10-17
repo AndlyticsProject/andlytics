@@ -34,7 +34,6 @@ import android.widget.ViewSwitcher;
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.about.AboutActivity;
-import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.adsense.AdSenseClient;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
@@ -526,7 +525,6 @@ public class Main extends BaseActivity implements OnNavigationListener,
 					return null;
 				}
 
-				boolean migratedToAdSense = false;
 				Map<String, List<String>> admobAccountSiteMap = new HashMap<String, List<String>>();
 
 				List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
@@ -549,7 +547,6 @@ public class Main extends BaseActivity implements OnNavigationListener,
 							siteList.add(admobSiteId);
 							admobAccountSiteMap.put(admobAccount, siteList);
 						} else {
-							migratedToAdSense = true;
 							List<String> siteList = admobAccountSiteMap.get(admobAccount);
 							if (siteList == null) {
 								siteList = new ArrayList<String>();
@@ -568,13 +565,8 @@ public class Main extends BaseActivity implements OnNavigationListener,
 				// sync admob accounts
 				Set<String> admobAccuntKeySet = admobAccountSiteMap.keySet();
 				for (String admobAccount : admobAccuntKeySet) {
-					if (migratedToAdSense) {
-						AdSenseClient.foregroundSyncStats(activity, admobAccount,
-								admobAccountSiteMap.get(admobAccount));
-					} else {
-						AdmobRequest.syncSiteStats(admobAccount, activity,
-								admobAccountSiteMap.get(admobAccount), null);
-					}
+					AdSenseClient.foregroundSyncStats(activity, admobAccount,
+							admobAccountSiteMap.get(admobAccount));
 				}
 
 				activity.state.setLoadIconInCache(new LoadIconInCache(activity));

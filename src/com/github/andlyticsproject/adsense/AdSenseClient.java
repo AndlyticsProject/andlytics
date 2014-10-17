@@ -13,6 +13,8 @@ import com.github.andlyticsproject.model.AdmobStats;
 import com.github.andlyticsproject.util.Utils;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.json.GoogleJsonError.ErrorInfo;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.adsense.AdSense;
@@ -58,16 +60,29 @@ public class AdSenseClient {
 
 	public static void foregroundSyncStats(Context context, String admobAccount,
 			List<String> adUnits) throws Exception {
-		AdSense adsense = createForegroundSyncClient(context, admobAccount);
-		syncStats(context, adsense, adUnits);
+		try {
+			AdSense adsense = createForegroundSyncClient(context, admobAccount);
+			syncStats(context, adsense, adUnits);
+		} catch (GoogleJsonResponseException e) {
+			List<ErrorInfo> errors = e.getDetails().getErrors();
+			for (ErrorInfo err : errors) {
+				if ("dailyLimitExceeded".equals(err.getReason())) {
+					// ignore
+					Log.w(TAG, "Quota exeeded: " + e.toString());
+					return;
+				}
+			}
+
+			throw e;
+		}
 	}
 
 	private static AdSense createForegroundSyncClient(Context context, String admobAccount) {
 		GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(context,
 				Collections.singleton(AdSenseScopes.ADSENSE_READONLY));
 		credential.setSelectedAccountName(admobAccount);
-		AdSense adsense = new AdSense.Builder(AndroidHttp.newCompatibleTransport(),
-				JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
+		AdSense adsense = new AdSense.Builder(AndroidHttp.newCompatibleTransport(), JSON_FACTORY,
+				credential).setApplicationName(APPLICATION_NAME).build();
 
 		return adsense;
 	}
@@ -75,9 +90,22 @@ public class AdSenseClient {
 	public static void backgroundSyncStats(Context context, String admobAccount,
 			List<String> adUnits, Bundle extras, String authority, Bundle syncBundle)
 			throws Exception {
-		AdSense adsense = createBackgroundSyncClient(context, admobAccount, extras, authority,
-				syncBundle);
-		syncStats(context, adsense, adUnits);
+		try {
+			AdSense adsense = createBackgroundSyncClient(context, admobAccount, extras, authority,
+					syncBundle);
+			syncStats(context, adsense, adUnits);
+		} catch (GoogleJsonResponseException e) {
+			List<ErrorInfo> errors = e.getDetails().getErrors();
+			for (ErrorInfo err : errors) {
+				if ("dailyLimitExceeded".equals(err.getReason())) {
+					// ignore
+					Log.w(TAG, "Quota exeeded: " + e.toString());
+					return;
+				}
+			}
+
+			throw e;
+		}
 	}
 
 	private static void syncStats(Context context, AdSense adsense, List<String> adUnits)
@@ -175,11 +203,10 @@ public class AdSenseClient {
 			Bundle extras, String authority, Bundle syncBundle) {
 		BackgroundGoogleAccountCredential credential = BackgroundGoogleAccountCredential
 				.usingOAuth2(context, Collections.singleton(AdSenseScopes.ADSENSE_READONLY),
-						extras,
-						authority, syncBundle);
+						extras, authority, syncBundle);
 		credential.setSelectedAccountName(admobAccount);
-		AdSense adsense = new AdSense.Builder(AndroidHttp.newCompatibleTransport(),
-				JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
+		AdSense adsense = new AdSense.Builder(AndroidHttp.newCompatibleTransport(), JSON_FACTORY,
+				credential).setApplicationName(APPLICATION_NAME).build();
 		return adsense;
 	}
 

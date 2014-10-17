@@ -39,11 +39,6 @@
         </menu>
     </item>
     <item
-        android:id="@+id/itemAdmobsmenuNewAdmob"
-        android:showAsAction="ifRoom"
-        android:title="@string/use_new_admob">
-    </item>
-    <item
         android:id="@+id/itemAdmobsmenuRemove"
         android:showAsAction="never"
         android:title="@string/remove_admob">
