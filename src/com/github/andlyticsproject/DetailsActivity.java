@@ -45,6 +45,8 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 
 	private String appName;
 	private boolean hasRevenue;
+	
+	private LoadBitmap loadBitmap;
 
 	public static class TabListener<T extends StatsView<?>> implements ActionBar.TabListener {
 
@@ -98,9 +100,16 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 		ActionBar actionBar = getActionBar();
 
 		if (iconFilePath != null) {
-			Bitmap bm = BitmapFactory.decodeFile(iconFilePath);
-			BitmapDrawable icon = new BitmapDrawable(getResources(), bm);
-			actionBar.setIcon(icon);
+			if (getLastNonConfigurationInstance() != null) {
+				loadBitmap = (LoadBitmap) getLastNonConfigurationInstance();
+				loadBitmap.attach(this);
+				if (loadBitmap.bitmap != null) {
+					setActionBarIcon(loadBitmap.bitmap);
+				}
+			} else {
+				loadBitmap = new LoadBitmap(this);
+				Utils.execute(loadBitmap, iconFilePath);
+			}
 		}
 		
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -304,6 +313,45 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 						Toast.LENGTH_LONG).show();
 			}
 		}
+	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return loadBitmap == null ? null : loadBitmap.detach();
+	}
+	
+	private static class LoadBitmap extends DetachableAsyncTask<String, Void, Bitmap, DetailsActivity> {
+		
+		Bitmap bitmap;
+		
+		LoadBitmap(DetailsActivity activity) {
+			super(activity);
+		}
+		
+		@Override
+		protected Bitmap doInBackground(String... params) {
+			if (activity == null) {
+				return null;
+			}
+			
+			Bitmap bm = BitmapFactory.decodeFile(params[0]);
+			bitmap = bm;
+			return bm;
+		}
+		
+		@Override
+		protected void onPostExecute(Bitmap bm) {
+			if (activity == null) {
+				return;
+			}
+			
+			activity.setActionBarIcon(bm);
+		}
+	}
+	
+	private void setActionBarIcon(Bitmap bm) {
+		BitmapDrawable icon = new BitmapDrawable(getResources(), bm);
+		getActionBar().setIcon(icon);
 	}
 
 }
