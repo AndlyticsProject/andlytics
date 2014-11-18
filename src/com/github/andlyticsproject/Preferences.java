@@ -1,8 +1,5 @@
 package com.github.andlyticsproject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,6 +8,9 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
 import com.github.andlyticsproject.sync.AutosyncHandler;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class Preferences {
 
@@ -69,6 +69,8 @@ public class Preferences {
 	public static final String SHOW_COMMENT_AUTO_TRANSLATIONS = "show.comment.auto.translations";
 
 	public static final String SHOW_DEVELOPER_CUT_REVENUE = "revenue.show.developer.cut";
+
+	public static final String NOTIFICATION_PREFS = "notification.prefs";
 
 	public enum Timeframe {
 		LAST_NINETY_DAYS, LAST_THIRTY_DAYS, UNLIMITED, LAST_TWO_DAYS, LATEST_VALUE, LAST_SEVEN_DAYS, MONTH_TO_DATE

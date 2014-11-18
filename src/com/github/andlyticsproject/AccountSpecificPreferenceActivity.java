@@ -18,7 +18,7 @@ import java.util.List;
 
 // See PreferenceActivity for warning suppression justification
 @SuppressWarnings("deprecation")
-public class AccountSpecificPreferenceActivity extends PreferenceActivity implements
+public class AccountSpecificPreferenceActivity extends AndlyticsPreferenceActivity implements
 		LoadAppListTaskCompleteListener {
 
 	private String accountName;
