@@ -10,7 +10,7 @@ import android.view.MenuItem;
 
 // See PreferenceActivity for warning suppression justification
 @SuppressWarnings("deprecation")
-public class NotificationPreferenceActivity extends PreferenceActivity {
+public class NotificationPreferenceActivity extends android.preference.PreferenceActivity {
 
 	private CheckBoxPreference downloadsPref;
 	private CheckBoxPreference ratingsPref;

@@ -21,7 +21,7 @@ import java.util.List;
 // Suppressing warnings as there is no SherlockPreferenceFragment
 // for us to use instead of a PreferencesActivity
 @SuppressWarnings("deprecation")
-public class PreferenceActivity extends android.preference.PreferenceActivity implements
+public class AndlyticsPreferenceActivity extends android.preference.PreferenceActivity implements
 		OnPreferenceChangeListener, OnSharedPreferenceChangeListener {
 
 	private PreferenceCategory accountListPrefCat;
@@ -76,7 +76,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
 			String accountName = (String) preference.getTitle();
-			Intent i = new Intent(PreferenceActivity.this, AccountSpecificPreferenceActivity.class);
+			Intent i = new Intent(AndlyticsPreferenceActivity.this, AccountSpecificPreferenceActivity.class);
 			i.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, accountName);
 			startActivity(i);
 			return true;
@@ -90,9 +90,9 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 			Integer newPeriod = Integer.parseInt((String) newValue);
 			if (!newPeriod.equals(0)) {
 				// Keep track of the last valid sync period for re-enabling the pref
-				Preferences.saveLastNonZeroAutosyncPeriod(PreferenceActivity.this, newPeriod);
+				Preferences.saveLastNonZeroAutosyncPeriod(AndlyticsPreferenceActivity.this, newPeriod);
 			}
-			int oldPeriod = Preferences.getAutosyncPeriod(PreferenceActivity.this);
+			int oldPeriod = Preferences.getAutosyncPeriod(AndlyticsPreferenceActivity.this);
 			for (DeveloperAccount account : developerAccounts) {
 				// If syncing is currently on, or it used to be app wide off
 				// set the new period (and enable it)
@@ -126,7 +126,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 			// At least one account is enabled, so this should show
 			// the sync period
 			autosyncPref.setValue(Integer.toString(Preferences
-					.getLastNonZeroAutosyncPeriod(PreferenceActivity.this)));
+					.getLastNonZeroAutosyncPeriod(AndlyticsPreferenceActivity.this)));
 		} else {
 			// All the accounts are disabled, so set it to 0
 			autosyncPref.setValue("0");

@@ -312,7 +312,7 @@ public class Main extends BaseActivity implements OnNavigationListener,
 			startActivity(aboutIntent);
 			break;
 		case R.id.itemMainmenuPreferences:
-			Intent preferencesIntent = new Intent(this, PreferenceActivity.class);
+			Intent preferencesIntent = new Intent(this, AndlyticsPreferenceActivity.class);
 			preferencesIntent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, accountName);
 			startActivity(preferencesIntent);
 			break;
