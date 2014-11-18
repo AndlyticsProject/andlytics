@@ -4,13 +4,14 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
 // See PreferenceActivity for warning suppression justification
 @SuppressWarnings("deprecation")
-public class NotificationPreferenceActivity extends android.preference.PreferenceActivity {
+public class NotificationPreferenceActivity extends PreferenceActivity {
 
 	private CheckBoxPreference downloadsPref;
 	private CheckBoxPreference ratingsPref;

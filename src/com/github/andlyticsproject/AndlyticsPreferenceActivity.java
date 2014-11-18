@@ -9,6 +9,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
@@ -21,7 +22,7 @@ import java.util.List;
 // Suppressing warnings as there is no SherlockPreferenceFragment
 // for us to use instead of a PreferencesActivity
 @SuppressWarnings("deprecation")
-public class AndlyticsPreferenceActivity extends android.preference.PreferenceActivity implements
+public class AndlyticsPreferenceActivity extends PreferenceActivity implements
 		OnPreferenceChangeListener, OnSharedPreferenceChangeListener {
 
 	private PreferenceCategory accountListPrefCat;
