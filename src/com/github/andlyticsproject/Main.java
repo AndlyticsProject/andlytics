@@ -780,6 +780,12 @@ public class Main extends BaseActivity implements OnNavigationListener,
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		final long lastVersionCode = prefs.getLong(LAST_VERSION_CODE_KEY, 0);
 
+		// don't show popup on first install, creates weird interaction with 
+		// authorization popup from GLS
+		if (lastVersionCode == 0) {
+			return false;
+		}
+
 		if (versionCode != lastVersionCode) {
 			Log.i(TAG, "versionCode " + versionCode + " is different from the last known version "
 					+ lastVersionCode);
