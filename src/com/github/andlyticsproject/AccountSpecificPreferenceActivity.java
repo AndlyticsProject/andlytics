@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
@@ -18,7 +19,7 @@ import java.util.List;
 
 // See PreferenceActivity for warning suppression justification
 @SuppressWarnings("deprecation")
-public class AccountSpecificPreferenceActivity extends AndlyticsPreferenceActivity implements
+public class AccountSpecificPreferenceActivity extends PreferenceActivity implements
 		LoadAppListTaskCompleteListener {
 
 	private String accountName;
