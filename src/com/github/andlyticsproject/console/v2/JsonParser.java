@@ -605,11 +605,15 @@ public class JsonParser {
 			}
 		}
 
-		long timestamp = summaryObj.getLong("2");
-		String tzStr = summaryObj.getString("3");
+		long timeInMillis = summaryObj.getLong("2");
+		Calendar cal = Calendar.getInstance();
+/*
+		// TODO Work out timezone
+		String tzStr = summaryObj.optString("3");
 		TimeZone tz = TimeZone.getTimeZone(tzStr);
-		Calendar cal = Calendar.getInstance(tz);
-		cal.setTimeInMillis(timestamp / 1000);
+		cal = Calendar.getInstance(tz);
+*/
+		cal.setTimeInMillis(timeInMillis);
 
 		return RevenueSummary.createTotal(currency, cal.getTime(), lastDay, last7Days, last30Days,
 				overall);
