@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/comments_list_item_app_row"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -32,7 +33,8 @@
             android:paddingLeft="5dp"
             android:paddingRight="10dp"
             android:paddingTop="10dp"
-            android:textIsSelectable="false" >
+            android:textIsSelectable="false"
+            android:text="User name" >
         </TextView>
 
         <ImageView
@@ -53,7 +55,8 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:textIsSelectable="false"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Comment title" />
 
         <TextView
             android:id="@+id/comments_list_item_text"
@@ -64,7 +67,8 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:textColor="#676767"
-            android:textIsSelectable="false" />
+            android:textIsSelectable="false"
+            tools:text="Comment message" />
     </RelativeLayout>
 
     <LinearLayout
@@ -91,7 +95,8 @@
             android:paddingRight="4dp"
             android:singleLine="true"
             android:textColor="#8F9698"
-            android:textIsSelectable="false" />
+            android:textIsSelectable="false"
+            tools:text="1.2.3" />
 
         <TextView
             android:id="@+id/comments_list_item_device"
@@ -106,7 +111,8 @@
             android:paddingRight="4dp"
             android:singleLine="true"
             android:textColor="#8F9698"
-            android:textIsSelectable="false" />
+            android:textIsSelectable="false"
+            tools:text="Google Nexus 5" />
 
         <TextView
             android:id="@+id/comments_list_item_language"
@@ -118,7 +124,8 @@
             android:drawablePadding="4dp"
             android:gravity="left|center_vertical"
             android:textColor="#8F9698"
-            android:textIsSelectable="false" />
+            android:textIsSelectable="false"
+            tools:text="EN" />
     </LinearLayout>
 
     <View
