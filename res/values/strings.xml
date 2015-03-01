@@ -156,6 +156,7 @@
     <string name="network_error">A network error has occurred. Please try again later</string>
     <string name="signup_error">%1$s is not an android developer account, sign up at:\n\n %2$s</string>
     <string name="auth_error">Authentication failed for: %1$s</string>
+    <string name="app_access_blocked_error">Not allowed to access apps for: %1$s</string>
     <string name="auth_error_open_browser">Additional authentication required. Tap to login via browser.</string>
     <string name="admob_ratelimit_error">Can\'t load Admob data because Admob has restricted the number of requests from this app, try again later</string>
     <string name="admob_missing_error">AdMob account %1$s is missing. If this happens repeatedly try moving Andlytics from SD card to internal storage</string>

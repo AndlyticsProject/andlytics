@@ -191,7 +191,7 @@ public class DevConsoleV2 implements DevConsole {
 	}
 
 	/**
-	 * Fetches a combined list of apps for all avaiable console accounts
+	 * Fetches a combined list of apps for all available console accounts
 	 * 
 	 * @return combined list of apps
 	 * @throws DevConsoleException
@@ -201,6 +201,10 @@ public class DevConsoleV2 implements DevConsole {
 		for (DeveloperConsoleAccount consoleAccount : protocol.getSessionCredentials()
 				.getDeveloperConsoleAccounts()) {
 			String developerId = consoleAccount.getDeveloperId();
+			if (!consoleAccount.getCanAccessApps()) {
+				Log.w(TAG, "Not allowed to fetch app info for " + developerId);
+				continue;
+			}
 			Log.d(TAG, "Getting apps for " + developerId);
 			String response = post(protocol.createFetchAppsUrl(developerId),
 					protocol.createFetchAppInfosRequest(), developerId);

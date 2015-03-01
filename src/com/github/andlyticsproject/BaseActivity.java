@@ -20,6 +20,7 @@ import com.github.andlyticsproject.admob.AdmobGenericException;
 import com.github.andlyticsproject.admob.AdmobInvalidRequestException;
 import com.github.andlyticsproject.admob.AdmobInvalidTokenException;
 import com.github.andlyticsproject.admob.AdmobRateLimitExceededException;
+import com.github.andlyticsproject.console.AppAccessBlockedException;
 import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.console.MultiAccountException;
@@ -108,6 +109,9 @@ public class BaseActivity extends Activity {
 		if (e instanceof NetworkException) {
 			Toast.makeText(BaseActivity.this, getString(R.string.network_error), Toast.LENGTH_LONG)
 					.show();
+		} else if (e instanceof AppAccessBlockedException) {
+			Toast.makeText(BaseActivity.this, getString(R.string.app_access_blocked_error, accountName),
+					Toast.LENGTH_LONG).show();
 		} else if (e instanceof AuthenticationException) {
 			Toast.makeText(BaseActivity.this, getString(R.string.auth_error, accountName),
 					Toast.LENGTH_LONG).show();
