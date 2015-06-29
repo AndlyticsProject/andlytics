@@ -258,7 +258,7 @@ public class JsonParser {
 			}
 			app.setName(appDetails.getString("2"));
 
-			String description = appDetails.getString("3");
+			String description = appDetails.optString("3");
 			String changelog = appDetails.optString("5");
 			Long lastPlayStoreUpdate = jsonAppInfo.getJSONObject("11").getLong("1");
 			AppDetails details = new AppDetails(description, changelog, lastPlayStoreUpdate);
