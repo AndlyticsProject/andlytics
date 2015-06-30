@@ -62,7 +62,9 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 				String developerId = accountObj.getString("1");
 				String developerName = StringEscapeUtils.unescapeJava(accountObj.getString("2"));
 				// Cannot access apps if e.g. a developer agreement needs to be accepted
-				boolean canAccessApps = accountObj.getBoolean("3");
+				// XXX seems to be always false? Disable check for now
+				//				boolean canAccessApps = accountObj.getBoolean("3");
+				boolean canAccessApps = true;
 				devAccounts.add(new DeveloperConsoleAccount(developerId, developerName, canAccessApps));
 			}
 
