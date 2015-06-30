@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.0'
+        classpath 'com.android.tools.build:gradle:1.2.3'
     }
 }
 
@@ -19,7 +19,7 @@ repositories {
 dependencies {
     compile 'com.android.support:support-v4:20.0.+'
     compile "org.achartengine:achartengine:1.1.0"
-    compile "ch.acra:acra:4.5.0"
+    compile "ch.acra:acra:4.6.1"
     compile 'com.google.android.gms:play-services:4.0.30'
     compile 'org.apache.commons:commons-lang3:3.1'
 
@@ -40,12 +40,12 @@ dependencies {
 android {
 
 	compileSdkVersion 21
-	buildToolsVersion "21.1.2"
+	buildToolsVersion "22.0.1"
 
-    //lintOptions {
-    //    checkReleaseBuilds false
-    //    abortOnError false
-    //}
+    // lintOptions {
+    //     checkReleaseBuilds false
+    //     abortOnError false
+    // }
 
 
     signingConfigs {
