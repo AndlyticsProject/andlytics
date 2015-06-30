@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.github.andlyticsproject.AndlyticsApp;
 import com.github.andlyticsproject.R;
+import com.github.andlyticsproject.console.AppAccessBlockedException;
 import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.DevConsoleException;
 import com.github.andlyticsproject.model.DeveloperConsoleAccount;
@@ -60,7 +61,9 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 				JSONObject accountObj = devConsoleAccountsArr.getJSONObject(i);
 				String developerId = accountObj.getString("1");
 				String developerName = StringEscapeUtils.unescapeJava(accountObj.getString("2"));
-				devAccounts.add(new DeveloperConsoleAccount(developerId, developerName));
+				// Cannot access apps if e.g. a developer agreement needs to be accepted
+				boolean canAccessApps = accountObj.getBoolean("3");
+				devAccounts.add(new DeveloperConsoleAccount(developerId, developerName, canAccessApps));
 			}
 
 
@@ -172,6 +175,20 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 			debugAuthFailure(responseStr, webloginUrl);
 
 			throw new AuthenticationException("Couldn't get developer account ID.");
+		}
+		boolean allowedToAccessAppsForSomeAccounts = false;
+		for (DeveloperConsoleAccount account : developerAccounts) {
+			if (account.getCanAccessApps()) {
+				allowedToAccessAppsForSomeAccounts = true;
+			} else {
+				// TODO Report this to the user properly, but don't spam them because they may
+				// never be able to resolve the problem e.g. the account owner needs to agree to new terms
+				Log.w(TAG, "Not allowed to fetch app info for " + account.getDeveloperId() + ". " +
+						"Log into the account via your browser to resolve the problem.");
+			}
+		}
+		if (!allowedToAccessAppsForSomeAccounts) {
+			throw new AppAccessBlockedException("Not allowed to fetch app info for any account.");
 		}
 
 		String xsrfToken = findXsrfToken(startupData);
