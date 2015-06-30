@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@color/andBackground"
@@ -54,7 +55,8 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/main_app_icon_frame"
                 android:maxLines="1"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="Andlytics" />
 
             <RatingBar
                 android:id="@+id/main_app_ratingbar"
@@ -80,7 +82,8 @@
                 android:minWidth="65dp"
                 android:paddingBottom="2dp"
                 android:paddingRight="5dp"
-                android:paddingTop="2dp">  
+                android:paddingTop="2dp"
+                tools:text="100">
             </TextView>
 
             <TextView
@@ -101,7 +104,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/main_app_commentscountText"
                 android:layout_alignParentRight="true"
-                android:paddingRight="50dp" />
+                android:paddingRight="50dp"
+                tools:text="10.0%" />
         </RelativeLayout>
         
         <RelativeLayout
@@ -138,7 +142,8 @@
                 android:minWidth="70dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="5dp"
-                android:paddingTop="3dp" />
+                android:paddingTop="3dp"
+                tools:text="1000"/>
 
             <TextView
                 android:id="@+id/main_app_downloadsText"
@@ -157,7 +162,8 @@
                 android:layout_alignBaseline="@+id/main_app_downloadsText"
                 android:layout_alignParentRight="true"
                 android:paddingRight="55dp"
-                android:text="" />
+                android:text=""
+                tools:text="50.0%" />
 
             <TextView
                 android:id="@+id/main_app_activeinstalls"
@@ -168,7 +174,8 @@
                 android:layout_below="@+id/main_app_downloads"
                 android:gravity="right"
                 android:paddingBottom="3dp"
-                android:paddingRight="5dp" />
+                android:paddingRight="5dp"
+                tools:text="500" />
 
             <TextView
                 android:id="@+id/main_app_activeinstallsText"
@@ -188,7 +195,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/main_app_activeinstallsText"
                 android:layout_alignParentRight="true"
-                android:paddingRight="55dp" />
+                android:paddingRight="55dp"
+                tools:text="50.0%" />
         </RelativeLayout>
         
         <RelativeLayout
@@ -225,7 +233,8 @@
                 android:minWidth="70dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="5dp"
-                android:paddingTop="3dp" />
+                android:paddingTop="3dp"
+                tools:text="1" />
 
             <TextView
                 android:id="@+id/main_app_revenue_total_label"
@@ -244,7 +253,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/main_app_revenue_total_text"
                 android:layout_alignParentRight="true"
-                android:paddingRight="55dp" />
+                android:paddingRight="55dp"
+                tools:text="10.0%" />
 
             <TextView
                 android:id="@+id/main_app_revenue_last_30days_text"
@@ -256,7 +266,8 @@
                 android:minWidth="70dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="5dp"
-                android:paddingBottom="3dp" />
+                android:paddingBottom="3dp"
+                tools:text="1" />
 
             <TextView
                 android:id="@+id/main_app_revenue_last_30days_label"
@@ -302,7 +313,8 @@
                 android:minWidth="70dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="5dp"
-                android:paddingTop="3dp" />
+                android:paddingTop="3dp"
+                tools:text="100" />
 
             <TextView
                 android:id="@+id/main_app_admob_revenue_text"
@@ -322,7 +334,8 @@
                 android:layout_alignBaseline="@+id/main_app_admob_revenue_text"
                 android:layout_alignParentRight="true"
                 android:paddingRight="55dp"
-                android:text="" />
+                android:text=""
+                tools:text="20.5%" />
 
             <TextView
                 android:id="@+id/main_app_admob_requests"
@@ -333,7 +346,8 @@
                 android:layout_below="@+id/main_app_admob_revenue"
                 android:gravity="right"
                 android:paddingBottom="3dp"
-                android:paddingRight="5dp" />
+                android:paddingRight="5dp"
+                tools:text="50"/>
 
             <TextView
                 android:id="@+id/main_app_admob_requests_text"
@@ -354,7 +368,8 @@
                 android:layout_alignBaseline="@+id/main_app_admob_requests_text"
                 android:layout_alignParentRight="true"
                 android:paddingRight="55dp"
-                android:text="" />
+                android:text=""
+                tools:text="11.8%" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -392,7 +407,8 @@
                 android:layout_below="@+id/main_app_spacer2"
                 android:maxLines="1"
                 android:paddingRight="5dp"
-                android:paddingTop="2dp" >
+                android:paddingTop="2dp"
+                tools:text="4.750">
             </TextView>
 
             <TextView
@@ -414,7 +430,8 @@
                 android:gravity="right"
                 android:minWidth="70dp"
                 android:paddingBottom="5dp"
-                android:paddingRight="5dp" >
+                android:paddingRight="5dp"
+                tools:text="200" >
             </TextView>
 
             <TextView
@@ -424,7 +441,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/main_app_avgrating"
                 android:layout_alignParentRight="true"
-                android:paddingRight="55dp" />
+                android:paddingRight="55dp"
+                tools:text="23.3%" />
 
             <TextView
                 android:id="@+id/main_app_ratingText"
@@ -444,7 +462,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/main_app_ratingText"
                 android:layout_alignParentRight="true"
-                android:paddingRight="55dp" />
+                android:paddingRight="55dp"
+                tools:text="17.2%" />
 
             <View
                 android:id="@+id/main_app_spacer3"
