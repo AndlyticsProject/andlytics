@@ -33,7 +33,7 @@
   <string name="apps_hide">Nascondi app</string>
   <string name="feedback">Invia feedback</string>
   <string name="settings">Impostazioni</string>
-  <string name="downloads">Descargas</string>
+  <string name="downloads">Downloads</string>
   <string name="close">Chiudi</string>
   <string name="rating_changes">Andamento rating</string>
   <string name="comment_changes">Andamento commenti</string>
@@ -82,7 +82,7 @@
   <string name="info_smooth">Attiva interpolazione dei valori per i grafici di download e installazioni attive</string>
   <string name="auto_sync_period">Intervallo sincronizzazione automatica</string>
   <string name="admob_login">LOGIN ACCOUNT ADMOB</string>
-  <string name="password">Contraseña</string>
+  <string name="password">Password</string>
   <string name="email">E-mail</string>
   <string name="login">Entrar</string>
   <string name="remove_admob">Elimina associazione AdMob</string>
