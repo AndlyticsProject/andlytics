@@ -150,43 +150,38 @@ public class JsonParser {
 			AppInfo app = new AppInfo();
 			app.setAccount(accountName);
 			app.setLastUpdate(now);
-			// Per app:
-			// 1 : { 1: package name,
-			// 2 : { 1: [{1 : lang, 2: name, 3: description, 4: ??, 5: what's new}], 2 : ?? },
-			// 3 : ??,
-			// 4 : update history,
-			// 5 : price,
-			// 6 : update date,
-			// 7 : state?
-			// }
-			// 2 : {}
-			// 3 : { 1: active dnd, 2: # ratings, 3: avg rating, 4: ???, 5: total dnd }
-
-			// arrays have changed to objects, with the index as the key
 			/*
-			 * Per app:
-			 * null
-			 * [ APP_INFO_ARRAY
-			 * * null
+			 * Per app key indexed objects:
+			 * "1" -> [ APP_INFO
 			 * * packageName
-			 * * Nested array with details
-			 * * null
-			 * * Nested array with version details
-			 * * Nested array with price details
-			 * * Last update Date
-			 * * Number [1=published, 5 = draft?]
+			 * * publishState
+			 * * ?
 			 * ]
-			 * null
-			 * [ APP_STATS_ARRAY
-			 * * null,
+			 * "3" -> [ APP_STATS
 			 * * Active installs
 			 * * Total ratings
 			 * * Average rating
 			 * * Errors
 			 * * Total installs
 			 * ]
+			 * "6" -> [ APP_DETAILS
+			 * * App name
+			 * * Low res icon
+			 * * High res icon
+			 * * Version
+			 * * Price
+			 * * ...
+			 * * Last update
+			 * ]
 			 */
 			JSONObject jsonApp = jsonApps.getJSONObject(i);
+			/*
+			 * [ APP_INFO
+			 * * "1" -> packageName
+			 * * "7" -> publishState
+			 * * "11" -> ?
+			 * ]
+			 */
 			JSONObject jsonAppInfo = jsonApp.getJSONObject("1");
 			if (DEBUG) {
 				pp("jsonAppInfo", jsonAppInfo);
@@ -218,17 +213,18 @@ public class JsonParser {
 			app.setPublishState(publishState);
 			app.setPackageName(packageName);
 
-			/*
-			 * Per app details:
-			 * 1: Country code
-			 * 2: App Name
-			 * 3: Description
-			 * 4: Promo text
-			 * 5: Last what's new
+			/* App details
+			 * * App name
+			 * * Low res icon
+			 * * High res icon
+			 * * Version
+			 * * Price?
+			 * * ...
+			 * * Last update
 			 */
 			// skip if we can't get all the data
 			// XXX should we just let this crash so we know there is a problem?
-			if (!jsonAppInfo.has("2")) {
+			if (!jsonApp.has("6")) {
 				if (skipIncomplete) {
 					Log.d(TAG, String.format(
 							"Skipping app %d because no app details found: package name=%s", i,
@@ -239,91 +235,45 @@ public class JsonParser {
 				}
 				continue;
 			}
-			if (!jsonAppInfo.has("4")) {
-				if (skipIncomplete) {
-					Log.d(TAG, String.format(
-							"Skipping app %d because no versions info found: package name=%s", i,
-							packageName));
-				} else {
-					Log.d(TAG, "Adding incomplete app: " + packageName);
-					apps.add(app);
-				}
-				continue;
-			}
-
-			JSONObject appDetails = jsonAppInfo.getJSONObject("2").getJSONArray("1")
-					.getJSONObject(0);
+			JSONObject jsonAppDetails = jsonApp.getJSONObject("6");
 			if (DEBUG) {
-				pp("appDetails", appDetails);
+				pp("jsonAppDetails", jsonAppDetails);
 			}
-			app.setName(appDetails.getString("2"));
+			app.setName(jsonAppDetails.getString("1"));
 
-			String description = appDetails.optString("3");
-			String changelog = appDetails.optString("5");
-			Long lastPlayStoreUpdate = jsonAppInfo.getJSONObject("11").getLong("1");
+			String description = ""; //appDetails.optString("3");
+			String changelog = ""; //appDetails.optString("5");
+			Long lastPlayStoreUpdate = jsonAppDetails.getLong("8");
 			AppDetails details = new AppDetails(description, changelog, lastPlayStoreUpdate);
 			app.setDetails(details);
 
-			/*
-			 * Per app version details:
-			 * null
-			 * null
-			 * packageName
-			 * versionNumber
-			 * versionName
-			 * null
-			 * Array with app icon [null,null,null,icon]
-			 */
-			// XXX
-			JSONArray appVersions = jsonAppInfo.getJSONObject("4").getJSONObject("1")
-					.optJSONArray("1");
-			if (DEBUG) {
-				pp("appVersions", appVersions);
-			}
-			if (appVersions == null) {
-				if (skipIncomplete) {
-					Log.d(TAG, String.format(
-							"Skipping app %d because no versions info found: package name=%s", i,
-							packageName));
-				} else {
-					Log.d(TAG, "Adding incomplete app: " + packageName);
-					apps.add(app);
-				}
-				continue;
-			}
-			JSONObject lastAppVersionDetails = appVersions.getJSONObject(appVersions.length() - 1)
-					.getJSONObject("2");
-			if (DEBUG) {
-				pp("lastAppVersionDetails", lastAppVersionDetails);
-			}
-			app.setVersionName(lastAppVersionDetails.getString("4"));
-			app.setIconUrl(lastAppVersionDetails.getJSONObject("6").getString("3"));
+			app.setVersionName(jsonAppDetails.getString("4"));
+			app.setIconUrl(jsonAppDetails.getString("3"));
+
+
 
 			// App stats
 			/*
-			 * null,
 			 * Active installs
 			 * Total ratings
 			 * Average rating
 			 * Errors
 			 * Total installs
 			 */
-			// XXX this index might not be correct for all apps?
-			// 3 : { 1: active dnd, 2: # ratings, 3: avg rating, 4: #errors?, 5: total dnd }
-			JSONObject jsonAppStats = jsonApp.optJSONObject("3");
-			if (DEBUG) {
-				pp("jsonAppStats", jsonAppStats);
-			}
-			if (jsonAppStats == null) {
+			if (!jsonApp.has("3")) {
 				if (skipIncomplete) {
 					Log.d(TAG, String.format(
-							"Skipping app %d because no stats found: package name=%s", i,
+							"Skipping app %d because no app stats found: package name=%s", i,
 							packageName));
 				} else {
 					Log.d(TAG, "Adding incomplete app: " + packageName);
 					apps.add(app);
 				}
 				continue;
+			}
+			JSONObject jsonAppStats = jsonApp.getJSONObject("3");
+			if (DEBUG) {
+				pp("jsonAppStats", jsonAppStats);
 			}
 			AppStats stats = new AppStats();
 			stats.setDate(now);
