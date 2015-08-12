@@ -53,11 +53,11 @@ public class JsonParser {
 	static void parseRatings(String json, AppStats stats) throws JSONException {
 		// Extract just the array with the values
 		JSONObject values = new JSONObject(json).getJSONObject("result").getJSONArray("1")
-				.getJSONObject(0);
+				.getJSONObject(0).getJSONObject("8");
 
-		// Ratings are at index 2 - 6
-		stats.setRating(values.getInt("2"), values.getInt("3"), values.getInt("4"),
-				values.getInt("5"), values.getInt("6"));
+		// Ratings are at index 1 - 5
+		stats.setRating(values.getInt("1"), values.getInt("2"), values.getInt("3"),
+				values.getInt("4"), values.getInt("5"));
 
 	}
 
