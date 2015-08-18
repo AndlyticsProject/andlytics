@@ -8,6 +8,7 @@ import com.github.andlyticsproject.model.AppStats;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.FileUtils;
+import com.google.gson.JsonObject;
 
 import org.apache.http.client.methods.HttpPost;
 import org.json.JSONArray;
@@ -43,9 +44,6 @@ public class DevConsoleV2Protocol {
 	// 1$: package name, 2$: stats type, 3$: stats by, 4$: XSRF
 	static final String GET_COMBINED_STATS_TEMPLATE = "{\"method\":\"getCombinedStats\","
 			+ "\"params\":{\"1\":\"%1$s\",\"2\":1,\"3\":%2$d,\"4\":[%3$d]},\"xsrf\":\"%4$s\"}";
-	// %1$s: package name, %2$s: comment ID, %3$s: reply text, %4$s: XSRF
-	static final String REPLY_TO_COMMENT_TEMPLATE = "{\"method\":\"sendReply\","
-			+ "\"params\":{\"1\":\"%1$s\",\"2\":\"%2$s\",\"3\":\"%3$s\"},\"xsrf\":\"%4$s\"}";
 	// %1$s: package name, %2$s: XSRF
 	static final String REVENUE_SUMMARY_TEMPLATE = "{\"method\":\"revenueSummary\",\"params\":{\"1\":\"%1$s\",\"2\":\"\"},\"xsrf\":\"%2$s\"}";
 	// %1$s: package name, %2$s: XSRF
@@ -234,8 +232,16 @@ public class DevConsoleV2Protocol {
 			reply = reply.substring(0, COMMENT_REPLY_MAX_LENGTH);
 		}
 
-		return String.format(REPLY_TO_COMMENT_TEMPLATE, packageName, commentId, reply,
-				sessionCredentials.getXsrfToken());
+		JsonObject replyObj = new JsonObject();
+		replyObj.addProperty("method", "sendReply");
+		JsonObject params = new JsonObject();
+		params.addProperty("1", packageName);
+		params.addProperty("2", commentId);
+		params.addProperty("3", reply);
+		replyObj.add("params", params);
+		replyObj.addProperty("xsrf", sessionCredentials.getXsrfToken());
+
+		return replyObj.toString();
 	}
 
 	boolean hasFeature(String feature) {
