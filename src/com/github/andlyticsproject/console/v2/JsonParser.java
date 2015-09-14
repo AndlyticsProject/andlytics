@@ -248,7 +248,9 @@ public class JsonParser {
 			app.setDetails(details);
 
 			app.setVersionName(jsonAppDetails.getString("4"));
-			app.setIconUrl(jsonAppDetails.getString("3"));
+			if (jsonAppDetails.has("3")) {
+				app.setIconUrl(jsonAppDetails.getString("3"));
+			}
 
 
 
