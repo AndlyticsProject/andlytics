@@ -259,7 +259,7 @@ public class AppInfo {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((account == null) ? 0 : account.hashCode());
-		result = prime * result + ((developerId == null) ? 0 : account.hashCode());
+		result = prime * result + ((developerId == null) ? 0 : developerId.hashCode());
 		result = prime * result + ((history == null) ? 0 : history.hashCode());
 		result = prime * result + ((iconUrl == null) ? 0 : iconUrl.hashCode());
 		result = prime * result + ((lastUpdate == null) ? 0 : lastUpdate.hashCode());
