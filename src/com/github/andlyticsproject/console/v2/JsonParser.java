@@ -458,7 +458,7 @@ public class JsonParser {
 				}
 			}
 
-			JSONObject jsonDevice = jsonComment.optJSONObject("8");
+			JSONObject jsonDevice = jsonComment.optJSONObject("16");
 			if (jsonDevice != null) {
 				String device = jsonDevice.optString("3");
 				JSONArray extraInfo = jsonDevice.optJSONArray("2");
