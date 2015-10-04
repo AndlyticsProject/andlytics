@@ -25,3 +25,12 @@ secure.properties
 .idea/
 .gradle/
 *.iml
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
