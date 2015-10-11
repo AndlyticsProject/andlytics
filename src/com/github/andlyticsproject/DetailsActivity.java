@@ -1,19 +1,19 @@
 package com.github.andlyticsproject;
 
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
 import com.github.andlyticsproject.db.AndlyticsDb;
@@ -45,6 +45,8 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 
 	private String appName;
 	private boolean hasRevenue;
+	
+	private LoadBitmap loadBitmap;
 
 	public static class TabListener<T extends StatsView<?>> implements ActionBar.TabListener {
 
@@ -58,7 +60,7 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 			this.tag = tag;
 			this.clazz = clz;
 
-			fragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
+			fragment = activity.getFragmentManager().findFragmentByTag(tag);
 		}
 
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -71,7 +73,7 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 
 			activity.setTitle(((StatsView<?>) fragment).getTitle());
 			if (activity.appName != null) {
-				activity.getSupportActionBar().setSubtitle(activity.appName);
+				activity.getActionBar().setSubtitle(activity.appName);
 			}
 		}
 
@@ -95,12 +97,19 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 		appName = getDbAdapter().getAppName(packageName);
 		hasRevenue = getIntent().getBooleanExtra(EXTRA_HAS_REVENUE, true);
 
-		ActionBar actionBar = getSupportActionBar();
+		ActionBar actionBar = getActionBar();
 
 		if (iconFilePath != null) {
-			Bitmap bm = BitmapFactory.decodeFile(iconFilePath);
-			BitmapDrawable icon = new BitmapDrawable(getResources(), bm);
-			actionBar.setIcon(icon);
+			if (getLastNonConfigurationInstance() != null) {
+				loadBitmap = (LoadBitmap) getLastNonConfigurationInstance();
+				loadBitmap.attach(this);
+				if (loadBitmap.bitmap != null) {
+					setActionBarIcon(loadBitmap.bitmap);
+				}
+			} else {
+				loadBitmap = new LoadBitmap(this);
+				Utils.execute(loadBitmap, iconFilePath);
+			}
 		}
 		
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -172,7 +181,7 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 
 	protected void onSaveInstanceState(Bundle state) {
 		super.onSaveInstanceState(state);
-		state.putInt(EXTRA_SELECTED_TAB_IDX, getSupportActionBar().getSelectedNavigationIndex());
+		state.putInt(EXTRA_SELECTED_TAB_IDX, getActionBar().getSelectedNavigationIndex());
 	}
 
 	@Override
@@ -189,8 +198,8 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 	}
 
 	public void showReplyDialog(Comment comment) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		Fragment prev = getSupportFragmentManager().findFragmentByTag(REPLY_DIALOG_FRAGMENT);
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		Fragment prev = getFragmentManager().findFragmentByTag(REPLY_DIALOG_FRAGMENT);
 		if (prev != null) {
 			ft.remove(prev);
 		}
@@ -209,8 +218,8 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 	}
 
 	public void hideReplyDialog() {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		Fragment dialog = getSupportFragmentManager().findFragmentByTag(REPLY_DIALOG_FRAGMENT);
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		Fragment dialog = getFragmentManager().findFragmentByTag(REPLY_DIALOG_FRAGMENT);
 		if (dialog != null) {
 			ft.remove(dialog);
 			ft.commit();
@@ -266,7 +275,7 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 
 				Toast.makeText(activity, R.string.reply_sent, Toast.LENGTH_LONG).show();
 
-				CommentsFragment commentsFargment = (CommentsFragment) getSupportFragmentManager()
+				CommentsFragment commentsFargment = (CommentsFragment) getFragmentManager()
 						.findFragmentByTag("comments_tab");
 				if (commentsFargment != null) {
 					commentsFargment.refreshComments();
@@ -277,8 +286,8 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 
 	@Override
 	public void setCurrentChart(int currentPage, int column) {
-		String tabTag = TAB_TAGS[getSupportActionBar().getSelectedNavigationIndex()];
-		StatsView<?> chartFargment = (StatsView<?>) getSupportFragmentManager().findFragmentByTag(
+		String tabTag = TAB_TAGS[getActionBar().getSelectedNavigationIndex()];
+		StatsView<?> chartFargment = (StatsView<?>) getFragmentManager().findFragmentByTag(
 				tabTag);
 		if (chartFargment != null) {
 			chartFargment.setCurrentChart(currentPage, column);
@@ -293,9 +302,9 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 			}
 		} else if (requestCode == REQUEST_AUTHORIZATION) {
 			if (resultCode == Activity.RESULT_OK) {
-				if (getSupportActionBar().getSelectedNavigationIndex() == TAB_IDX_ADMOB) {
-					String tabTag = TAB_TAGS[getSupportActionBar().getSelectedNavigationIndex()];
-					AdmobFragment admobFragment = (AdmobFragment) getSupportFragmentManager()
+				if (getActionBar().getSelectedNavigationIndex() == TAB_IDX_ADMOB) {
+					String tabTag = TAB_TAGS[getActionBar().getSelectedNavigationIndex()];
+					AdmobFragment admobFragment = (AdmobFragment) getFragmentManager()
 							.findFragmentByTag(tabTag);
 					admobFragment.loadAdUnits();
 				}
@@ -304,6 +313,45 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 						Toast.LENGTH_LONG).show();
 			}
 		}
+	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return loadBitmap == null ? null : loadBitmap.detach();
+	}
+	
+	private static class LoadBitmap extends DetachableAsyncTask<String, Void, Bitmap, DetailsActivity> {
+		
+		Bitmap bitmap;
+		
+		LoadBitmap(DetailsActivity activity) {
+			super(activity);
+		}
+		
+		@Override
+		protected Bitmap doInBackground(String... params) {
+			if (activity == null) {
+				return null;
+			}
+			
+			Bitmap bm = BitmapFactory.decodeFile(params[0]);
+			bitmap = bm;
+			return bm;
+		}
+		
+		@Override
+		protected void onPostExecute(Bitmap bm) {
+			if (activity == null) {
+				return;
+			}
+			
+			activity.setActionBarIcon(bm);
+		}
+	}
+	
+	private void setActionBarIcon(Bitmap bm) {
+		BitmapDrawable icon = new BitmapDrawable(getResources(), bm);
+		getActionBar().setIcon(icon);
 	}
 
 }

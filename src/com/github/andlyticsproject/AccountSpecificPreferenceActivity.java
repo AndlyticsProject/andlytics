@@ -1,25 +1,25 @@
 package com.github.andlyticsproject;
 
-import java.util.List;
-
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.AsyncTasks.LoadAppListTask;
 import com.github.andlyticsproject.AsyncTasks.LoadAppListTaskCompleteListener;
 import com.github.andlyticsproject.model.AppInfo;
 import com.github.andlyticsproject.sync.AutosyncHandler;
 import com.github.andlyticsproject.util.Utils;
 
+import java.util.List;
+
 // See PreferenceActivity for warning suppression justification
 @SuppressWarnings("deprecation")
-public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivity implements
+public class AccountSpecificPreferenceActivity extends PreferenceActivity implements
 		LoadAppListTaskCompleteListener {
 
 	private String accountName;
@@ -36,7 +36,7 @@ public class AccountSpecificPreferenceActivity extends SherlockPreferenceActivit
 
 		accountName = getIntent().getExtras().getString(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME);
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		setTitle(accountName);
 		PreferenceManager prefMgr = getPreferenceManager();
 		prefMgr.setSharedPreferencesName(Preferences.PREF);

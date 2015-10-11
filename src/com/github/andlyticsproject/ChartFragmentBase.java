@@ -1,12 +1,11 @@
 package com.github.andlyticsproject;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
+import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,8 +16,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.chart.Chart;
 import com.github.andlyticsproject.view.ChartGallery;
@@ -26,8 +23,11 @@ import com.github.andlyticsproject.view.ChartGalleryAdapter;
 import com.github.andlyticsproject.view.ViewSwitcher3D;
 import com.github.andlyticsproject.view.ViewSwitcher3D.ViewSwitcherListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("deprecation")
-public abstract class ChartFragmentBase extends SherlockFragment implements ViewSwitcherListener {
+public abstract class ChartFragmentBase extends Fragment implements ViewSwitcherListener {
 
 	protected static final String SELECTED_CHART_PAGE = "selected_chart_page";
 	protected static final String SELECTED_CHART_COLUMN = "selected_chart_position";
@@ -193,7 +193,7 @@ public abstract class ChartFragmentBase extends SherlockFragment implements View
 
 	protected final void updateTitleTextSwitcher(String string) {
 		if (getActivity() != null) {
-			getSherlockActivity().getSupportActionBar().setTitle(string);
+			getActivity().getActionBar().setTitle(string);
 		}
 	}
 

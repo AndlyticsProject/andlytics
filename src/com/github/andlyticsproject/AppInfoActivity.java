@@ -1,20 +1,21 @@
 package com.github.andlyticsproject;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -23,11 +24,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.cache.AppIconInMemoryCache;
 import com.github.andlyticsproject.db.AndlyticsDb;
 import com.github.andlyticsproject.dialog.AddEditLinkDialog;
@@ -37,7 +33,11 @@ import com.github.andlyticsproject.model.Link;
 import com.github.andlyticsproject.util.DetachableAsyncTask;
 import com.github.andlyticsproject.util.Utils;
 
-public class AppInfoActivity extends SherlockFragmentActivity implements
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+public class AppInfoActivity extends Activity implements
 		AddEditLinkDialog.OnFinishAddEditLinkDialogListener, OnItemLongClickListener {
 
 	public static final String TAG = Main.class.getSimpleName();
@@ -45,6 +45,7 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 	private LinksListAdapter linksListAdapter;
 
 	private LoadLinksDb loadLinksDb;
+	private LoadBitmap loadBitmap;
 
 	private AppInfo appInfo;
 	private List<Link> links;
@@ -70,17 +71,24 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 			iconFilePath = b.getString(BaseActivity.EXTRA_ICON_FILE);
 		}
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		String appName = getDbAdapter().getAppName(packageName);
 		if (appName != null) {
-			getSupportActionBar().setSubtitle(appName);
+			getActionBar().setSubtitle(appName);
 		}
 
 		if (iconFilePath != null) {
-			Bitmap bm = BitmapFactory.decodeFile(iconFilePath);
-			BitmapDrawable icon = new BitmapDrawable(getResources(), bm);
-			getSupportActionBar().setIcon(icon);
+			if (getLastNonConfigurationInstance() != null) {
+				loadBitmap = (LoadBitmap) getLastNonConfigurationInstance();
+				loadBitmap.attach(this);
+				if (loadBitmap.bitmap != null) {
+					setActionBarIcon(loadBitmap.bitmap);
+				}
+			} else {
+				loadBitmap = new LoadBitmap(this);
+				Utils.execute(loadBitmap, iconFilePath);
+			}
 		}
 
 		LayoutInflater layoutInflater = getLayoutInflater();
@@ -148,7 +156,7 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 		}
 
 		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-			MenuInflater inflater = getSupportMenuInflater();
+			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.links_context_menu, menu);
 			return true;
 		}
@@ -190,7 +198,7 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.clear();
-		getSupportMenuInflater().inflate(R.menu.links_menu, menu);
+		getMenuInflater().inflate(R.menu.links_menu, menu);
 
 		return true;
 	}
@@ -230,6 +238,11 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 	public AndlyticsApp getAndlyticsApplication() {
 		return (AndlyticsApp) getApplication();
 	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return loadBitmap == null ? null : loadBitmap.detach();
+	}
 
 	private static class LoadLinksDb extends DetachableAsyncTask<Void, Void, Void, AppInfoActivity> {
 
@@ -257,6 +270,39 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 			activity.refreshLinks();
 		}
 
+	}
+	
+	private static class LoadBitmap extends DetachableAsyncTask<String, Void, Bitmap, AppInfoActivity> {
+		
+		Bitmap bitmap;
+		
+		LoadBitmap(AppInfoActivity activity) {
+			super(activity);
+		}
+		
+		@Override
+		protected Bitmap doInBackground(String... params) {
+			if (activity == null) {
+				return null;
+			}
+			Bitmap bm = BitmapFactory.decodeFile(params[0]);
+			bitmap = bm;
+			return bm;
+		}
+		
+		@Override
+		protected void onPostExecute(Bitmap bm) {
+			if (activity == null) {
+				return;
+			}
+			
+			activity.setActionBarIcon(bm);
+		}
+	}
+	
+	private void setActionBarIcon(Bitmap bm) {
+		BitmapDrawable icon = new BitmapDrawable(getResources(), bm);
+		getActionBar().setIcon(icon);
 	}
 
 	private void getLinksFromDb() {
@@ -334,8 +380,8 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 	}
 
 	private void showAddEditLinkDialog(Link link) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		Fragment prev = getSupportFragmentManager().findFragmentByTag("fragment_addedit_link");
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		Fragment prev = getFragmentManager().findFragmentByTag("fragment_addedit_link");
 		if (prev != null) {
 			ft.remove(prev);
 		}
@@ -358,8 +404,8 @@ public class AppInfoActivity extends SherlockFragmentActivity implements
 	}
 
 	private void showLongTextDialog(int title, String longText) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		Fragment prev = getSupportFragmentManager().findFragmentByTag("fragment_longtext");
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		Fragment prev = getFragmentManager().findFragmentByTag("fragment_longtext");
 		if (prev != null) {
 			ft.remove(prev);
 		}

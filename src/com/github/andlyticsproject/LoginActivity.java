@@ -1,33 +1,33 @@
 package com.github.andlyticsproject;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.github.andlyticsproject.model.DeveloperAccount;
 import com.github.andlyticsproject.sync.AutosyncHandler;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Used for initial login and managing accounts Because of this original legacy as the launcher
@@ -38,7 +38,7 @@ import com.github.andlyticsproject.sync.AutosyncHandler;
  * or
  * Main -> LoginActivity -> Main
  */
-public class LoginActivity extends SherlockActivity {
+public class LoginActivity extends Activity {
 
 	private static final String TAG = LoginActivity.class.getSimpleName();
 
@@ -82,13 +82,13 @@ public class LoginActivity extends SherlockActivity {
 		}
 
 		if (manageAccountsMode) {
-			getSupportActionBar().setTitle(R.string.manage_accounts);
+			getActionBar().setTitle(R.string.manage_accounts);
 		}
 
 		selectedAccount = developerAccountManager.getSelectedDeveloperAccount();
 
 		setContentView(R.layout.login);
-		setSupportProgressBarIndeterminateVisibility(false);
+		setProgressBarIndeterminateVisibility(false);
 		accountList = (LinearLayout) findViewById(R.id.login_input);
 
 		okButton = findViewById(R.id.login_ok_button);
@@ -100,7 +100,7 @@ public class LoginActivity extends SherlockActivity {
 
 					@Override
 					protected void onPreExecute() {
-						setSupportProgressBarIndeterminateVisibility(true);
+						setProgressBarIndeterminateVisibility(true);
 						okButton.setEnabled(false);
 					}
 
@@ -113,7 +113,7 @@ public class LoginActivity extends SherlockActivity {
 
 					@Override
 					protected void onPostExecute(Void arg) {
-						setSupportProgressBarIndeterminateVisibility(false);
+						setProgressBarIndeterminateVisibility(false);
 						okButton.setEnabled(true);
 
 						if (selectedAccount != null) {
@@ -150,7 +150,7 @@ public class LoginActivity extends SherlockActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		getSupportMenuInflater().inflate(R.menu.login_menu, menu);
+		getMenuInflater().inflate(R.menu.login_menu, menu);
 		return true;
 	}
 

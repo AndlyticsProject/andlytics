@@ -1,11 +1,5 @@
 package com.github.andlyticsproject;
 
-import org.acra.ACRA;
-import org.acra.ACRAConfiguration;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
-import org.acra.sender.HttpSender;
-
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -13,7 +7,14 @@ import android.util.Log;
 
 import com.github.andlyticsproject.db.AndlyticsDb;
 
-@ReportsCrashes(formKey = "dummy", sharedPreferencesMode = Context.MODE_PRIVATE, sharedPreferencesName = Preferences.PREF, mode = ReportingInteractionMode.TOAST)
+import org.acra.ACRA;
+import org.acra.ACRAConfiguration;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+import org.acra.sender.HttpSender;
+
+@ReportsCrashes(sharedPreferencesMode = Context.MODE_PRIVATE, sharedPreferencesName = Preferences.PREF, mode = ReportingInteractionMode.TOAST,
+resToastText = R.string.crash_toast, sendReportsInDevMode = false)
 public class AndlyticsApp extends Application {
 
 	private static final String TAG = AndlyticsApp.class.getSimpleName();
@@ -41,10 +42,6 @@ public class AndlyticsApp extends Application {
 
 	private void initAcra() {
 		try {
-			ACRAConfiguration config = ACRA.getNewDefaultConfig(this);
-			config.setResToastText(R.string.crash_toast);
-			config.setSendReportsInDevMode(false);
-			ACRA.setConfig(config);
 			ACRA.init(this);
 			String bugsenseUrl = getResources().getString(R.string.bugsense_url);
 			HttpSender bugSenseSender = new HttpSender(HttpSender.Method.POST,

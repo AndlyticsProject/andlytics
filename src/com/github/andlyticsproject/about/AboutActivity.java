@@ -1,53 +1,53 @@
 package com.github.andlyticsproject.about;
 
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.R;
 
-public class AboutActivity extends SherlockFragmentActivity implements
+public class AboutActivity extends Activity implements
 		ActionBar.TabListener {
 	private static final String BUNDLE_KEY_TABINDEX = "tabindex";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		setContentView(R.layout.about_navigation);
 
-		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		ActionBar.Tab tab1 = getSupportActionBar().newTab();
+		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		ActionBar.Tab tab1 = getActionBar().newTab();
 		tab1.setText(R.string.about_credits);
 		tab1.setTabListener(this);
 
-		ActionBar.Tab tab2 = getSupportActionBar().newTab();
+		ActionBar.Tab tab2 = getActionBar().newTab();
 		tab2.setText(R.string.changelog_title);
 		tab2.setTabListener(this);
 
-		getSupportActionBar().addTab(tab1);
-		getSupportActionBar().addTab(tab2);
+		getActionBar().addTab(tab1);
+		getActionBar().addTab(tab2);
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
-		savedInstanceState.putInt(BUNDLE_KEY_TABINDEX, getSupportActionBar()
+		savedInstanceState.putInt(BUNDLE_KEY_TABINDEX, getActionBar()
 				.getSelectedTab().getPosition());
 	}
 
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		getSupportActionBar().setSelectedNavigationItem(
+		getActionBar().setSelectedNavigationItem(
 				savedInstanceState.getInt(BUNDLE_KEY_TABINDEX));
 	}
 

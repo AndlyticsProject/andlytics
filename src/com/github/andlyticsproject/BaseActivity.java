@@ -1,5 +1,6 @@
 package com.github.andlyticsproject;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,13 +14,13 @@ import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.github.andlyticsproject.admob.AdmobAccountRemovedException;
 import com.github.andlyticsproject.admob.AdmobAskForPasswordException;
 import com.github.andlyticsproject.admob.AdmobGenericException;
 import com.github.andlyticsproject.admob.AdmobInvalidRequestException;
 import com.github.andlyticsproject.admob.AdmobInvalidTokenException;
 import com.github.andlyticsproject.admob.AdmobRateLimitExceededException;
+import com.github.andlyticsproject.console.AppAccessBlockedException;
 import com.github.andlyticsproject.console.AuthenticationException;
 import com.github.andlyticsproject.console.DevConsoleProtocolException;
 import com.github.andlyticsproject.console.MultiAccountException;
@@ -31,7 +32,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import org.acra.ACRA;
 
-public class BaseActivity extends SherlockFragmentActivity {
+public class BaseActivity extends Activity {
 
 	private static final String TAG = BaseActivity.class.getSimpleName();
 
@@ -108,6 +109,9 @@ public class BaseActivity extends SherlockFragmentActivity {
 		if (e instanceof NetworkException) {
 			Toast.makeText(BaseActivity.this, getString(R.string.network_error), Toast.LENGTH_LONG)
 					.show();
+		} else if (e instanceof AppAccessBlockedException) {
+			Toast.makeText(BaseActivity.this, getString(R.string.app_access_blocked_error, accountName),
+					Toast.LENGTH_LONG).show();
 		} else if (e instanceof AuthenticationException) {
 			Toast.makeText(BaseActivity.this, getString(R.string.auth_error, accountName),
 					Toast.LENGTH_LONG).show();
@@ -348,14 +352,14 @@ public class BaseActivity extends SherlockFragmentActivity {
 		ensureMainThread();
 
 		refreshing = true;
-		supportInvalidateOptionsMenu();
+		invalidateOptionsMenu();
 	}
 
 	public void refreshFinished() {
 		ensureMainThread();
 
 		refreshing = false;
-		supportInvalidateOptionsMenu();
+		invalidateOptionsMenu();
 	}
 
 	private void ensureMainThread() {

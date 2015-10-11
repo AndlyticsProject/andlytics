@@ -2,6 +2,8 @@ package com.github.andlyticsproject;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -14,8 +16,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -26,14 +31,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
 import com.github.andlyticsproject.about.AboutActivity;
-import com.github.andlyticsproject.admob.AdmobRequest;
 import com.github.andlyticsproject.adsense.AdSenseClient;
 import com.github.andlyticsproject.console.v2.DevConsoleRegistry;
 import com.github.andlyticsproject.console.v2.DevConsoleV2;
@@ -59,7 +59,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Main extends BaseActivity implements OnNavigationListener {
+public class Main extends BaseActivity implements OnNavigationListener,
+		SwipeRefreshLayout.OnRefreshListener {
 
 	/** Key for latest version code preference. */
 	private static final String LAST_VERSION_CODE_KEY = "last_version_code";
@@ -70,6 +71,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	public static final int DIALOG_ABOUT_ID = 1;
 
 	private boolean cancelRequested;
+	private SwipeRefreshLayout swipeRefresh;
 	private ListView mainListView;
 	private TextView statusText;
 	private ViewSwitcher mainViewSwitcher;
@@ -157,6 +159,12 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		// BaseActivity has already selected the account
 		updateAccountsList();
 
+		// setup swipeRefreshLayou
+		swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
+		swipeRefresh.setColorSchemeResources(R.color.swipe1, R.color.swipe2, R.color.swipe1,
+				R.color.swipe2);
+		swipeRefresh.setOnRefreshListener(this);
+
 		// setup main list
 		mainListView = (ListView) findViewById(R.id.main_app_list);
 		mainListView.addHeaderView(layoutInflater.inflate(R.layout.main_list_header, null), null,
@@ -175,7 +183,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		currentStatsMode = Preferences.getStatsMode(this);
 		updateStatsMode();
 
-		State lastState = (State) getLastCustomNonConfigurationInstance();
+		State lastState = (State) getLastNonConfigurationInstance();
 		if (lastState != null) {
 			state = lastState;
 			state.attachAll(this);
@@ -189,6 +197,28 @@ public class Main extends BaseActivity implements OnNavigationListener {
 		if (isUpdate()) {
 			showChangelog();
 		}
+	}
+
+	@Override
+	public void onRefresh() {
+		swipeRefresh.setEnabled(false);
+		loadRemoteEntries();
+	}
+
+	@Override
+	public void refreshStarted() {
+		super.refreshStarted();
+		if (!swipeRefresh.isRefreshing()) {
+			swipeRefresh.setRefreshing(true);
+			swipeRefresh.setEnabled(false);
+		}
+	}
+
+	@Override
+	public void refreshFinished() {
+		super.refreshFinished();
+		swipeRefresh.setRefreshing(false);
+		swipeRefresh.setEnabled(true);
 	}
 
 	@Override
@@ -224,7 +254,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.clear();
-		getSupportMenuInflater().inflate(R.menu.main_menu, menu);
+		getMenuInflater().inflate(R.menu.main_menu, menu);
 		statsModeMenuItem = menu.findItem(R.id.itemMainmenuStatsMode);
 		if (isRefreshing())
 			menu.findItem(R.id.itemMainmenuRefresh).setActionView(
@@ -282,7 +312,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			startActivity(aboutIntent);
 			break;
 		case R.id.itemMainmenuPreferences:
-			Intent preferencesIntent = new Intent(this, PreferenceActivity.class);
+			Intent preferencesIntent = new Intent(this, AndlyticsPreferenceActivity.class);
 			preferencesIntent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, accountName);
 			startActivity(preferencesIntent);
 			break;
@@ -361,7 +391,7 @@ public class Main extends BaseActivity implements OnNavigationListener {
 	}
 
 	@Override
-	public Object onRetainCustomNonConfigurationInstance() {
+	public Object onRetainNonConfigurationInstance() {
 		state.lastAppList = adapter.getAppInfos();
 		state.detachAll();
 
@@ -393,31 +423,30 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			}
 			if (developerAccounts.size() > 1) {
 				// Only use the spinner if we have multiple accounts
-				Context context = getSupportActionBar().getThemedContext();
+				Context context = getActionBar().getThemedContext();
 				AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(context,
 						R.layout.account_selector_item, developerAccounts);
-				accountsAdapter
-						.setDropDownViewResource(com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item);
+				accountsAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
 				// Hide the title to avoid duplicated info on tablets/landscape
 				// & setup the spinner
-				getSupportActionBar().setDisplayShowTitleEnabled(false);
-				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-				getSupportActionBar().setListNavigationCallbacks(accountsAdapter, this);
-				getSupportActionBar().setSelectedNavigationItem(selectedIndex);
+				getActionBar().setDisplayShowTitleEnabled(false);
+				getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+				getActionBar().setListNavigationCallbacks(accountsAdapter, this);
+				getActionBar().setSelectedNavigationItem(selectedIndex);
 			} else {
 				// Just one account so use the standard title/subtitle
-				getSupportActionBar().setDisplayShowTitleEnabled(true);
-				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-				getSupportActionBar().setTitle(R.string.app_name);
-				getSupportActionBar().setSubtitle(accountName);
+				getActionBar().setDisplayShowTitleEnabled(true);
+				getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+				getActionBar().setTitle(R.string.app_name);
+				getActionBar().setSubtitle(accountName);
 			}
 		} else {
 			// Just one account so use the standard title/subtitle
-			getSupportActionBar().setDisplayShowTitleEnabled(true);
-			getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-			getSupportActionBar().setTitle(R.string.app_name);
-			getSupportActionBar().setSubtitle(accountName);
+			getActionBar().setDisplayShowTitleEnabled(true);
+			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			getActionBar().setTitle(R.string.app_name);
+			getActionBar().setSubtitle(accountName);
 		}
 	}
 
@@ -445,7 +474,12 @@ public class Main extends BaseActivity implements OnNavigationListener {
 			}
 		}
 
-		if (!(R.id.main_app_list == mainViewSwitcher.getCurrentView().getId())) {
+		if (!swipeRefresh.isRefreshing()) {
+			swipeRefresh.setRefreshing(false);
+			swipeRefresh.setEnabled(true);
+		}
+
+		if (!(R.id.swipeRefresh == mainViewSwitcher.getCurrentView().getId())) {
 			mainViewSwitcher.showNext();
 		}
 
@@ -491,7 +525,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 					return null;
 				}
 
-				boolean migratedToAdSense = false;
 				Map<String, List<String>> admobAccountSiteMap = new HashMap<String, List<String>>();
 
 				List<AppStatsDiff> diffs = new ArrayList<AppStatsDiff>();
@@ -514,7 +547,6 @@ public class Main extends BaseActivity implements OnNavigationListener {
 							siteList.add(admobSiteId);
 							admobAccountSiteMap.put(admobAccount, siteList);
 						} else {
-							migratedToAdSense = true;
 							List<String> siteList = admobAccountSiteMap.get(admobAccount);
 							if (siteList == null) {
 								siteList = new ArrayList<String>();
@@ -533,13 +565,8 @@ public class Main extends BaseActivity implements OnNavigationListener {
 				// sync admob accounts
 				Set<String> admobAccuntKeySet = admobAccountSiteMap.keySet();
 				for (String admobAccount : admobAccuntKeySet) {
-					if (migratedToAdSense) {
-						AdSenseClient.foregroundSyncStats(activity, admobAccount,
-								admobAccountSiteMap.get(admobAccount));
-					} else {
-						AdmobRequest.syncSiteStats(admobAccount, activity,
-								admobAccountSiteMap.get(admobAccount), null);
-					}
+					AdSenseClient.foregroundSyncStats(activity, admobAccount,
+							admobAccountSiteMap.get(admobAccount));
 				}
 
 				activity.state.setLoadIconInCache(new LoadIconInCache(activity));
@@ -752,6 +779,12 @@ public class Main extends BaseActivity implements OnNavigationListener {
 
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		final long lastVersionCode = prefs.getLong(LAST_VERSION_CODE_KEY, 0);
+
+		// don't show popup on first install, creates weird interaction with 
+		// authorization popup from GLS
+		if (lastVersionCode == 0) {
+			return false;
+		}
 
 		if (versionCode != lastVersionCode) {
 			Log.i(TAG, "versionCode " + versionCode + " is different from the last known version "

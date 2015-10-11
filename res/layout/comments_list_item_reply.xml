@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="15dp"
@@ -33,7 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/comments_list_item_username"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp" >
+            android:paddingRight="5dp"
+            tools:text="Monday, February 22, 2015" >
         </TextView>
 
         <TextView
@@ -47,7 +49,8 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:paddingTop="5dp"
-            android:paddingBottom="10dp" />
+            android:paddingBottom="10dp"
+            tools:text="Reply message" />
     </RelativeLayout>
 
 </FrameLayout>
