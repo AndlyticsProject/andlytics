@@ -537,7 +537,7 @@ public class JsonParser {
 		for (int i = 0; i < revenueArr.length(); i++) {
 			JSONObject revenueObj = revenueArr.getJSONObject(i);
 			int period = revenueObj.getJSONArray("1").getInt(0);
-			double value = revenueObj.getJSONArray("2").optDouble(0, 0.0) / 1000000;
+			double value = revenueObj.getJSONArray("2").optJSONObject(0).optDouble("1", 0.0) / 1000000;
 
 			switch (period) {
 			case REVENUE_OVERALL:
