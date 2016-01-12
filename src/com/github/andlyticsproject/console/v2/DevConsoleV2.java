@@ -118,7 +118,6 @@ public class DevConsoleV2 implements DevConsole {
 			// in fetchAppInfos
 			AppStats stats = app.getLatestStats();
 			fetchRatings(app, stats);
-			stats.setNumberOfComments(fetchCommentsCount(app, Utils.getDisplayLocale()));
 
 			RevenueSummary revenue = fetchRevenueSummary(app);
 			app.setTotalRevenueSummary(revenue);
@@ -286,40 +285,6 @@ public class DevConsoleV2 implements DevConsole {
 		String response = post(protocol.createCommentsUrl(developerId),
 				protocol.createFetchRatingsRequest(appInfo.getPackageName()), developerId);
 		protocol.parseRatingsResponse(response, stats);
-	}
-
-	/**
-	 * Fetches the number of comments for the given packageName
-	 * 
-	 * @param packageName
-	 * @return
-	 * @throws DevConsoleException
-	 */
-	private int fetchCommentsCount(AppInfo appInfo, String displayLocale)
-			throws DevConsoleException {
-		// TODO -- this doesn't always produce correct results
-		// emulate the console: fetch first 50, get approx num. comments,
-		// fetch last 50 (or so) to get exact number.
-		int finalNumComments = 0;
-		int pageSize = 50;
-
-		String developerId = appInfo.getDeveloperId();
-		String response = post(protocol.createCommentsUrl(developerId),
-				protocol.createFetchCommentsRequest(appInfo.getPackageName(), 0, pageSize,
-						displayLocale), developerId);
-		int approxNumComments = protocol.extractCommentsCount(response);
-		if (approxNumComments <= pageSize) {
-			// this has a good chance of being exact
-			return approxNumComments;
-		}
-
-		response = post(
-				protocol.createCommentsUrl(developerId),
-				protocol.createFetchCommentsRequest(appInfo.getPackageName(), approxNumComments
-						- pageSize, pageSize, displayLocale), developerId);
-		finalNumComments += protocol.extractCommentsCount(response);
-
-		return finalNumComments;
 	}
 
 	private List<Comment> fetchComments(String packageName, String developerId, int startIndex,

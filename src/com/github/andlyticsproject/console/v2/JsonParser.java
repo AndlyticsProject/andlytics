@@ -55,14 +55,17 @@ public class JsonParser {
 	 * @throws JSONException
 	 */
 	static void parseRatings(String json, AppStats stats) throws JSONException {
-		// Extract just the array with the values
-		JSONObject values = new JSONObject(json).getJSONObject("result").getJSONArray("1")
-				.getJSONObject(0).getJSONObject("8");
+		JSONObject data = new JSONObject(json).getJSONObject("result").getJSONArray("1")
+				.getJSONObject(0);
 
+		// Ratings values is in 8
+		JSONObject values = data.getJSONObject("8");
 		// Ratings are at index 1 - 5
 		stats.setRating(values.getInt("1"), values.getInt("2"), values.getInt("3"),
 				values.getInt("4"), values.getInt("5"));
 
+		// Comment count is in 7
+		stats.setNumberOfComments(data.getInt("7"));
 	}
 
 	/**
@@ -316,23 +319,6 @@ public class JsonParser {
 		} catch (JSONException e) {
 			Log.w(TAG, "Error printing JSON: " + e.getMessage(), e);
 		}
-	}
-
-	/**
-	 * Parses the supplied JSON string and returns the number of comments.
-	 * 
-	 * @param json
-	 * @return
-	 * @throws JSONException
-	 */
-	static int parseCommentsCount(String json) throws JSONException {
-		// Just extract the number of comments
-		/*
-		 * null
-		 * Array containing arrays of comments
-		 * numberOfComments
-		 */
-		return new JSONObject(json).getJSONObject("result").getInt("2");
 	}
 
 	/**
