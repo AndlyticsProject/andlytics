@@ -257,15 +257,6 @@ public class DevConsoleV2Protocol {
 		return true;
 	}
 
-	int extractCommentsCount(String json) {
-		try {
-			return JsonParser.parseCommentsCount(json);
-		} catch (JSONException ex) {
-			saveDebugJson(json);
-			throw new DevConsoleProtocolException(json, ex);
-		}
-	}
-
 	List<Comment> parseCommentsResponse(String json) {
 		try {
 			return JsonParser.parseComments(json);
