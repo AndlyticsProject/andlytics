@@ -2,8 +2,8 @@ package com.github.andlyticsproject;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.app.ActionBar.OnNavigationListener;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -16,6 +16,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,8 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -71,6 +73,7 @@ public class Main extends BaseActivity implements OnNavigationListener,
 	public static final int DIALOG_ABOUT_ID = 1;
 
 	private boolean cancelRequested;
+	private DrawerLayout mainDrawer;
 	private SwipeRefreshLayout swipeRefresh;
 	private ListView mainListView;
 	private TextView statusText;
@@ -78,7 +81,6 @@ public class Main extends BaseActivity implements OnNavigationListener,
 	private MainListAdapter adapter;
 	private View footer;
 
-	public Animation aniPrevIn;
 	private StatsMode currentStatsMode;
 	private MenuItem statsModeMenuItem;
 
@@ -156,13 +158,28 @@ public class Main extends BaseActivity implements OnNavigationListener,
 
 		LayoutInflater layoutInflater = getLayoutInflater();
 
+		// setup Nav Drawer
+		mainDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+		NavDrawerFragment navFragment = new NavDrawerFragment();
+		t.setCustomAnimations(0, 0);
+		t.replace(R.id.leftDrawerHolder, navFragment, "Nav");
+		t.commit();
+
+		// setup toolbar
+		Toolbar mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+		setSupportActionBar(mainToolbar);
+		ActionBar ab = getSupportActionBar();
+		ab.setHomeAsUpIndicator(R.drawable.icon_drawer_menu);
+		ab.setDisplayHomeAsUpEnabled(true);
+		mainToolbar.setBackgroundColor(getResources().getColor(R.color.lightBlue));
+
 		// BaseActivity has already selected the account
 		updateAccountsList();
 
 		// setup swipeRefreshLayou
 		swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
-		swipeRefresh.setColorSchemeResources(R.color.swipe1, R.color.swipe2, R.color.swipe1,
-				R.color.swipe2);
+		swipeRefresh.setColorSchemeResources(R.color.lightBlue);
 		swipeRefresh.setOnRefreshListener(this);
 
 		// setup main list
@@ -178,12 +195,11 @@ public class Main extends BaseActivity implements OnNavigationListener,
 
 		// status & progress bar
 		statusText = (TextView) findViewById(R.id.main_app_status_line);
-		aniPrevIn = AnimationUtils.loadAnimation(Main.this, R.anim.activity_fade_in);
 
 		currentStatsMode = Preferences.getStatsMode(this);
 		updateStatsMode();
 
-		State lastState = (State) getLastNonConfigurationInstance();
+		State lastState = (State) getLastCustomNonConfigurationInstance();
 		if (lastState != null) {
 			state = lastState;
 			state.attachAll(this);
@@ -274,6 +290,9 @@ public class Main extends BaseActivity implements OnNavigationListener,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case android.R.id.home:
+			mainDrawer.openDrawer(GravityCompat.START);
+			break;
 		case R.id.itemMainmenuRefresh:
 			loadRemoteEntries();
 			break;
@@ -391,7 +410,7 @@ public class Main extends BaseActivity implements OnNavigationListener,
 	}
 
 	@Override
-	public Object onRetainNonConfigurationInstance() {
+	public Object onRetainCustomNonConfigurationInstance() {
 		state.lastAppList = adapter.getAppInfos();
 		state.detachAll();
 
@@ -423,30 +442,30 @@ public class Main extends BaseActivity implements OnNavigationListener,
 			}
 			if (developerAccounts.size() > 1) {
 				// Only use the spinner if we have multiple accounts
-				Context context = getActionBar().getThemedContext();
-				AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(context,
+				//TODO Move all of this to a Nav Drawer Account Selector
+				AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(this,
 						R.layout.account_selector_item, developerAccounts);
 				accountsAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
 				// Hide the title to avoid duplicated info on tablets/landscape
 				// & setup the spinner
-				getActionBar().setDisplayShowTitleEnabled(false);
-				getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-				getActionBar().setListNavigationCallbacks(accountsAdapter, this);
-				getActionBar().setSelectedNavigationItem(selectedIndex);
+				getSupportActionBar().setDisplayShowTitleEnabled(false);
+				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+				getSupportActionBar().setListNavigationCallbacks(accountsAdapter, this);
+				getSupportActionBar().setSelectedNavigationItem(selectedIndex);
 			} else {
 				// Just one account so use the standard title/subtitle
-				getActionBar().setDisplayShowTitleEnabled(true);
-				getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-				getActionBar().setTitle(R.string.app_name);
-				getActionBar().setSubtitle(accountName);
+				getSupportActionBar().setDisplayShowTitleEnabled(true);
+				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+				getSupportActionBar().setTitle(R.string.app_name);
+				getSupportActionBar().setSubtitle(accountName);
 			}
 		} else {
 			// Just one account so use the standard title/subtitle
-			getActionBar().setDisplayShowTitleEnabled(true);
-			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-			getActionBar().setTitle(R.string.app_name);
-			getActionBar().setSubtitle(accountName);
+			getSupportActionBar().setDisplayShowTitleEnabled(true);
+			getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			getSupportActionBar().setTitle(R.string.app_name);
+			getSupportActionBar().setSubtitle(accountName);
 		}
 	}
 

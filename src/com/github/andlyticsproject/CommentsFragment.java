@@ -1,10 +1,10 @@
 package com.github.andlyticsproject;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.LoaderManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.content.Context;
-import android.content.Loader;
+import android.support.v4.content.Loader;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -194,15 +194,6 @@ public class CommentsFragment extends Fragment implements StatsView<Comment>,
 	public CommentsFragment() {
 		setHasOptionsMenu(true);
 	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActivity().getActionBar().setTitle(getTitle());
-	}
-
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {

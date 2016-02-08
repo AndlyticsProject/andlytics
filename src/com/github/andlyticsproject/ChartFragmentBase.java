@@ -1,7 +1,7 @@
 package com.github.andlyticsproject;
 
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -193,7 +193,8 @@ public abstract class ChartFragmentBase extends Fragment implements ViewSwitcher
 
 	protected final void updateTitleTextSwitcher(String string) {
 		if (getActivity() != null) {
-			getActivity().getActionBar().setTitle(string);
+			//TODO reconfigure chart titles
+			//getActivity().getActionBar().setTitle(string);
 		}
 	}
 
