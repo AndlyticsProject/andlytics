@@ -12,6 +12,11 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.github.andlyticsproject.model.DeveloperAccount;
@@ -19,12 +24,20 @@ import com.github.andlyticsproject.sync.AutosyncHandler;
 
 import java.util.List;
 
+/**
+ *  Reference AppCompatPreferenceActivity here:
+ *  https://chromium.googlesource.com/android_tools/+/7200281446186c7192cb02f54dc2b38e02d705e5/
+ *  	sdk/extras/android/support/samples/Support7Demos/src/com/example/android/supportv7/app/
+ *  	AppCompatPreferenceActivity.java
+ */
+
 // Suppressing warnings as there is no SherlockPreferenceFragment
 // for us to use instead of a PreferencesActivity
 @SuppressWarnings("deprecation")
 public class AndlyticsPreferenceActivity extends PreferenceActivity implements
 		OnPreferenceChangeListener, OnSharedPreferenceChangeListener {
 
+	private AppCompatDelegate mDelegate;
 	private PreferenceCategory accountListPrefCat;
 	private ListPreference autosyncPref;
 	private List<DeveloperAccount> developerAccounts;
@@ -32,8 +45,13 @@ public class AndlyticsPreferenceActivity extends PreferenceActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		getDelegate().installViewFactory();
+		getDelegate().onCreate(savedInstanceState);
 		super.onCreate(savedInstanceState);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+
+		setContentView(R.layout.preference_activity);
+		setSupportActionBar((Toolbar) findViewById(R.id.pref_toolbar));
+		findViewById(R.id.pref_toolbar).setBackgroundColor(getResources().getColor(R.color.lightBlue));
 
 		PreferenceManager prefMgr = getPreferenceManager();
 		prefMgr.setSharedPreferencesName(Preferences.PREF);
@@ -59,6 +77,8 @@ public class AndlyticsPreferenceActivity extends PreferenceActivity implements
 		for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
 			initSummary(getPreferenceScreen().getPreference(i));
 		}
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	private void buildAccountsList() {
@@ -182,6 +202,50 @@ public class AndlyticsPreferenceActivity extends PreferenceActivity implements
 		// Unregister the listener whenever a key changes
 		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(
 				this);
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		getDelegate().onPostCreate(savedInstanceState);
+	}
+
+	@Override
+	public void setContentView(@LayoutRes int layoutResID) {
+		getDelegate().setContentView(layoutResID);
+	}
+
+	@Override
+	protected void onPostResume() {
+		super.onPostResume();
+		getDelegate().onPostResume();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		getDelegate().onStop();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		getDelegate().onDestroy();
+	}
+
+	private void setSupportActionBar(@Nullable Toolbar toolbar) {
+		getDelegate().setSupportActionBar(toolbar);
+	}
+
+	private ActionBar getSupportActionBar() {
+		return getDelegate().getSupportActionBar();
+	}
+
+	private AppCompatDelegate getDelegate() {
+		if (mDelegate == null) {
+			mDelegate = AppCompatDelegate.create(this, null);
+		}
+		return mDelegate;
 	}
 
 }

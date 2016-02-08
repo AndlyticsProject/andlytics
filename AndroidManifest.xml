@@ -55,7 +55,6 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".AndlyticsPreferenceActivity"
-            android:theme="@style/Theme.Andlytics.ActionBar"
             android:label="@string/preferences" >
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Main" />
@@ -67,7 +66,6 @@
         </activity>
         <activity
             android:name=".NotificationPreferenceActivity"
-            android:theme="@style/Theme.Andlytics.ActionBar"
             android:label="@string/notifications" >
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".AndlyticsPreferenceActivity" />
@@ -77,7 +75,6 @@
         </activity>
         <activity
             android:name=".AccountSpecificPreferenceActivity"
-            android:theme="@style/Theme.Andlytics.ActionBar"
             android:label="@string/notifications" >
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".AndlyticsPreferenceActivity" />
