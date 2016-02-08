@@ -1,17 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.Andlytics" parent="android:style/Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/Widget.Andlytics.ActionBar</item>
+    <style name="Theme.Andlytics" parent="Theme.Andlytics.Toolbar"/>
+
+    <style name="Theme.Andlytics.Toolbar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/lightBlue</item>
+        <item name="colorAccent">@color/lightBlue</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:textColorPrimary">@color/abc_primary_text_material_dark</item>
+        <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item>
     </style>
 
-    <style name="Widget.Andlytics.ActionBar" parent="android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:subtitleTextStyle">@style/TextAppearance.Andlytics.Widget.ActionBar.Subtitle</item>
+    <style name="Theme.Andlytics.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionBarStyle">@style/Widget.Andlytics.ActionBar</item>
+        <item name="colorPrimary">@color/lightBlue</item>
+        <item name="colorPrimaryDark">@color/lightBlueDark</item>
+        <item name="colorAccent">@color/lightBlue</item>
     </style>
 
-    <style name="TextAppearance.Andlytics.Widget.ActionBar.Subtitle" parent="android:style/Widget">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@android:color/secondary_text_dark</item>
+    <style name="Widget.Andlytics.ActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="titleTextStyle">@style/TextAppearance.Andlytics.Widget.ActionBar.Title</item>
+        <item name="subtitleTextStyle">@style/TextAppearance.Andlytics.Widget.ActionBar.Subtitle</item>
+    </style>
+
+    <style name="TextAppearance.Andlytics.Widget.ActionBar.Title" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/primary_text_default_material_dark</item>
+    </style>
+
+    <style name="TextAppearance.Andlytics.Widget.ActionBar.Subtitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/secondary_text_default_material_dark</item>
     </style>
 
     <style name="MainTableText" parent="@android:style/TextAppearance.Small">
