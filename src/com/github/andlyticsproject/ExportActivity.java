@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,7 +90,7 @@ public class ExportActivity extends Activity {
 
 		this.inMemoryCache = AppIconInMemoryCache.getInstance();
 		this.cacheDir = getCacheDir();
-		this.spacerIcon = getResources().getDrawable(R.drawable.app_icon_spacer);
+		this.spacerIcon = ContextCompat.getDrawable(this, R.drawable.app_icon_spacer);
 
 		if (getLastNonConfigurationInstance() != null) {
 			loadTask = (LoadExportTask) getLastNonConfigurationInstance();
