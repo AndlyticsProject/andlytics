@@ -6,7 +6,7 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -38,7 +37,7 @@ import java.util.List;
  * or
  * Main -> LoginActivity -> Main
  */
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity {
 
 	private static final String TAG = LoginActivity.class.getSimpleName();
 
@@ -65,8 +64,6 @@ public class LoginActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
 		accountManager = AccountManager.get(this);
 		developerAccountManager = DeveloperAccountManager.getInstance(getApplicationContext());
 		syncHandler = new AutosyncHandler();
@@ -81,14 +78,16 @@ public class LoginActivity extends Activity {
 			manageAccountsMode = extras.getBoolean(LoginActivity.EXTRA_MANAGE_ACCOUNTS_MODE);
 		}
 
-		if (manageAccountsMode) {
-			getActionBar().setTitle(R.string.manage_accounts);
-		}
-
 		selectedAccount = developerAccountManager.getSelectedDeveloperAccount();
 
 		setContentView(R.layout.login);
 		setProgressBarIndeterminateVisibility(false);
+
+		if (manageAccountsMode) {
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setTitle(R.string.manage_accounts);
+		}
+
 		accountList = (LinearLayout) findViewById(R.id.login_input);
 
 		okButton = findViewById(R.id.login_ok_button);
