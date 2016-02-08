@@ -1,6 +1,6 @@
 package com.github.andlyticsproject;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -33,7 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImportActivity extends Activity {
+public class ImportActivity extends AppCompatActivity {
 
 	private static final String TAG = ImportActivity.class.getSimpleName();
 
@@ -58,15 +57,13 @@ public class ImportActivity extends Activity {
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
 
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
 		setContentView(R.layout.import_stats);
 		setProgressBarIndeterminateVisibility(false);
 
 		layoutInflater = getLayoutInflater();
 
 		accountName = getAccountName();
-		getActionBar().setSubtitle(accountName);
+		getSupportActionBar().setSubtitle(accountName);
 
 		if (state != null) {
 			importFilenames = (ArrayList<String>) state.getSerializable(EXTRA_IMPORT_FILENAMES);
@@ -103,7 +100,7 @@ public class ImportActivity extends Activity {
 	}
 
 	@Override
-	public Object onRetainNonConfigurationInstance() {
+	public Object onRetainCustomNonConfigurationInstance() {
 		return loadTask == null ? null : loadTask.detach();
 	}
 

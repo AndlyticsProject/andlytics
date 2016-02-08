@@ -1,6 +1,6 @@
 package com.github.andlyticsproject;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
@@ -38,7 +37,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExportActivity extends Activity {
+public class ExportActivity extends AppCompatActivity {
 
 	private static final String TAG = ExportActivity.class.getSimpleName();
 
@@ -67,15 +66,14 @@ public class ExportActivity extends Activity {
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
 
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
 		setContentView(R.layout.export_stats);
 		setProgressBarIndeterminateVisibility(false);
 
 		layoutInflater = getLayoutInflater();
 
 		accountName = getIntent().getExtras().getString(EXTRA_ACCOUNT_NAME);
-		getActionBar().setSubtitle(accountName);
+		getSupportActionBar().setSubtitle(accountName);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		adapter = new ExportListAdapter();
 		setAppInfos(appInfos);
@@ -157,7 +155,7 @@ public class ExportActivity extends Activity {
 
 
 	@Override
-	public Object onRetainNonConfigurationInstance() {
+	public Object onRetainCustomNonConfigurationInstance() {
 		return loadTask == null ? null : loadTask.detach();
 	}
 
