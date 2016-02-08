@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
@@ -105,7 +106,7 @@ public class MainListAdapter extends BaseAdapter {
 		this.setAppInfos(new ArrayList<AppInfo>());
 		this.layoutInflater = activity.getLayoutInflater();
 		this.activity = activity;
-		this.spacerIcon = activity.getResources().getDrawable(R.drawable.app_icon_spacer);
+		this.spacerIcon = ContextCompat.getDrawable(activity, R.drawable.app_icon_spacer);
 		this.accountname = accountname;
 		this.cachDir = activity.getCacheDir();
 		this.inMemoryCache = AppIconInMemoryCache.getInstance();
@@ -117,8 +118,8 @@ public class MainListAdapter extends BaseAdapter {
 		activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 		this.expandViewHeight = Math.round(displayMetrics.scaledDensity * 150);
 		this.expandMargin = Math.round(displayMetrics.scaledDensity * 5);
-		this.iconDown = activity.getResources().getDrawable(R.drawable.icon_down);
-		this.iconUp = activity.getResources().getDrawable(R.drawable.icon_up);
+		this.iconDown = ContextCompat.getDrawable(activity, R.drawable.icon_down);
+		this.iconUp = ContextCompat.getDrawable(activity, R.drawable.icon_up);
 
 		this.setStatsMode(statsMode);
 	}
@@ -501,7 +502,8 @@ public class MainListAdapter extends BaseAdapter {
 			layout.leftMargin = 0;
 			layout.rightMargin = expandMargin;
 			changeBackgroundDrawable(holder.buttonHistory,
-					activity.getResources().getDrawable(R.drawable.row_background_inner_borderless));
+					ContextCompat.getDrawable(activity,
+							R.drawable.row_background_inner_borderless));
 			holder.buttonHistory.setSelected(false);
 			holder.buttonHistory.setPressed(false);
 
@@ -515,7 +517,7 @@ public class MainListAdapter extends BaseAdapter {
 			layout.leftMargin = expandMargin;
 			changeBackgroundDrawable(
 					holder.buttonHistory,
-					activity.getResources().getDrawable(
+					ContextCompat.getDrawable(activity,
 							R.drawable.row_background_inner_borderless_bottom));
 			holder.buttonHistory.setSelected(false);
 			holder.buttonHistory.setPressed(false);
@@ -547,7 +549,7 @@ public class MainListAdapter extends BaseAdapter {
 
 						changeBackgroundDrawable(
 								v,
-								activity.getResources().getDrawable(
+								ContextCompat.getDrawable(activity,
 										R.drawable.row_background_inner_borderless_bottom));
 						holder.expand.startAnimation(rotateUp);
 
@@ -571,8 +573,8 @@ public class MainListAdapter extends BaseAdapter {
 
 							@Override
 							public void onAnimationEnd(Animation animation) {
-								TransitionDrawable out = (TransitionDrawable) activity
-										.getResources().getDrawable(
+								TransitionDrawable out = (TransitionDrawable)
+										ContextCompat.getDrawable(activity,
 												R.drawable.background_border_transition_out);
 								changeBackgroundDrawable(v, out);
 								out.startTransition(2000);

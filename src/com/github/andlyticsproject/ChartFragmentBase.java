@@ -3,6 +3,7 @@ package com.github.andlyticsproject;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -135,11 +136,11 @@ public abstract class ChartFragmentBase extends Fragment implements ViewSwitcher
 		if (View.VISIBLE == chartframe.getVisibility()) {
 			chartframe.setVisibility(View.GONE);
 			dataframe.setVisibility(View.VISIBLE);
-			item.setIcon(this.getResources().getDrawable(R.drawable.icon_graph));
+			item.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icon_graph));
 		} else {
 			chartframe.setVisibility(View.VISIBLE);
 			dataframe.setVisibility(View.GONE);
-			item.setIcon(this.getResources().getDrawable(R.drawable.icon_data));
+			item.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icon_data));
 		}
 	}
 
