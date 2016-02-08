@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     compile "com.android.support:support-v4:22.2.1"
+    compile "com.android.support:appcompat-v7:22.2.1"
     compile "org.achartengine:achartengine:1.1.0"
     compile "ch.acra:acra:4.6.1"
     compile 'com.google.android.gms:play-services:4.0.30'
