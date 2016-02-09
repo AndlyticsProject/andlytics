@@ -162,7 +162,7 @@
     <string name="admob_missing_error">AdMob account %1$s is missing. If this happens repeatedly try moving Andlytics from SD card to internal storage</string>
     <string name="admob_invalid_request_error">Error while requesting AdMob API</string>
     <string name="admob_invalid_token_error">Error while authenticating AdMob account. Please try again later</string>
-    <string name="admob_generic_error">Unabled to load Admob data, please try again later</string>
+    <string name="admob_generic_error">Unable to load Admob data, please try again later</string>
     <string name="admob_linked_accounts_error">AdMob accounts that are linked to Google accounts are disable for API access by Google. They are working on a new version of the API that supports OAuth</string>
     <string name="remote_interface_changed_error">Updates are currently not possible, probably because the remote interface changed.\n\nPlease help us to fix this by sending us error report data. Information about the error (stacktrace) and information about your device such as device manufacturer\'s name, device model number, operating system, etc. will be sent to help us identifying the problem.\n\nThank you!</string>
     <string name="multiple_dev_accounts_error">Your account is linked to multiple developer consoles. This feature is not supported in andlytics.\n\nYou can unlink additional accounts or ask Google for a public app stats API at: \n\nhttp://support.google.com/googleplay\n\nSorry :(</string>
