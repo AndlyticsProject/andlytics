@@ -7,4 +7,9 @@
     <dimen name="tab_text_size">11sp</dimen>
     <dimen name="nav_drawer_max_width">280dp</dimen>
     <dimen name="ab_elevation">8dp</dimen>
+    <dimen name="spacing_small">4dp</dimen>
+    <dimen name="spacing_medium">8dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="account_selector_height">56dp</dimen>
+    <dimen name="status_bar_height">0dp</dimen>
 </resources>

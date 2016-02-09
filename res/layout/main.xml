@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -57,11 +58,13 @@
 
     </RelativeLayout>
 
-    <FrameLayout
-        android:id="@+id/leftDrawerHolder"
-        android:layout_width="@dimen/nav_drawer_max_width"
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation_view"
         android:layout_height="match_parent"
+        android:layout_width="wrap_content"
         android:layout_gravity="start"
-        android:background="@color/andBackground"/>
+        android:maxWidth="@dimen/nav_drawer_max_width"
+        app:headerLayout="@layout/drawer_header"
+        app:menu="@menu/drawer"/>
 
 </android.support.v4.widget.DrawerLayout>

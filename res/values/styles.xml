@@ -2,14 +2,14 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.Andlytics" parent="Theme.Andlytics.Toolbar"/>
+    <style name="Theme.Andlytics.ColoredStatusBar" parent="Theme.Andlytics"/>
 
-    <style name="Theme.Andlytics.Toolbar" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.Andlytics.Toolbar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/lightBlue</item>
+        <item name="colorPrimaryDark">@color/lightBlueDark</item>
         <item name="colorAccent">@color/lightBlue</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:textColorPrimary">@color/abc_primary_text_material_light</item>
-        <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item>
     </style>
 
     <style name="Theme.Andlytics.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">

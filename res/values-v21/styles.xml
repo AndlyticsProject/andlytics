@@ -2,6 +2,11 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.Andlytics" parent="Theme.Andlytics.Toolbar">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.Andlytics.ColoredStatusBar" parent="Theme.Andlytics">
         <item name="android:statusBarColor">@color/lightBlueDark</item>
     </style>
 

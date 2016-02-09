@@ -2,9 +2,10 @@ package com.github.andlyticsproject;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.graphics.PorterDuff;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.OnNavigationListener;
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,7 +17,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -27,8 +27,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -61,8 +63,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Main extends BaseActivity implements OnNavigationListener,
-		SwipeRefreshLayout.OnRefreshListener {
+public class Main extends BaseActivity implements AdapterView.OnItemSelectedListener,
+		SwipeRefreshLayout.OnRefreshListener, NavigationView.OnNavigationItemSelectedListener,
+        View.OnClickListener {
 
 	/** Key for latest version code preference. */
 	private static final String LAST_VERSION_CODE_KEY = "last_version_code";
@@ -74,6 +77,7 @@ public class Main extends BaseActivity implements OnNavigationListener,
 
 	private boolean cancelRequested;
 	private DrawerLayout mainDrawer;
+    private NavigationView navigationView;
 	private SwipeRefreshLayout swipeRefresh;
 	private ListView mainListView;
 	private TextView statusText;
@@ -91,7 +95,7 @@ public class Main extends BaseActivity implements OnNavigationListener,
 	private static final int REQUEST_OPEN_DOCUMENT = 88;
 	private static final int REQUEST_CODE_MANAGE_ACCOUNTS = 99;
 
-	private static class State {
+    private static class State {
 		// TODO replace with loaders
 		LoadDbEntries loadDbEntries;
 		LoadRemoteEntries loadRemoteEntries;
@@ -160,11 +164,8 @@ public class Main extends BaseActivity implements OnNavigationListener,
 
 		// setup Nav Drawer
 		mainDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-		FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-		NavDrawerFragment navFragment = new NavDrawerFragment();
-		t.setCustomAnimations(0, 0);
-		t.replace(R.id.leftDrawerHolder, navFragment, "Nav");
-		t.commit();
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
 		// setup toolbar
 		Toolbar mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
@@ -237,20 +238,38 @@ public class Main extends BaseActivity implements OnNavigationListener,
 		swipeRefresh.setEnabled(true);
 	}
 
-	@Override
-	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		if (!developerAccounts.get(itemPosition).getName().equals(accountName)) {
-			// Only switch if it is a new account
-			Intent intent = new Intent(Main.this, Main.class);
-			intent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME,
-					developerAccounts.get(itemPosition).getName());
-			startActivity(intent);
-			overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
-			// Call finish to ensure we don't get multiple activities running
-			finish();
-		}
-		return true;
-	}
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (parent.getId()){
+        case R.id.account_selector:
+            if (!developerAccounts.get(position).getName().equals(accountName)) {
+                // Only switch if it is a new account
+                Intent intent = new Intent(this, Main.class);
+                intent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME,
+                        developerAccounts.get(position).getName());
+                startActivity(intent);
+                overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
+                // Call finish to ensure we don't get multiple activities running
+                finish();
+            }
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Do Nothing
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+        case R.id.manage_accounts:
+            Intent accountsIntent = new Intent(this, LoginActivity.class);
+            accountsIntent.putExtra(LoginActivity.EXTRA_MANAGE_ACCOUNTS_MODE, true);
+            startActivityForResult(accountsIntent, REQUEST_CODE_MANAGE_ACCOUNTS);
+        }
+
+    }
 
 	@Override
 	protected void onResume() {
@@ -266,6 +285,54 @@ public class Main extends BaseActivity implements OnNavigationListener,
 
 		AndlyticsApp.getInstance().setIsAppVisible(true);
 	}
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+        case R.id.itemMainmenuImport:
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                Intent openIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                openIntent.setType("*/*");
+                openIntent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "application/zip" });
+                //hidden
+                openIntent.putExtra("android.content.extra.SHOW_ADVANCED", true);
+                startActivityForResult(openIntent, REQUEST_OPEN_DOCUMENT);
+            } else {
+                File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
+                if (!fileToImport.exists()) {
+                    Toast.makeText(
+                            this,
+                            getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
+                            Toast.LENGTH_LONG).show();
+                    return true;
+                }
+
+                Intent importIntent = new Intent(this, ImportActivity.class);
+                importIntent.setAction(Intent.ACTION_VIEW);
+                importIntent.setData(Uri.fromFile(fileToImport));
+                startActivity(importIntent);
+            }
+            break;
+        case R.id.itemMainmenuExport:
+            Intent exportIntent = new Intent(this, ExportActivity.class);
+            exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
+            startActivity(exportIntent);
+            break;
+        case R.id.itemMainmenuAbout:
+            // launch about activity
+            Intent aboutIntent = new Intent(this, AboutActivity.class);
+            startActivity(aboutIntent);
+            break;
+        case R.id.itemMainmenuPreferences:
+            Intent preferencesIntent = new Intent(this, AndlyticsPreferenceActivity.class);
+            preferencesIntent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, accountName);
+            startActivity(preferencesIntent);
+            break;
+        default:
+            return false;
+        }
+        return true;
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -296,45 +363,6 @@ public class Main extends BaseActivity implements OnNavigationListener,
 		case R.id.itemMainmenuRefresh:
 			loadRemoteEntries();
 			break;
-		case R.id.itemMainmenuImport:
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-				Intent openIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-				openIntent.setType("*/*");
-				openIntent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "application/zip" });
-				//hidden
-				openIntent.putExtra("android.content.extra.SHOW_ADVANCED", true);
-				startActivityForResult(openIntent, REQUEST_OPEN_DOCUMENT);
-			} else {
-				File fileToImport = StatsCsvReaderWriter.getExportFileForAccount(accountName);
-				if (!fileToImport.exists()) {
-					Toast.makeText(
-							this,
-							getString(R.string.import_no_stats_file, fileToImport.getAbsolutePath()),
-							Toast.LENGTH_LONG).show();
-					return true;
-				}
-
-				Intent importIntent = new Intent(this, ImportActivity.class);
-				importIntent.setAction(Intent.ACTION_VIEW);
-				importIntent.setData(Uri.fromFile(fileToImport));
-				startActivity(importIntent);
-			}
-			break;
-		case R.id.itemMainmenuExport:
-			Intent exportIntent = new Intent(this, ExportActivity.class);
-			exportIntent.putExtra(ExportActivity.EXTRA_ACCOUNT_NAME, accountName);
-			startActivity(exportIntent);
-			break;
-		case R.id.itemMainmenuAbout:
-			// launch about activity				
-			Intent aboutIntent = new Intent(this, AboutActivity.class);
-			startActivity(aboutIntent);
-			break;
-		case R.id.itemMainmenuPreferences:
-			Intent preferencesIntent = new Intent(this, AndlyticsPreferenceActivity.class);
-			preferencesIntent.putExtra(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME, accountName);
-			startActivity(preferencesIntent);
-			break;
 		case R.id.itemMainmenuStatsMode:
 			if (currentStatsMode.equals(StatsMode.PERCENT)) {
 				currentStatsMode = StatsMode.DAY_CHANGES;
@@ -353,6 +381,14 @@ public class Main extends BaseActivity implements OnNavigationListener,
 		}
 		return true;
 	}
+
+    @Override
+    public void onBackPressed() {
+        if (mainDrawer.isDrawerOpen(GravityCompat.START))
+            mainDrawer.closeDrawer(GravityCompat.START);
+        else
+            super.onBackPressed();
+    }
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -382,12 +418,12 @@ public class Main extends BaseActivity implements OnNavigationListener,
 						.show();
 			}
 		} else if (requestCode == REQUEST_GOOGLE_PLAY_SERVICES) {
-			if (resultCode == Activity.RESULT_OK) {
+			if (resultCode == AppCompatActivity.RESULT_OK) {
 			} else {
 				checkGooglePlayServicesAvailable();
 			}
 		} else if (requestCode == REQUEST_AUTHORIZATION) {
-			if (resultCode == Activity.RESULT_OK) {
+			if (resultCode == AppCompatActivity.RESULT_OK) {
 				loadRemoteEntries();
 			} else {
 				Toast.makeText(this, getString(R.string.account_authorization_denied, accountName),
@@ -431,6 +467,17 @@ public class Main extends BaseActivity implements OnNavigationListener,
 
 	private void updateAccountsList() {
 		developerAccounts = developerAccountManager.getActiveDeveloperAccounts();
+        Spinner accountSelector = (Spinner) navigationView.findViewById(R.id.account_selector);
+        accountSelector.getBackground().setColorFilter(
+                getResources().getColor(R.color.primary_material_light), PorterDuff.Mode.SRC_ATOP);
+        AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(this,
+                R.layout.account_selector_item, developerAccounts);
+        accountsAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        accountSelector.setAdapter(accountsAdapter);
+        accountSelector.setOnItemSelectedListener(this);
+        // Only use the spinner if we have multiple accounts
+        accountSelector.setEnabled(developerAccounts.size() > 1);
+
 		if (developerAccounts.size() > 1) {
 			int selectedIndex = 0;
 			int index = 0;
@@ -440,33 +487,10 @@ public class Main extends BaseActivity implements OnNavigationListener,
 				}
 				index++;
 			}
-			if (developerAccounts.size() > 1) {
-				// Only use the spinner if we have multiple accounts
-				//TODO Move all of this to a Nav Drawer Account Selector
-				AccountSelectorAdaper accountsAdapter = new AccountSelectorAdaper(this,
-						R.layout.account_selector_item, developerAccounts);
-				accountsAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-
-				// Hide the title to avoid duplicated info on tablets/landscape
-				// & setup the spinner
-				getSupportActionBar().setDisplayShowTitleEnabled(false);
-				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-				getSupportActionBar().setListNavigationCallbacks(accountsAdapter, this);
-				getSupportActionBar().setSelectedNavigationItem(selectedIndex);
-			} else {
-				// Just one account so use the standard title/subtitle
-				getSupportActionBar().setDisplayShowTitleEnabled(true);
-				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-				getSupportActionBar().setTitle(R.string.app_name);
-				getSupportActionBar().setSubtitle(accountName);
-			}
-		} else {
-			// Just one account so use the standard title/subtitle
-			getSupportActionBar().setDisplayShowTitleEnabled(true);
-			getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-			getSupportActionBar().setTitle(R.string.app_name);
-			getSupportActionBar().setSubtitle(accountName);
+            accountSelector.setSelection(selectedIndex);
 		}
+
+        navigationView.findViewById(R.id.manage_accounts).setOnClickListener(this);
 	}
 
 	private void updateMainList(List<AppInfo> apps) {
