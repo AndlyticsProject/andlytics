@@ -18,7 +18,7 @@
         android:id="@+id/manage_accounts"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/icon_logout"
+        android:src="@drawable/icon_account_box"
         android:layout_marginTop="@dimen/status_bar_height"
         android:padding="@dimen/spacing_medium"
         android:layout_alignParentTop="true"
