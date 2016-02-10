@@ -20,15 +20,12 @@
             app:popupTheme="@style/Theme.AppCompat.Light"
             android:elevation="@dimen/ab_elevation"/>
 
-        <ViewSwitcher
-            android:id="@+id/main_viewswitcher"
+        <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_below="@id/main_toolbar"
             android:layout_marginLeft="@dimen/main_margin"
-            android:layout_marginRight="@dimen/main_margin"
-            android:inAnimation="@anim/view_switcher_fade_in"
-            android:outAnimation="@anim/view_switcher_fade_out">
+            android:layout_marginRight="@dimen/main_margin">
 
             <TextView
                 android:id="@+id/main_app_list_loading"
@@ -54,7 +51,7 @@
                     android:fadingEdge="none"
                     android:scrollbars="vertical" />
             </android.support.v4.widget.SwipeRefreshLayout>
-        </ViewSwitcher>
+        </FrameLayout>
 
     </RelativeLayout>
 

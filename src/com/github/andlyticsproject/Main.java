@@ -33,7 +33,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewSwitcher;
 
 import com.github.andlyticsproject.Preferences.StatsMode;
 import com.github.andlyticsproject.Preferences.Timeframe;
@@ -81,7 +80,6 @@ public class Main extends BaseActivity implements AdapterView.OnItemSelectedList
 	private SwipeRefreshLayout swipeRefresh;
 	private ListView mainListView;
 	private TextView statusText;
-	private ViewSwitcher mainViewSwitcher;
 	private MainListAdapter adapter;
 	private View footer;
 
@@ -192,7 +190,6 @@ public class Main extends BaseActivity implements AdapterView.OnItemSelectedList
 		mainListView.addFooterView(footer, null, false);
 		adapter = new MainListAdapter(this, accountName, currentStatsMode);
 		mainListView.setAdapter(adapter);
-		mainViewSwitcher = (ViewSwitcher) findViewById(R.id.main_viewswitcher);
 
 		// status & progress bar
 		statusText = (TextView) findViewById(R.id.main_app_status_line);
@@ -522,10 +519,7 @@ public class Main extends BaseActivity implements AdapterView.OnItemSelectedList
 			swipeRefresh.setEnabled(true);
 		}
 
-		if (!(R.id.swipeRefresh == mainViewSwitcher.getCurrentView().getId())) {
-			mainViewSwitcher.showNext();
-		}
-
+        findViewById(R.id.main_app_list_loading).setVisibility(View.GONE);
 	}
 
 	private static class LoadRemoteEntries extends
