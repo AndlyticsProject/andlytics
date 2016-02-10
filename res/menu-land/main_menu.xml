@@ -8,18 +8,6 @@
     for the account chooser and to avoid having only one of import/export  -->
 
     <item
-        android:id="@+id/itemMainmenuImport"
-        android:icon="@drawable/icon_import"
-        app:showAsAction="never"
-        android:title="@string/import_">
-    </item>
-    <item
-        android:id="@+id/itemMainmenuExport"
-        android:icon="@drawable/icon_export"
-        app:showAsAction="never"
-        android:title="@string/export_">
-    </item>
-    <item
         android:id="@+id/itemMainmenuStatsMode"
         android:icon="@drawable/icon_plusminus"
         app:showAsAction="always|withText"
@@ -30,22 +18,6 @@
         android:icon="@drawable/icon_refresh"
         app:showAsAction="always"
         android:title="@string/refresh">
-    </item>
-    <item
-        android:id="@+id/itemMainmenuAbout"
-        android:icon="@drawable/icon_about"
-        app:showAsAction="never"
-        android:title="@string/about_title">
-    </item>
-    <item
-        android:id="@+id/itemMainmenuAccounts"
-        app:showAsAction="never"
-        android:title="@string/manage_accounts">
-    </item>
-    <item
-        android:id="@+id/itemMainmenuPreferences"
-        app:showAsAction="never"
-        android:title="@string/preferences">
     </item>
 
 </menu>
