@@ -159,6 +159,12 @@ public class DetailsActivity extends BaseActivity implements DetailedStatsActivi
 		}
 	}
 
+    @Override
+    public void setActionBarTitle(String title) {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(title);
+    }
+
 	@Override
 	protected void onResume() {
 		super.onResume();

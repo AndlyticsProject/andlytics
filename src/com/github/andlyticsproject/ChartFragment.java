@@ -91,8 +91,7 @@ public abstract class ChartFragment<T extends Statistic> extends ChartFragmentBa
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		//TODO reconfigure chart titles
-		//getActivity().getActionBar().setTitle(getTitle());
+        statsActivity.setActionBarTitle(getTitle());
 
 		Bundle b = getArguments();
 		if (b != null) {
