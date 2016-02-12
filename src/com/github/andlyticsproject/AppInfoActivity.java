@@ -1,13 +1,10 @@
 package com.github.andlyticsproject;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -37,7 +34,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppInfoActivity extends Activity implements
+public class AppInfoActivity extends AppCompatActivity implements
 		AddEditLinkDialog.OnFinishAddEditLinkDialogListener, OnItemLongClickListener {
 
 	public static final String TAG = Main.class.getSimpleName();
@@ -45,7 +42,6 @@ public class AppInfoActivity extends Activity implements
 	private LinksListAdapter linksListAdapter;
 
 	private LoadLinksDb loadLinksDb;
-	private LoadBitmap loadBitmap;
 
 	private AppInfo appInfo;
 	private List<Link> links;
@@ -71,24 +67,11 @@ public class AppInfoActivity extends Activity implements
 			iconFilePath = b.getString(BaseActivity.EXTRA_ICON_FILE);
 		}
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		String appName = getDbAdapter().getAppName(packageName);
 		if (appName != null) {
-			getActionBar().setSubtitle(appName);
-		}
-
-		if (iconFilePath != null) {
-			if (getLastNonConfigurationInstance() != null) {
-				loadBitmap = (LoadBitmap) getLastNonConfigurationInstance();
-				loadBitmap.attach(this);
-				if (loadBitmap.bitmap != null) {
-					setActionBarIcon(loadBitmap.bitmap);
-				}
-			} else {
-				loadBitmap = new LoadBitmap(this);
-				Utils.execute(loadBitmap, iconFilePath);
-			}
+			getSupportActionBar().setSubtitle(appName);
 		}
 
 		LayoutInflater layoutInflater = getLayoutInflater();
@@ -238,11 +221,6 @@ public class AppInfoActivity extends Activity implements
 	public AndlyticsApp getAndlyticsApplication() {
 		return (AndlyticsApp) getApplication();
 	}
-	
-	@Override
-	public Object onRetainNonConfigurationInstance() {
-		return loadBitmap == null ? null : loadBitmap.detach();
-	}
 
 	private static class LoadLinksDb extends DetachableAsyncTask<Void, Void, Void, AppInfoActivity> {
 
@@ -270,39 +248,6 @@ public class AppInfoActivity extends Activity implements
 			activity.refreshLinks();
 		}
 
-	}
-	
-	private static class LoadBitmap extends DetachableAsyncTask<String, Void, Bitmap, AppInfoActivity> {
-		
-		Bitmap bitmap;
-		
-		LoadBitmap(AppInfoActivity activity) {
-			super(activity);
-		}
-		
-		@Override
-		protected Bitmap doInBackground(String... params) {
-			if (activity == null) {
-				return null;
-			}
-			Bitmap bm = BitmapFactory.decodeFile(params[0]);
-			bitmap = bm;
-			return bm;
-		}
-		
-		@Override
-		protected void onPostExecute(Bitmap bm) {
-			if (activity == null) {
-				return;
-			}
-			
-			activity.setActionBarIcon(bm);
-		}
-	}
-	
-	private void setActionBarIcon(Bitmap bm) {
-		BitmapDrawable icon = new BitmapDrawable(getResources(), bm);
-		getActionBar().setIcon(icon);
 	}
 
 	private void getLinksFromDb() {

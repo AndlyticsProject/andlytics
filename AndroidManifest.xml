@@ -31,6 +31,7 @@
         android:theme="@style/Theme.Andlytics" >
         <activity
             android:name=".LoginActivity"
+            android:theme="@style/Theme.Andlytics.ActionBar"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,11 +41,11 @@
         </activity>
         <activity
             android:name=".Main"
-            android:label="@string/app_name"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:label="@string/app_name">
         </activity>
         <activity
             android:name=".AppInfoActivity"
+            android:theme="@style/Theme.Andlytics.ActionBar"
             android:label="@string/appinfo" >
         </activity>
         <activity
@@ -54,7 +55,10 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".AndlyticsPreferenceActivity"
+            android:theme="@style/Theme.Andlytics.ColoredStatusBar"
             android:label="@string/preferences" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Main" />
             <intent-filter>
                 <action android:name="com.github.andlyticsproject.PREFERENCES" />
 
@@ -63,17 +67,24 @@
         </activity>
         <activity
             android:name=".NotificationPreferenceActivity"
+            android:theme="@style/Theme.Andlytics.ColoredStatusBar"
             android:label="@string/notifications" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".AndlyticsPreferenceActivity" />
             <action android:name="android.intent.action.MAIN" />
 
             <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
         </activity>
         <activity
             android:name=".AccountSpecificPreferenceActivity"
+            android:theme="@style/Theme.Andlytics.ColoredStatusBar"
             android:label="@string/notifications" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".AndlyticsPreferenceActivity" />
         </activity>
         <activity
             android:name=".ImportActivity"
+            android:theme="@style/Theme.Andlytics.ActionBar"
             android:label="@string/statistics_import"
             tools:ignore="ExportedActivity" >
             <intent-filter>
@@ -100,15 +111,20 @@
         </activity>
         <activity
             android:name=".ExportActivity"
+            android:theme="@style/Theme.Andlytics.ActionBar"
             android:label="@string/statistics_export" >
         </activity>
         <activity
             android:name=".about.AboutActivity"
+            android:theme="@style/Theme.Andlytics.ActionBar"
             android:label="@string/about_title" >
         </activity>
         <activity
             android:name=".DetailsActivity"
+            android:theme="@style/Theme.Andlytics.ActionBar"
             android:label="@string/app_name" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Main" />
         </activity>
 
         <service

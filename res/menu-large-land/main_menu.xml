@@ -1,48 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="AlwaysShowAction" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="AlwaysShowAction">
 
     <!-- Same as the normal menu -->
 
     <item
         android:id="@+id/itemMainmenuImport"
         android:icon="@drawable/icon_import"
-        android:showAsAction="ifRoom|withText"
+        app:showAsAction="ifRoom|withText"
         android:title="@string/import_">
     </item>
     <item
         android:id="@+id/itemMainmenuExport"
         android:icon="@drawable/icon_export"
-        android:showAsAction="ifRoom|withText"
+        app:showAsAction="ifRoom|withText"
         android:title="@string/export_">
     </item>
     <item
         android:id="@+id/itemMainmenuStatsMode"
         android:icon="@drawable/icon_plusminus"
-        android:showAsAction="always|withText"
+        app:showAsAction="always|withText"
         android:title="@string/daily">
     </item>
     <item
         android:id="@+id/itemMainmenuRefresh"
         android:icon="@drawable/icon_refresh"
-        android:showAsAction="always"
+        app:showAsAction="always"
         android:title="@string/refresh">
     </item>
     <item
         android:id="@+id/itemMainmenuAbout"
         android:icon="@drawable/icon_about"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/about_title">
     </item>
     <item
         android:id="@+id/itemMainmenuAccounts"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/manage_accounts">
     </item>
     <item
         android:id="@+id/itemMainmenuPreferences"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/preferences">
     </item>
 

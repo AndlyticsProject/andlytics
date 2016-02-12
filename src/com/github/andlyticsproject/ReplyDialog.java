@@ -1,6 +1,6 @@
 package com.github.andlyticsproject;
 
-import android.app.DialogFragment;
+import android.support.v4.app.DialogFragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;

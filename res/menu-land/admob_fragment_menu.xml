@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/itemAdmobsmenuRefresh"
         android:icon="@drawable/icon_refresh"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/refresh">
     </item>
     <item
         android:id="@+id/itemChartsmenuToggle"        
         android:icon="@drawable/icon_data"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/refresh">
     </item>
     <item
         android:id="@+id/itemAdmobsmenuTimeframe"
         android:icon="@drawable/icon_calendar"
-        android:showAsAction="ifRoom|withText"
+        app:showAsAction="ifRoom|withText"
         android:title="@string/time_frame">
         <menu>
             <group android:checkableBehavior="single" >
@@ -40,7 +41,7 @@
     </item>
     <item
         android:id="@+id/itemAdmobsmenuRemove"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/remove_admob">
     </item>
 

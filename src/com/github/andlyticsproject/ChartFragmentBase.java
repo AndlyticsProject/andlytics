@@ -1,7 +1,8 @@
 package com.github.andlyticsproject;
 
 
-import android.app.Fragment;
+import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
@@ -46,6 +47,8 @@ public abstract class ChartFragmentBase extends Fragment implements ViewSwitcher
 
 	protected int currentChartPage = -1;
 	protected int currentChartColumn = -1;
+
+    private DetailedStatsActivity statsActivity;
 
 	public ChartFragmentBase() {
 	}
@@ -193,9 +196,7 @@ public abstract class ChartFragmentBase extends Fragment implements ViewSwitcher
 	}
 
 	protected final void updateTitleTextSwitcher(String string) {
-		if (getActivity() != null) {
-			getActivity().getActionBar().setTitle(string);
-		}
+        statsActivity.setActionBarTitle(string);
 	}
 
 	@Override
@@ -296,5 +297,22 @@ public abstract class ChartFragmentBase extends Fragment implements ViewSwitcher
 			setCurrentChart(currentChartPage, currentChartColumn);
 		}
 	}
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            statsActivity = (DetailedStatsActivity) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        statsActivity = null;
+    }
 
 }
