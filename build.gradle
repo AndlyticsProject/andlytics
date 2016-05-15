@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.1.0'
     }
 }
 
@@ -40,7 +40,7 @@ dependencies {
 android {
 
 	compileSdkVersion 22
-	buildToolsVersion "23.0.2"
+	buildToolsVersion "23.0.3"
 
     // lintOptions {
     //     checkReleaseBuilds false
@@ -49,14 +49,18 @@ android {
 
 
     signingConfigs {
-        release {
-            storeFile file ("andlytics-release-key.keystore")
+        if (rootProject.file('andlytics-release-key.keystore').exists()) {
+            release {
+                storeFile file ("andlytics-release-key.keystore")
+            }
         }
     }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            if (rootProject.file('andlytics-release-key.keystore').exists()) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 

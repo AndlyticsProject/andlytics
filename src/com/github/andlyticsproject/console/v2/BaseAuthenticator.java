@@ -151,8 +151,7 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 		Builder builder = new NotificationCompat.Builder(ctx);
 		builder.setSmallIcon(R.drawable.statusbar_andlytics);
 		builder.setContentTitle(ctx.getResources().getString(R.string.auth_error, accountName));
-		builder.setContentText(ctx.getResources().getString(R.string.auth_error_open_browser,
-				accountName));
+		builder.setContentText(ctx.getResources().getString(R.string.auth_error_open_browser));
 		builder.setAutoCancel(true);
 		PendingIntent contentIntent = PendingIntent.getActivity(ctx, accountName.hashCode(),
 				viewInBrowser, PendingIntent.FLAG_UPDATE_CURRENT);
