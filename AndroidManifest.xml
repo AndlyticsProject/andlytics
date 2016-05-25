@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.github.andlyticsproject"
     android:installLocation="auto"
-    android:versionCode="261"
-    android:versionName="2.7.4" >
+    android:versionCode="263"
+    android:versionName="2.8.0-BETA" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
