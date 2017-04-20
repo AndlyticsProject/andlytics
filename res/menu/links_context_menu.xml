@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/itemLinksmenuEdit"
         android:icon="@drawable/icon_edit"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/edit">
     </item>
     
     <item
         android:id="@+id/itemLinksmenuDelete"
         android:icon="@drawable/icon_delete"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/delete">
     </item>
 

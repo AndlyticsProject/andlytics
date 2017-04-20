@@ -7,6 +7,11 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.github.andlyticsproject.AsyncTasks.LoadAppListTask;
@@ -22,6 +27,7 @@ import java.util.List;
 public class AccountSpecificPreferenceActivity extends PreferenceActivity implements
 		LoadAppListTaskCompleteListener {
 
+	private AppCompatDelegate mDelegate;
 	private String accountName;
 	private Preference dummyApp;
 	private CheckBoxPreference autosyncPref;
@@ -32,11 +38,17 @@ public class AccountSpecificPreferenceActivity extends PreferenceActivity implem
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		getDelegate().installViewFactory();
+		getDelegate().onCreate(savedInstanceState);
 		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.preference_activity);
+		setSupportActionBar((Toolbar) findViewById(R.id.pref_toolbar));
+		findViewById(R.id.pref_toolbar).setBackgroundColor(getResources().getColor(R.color.lightBlue));
 
 		accountName = getIntent().getExtras().getString(BaseActivity.EXTRA_AUTH_ACCOUNT_NAME);
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		setTitle(accountName);
 		PreferenceManager prefMgr = getPreferenceManager();
 		prefMgr.setSharedPreferencesName(Preferences.PREF);
@@ -167,6 +179,50 @@ public class AccountSpecificPreferenceActivity extends PreferenceActivity implem
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		getDelegate().onPostCreate(savedInstanceState);
+	}
+
+	@Override
+	public void setContentView(@LayoutRes int layoutResID) {
+		getDelegate().setContentView(layoutResID);
+	}
+
+	@Override
+	protected void onPostResume() {
+		super.onPostResume();
+		getDelegate().onPostResume();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		getDelegate().onStop();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		getDelegate().onDestroy();
+	}
+
+	private void setSupportActionBar(@Nullable Toolbar toolbar) {
+		getDelegate().setSupportActionBar(toolbar);
+	}
+
+	private ActionBar getSupportActionBar() {
+		return getDelegate().getSupportActionBar();
+	}
+
+	private AppCompatDelegate getDelegate() {
+		if (mDelegate == null) {
+			mDelegate = AppCompatDelegate.create(this, null);
+		}
+		return mDelegate;
 	}
 
 }

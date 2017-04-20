@@ -4,9 +4,9 @@
     android:layout_height="wrap_content"
     style="@android:style/Widget.Holo.ActionButton" >
     <ProgressBar
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_gravity="center"
         android:indeterminate="true"
-        android:indeterminateDrawable="@drawable/progress_medium_holo" />
+        android:indeterminateDrawable="@drawable/progress_medium" />
 </FrameLayout>

@@ -1,6 +1,6 @@
 package com.github.andlyticsproject;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,7 +32,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import org.acra.ACRA;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
 
 	private static final String TAG = BaseActivity.class.getSimpleName();
 

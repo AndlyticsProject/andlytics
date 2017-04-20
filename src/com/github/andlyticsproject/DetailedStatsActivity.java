@@ -14,6 +14,8 @@ public interface DetailedStatsActivity {
 
 	public boolean shouldRemoteUpdateStats();
 
+	public void setActionBarTitle(String title);
+
 	// XXX do NOT name this `getPackageName()`, will override 
 	// core activity method and crash the ActivityManager.
 	public String getPackage();

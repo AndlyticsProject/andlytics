@@ -44,6 +44,7 @@
             android:layout_alignParentRight="true"
             android:paddingRight="16dp"
             android:paddingTop="10dp"
+            android:tint="@color/andActionbarBackground"
             android:src="@drawable/icon_reply" />
 
         <TextView

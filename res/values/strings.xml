@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="one_entry_hint_desc">Andlytics collects data over time. to see a meaningful chart come back as soon as more data is available.
         \n\nUsually download stats are updated every 24&#8211;48 hours.</string>
@@ -115,15 +115,15 @@
     <string name="notification_title">Andlytics change detection</string>
     <string name="import_">Import</string>
     <string name="import_no_sdcard_or_file">SD-Card not mounted or invalid file format, can\'t import!</string>
-    <string name="import_no_stats_file">Stats file not found: %1$s</string>
+    <string name="import_no_stats_file">Stats file not found: <xliff:g id="fileName">%1$s</xliff:g></string>
     <string name="import_no_app">No app selected, can\'t import!</string>
     <string name="importing">Importing</string>
     <string name="import_started">Import started.</string>
     <string name="import_finished">Import finished.</string>
-    <string name="imported_apps">Imported %d apps.</string>
+    <string name="imported_apps">Imported <xliff:g example="23" id="appsCount">%d</xliff:g> apps.</string>
     <string name="import_error">Error during import.</string>
     <string name="import_confirm_dialog_title">Confirm import</string>
-    <string name="import_confirm_dialog_message">You already have stats for %d apps. Importing will overwrite them. Continue with import?</string>
+    <string name="import_confirm_dialog_message">You already have stats for <xliff:g example="23" id="appsCount">%d</xliff:g> apps. Importing will overwrite them. Continue with import?</string>
     <string name="export_">Export</string>
     <string name="export_no_sdcard">SD-Card not mounted, can\'t export!</string>
     <string name="export_no_app">No app selected, can\'t export!</string>
@@ -132,7 +132,7 @@
     <string name="export_failed_to_load_stats">Failed to load app stats.</string>
     <string name="export_saved_to">Saved to</string>
     <string name="export_confirm_dialog_title">Confirm export</string>
-    <string name="export_confirm_dialog_message">An export file \'%s\' already exits. Exporting app stats will overwrite it. Continue with export?</string>
+    <string name="export_confirm_dialog_message">An export file \'<xliff:g example="andlytics.zip" id="fileName">%s</xliff:g>\' already exits. Exporting app stats will overwrite it. Continue with export?</string>
     <string name="share">Share</string>
     <string name="manage_accounts">Manage accounts</string>
     <string name="preferences">Preferences</string>
@@ -154,15 +154,15 @@
 
     <!-- Errors -->
     <string name="network_error">A network error has occurred. Please try again later</string>
-    <string name="signup_error">%1$s is not an android developer account, sign up at:\n\n %2$s</string>
-    <string name="auth_error">Authentication failed for: %1$s</string>
-    <string name="app_access_blocked_error">Not allowed to access apps for: %1$s</string>
+    <string name="signup_error"><xliff:g id="accountName">%1$s</xliff:g> is not an android developer account, sign up at:\n\n <xliff:g id="uri">%2$s</xliff:g></string>
+    <string name="auth_error">Authentication failed for: <xliff:g id="accountName">%1$s</xliff:g></string>
+    <string name="app_access_blocked_error">Not allowed to access apps for: <xliff:g id="accountName">%1$s</xliff:g></string>
     <string name="auth_error_open_browser">Additional authentication required. Tap to login via browser.</string>
     <string name="admob_ratelimit_error">Can\'t load Admob data because Admob has restricted the number of requests from this app, try again later</string>
-    <string name="admob_missing_error">AdMob account %1$s is missing. If this happens repeatedly try moving Andlytics from SD card to internal storage</string>
+    <string name="admob_missing_error">AdMob account <xliff:g id="accountName">%1$s</xliff:g> is missing. If this happens repeatedly try moving Andlytics from SD card to internal storage</string>
     <string name="admob_invalid_request_error">Error while requesting AdMob API</string>
     <string name="admob_invalid_token_error">Error while authenticating AdMob account. Please try again later</string>
-    <string name="admob_generic_error">Unabled to load Admob data, please try again later</string>
+    <string name="admob_generic_error">Unable to load Admob data, please try again later</string>
     <string name="admob_linked_accounts_error">AdMob accounts that are linked to Google accounts are disable for API access by Google. They are working on a new version of the API that supports OAuth</string>
     <string name="remote_interface_changed_error">Updates are currently not possible, probably because the remote interface changed.\n\nPlease help us to fix this by sending us error report data. Information about the error (stacktrace) and information about your device such as device manufacturer\'s name, device model number, operating system, etc. will be sent to help us identifying the problem.\n\nThank you!</string>
     <string name="multiple_dev_accounts_error">Your account is linked to multiple developer consoles. This feature is not supported in andlytics.\n\nYou can unlink additional accounts or ask Google for a public app stats API at: \n\nhttp://support.google.com/googleplay\n\nSorry :(</string>
@@ -180,7 +180,7 @@
     <string name="about_title">About Andlytics</string>
     <string name="about_credits">Credits</string>
     <string name="about_text">Andlytics is open source, please feel free to contribute via GitHub. This app is not associated with Google in any way.\n\nVisit us on:</string>
-    <string name="about_thirdsparty_credits_title">Used 3rd party libraries:</string>
+    <string name="about_thirdsparty_credits_title">Privacy policy and 3rd party libraries:</string>
     <string name="appinfo_link_addedit_dialog_title_add">ADD LINK</string>
     <string name="appinfo_link_addedit_dialog_title_edit">EDIT LINK</string>
     <string name="appinfo_link_addedit_dialog_text">This form accepts any http or https URL. market:// links are not supported.</string>
@@ -206,7 +206,7 @@
     <string name="revenue_last_30days">30 days revenue</string>
     <string name="show_developer_cut_revenue">Show developer cut of revenue</string>
     <string name="show_developer_cut_revenue_summary">Show developer cut of sales revenue (70%).</string>
-    <string name="account_authorization_denied">Authorization for account \'%s\' denied.</string>
+    <string name="account_authorization_denied">Authorization for account \'<xliff:g id="accountName">%s</xliff:g>\' denied.</string>
     <string name="use_new_admob">Use new AdMob</string>
 
 </resources>
