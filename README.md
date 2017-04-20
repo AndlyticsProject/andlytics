@@ -79,6 +79,11 @@ Any contributions, large or small, major features, bug fixes, unit/integration t
 
 Translations should be done via [crowdin.net](http://crowdin.net/project/andlytics).
 
+### Building your own version
+
+Add the package name and your signing certificate hash to Google APIs console. See attached image:
+![api-console](https://cloud.githubusercontent.com/assets/1053078/25211216/18b2dba4-25bf-11e7-9b5f-cf7a53776bc7.png)
+
 ## SocialMedia
 
 <a href="https://plus.google.com/103867882342055020019" rel="publisher">Find us on Google+</a>
