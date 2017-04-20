@@ -180,7 +180,7 @@
     <string name="about_title">About Andlytics</string>
     <string name="about_credits">Credits</string>
     <string name="about_text">Andlytics is open source, please feel free to contribute via GitHub. This app is not associated with Google in any way.\n\nVisit us on:</string>
-    <string name="about_thirdsparty_credits_title">Used 3rd party libraries:</string>
+    <string name="about_thirdsparty_credits_title">Privacy policy and 3rd party libraries:</string>
     <string name="appinfo_link_addedit_dialog_title_add">ADD LINK</string>
     <string name="appinfo_link_addedit_dialog_title_edit">EDIT LINK</string>
     <string name="appinfo_link_addedit_dialog_text">This form accepts any http or https URL. market:// links are not supported.</string>

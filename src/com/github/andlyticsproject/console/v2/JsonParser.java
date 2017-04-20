@@ -289,7 +289,7 @@ public class JsonParser {
 				stats.setTotalDownloads(0);
 				stats.setNumberOfErrors(0);
 			} else {
-				stats.setActiveInstalls(jsonAppStats.getInt("1"));
+				stats.setActiveInstalls(jsonAppStats.optInt("1", 0));
 				stats.setTotalDownloads(jsonAppStats.getInt("5"));
 				stats.setNumberOfErrors(jsonAppStats.optInt("4"));
 			}
