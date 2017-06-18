@@ -40,7 +40,7 @@ public class JsonParser {
 
 	private static final String TAG = JsonParser.class.getSimpleName();
 
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 
 	private JsonParser() {
 
@@ -250,7 +250,7 @@ public class JsonParser {
 			AppDetails details = new AppDetails(description, changelog, lastPlayStoreUpdate);
 			app.setDetails(details);
 
-			app.setVersionName(jsonAppDetails.getString("4"));
+			app.setVersionName(jsonAppDetails.optString("4", ""));
 			if (jsonAppDetails.has("3")) {
 				app.setIconUrl(jsonAppDetails.getString("3"));
 			}
@@ -289,9 +289,10 @@ public class JsonParser {
 				stats.setTotalDownloads(0);
 				stats.setNumberOfErrors(0);
 			} else {
-				stats.setActiveInstalls(jsonAppStats.optInt("1", 0));
+				//stats.setActiveInstalls(jsonAppStats.optInt("1", 0));
 				stats.setTotalDownloads(jsonAppStats.getInt("5"));
 				stats.setNumberOfErrors(jsonAppStats.optInt("4"));
+				stats.setActiveInstalls(jsonAppStats.optInt("7", 0));
 			}
 			app.setLatestStats(stats);
 
