@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import static android.R.attr.data;
+
 /**
  * This class contains static methods used to parse JSON from {@link DevConsoleV2}
  * 
@@ -246,7 +248,8 @@ public class JsonParser {
 
 			String description = ""; //appDetails.optString("3");
 			String changelog = ""; //appDetails.optString("5");
-			Long lastPlayStoreUpdate = jsonAppDetails.getLong("8");
+			long lastUpdate = jsonAppDetails.optLong("8", -1);
+			Long lastPlayStoreUpdate =  lastUpdate == -1 ? null : lastUpdate;
 			AppDetails details = new AppDetails(description, changelog, lastPlayStoreUpdate);
 			app.setDetails(details);
 

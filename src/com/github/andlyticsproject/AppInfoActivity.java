@@ -1,12 +1,12 @@
 package com.github.andlyticsproject;
 
 import android.annotation.SuppressLint;
-import android.support.v7.app.AppCompatActivity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -288,8 +288,10 @@ public class AppInfoActivity extends AppCompatActivity implements
 		versionNameView.setText(appInfo.getVersionName());
 
 		TextView lastStoreUpdateView = (TextView) findViewById(R.id.appinfo_last_store_update);
-		lastStoreUpdateView.setText(DateFormat.getDateInstance().format(
-				appInfo.getDetails().getLastStoreUpdate()));
+		if (appInfo.getDetails().getLastStoreUpdate() != null) {
+			lastStoreUpdateView.setText(DateFormat.getDateInstance().format(
+					appInfo.getDetails().getLastStoreUpdate()));
+		}
 
 		TextView descriptionView = (TextView) findViewById(R.id.appinfo_description);
 		final String description = appInfo.getDetails().getDescription().replace("\n", "<br/>");

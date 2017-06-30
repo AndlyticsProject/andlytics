@@ -357,7 +357,7 @@ public class AppInfo {
 	}
 
 	public boolean isIncomplete() {
-		return name == null || versionName == null || iconUrl == null;
+		return name == null || versionName == null || iconUrl == null || latestStats == null;
 	}
 
 }
