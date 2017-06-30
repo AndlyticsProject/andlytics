@@ -36,3 +36,4 @@ res/values/private-strings.xml
 .Trashes
 ehthumbs.db
 Thumbs.db
+*.keystore
