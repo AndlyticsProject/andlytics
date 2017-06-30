@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.github.andlyticsproject">
+
+    <application
+        android:name="AndlyticsApp"
+        android:allowBackup="true"
+        android:backupAgent=".io.AndlyticsBackupAgent"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:requiredAccountType="com.google"
+        android:theme="@style/Theme.Andlytics" >
+
+        <meta-data
+             android:name="com.google.android.backup.api_key"		
+             android:value="@string/backup_api_key" />		
+    </application>
+
+</manifest>
