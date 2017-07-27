@@ -28,7 +28,7 @@ public class DevConsoleV2Protocol {
 
 	// Templates for payloads used in POST requests
 	static final String FETCH_APPS_TEMPLATE = "{\"method\":\"fetch\","
-			+ "\"params\":{\"2\":1,\"3\":7},\"xsrf\":\"%s\"}";
+			+ "\"params\":{\"2\":1,\"3\":0},\"xsrf\":\"%s\"}";
 	// 1$: comma separated list of package names
 	static final String FETCH_APPS_BY_PACKAGES_TEMPLATE = "{\"method\":\"fetch\","
 			+ "\"params\":{\"1\":[%1$s],\"3\":1},\"xsrf\":\"%2$s\"}";
