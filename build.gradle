@@ -48,8 +48,8 @@ android {
     // }
 
     defaultConfig {
-        versionCode 266
-        versionName '2.8.0'
+        versionCode 267
+        versionName '2.8.1'
     }
 
     signingConfigs {
