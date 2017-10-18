@@ -59,7 +59,11 @@ public abstract class BaseAuthenticator implements DevConsoleAuthenticator {
 			JSONArray devConsoleAccountsArr = devConsoleAccountsObj.getJSONArray("1");
 			for (int i = 0; i < devConsoleAccountsArr.length(); i++) {
 				JSONObject accountObj = devConsoleAccountsArr.getJSONObject(i);
-				String developerId = accountObj.getString("1");
+				/*
+				There has been a change on Oct-18-2017
+				accountObj is now: {"2":"Company","3":false,"4":"email","5":"logourl","6":"account id"}
+				 */
+				String developerId = accountObj.getString("6");
 				String developerName = StringEscapeUtils.unescapeJava(accountObj.getString("2"));
 				// Cannot access apps if e.g. a developer agreement needs to be accepted
 				// XXX seems to be always false? Disable check for now
