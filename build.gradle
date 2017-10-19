@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:2.3.0'
     }
 }
 
@@ -48,8 +48,8 @@ android {
     // }
 
     defaultConfig {
-        versionCode 268
-        versionName '2.8.2'
+        versionCode 269
+        versionName '2.8.3'
     }
 
     signingConfigs {
