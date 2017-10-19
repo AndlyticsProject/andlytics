@@ -113,8 +113,9 @@ public class DevConsoleV2Protocol {
 
 	String createDeveloperUrl(String baseUrl, String developerId) {
 		checkState();
-
-		return String.format("%s?dev_acc=%s", baseUrl, developerId);
+        //on october 18 2017 it seems like dev_acc has been changed to account.
+		//return String.format("%s?dev_acc=%s", baseUrl, developerId);
+		return String.format("%s?account=%s", baseUrl, developerId);
 	}
 
 	String createFetchAppsUrl(String developerId) {
