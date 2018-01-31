@@ -71,8 +71,8 @@
     </style>
 
     <style name="Animation.InfoDialog" parent="@android:style/Animation">
-        <item name="@android:windowEnterAnimation">@anim/info_dialog_fade_in</item>
-        <item name="@android:windowExitAnimation">@anim/info_dialog_fade_out</item>
+        <item name="android:windowEnterAnimation">@anim/info_dialog_fade_in</item>
+        <item name="android:windowExitAnimation">@anim/info_dialog_fade_out</item>
     </style>
 
     <style name="andRatingBar" parent="@android:style/Widget.RatingBar">
