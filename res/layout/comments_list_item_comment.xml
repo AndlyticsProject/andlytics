@@ -98,13 +98,25 @@
             android:textColor="#8F9698"
             android:textIsSelectable="false"
             tools:text="1.2.3" />
-
+        <TextView
+            android:id="@+id/comments_list_item_android_api_level"
+            style="@style/MainTableText"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:drawableLeft="@drawable/ic_code_black_24dp"
+            android:drawablePadding="4dp"
+            android:ellipsize="end"
+            android:gravity="left|center_vertical"
+            android:paddingRight="4dp"
+            android:singleLine="true"
+            android:textColor="#8F9698"
+            android:textIsSelectable="false"
+            tools:text="23" />
         <TextView
             android:id="@+id/comments_list_item_device"
             style="@style/MainTableText"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_weight="2"
             android:drawableLeft="@drawable/icon_device"
             android:drawablePadding="4dp"
             android:ellipsize="end"
@@ -118,15 +130,17 @@
         <TextView
             android:id="@+id/comments_list_item_language"
             style="@style/MainTableText"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
             android:drawableLeft="@drawable/icon_language"
             android:drawablePadding="4dp"
             android:gravity="left|center_vertical"
             android:textColor="#8F9698"
             android:textIsSelectable="false"
+            android:paddingRight="4dp"
+
             tools:text="EN" />
+
     </LinearLayout>
 
     <View

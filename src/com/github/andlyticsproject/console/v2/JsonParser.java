@@ -19,10 +19,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
-
-import static android.R.attr.data;
-import static android.R.attr.publicKey;
 
 /**
  * This class contains static methods used to parse JSON from {@link DevConsoleV2}
@@ -538,7 +534,14 @@ public class JsonParser {
 				reply.setOriginalCommentDate(comment.getDate());
 				comment.setReply(reply);
 			}
-
+			//android version
+			JSONObject phoneInfo = jsonComment.optJSONObject("18");
+			if (phoneInfo != null){
+				String androidAPILevel = phoneInfo.optString("7");
+				if (androidAPILevel != null){
+					comment.setAndroidAPILevel(androidAPILevel);
+				}
+			}
 			comments.add(comment);
 		}
 

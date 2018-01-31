@@ -1,14 +1,5 @@
 package com.github.andlyticsproject;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.backup.BackupManager;
@@ -32,6 +23,15 @@ import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.Revenue;
 import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.util.Utils;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class ContentAdapter {
 
@@ -954,6 +954,7 @@ public class ContentAdapter {
 			initialValues.put(CommentsTable.KEY_COMMENT_USER, comment.getUser());
 			initialValues.put(CommentsTable.KEY_COMMENT_APP_VERSION, comment.getAppVersion());
 			initialValues.put(CommentsTable.KEY_COMMENT_DEVICE, comment.getDevice());
+			initialValues.put(CommentsTable.KEY_COMMENT_DEVICE_API_LEVEL,comment.getAndroidAPILevel());
 			Comment reply = comment.getReply();
 			String replyText = null;
 			String replyDate = null;
@@ -984,10 +985,10 @@ public class ContentAdapter {
 					CommentsTable.CONTENT_URI,
 					new String[] { CommentsTable.KEY_COMMENT_DATE,
 							CommentsTable.KEY_COMMENT_PACKAGENAME,
-							CommentsTable.KEY_COMMENT_RATING, 
+							CommentsTable.KEY_COMMENT_RATING,
 							CommentsTable.KEY_COMMENT_TITLE,
 							CommentsTable.KEY_COMMENT_TEXT,
-							CommentsTable.KEY_COMMENT_USER, 
+							CommentsTable.KEY_COMMENT_USER,
 							CommentsTable.KEY_COMMENT_DEVICE,
 							CommentsTable.KEY_COMMENT_APP_VERSION,
 							CommentsTable.KEY_COMMENT_REPLY_TEXT,
@@ -995,7 +996,8 @@ public class ContentAdapter {
 							CommentsTable.KEY_COMMENT_LANGUAGE,
 							CommentsTable.KEY_COMMENT_ORIGINAL_TITLE,
 							CommentsTable.KEY_COMMENT_ORIGINAL_TEXT,
-							CommentsTable.KEY_COMMENT_UNIQUE_ID },
+							CommentsTable.KEY_COMMENT_UNIQUE_ID,
+					        CommentsTable.KEY_COMMENT_DEVICE_API_LEVEL},
 					AppInfoTable.KEY_APP_PACKAGENAME + " = ?", new String[] { packageName },
 					CommentsTable.KEY_COMMENT_DATE + " desc");
 			if (cursor == null) {
@@ -1019,8 +1021,10 @@ public class ContentAdapter {
 						.getColumnIndex(CommentsTable.KEY_COMMENT_APP_VERSION)));
 				comment.setRating(cursor.getInt(cursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_RATING)));
+				comment.setAndroidAPILevel(cursor.getString(cursor.getColumnIndex(CommentsTable.KEY_COMMENT_DEVICE_API_LEVEL)));
 				String replyText = cursor.getString(cursor
 						.getColumnIndex(CommentsTable.KEY_COMMENT_REPLY_TEXT));
+
 				if (replyText != null) {
 					Comment reply = new Comment(true);
 					reply.setText(replyText);

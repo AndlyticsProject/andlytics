@@ -1,9 +1,5 @@
 package com.github.andlyticsproject.db;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentValues;
@@ -23,11 +19,15 @@ import com.github.andlyticsproject.model.RevenueSummary;
 import com.github.andlyticsproject.sync.AutosyncHandler;
 import com.github.andlyticsproject.util.Utils;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class AndlyticsDb extends SQLiteOpenHelper {
 
 	private static final String TAG = AndlyticsDb.class.getSimpleName();
 
-	private static final int DATABASE_VERSION = 24;
+	private static final int DATABASE_VERSION = 25;
 
 	private static final String DATABASE_NAME = "andlytics";
 
@@ -209,6 +209,12 @@ public class AndlyticsDb extends SQLiteOpenHelper {
 			db.execSQL("ALTER table " + CommentsTable.DATABASE_TABLE_NAME + " add "
 					+ CommentsTable.KEY_COMMENT_ORIGINAL_TITLE + " text");
 		}
+		if (oldVersion < 25){
+			Log.w(TAG, "Old version < 25 - adding comment.api_level column but dropping it since the data will be old");
+			db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.DATABASE_TABLE_NAME);
+			db.execSQL(CommentsTable.TABLE_CREATE_COMMENTS);
+		}
+
 	}
 
 	@SuppressWarnings("deprecation")
