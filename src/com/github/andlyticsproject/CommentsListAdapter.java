@@ -121,11 +121,13 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 				}
 			});
 		}
-		if (comment.getAndroidAPILevel() != null){
-			holder.apiLevel.setText(comment.getAndroidAPILevel());
-			holder.apiLevel.setVisibility(View.VISIBLE);
-		}else{
-			holder.apiLevel.setVisibility(View.GONE);
+		if (holder.apiLevel != null) {
+			if (comment.getAndroidAPILevel() != null) {
+				holder.apiLevel.setText(comment.getAndroidAPILevel());
+				holder.apiLevel.setVisibility(View.VISIBLE);
+			} else {
+				holder.apiLevel.setVisibility(View.GONE);
+			}
 		}
 
 		if (comment.isReply()) {
