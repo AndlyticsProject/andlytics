@@ -1,9 +1,13 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:3.0.1'
     }
 }
 
@@ -13,6 +17,10 @@ repositories {
     mavenCentral()
     maven { 
         url "https://repository-achartengine.forge.cloudbees.com/snapshot/"
+    }
+    maven {
+        url 'https://maven.google.com/'
+        name 'Google'
     }
 }
 
@@ -38,9 +46,10 @@ dependencies {
 }
 
 android {
+    flavorDimensions "default"
 
 	compileSdkVersion 22
-	buildToolsVersion '25.0.0'
+	buildToolsVersion '26.0.2'
 
     // lintOptions {
     //     checkReleaseBuilds false
@@ -138,12 +147,22 @@ if (project.hasProperty('storePassword')
 }
 
 android.applicationVariants.all { v ->
-    v.outputs.each { out ->
+   /* v.outputs.each { out ->
         def fileName = out.outputFile.toString()
         def idx = fileName.lastIndexOf('/') + 1
         fileName = fileName.substring(0, idx)
         fileName += "andlytics-" + v.buildType.name + '-' + android.defaultConfig.versionName + '.apk'
         out.outputFile = new File(fileName)
+
+    }*/
+    v.outputs.all { output ->
+        //def fileName = out.outputFile.toString()
+        def fileName = outputFileName
+        def idx = fileName.lastIndexOf('/') + 1
+        fileName = fileName.substring(0, idx)
+        fileName += "andlytics-" + v.buildType.name + '-' + android.defaultConfig.versionName + '.apk'
+//        out.outputFile = new File(fileName)
+        outputFileName = new File(fileName)
     }
 }
 

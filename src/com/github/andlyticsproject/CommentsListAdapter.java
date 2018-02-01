@@ -1,13 +1,5 @@
 package com.github.andlyticsproject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -27,6 +19,14 @@ import android.widget.TextView;
 import com.github.andlyticsproject.model.Comment;
 import com.github.andlyticsproject.model.CommentGroup;
 import com.github.andlyticsproject.util.Utils;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class CommentsListAdapter extends BaseExpandableListAdapter {
 
@@ -77,7 +77,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			holder.deviceVersionContainer = (LinearLayout) convertView
 					.findViewById(R.id.comments_list_item_device_container);
 			holder.language = (TextView) convertView.findViewById(R.id.comments_list_item_language);
-
+			holder.apiLevel = (TextView) convertView.findViewById(R.id.comments_list_item_android_api_level);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolderChild) convertView.getTag();
@@ -121,6 +121,12 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 				}
 			});
 		}
+		if (comment.getAndroidAPILevel() != null){
+			holder.apiLevel.setText(comment.getAndroidAPILevel());
+			holder.apiLevel.setVisibility(View.VISIBLE);
+		}else{
+			holder.apiLevel.setVisibility(View.GONE);
+		}
 
 		if (comment.isReply()) {
 			holder.date.setText(formatCommentDate(comment.getDate()));
@@ -135,7 +141,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 			if (!showTranslations && comment.getOriginalTitle() != null) {
 				commentTitle = comment.getOriginalTitle();
 			}
-			
+
 			holder.text.setText(commentText);
 			holder.title.setText(commentTitle);
 
@@ -301,6 +307,7 @@ public class CommentsListAdapter extends BaseExpandableListAdapter {
 		TextView device;
 		TextView version;
 		TextView language;
+		TextView apiLevel;
 		ImageView replyIcon;
 	}
 

@@ -1,8 +1,8 @@
 package com.github.andlyticsproject.db;
 
-import java.util.HashMap;
-
 import android.net.Uri;
+
+import java.util.HashMap;
 
 public class CommentsTable {
 
@@ -22,6 +22,7 @@ public class CommentsTable {
 	public static final String KEY_COMMENT_USER = "user";
 	public static final String KEY_COMMENT_RATING = "rating";
 	public static final String KEY_COMMENT_DEVICE = "device";
+	public static final String KEY_COMMENT_DEVICE_API_LEVEL = "api_level";
 	public static final String KEY_COMMENT_APP_VERSION = "app_version";
 	public static final String KEY_COMMENT_REPLY_TEXT = "reply_text";
 	public static final String KEY_COMMENT_REPLY_DATE = "reply_date";
@@ -39,7 +40,8 @@ public class CommentsTable {
 			+ KEY_COMMENT_REPLY_TEXT + " text," + KEY_COMMENT_REPLY_DATE + " text, "
 			+ KEY_COMMENT_LANGUAGE + " text," 
 			+ KEY_COMMENT_ORIGINAL_TITLE + " text, " + KEY_COMMENT_ORIGINAL_TEXT + " text, "
-			+ KEY_COMMENT_UNIQUE_ID + " text)";
+			+ KEY_COMMENT_UNIQUE_ID + " text,"
+			+ KEY_COMMENT_DEVICE_API_LEVEL+" text)";
 
 	public static HashMap<String, String> PROJECTION_MAP;
 
@@ -61,6 +63,7 @@ public class CommentsTable {
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_ORIGINAL_TITLE, CommentsTable.KEY_COMMENT_ORIGINAL_TITLE);
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_ORIGINAL_TEXT,	CommentsTable.KEY_COMMENT_ORIGINAL_TEXT);
 		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_UNIQUE_ID, CommentsTable.KEY_COMMENT_UNIQUE_ID);
+		PROJECTION_MAP.put(CommentsTable.KEY_COMMENT_DEVICE_API_LEVEL, CommentsTable.KEY_COMMENT_DEVICE_API_LEVEL);
 
 	}
 

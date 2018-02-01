@@ -19,9 +19,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
-
-import static android.R.attr.data;
 
 /**
  * This class contains static methods used to parse JSON from {@link DevConsoleV2}
@@ -118,6 +115,77 @@ public class JsonParser {
 			break;
 		}
 
+	}
+	/**
+	 * Parses the supplied JSON string and builds a list of apps from it
+	 *
+	 * @param json
+	 * @param accountName
+	 * @return List of apps with incomplete info
+	 * @throws JSONException
+	 */
+	static List<AppInfo> parseAppInfosIncomplete(String json, String accountName)
+			throws JSONException {
+
+		Date now = new Date();
+		List<AppInfo> apps = new ArrayList<AppInfo>();
+		// Extract the base array containing apps
+		JSONObject result = new JSONObject(json).getJSONObject("result");
+		if (DEBUG) {
+			pp("result", result);
+		}
+
+		JSONArray jsonApps = result.optJSONArray("1");
+		if (DEBUG) {
+			pp("jsonApps", jsonApps);
+		}
+		if (jsonApps == null) {
+			// no apps yet?
+			return apps;
+		}
+
+		int numberOfApps = jsonApps.length();
+		Log.d(TAG, String.format("Found %d apps in JSON", numberOfApps));
+		for (int i = 0; i < numberOfApps; i++) {
+			AppInfo app = new AppInfo();
+			app.setAccount(accountName);
+			app.setLastUpdate(now);
+
+			JSONObject jsonApp = jsonApps.getJSONObject(i);
+			//{"1":"some number","2":"package","3":{"2":"some number","3":rating,"4":somenumber,"5":"install count","7":"active users"}}]}
+			// JSONObject jsonAppInfo = jsonApp.getJSONObject("1");
+			if (DEBUG) {
+				pp("jsonAppInfo", jsonApp);
+			}
+			String packageName = jsonApp.getString("2");
+			// Look for "tmp.7238057230750432756094760456.235728507238057230542"
+			if (packageName == null
+					|| (packageName.startsWith("tmp.") && Character.isDigit(packageName.charAt(4)))) {
+				Log.d(TAG, String.format("Skipping draft app %d, package name=%s", i, packageName));
+				continue;
+				// Draft app
+			}
+
+
+			//fake the publish state
+			int publishState = 1;
+			Log.d(TAG, String.format("%s: publishState=%d", packageName, publishState));
+			if (publishState != 1) {
+				// Not a published app, skipping
+				Log.d(TAG, String.format(
+						"Skipping app %d with state != 1: package name=%s: state=%d", i,
+						packageName, publishState));
+				continue;
+			}
+			app.setPublishState(publishState);
+			app.setPackageName(packageName);
+
+			apps.add(app);
+
+
+		}
+
+		return apps;
 	}
 
 	/**
@@ -466,7 +534,14 @@ public class JsonParser {
 				reply.setOriginalCommentDate(comment.getDate());
 				comment.setReply(reply);
 			}
-
+			//android version
+			JSONObject phoneInfo = jsonComment.optJSONObject("18");
+			if (phoneInfo != null){
+				String androidAPILevel = phoneInfo.optString("7");
+				if (androidAPILevel != null){
+					comment.setAndroidAPILevel(androidAPILevel);
+				}
+			}
 			comments.add(comment);
 		}
 

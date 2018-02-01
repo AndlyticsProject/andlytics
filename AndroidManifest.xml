@@ -1,39 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.github.andlyticsproject"
-    android:installLocation="auto">
+<manifest package="com.github.andlyticsproject"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:installLocation="auto">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="21" />
-
+        android:targetSdkVersion="21"/>
     <application
         android:name="AndlyticsApp"
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:requiredAccountType="com.google"
-        android:theme="@style/Theme.Andlytics" >
+        android:theme="@style/Theme.Andlytics">
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/Theme.Andlytics.ActionBar"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Andlytics.ActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
@@ -42,136 +40,132 @@
         </activity>
         <activity
             android:name=".AppInfoActivity"
-            android:theme="@style/Theme.Andlytics.ActionBar"
-            android:label="@string/appinfo" >
+            android:label="@string/appinfo"
+            android:theme="@style/Theme.Andlytics.ActionBar">
         </activity>
         <activity
             android:name=".AdmobAuthenticatorActivity"
             android:excludeFromRecents="true"
             android:label="@string/app_name_admob"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@android:style/Theme.Dialog"/>
         <activity
             android:name=".AndlyticsPreferenceActivity"
-            android:theme="@style/Theme.Andlytics.ColoredStatusBar"
-            android:label="@string/preferences" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Main" />
+            android:label="@string/preferences"
+            android:theme="@style/Theme.Andlytics.ColoredStatusBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Main"/>
             <intent-filter>
-                <action android:name="com.github.andlyticsproject.PREFERENCES" />
-
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="com.github.andlyticsproject.PREFERENCES"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".NotificationPreferenceActivity"
-            android:theme="@style/Theme.Andlytics.ColoredStatusBar"
-            android:label="@string/notifications" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".AndlyticsPreferenceActivity" />
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            android:label="@string/notifications"
+            android:theme="@style/Theme.Andlytics.ColoredStatusBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".AndlyticsPreferenceActivity"/>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES"/>
+            </intent-filter>
         </activity>
         <activity
             android:name=".AccountSpecificPreferenceActivity"
-            android:theme="@style/Theme.Andlytics.ColoredStatusBar"
-            android:label="@string/notifications" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".AndlyticsPreferenceActivity" />
+            android:label="@string/notifications"
+            android:theme="@style/Theme.Andlytics.ColoredStatusBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".AndlyticsPreferenceActivity"/>
         </activity>
         <activity
             android:name=".ImportActivity"
-            android:theme="@style/Theme.Andlytics.ActionBar"
             android:label="@string/statistics_import"
-            tools:ignore="ExportedActivity" >
+            android:theme="@style/Theme.Andlytics.ActionBar"
+            tools:ignore="ExportedActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
                 <data
                     android:host="*"
                     android:mimeType="application/zip"
                     android:pathPattern="andlytics\\.zip"
-                    android:scheme="file" />
+                    android:scheme="file"/>
             </intent-filter>
             <!-- intent-filter android:priority="-100" -->
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
                 <data
                     android:mimeType="application/zip"
-                    android:scheme="file" />
+                    android:scheme="file"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".ExportActivity"
-            android:theme="@style/Theme.Andlytics.ActionBar"
-            android:label="@string/statistics_export" >
+            android:label="@string/statistics_export"
+            android:theme="@style/Theme.Andlytics.ActionBar">
         </activity>
         <activity
             android:name=".about.AboutActivity"
-            android:theme="@style/Theme.Andlytics.ActionBar"
-            android:label="@string/about_title" >
+            android:label="@string/about_title"
+            android:theme="@style/Theme.Andlytics.ActionBar">
         </activity>
         <activity
             android:name=".DetailsActivity"
-            android:theme="@style/Theme.Andlytics.ActionBar"
-            android:label="@string/app_name" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Main" />
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Andlytics.ActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Main"/>
         </activity>
 
         <service
             android:name=".sync.SyncAdapterService"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
-                <action android:name="android.content.SyncAdapter" />
+                <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
-
             <meta-data
                 android:name="android.content.SyncAdapter"
-                android:resource="@xml/sync" />
+                android:resource="@xml/sync"/>
         </service>
-        <service android:name=".sync.SyncDeveloperAccountsService" />
+        <service android:name=".sync.SyncDeveloperAccountsService"/>
         <service
             android:name=".admob.AdmobAccountAuthenticator"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
+                <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
-
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
+                android:resource="@xml/authenticator"/>
         </service>
         <service
             android:name=".io.ExportService"
-            android:exported="false" />
+            android:exported="false"/>
         <service
             android:name=".io.ImportService"
-            android:exported="false" />
+            android:exported="false"/>
 
         <provider
             android:name="com.github.andlyticsproject.sync.ContentProvider"
             android:authorities="com.github.andlyticsproject"
-            android:exported="false" />
+            android:exported="false"/>
         <provider
             android:name="com.github.andlyticsproject.db.AndlyticsContentProvider"
             android:authorities="com.github.andlyticsproject.db.AndlyticsContentProvider"
-            android:exported="false" />
+            android:exported="false"/>
 
-        <receiver android:name="com.github.andlyticsproject.sync.AccountsChangedReceiver" >
+        <receiver android:name="com.github.andlyticsproject.sync.AccountsChangedReceiver">
             <intent-filter>
-                <action android:name="android.accounts.LOGIN_ACCOUNTS_CHANGED" />
+                <action android:name="android.accounts.LOGIN_ACCOUNTS_CHANGED"/>
             </intent-filter>
         </receiver>
-
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
     </application>
-
 </manifest>
