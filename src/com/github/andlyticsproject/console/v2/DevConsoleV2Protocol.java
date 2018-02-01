@@ -27,8 +27,11 @@ public class DevConsoleV2Protocol {
 	static final String URL_REVIEWS = DevConsoleV2Protocol.URL_DEVELOPER_CONSOLE + "/reviews";
 
 	// Templates for payloads used in POST requests
-	static final String FETCH_APPS_TEMPLATE = "{\"method\":\"fetch\","
-			+ "\"params\":{\"2\":1,\"3\":0},\"xsrf\":\"%s\"}";
+	//Jan 31 2018, fetch seems to have changed to fetchAppListStatsData
+	static final String FETCH_APPS_TEMPLATE = "{\"method\":\"fetchAppListStatsData\","
+			+ "\"params\":{},\"xsrf\":\"%s\"}";
+	//static final String FETCH_APPS_TEMPLATE = "{\"method\":\"fetch\","
+	//		+ "\"params\":{\"2\":1,\"3\":0},\"xsrf\":\"%s\"}";
 	// 1$: comma separated list of package names
 	static final String FETCH_APPS_BY_PACKAGES_TEMPLATE = "{\"method\":\"fetch\","
 			+ "\"params\":{\"1\":[%1$s],\"3\":1},\"xsrf\":\"%2$s\"}";
@@ -158,7 +161,14 @@ public class DevConsoleV2Protocol {
 		return String.format(FETCH_APPS_BY_PACKAGES_TEMPLATE, packageList,
 				sessionCredentials.getXsrfToken());
 	}
-
+	List<AppInfo> parseAppInfosIncompleteResponse(String json, String accountName) {
+		try {
+			return JsonParser.parseAppInfosIncomplete(json, accountName);
+		} catch (JSONException ex) {
+			saveDebugJson(json);
+			throw new DevConsoleProtocolException(json, ex);
+		}
+	}
 	List<AppInfo> parseAppInfosResponse(String json, String accountName, boolean skipIncomplete) {
 		try {
 			return JsonParser.parseAppInfos(json, accountName, skipIncomplete);

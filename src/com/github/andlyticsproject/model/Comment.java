@@ -40,6 +40,8 @@ public class Comment extends Statistic {
 
 	private Comment reply;
 
+	private String androidAPILevel;
+
 	public Comment() {
 
 	}
@@ -169,5 +171,14 @@ public class Comment extends Statistic {
 	public boolean isTranslated() {
 		return language != null && !language.contains(Locale.getDefault().getLanguage());
 	}
+
+	public String getAndroidAPILevel() {
+		return androidAPILevel;
+	}
+
+	public void setAndroidAPILevel(String androidAPILevel) {
+		this.androidAPILevel = androidAPILevel;
+	}
+
 
 }

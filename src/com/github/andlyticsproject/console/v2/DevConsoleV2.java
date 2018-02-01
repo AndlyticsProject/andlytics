@@ -207,7 +207,9 @@ public class DevConsoleV2 implements DevConsole {
 					protocol.createFetchAppInfosRequest(), developerId);
 
 			// don't skip incomplete apps, so we can get the package list
-			List<AppInfo> apps = protocol.parseAppInfosResponse(response, accountName, false);
+			//This response can no longer be parsed by parseAppInfosResponse, so a new method will be created that only gets the incomplete data
+			//List<AppInfo> apps = protocol.parseAppInfosResponse(response, accountName, false);
+			List<AppInfo> apps = protocol.parseAppInfosIncompleteResponse(response, accountName);
 			if (apps.isEmpty()) {
 				continue;
 			}
