@@ -5,9 +5,13 @@ buildscript {
             url 'https://maven.google.com/'
             name 'Google'
         }
+        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
+    }
+    repositories {
+        jcenter()
     }
 }
 
@@ -51,14 +55,14 @@ android {
 	compileSdkVersion 22
 	buildToolsVersion '26.0.2'
 
-    // lintOptions {
-    //     checkReleaseBuilds false
-    //     abortOnError false
-    // }
+     lintOptions {
+         checkReleaseBuilds false
+         abortOnError false
+     }
 
     defaultConfig {
-        versionCode 268
-        versionName '2.8.2'
+        versionCode 269
+        versionName '2.8.4'
     }
 
     signingConfigs {
