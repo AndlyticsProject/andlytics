@@ -353,7 +353,11 @@ public class JsonParser {
 			}
 			AppStats stats = new AppStats();
 			stats.setDate(now);
-			if (jsonAppStats.length() < 4) {
+			if (jsonAppStats.length() < 4 && jsonAppStats.has("7")){
+				//Change on July 2018 removed total downloads
+				//stats.setNumberOfErrors(jsonAppStats.optInt("4"));
+				stats.setActiveInstalls(jsonAppStats.optInt("7", 0));
+			}else if (jsonAppStats.length() < 4) {
 				// no statistics (yet?) or weird format
 				// TODO do we need differentiate?
 				stats.setActiveInstalls(0);
