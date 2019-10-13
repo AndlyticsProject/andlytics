@@ -79,6 +79,19 @@ Any contributions, large or small, major features, bug fixes, unit/integration t
 
 Translations should be done via [crowdin.net](http://crowdin.net/project/andlytics).
 
+## Examples 
+git clone https://github.com/<git_account>/andlytics.git
+
+cd <directory>
+
+git remote add upstream https://github.com/AndlyticsProject/andlytics
+
+git checkout master
+git pull upstream master && git push origin master
+git checkout -b readme-update
+
+Create a Pull Request to submit your changes
+
 ### Building your own version
 
 Add the package name and your signing certificate hash to Google APIs console. See attached image:
